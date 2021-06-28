@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rxNav:NavigationShell
+    x:Class="CrissCross.XamForms.Test.AppShell"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CrissCross.XamForms.Test.Views"
+    xmlns:rxNav="clr-namespace:CrissCross;assembly= CrissCross.XamForms"
+    xmlns:vm="clr-namespace:CrissCross.XamForms.Test.ViewModels"
+    Name="appShell"
+    Title="CrissCross.XamForms.Test">
+
+    <!--
+        The overall app visual hierarchy is defined here, along with navigation.
+
+        https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
+    -->
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Shell.ForegroundColor" Value="White" />
+                <Setter Property="Shell.TitleColor" Value="White" />
+                <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
+                <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="White" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF" />
+                <Setter Property="Shell.TabBarTitleColor" Value="White" />
+            </Style>
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="FlyoutItem" />
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <rxNav:ShellViewModel
+        Title="about"
+        x:TypeArguments="vm:AboutViewModel"
+        Icon="icon_about.png" />
+    <rxNav:ShellViewModel
+        Title="browse"
+        x:TypeArguments="vm:ItemsViewModel"
+        Icon="icon_feed.png" />
+    <rxNav:ShellViewModel Title="login" x:TypeArguments="vm:LoginViewModel" />
+</rxNav:NavigationShell>
