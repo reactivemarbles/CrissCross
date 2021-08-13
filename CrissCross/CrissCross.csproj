@@ -5,10 +5,23 @@
 		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net461;net472;uap10.0.16299;netcoreapp3.1;net5.0-windows;net5.0-windows10.0.19041</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
+		<PackageIcon>CrissCross.png</PackageIcon>
+		<PackageIconUrl />
+		<PackageProjectUrl>https://github.com/ChrisPulman/CrissCross</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ChrisPulman/CrissCross</RepositoryUrl>
+		<Authors>Chris Pulman</Authors>
+		<Copyright>Chris Pulman</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="14.1.1" />
+		<PackageReference Include="ReactiveUI" Version="14.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Images\CrissCross.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
 	</ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CrissCross.XamForms.Test.Views"
     xmlns:rxNav="clr-namespace:CrissCross;assembly= CrissCross.XamForms"
+    xmlns:rxui="clr-namespace:ReactiveUI.XamForms;assembly=ReactiveUI.XamForms"
     xmlns:vm="clr-namespace:CrissCross.XamForms.Test.ViewModels"
     Name="appShell"
     Title="CrissCross.XamForms.Test">
@@ -32,13 +33,13 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <rxNav:ShellViewModel
+    <rxui:ReactiveShellContent
         Title="about"
         x:TypeArguments="vm:AboutViewModel"
         Icon="icon_about.png" />
-    <rxNav:ShellViewModel
+    <rxui:ReactiveShellContent
         Title="browse"
         x:TypeArguments="vm:ItemsViewModel"
         Icon="icon_feed.png" />
-    <rxNav:ShellViewModel Title="login" x:TypeArguments="vm:LoginViewModel" />
+    <rxui:ReactiveShellContent Title="login" x:TypeArguments="vm:LoginViewModel" />
 </rxNav:NavigationShell>
