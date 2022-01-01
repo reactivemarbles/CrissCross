@@ -16,6 +16,7 @@ namespace CrissCross.WPF.Test.Views
             {
                 ViewModel ??= Locator.Current.GetService<MainViewModel>();
                 this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+                this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
             });
         }
     }

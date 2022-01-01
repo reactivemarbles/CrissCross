@@ -6,8 +6,6 @@ namespace CrissCross
     /// <summary>
     /// View Model Navigation EventArgs.
     /// </summary>
-    /// <seealso cref="AICS.Windows.ViewModelNavigationBaseEventArgs" />
-    /// <seealso cref="AICS.Windows.IViewModelNavigationEventArgs" />
     [DataContract]
     public class ViewModelNavigationEventArgs : ViewModelNavigationBaseEventArgs, IViewModelNavigationEventArgs
     {
@@ -29,6 +27,15 @@ namespace CrissCross
         }
 
         /// <summary>
+        /// Gets or sets the name of the host.
+        /// </summary>
+        /// <value>
+        /// The name of the host.
+        /// </value>
+        [DataMember]
+        public string HostName { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of the navigation.
         /// </summary>
         /// <value>The type of the navigation.</value>
@@ -41,14 +48,5 @@ namespace CrissCross
         /// <value>The view.</value>
         [DataMember]
         public IViewFor? View { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the host.
-        /// </summary>
-        /// <value>
-        /// The name of the host.
-        /// </value>
-        [DataMember]
-        public string HostName { get; set; }
     }
 }

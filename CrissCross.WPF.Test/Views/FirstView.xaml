@@ -13,9 +13,15 @@
     mc:Ignorable="d">
     <Grid>
         <TextBlock FontSize="36" Text="First View" />
-        <Button
-            x:Name="GotoMain"
-            Height="30"
-            Content="Goto Main" />
+        <StackPanel VerticalAlignment="Center">
+            <Button
+                x:Name="GotoMain"
+                Height="30"
+                Content="Goto Main" />
+            <Button
+                x:Name="GotoFirst"
+                Height="30"
+                Content="Goto First" />
+        </StackPanel>
     </Grid>
 </rxui:ReactiveUserControl>

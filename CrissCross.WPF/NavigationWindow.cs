@@ -15,15 +15,6 @@ namespace CrissCross.WPF
     public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivatableView
     {
         /// <summary>
-        /// The transition property
-        /// </summary>
-        public static readonly DependencyProperty TransitionProperty = DependencyProperty.Register(
-            nameof(Transition),
-            typeof(TransitionType),
-            typeof(NavigationWindow),
-            new PropertyMetadata(TransitionType.Fade));
-
-        /// <summary>
         /// The navigate back is enabled property
         /// </summary>
         public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
@@ -41,6 +32,15 @@ namespace CrissCross.WPF
             typeof(NavigationWindow));
 
         /// <summary>
+        /// The transition property
+        /// </summary>
+        public static readonly DependencyProperty TransitionProperty = DependencyProperty.Register(
+            nameof(Transition),
+            typeof(TransitionType),
+            typeof(NavigationWindow),
+            new PropertyMetadata(TransitionType.Fade));
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NavigationWindow"/> class.
         /// </summary>
         public NavigationWindow()
@@ -49,16 +49,12 @@ namespace CrissCross.WPF
         }
 
         /// <summary>
-        /// Gets or sets the transition.
+        /// Gets the can navigate back.
         /// </summary>
         /// <value>
-        /// The transition.
+        /// The can navigate back.
         /// </value>
-        public TransitionType Transition
-        {
-            get => (TransitionType)GetValue(TransitionProperty);
-            set => SetValue(TransitionProperty, value);
-        }
+        public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].
@@ -73,14 +69,6 @@ namespace CrissCross.WPF
         }
 
         /// <summary>
-        /// Gets the can navigate back.
-        /// </summary>
-        /// <value>
-        /// The can navigate back.
-        /// </value>
-        public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
-
-        /// <summary>
         /// Gets the navigation frame.
         /// </summary>
         /// <value>
@@ -92,6 +80,19 @@ namespace CrissCross.WPF
             private set => SetValue(NavigationFrameProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the transition.
+        /// </summary>
+        /// <value>
+        /// The transition.
+        /// </value>
+        public TransitionType Transition
+        {
+            get => (TransitionType)GetValue(TransitionProperty);
+            set => SetValue(TransitionProperty, value);
+        }
+
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

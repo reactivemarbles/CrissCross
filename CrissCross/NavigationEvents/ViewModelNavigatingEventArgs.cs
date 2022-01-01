@@ -6,8 +6,6 @@ namespace CrissCross
     /// <summary>
     /// View Model Navigating Event Args.
     /// </summary>
-    /// <seealso cref="AICS.Windows.ViewModelNavigationEventArgs" />
-    /// <seealso cref="AICS.Windows.IViewModelNavigatingEventArgs" />
     [DataContract]
     public class ViewModelNavigatingEventArgs : ViewModelNavigationEventArgs, IViewModelNavigatingEventArgs
     {

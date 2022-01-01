@@ -1,8 +1,8 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net5.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;MonoAndroid10.0;tizen40</TargetFrameworks>
-		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net461;net472;uap10.0.16299;netcoreapp3.1;net5.0-windows;net5.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;MonoAndroid11.0;tizen40;net6.0;net6.0-android;net6.0-ios;net6.0-tvos;net6.0-macos</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);net462;net472;uap10.0.16299</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
 		<PackageIcon>CrissCross.png</PackageIcon>
@@ -11,17 +11,22 @@
 		<RepositoryUrl>https://github.com/ChrisPulman/CrissCross</RepositoryUrl>
 		<Authors>Chris Pulman</Authors>
 		<Copyright>Chris Pulman</Copyright>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI" Version="14.*" />
+		<PackageReference Include="ReactiveUI" Version="17.*" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="Images\CrissCross.png">
-	    <Pack>True</Pack>
-	    <PackagePath></PackagePath>
-	  </None>
+		<Compile Update="**\*.cs" DependentUpon="I%(Filename).cs" />
+		<None Include="Images\CrissCross.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

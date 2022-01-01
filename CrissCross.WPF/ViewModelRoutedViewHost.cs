@@ -13,7 +13,6 @@ namespace CrissCross.WPF
     /// View Model Routed View Host.
     /// </summary>
     /// <seealso cref="RoutedViewHost" />
-    /// <seealso cref="AICS.Windows.Controls.IViewModelRoutedViewHost" />
     public class ViewModelRoutedViewHost : RoutedViewHost, IViewModelRoutedViewHost
     {
         /// <summary>
@@ -33,12 +32,12 @@ namespace CrissCross.WPF
 
         private readonly ISubject<bool> _canNavigateBackSubject = new Subject<bool>();
         private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
-        private IRxObject? _toViewModel;
         private IRxObject? __currentViewModel;
-        private bool _resetStack;
-        private bool _navigateBack;
-        private IViewFor? _lastView;
         private IViewFor? _currentView;
+        private IViewFor? _lastView;
+        private bool _navigateBack;
+        private bool _resetStack;
+        private IRxObject? _toViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.
@@ -48,7 +47,7 @@ namespace CrissCross.WPF
             ViewLocator = Locator.Current.GetService<IViewLocator>();
             CurrentViewModel.Subscribe(vm =>
             {
-                if (vm is IRxObject)
+                if (vm is IRxObject && !_navigateBack)
                 {
                     __currentViewModel = vm as IRxObject;
                     NavigationStack.Add(__currentViewModel?.GetType());
@@ -62,46 +61,6 @@ namespace CrissCross.WPF
                 CanNavigateBack = NavigationStack?.Count > 1;
                 _canNavigateBackSubject.OnNext(CanNavigateBack);
             });
-        }
-
-        /// <summary>
-        /// Gets the navigation stack.
-        /// </summary>
-        /// <value>
-        /// The navigation stack.
-        /// </value>
-        public ObservableCollection<Type?> NavigationStack { get; } = new();
-
-        /// <summary>
-        /// Gets the current view model.
-        /// </summary>
-        /// <value>
-        /// The current view model.
-        /// </value>
-        public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Publish().RefCount();
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [navigate back is enabled].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
-        /// </value>
-        public bool NavigateBackIsEnabled
-        {
-            get => (bool)GetValue(NavigateBackIsEnabledProperty);
-            set => SetValue(NavigateBackIsEnabledProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the name of the host.
-        /// </summary>
-        /// <value>
-        /// The name of the host.
-        /// </value>
-        public string HostName
-        {
-            get => (string)GetValue(HostNameProperty);
-            set => SetValue(HostNameProperty, value);
         }
 
         /// <summary>
@@ -122,8 +81,141 @@ namespace CrissCross.WPF
         /// </value>
         public IObservable<bool> CanNavigateBackObservable => _canNavigateBackSubject;
 
+        /// <summary>
+        /// Gets the current view model.
+        /// </summary>
+        /// <value>
+        /// The current view model.
+        /// </value>
+        public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Publish().RefCount();
+
+        /// <summary>
+        /// Gets or sets the name of the host.
+        /// </summary>
+        /// <value>
+        /// The name of the host.
+        /// </value>
+        public string HostName
+        {
+            get => (string)GetValue(HostNameProperty);
+            set => SetValue(HostNameProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [navigate back is enabled].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool NavigateBackIsEnabled
+        {
+            get => (bool)GetValue(NavigateBackIsEnabledProperty);
+            set => SetValue(NavigateBackIsEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// Gets the navigation stack.
+        /// </summary>
+        /// <value>
+        /// The navigation stack.
+        /// </value>
+        public ObservableCollection<Type?> NavigationStack { get; } = new();
+
+        /// <summary>
+        /// Gets a value indicating whether [requires setup].
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if [requires setup]; otherwise, <c>false</c>.
+        /// </value>
         public bool RequiresSetup => false;
 
+        /// <summary>
+        /// Clears the history.
+        /// </summary>
+        public void ClearHistory() => NavigationStack.Clear();
+
+        /// <summary>
+        /// Navigates the ViewModel contract.
+        /// </summary>
+        /// <typeparam name="T">The Type.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void Navigate<T>(string? contract = null, object? parameter = null)
+            where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
+
+        /// <summary>
+        /// Navigates and resets.
+        /// </summary>
+        /// <typeparam name="T">The Type.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void NavigateAndReset<T>(string? contract = null, object? parameter = null)
+            where T : class, IRxObject
+        {
+            _resetStack = true;
+            InternalNavigate<T>(contract, parameter);
+        }
+
+        /// <summary>
+        /// Navigates back.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        public void NavigateBack(object? parameter = null)
+        {
+            if (NavigateBackIsEnabled && CanNavigateBack && NavigationStack.Count > 1)
+            {
+                _navigateBack = true;
+
+                // Get the previous View
+                var count = NavigationStack.Count - 2;
+                _toViewModel = Locator.Current.GetService(NavigationStack[count]!) as IRxObject;
+
+                if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+                {
+                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
+                }
+                else
+                {
+                    ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
+                }
+            }
+
+            CanNavigateBack = NavigationStack.Count > 1;
+            _canNavigateBackSubject.OnNext(CanNavigateBack);
+        }
+
+        /// <inheritdoc />
+        public override void OnApplyTemplate()
+        {
+            Setup();
+            base.OnApplyTemplate();
+        }
+
+        /// <summary>
+        /// Refreshes this instance.
+        /// </summary>
+        public void Refresh()
+        {
+            // Keep existing view
+            if (Content == null && _currentView != null)
+            {
+                Content = _currentView;
+            }
+
+            if (!NavigateBackIsEnabled)
+            {
+                // cleanup while Navigation Back is disabled
+                while (NavigationStack.Count > 1)
+                {
+                    NavigationStack.RemoveAt(0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Setups this instance.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">Navigation Host Name not set</exception>
         public void Setup()
         {
             if (string.IsNullOrWhiteSpace(HostName))
@@ -154,9 +246,6 @@ namespace CrissCross.WPF
                     if (_navigateBack)
                     {
                         // Remove the current
-                        NavigationStack.RemoveAt(NavigationStack.Count - 1);
-
-                        // Remove the view we are navigating back too
                         NavigationStack.RemoveAt(NavigationStack.Count - 1);
                         if (_toViewModel != null)
                         {
@@ -201,53 +290,8 @@ namespace CrissCross.WPF
             });
         }
 
-        /// <inheritdoc />
-        public override void OnApplyTemplate()
+        private void InternalNavigate<T>(string? contract, object? parameter) where T : class, IRxObject
         {
-            Setup();
-            base.OnApplyTemplate();
-        }
-
-        /// <summary>
-        /// Clears the history.
-        /// </summary>
-        public void ClearHistory() => NavigationStack.Clear();
-
-        /// <summary>
-        /// Navigates the ViewModel contract.
-        /// </summary>
-        /// <typeparam name="T">The Type.</typeparam>
-        /// <param name="contract">The contract.</param>
-        /// <param name="parameter">The parameter.</param>
-        public void Navigate<T>(string? contract = null, object? parameter = null)
-            where T : class, IRxObject
-        {
-            _toViewModel = Locator.Current.GetService<T>(contract);
-            _lastView = _currentView;
-
-            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
-
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
-            {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter));
-            }
-            else
-            {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
-                ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
-            }
-        }
-
-        /// <summary>
-        /// Navigates and resets.
-        /// </summary>
-        /// <typeparam name="T">The Type.</typeparam>
-        /// <param name="contract">The contract.</param>
-        /// <param name="parameter">The parameter.</param>
-        public void NavigateAndReset<T>(string? contract = null, object? parameter = null)
-            where T : class, IRxObject
-        {
-            _resetStack = true;
             _toViewModel = Locator.Current.GetService<T>(contract);
             _lastView = _currentView;
 
@@ -262,56 +306,6 @@ namespace CrissCross.WPF
             {
                 var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
-            }
-        }
-
-        /// <summary>
-        /// Navigates back.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        public void NavigateBack(object? parameter = null)
-        {
-            if (NavigateBackIsEnabled && CanNavigateBack && NavigationStack.Count > 1)
-            {
-                _navigateBack = true;
-
-                // Get the previous View
-                var count = NavigationStack.Count;
-                var vm = Locator.Current.GetService(NavigationStack[count + 2]!);
-                _toViewModel = vm as IRxObject;
-
-                if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
-                {
-                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
-                }
-                else
-                {
-                    ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
-                }
-            }
-
-            CanNavigateBack = NavigationStack.Count > 1;
-            _canNavigateBackSubject.OnNext(CanNavigateBack);
-        }
-
-        /// <summary>
-        /// Refreshes this instance.
-        /// </summary>
-        public void Refresh()
-        {
-            // Keep existing view
-            if (Content == null && _currentView != null)
-            {
-                Content = _currentView;
-            }
-
-            if (!NavigateBackIsEnabled)
-            {
-                // cleanup while Navigation Back is disabled
-                while (NavigationStack.Count > 1)
-                {
-                    NavigationStack.RemoveAt(0);
-                }
             }
         }
     }

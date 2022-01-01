@@ -11,6 +11,12 @@
     Width="800"
     Height="450"
     x:TypeArguments="local:MainWindowViewModel"
+    Style="{DynamicResource NavigationWindowStyle}"
     mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <Button
+            x:Name="NavBack"
+            Height="30"
+            Content="Back" />
+    </Grid>
 </rxNav:NavigationWindow>

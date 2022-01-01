@@ -5,6 +5,12 @@ using Splat;
 
 namespace CrissCross.WPF
 {
+    /// <summary>
+    /// Navigation Window.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
+    /// <seealso cref="CrissCross.WPF.NavigationWindow" />
+    /// <seealso cref="ReactiveUI.IViewFor&lt;TViewModel&gt;" />
     public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewModel>
         where TViewModel : class, IRxObject, new()
     {

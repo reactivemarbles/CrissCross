@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using System.Reactive.Disposables;
 
 namespace CrissCross.WPF.Test
 {
@@ -13,6 +14,7 @@ namespace CrissCross.WPF.Test
             this.WhenActivated(d =>
             {
                 this.NavigateToView<MainViewModel>();
+                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack).DisposeWith(d);
             });
         }
     }

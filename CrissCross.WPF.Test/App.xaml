@@ -6,7 +6,7 @@
     xmlns:rxNav="https://github.com/ChrisPulman/CrissCross"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style x:Key="NavigationWindowStyle1" TargetType="{x:Type rxNav:NavigationWindow}">
+        <Style x:Key="NavigationWindowStyle" TargetType="{x:Type rxNav:NavigationWindow}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type rxNav:NavigationWindow}">

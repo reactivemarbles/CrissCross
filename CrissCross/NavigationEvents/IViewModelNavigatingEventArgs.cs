@@ -3,7 +3,6 @@
     /// <summary>
     /// IView Model Navigating EventArgs.
     /// </summary>
-    /// <seealso cref="AICS.Windows.IViewModelNavigationEventArgs" />
     public interface IViewModelNavigatingEventArgs : IViewModelNavigationEventArgs
     {
         /// <summary>

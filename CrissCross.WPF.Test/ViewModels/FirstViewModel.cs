@@ -1,5 +1,4 @@
 ﻿using ReactiveUI;
-using Splat;
 using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
@@ -16,9 +15,16 @@ namespace CrissCross.WPF.Test
                 this.NavigateToView<MainViewModel>("mainWindow");
                 this.NavigateToView<FirstViewModel>("secondWindow");
             });
+
+            GotoFirst = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView<MainViewModel>("secondWindow");
+                this.NavigateToView<FirstViewModel>("mainWindow");
+            });
         }
 
         public ICommand GotoMain { get; }
+        public ICommand GotoFirst { get; }
 
         public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
         {

@@ -85,14 +85,17 @@ namespace CrissCross
             }
         }
 
+        /// <inheritdoc/>
         public virtual void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
         {
         }
 
+        /// <inheritdoc/>
         public virtual void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
         {
         }
 
+        /// <inheritdoc/>
         public virtual void WhenNavigating(IViewModelNavigatingEventArgs e)
         {
         }

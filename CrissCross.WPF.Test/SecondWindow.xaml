@@ -10,7 +10,7 @@
     Title="SecondWindow"
     Width="800"
     Height="450"
-    Style="{DynamicResource NavigationWindowStyle1}"
+    Style="{DynamicResource NavigationWindowStyle}"
     mc:Ignorable="d">
     <Grid>
         <Button
