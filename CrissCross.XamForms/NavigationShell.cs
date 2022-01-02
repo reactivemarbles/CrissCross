@@ -65,7 +65,7 @@ namespace CrissCross
         public NavigationShell()
         {
             ViewLocator = Locator.Current.GetService<IViewLocator>();
-            CurrentViewModel.Subscribe(vm =>
+            CurrentViewModel.ObserveOn(RxApp.MainThreadScheduler).Subscribe(vm =>
             {
                 if (vm is IRxObject && !_navigateBack)
                 {
@@ -169,24 +169,7 @@ namespace CrissCross
         /// <param name="contract">The contract.</param>
         /// <param name="parameter">The parameter.</param>
         public void Navigate<T>(string? contract = null, object? parameter = null)
-            where T : class, IRxObject
-        {
-            _userInstigated = true;
-            _toViewModel = Locator.Current.GetService<T>(contract);
-            _lastView = _currentView;
-
-            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
-
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
-            {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
-            }
-            else
-            {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
-                ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
-            }
-        }
+            where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
         /// <summary>
         /// Navigates and resets.
@@ -197,23 +180,8 @@ namespace CrissCross
         public void NavigateAndReset<T>(string? contract = null, object? parameter = null)
             where T : class, IRxObject
         {
-            _userInstigated = true;
             _resetStack = true;
-            _toViewModel = Locator.Current.GetService<T>(contract);
-            _lastView = _currentView;
-
-            // NOTE: This gets a new instance of the View
-            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
-
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
-            {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
-            }
-            else
-            {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
-                ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
-            }
+            InternalNavigate<T>(contract, parameter);
         }
 
         /// <summary>
@@ -299,6 +267,8 @@ namespace CrissCross
                     // Cancel navigate back
                     e.Cancel();
                 }
+
+                _canNavigateBackSubject.OnNext(CanNavigateBack);
             });
 
             navigatedEvent
@@ -308,18 +278,19 @@ namespace CrissCross
                     try
                     {
                         var f = e.Current.Location.OriginalString;
+                        Debug.WriteLine($"Current {f}");
                         if (e.Previous != null)
                         {
                             var s = e.Previous.Location.OriginalString;
+                            Debug.WriteLine($"Previous {s}");
                         }
-
                         if ((e.Source == ShellNavigationSource.Pop || e.Source == ShellNavigationSource.PopToRoot) && NavigationStack.Count > 1)
                         {
                             // Navigating back
                             if (!_userInstigated)
                             {
                                 NavigationStack.RemoveAt(NavigationStack.Count - 1);
-                                Debug.WriteLine(NavigationStack.Count);
+                                Debug.WriteLine($"Navigation Stack: {NavigationStack.Count}");
                             }
                         }
 
@@ -341,7 +312,7 @@ namespace CrissCross
                             if (navigatingForward && page.ViewModel is IRxObject)
                             {
                                 NavigationStack.Add(page.ViewModel.GetType());
-                                Debug.WriteLine(NavigationStack.Count);
+                                Debug.WriteLine($"Navigation Stack: {NavigationStack.Count}");
                             }
                         }
                     }
@@ -447,7 +418,8 @@ namespace CrissCross
             {
                 animated = false;
             }
-
+            //Device.BeginInvokeOnMainThread(() =>
+            //    {
             if (_popToRootPending && Navigation.NavigationStack.Count > 0)
             {
                 await Navigation.PopToRootAsync(animated);
@@ -456,12 +428,32 @@ namespace CrissCross
             {
                 await Navigation.PushAsync(page, animated);
             }
-
+            //});
             _popToRootPending = false;
             if (CurrentPage is IViewFor p && __currentViewModel is not null)
             {
                 // don't replace view model if vm is null
                 p.ViewModel = __currentViewModel;
+            }
+        }
+
+        private void InternalNavigate<T>(string? contract, object? parameter) where T : class, IRxObject
+        {
+            _userInstigated = true;
+            _toViewModel = Locator.Current.GetService<T>(contract);
+            _lastView = _currentView;
+
+            // NOTE: This gets a new instance of the View
+            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+
+            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            {
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
+            }
+            else
+            {
+                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
+                ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
             }
         }
     }

@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ReactiveUI.Fody" Version="17.*" />
+		<PackageReference Include="ReactiveUI.XamForms" Version="17.*" />
 		<PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
 	</ItemGroup>
 

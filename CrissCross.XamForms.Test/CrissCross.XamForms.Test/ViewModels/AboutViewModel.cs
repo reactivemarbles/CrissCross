@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using System;
 using System.Windows.Input;
 using Xamarin.Essentials;
 
@@ -9,9 +10,14 @@ namespace CrissCross.XamForms.Test.ViewModels
         public AboutViewModel()
         {
             Title = "About";
-            OpenWebCommand = ReactiveCommand.CreateFromTask(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
+            this.WhenSetup().Subscribe(_ =>
+            {
+                OpenWebCommand = ReactiveCommand.CreateFromTask(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
+                NavigateBack = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
+            });
         }
 
-        public ICommand OpenWebCommand { get; }
+        public ICommand NavigateBack { get; private set; }
+        public ICommand OpenWebCommand { get; private set; }
     }
 }

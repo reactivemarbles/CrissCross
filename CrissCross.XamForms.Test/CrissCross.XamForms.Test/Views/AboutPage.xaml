@@ -65,6 +65,7 @@
                     Command="{Binding OpenWebCommand}"
                     Text="Learn more"
                     TextColor="White" />
+                <Button x:Name="btnBack" Text="Back" />
             </StackLayout>
         </ScrollView>
     </Grid>

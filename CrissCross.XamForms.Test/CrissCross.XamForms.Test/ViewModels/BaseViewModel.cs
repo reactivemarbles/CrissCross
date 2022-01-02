@@ -1,5 +1,4 @@
-﻿using CrissCross;
-using CrissCross.XamForms.Test.Models;
+﻿using CrissCross.XamForms.Test.Models;
 using CrissCross.XamForms.Test.Services;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -17,12 +18,64 @@ namespace CrissCross
     /// </summary>
     public static class ViewModelRoutedViewHostMixins
     {
+        internal static Subject<Unit> ASetupCompleted { get; } = new();
         internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = new();
-        internal static Dictionary<string, IViewModelRoutedViewHost> NavigationHost { get; } = new Dictionary<string, IViewModelRoutedViewHost>();
+        internal static Dictionary<string, IViewModelRoutedViewHost> NavigationHost { get; } = new();
         internal static Dictionary<string, Subject<IViewModelNavigatingEventArgs>> ResultNavigating { get; } = new();
         internal static Subject<IViewModelNavigationEventArgs> SetWhenNavigated { get; } = new();
-
         internal static Subject<IViewModelNavigatingEventArgs> SetWhenNavigating { get; } = new();
+        internal static Dictionary<string, ReplaySubject<bool>> WhenSetupSubjects { get; } = new();
+
+        /// <summary>
+        /// Determines whether this instance [can navigate back] the specified this.
+        /// </summary>
+        /// <param name="this">The this.</param>
+        /// <returns></returns>
+        public static IObservable<bool> CanNavigateBack(this IUseNavigation @this)
+        {
+            if (NavigationHost.Count > 0 && @this.Name != null)
+            {
+                if (@this.Name.Length == 0)
+                {
+                    return NavigationHost.First().Value.CanNavigateBackObservable;
+                }
+                else
+                {
+                    if (NavigationHost.ContainsKey(@this.Name))
+                    {
+                        return NavigationHost[@this.Name].CanNavigateBackObservable;
+                    }
+                }
+            }
+
+            return Observable.Empty<bool>();
+        }
+
+        /// <summary>
+        /// Determines whether this instance [can navigate back] the specified host name.
+        /// </summary>
+        /// <param name="_">The .</param>
+        /// <param name="hostName">Name of the host.</param>
+        /// <returns></returns>
+        public static IObservable<bool> CanNavigateBack(this IUseHostedNavigation _, string hostName = "")
+        {
+            if (NavigationHost.Count > 0 && hostName != null)
+            {
+                if (hostName.Length == 0)
+                {
+                    return NavigationHost.First().Value.CanNavigateBackObservable;
+                }
+                else
+                {
+                    if (NavigationHost.ContainsKey(hostName))
+                    {
+                        return NavigationHost[hostName].CanNavigateBackObservable;
+                    }
+                }
+            }
+
+            return Observable.Empty<bool>();
+        }
 
         /// <summary>
         /// Clears the history.
@@ -87,7 +140,7 @@ namespace CrissCross
         }
 
         /// <summary>
-        /// Navigates the back.
+        /// Navigates backwards.
         /// </summary>
         /// <param name="_">The dummy.</param>
         /// <param name="hostName">Name of the host.</param>
@@ -225,6 +278,7 @@ namespace CrissCross
                 return;
             }
 
+            WhenSetupSubjects.Add(@this.Name, new(1));
             NavigationHost.Add(@this.Name, viewHost);
             CurrentViewDisposable.Add(@this.Name, new CompositeDisposable());
             ResultNavigating.Add(@this.Name, new Subject<IViewModelNavigatingEventArgs>());
@@ -233,6 +287,8 @@ namespace CrissCross
             {
                 viewHost.Setup();
             }
+            ASetupCompleted.OnNext(Unit.Default);
+            WhenSetupSubjects[@this.Name].OnNext(true);
         }
 
         /// <summary>
@@ -298,6 +354,69 @@ namespace CrissCross
                     ResultNavigating[ea.HostName].OnNext(ea);
                 }
             }).DisposeWith(@this.CleanUp);
+        }
+
+        /// <summary>
+        /// Whens the activated.
+        /// </summary>
+        /// <param name="this">The this.</param>
+        /// <returns></returns>
+        public static IObservable<bool> WhenSetup(this IUseNavigation @this)
+        {
+            return Observable.Create<bool>(obs =>
+             {
+                 var dis = new CompositeDisposable();
+                 ASetupCompleted.Subscribe(_ =>
+                  {
+                      if (WhenSetupSubjects.Count > 0 && @this.Name != null)
+                      {
+                          if (@this.Name.Length == 0)
+                          {
+                              WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
+                          }
+                          else
+                          {
+                              if (NavigationHost.ContainsKey(@this.Name))
+                              {
+                                  WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                              }
+                          }
+                      }
+                  }).DisposeWith(dis);
+                 return dis;
+             });
+        }
+
+        /// <summary>
+        /// Whens the activated.
+        /// </summary>
+        /// <param name="_">The .</param>
+        /// <param name="hostName">Name of the host.</param>
+        /// <returns></returns>
+        public static IObservable<bool> WhenSetup(this IUseHostedNavigation _, string? hostName = "")
+        {
+            return Observable.Create<bool>(obs =>
+             {
+                 var dis = new CompositeDisposable();
+                 ASetupCompleted.Subscribe(_ =>
+                  {
+                      if (WhenSetupSubjects.Count > 0)
+                      {
+                          if (hostName?.Length > 0)
+                          {
+                              if (NavigationHost.ContainsKey(hostName))
+                              {
+                                  WhenSetupSubjects[hostName].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                              }
+                          }
+                          else
+                          {
+                              WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
+                          }
+                      }
+                  }).DisposeWith(dis);
+                 return dis;
+             });
         }
     }
 }
