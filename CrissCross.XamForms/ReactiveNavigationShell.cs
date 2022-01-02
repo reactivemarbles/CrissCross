@@ -13,13 +13,15 @@ using System.Diagnostics;
 namespace CrissCross
 {
     /// <summary>
-    /// Navigation Shell.
+    /// Reactive Navigation Shell.
     /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     /// <seealso cref="Xamarin.Forms.Shell" />
     /// <seealso cref="CrissCross.ISetNavigation" />
     /// <seealso cref="CrissCross.IViewModelRoutedViewHost" />
     /// <seealso cref="CrissCross.IUseNavigation" />
-    public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation
+    public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation
+        where TViewModel : class, IRxObject
     {
         /// <summary>
         /// The navigate back is enabled property.
@@ -27,7 +29,7 @@ namespace CrissCross
         public static readonly BindableProperty CanNavigateBackProperty = BindableProperty.Create(
             nameof(CanNavigateBack),
             typeof(bool),
-            typeof(NavigationShell),
+            typeof(ReactiveNavigationShell<TViewModel>),
             false);
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace CrissCross
         public static readonly BindableProperty NameProperty = BindableProperty.Create(
             nameof(Name),
             typeof(string),
-            typeof(NavigationShell),
+            typeof(ReactiveNavigationShell<TViewModel>),
             string.Empty,
             BindingMode.Default,
             propertyChanged: NameChanged);
@@ -47,7 +49,7 @@ namespace CrissCross
         public static readonly BindableProperty NavigateBackIsEnabledProperty = BindableProperty.Create(
             nameof(NavigateBackIsEnabled),
             typeof(bool),
-            typeof(NavigationShell),
+            typeof(ReactiveNavigationShell<TViewModel>),
             true);
 
         private readonly ISubject<bool> _canNavigateBackSubject = new Subject<bool>();
@@ -62,9 +64,9 @@ namespace CrissCross
         private bool _userInstigated;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NavigationShell"/> class.
+        /// Initializes a new instance of the <see cref="ReactiveNavigationShell<TViewModel>"/> class.
         /// </summary>
-        public NavigationShell()
+        public ReactiveNavigationShell()
         {
             ViewLocator = Locator.Current.GetService<IViewLocator>();
             CurrentViewModel.ObserveOn(RxApp.MainThreadScheduler).Subscribe(vm =>
@@ -405,7 +407,7 @@ namespace CrissCross
 
         private static void NameChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            if (bindable is NavigationShell ns)
+            if (bindable is ReactiveNavigationShell<TViewModel> ns)
             {
                 ns.SetMainNavigationHost(ns);
             }
@@ -420,8 +422,7 @@ namespace CrissCross
             {
                 animated = false;
             }
-            //Device.BeginInvokeOnMainThread(() =>
-            //    {
+
             if (_popToRootPending && Navigation.NavigationStack.Count > 0)
             {
                 await Navigation.PopToRootAsync(animated);
@@ -430,7 +431,7 @@ namespace CrissCross
             {
                 await Navigation.PushAsync(page, animated);
             }
-            //});
+
             _popToRootPending = false;
             if (CurrentPage is IViewFor p && __currentViewModel is not null)
             {
