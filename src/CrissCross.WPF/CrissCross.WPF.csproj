@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net7.0-windows10.0.17763.0</TargetFrameworks>
+		<UseWpf>true</UseWpf>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest</AnalysisLevel>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ReactiveUI.WPF" Version="18.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
+	</ItemGroup>
+
+</Project>

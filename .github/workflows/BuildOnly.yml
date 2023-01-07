@@ -1,0 +1,78 @@
+name: CrisCross CI-BuildOnly
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci-build-and-test:
+
+    runs-on: windows-2022
+    outputs:
+      nbgv: ${{ steps.nbgv.outputs.SemVer2 }}
+    steps:
+    - name: Get Current Visual Studio Information
+      shell: bash
+      run: |
+        dotnet tool update -g dotnet-vs
+        echo "-- About RELEASE --"
+        vs where release
+
+    - name: Update Visual Studio Latest Release
+      shell: bash
+      run: |
+        echo "-- Update RELEASE --"
+        vs update release Enterprise
+        vs modify release Enterprise +mobile +desktop +uwp +web
+        echo "-- About RELEASE Updated --"
+        vs where release
+        
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+       fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: |
+            6.0.x
+            7.0.x
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.1.3
+      with:
+        vs-prerelease: true
+
+    - name: NBGV
+      id: nbgv
+      uses: dotnet/nbgv@master
+      with:
+        setAllVars: true
+    - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
+
+    - name: NuGet Restore
+      run: dotnet restore CrissCross.sln
+      working-directory: src
+
+    - name: Build
+      run: msbuild /t:build,pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release CrissCross.sln
+      working-directory: src
+
+    - name: Run Unit Tests and Generate Coverage
+      uses: glennawatson/coverlet-msbuild@v2.1
+      with:
+        project-files: 'src/**/*Tests*.csproj'
+        no-build: true
+        include-filter: 'CrissCross*'
+        output-format: cobertura
+        configuration: Release
+
+    - name: Upload Code Coverage
+      uses: codecov/codecov-action@v3
+
+    - name: Create NuGet Artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: nuget
+        path: '**/*.nupkg'
