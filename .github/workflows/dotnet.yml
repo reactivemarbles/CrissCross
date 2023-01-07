@@ -1,4 +1,4 @@
-name: MQTTnet.Rx.SerialPort CI-Build
+name: CrisCross CI-Build
 
 on:
   push:
@@ -52,11 +52,11 @@ jobs:
     - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
 
     - name: NuGet Restore
-      run: dotnet restore MQTTnet.Rx.SerialPort.sln
+      run: dotnet restore CrisCross.sln
       working-directory: src
 
     - name: Build
-      run: msbuild /t:build,pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release MQTTnet.Rx.SerialPort.sln
+      run: msbuild /t:build,pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release CrisCross.sln
       working-directory: src
 
     - name: Create NuGet Artifacts
