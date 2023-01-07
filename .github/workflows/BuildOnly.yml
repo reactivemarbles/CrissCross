@@ -1,4 +1,4 @@
-name: CrisCross CI-BuildOnly
+name: CrissCross CI-BuildOnly
 
 on:
   pull_request:

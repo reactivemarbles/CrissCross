@@ -1,4 +1,4 @@
-name: CrisCross CI-Build
+name: CrissCross CI-Build
 
 on:
   push:
@@ -52,11 +52,11 @@ jobs:
     - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
 
     - name: NuGet Restore
-      run: dotnet restore CrisCross.sln
+      run: dotnet restore CrissCross.sln
       working-directory: src
 
     - name: Build
-      run: msbuild /t:build,pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release CrisCross.sln
+      run: msbuild /t:build,pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release CrissCross.sln
       working-directory: src
 
     - name: Create NuGet Artifacts
