@@ -39,6 +39,11 @@ jobs:
             6.0.x
             7.0.x
 
+    - name: Install DotNet workloads
+      shell: bash
+      run: |
+        dotnet workload install android ios tvos macos maui maccatalyst
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.1.3
       with:
