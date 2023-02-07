@@ -42,12 +42,12 @@ namespace CrissCross
         public string? Name => GetType().FullName;
 
         /// <summary>
-        /// Gets the host screen.
+        /// Gets or sets the host screen.
         /// </summary>
         /// <value>
         /// The host screen.
         /// </value>
-        public IScreen HostScreen { get; protected set; }
+        public IScreen? HostScreen { get; protected set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is disposed.

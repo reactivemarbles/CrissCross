@@ -7,8 +7,15 @@ using Splat;
 
 namespace CrissCross.XamForms.Test.Views
 {
+    /// <summary>
+    /// ItemsPage.
+    /// </summary>
+    /// <seealso cref="ReactiveUI.XamForms.ReactiveContentPage&lt;CrissCross.XamForms.Test.ViewModels.ItemsViewModel&gt;" />
     public partial class ItemsPage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemsPage"/> class.
+        /// </summary>
         public ItemsPage()
         {
             InitializeComponent();

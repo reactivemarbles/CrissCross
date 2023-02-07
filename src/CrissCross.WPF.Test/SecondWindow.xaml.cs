@@ -11,6 +11,9 @@ namespace CrissCross.WPF.Test
     /// </summary>
     public partial class SecondWindow : IUseNavigation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SecondWindow"/> class.
+        /// </summary>
         public SecondWindow()
         {
             InitializeComponent();

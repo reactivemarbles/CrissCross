@@ -6,8 +6,14 @@ using Splat;
 
 namespace CrissCross.XamForms.Test.Views
 {
+    /// <summary>
+    /// ItemDetailPage.
+    /// </summary>
     public partial class ItemDetailPage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemDetailPage"/> class.
+        /// </summary>
         public ItemDetailPage()
         {
             InitializeComponent();

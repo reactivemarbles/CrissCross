@@ -4,29 +4,59 @@
 using System;
 using System.Reactive;
 using System.Reactive.Linq;
-using CrissCross;
 using CrissCross.XamForms.Test.Models;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace CrissCross.XamForms.Test.ViewModels
 {
+    /// <summary>
+    /// NewItemViewModel.
+    /// </summary>
+    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
     public class NewItemViewModel : BaseViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NewItemViewModel"/> class.
+        /// </summary>
         public NewItemViewModel()
         {
             SaveCommand = ReactiveCommand.Create(OnSave, ValidateSave());
             CancelCommand = ReactiveCommand.Create(OnCancel);
         }
 
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
         [Reactive]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
         [Reactive]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
+        /// <summary>
+        /// Gets the save command.
+        /// </summary>
+        /// <value>
+        /// The save command.
+        /// </value>
         public ReactiveCommand<Unit, Unit> SaveCommand { get; }
 
+        /// <summary>
+        /// Gets the cancel command.
+        /// </summary>
+        /// <value>
+        /// The cancel command.
+        /// </value>
         public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
         private void OnCancel()
@@ -36,16 +66,16 @@ namespace CrissCross.XamForms.Test.ViewModels
 
         private IObservable<bool> ValidateSave()
         {
-            return this.WhenAnyValue(vm => vm.Text, vm => vm.Description).Select(x => !String.IsNullOrWhiteSpace(x.Item1) && !String.IsNullOrWhiteSpace(x.Item2));
+            return this.WhenAnyValue(vm => vm.Text, vm => vm.Description).Select(x => !string.IsNullOrWhiteSpace(x.Item1) && !string.IsNullOrWhiteSpace(x.Item2));
         }
 
         private async void OnSave()
         {
-            Item newItem = new Item()
+            var newItem = new Item()
             {
                 Id = Guid.NewGuid().ToString(),
-                Text = Text,
-                Description = Description
+                Text = Text!,
+                Description = Description!
             };
 
             await DataStore.AddItemAsync(newItem);

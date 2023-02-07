@@ -12,6 +12,9 @@ namespace CrissCross.WPF.Test.Views
     /// </summary>
     public partial class MainView
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainView"/> class.
+        /// </summary>
         public MainView()
         {
             InitializeComponent();

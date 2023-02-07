@@ -57,6 +57,11 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
         {
+            if (e is null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
             base.WhenNavigatedTo(e, disposables);
         }
@@ -68,6 +73,11 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
         {
+            if (e is null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
             base.WhenNavigatedFrom(e);
         }
@@ -79,6 +89,11 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigating(IViewModelNavigatingEventArgs e)
         {
+            if (e is null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
             base.WhenNavigating(e);
         }

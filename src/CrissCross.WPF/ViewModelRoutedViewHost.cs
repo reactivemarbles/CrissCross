@@ -147,6 +147,15 @@ namespace CrissCross.WPF
             where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
         /// <summary>
+        /// Navigates the ViewModel contract.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
+            => InternalNavigate(viewModel, contract, parameter);
+
+        /// <summary>
         /// Navigates and resets.
         /// </summary>
         /// <typeparam name="T">The Type.</typeparam>
@@ -157,6 +166,18 @@ namespace CrissCross.WPF
         {
             _resetStack = true;
             InternalNavigate<T>(contract, parameter);
+        }
+
+        /// <summary>
+        /// Navigates the and reset.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
+        {
+            _resetStack = true;
+            InternalNavigate(viewModel, contract, parameter);
         }
 
         /// <summary>
@@ -238,7 +259,7 @@ namespace CrissCross.WPF
 
                 if (!e.Cancel)
                 {
-                    ViewModelNavigationEventArgs nea = new(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
+                    var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
                     var toView = e.View as INotifiyNavigation;
                     var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
                     var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
@@ -293,9 +314,29 @@ namespace CrissCross.WPF
             });
         }
 
-        private void InternalNavigate<T>(string? contract, object? parameter) where T : class, IRxObject
+        private void InternalNavigate<T>(string? contract, object? parameter)
+            where T : class, IRxObject
         {
             _toViewModel = Locator.Current.GetService<T>(contract);
+            _lastView = _currentView;
+
+            // NOTE: This gets a new instance of the View
+            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+
+            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            {
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter));
+            }
+            else
+            {
+                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+                ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            }
+        }
+
+        private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
+        {
+            _toViewModel = viewModel;
             _lastView = _currentView;
 
             // NOTE: This gets a new instance of the View

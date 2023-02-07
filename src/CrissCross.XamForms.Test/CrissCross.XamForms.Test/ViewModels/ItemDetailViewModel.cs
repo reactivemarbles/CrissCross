@@ -11,35 +11,64 @@ using Xamarin.Forms;
 
 namespace CrissCross.XamForms.Test.ViewModels
 {
+    /// <summary>
+    /// ItemDetailViewModel.
+    /// </summary>
+    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
-        private string itemId;
+        private string? _itemId;
 
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
         [Reactive]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
         [Reactive]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
         [Reactive]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string ItemId
+        /// <summary>
+        /// Gets or sets the item identifier.
+        /// </summary>
+        /// <value>
+        /// The item identifier.
+        /// </value>
+        public string? ItemId
         {
-            get
-            {
-                return itemId;
-            }
+            get => _itemId;
 
             set
             {
-                this.RaiseAndSetIfChanged(ref itemId, value);
+                this.RaiseAndSetIfChanged(ref _itemId, value);
                 LoadItemId(value);
             }
         }
 
-        public async void LoadItemId(string itemId)
+        /// <summary>
+        /// Loads the item identifier.
+        /// </summary>
+        /// <param name="itemId">The item identifier.</param>
+        public async void LoadItemId(string? itemId)
         {
             try
             {
@@ -54,9 +83,20 @@ namespace CrissCross.XamForms.Test.ViewModels
             }
         }
 
+        /// <summary>
+        /// WhenNavigatedTo.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="disposables"></param>
+        /// <inheritdoc />
         public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
         {
-            ItemId = (string)e.NavigationParameter;
+            if (e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
+            ItemId = (string?)e.NavigationParameter;
         }
     }
 }
