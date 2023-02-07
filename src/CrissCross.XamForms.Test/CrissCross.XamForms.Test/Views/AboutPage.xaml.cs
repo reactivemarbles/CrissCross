@@ -6,8 +6,14 @@ using ReactiveUI;
 
 namespace CrissCross.XamForms.Test.Views
 {
+    /// <summary>
+    /// AboutPage.
+    /// </summary>
     public partial class AboutPage
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AboutPage"/> class.
+        /// </summary>
         public AboutPage()
         {
             InitializeComponent();

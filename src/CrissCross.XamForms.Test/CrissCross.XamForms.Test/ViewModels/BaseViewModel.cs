@@ -8,14 +8,36 @@ using Xamarin.Forms;
 
 namespace CrissCross.XamForms.Test.ViewModels
 {
+    /// <summary>
+    /// BaseViewModel.
+    /// </summary>
+    /// <seealso cref="CrissCross.RxObject" />
     public class BaseViewModel : RxObject
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        /// <summary>
+        /// Gets the data store.
+        /// </summary>
+        /// <value>
+        /// The data store.
+        /// </value>
+        public static IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is busy.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is busy; otherwise, <c>false</c>.
+        /// </value>
         [Reactive]
         public bool IsBusy { get; set; }
 
+        /// <summary>
+        /// Gets or sets the title.
+        /// </summary>
+        /// <value>
+        /// The title.
+        /// </value>
         [Reactive]
-        public string Title { get; set; }
+        public string? Title { get; set; }
     }
 }

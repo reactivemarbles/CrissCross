@@ -1,17 +1,24 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using CrissCross.XamForms.Test.Services;
 using CrissCross.XamForms.Test.ViewModels;
 using CrissCross.XamForms.Test.Views;
-using CrissCross.XamForms.Test.Services;
 using ReactiveUI;
 using Splat;
 using Xamarin.Forms;
 
 namespace CrissCross.XamForms.Test
 {
+    /// <summary>
+    /// App.
+    /// </summary>
+    /// <seealso cref="Xamarin.Forms.Application" />
     public partial class App : Application
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="App"/> class.
+        /// </summary>
         public App()
         {
             InitializeComponent();
@@ -32,14 +39,32 @@ namespace CrissCross.XamForms.Test
             MainPage = new AppShell();
         }
 
+        /// <summary>
+        /// Application developers override this method to perform actions when the application starts.
+        /// </summary>
+        /// <remarks>
+        /// To be added.
+        /// </remarks>
         protected override void OnStart()
         {
         }
 
+        /// <summary>
+        /// Application developers override this method to perform actions when the application enters the sleeping state.
+        /// </summary>
+        /// <remarks>
+        /// To be added.
+        /// </remarks>
         protected override void OnSleep()
         {
         }
 
+        /// <summary>
+        /// Application developers override this method to perform actions when the application resumes from a sleeping state.
+        /// </summary>
+        /// <remarks>
+        /// To be added.
+        /// </remarks>
         protected override void OnResume()
         {
         }

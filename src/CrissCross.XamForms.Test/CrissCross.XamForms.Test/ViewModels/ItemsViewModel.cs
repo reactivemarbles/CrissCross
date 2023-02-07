@@ -6,13 +6,16 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
-using CrissCross;
 using CrissCross.XamForms.Test.Models;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace CrissCross.XamForms.Test.ViewModels
 {
+    /// <summary>
+    /// ItemsViewModel.
+    /// </summary>
+    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
     public class ItemsViewModel : BaseViewModel
     {
         /// <summary>
@@ -69,7 +72,7 @@ namespace CrissCross.XamForms.Test.ViewModels
         /// The selected item.
         /// </value>
         [Reactive]
-        public Item SelectedItem { get; set; }
+        public Item? SelectedItem { get; set; }
 
         /// <summary>
         /// Called when [appearing].
@@ -103,10 +106,7 @@ namespace CrissCross.XamForms.Test.ViewModels
             }
         }
 
-        private void OnAddItem(object obj)
-        {
-            this.NavigateToView<NewItemViewModel>();
-        }
+        private void OnAddItem(object obj) => this.NavigateToView<NewItemViewModel>();
 
         private void OnItemSelected(Item item)
         {

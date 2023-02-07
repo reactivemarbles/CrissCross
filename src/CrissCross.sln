@@ -15,6 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.XamForms.Test", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionSettings", "SolutionSettings", "{9E46C77C-6C76-4485-A868-1EAE571C68E7}"
 	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
 		..\.github\workflows\BuildOnly.yml = ..\.github\workflows\BuildOnly.yml
 		..\Directory.Build.props = ..\Directory.Build.props
 		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml

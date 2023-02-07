@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using CrissCross.XamForms.Test.ViewModels;
 using CrissCross.XamForms.Test.Models;
+using CrissCross.XamForms.Test.ViewModels;
 using Splat;
 
 namespace CrissCross.XamForms.Test.Views
@@ -10,7 +10,6 @@ namespace CrissCross.XamForms.Test.Views
     /// <summary>
     /// NewItemPage.
     /// </summary>
-    /// <seealso cref="ReactiveUI.XamForms.ReactiveContentPage&lt;CrissCross.XamForms.Test.ViewModels.NewItemViewModel&gt;" />
     public partial class NewItemPage
     {
         /// <summary>
@@ -28,6 +27,6 @@ namespace CrissCross.XamForms.Test.Views
         /// <value>
         /// The item.
         /// </value>
-        public Item Item { get; set; }
+        public Item? Item { get; set; }
     }
 }

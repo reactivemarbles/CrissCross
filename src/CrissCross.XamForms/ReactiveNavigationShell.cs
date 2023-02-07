@@ -67,7 +67,7 @@ namespace CrissCross
         private bool _userInstigated;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReactiveNavigationShell.<TViewModel>"/> class.
+        /// Initializes a new instance of the <see cref="ReactiveNavigationShell{TViewModel}"/> class.
         /// </summary>
         public ReactiveNavigationShell()
         {
@@ -179,6 +179,15 @@ namespace CrissCross
             where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
         /// <summary>
+        /// Navigates the specified contract.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
+            => InternalNavigate(viewModel, contract, parameter);
+
+        /// <summary>
         /// Navigates and resets.
         /// </summary>
         /// <typeparam name="T">The Type.</typeparam>
@@ -189,6 +198,18 @@ namespace CrissCross
         {
             _resetStack = true;
             InternalNavigate<T>(contract, parameter);
+        }
+
+        /// <summary>
+        /// Navigates the and reset.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
+        {
+            _resetStack = true;
+            InternalNavigate(viewModel, contract, parameter);
         }
 
         /// <summary>
@@ -242,6 +263,10 @@ namespace CrissCross
             }
         }
 
+        /// <summary>
+        /// Setups this instance.
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException">NavigationShell Name not set.</exception>
         public void Setup()
         {
             if (string.IsNullOrWhiteSpace(Name))
@@ -344,7 +369,7 @@ namespace CrissCross
 
                 if (!e.Cancel)
                 {
-                    ViewModelNavigationEventArgs nea = new(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, Name, e.NavigationParameter);
+                    var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, Name, e.NavigationParameter);
                     var toView = e.View as INotifiyNavigation;
                     var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
                     var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
@@ -396,14 +421,14 @@ namespace CrissCross
                 _resetStack = false;
                 _navigateBack = false;
             });
-            base.OnAppearing();
+            OnAppearing();
         }
 
         /// <summary>
         /// Converts to page.
         /// </summary>
         /// <param name="item">The item.</param>
-        /// <returns></returns>
+        /// <returns>A Page.</returns>
         protected static Page? ToPage(object item)
         {
             return item as Page;
@@ -444,10 +469,31 @@ namespace CrissCross
             }
         }
 
-        private void InternalNavigate<T>(string? contract, object? parameter) where T : class, IRxObject
+        private void InternalNavigate<T>(string? contract, object? parameter)
+            where T : class, IRxObject
         {
             _userInstigated = true;
             _toViewModel = Locator.Current.GetService<T>(contract);
+            _lastView = _currentView;
+
+            // NOTE: This gets a new instance of the View
+            _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+
+            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            {
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
+            }
+            else
+            {
+                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
+                ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
+            }
+        }
+
+        private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
+        {
+            _userInstigated = true;
+            _toViewModel = viewModel;
             _lastView = _currentView;
 
             // NOTE: This gets a new instance of the View

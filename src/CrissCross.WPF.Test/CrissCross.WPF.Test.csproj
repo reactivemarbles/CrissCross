@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
-		<UseWPF>true</UseWPF>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-	</PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Compile Update="Views\FirstView.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\FirstView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
 
-	<ItemGroup>
-	  <Page Update="Views\FirstView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	</ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\FirstView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
 
 </Project>

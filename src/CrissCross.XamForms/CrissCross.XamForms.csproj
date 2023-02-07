@@ -4,11 +4,7 @@
 		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<Authors>Chris Pulman</Authors>
-		<PackageIcon>CrissCross.png</PackageIcon>
-		<PackageIconUrl />
-		<PackageProjectUrl>https://github.com/ChrisPulman/CrissCross</PackageProjectUrl>
-		<Copyright>Chris Pulman</Copyright>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,12 +13,5 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="..\CrissCross\Images\CrissCross.png">
-	    <Pack>True</Pack>
-	    <PackagePath></PackagePath>
-	  </None>
 	</ItemGroup>
 </Project>

@@ -5,8 +5,6 @@
 		<UseWpf>true</UseWpf>
 		<Nullable>enable</Nullable>
 		<LangVersion>latest</LangVersion>
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
-		<AnalysisLevel>latest</AnalysisLevel>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>

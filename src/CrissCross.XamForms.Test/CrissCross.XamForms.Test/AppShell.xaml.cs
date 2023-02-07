@@ -3,11 +3,15 @@
 
 namespace CrissCross.XamForms.Test
 {
+    /// <summary>
+    /// AppShell.
+    /// </summary>
+    /// <seealso cref="CrissCross.NavigationShell" />
     public partial class AppShell
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AppShell"/> class.
+        /// </summary>
+        public AppShell() => InitializeComponent();
     }
 }

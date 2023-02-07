@@ -89,6 +89,14 @@ namespace CrissCross
             where T : class, IRxObject;
 
         /// <summary>
+        /// Navigates the specified contract.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null);
+
+        /// <summary>
         /// Navigates the and reset.
         /// </summary>
         /// <typeparam name="T">The Type.</typeparam>
@@ -96,6 +104,14 @@ namespace CrissCross
         /// <param name="parameter">The parameter.</param>
         void NavigateAndReset<T>(string? contract = null, object? parameter = null)
             where T : class, IRxObject;
+
+        /// <summary>
+        /// Navigates the and reset.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The parameter.</param>
+        void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null);
 
         /// <summary>
         /// Navigates the back.
