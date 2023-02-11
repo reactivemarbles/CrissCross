@@ -13,6 +13,7 @@ using ReactiveUI;
 
 [assembly: InternalsVisibleTo(" CrissCross.WPF")]
 [assembly: InternalsVisibleTo(" CrissCross.XamForms")]
+[assembly: InternalsVisibleTo(" CrissCross.MAUI")]
 
 namespace CrissCross
 {
