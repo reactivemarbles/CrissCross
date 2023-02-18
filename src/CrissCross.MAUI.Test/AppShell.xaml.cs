@@ -15,9 +15,6 @@ namespace CrissCross.MAUI.Test
         /// <remarks>
         /// To be added.
         /// </remarks>
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        public AppShell() => InitializeComponent();
     }
 }

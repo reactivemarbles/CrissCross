@@ -12,7 +12,7 @@
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.
-
+        
         https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
     -->
     <Shell.Resources>

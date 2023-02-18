@@ -48,46 +48,77 @@ namespace CrissCross
                 throw new ArgumentNullException(nameof(@this));
             }
 
-            if (NavigationHost.Count > 0 && @this.Name != null)
+            return Observable.Create<bool>(obs =>
             {
-                if (@this.Name.Length == 0)
+                var dis = new CompositeDisposable();
+                @this.WhenSetup().Subscribe(_ =>
                 {
-                    return NavigationHost.First().Value.CanNavigateBackObservable;
-                }
+                    if (NavigationHost.Count > 0 && @this.Name != null)
+                    {
+                        if (@this.Name.Length == 0)
+                        {
+                            NavigationHost.First().Value.CanNavigateBackObservable
+                             .Subscribe(x => obs.OnNext(x))
+                             .DisposeWith(dis);
+                        }
 
-                if (NavigationHost.TryGetValue(@this.Name, out var value))
-                {
-                    return value.CanNavigateBackObservable;
-                }
-            }
+                        if (NavigationHost.TryGetValue(@this.Name, out var value))
+                        {
+                            value.CanNavigateBackObservable
+                             .Subscribe(x => obs.OnNext(x))
+                             .DisposeWith(dis);
+                        }
+                    }
+                });
 
-            return Observable.Empty<bool>();
+                obs.OnNext(false);
+
+                return dis;
+            });
         }
 
         /// <summary>
         /// Determines whether this instance [can navigate back] the specified host name.
         /// </summary>
-        /// <param name="dummy">The dummy.</param>
+        /// <param name="this">The navigation host.</param>
         /// <param name="hostName">Name of the host.</param>
         /// <returns>
         /// A bool.
         /// </returns>
-        public static IObservable<bool> CanNavigateBack(this IUseHostedNavigation dummy, string hostName = "")
+        public static IObservable<bool> CanNavigateBack(this IUseHostedNavigation @this, string hostName = "")
         {
-            if (NavigationHost.Count > 0 && hostName != null)
+            if (@this == null)
             {
-                if (hostName.Length == 0)
-                {
-                    return NavigationHost.First().Value.CanNavigateBackObservable;
-                }
-
-                if (NavigationHost.TryGetValue(hostName, out var value))
-                {
-                    return value.CanNavigateBackObservable;
-                }
+                throw new ArgumentNullException(nameof(@this));
             }
 
-            return Observable.Empty<bool>();
+            return Observable.Create<bool>(obs =>
+             {
+                 var dis = new CompositeDisposable();
+                 @this.WhenSetup(hostName).Subscribe(_ =>
+                 {
+                     if (NavigationHost.Count > 0 && hostName != null)
+                     {
+                         if (hostName.Length == 0)
+                         {
+                             NavigationHost.First().Value.CanNavigateBackObservable
+                             .Subscribe(x => obs.OnNext(x))
+                             .DisposeWith(dis);
+                         }
+
+                         if (NavigationHost.TryGetValue(hostName, out var value))
+                         {
+                             value.CanNavigateBackObservable
+                             .Subscribe(x => obs.OnNext(x))
+                             .DisposeWith(dis);
+                         }
+                     }
+                 }).DisposeWith(dis);
+
+                 obs.OnNext(false);
+
+                 return dis;
+             });
         }
 
         /// <summary>
@@ -99,6 +130,11 @@ namespace CrissCross
             if (@this == null)
             {
                 throw new ArgumentNullException(nameof(@this));
+            }
+
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
             }
 
             if (NavigationHost.Count > 0 && @this.Name != null)
@@ -121,6 +157,11 @@ namespace CrissCross
         /// <param name="hostName">Name of the host.</param>
         public static void ClearHistory(this IUseHostedNavigation dummy, string hostName = "")
         {
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && hostName != null)
             {
                 if (hostName.Length == 0)
@@ -146,6 +187,11 @@ namespace CrissCross
                 throw new ArgumentNullException(nameof(@this));
             }
 
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
                 if (@this.Name.Length == 0)
@@ -167,6 +213,11 @@ namespace CrissCross
         /// <param name="parameter">The parameter.</param>
         public static void NavigateBack(this IUseHostedNavigation dummy, string hostName = "", object? parameter = null)
         {
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && hostName != null)
             {
                 if (hostName.Length == 0)
@@ -195,6 +246,11 @@ namespace CrissCross
                 throw new ArgumentNullException(nameof(@this));
             }
 
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
                 if (@this.Name.Length == 0)
@@ -219,6 +275,11 @@ namespace CrissCross
         public static void NavigateToView<T>(this IUseHostedNavigation dummy, string? hostName = "", string? contract = null, object? parameter = null)
             where T : class, IRxObject
         {
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && hostName != null)
             {
                 if (hostName.Length == 0)
@@ -247,6 +308,11 @@ namespace CrissCross
                 throw new ArgumentNullException(nameof(@this));
             }
 
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
                 if (@this.Name.Length == 0)
@@ -271,6 +337,11 @@ namespace CrissCross
         public static void NavigateToViewAndClearHistory<T>(this IUseHostedNavigation dummy, string hostName = "", string? contract = null, object? parameter = null)
             where T : class, IRxObject
         {
+            if (NavigationHost.Count == 0)
+            {
+                throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            }
+
             if (NavigationHost.Count > 0 && hostName != null)
             {
                 if (hostName.Length == 0)
