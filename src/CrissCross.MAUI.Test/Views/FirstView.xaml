@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<rxui:ReactiveContentPage
+    x:Class="CrissCross.MAUI.Test.FirstView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CrissCross.MAUI.Test"
+    xmlns:rxui="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
+    x:TypeArguments="local:FirstViewModel">
+    <rxui:ReactiveContentPage.Content>
+        <StackLayout Orientation="Vertical">
+            <Label Text="First View" />
+            <Button x:Name="GotoMain" Text="Goto Main" />
+            <Button x:Name="GotoFirst" Text="Goto Back" />
+        </StackLayout>
+    </rxui:ReactiveContentPage.Content>
+</rxui:ReactiveContentPage>

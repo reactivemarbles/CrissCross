@@ -17,10 +17,7 @@ namespace CrissCross
         /// <summary>
         /// Initializes a new instance of the <see cref="RxObject"/> class.
         /// </summary>
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
         protected RxObject()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
         }
 
@@ -28,10 +25,7 @@ namespace CrissCross
         /// Initializes a new instance of the <see cref="RxObject"/> class.
         /// </summary>
         /// <param name="hostScreen">The host screen.</param>
-        protected RxObject(IScreen? hostScreen = null)
-        {
-            HostScreen = hostScreen!;
-        }
+        protected RxObject(IScreen? hostScreen = null) => HostScreen = hostScreen!;
 
         /// <summary>
         /// Gets the URL path segment.

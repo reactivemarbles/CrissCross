@@ -1,24 +1,25 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
+using System.Diagnostics.Contracts;
+using System.Diagnostics.Metrics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using DynamicData;
+using Microsoft.Maui.Platform;
 using ReactiveUI;
-using ReactiveUI.XamForms;
+using ReactiveUI.Maui;
 using Splat;
-using Xamarin.Forms;
 
-namespace CrissCross
+namespace CrissCross.MAUI
 {
     /// <summary>
-    /// Navigation Shell.
+    /// NavigationShell.
     /// </summary>
-    /// <seealso cref="Xamarin.Forms.Shell" />
+    /// <seealso cref="Microsoft.Maui.Controls.Shell" />
     /// <seealso cref="CrissCross.ISetNavigation" />
     /// <seealso cref="CrissCross.IViewModelRoutedViewHost" />
     /// <seealso cref="CrissCross.IUseNavigation" />
@@ -59,10 +60,10 @@ namespace CrissCross
         private IViewFor? _currentView;
         private IViewFor? _lastView;
         private bool _navigateBack;
-        private bool _popToRootPending;
         private bool _resetStack;
         private IRxObject? _toViewModel;
         private bool _userInstigated;
+        private bool _cleaningNavigation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationShell"/> class.
@@ -72,16 +73,34 @@ namespace CrissCross
             ViewLocator = Locator.Current.GetService<IViewLocator>();
             CurrentViewModel.ObserveOn(RxApp.MainThreadScheduler).Subscribe(vm =>
             {
-                if (vm is IRxObject && !_navigateBack)
+                if (vm is IRxObject rxo && _userInstigated)
                 {
-                    __currentViewModel = vm as IRxObject;
-                    NavigationStack.Add(__currentViewModel?.GetType());
+                    __currentViewModel = rxo;
+                    if (!_navigateBack)
+                    {
+                        NavigationStack.Add(__currentViewModel?.GetType());
+                    }
+                    else
+                    {
+                        // Navigate Back
+                        if (NavigationStack?.Count > 1)
+                        {
+                            NavigationStack.Remove(NavigationStack.Last());
+                        }
+
+                        if (Navigation.NavigationStack.Count > 1)
+                        {
+                            Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
+                        }
+                    }
                 }
 
                 if (_currentView != null)
                 {
                     GotoPage();
                 }
+
+                _navigateBack = false;
 
                 CanNavigateBack = NavigationStack?.Count > 1;
                 _canNavigateBackSubject.OnNext(CanNavigateBack);
@@ -223,7 +242,7 @@ namespace CrissCross
 
                 // Get the previous View
                 var count = NavigationStack.Count;
-                var vm = Locator.Current.GetService(NavigationStack[count - 2]!);
+                var vm = Locator.Current.GetService(NavigationStack[count - 2]);
                 _toViewModel = vm as IRxObject;
 
                 if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
@@ -292,18 +311,29 @@ namespace CrissCross
 
             navigatingEvent.Subscribe(e =>
             {
+                if (_cleaningNavigation)
+                {
+                    return;
+                }
+
                 if ((e.Source == ShellNavigationSource.Pop || e.Source == ShellNavigationSource.PopToRoot) && !CanNavigateBack)
                 {
                     // Cancel navigate back
                     e.Cancel();
                 }
 
+                CanNavigateBack = NavigationStack?.Count > 1;
                 _canNavigateBackSubject.OnNext(CanNavigateBack);
             });
 
             navigatedEvent
                 .Subscribe(e =>
                 {
+                    if (_cleaningNavigation)
+                    {
+                        return;
+                    }
+
                     var navigatingForward = false;
                     try
                     {
@@ -320,8 +350,13 @@ namespace CrissCross
                             // Navigating back
                             if (!_userInstigated)
                             {
-                                NavigationStack.RemoveAt(NavigationStack.Count - 1);
-                                Debug.WriteLine($"Navigation Stack: {NavigationStack.Count}");
+                                if (NavigationStack.Count > 1)
+                                {
+                                    NavigationStack.RemoveAt(NavigationStack.Count - 1);
+                                }
+
+                                CanNavigateBack = NavigationStack?.Count > 1;
+                                _canNavigateBackSubject.OnNext(CanNavigateBack);
                             }
                         }
 
@@ -342,8 +377,7 @@ namespace CrissCross
 
                             if (navigatingForward && page.ViewModel is IRxObject)
                             {
-                                NavigationStack.Add(page.ViewModel.GetType());
-                                Debug.WriteLine($"Navigation Stack: {NavigationStack.Count}");
+                                NavigationStack?.Add(page.ViewModel.GetType());
                             }
                         }
                     }
@@ -357,68 +391,66 @@ namespace CrissCross
             ViewModelRoutedViewHostMixins.ResultNavigating[Name].DistinctUntilChanged()
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe(e =>
-            {
-                var fromView = _currentView as INotifiyNavigation;
-                if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
                 {
-                    // No view is setup for recieving navigation notifications.
-                    __currentViewModel?.WhenNavigating(e);
-                }
-
-                if (!e.Cancel)
-                {
-                    var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, Name, e.NavigationParameter);
-                    var toView = e.View as INotifiyNavigation;
-                    var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
-                    var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
-                    var cvm = __currentViewModel;
-                    _toViewModel ??= e.View?.ViewModel as IRxObject;
-                    var tvm = _toViewModel;
-
-                    if (_navigateBack)
+                    var fromView = _currentView as INotifiyNavigation;
+                    if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
                     {
-                        _popToRootPending = NavigationStack.Count == 0;
-                        if (_toViewModel != null)
+                        // No view is setup for recieving navigation notifications.
+                        __currentViewModel?.WhenNavigating(e);
+                    }
+
+                    if (!e.Cancel)
+                    {
+                        var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, Name, e.NavigationParameter);
+                        var toView = e.View as INotifiyNavigation;
+                        var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
+                        var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
+                        var cvm = __currentViewModel;
+                        _toViewModel ??= e.View?.ViewModel as IRxObject;
+                        var tvm = _toViewModel;
+
+                        if (_navigateBack)
                         {
-                            _currentView = ViewLocator?.ResolveView(_toViewModel);
-                            _currentViewModel.OnNext(_toViewModel);
-                            foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != Name).Select(x => x.Key))
+                            if (_toViewModel != null)
                             {
-                                ViewModelRoutedViewHostMixins.NavigationHost[host].Refresh();
+                                _currentView = ViewLocator?.ResolveView(_toViewModel);
+                                _currentViewModel.OnNext(_toViewModel);
+                                foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != Name).Select(x => x.Key))
+                                {
+                                    ViewModelRoutedViewHostMixins.NavigationHost[host].Refresh();
+                                }
                             }
                         }
-                    }
-                    else if (_toViewModel != null && _resetStack)
-                    {
-                        NavigationStack.Clear();
-                        _currentViewModel.OnNext(_toViewModel);
-                    }
-                    else if (_toViewModel != null && _currentView != null)
-                    {
-                        _currentViewModel.OnNext(_toViewModel);
+                        else if (_toViewModel != null && _resetStack)
+                        {
+                            NavigationStack.Clear();
+                            _currentViewModel.OnNext(_toViewModel);
+                        }
+                        else if (_toViewModel != null && _currentView != null)
+                        {
+                            _currentViewModel.OnNext(_toViewModel);
+                        }
+
+                        if (toView?.ISetupNavigatedTo == true || fromView?.ISetupNavigatedFrom == true)
+                        {
+                            ViewModelRoutedViewHostMixins.SetWhenNavigated.OnNext(nea);
+                        }
+
+                        if (callVmNavTo)
+                        {
+                            tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[Name]);
+                        }
+
+                        if (callVmNavFrom)
+                        {
+                            cvm?.WhenNavigatedFrom(nea);
+                        }
                     }
 
-                    if (toView?.ISetupNavigatedTo == true || fromView?.ISetupNavigatedFrom == true)
-                    {
-                        ViewModelRoutedViewHostMixins.SetWhenNavigated.OnNext(nea);
-                    }
-
-                    if (callVmNavTo)
-                    {
-                        tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[Name]);
-                    }
-
-                    if (callVmNavFrom)
-                    {
-                        cvm?.WhenNavigatedFrom(nea);
-                    }
-                }
-
-                CanNavigateBack = NavigationStack?.Count > 1;
-                _canNavigateBackSubject.OnNext(CanNavigateBack);
-                _resetStack = false;
-                _navigateBack = false;
-            });
+                    CanNavigateBack = NavigationStack?.Count > 1;
+                    _canNavigateBackSubject.OnNext(CanNavigateBack);
+                    _resetStack = false;
+                });
 
             OnAppearing();
         }
@@ -448,7 +480,7 @@ namespace CrissCross
                 animated = false;
             }
 
-            if (_popToRootPending && Navigation.NavigationStack.Count > 0)
+            if (NavigationStack.Count == 1)
             {
                 await Navigation.PopToRootAsync(animated);
             }
@@ -457,7 +489,8 @@ namespace CrissCross
                 await Navigation.PushAsync(page, animated);
             }
 
-            _popToRootPending = false;
+            ////SyncNavigationStacks();
+
             if (CurrentPage is IViewFor p && __currentViewModel is not null)
             {
                 // don't replace view model if vm is null
@@ -504,6 +537,58 @@ namespace CrissCross
                 var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
             }
+        }
+
+        private void SyncNavigationStacks()
+        {
+            if (Navigation.NavigationStack.Count != NavigationStack.Count
+                || StacksAreDifferent())
+            {
+                _cleaningNavigation = true;
+                for (var i = Navigation.NavigationStack.Count - 2; i >= 1; i--)
+                {
+                    Navigation.RemovePage(Navigation.NavigationStack[i]);
+                }
+
+                var rootPage = Navigation.NavigationStack[1];
+
+                for (var i = 1; i < NavigationStack.Count - 1; i++)
+                {
+                    var vm = Locator.Current.GetService(NavigationStack[i]) as IRxObject;
+                    var p = ViewLocator?.ResolveView(vm);
+                    if (p != null)
+                    {
+                        var page = ToPage(p!);
+                        Navigation.InsertPageBefore(page, rootPage);
+                    }
+                }
+
+                _cleaningNavigation = false;
+            }
+        }
+
+        private bool StacksAreDifferent()
+        {
+            for (var i = 1; i < NavigationStack.Count; i++)
+            {
+                var vm = NavigationStack[i];
+                var page = Navigation.NavigationStack[i];
+
+                if (page is not IViewFor view)
+                {
+                    return true;
+                }
+
+                var pageVm = view.ViewModel?.GetType();
+                var vmType = vm;
+
+                if (pageVm?.Equals(vmType) == false)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

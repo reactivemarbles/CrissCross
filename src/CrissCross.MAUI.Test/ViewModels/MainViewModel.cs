@@ -7,40 +7,23 @@ using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
-namespace CrissCross.WPF.Test
+namespace CrissCross.MAUI.Test
 {
     /// <summary>
-    /// FirstViewModel.
+    /// MainViewModel.
     /// </summary>
     /// <seealso cref="CrissCross.RxObject" />
-    public class FirstViewModel : RxObject
+    public class MainViewModel : RxObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FirstViewModel"/> class.
+        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
         /// </summary>
-        public FirstViewModel() =>
-            this.BuildComplete(() =>
-                {
-                    GotoMain = ReactiveCommand.Create(() =>
-                    {
-                        this.NavigateToView<MainViewModel>("mainWindow");
-                        this.NavigateToView<FirstViewModel>("secondWindow");
-                    });
+        public MainViewModel()
+        {
+            GotoFirst = ReactiveCommand.Create(() => this.NavigateToView<FirstViewModel>());
 
-                    GotoFirst = ReactiveCommand.Create(() =>
-                    {
-                        this.NavigateToView<MainViewModel>("secondWindow");
-                        this.NavigateToView<FirstViewModel>("mainWindow");
-                    });
-                });
-
-        /// <summary>
-        /// Gets the goto main.
-        /// </summary>
-        /// <value>
-        /// The goto main.
-        /// </value>
-        public ICommand? GotoMain { get; private set; }
+            GotoMain = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
+        }
 
         /// <summary>
         /// Gets the goto first.
@@ -48,7 +31,15 @@ namespace CrissCross.WPF.Test
         /// <value>
         /// The goto first.
         /// </value>
-        public ICommand? GotoFirst { get; private set; }
+        public ICommand? GotoFirst { get; }
+
+        /// <summary>
+        /// Gets the goto main.
+        /// </summary>
+        /// <value>
+        /// The goto main.
+        /// </value>
+        public ICommand? GotoMain { get; }
 
         /// <summary>
         /// WhenNavigatedTo.
@@ -58,7 +49,7 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
         {
-            if (e is null)
+            if (e == null)
             {
                 throw new ArgumentNullException(nameof(e));
             }
@@ -74,7 +65,7 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
         {
-            if (e is null)
+            if (e == null)
             {
                 throw new ArgumentNullException(nameof(e));
             }
@@ -90,12 +81,12 @@ namespace CrissCross.WPF.Test
         /// <inheritdoc />
         public override void WhenNavigating(IViewModelNavigatingEventArgs e)
         {
-            if (e is null)
+            if (e == null)
             {
                 throw new ArgumentNullException(nameof(e));
             }
 
-            Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+            Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name!} To: {e.To?.Name!} with Host {e.HostName!}");
             base.WhenNavigating(e);
         }
     }

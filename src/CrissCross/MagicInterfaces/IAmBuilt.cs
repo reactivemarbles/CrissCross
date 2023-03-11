@@ -7,10 +7,9 @@ using ReactiveUI;
 namespace CrissCross
 {
     /// <summary>
-    /// interface for RxBase.
+    /// IAmBuilt.
     /// </summary>
-    /// <seealso cref="System.IDisposable"/>
-    public interface IRxObject : IReactiveNotifyPropertyChanged<IReactiveObject>, IHandleObservableErrors, INotifiyRoutableViewModel, ICancelable, IAmBuilt
+    public interface IAmBuilt
     {
     }
 }
