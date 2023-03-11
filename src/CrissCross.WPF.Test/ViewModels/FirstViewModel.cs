@@ -18,20 +18,21 @@ namespace CrissCross.WPF.Test
         /// <summary>
         /// Initializes a new instance of the <see cref="FirstViewModel"/> class.
         /// </summary>
-        public FirstViewModel()
-        {
-            GotoMain = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("mainWindow");
-                this.NavigateToView<FirstViewModel>("secondWindow");
-            });
+        public FirstViewModel() =>
+            this.BuildComplete(() =>
+                {
+                    GotoMain = ReactiveCommand.Create(() =>
+                    {
+                        this.NavigateToView<MainViewModel>("mainWindow");
+                        this.NavigateToView<FirstViewModel>("secondWindow");
+                    });
 
-            GotoFirst = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("secondWindow");
-                this.NavigateToView<FirstViewModel>("mainWindow");
-            });
-        }
+                    GotoFirst = ReactiveCommand.Create(() =>
+                    {
+                        this.NavigateToView<MainViewModel>("secondWindow");
+                        this.NavigateToView<FirstViewModel>("mainWindow");
+                    });
+                });
 
         /// <summary>
         /// Gets the goto main.
@@ -39,7 +40,7 @@ namespace CrissCross.WPF.Test
         /// <value>
         /// The goto main.
         /// </value>
-        public ICommand? GotoMain { get; }
+        public ICommand? GotoMain { get; private set; }
 
         /// <summary>
         /// Gets the goto first.
@@ -47,7 +48,7 @@ namespace CrissCross.WPF.Test
         /// <value>
         /// The goto first.
         /// </value>
-        public ICommand? GotoFirst { get; }
+        public ICommand? GotoFirst { get; private set; }
 
         /// <summary>
         /// WhenNavigatedTo.

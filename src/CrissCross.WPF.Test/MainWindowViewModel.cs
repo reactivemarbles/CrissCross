@@ -23,6 +23,7 @@ namespace CrissCross.WPF.Test
 
             Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
             Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+            Locator.CurrentMutable.SetupComplete();
             var s = new SecondWindow();
             s.Show();
         }

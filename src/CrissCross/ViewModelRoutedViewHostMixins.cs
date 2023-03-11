@@ -139,13 +139,14 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
-                if (@this.Name.Length == 0)
+                switch (@this.Name.Length)
                 {
-                    NavigationHost.First().Value.ClearHistory();
-                }
-                else
-                {
-                    NavigationHost[@this.Name].ClearHistory();
+                    case 0:
+                        NavigationHost.First().Value.ClearHistory();
+                        break;
+                    default:
+                        NavigationHost[@this.Name].ClearHistory();
+                        break;
                 }
             }
         }
@@ -164,13 +165,14 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && hostName != null)
             {
-                if (hostName.Length == 0)
+                switch (hostName.Length)
                 {
-                    NavigationHost.First().Value.ClearHistory();
-                }
-                else
-                {
-                    NavigationHost[hostName].ClearHistory();
+                    case 0:
+                        NavigationHost.First().Value.ClearHistory();
+                        break;
+                    default:
+                        NavigationHost[hostName].ClearHistory();
+                        break;
                 }
             }
         }
@@ -194,13 +196,18 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
-                if (@this.Name.Length == 0)
+                switch (@this.Name.Length)
                 {
-                    NavigationHost.First().Value.NavigateBack(parameter);
-                }
-                else if (NavigationHost.TryGetValue(@this.Name, out var value))
-                {
-                    value.NavigateBack(parameter);
+                    case 0:
+                        NavigationHost.First().Value.NavigateBack(parameter);
+                        break;
+                    default:
+                        if (NavigationHost.TryGetValue(@this.Name, out var value))
+                        {
+                            value.NavigateBack(parameter);
+                        }
+
+                        break;
                 }
             }
         }
@@ -220,13 +227,18 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && hostName != null)
             {
-                if (hostName.Length == 0)
+                switch (hostName.Length)
                 {
-                    NavigationHost.First().Value.NavigateBack(parameter);
-                }
-                else if (NavigationHost.TryGetValue(hostName, out var value))
-                {
-                    value.NavigateBack(parameter);
+                    case 0:
+                        NavigationHost.First().Value.NavigateBack(parameter);
+                        break;
+                    default:
+                        if (NavigationHost.TryGetValue(hostName, out var value))
+                        {
+                            value.NavigateBack(parameter);
+                        }
+
+                        break;
                 }
             }
         }
@@ -253,13 +265,14 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
-                if (@this.Name.Length == 0)
+                switch (@this.Name.Length)
                 {
-                    NavigationHost.First().Value.Navigate<T>(contract, parameter);
-                }
-                else
-                {
-                    NavigationHost[@this.Name].Navigate<T>(contract, parameter);
+                    case 0:
+                        NavigationHost.First().Value.Navigate<T>(contract, parameter);
+                        break;
+                    default:
+                        NavigationHost[@this.Name].Navigate<T>(contract, parameter);
+                        break;
                 }
             }
         }
@@ -282,13 +295,18 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && hostName != null)
             {
-                if (hostName.Length == 0)
+                switch (hostName.Length)
                 {
-                    NavigationHost.First().Value.Navigate<T>(contract, parameter);
-                }
-                else if (NavigationHost.TryGetValue(hostName, out var value))
-                {
-                    value.Navigate<T>(contract, parameter);
+                    case 0:
+                        NavigationHost.First().Value.Navigate<T>(contract, parameter);
+                        break;
+                    default:
+                        if (NavigationHost.TryGetValue(hostName, out var value))
+                        {
+                            value.Navigate<T>(contract, parameter);
+                        }
+
+                        break;
                 }
             }
         }
@@ -315,13 +333,18 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && @this.Name != null)
             {
-                if (@this.Name.Length == 0)
+                switch (@this.Name.Length)
                 {
-                    NavigationHost.First().Value.NavigateAndReset<T>(contract, parameter);
-                }
-                else if (NavigationHost.TryGetValue(@this.Name, out var value))
-                {
-                    value.NavigateAndReset<T>(contract, parameter);
+                    case 0:
+                        NavigationHost.First().Value.NavigateAndReset<T>(contract, parameter);
+                        break;
+                    default:
+                        if (NavigationHost.TryGetValue(@this.Name, out var value))
+                        {
+                            value.NavigateAndReset<T>(contract, parameter);
+                        }
+
+                        break;
                 }
             }
         }
@@ -344,13 +367,18 @@ namespace CrissCross
 
             if (NavigationHost.Count > 0 && hostName != null)
             {
-                if (hostName.Length == 0)
+                switch (hostName.Length)
                 {
-                    NavigationHost.First().Value.NavigateAndReset<T>(contract, parameter);
-                }
-                else if (NavigationHost.TryGetValue(hostName, out var value))
-                {
-                    value.NavigateAndReset<T>(contract, parameter);
+                    case 0:
+                        NavigationHost.First().Value.NavigateAndReset<T>(contract, parameter);
+                        break;
+                    default:
+                        if (NavigationHost.TryGetValue(hostName, out var value))
+                        {
+                            value.NavigateAndReset<T>(contract, parameter);
+                        }
+
+                        break;
                 }
             }
         }
@@ -484,13 +512,21 @@ namespace CrissCross
                     {
                         if (WhenSetupSubjects.Count > 0 && @this.Name != null)
                         {
-                            if (@this.Name.Length == 0)
+                            switch (@this.Name.Length)
                             {
-                                WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
-                            }
-                            else if (NavigationHost.ContainsKey(@this.Name))
-                            {
-                                WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                case 0:
+                                    {
+                                        WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                        break;
+                                    }
+
+                                default:
+                                    if (NavigationHost.ContainsKey(@this.Name))
+                                    {
+                                        WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                    }
+
+                                    break;
                             }
                         }
                     }).DisposeWith(dis);
@@ -505,30 +541,28 @@ namespace CrissCross
         /// <returns>
         /// A Bool.
         /// </returns>
-        public static IObservable<bool> WhenSetup(this IUseHostedNavigation dummy, string? hostName = "")
-        {
-            return Observable.Create<bool>(obs =>
-             {
-                 var dis = new CompositeDisposable();
-                 ASetupCompleted.Subscribe(_ =>
-                  {
-                      if (WhenSetupSubjects.Count > 0)
-                      {
-                          if (hostName?.Length > 0)
-                          {
-                              if (NavigationHost.ContainsKey(hostName))
-                              {
-                                  WhenSetupSubjects[hostName].Where(x => x).Subscribe(obs).DisposeWith(dis);
-                              }
-                          }
-                          else
-                          {
-                              WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
-                          }
-                      }
-                  }).DisposeWith(dis);
-                 return dis;
-             });
-        }
+        public static IObservable<bool> WhenSetup(this IUseHostedNavigation dummy, string? hostName = "") =>
+            Observable.Create<bool>(obs =>
+                {
+                    var dis = new CompositeDisposable();
+                    ASetupCompleted.Subscribe(_ =>
+                    {
+                        if (WhenSetupSubjects.Count > 0)
+                        {
+                            if (hostName?.Length > 0)
+                            {
+                                if (NavigationHost.ContainsKey(hostName))
+                                {
+                                    WhenSetupSubjects[hostName].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                }
+                            }
+                            else
+                            {
+                                WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
+                            }
+                        }
+                    }).DisposeWith(dis);
+                    return dis;
+                });
     }
 }
