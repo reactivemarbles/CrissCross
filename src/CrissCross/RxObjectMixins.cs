@@ -14,14 +14,13 @@ namespace CrissCross
     /// </summary>
     public static class RxObjectMixins
     {
-        private static readonly ReplaySubject<bool> _buildCompleteSubject = new(1);
+        private static readonly ReplaySubject<Unit> _buildCompleteSubject = new(1);
 
-        private static IObservable<Unit> _source = _buildCompleteSubject.Select(_ => Unit.Default).Publish().RefCount();
         /// <summary>
         /// Sets the IOC container build complete, Execute this once after completion of IOC registrations.
         /// </summary>
         /// <param name="dummy">The dummy.</param>
-        public static void SetupComplete(this IMutableDependencyResolver dummy) => _buildCompleteSubject.OnNext(true);
+        public static void SetupComplete(this IMutableDependencyResolver dummy) => _buildCompleteSubject.OnNext(Unit.Default);
 
         /// <summary>
         /// Gets the build complete.
@@ -29,6 +28,6 @@ namespace CrissCross
         /// <param name="dummy">The dummy.</param>
         /// <param name="action">The action.</param>
         /// <value>The build complete.</value>
-        public static void BuildComplete(this IAmBuilt dummy, Action action) => _source.Subscribe(_ => action());
+        public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
     }
 }
