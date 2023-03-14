@@ -16,5 +16,16 @@ namespace CrissCross.WPF.Test
         public App()
         {
         }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Application.Startup" /> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.Windows.StartupEventArgs" /> that contains the event data.</param>
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            // This will prevent multiple instances of the application from running at the same time.
+            Make.SingleInstance("MyUniqueAppName ddd81fc8-9107-4e33-b848-cac4c3ec3d2a");
+            base.OnStartup(e);
+        }
     }
 }

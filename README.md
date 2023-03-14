@@ -122,6 +122,19 @@ Create a View that inherits from `ReactiveUserControl`. This is the View that wi
     }
 ```
 
-### Step 6: Run the application
+### Step 6: For WPF Applications Configure Single Instance Application if required
+
+If you want to prevent multiple instances of the application from running at the same time, you can use the `Make.SingleInstance` method.
+
+```c#
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        // This will prevent multiple instances of the application from running at the same time.
+        Make.SingleInstance("MyUniqueAppName ddd81fc8-9107-4e33-b848-cac4c3ec3d2a");
+        base.OnStartup(e);
+    }
+```
+
+### Step 7: Run the application
 
 Run the application and you should see the MainView.
