@@ -22,26 +22,12 @@ namespace CrissCross
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RxObject"/> class.
-        /// </summary>
-        /// <param name="hostScreen">The host screen.</param>
-        protected RxObject(IScreen? hostScreen = null) => HostScreen = hostScreen!;
-
-        /// <summary>
         /// Gets the URL path segment.
         /// </summary>
         /// <value>
         /// The URL path segment.
         /// </value>
         public string? Name => GetType().FullName;
-
-        /// <summary>
-        /// Gets or sets the host screen.
-        /// </summary>
-        /// <value>
-        /// The host screen.
-        /// </value>
-        public IScreen? HostScreen { get; protected set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is disposed.

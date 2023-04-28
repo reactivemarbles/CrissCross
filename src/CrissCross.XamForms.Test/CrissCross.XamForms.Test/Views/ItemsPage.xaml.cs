@@ -10,7 +10,6 @@ namespace CrissCross.XamForms.Test.Views
     /// <summary>
     /// ItemsPage.
     /// </summary>
-    /// <seealso cref="ReactiveUI.XamForms.ReactiveContentPage&lt;CrissCross.XamForms.Test.ViewModels.ItemsViewModel&gt;" />
     public partial class ItemsPage
     {
         /// <summary>
@@ -21,10 +20,7 @@ namespace CrissCross.XamForms.Test.Views
             InitializeComponent();
 
             BindingContext = ViewModel = Locator.Current.GetService<ItemsViewModel>();
-            this.WhenActivated(d =>
-            {
-                ViewModel.OnAppearing();
-            });
+            this.WhenActivated(_ => ViewModel?.OnAppearing());
         }
     }
 }

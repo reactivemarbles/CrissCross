@@ -17,6 +17,8 @@ using ReactiveUI;
 
 namespace CrissCross
 {
+#pragma warning disable RCS1175 // Unused 'this' parameter.
+
     /// <summary>
     /// View Model Routed View Host Mixins.
     /// </summary>
@@ -521,6 +523,7 @@ namespace CrissCross
                                     }
 
                                 default:
+#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
                                     if (NavigationHost.ContainsKey(@this.Name))
                                     {
                                         WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
@@ -555,6 +558,7 @@ namespace CrissCross
                                 {
                                     WhenSetupSubjects[hostName].Where(x => x).Subscribe(obs).DisposeWith(dis);
                                 }
+#pragma warning restore CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
                             }
                             else
                             {
@@ -564,5 +568,6 @@ namespace CrissCross
                     }).DisposeWith(dis);
                     return dis;
                 });
+#pragma warning restore RCS1175 // Unused 'this' parameter.
     }
 }

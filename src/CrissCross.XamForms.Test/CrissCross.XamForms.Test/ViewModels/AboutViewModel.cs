@@ -33,7 +33,7 @@ namespace CrissCross.XamForms.Test.ViewModels
         /// <value>
         /// The navigate back.
         /// </value>
-        public ICommand NavigateBack { get; private set; }
+        public ICommand? NavigateBack { get; private set; }
 
         /// <summary>
         /// Gets the open web command.
@@ -41,6 +41,6 @@ namespace CrissCross.XamForms.Test.ViewModels
         /// <value>
         /// The open web command.
         /// </value>
-        public ICommand OpenWebCommand { get; private set; }
+        public ICommand? OpenWebCommand { get; private set; }
     }
 }

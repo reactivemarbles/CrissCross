@@ -19,10 +19,10 @@ namespace CrissCross
     /// Reactive Navigation Shell.
     /// </summary>
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-    /// <seealso cref="Xamarin.Forms.Shell" />
-    /// <seealso cref="CrissCross.ISetNavigation" />
-    /// <seealso cref="CrissCross.IViewModelRoutedViewHost" />
-    /// <seealso cref="CrissCross.IUseNavigation" />
+    /// <seealso cref="Shell" />
+    /// <seealso cref="ISetNavigation" />
+    /// <seealso cref="IViewModelRoutedViewHost" />
+    /// <seealso cref="IUseNavigation" />
     public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation
         where TViewModel : class, IRxObject
     {
@@ -225,16 +225,17 @@ namespace CrissCross
 
                 // Get the previous View
                 var count = NavigationStack.Count;
-                var vm = Locator.Current.GetService(NavigationStack[count - 2]!);
+                var vm = Locator.Current.GetService(NavigationStack[count - 2]);
                 _toViewModel = vm as IRxObject;
 
-                if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, Name, parameter);
+                if (_currentView is INotifiyNavigation { ISetupNavigating: true })
                 {
-                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, Name, parameter));
+                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
                 }
                 else
                 {
-                    ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, Name, parameter));
+                    ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
                 }
             }
 
@@ -266,7 +267,7 @@ namespace CrissCross
         /// <summary>
         /// Setups this instance.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">NavigationShell Name not set.</exception>
+        /// <exception cref="ArgumentNullException">NavigationShell Name not set.</exception>
         public void Setup()
         {
             if (string.IsNullOrWhiteSpace(Name))
@@ -429,10 +430,7 @@ namespace CrissCross
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>A Page.</returns>
-        protected static Page? ToPage(object item)
-        {
-            return item as Page;
-        }
+        protected static Page? ToPage(object item) => item as Page;
 
         private static void NameChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -479,13 +477,13 @@ namespace CrissCross
             // NOTE: This gets a new instance of the View
             _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
+            if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
             }
             else
             {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
             }
         }
@@ -499,13 +497,13 @@ namespace CrissCross
             // NOTE: This gets a new instance of the View
             _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
+            if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter));
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
             }
             else
             {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
             }
         }

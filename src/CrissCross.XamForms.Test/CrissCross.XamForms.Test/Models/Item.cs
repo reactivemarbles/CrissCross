@@ -16,7 +16,7 @@ namespace CrissCross.XamForms.Test.Models
         /// <value>
         /// The identifier.
         /// </value>
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         /// <summary>
         /// Gets or sets the text.
@@ -24,7 +24,7 @@ namespace CrissCross.XamForms.Test.Models
         /// <value>
         /// The text.
         /// </value>
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
@@ -32,6 +32,6 @@ namespace CrissCross.XamForms.Test.Models
         /// <value>
         /// The description.
         /// </value>
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

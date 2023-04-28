@@ -10,7 +10,6 @@ namespace CrissCross.XamForms.Test.Views
     /// <summary>
     /// LoginPage.
     /// </summary>
-    /// <seealso cref="ReactiveUI.XamForms.ReactiveContentPage&lt;CrissCross.XamForms.Test.ViewModels.LoginViewModel&gt;" />
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage
     {

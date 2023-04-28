@@ -9,6 +9,7 @@ using Splat;
 
 namespace CrissCross
 {
+#pragma warning disable RCS1175 // Unused 'this' parameter.
     /// <summary>
     /// RxObjectMixins.
     /// </summary>
@@ -30,4 +31,5 @@ namespace CrissCross
         /// <value>The build complete.</value>
         public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
     }
+#pragma warning restore RCS1175 // Unused 'this' parameter.
 }

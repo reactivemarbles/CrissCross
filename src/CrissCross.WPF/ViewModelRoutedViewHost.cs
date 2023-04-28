@@ -192,15 +192,16 @@ namespace CrissCross.WPF
 
                 // Get the previous View
                 var count = NavigationStack.Count - 2;
-                _toViewModel = Locator.Current.GetService(NavigationStack[count]!) as IRxObject;
+                _toViewModel = Locator.Current.GetService(NavigationStack[count]) as IRxObject;
 
-                if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
+                if (_currentView is INotifiyNavigation { ISetupNavigating: true })
                 {
-                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
+                    ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
                 }
                 else
                 {
-                    ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter));
+                    ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
                 }
             }
 
@@ -323,13 +324,13 @@ namespace CrissCross.WPF
             // NOTE: This gets a new instance of the View
             _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+            if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter));
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
             }
             else
             {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
             }
         }
@@ -342,13 +343,13 @@ namespace CrissCross.WPF
             // NOTE: This gets a new instance of the View
             _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-            if ((_currentView as INotifiyNavigation)?.ISetupNavigating == true)
+            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+            if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
-                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter));
+                ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
             }
             else
             {
-                var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
                 ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
             }
         }
