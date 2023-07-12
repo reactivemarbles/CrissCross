@@ -23,7 +23,10 @@ or
 
     Install-Package CrissCross.XamForms
 
-A NuGet package for MAUI is coming soon.
+or
+
+    Install-Package CrissCross.MAUI
+
 
 ### Step 2: Create a ViewModel
 
