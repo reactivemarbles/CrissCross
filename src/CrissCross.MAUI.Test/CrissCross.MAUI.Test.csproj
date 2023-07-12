@@ -53,10 +53,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
   </ItemGroup>
-  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
