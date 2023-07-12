@@ -14,7 +14,6 @@
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Configurations>Debug;Release;PreRelease</Configurations>
     <PackageReleaseNotes>Compatability with Net 6, Net 7 and netstandard2.0</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
