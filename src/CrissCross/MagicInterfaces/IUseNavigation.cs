@@ -8,7 +8,7 @@ namespace CrissCross
     /// <summary>
     /// I Use Navigation.
     /// </summary>
-    public interface IUseNavigation
+    public interface IUseNavigation : IAmBuilt
     {
         /// <summary>
         /// Gets the name.

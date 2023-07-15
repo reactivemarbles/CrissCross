@@ -9,7 +9,7 @@ namespace CrissCross.MAUI.Test
     /// <summary>
     /// MainApplication.
     /// </summary>
-    /// <seealso cref="Microsoft.Maui.MauiApplication" />
+    /// <seealso cref="MauiApplication" />
     [Application]
     public class MainApplication : MauiApplication
     {

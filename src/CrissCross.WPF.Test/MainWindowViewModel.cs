@@ -10,7 +10,7 @@ namespace CrissCross.WPF.Test
     /// <summary>
     /// MainWindowViewModel.
     /// </summary>
-    /// <seealso cref="CrissCross.RxObject" />
+    /// <seealso cref="RxObject" />
     public class MainWindowViewModel : RxObject
     {
         /// <summary>

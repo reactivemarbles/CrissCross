@@ -46,10 +46,8 @@ namespace CrissCross.WPF
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationWindow"/> class.
         /// </summary>
-        public NavigationWindow()
-        {
+        public NavigationWindow() =>
             DefaultStyleKey = typeof(NavigationWindow);
-        }
 
         /// <summary>
         /// Gets the can navigate back.
@@ -57,7 +55,8 @@ namespace CrissCross.WPF
         /// <value>
         /// The can navigate back.
         /// </value>
-        public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
+        public IObservable<bool> CanNavigateBack =>
+            NavigationFrame.CanNavigateBackObservable;
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].

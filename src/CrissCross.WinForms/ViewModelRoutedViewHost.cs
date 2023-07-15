@@ -1,38 +1,23 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+using System.ComponentModel;
+using System.Data;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Windows;
 using ReactiveUI;
 using Splat;
 
-namespace CrissCross.WPF
+namespace CrissCross.WinForms
 {
     /// <summary>
-    /// View Model Routed View Host.
+    /// ViewModelRoutedViewHost.
     /// </summary>
-    /// <seealso cref="RoutedViewHost" />
-    public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRoutedViewHost
+    /// <seealso cref="UserControl" />
+    /// <seealso cref="IViewModelRoutedViewHost" />
+    public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedViewHost
     {
-        /// <summary>
-        /// The navigate back is enabled property.
-        /// </summary>
-        public static readonly DependencyProperty CanNavigateBackProperty = DependencyProperty.Register(nameof(CanNavigateBack), typeof(bool), typeof(ViewModelRoutedViewHost), new PropertyMetadata(false));
-
-        /// <summary>
-        /// The host name property.
-        /// </summary>
-        public static readonly DependencyProperty HostNameProperty = DependencyProperty.Register(nameof(HostName), typeof(string), typeof(ViewModelRoutedViewHost), new PropertyMetadata(string.Empty));
-
-        /// <summary>
-        /// The navigate back is enabled property.
-        /// </summary>
-        public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(nameof(NavigateBackIsEnabled), typeof(bool), typeof(ViewModelRoutedViewHost), new PropertyMetadata(true));
-
         private readonly ISubject<bool> _canNavigateBackSubject = new Subject<bool>();
         private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
         private IRxObject? __currentViewModel;
@@ -41,16 +26,19 @@ namespace CrissCross.WPF
         private bool _navigateBack;
         private bool _resetStack;
         private IRxObject? _toViewModel;
+        private Control? _content;
+
+        static ViewModelRoutedViewHost() => _ = RxApp.DefaultExceptionHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.
         /// </summary>
         public ViewModelRoutedViewHost()
         {
-            HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            VerticalContentAlignment = VerticalAlignment.Stretch;
+            InitializeComponent();
             ViewLocator = Locator.Current.GetService<IViewLocator>();
-            CurrentViewModel.Subscribe(vm =>
+            CurrentViewModel.Subscribe(
+                vm =>
             {
                 if (vm is IRxObject && !_navigateBack)
                 {
@@ -60,7 +48,7 @@ namespace CrissCross.WPF
 
                 if (_currentView != null)
                 {
-                    Content = _currentView;
+                    Content = (Control)_currentView;
                 }
 
                 CanNavigateBack = NavigationStack?.Count > 1;
@@ -71,20 +59,16 @@ namespace CrissCross.WPF
         /// <summary>
         /// Gets or sets the view locator.
         /// </summary>
-        /// <value>
-        /// The view locator.
-        /// </value>
+        [Browsable(false)]
         public IViewLocator? ViewLocator { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].
         /// </summary>
-        /// <value><c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.</value>
-        public bool CanNavigateBack
-        {
-            get => (bool)GetValue(CanNavigateBackProperty);
-            set => SetValue(CanNavigateBackProperty, value);
-        }
+        /// <value>
+        /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
+        /// </value>
+        public bool CanNavigateBack { get; set; }
 
         /// <summary>
         /// Gets the can navigate back observable.
@@ -108,22 +92,38 @@ namespace CrissCross.WPF
         /// <value>
         /// The name of the host.
         /// </value>
-        public string HostName
-        {
-            get => (string)GetValue(HostNameProperty);
-            set => SetValue(HostNameProperty, value);
-        }
+        public string HostName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].
         /// </summary>
         /// <value>
-        ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
+        /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        public bool NavigateBackIsEnabled
+        public bool NavigateBackIsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content.
+        /// </summary>
+        /// <value>
+        /// The content.
+        /// </value>
+        public Control? Content
         {
-            get => (bool)GetValue(NavigateBackIsEnabledProperty);
-            set => SetValue(NavigateBackIsEnabledProperty, value);
+            get => _content;
+            set
+            {
+                SuspendLayout();
+                Controls.Clear();
+                _content = value;
+                if (_content is not null)
+                {
+                    _content.Dock = DockStyle.Fill;
+                    Controls.Add(_content);
+                }
+
+                ResumeLayout();
+            }
         }
 
         /// <summary>
@@ -219,22 +219,15 @@ namespace CrissCross.WPF
             _canNavigateBackSubject.OnNext(CanNavigateBack);
         }
 
-        /// <inheritdoc />
-        public override void OnApplyTemplate()
-        {
-            Setup();
-            base.OnApplyTemplate();
-        }
-
         /// <summary>
         /// Refreshes this instance.
         /// </summary>
-        public void Refresh()
+        void IViewModelRoutedViewHost.Refresh()
         {
             // Keep existing view
             if (Content == null && _currentView != null)
             {
-                Content = _currentView;
+                Content = (Control)_currentView;
             }
 
             if (!NavigateBackIsEnabled)

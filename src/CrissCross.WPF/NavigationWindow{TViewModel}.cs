@@ -12,8 +12,8 @@ namespace CrissCross.WPF
     /// Navigation Window.
     /// </summary>
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-    /// <seealso cref="CrissCross.WPF.NavigationWindow" />
-    /// <seealso cref="ReactiveUI.IViewFor&lt;TViewModel&gt;" />
+    /// <seealso cref="NavigationWindow" />
+    /// <seealso cref="IViewFor&lt;TViewModel&gt;" />
     public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewModel>
         where TViewModel : class, IRxObject, new()
     {
@@ -30,13 +30,8 @@ namespace CrissCross.WPF
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationWindow{TViewModel}"/> class.
         /// </summary>
-        public NavigationWindow()
-        {
-            this.WhenActivated(d =>
-            {
-                ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new();
-            });
-        }
+        public NavigationWindow() =>
+            this.WhenActivated(_ => ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new());
 
         /// <summary>
         /// Gets the binding root view model.

@@ -9,7 +9,7 @@ namespace CrissCross.MAUI.Test
     /// <summary>
     /// App.
     /// </summary>
-    /// <seealso cref="Microsoft.Maui.Controls.Application" />
+    /// <seealso cref="Application" />
     public partial class App : Application
     {
         /// <summary>
