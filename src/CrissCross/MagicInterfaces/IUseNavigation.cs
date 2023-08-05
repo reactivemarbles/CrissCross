@@ -16,6 +16,6 @@ namespace CrissCross
         /// <value>
         /// The name.
         /// </value>
-        string Name { get; }
+        string? Name { get; }
     }
 }

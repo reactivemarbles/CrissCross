@@ -15,6 +15,7 @@ using ReactiveUI;
 [assembly: InternalsVisibleTo(" CrissCross.XamForms")]
 [assembly: InternalsVisibleTo(" CrissCross.MAUI")]
 [assembly: InternalsVisibleTo(" CrissCross.WinForms")]
+[assembly: InternalsVisibleTo(" CrissCross.Avalonia")]
 
 namespace CrissCross
 {
@@ -61,14 +62,14 @@ namespace CrissCross
                         if (@this.Name.Length == 0)
                         {
                             NavigationHost.First().Value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                         }
 
                         if (NavigationHost.TryGetValue(@this.Name, out var value))
                         {
                             value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                         }
                     }
@@ -105,14 +106,14 @@ namespace CrissCross
                          if (hostName.Length == 0)
                          {
                              NavigationHost.First().Value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                          }
 
                          if (NavigationHost.TryGetValue(hostName, out var value))
                          {
                              value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                          }
                      }

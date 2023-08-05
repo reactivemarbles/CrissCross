@@ -6,7 +6,7 @@ namespace CrissCross.XamForms.Test
     /// <summary>
     /// AppShell.
     /// </summary>
-    /// <seealso cref="CrissCross.NavigationShell" />
+    /// <seealso cref="NavigationShell" />
     public partial class AppShell
     {
         /// <summary>

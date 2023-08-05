@@ -18,7 +18,7 @@ namespace CrissCross.WinForms
     /// <seealso cref="IViewModelRoutedViewHost" />
     public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedViewHost
     {
-        private readonly ISubject<bool> _canNavigateBackSubject = new Subject<bool>();
+        private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
         private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
         private IRxObject? __currentViewModel;
         private IViewFor? _currentView;
@@ -68,7 +68,7 @@ namespace CrissCross.WinForms
         /// <value>
         /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        public bool CanNavigateBack { get; set; }
+        public bool? CanNavigateBack { get; set; }
 
         /// <summary>
         /// Gets the can navigate back observable.
@@ -76,7 +76,7 @@ namespace CrissCross.WinForms
         /// <value>
         /// The can navigate back observable.
         /// </value>
-        public IObservable<bool> CanNavigateBackObservable => _canNavigateBackSubject;
+        public IObservable<bool?> CanNavigateBackObservable => _canNavigateBackSubject;
 
         /// <summary>
         /// Gets the current view model.
@@ -100,7 +100,7 @@ namespace CrissCross.WinForms
         /// <value>
         /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        public bool NavigateBackIsEnabled { get; set; }
+        public bool? NavigateBackIsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the content.
@@ -196,7 +196,7 @@ namespace CrissCross.WinForms
         /// <param name="parameter">The parameter.</param>
         public void NavigateBack(object? parameter = null)
         {
-            if (NavigateBackIsEnabled && CanNavigateBack && NavigationStack.Count > 1)
+            if (NavigateBackIsEnabled == true && CanNavigateBack == true && NavigationStack.Count > 1)
             {
                 _navigateBack = true;
 
@@ -230,7 +230,7 @@ namespace CrissCross.WinForms
                 Content = (Control)_currentView;
             }
 
-            if (!NavigateBackIsEnabled)
+            if (NavigateBackIsEnabled == false)
             {
                 // cleanup while Navigation Back is disabled
                 while (NavigationStack.Count > 1)

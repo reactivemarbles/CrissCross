@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace CrissCross.WPF.Test
@@ -17,11 +18,13 @@ namespace CrissCross.WPF.Test
         public SecondWindow()
         {
             InitializeComponent();
+#pragma warning disable CA1416 // Validate platform compatibility
             this.WhenActivated(d =>
             {
                 this.NavigateToView<FirstViewModel>();
-                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack).DisposeWith(d);
+                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
             });
+#pragma warning restore CA1416 // Validate platform compatibility
         }
     }
 }

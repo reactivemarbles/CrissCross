@@ -17,7 +17,7 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.Maui" Version="19.4.1" />
+    <PackageReference Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
   </ItemGroup>
 
   <ItemGroup>

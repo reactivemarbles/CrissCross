@@ -1,0 +1,13 @@
+<Application
+    x:Class="CrissCross.Avalonia.Test.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:nav="clr-namespace:CrissCross.Avalonia;assembly=CrissCross.Avalonia"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.Styles>
+        <FluentTheme />
+        <!--<StyleInclude x:Key="NavigationWindow" Source="avares://CrissCross.Avalonia/NavigationWindow.axaml" />-->
+    </Application.Styles>
+</Application>

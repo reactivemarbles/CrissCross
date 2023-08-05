@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.ComponentModel;
+using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace CrissCross.WinForms;
@@ -70,7 +71,7 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
     /// <value>
     /// The can navigate back.
     /// </value>
-    public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
+    public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable.Select(x => x == true);
 
     /// <summary>
     /// Gets the navigation frame.
