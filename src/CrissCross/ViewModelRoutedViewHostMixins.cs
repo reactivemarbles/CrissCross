@@ -14,6 +14,8 @@ using ReactiveUI;
 [assembly: InternalsVisibleTo(" CrissCross.WPF")]
 [assembly: InternalsVisibleTo(" CrissCross.XamForms")]
 [assembly: InternalsVisibleTo(" CrissCross.MAUI")]
+[assembly: InternalsVisibleTo(" CrissCross.WinForms")]
+[assembly: InternalsVisibleTo(" CrissCross.Avalonia")]
 
 namespace CrissCross
 {
@@ -24,7 +26,7 @@ namespace CrissCross
     /// </summary>
     public static class ViewModelRoutedViewHostMixins
     {
-        internal static Subject<Unit> ASetupCompleted { get; } = new();
+        internal static ReplaySubject<Unit> ASetupCompleted { get; } = new(1);
 
         internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = new();
 
@@ -60,14 +62,14 @@ namespace CrissCross
                         if (@this.Name.Length == 0)
                         {
                             NavigationHost.First().Value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                         }
 
                         if (NavigationHost.TryGetValue(@this.Name, out var value))
                         {
                             value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                         }
                     }
@@ -104,14 +106,14 @@ namespace CrissCross
                          if (hostName.Length == 0)
                          {
                              NavigationHost.First().Value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                          }
 
                          if (NavigationHost.TryGetValue(hostName, out var value))
                          {
                              value.CanNavigateBackObservable
-                             .Subscribe(x => obs.OnNext(x))
+                             .Subscribe(x => obs.OnNext(x == true))
                              .DisposeWith(dis);
                          }
                      }
@@ -502,7 +504,7 @@ namespace CrissCross
         }
 
         /// <summary>
-        /// Whens the activated.
+        /// Notify When the Host is setup.
         /// </summary>
         /// <param name="this">The this.</param>
         /// <returns>A Bool.</returns>
@@ -510,34 +512,34 @@ namespace CrissCross
             Observable.Create<bool>(obs =>
                 {
                     var dis = new CompositeDisposable();
-                    ASetupCompleted.Subscribe(_ =>
-                    {
-                        if (WhenSetupSubjects.Count > 0 && @this.Name != null)
+                    @this.BuildComplete(() => ASetupCompleted.Subscribe(_ =>
                         {
-                            switch (@this.Name.Length)
+                            if (WhenSetupSubjects.Count > 0 && @this.Name != null)
                             {
-                                case 0:
-                                    {
-                                        WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
-                                        break;
-                                    }
+                                switch (@this.Name.Length)
+                                {
+                                    case 0:
+                                        {
+                                            WhenSetupSubjects.First().Value.Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                            break;
+                                        }
 
-                                default:
+                                    default:
 #pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
-                                    if (NavigationHost.ContainsKey(@this.Name))
-                                    {
-                                        WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
-                                    }
+                                        if (NavigationHost.ContainsKey(@this.Name))
+                                        {
+                                            WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);
+                                        }
 
-                                    break;
+                                        break;
+                                }
                             }
-                        }
-                    }).DisposeWith(dis);
+                        }).DisposeWith(dis));
                     return dis;
                 });
 
         /// <summary>
-        /// Whens the activated.
+        /// Notify When the Host is setup.
         /// </summary>
         /// <param name="dummy">The dummy.</param>
         /// <param name="hostName">Name of the host.</param>

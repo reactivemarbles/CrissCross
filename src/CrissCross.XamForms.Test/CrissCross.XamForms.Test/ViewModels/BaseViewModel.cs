@@ -11,7 +11,7 @@ namespace CrissCross.XamForms.Test.ViewModels
     /// <summary>
     /// BaseViewModel.
     /// </summary>
-    /// <seealso cref="CrissCross.RxObject" />
+    /// <seealso cref="RxObject" />
     public class BaseViewModel : RxObject
     {
         /// <summary>

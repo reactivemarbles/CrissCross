@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI.WPF" Version="19.4.1" />
+		<PackageReference Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>

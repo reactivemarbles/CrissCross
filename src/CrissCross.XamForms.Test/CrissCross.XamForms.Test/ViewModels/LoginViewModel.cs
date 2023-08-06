@@ -10,7 +10,7 @@ namespace CrissCross.XamForms.Test.ViewModels
     /// <summary>
     /// LoginViewModel.
     /// </summary>
-    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
+    /// <seealso cref="BaseViewModel" />
     public class LoginViewModel : BaseViewModel
     {
         /// <summary>

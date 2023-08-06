@@ -19,7 +19,7 @@ namespace CrissCross
         /// <param name="view">The view.</param>
         /// <param name="hostName">The Hostname.</param>
         /// <param name="parmeter">The parmeter.</param>
-        public ViewModelNavigationEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string hostName, object? parmeter = null)
+        public ViewModelNavigationEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string? hostName, object? parmeter = null)
         {
             From = from;
             To = to;
@@ -36,7 +36,7 @@ namespace CrissCross
         /// The name of the host.
         /// </value>
         [DataMember]
-        public string HostName { get; set; }
+        public string? HostName { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the navigation.

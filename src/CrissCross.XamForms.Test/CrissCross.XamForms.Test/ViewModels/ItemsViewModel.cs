@@ -15,7 +15,7 @@ namespace CrissCross.XamForms.Test.ViewModels
     /// <summary>
     /// ItemsViewModel.
     /// </summary>
-    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
+    /// <seealso cref="BaseViewModel" />
     public class ItemsViewModel : BaseViewModel
     {
         /// <summary>

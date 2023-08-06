@@ -22,7 +22,7 @@ namespace CrissCross.WPF
         /// </summary>
         public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
             nameof(NavigateBackIsEnabled),
-            typeof(bool),
+            typeof(bool?),
             typeof(NavigationWindow),
             new PropertyMetadata(true));
 
@@ -46,10 +46,8 @@ namespace CrissCross.WPF
         /// <summary>
         /// Initializes a new instance of the <see cref="NavigationWindow"/> class.
         /// </summary>
-        public NavigationWindow()
-        {
+        public NavigationWindow() =>
             DefaultStyleKey = typeof(NavigationWindow);
-        }
 
         /// <summary>
         /// Gets the can navigate back.
@@ -57,7 +55,8 @@ namespace CrissCross.WPF
         /// <value>
         /// The can navigate back.
         /// </value>
-        public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
+        public IObservable<bool?> CanNavigateBack =>
+            NavigationFrame.CanNavigateBackObservable;
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].
@@ -65,9 +64,9 @@ namespace CrissCross.WPF
         /// <value>
         ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        public bool NavigateBackIsEnabled
+        public bool? NavigateBackIsEnabled
         {
-            get => (bool)GetValue(NavigateBackIsEnabledProperty);
+            get => (bool?)GetValue(NavigateBackIsEnabledProperty);
             set => SetValue(NavigateBackIsEnabledProperty, value);
         }
 

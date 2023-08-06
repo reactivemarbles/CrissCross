@@ -13,7 +13,7 @@ namespace CrissCross.XamForms.Test
     /// <summary>
     /// App.
     /// </summary>
-    /// <seealso cref="Xamarin.Forms.Application" />
+    /// <seealso cref="Application" />
     public partial class App : Application
     {
         /// <summary>

@@ -21,7 +21,7 @@ namespace CrissCross
         /// <param name="view">The view.</param>
         /// <param name="hostName">The hostName.</param>
         /// <param name="parmeter">The parmeter.</param>
-        public ViewModelNavigatingEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string hostName, object? parmeter = null)
+        public ViewModelNavigatingEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string? hostName, object? parmeter = null)
             : base(from, to, navType, view, hostName, parmeter)
         {
         }

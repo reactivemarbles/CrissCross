@@ -8,7 +8,7 @@ namespace CrissCross
     /// <summary>
     /// I Use Navigation.
     /// </summary>
-    public interface IUseNavigation
+    public interface IUseNavigation : IAmBuilt
     {
         /// <summary>
         /// Gets the name.
@@ -16,6 +16,6 @@ namespace CrissCross
         /// <value>
         /// The name.
         /// </value>
-        string Name { get; }
+        string? Name { get; }
     }
 }

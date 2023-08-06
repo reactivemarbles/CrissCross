@@ -35,7 +35,7 @@ namespace CrissCross
         /// <value>
         ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        bool CanNavigateBack { get; set; }
+        bool? CanNavigateBack { get; set; }
 
         /// <summary>
         /// Gets the can navigate back observable.
@@ -43,7 +43,7 @@ namespace CrissCross
         /// <value>
         /// The can navigate back observable.
         /// </value>
-        IObservable<bool> CanNavigateBackObservable { get; }
+        IObservable<bool?> CanNavigateBackObservable { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [navigate back is enabled].
@@ -51,7 +51,7 @@ namespace CrissCross
         /// <value>
         ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        bool NavigateBackIsEnabled { get; set; }
+        bool? NavigateBackIsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the host.

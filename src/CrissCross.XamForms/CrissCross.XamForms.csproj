@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ReactiveUI.XamForms" Version="19.4.1" />
+		<PackageReference Include="ReactiveUI.XamForms" Version="$(ReactiveUIVersion)" />
 	</ItemGroup>
 
 	<ItemGroup>

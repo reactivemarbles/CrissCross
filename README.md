@@ -28,6 +28,12 @@ or
     Install-Package CrissCross.MAUI
 
 
+COMING SOON
+
+    Install-Package CrissCross.WinForms
+    Install-Package CrissCross.Avalonia
+
+
 ### Step 2: Create a ViewModel
 
 Create a ViewModel that inherits from `RxObject`. This is the ViewModel that will be used for the MainWindow.

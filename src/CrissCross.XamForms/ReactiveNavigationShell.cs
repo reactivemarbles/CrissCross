@@ -31,7 +31,7 @@ namespace CrissCross
         /// </summary>
         public static readonly BindableProperty CanNavigateBackProperty = BindableProperty.Create(
             nameof(CanNavigateBack),
-            typeof(bool),
+            typeof(bool?),
             typeof(ReactiveNavigationShell<TViewModel>),
             false);
 
@@ -51,11 +51,11 @@ namespace CrissCross
         /// </summary>
         public static readonly BindableProperty NavigateBackIsEnabledProperty = BindableProperty.Create(
             nameof(NavigateBackIsEnabled),
-            typeof(bool),
+            typeof(bool?),
             typeof(ReactiveNavigationShell<TViewModel>),
             true);
 
-        private readonly ISubject<bool> _canNavigateBackSubject = new Subject<bool>();
+        private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
         private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
         private IRxObject? __currentViewModel;
         private IViewFor? _currentView;
@@ -94,9 +94,9 @@ namespace CrissCross
         /// Gets or sets a value indicating whether [navigate back is enabled].
         /// </summary>
         /// <value><c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.</value>
-        public bool CanNavigateBack
+        public bool? CanNavigateBack
         {
-            get => (bool)GetValue(CanNavigateBackProperty);
+            get => (bool?)GetValue(CanNavigateBackProperty);
             set => SetValue(CanNavigateBackProperty, value);
         }
 
@@ -106,7 +106,7 @@ namespace CrissCross
         /// <value>
         /// The can navigate back observable.
         /// </value>
-        public IObservable<bool> CanNavigateBackObservable => _canNavigateBackSubject;
+        public IObservable<bool?> CanNavigateBackObservable => _canNavigateBackSubject;
 
         /// <summary>
         /// Gets the current view model.
@@ -134,9 +134,9 @@ namespace CrissCross
         /// <value>
         ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
         /// </value>
-        public bool NavigateBackIsEnabled
+        public bool? NavigateBackIsEnabled
         {
-            get => (bool)GetValue(NavigateBackIsEnabledProperty);
+            get => (bool?)GetValue(NavigateBackIsEnabledProperty);
             set => SetValue(NavigateBackIsEnabledProperty, value);
         }
 
@@ -218,7 +218,7 @@ namespace CrissCross
         /// <param name="parameter">The parameter.</param>
         public void NavigateBack(object? parameter = null)
         {
-            if (NavigateBackIsEnabled && CanNavigateBack && NavigationStack.Count > 1)
+            if (NavigateBackIsEnabled == true && CanNavigateBack == true && NavigationStack.Count > 1)
             {
                 _userInstigated = true;
                 _navigateBack = true;
@@ -254,7 +254,7 @@ namespace CrissCross
                 GotoPage();
             }
 
-            if (!NavigateBackIsEnabled)
+            if (NavigateBackIsEnabled == false)
             {
                 // cleanup while Navigation Back is disabled
                 while (NavigationStack.Count > 1)
@@ -295,7 +295,7 @@ namespace CrissCross
 
             navigatingEvent.Subscribe(e =>
             {
-                if ((e.Source == ShellNavigationSource.Pop || e.Source == ShellNavigationSource.PopToRoot) && !CanNavigateBack)
+                if ((e.Source == ShellNavigationSource.Pop || e.Source == ShellNavigationSource.PopToRoot) && CanNavigateBack == false)
                 {
                     // Cancel navigate back
                     e.Cancel();

@@ -16,7 +16,7 @@ namespace CrissCross
         /// <value>
         /// The name of the host.
         /// </value>
-        string HostName { get; set; }
+        string? HostName { get; set; }
 
         /// <summary>
         /// Gets the type of the navigation.

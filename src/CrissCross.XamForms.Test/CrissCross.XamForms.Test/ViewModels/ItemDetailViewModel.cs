@@ -14,7 +14,7 @@ namespace CrissCross.XamForms.Test.ViewModels
     /// <summary>
     /// ItemDetailViewModel.
     /// </summary>
-    /// <seealso cref="CrissCross.XamForms.Test.ViewModels.BaseViewModel" />
+    /// <seealso cref="BaseViewModel" />
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
