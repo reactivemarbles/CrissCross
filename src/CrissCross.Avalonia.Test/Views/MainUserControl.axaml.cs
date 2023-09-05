@@ -9,17 +9,16 @@ using ReactiveUI;
 namespace CrissCross.Avalonia.Test.Views;
 
 /// <summary>
-/// MainWindow.
+/// MainUserControl.
 /// </summary>
-/// <seealso cref="Window" />
-public partial class MainWindow : NavigationWindow<MainWindowViewModel>
+public partial class MainUserControl : NavigationUserControl<MainWindowViewModel>
 {
     private Button? _NavBack;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MainWindow"/> class.
+    /// Initializes a new instance of the <see cref="MainUserControl"/> class.
     /// </summary>
-    public MainWindow()
+    public MainUserControl()
     {
         InitializeComponent();
         this.WhenActivated(d =>

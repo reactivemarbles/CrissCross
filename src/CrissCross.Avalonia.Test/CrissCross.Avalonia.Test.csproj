@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);RCS1198</NoWarn>
   </PropertyGroup>
 
   
@@ -27,6 +28,9 @@
   <ItemGroup>
     <Compile Update="Views\FirstView.axaml.cs">
       <DependentUpon>FirstView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainUserControl.axaml.cs">
+      <DependentUpon>MainUserControl.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

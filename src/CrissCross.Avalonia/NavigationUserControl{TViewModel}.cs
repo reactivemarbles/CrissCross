@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using Avalonia;
 using ReactiveUI;
 using Splat;
@@ -9,12 +8,12 @@ using Splat;
 namespace CrissCross.Avalonia
 {
     /// <summary>
-    /// Navigation Window.
+    /// NavigationUserControl.
     /// </summary>
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-    /// <seealso cref="NavigationWindow" />
-    /// <seealso cref="IViewFor&lt;TViewModel&gt;" />
-    public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewModel>
+    /// <seealso cref="CrissCross.Avalonia.NavigationUserControl" />
+    /// <seealso cref="ReactiveUI.IViewFor&lt;TViewModel&gt;" />
+    public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor<TViewModel>
         where TViewModel : class, IRxObject, new()
     {
         /// <summary>
@@ -22,12 +21,12 @@ namespace CrissCross.Avalonia
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("AvaloniaProperty", "AVP1002", Justification = "Generic avalonia property is expected here.")]
         public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty
-            .Register<NavigationWindow<TViewModel>, TViewModel?>(nameof(ViewModel));
+            .Register<NavigationUserControl<TViewModel>, TViewModel?>(nameof(ViewModel));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NavigationWindow{TViewModel}"/> class.
+        /// Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.
         /// </summary>
-        public NavigationWindow() =>
+        public NavigationUserControl() =>
             this.WhenActivated(_ => ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new());
 
         /// <summary>
