@@ -3,8 +3,15 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
+using Avalonia.Metadata;
 using ReactiveUI;
+
+[assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross", "CrissCross")]
+[assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross", "CrissCross.Avalonia")]
+[assembly: XmlnsPrefix("https://github.com/ChrisPulman/CrissCross", "rxNav")]
 
 namespace CrissCross.Avalonia
 {
@@ -21,7 +28,7 @@ namespace CrissCross.Avalonia
         /// The navigate back is enabled property.
         /// </summary>
         public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty =
-            AvaloniaProperty.Register<NavigationWindow, bool?>(nameof(NavigateBackIsEnabled));
+            AvaloniaProperty.Register<NavigationWindow, bool?>(nameof(NavigateBackIsEnabled), defaultValue: true);
 
         /// <summary>
         /// The navigation frame property.
@@ -29,13 +36,15 @@ namespace CrissCross.Avalonia
         public static readonly StyledProperty<ViewModelRoutedViewHost?> NavigationFrameProperty =
             AvaloniaProperty.Register<NavigationWindow, ViewModelRoutedViewHost?>(nameof(NavigationFrame));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NavigationWindow"/> class.
-        /// </summary>
-        public NavigationWindow()
-        {
-            ////NavigationFrame = new();
-        }
+        static NavigationWindow() =>
+            NavigationFrameProperty.Changed.Subscribe(static (e) =>
+            {
+                if (e.Sender is NavigationWindow navigationWindow && e.NewValue.Value is ViewModelRoutedViewHost host)
+                {
+                    host.HostName = navigationWindow.Name;
+                    navigationWindow.SetMainNavigationHost(host);
+                }
+            });
 
         /// <summary>
         /// Gets the can navigate back.
@@ -76,9 +85,33 @@ namespace CrissCross.Avalonia
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            NavigationFrame = this.FindControl<ViewModelRoutedViewHost>("PART_NavigationFrame");
-            NavigationFrame!.HostName = Name;
-            this.SetMainNavigationHost(NavigationFrame!);
+            NavigationFrame = new()
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HostName = Name,
+                NavigateBackIsEnabled = NavigateBackIsEnabled
+            };
+        }
+
+        /// <summary>
+        /// Registers the content presenter.
+        /// </summary>
+        /// <param name="presenter">The presenter.</param>
+        /// <returns>A bool.</returns>
+        protected override bool RegisterContentPresenter(ContentPresenter presenter)
+        {
+            if (presenter == null)
+            {
+                return false;
+            }
+
+            if (presenter.Name == "PART_ContentPresenter" && presenter.Content == null)
+            {
+                presenter.Content = NavigationFrame;
+            }
+
+            return base.RegisterContentPresenter(presenter);
         }
     }
 }

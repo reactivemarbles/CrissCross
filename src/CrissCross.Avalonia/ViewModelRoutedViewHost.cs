@@ -155,7 +155,7 @@ namespace CrissCross.Avalonia
         /// <value>
         /// <c>true</c> if [requires setup]; otherwise, <c>false</c>.
         /// </value>
-        public bool RequiresSetup => false;
+        public bool RequiresSetup => true;
 
         /// <summary>
         /// Gets the type by which the element is styled.

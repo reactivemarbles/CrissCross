@@ -4,7 +4,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
 using CrissCross.Avalonia.Test.Views;
 
 namespace CrissCross.Avalonia.Test;
@@ -18,10 +17,7 @@ public partial class App : Application
     /// <summary>
     /// Initializes the application by loading XAML etc.
     /// </summary>
-    public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     /// <summary>
     /// Called when [framework initialization completed].
@@ -30,17 +26,11 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainViewModel()
-            };
+            desktop.MainWindow = new MainWindow();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = new MainView
-            {
-                DataContext = new MainViewModel()
-            };
+            singleViewPlatform.MainView = new MainUserControl();
         }
 
         base.OnFrameworkInitializationCompleted();
