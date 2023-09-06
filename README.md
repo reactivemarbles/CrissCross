@@ -32,7 +32,7 @@ or
 
     Install-Package CrissCross.Avalonia
 
-COMING SOON
+or
 
     Install-Package CrissCross.WinForms
 

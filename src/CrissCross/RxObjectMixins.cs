@@ -7,29 +7,29 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Splat;
 
-namespace CrissCross
-{
+namespace CrissCross;
+
 #pragma warning disable RCS1175 // Unused 'this' parameter.
+/// <summary>
+/// RxObjectMixins.
+/// </summary>
+public static class RxObjectMixins
+{
+    private static readonly ReplaySubject<Unit> _buildCompleteSubject = new(1);
+
     /// <summary>
-    /// RxObjectMixins.
+    /// Sets the IOC container build complete, Execute this once after completion of IOC registrations.
     /// </summary>
-    public static class RxObjectMixins
-    {
-        private static readonly ReplaySubject<Unit> _buildCompleteSubject = new(1);
+    /// <param name="dummy">The dummy.</param>
+    public static void SetupComplete(this IMutableDependencyResolver dummy) => _buildCompleteSubject.OnNext(Unit.Default);
 
-        /// <summary>
-        /// Sets the IOC container build complete, Execute this once after completion of IOC registrations.
-        /// </summary>
-        /// <param name="dummy">The dummy.</param>
-        public static void SetupComplete(this IMutableDependencyResolver dummy) => _buildCompleteSubject.OnNext(Unit.Default);
-
-        /// <summary>
-        /// Gets the build complete.
-        /// </summary>
-        /// <param name="dummy">The dummy.</param>
-        /// <param name="action">The action.</param>
-        /// <value>The build complete.</value>
-        public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
-    }
-#pragma warning restore RCS1175 // Unused 'this' parameter.
+    /// <summary>
+    /// Gets the build complete.
+    /// </summary>
+    /// <param name="dummy">The dummy.</param>
+    /// <param name="action">The action.</param>
+    /// <value>The build complete.</value>
+    public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
 }
+#pragma warning restore RCS1175 // Unused 'this' parameter.
+

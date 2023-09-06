@@ -5,21 +5,20 @@ using CrissCross.XamForms.Test.ViewModels;
 using Splat;
 using Xamarin.Forms.Xaml;
 
-namespace CrissCross.XamForms.Test.Views
+namespace CrissCross.XamForms.Test.Views;
+
+/// <summary>
+/// LoginPage.
+/// </summary>
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class LoginPage
 {
     /// <summary>
-    /// LoginPage.
+    /// Initializes a new instance of the <see cref="LoginPage"/> class.
     /// </summary>
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage
+    public LoginPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoginPage"/> class.
-        /// </summary>
-        public LoginPage()
-        {
-            InitializeComponent();
-            BindingContext = ViewModel = Locator.Current.GetService<LoginViewModel>();
-        }
+        InitializeComponent();
+        BindingContext = ViewModel = Locator.Current.GetService<LoginViewModel>();
     }
 }

@@ -2,10 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #if !DESIGN
-using System;
 using System.Reactive.Linq;
 using ReactiveUI;
-using Splat;
 #endif
 
 namespace CrissCross.WinForms.Test;
@@ -25,7 +23,7 @@ public partial class MainForm : NavigationForm<MainWindowViewModel>
     public MainForm()
     {
 #if !DESIGN
-        Locator.CurrentMutable.RegisterLazySingleton<MainWindowViewModel>(() => new());
+        ////Locator.CurrentMutable.RegisterLazySingleton<MainWindowViewModel>(() => new());
 #endif
         InitializeComponent();
 #if !DESIGN

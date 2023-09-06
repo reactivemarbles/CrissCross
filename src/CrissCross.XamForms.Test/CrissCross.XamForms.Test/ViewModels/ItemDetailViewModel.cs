@@ -4,99 +4,97 @@
 using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
-using CrissCross;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;
 
-namespace CrissCross.XamForms.Test.ViewModels
+namespace CrissCross.XamForms.Test.ViewModels;
+
+/// <summary>
+/// ItemDetailViewModel.
+/// </summary>
+/// <seealso cref="BaseViewModel" />
+[QueryProperty(nameof(ItemId), nameof(ItemId))]
+public class ItemDetailViewModel : BaseViewModel
 {
+    private string? _itemId;
+
     /// <summary>
-    /// ItemDetailViewModel.
+    /// Gets or sets the identifier.
     /// </summary>
-    /// <seealso cref="BaseViewModel" />
-    [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class ItemDetailViewModel : BaseViewModel
+    /// <value>
+    /// The identifier.
+    /// </value>
+    [Reactive]
+    public string? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text.
+    /// </summary>
+    /// <value>
+    /// The text.
+    /// </value>
+    [Reactive]
+    public string? Text { get; set; }
+
+    /// <summary>
+    /// Gets or sets the description.
+    /// </summary>
+    /// <value>
+    /// The description.
+    /// </value>
+    [Reactive]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Gets or sets the item identifier.
+    /// </summary>
+    /// <value>
+    /// The item identifier.
+    /// </value>
+    public string? ItemId
     {
-        private string? _itemId;
+        get => _itemId;
 
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Reactive]
-        public string? Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        /// <value>
-        /// The text.
-        /// </value>
-        [Reactive]
-        public string? Text { get; set; }
-
-        /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
-        [Reactive]
-        public string? Description { get; set; }
-
-        /// <summary>
-        /// Gets or sets the item identifier.
-        /// </summary>
-        /// <value>
-        /// The item identifier.
-        /// </value>
-        public string? ItemId
+        set
         {
-            get => _itemId;
+            this.RaiseAndSetIfChanged(ref _itemId, value);
+            LoadItemId(value);
+        }
+    }
 
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _itemId, value);
-                LoadItemId(value);
-            }
+    /// <summary>
+    /// Loads the item identifier.
+    /// </summary>
+    /// <param name="itemId">The item identifier.</param>
+    public async void LoadItemId(string? itemId)
+    {
+        try
+        {
+            var item = await DataStore.GetItemAsync(itemId);
+            Id = item.Id;
+            Text = item.Text;
+            Description = item.Description;
+        }
+        catch (Exception)
+        {
+            Debug.WriteLine("Failed to Load Item");
+        }
+    }
+
+    /// <summary>
+    /// WhenNavigatedTo.
+    /// </summary>
+    /// <param name="e"></param>
+    /// <param name="disposables"></param>
+    /// <inheritdoc />
+    public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
+    {
+        if (e == null)
+        {
+            throw new ArgumentNullException(nameof(e));
         }
 
-        /// <summary>
-        /// Loads the item identifier.
-        /// </summary>
-        /// <param name="itemId">The item identifier.</param>
-        public async void LoadItemId(string? itemId)
-        {
-            try
-            {
-                var item = await DataStore.GetItemAsync(itemId);
-                Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Failed to Load Item");
-            }
-        }
-
-        /// <summary>
-        /// WhenNavigatedTo.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="disposables"></param>
-        /// <inheritdoc />
-        public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
-        {
-            if (e == null)
-            {
-                throw new ArgumentNullException(nameof(e));
-            }
-
-            ItemId = (string?)e.NavigationParameter;
-        }
+        ItemId = (string?)e.NavigationParameter;
     }
 }

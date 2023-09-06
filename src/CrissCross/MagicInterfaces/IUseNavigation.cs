@@ -1,21 +1,18 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
+namespace CrissCross;
 
-namespace CrissCross
+/// <summary>
+/// I Use Navigation.
+/// </summary>
+public interface IUseNavigation : IAmBuilt
 {
     /// <summary>
-    /// I Use Navigation.
+    /// Gets the name.
     /// </summary>
-    public interface IUseNavigation : IAmBuilt
-    {
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        string? Name { get; }
-    }
+    /// <value>
+    /// The name.
+    /// </value>
+    string? Name { get; }
 }
