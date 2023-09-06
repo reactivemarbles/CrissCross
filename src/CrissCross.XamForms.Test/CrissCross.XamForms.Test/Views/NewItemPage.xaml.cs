@@ -5,28 +5,27 @@ using CrissCross.XamForms.Test.Models;
 using CrissCross.XamForms.Test.ViewModels;
 using Splat;
 
-namespace CrissCross.XamForms.Test.Views
+namespace CrissCross.XamForms.Test.Views;
+
+/// <summary>
+/// NewItemPage.
+/// </summary>
+public partial class NewItemPage
 {
     /// <summary>
-    /// NewItemPage.
+    /// Initializes a new instance of the <see cref="NewItemPage"/> class.
     /// </summary>
-    public partial class NewItemPage
+    public NewItemPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NewItemPage"/> class.
-        /// </summary>
-        public NewItemPage()
-        {
-            InitializeComponent();
-            BindingContext = ViewModel = Locator.Current.GetService<NewItemViewModel>();
-        }
-
-        /// <summary>
-        /// Gets or sets the item.
-        /// </summary>
-        /// <value>
-        /// The item.
-        /// </value>
-        public Item? Item { get; set; }
+        InitializeComponent();
+        BindingContext = ViewModel = Locator.Current.GetService<NewItemViewModel>();
     }
+
+    /// <summary>
+    /// Gets or sets the item.
+    /// </summary>
+    /// <value>
+    /// The item.
+    /// </value>
+    public Item? Item { get; set; }
 }

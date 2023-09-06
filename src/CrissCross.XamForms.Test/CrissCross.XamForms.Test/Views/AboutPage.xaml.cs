@@ -4,23 +4,22 @@
 using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace CrissCross.XamForms.Test.Views
+namespace CrissCross.XamForms.Test.Views;
+
+/// <summary>
+/// AboutPage.
+/// </summary>
+public partial class AboutPage
 {
     /// <summary>
-    /// AboutPage.
+    /// Initializes a new instance of the <see cref="AboutPage"/> class.
     /// </summary>
-    public partial class AboutPage
+    public AboutPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AboutPage"/> class.
-        /// </summary>
-        public AboutPage()
+        InitializeComponent();
+        this.WhenActivated(d =>
         {
-            InitializeComponent();
-            this.WhenActivated(d =>
-            {
-                this.BindCommand(ViewModel, vm => vm.NavigateBack, v => v.btnBack).DisposeWith(d);
-            });
-        }
+            this.BindCommand(ViewModel, vm => vm.NavigateBack, v => v.btnBack).DisposeWith(d);
+        });
     }
 }

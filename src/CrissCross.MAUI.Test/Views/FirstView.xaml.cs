@@ -3,29 +3,27 @@
 
 using System.Reactive.Disposables;
 using ReactiveUI;
-using ReactiveUI.Maui;
 using Splat;
 
-namespace CrissCross.MAUI.Test
+namespace CrissCross.MAUI.Test;
+
+/// <summary>
+/// FirstView.
+/// </summary>
+[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class FirstView
 {
     /// <summary>
-    /// FirstView.
+    /// Initializes a new instance of the <see cref="FirstView"/> class.
     /// </summary>
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class FirstView
+    public FirstView()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FirstView"/> class.
-        /// </summary>
-        public FirstView()
+        InitializeComponent();
+        this.WhenActivated(d =>
         {
-            InitializeComponent();
-            this.WhenActivated(d =>
-            {
-                ViewModel ??= Locator.Current.GetService<FirstViewModel>();
-                this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
-                this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            });
-        }
+            ViewModel ??= Locator.Current.GetService<FirstViewModel>();
+            this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
+            this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+        });
     }
 }

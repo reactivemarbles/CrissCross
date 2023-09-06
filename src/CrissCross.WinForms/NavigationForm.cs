@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.Reactive.Linq;
-using ReactiveUI;
 
 namespace CrissCross.WinForms;
 
@@ -29,7 +28,7 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
     /// <value>
     ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
-    [Category("ReactiveMarbles")]
+    [Category("CrissCross")]
     [Description("A value indicating if Navigating back is enabled.")]
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -50,7 +49,7 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
     /// <value>
     /// The navigation frame dock.
     /// </value>
-    [Category("ReactiveMarbles")]
+    [Category("CrissCross")]
     [Description("A value indicating the dock style.")]
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
@@ -92,7 +91,6 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
         if (!DesignMode)
         {
             this.SetMainNavigationHost(NavigationFrame);
-            NavigationFrame.Setup();
         }
 
         NavigationFrame.NavigateBackIsEnabled = NavigateBackIsEnabled;

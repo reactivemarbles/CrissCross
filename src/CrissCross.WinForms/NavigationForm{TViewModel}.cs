@@ -26,7 +26,7 @@ where TViewModel : class, IRxObject, new()
     }
 
     /// <inheritdoc/>
-    [Category("ReactiveMarbles")]
+    [Category("CrissCross")]
     [Description("The ViewModel.")]
     [Bindable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -5,22 +5,21 @@ using CrissCross.XamForms.Test.ViewModels;
 using ReactiveUI;
 using Splat;
 
-namespace CrissCross.XamForms.Test.Views
+namespace CrissCross.XamForms.Test.Views;
+
+/// <summary>
+/// ItemsPage.
+/// </summary>
+public partial class ItemsPage
 {
     /// <summary>
-    /// ItemsPage.
+    /// Initializes a new instance of the <see cref="ItemsPage"/> class.
     /// </summary>
-    public partial class ItemsPage
+    public ItemsPage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ItemsPage"/> class.
-        /// </summary>
-        public ItemsPage()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            BindingContext = ViewModel = Locator.Current.GetService<ItemsViewModel>();
-            this.WhenActivated(_ => ViewModel?.OnAppearing());
-        }
+        BindingContext = ViewModel = Locator.Current.GetService<ItemsViewModel>();
+        this.WhenActivated(_ => ViewModel?.OnAppearing());
     }
 }

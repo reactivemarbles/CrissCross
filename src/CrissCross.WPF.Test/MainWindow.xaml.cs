@@ -4,24 +4,23 @@
 using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace CrissCross.WPF.Test
+namespace CrissCross.WPF.Test;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml.
+/// </summary>
+public partial class MainWindow
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml.
+    /// Initializes a new instance of the <see cref="MainWindow"/> class.
     /// </summary>
-    public partial class MainWindow
+    public MainWindow()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
-        /// </summary>
-        public MainWindow()
+        InitializeComponent();
+        this.WhenActivated(d =>
         {
-            InitializeComponent();
-            this.WhenActivated(d =>
-            {
-                this.NavigateToView<MainViewModel>();
-                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
-            });
-        }
+            this.NavigateToView<MainViewModel>();
+            NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
+        });
     }
 }
