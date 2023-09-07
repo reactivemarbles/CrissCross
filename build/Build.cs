@@ -15,13 +15,13 @@ using Nuke.Common.Tools.MSBuild;
 [GitHubActions(
     "BuildOnly",
     GitHubActionsImage.WindowsLatest,
-    OnPushBranchesIgnore = new[] { "main" },
+    OnPushBranchesIgnore = new[] { "master" },
     FetchDepth = 0,
     InvokedTargets = new[] { nameof(Compile) })]
 [GitHubActions(
     "BuildDeploy",
     GitHubActionsImage.WindowsLatest,
-    OnPushBranches = new[] { "main" },
+    OnPushBranches = new[] { "master" },
     FetchDepth = 0,
     ImportSecrets = new[] { nameof(NuGetApiKey) },
     InvokedTargets = new[] { nameof(Compile), nameof(Deploy) })]
