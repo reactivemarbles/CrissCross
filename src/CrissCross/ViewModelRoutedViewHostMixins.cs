@@ -404,15 +404,15 @@ public static class ViewModelRoutedViewHostMixins
             throw new ArgumentNullException(nameof(viewHost));
         }
 
-        if (NavigationHost.ContainsKey(@this.Name))
+        if (NavigationHost.ContainsKey(@this.Name!))
         {
             return;
         }
 
-        WhenSetupSubjects.Add(@this.Name, new(1));
-        NavigationHost.Add(@this.Name, viewHost);
-        CurrentViewDisposable.Add(@this.Name, new CompositeDisposable());
-        ResultNavigating.Add(@this.Name, new Subject<IViewModelNavigatingEventArgs>());
+        WhenSetupSubjects.Add(@this.Name!, new(1));
+        NavigationHost.Add(@this.Name!, viewHost);
+        CurrentViewDisposable.Add(@this.Name!, new CompositeDisposable());
+        ResultNavigating.Add(@this.Name!, new Subject<IViewModelNavigatingEventArgs>());
 
         if (viewHost.RequiresSetup)
         {
@@ -420,7 +420,7 @@ public static class ViewModelRoutedViewHostMixins
         }
 
         ASetupCompleted.OnNext(Unit.Default);
-        WhenSetupSubjects[@this.Name].OnNext(true);
+        WhenSetupSubjects[@this.Name!].OnNext(true);
     }
 
     /// <summary>
@@ -462,12 +462,12 @@ public static class ViewModelRoutedViewHostMixins
         {
             if (ea.NavigationType == NavigationType.New)
             {
-                CurrentViewDisposable[ea.HostName]?.Dispose();
-                CurrentViewDisposable[ea.HostName] = new CompositeDisposable();
+                CurrentViewDisposable[ea.HostName!]?.Dispose();
+                CurrentViewDisposable[ea.HostName!] = new CompositeDisposable();
             }
 
-            e(ea, CurrentViewDisposable[ea.HostName]);
-            ea?.To?.WhenNavigatedTo(ea, CurrentViewDisposable[ea.HostName]);
+            e(ea, CurrentViewDisposable[ea.HostName!]);
+            ea?.To?.WhenNavigatedTo(ea, CurrentViewDisposable[ea.HostName!]);
         }).DisposeWith(@this.CleanUp);
     }
 
@@ -498,7 +498,7 @@ public static class ViewModelRoutedViewHostMixins
 
                 ea.From?.WhenNavigating(ea);
 
-                ResultNavigating[ea.HostName].OnNext(ea);
+                ResultNavigating[ea.HostName!].OnNext(ea);
             }
         }).DisposeWith(@this.CleanUp);
     }

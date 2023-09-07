@@ -19,7 +19,7 @@ name: BuildDeploy
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   windows-latest:

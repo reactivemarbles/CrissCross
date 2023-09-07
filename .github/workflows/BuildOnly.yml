@@ -19,7 +19,7 @@ name: BuildOnly
 on:
   push:
     branches-ignore:
-      - main
+      - master
 
 jobs:
   windows-latest:

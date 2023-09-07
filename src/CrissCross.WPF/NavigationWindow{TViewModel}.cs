@@ -21,7 +21,7 @@ public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewMode
     /// </summary>
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(
-            "ViewModel",
+            nameof(ViewModel),
             typeof(TViewModel),
             typeof(NavigationWindow<TViewModel>),
             new PropertyMetadata(null));
