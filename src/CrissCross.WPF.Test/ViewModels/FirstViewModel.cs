@@ -23,14 +23,14 @@ public class FirstViewModel : RxObject
             {
                 GotoMain = ReactiveCommand.Create(() =>
                 {
-                    this.NavigateToView<MainViewModel>("mainWindow");
+                    this.NavigateToView<MainViewModel>("browserView");
                     this.NavigateToView<FirstViewModel>("secondWindow");
                 });
 
                 GotoFirst = ReactiveCommand.Create(() =>
                 {
                     this.NavigateToView<MainViewModel>("secondWindow");
-                    this.NavigateToView<FirstViewModel>("mainWindow");
+                    this.NavigateToView<FirstViewModel>("browserView");
                 });
             });
 

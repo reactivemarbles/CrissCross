@@ -23,6 +23,9 @@ public class MainWindowViewModel : RxObject
 
         Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
         Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+
+        Locator.CurrentMutable.RegisterConstant<BrowserViewModel>(new());
+        Locator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(() => new BrowserView());
         Locator.CurrentMutable.SetupComplete();
         var s = new SecondWindow();
         s.Show();

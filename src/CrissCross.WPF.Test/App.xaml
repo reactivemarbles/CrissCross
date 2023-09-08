@@ -12,7 +12,7 @@
                     <ControlTemplate TargetType="{x:Type rxNav:NavigationWindow}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
+                                <ColumnDefinition Width="200" />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <ContentPresenter Grid.Column="0" />

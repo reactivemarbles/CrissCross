@@ -10,37 +10,40 @@ using ReactiveUI;
 namespace CrissCross.WPF.Test;
 
 /// <summary>
-/// MainViewModel.
+/// BrowserViewModel.
 /// </summary>
-/// <seealso cref="RxObject" />
-public class MainViewModel : RxObject
+/// <seealso cref="CrissCross.RxObject" />
+public class BrowserViewModel : RxObject
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainViewModel"/> class.
-    /// </summary>
-    public MainViewModel() =>
-        this.BuildComplete(() =>
-            {
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("secondWindow");
-                    this.NavigateToView<FirstViewModel>("browserView");
-                });
+    private string _WebUrl = string.Empty;
 
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("browserView");
-                    this.NavigateToView<FirstViewModel>("secondWindow");
-                });
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BrowserViewModel"/> class.
+    /// </summary>
+    public BrowserViewModel() =>
+        this.BuildComplete(() =>
+        {
+            GotoMain = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView<MainViewModel>("mainWindow");
+                this.NavigateToView<FirstViewModel>("secondWindow");
             });
 
+            GotoFirst = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView<MainViewModel>("secondWindow");
+                this.NavigateToView<FirstViewModel>("mainWindow");
+            });
+            WebUrl = "https://www.aicsolutions.com";
+        });
+
     /// <summary>
-    /// Gets the goto first.
+    /// Gets or sets the web URL.
     /// </summary>
     /// <value>
-    /// The goto first.
+    /// The web URL.
     /// </value>
-    public ICommand? GotoFirst { get; private set; }
+    public string WebUrl { get => _WebUrl; set => this.RaiseAndSetIfChanged(ref _WebUrl, value); }
 
     /// <summary>
     /// Gets the goto main.
@@ -51,6 +54,14 @@ public class MainViewModel : RxObject
     public ICommand? GotoMain { get; private set; }
 
     /// <summary>
+    /// Gets the goto first.
+    /// </summary>
+    /// <value>
+    /// The goto first.
+    /// </value>
+    public ICommand? GotoFirst { get; private set; }
+
+    /// <summary>
     /// WhenNavigatedTo.
     /// </summary>
     /// <param name="e"></param>
@@ -58,7 +69,7 @@ public class MainViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }
@@ -74,7 +85,7 @@ public class MainViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }
@@ -90,12 +101,12 @@ public class MainViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }
 
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name!} To: {e.To?.Name!} with Host {e.HostName!}");
+        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
 }

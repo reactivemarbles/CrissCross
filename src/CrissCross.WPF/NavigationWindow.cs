@@ -99,6 +99,7 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     {
         base.OnApplyTemplate();
         NavigationFrame = (ViewModelRoutedViewHost)Template.FindName(nameof(NavigationFrame), this);
+
         if (NavigationFrame == null)
         {
             throw new Exception($"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} is missing from the Style template.");

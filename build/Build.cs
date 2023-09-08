@@ -8,9 +8,9 @@ using Nuke.Common.Tools.NerdbankGitVersioning;
 using Nuke.Common.Tools.DotNet;
 using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using Nuke.Common.Tools.PowerShell;
 using CP.BuildTools;
 using Nuke.Common.Tools.MSBuild;
+using System;
 
 [GitHubActions(
     "BuildOnly",
@@ -78,20 +78,13 @@ partial class Build : NukeBuild
     {
         if (Repository.IsOnMainOrMasterBranch())
         {
-            var packableProjects = Solution.GetPackableProjects();
-
-            foreach (var project in packableProjects!)
-            {
-                Log.Information("Packing {Project}", project.Name);
-            }
-
-            DotNetPack(settings => settings
-                .SetConfiguration(Configuration)
-                .SetNoBuild(true)
-                .SetVersion(NerdbankVersioning.NuGetPackageVersion)
-                .SetOutputDirectory(PackagesDirectory)
-                .CombineWith(packableProjects, (packSettings, project) =>
-                    packSettings.SetProject(project)));
+            MSBuildTasks.MSBuild(s => s
+                        .SetSolutionFile(Solution)
+                        .SetConfiguration(Configuration)
+                        .SetTargets("build,pack")
+                        .SetMaxCpuCount(Environment.ProcessorCount)
+                        .SetPackageVersion(NerdbankVersioning.NuGetPackageVersion)
+                        .SetPackageOutputPath(PackagesDirectory));
         }
     });
 
