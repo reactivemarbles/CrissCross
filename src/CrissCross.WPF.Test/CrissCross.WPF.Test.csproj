@@ -13,12 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\BrowserView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\FirstView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\BrowserView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\FirstView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

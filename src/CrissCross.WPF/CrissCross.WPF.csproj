@@ -6,10 +6,12 @@
 		<Nullable>enable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.674-prerelease" />
 	</ItemGroup>
 
 	<ItemGroup>

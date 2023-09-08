@@ -19,7 +19,7 @@ public partial class MainWindow
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            this.NavigateToView<MainViewModel>();
+            this.NavigateToView<BrowserViewModel>();
             NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
         });
     }
