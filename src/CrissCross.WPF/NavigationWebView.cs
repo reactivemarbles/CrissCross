@@ -59,11 +59,16 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationWebView"/> class.
     /// </summary>
-    public NavigationWebView() => _WebBrowser = new()
+    public NavigationWebView()
     {
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        VerticalAlignment = VerticalAlignment.Stretch
-    };
+        _WebBrowser = new()
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch
+        };
+
+        Unloaded += (s, e) => Dispose();
+    }
 
     /// <summary>
     /// Gets the can navigate back.
