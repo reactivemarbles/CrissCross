@@ -15,7 +15,7 @@
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>Compatability with Net 6, Net 7 and netstandard2.0</PackageReleaseNotes>
-    <PackageTags>ReactiveUI;Navigation;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
+    <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <PackageProjectUrl>https://github.com/ChrisPulman/CrissCross</PackageProjectUrl>

@@ -31,7 +31,6 @@ public partial class BrowserView : IUseHostedNavigation
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .BindTo(this, vm => vm.browserView.Source)
                 .DisposeWith(d);
-            browserView.DisposeWith(d);
             this.NavigateToView<MainViewModel>(browserView.Name);
         });
     }
