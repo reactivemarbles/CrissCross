@@ -93,7 +93,7 @@ public class WebView2Wpf : ContentControl, IDisposable
         _WebBrowser = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
+            VerticalAlignment = VerticalAlignment.Stretch,
         };
         Unloaded += (s, e) => Dispose();
     }
@@ -168,9 +168,9 @@ public class WebView2Wpf : ContentControl, IDisposable
     ///   <c>true</c> if [zoom factor]; otherwise, <c>false</c>.
     /// </value>
     [Category("Common")]
-    public bool ZoomFactor
+    public double ZoomFactor
     {
-        get => (bool)GetValue(ZoomFactorProperty);
+        get => (double)GetValue(ZoomFactorProperty);
         set => SetValue(ZoomFactorProperty, value);
     }
 
