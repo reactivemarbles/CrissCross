@@ -60,7 +60,7 @@ public class WindowHost<TWindow> : HwndHost
     public void Close()
     {
         Window.Close();
-        DestroyWindowCore(default);
+        DestroyWindowCore(new HandleRef(Window, IntPtr.Zero));
     }
 
     /// <summary>
