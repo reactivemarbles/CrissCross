@@ -29,7 +29,7 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.0.4</AvaloniaVersion>
+    <AvaloniaVersion>11.0.5</AvaloniaVersion>
     <ReactiveUIVersion>19.5.1</ReactiveUIVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
