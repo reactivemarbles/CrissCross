@@ -12,9 +12,41 @@
     mc:Ignorable="d">
     <Grid>
         <rxnav:WebView2Wpf x:Name="WebView2Wpf" Source="https://www.aicsolutions.com">
-            <Grid>
-                <TextBlock FontSize="20" Text="Hello World" />
-            </Grid>
+            <StackPanel HorizontalAlignment="Left">
+                <TextBlock
+                    x:Name="Greeting"
+                    FontSize="20"
+                    Foreground="Red"
+                    Text="Hello World" />
+                <Button
+                    Width="100"
+                    Height="100"
+                    Background="Transparent"
+                    Click="ReactiveUI_Click">
+                    <Image Source="/logo.png" />
+                </Button>
+                <Button
+                    Width="100"
+                    Height="100"
+                    Background="Transparent"
+                    Click="Windows7_Click">
+                    <Image Source="/logo1.png" />
+                </Button>
+                <Button
+                    Width="100"
+                    Height="100"
+                    Background="Transparent"
+                    Click="WindowsXp_Click">
+                    <Image Source="/logo2.png" />
+                </Button>
+                <Button
+                    Width="100"
+                    Height="100"
+                    Background="Transparent"
+                    Click="Windows10_Click">
+                    <Image Source="/logo3.png" />
+                </Button>
+            </StackPanel>
         </rxnav:WebView2Wpf>
     </Grid>
 </Window>
