@@ -29,6 +29,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      
+      - name: 'Install DotNet workloads'
+        shell: bash
+        run: |
+          dotnet workload install android ios tvos macos maui maccatalyst
+
       - name: 'Cache: .nuke/temp, ~/.nuget/packages'
         uses: actions/cache@v3
         with:
