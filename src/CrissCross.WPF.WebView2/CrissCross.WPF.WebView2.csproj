@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-		<TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+		<TargetFrameworks>$(CrissCrossWebviewTargetFrameworks)</TargetFrameworks>
 		<UseWpf>true</UseWpf>
 		<Nullable>enable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
