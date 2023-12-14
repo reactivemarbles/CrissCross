@@ -41,7 +41,7 @@ jobs:
       - name: 'Install DotNet workloads'
         shell: bash
         run: |
-          dotnet workload install android ios tvos macos maui maccatalyst
+          dotnet workload install android ios tvos macos maui maccatalyst wasm
 
       - name: 'Cache: .nuke/temp, ~/.nuget/packages'
         uses: actions/cache@v3
