@@ -41,7 +41,7 @@ public abstract class RxObject : ReactiveObject, IRxObject
     /// <value>
     /// The disposables.
     /// </value>
-    protected CompositeDisposable Disposables { get; } = new CompositeDisposable();
+    protected CompositeDisposable Disposables { get; } = [];
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting

@@ -25,10 +25,19 @@ jobs:
   windows-latest:
     name: windows-latest
     runs-on: windows-latest
+    environment:
+      name: release
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: NBGV
+        id: nbgv
+        uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+      - run: echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
+
       - name: 'Cache: .nuke/temp, ~/.nuget/packages'
         uses: actions/cache@v3
         with:
@@ -45,3 +54,17 @@ jobs:
         with:
           name: output
           path: output
+
+      - name: Changelog
+        uses: glennawatson/ChangeLog@v1
+        id: changelog
+
+      - name: Create Release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.nbgv.outputs.SemVer2 }}
+          release_name: ${{ steps.nbgv.outputs.SemVer2 }}
+          body: |
+            ${{ steps.changelog.outputs.commitLog }}

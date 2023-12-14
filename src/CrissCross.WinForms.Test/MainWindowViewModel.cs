@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #if !DESIGN
+using System.Reactive;
 using CrissCross.WinForms.Test.Views;
 using ReactiveUI;
 using Splat;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-		<TargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net7.0-windows10.0.17763.0</TargetFrameworks>
+		<TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
 		<UseWpf>true</UseWpf>
 		<Nullable>enable</Nullable>
 		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2194-prerelease" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2210.55" />
 	</ItemGroup>
 
 </Project>

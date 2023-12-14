@@ -62,15 +62,17 @@ public static class ViewModelRoutedViewHostMixins
                     if (@this.Name.Length == 0)
                     {
                         NavigationHost.First().Value.CanNavigateBackObservable
-                         .Subscribe(x => obs.OnNext(x == true))
-                         .DisposeWith(dis);
+                        .DistinctUntilChanged()
+                        .Subscribe(x => obs.OnNext(x == true))
+                        .DisposeWith(dis);
                     }
 
                     if (NavigationHost.TryGetValue(@this.Name, out var value))
                     {
                         value.CanNavigateBackObservable
-                         .Subscribe(x => obs.OnNext(x == true))
-                         .DisposeWith(dis);
+                        .DistinctUntilChanged()
+                        .Subscribe(x => obs.OnNext(x == true))
+                        .DisposeWith(dis);
                     }
                 }
             });
@@ -106,6 +108,7 @@ public static class ViewModelRoutedViewHostMixins
                      if (hostName.Length == 0)
                      {
                          NavigationHost.First().Value.CanNavigateBackObservable
+                         .DistinctUntilChanged()
                          .Subscribe(x => obs.OnNext(x == true))
                          .DisposeWith(dis);
                      }
@@ -113,6 +116,7 @@ public static class ViewModelRoutedViewHostMixins
                      if (NavigationHost.TryGetValue(hostName, out var value))
                      {
                          value.CanNavigateBackObservable
+                         .DistinctUntilChanged()
                          .Subscribe(x => obs.OnNext(x == true))
                          .DisposeWith(dis);
                      }
@@ -411,7 +415,7 @@ public static class ViewModelRoutedViewHostMixins
 
         WhenSetupSubjects.Add(@this.Name!, new(1));
         NavigationHost.Add(@this.Name!, viewHost);
-        CurrentViewDisposable.Add(@this.Name!, new CompositeDisposable());
+        CurrentViewDisposable.Add(@this.Name!, new());
         ResultNavigating.Add(@this.Name!, new Subject<IViewModelNavigatingEventArgs>());
 
         if (viewHost.RequiresSetup)
@@ -463,7 +467,7 @@ public static class ViewModelRoutedViewHostMixins
             if (ea.NavigationType == NavigationType.New)
             {
                 CurrentViewDisposable[ea.HostName!]?.Dispose();
-                CurrentViewDisposable[ea.HostName!] = new CompositeDisposable();
+                CurrentViewDisposable[ea.HostName!] = new();
             }
 
             e(ea, CurrentViewDisposable[ea.HostName!]);
@@ -560,7 +564,6 @@ public static class ViewModelRoutedViewHostMixins
                             {
                                 WhenSetupSubjects[hostName].Where(x => x).Subscribe(obs).DisposeWith(dis);
                             }
-#pragma warning restore CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
                         }
                         else
                         {
@@ -570,5 +573,6 @@ public static class ViewModelRoutedViewHostMixins
                 }).DisposeWith(dis);
                 return dis;
             });
+#pragma warning restore CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
 #pragma warning restore RCS1175 // Unused 'this' parameter.
 }

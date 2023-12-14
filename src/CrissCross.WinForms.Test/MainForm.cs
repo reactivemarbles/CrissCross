@@ -3,6 +3,7 @@
 
 #if !DESIGN
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
 using ReactiveUI;
 #endif
 
@@ -20,11 +21,9 @@ public partial class MainForm : NavigationForm<MainWindowViewModel>
     /// <summary>
     /// Initializes a new instance of the <see cref="MainForm"/> class.
     /// </summary>
+    [RequiresPreviewFeatures]
     public MainForm()
     {
-#if !DESIGN
-        ////Locator.CurrentMutable.RegisterLazySingleton<MainWindowViewModel>(() => new());
-#endif
         InitializeComponent();
 #if !DESIGN
         this.WhenSetup().Subscribe(_ =>
