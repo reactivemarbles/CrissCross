@@ -29,14 +29,17 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.0.5</AvaloniaVersion>
+    <AvaloniaVersion>11.0.6</AvaloniaVersion>
     <ReactiveUIVersion>19.5.1</ReactiveUIVersion>
+    <CrissCrossCoreTargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net7.0-windows10.0.17763.0;net8.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net6.0-windows;net7.0-windows;net8.0-windows</CrissCrossWebviewTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <ItemGroup Condition="'$(IsTestProject)' != 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)images\CrissCross.png" Pack="true" PackagePath="\" />
@@ -47,7 +50,7 @@
     <!--<Compile Update="**\*.cs" DependentUpon="I%(Filename).cs" />-->
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" PrivateAssets="all" Condition="!Exists('packages.config')" />
     <PackageReference Include="stylecop.analyzers" Version="1.2.0-beta.507" PrivateAssets="all" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.6.2" PrivateAssets="All" />
+    <PackageReference Include="Roslynator.Analyzers" Version="4.7.0" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 </Project>
