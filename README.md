@@ -1,7 +1,11 @@
 # CrissCross
 A Navigation Framework for ReactiveUI based projects
 
+![Alt](https://repobeats.axiom.co/api/embed/3ffd196858ee7468fa2e28225b0edf635b6c740b.svg "Repobeats analytics image")
+
 ![CrissCross](https://github.com/ChrisPulman/CrissCross/blob/master/Images/CrissCross.png)
+
+[![CrissCross CI-Build](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml) 
 
 ## What is CrissCross?
 
@@ -17,22 +21,28 @@ CrissCross is designed to be a simple, lightweight, and easy to use navigation f
 
 CrissCross is available on NuGet. You can install it using the NuGet Package Manager:
 
+![Nuget](https://img.shields.io/nuget/v/CrissCross) ![Nuget](https://img.shields.io/nuget/dt/CrissCross)
+
+    Install-Package CrissCross
+
+or ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF)
+
     Install-Package CrissCross.WPF
 
-or
+or ![Nuget](https://img.shields.io/nuget/v/CrissCross.XamForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.XamForms)
 
     Install-Package CrissCross.XamForms
 
-or
+or ![Nuget](https://img.shields.io/nuget/v/CrissCross.MAUI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.MAUI)
 
     Install-Package CrissCross.MAUI
 
-or
+or ![Nuget](https://img.shields.io/nuget/v/CrissCross.Avalonia) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.Avalonia)
 
 
     Install-Package CrissCross.Avalonia
 
-or
+or ![Nuget](https://img.shields.io/nuget/v/CrissCross.WinForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WinForms)
 
     Install-Package CrissCross.WinForms
 
