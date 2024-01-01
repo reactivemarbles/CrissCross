@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" />
     <PackageReference Include="Nuke.Common" Version="7.0.6" />
-    <PackageReference Include="CP.Nuke.BuildTools" Version="1.0.36" />
+    <PackageReference Include="CP.Nuke.BuildTools" Version="1.0.38" />
   </ItemGroup>
 
   <ItemGroup>
