@@ -14,7 +14,7 @@
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Compatability with Net 6, Net 7 and netstandard2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatability with Net 6/7/8 and netstandard2.0</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -30,7 +30,7 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
     <AvaloniaVersion>11.0.6</AvaloniaVersion>
-    <ReactiveUIVersion>19.5.1</ReactiveUIVersion>
+    <ReactiveUIVersion>19.5.39</ReactiveUIVersion>
     <CrissCrossCoreTargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</CrissCrossCoreTargetFrameworks>
     <CrissCrossWinTargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net7.0-windows10.0.17763.0;net8.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
     <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net6.0-windows;net7.0-windows;net8.0-windows</CrissCrossWebviewTargetFrameworks>
