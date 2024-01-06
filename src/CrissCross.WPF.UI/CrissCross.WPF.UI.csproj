@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="1.1.18" />
+    <PackageReference Include="WPF-UI" Version="3.0.0-preview.13" />
+    <PackageReference Include="WPF-UI.Tray" Version="3.0.0-preview.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
+  </ItemGroup>
+
+</Project>
