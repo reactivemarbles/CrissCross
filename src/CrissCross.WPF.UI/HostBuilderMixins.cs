@@ -24,7 +24,7 @@ namespace CrissCross.WPF.UI
         /// <param name="hostBuilder">The host builder.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
         public static IHostBuilder ConfigureCrissCrossForPageNavigation<TWindow, TPage>(this IHostBuilder hostBuilder)
-            where TWindow : Window
+            where TWindow : Window, INavigationWindow
             where TPage : Page => hostBuilder
             .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
             .ConfigureServices(
@@ -33,6 +33,7 @@ namespace CrissCross.WPF.UI
                 .AddSingleton<IPageService, PageService>() // Page resolver service
                 .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
                 .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
-                .AddSingleton<INavigationService, NavigationService>()); // Service containing navigation, same as INavigationWindow... but without window
+                .AddSingleton<INavigationService, NavigationService>() // Service containing navigation, same as INavigationWindow... but without window
+                .AddSingleton<INavigationWindow, TWindow>());
     }
 }

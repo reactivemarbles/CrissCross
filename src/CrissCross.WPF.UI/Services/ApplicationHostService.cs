@@ -47,8 +47,14 @@ internal class ApplicationHostService<TWindow, TPage>(IServiceProvider servicePr
 
         if (!Application.Current.Windows.OfType<TWindow>().Any())
         {
-            _navigationWindow = (serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow)!;
-            _navigationWindow!.ShowWindow();
+            _navigationWindow = serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow;
+
+            if (_navigationWindow is null)
+            {
+                throw new InvalidOperationException("Navigation Window not registered.");
+            }
+
+            _navigationWindow.ShowWindow();
 
             _navigationWindow.Navigate(typeof(TPage));
         }
