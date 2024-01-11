@@ -18,8 +18,8 @@ public partial class App
         .ConfigureServices(
             (context, services) =>
             {
-                // Register Main window for navigation
-                services.AddSingleton<INavigationWindow, MainWindow>().AddSingleton<MainWindowViewModel>();
+                // Register Main window View Model.
+                services.AddSingleton<MainWindowViewModel>();
 
                 // Views and ViewModels
                 services.AddSingleton<DashboardPage>().AddSingleton<DashboardViewModel>();

@@ -75,18 +75,13 @@ public partial class MainWindow : INavigationWindow
     public void CloseWindow() => Close();
 
     /// <summary>
-    /// Provides direct access to the control responsible for navigation.
-    /// </summary>
-    /// <returns>
-    /// Instance of the <see cref="T:Wpf.Ui.Controls.INavigationView" /> control.
-    /// </returns>
-    INavigationView INavigationWindow.GetNavigation() => throw new NotImplementedException();
-
-    /// <summary>
     /// Lets you attach the service provider that delivers page instances to <see cref="T:Wpf.Ui.Controls.INavigationView" />.
     /// </summary>
     /// <param name="serviceProvider">Instance of the <see cref="T:System.IServiceProvider" />.</param>
-    public void SetServiceProvider(IServiceProvider serviceProvider) => throw new NotImplementedException();
+    public void SetServiceProvider(IServiceProvider serviceProvider)
+    {
+        // Not used
+    }
 
     /// <summary>
     /// Raises the closed event.

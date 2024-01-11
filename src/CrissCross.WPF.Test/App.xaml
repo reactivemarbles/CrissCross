@@ -6,28 +6,33 @@
     xmlns:rxNav="https://github.com/ChrisPulman/CrissCross"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <Style x:Key="NavigationWindowStyle" TargetType="{x:Type rxNav:NavigationWindow}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type rxNav:NavigationWindow}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <ContentPresenter Grid.Column="0" />
-                            <rxNav:ViewModelRoutedViewHost
-                                x:Name="NavigationFrame"
-                                Grid.Column="1"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                HostName="{TemplateBinding Name}"
-                                NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
-                                Transition="{TemplateBinding Transition}" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <rxNav:CrissCrossWpfDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SplitNavigationWindowStyle" TargetType="{x:Type rxNav:NavigationWindow}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type rxNav:NavigationWindow}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" />
+                                <rxNav:ViewModelRoutedViewHost
+                                    x:Name="NavigationFrame"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HostName="{TemplateBinding Name}"
+                                    NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
+                                    Transition="{TemplateBinding Transition}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

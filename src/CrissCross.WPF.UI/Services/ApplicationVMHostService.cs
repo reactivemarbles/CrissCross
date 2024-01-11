@@ -4,6 +4,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Hosting;
+using ReactiveUI;
 using Wpf.Ui;
 
 namespace CrissCross.WPF.UI;
@@ -12,17 +13,17 @@ namespace CrissCross.WPF.UI;
 /// Managed host of the application.
 /// </summary>
 /// <typeparam name="TWindow">The application Window.</typeparam>
-/// <typeparam name="TPage">The Start Page.</typeparam>
+/// <typeparam name="TViewModel">The Start ViewModel.</typeparam>
 /// <seealso cref="IHostedService" />
 /// <remarks>
-/// Initializes a new instance of the <see cref="ApplicationHostService{TWindow , TPage}" /> class.
+/// Initializes a new instance of the <see cref="ApplicationVMHostService{TWindow , TPage}" /> class.
 /// </remarks>
 /// <param name="serviceProvider">The service provider.</param>
-internal class ApplicationHostService<TWindow, TPage>(IServiceProvider serviceProvider) : IHostedService
-    where TWindow : Window
-    where TPage : Page
+internal class ApplicationVMHostService<TWindow, TViewModel>(IServiceProvider serviceProvider) : IHostedService
+    where TWindow : NavigationWindow
+    where TViewModel : class, IRxObject, new()
 {
-    private INavigationWindow? _navigationWindow;
+    private NavigationWindow? _navigationWindow;
 
     /// <summary>
     /// Triggered when the application host is ready to start the service.
@@ -47,16 +48,16 @@ internal class ApplicationHostService<TWindow, TPage>(IServiceProvider servicePr
 
         if (!Application.Current.Windows.OfType<TWindow>().Any())
         {
-            _navigationWindow = serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow;
+            _navigationWindow = serviceProvider.GetService(typeof(NavigationWindow)) as NavigationWindow;
 
             if (_navigationWindow is null)
             {
                 throw new InvalidOperationException("Navigation Window not registered.");
             }
 
-            _navigationWindow.ShowWindow();
+            _navigationWindow.Show();
 
-            _navigationWindow.Navigate(typeof(TPage));
+            _navigationWindow.NavigateToView<TViewModel>();
         }
 
         await Task.CompletedTask;

@@ -1,0 +1,395 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
+    xmlns:bbcode="https://github.com/ChrisPulman/BBCode.WPF"
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI"
+    xmlns:converters="https://github.com/ChrisPulman/XamlConverters"
+    xmlns:rxNav="https://github.com/ChrisPulman/CrissCross">
+
+    <converters:ToUpperConverter x:Key="ToUpperConverter" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <Style TargetType="{x:Type controls:ModernWindow}">
+        <Setter Property="BackgroundContent" Value="{DynamicResource WindowBackgroundContent}" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource WindowForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorder}" />
+        <Setter Property="Height" Value="600" />
+        <Setter Property="MinHeight" Value="320" />
+        <Setter Property="Width" Value="1100" />
+        <Setter Property="MinWidth" Value="460" />
+        <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ModernWindow}">
+                    <Border x:Name="WindowBorder" Margin="{Binding Source={x:Static SystemParameters.WindowNonClientFrameThickness}}">
+                        <Border.Background>
+                            <SolidColorBrush x:Name="WindowBorderBackground" Color="{DynamicResource ApplicationBackgroundColor}" />
+                        </Border.Background>
+                        <Border.Resources>
+                            <Storyboard x:Key="BackgroundAnimation">
+                                <ColorAnimation
+                                    Storyboard.TargetName="WindowBorderBackground"
+                                    Storyboard.TargetProperty="Color"
+                                    To="{DynamicResource ApplicationBackgroundColor}"
+                                    Duration="0:0:.6" />
+                            </Storyboard>
+                        </Border.Resources>
+
+                        <Grid>
+
+                            <!--  window background content  -->
+                            <ContentControl Grid.RowSpan="5" Content="{TemplateBinding BackgroundContent}" />
+
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                                <AdornerDecorator>
+                                    <Grid x:Name="LayoutRoot">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="65" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="15" />
+                                        </Grid.RowDefinitions>
+
+                                        <!--  HEADER START  -->
+                                        <!--  header background  -->
+                                        <Rectangle
+                                            x:Name="HeaderBackground"
+                                            Grid.RowSpan="5"
+                                            Height="96"
+                                            VerticalAlignment="Top"
+                                            Fill="{DynamicResource WindowHeaderGradient}" />
+
+                                        <!--  HEADER END  -->
+                                        <!--  NAV BAR START  -->
+                                        <!--    -->
+                                        <Grid VerticalAlignment="Top">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="45" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--  STATUS BAR START  -->
+                                            <ItemsControl
+                                                Grid.Row="0"
+                                                Grid.ColumnSpan="3"
+                                                ItemsSource="{TemplateBinding StatusBar}"
+                                                WindowChrome.IsHitTestVisibleInChrome="False">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <Grid x:Name="StatusBarPanel" VerticalAlignment="Top" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
+                                            <!--  STATUS BAR END  -->
+                                            <!--  logo Start  -->
+                                            <Border
+                                                Grid.Column="2"
+                                                Width="45"
+                                                Height="45"
+                                                Margin="0,0,5,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top"
+                                                Background="{DynamicResource SystemAccentColorBrush}"
+                                                DataContext="{TemplateBinding LogoData}"
+                                                Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=inverse}">
+                                                <Grid>
+                                                    <Path
+                                                        Width="38"
+                                                        Height="38"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Data="{Binding}"
+                                                        Fill="White"
+                                                        Stretch="Fill" />
+                                                    <Image Source="{TemplateBinding Logo}" />
+                                                </Grid>
+                                            </Border>
+
+                                            <!--  logo End  -->
+                                        </Grid>
+                                        <StackPanel
+                                            Grid.RowSpan="2"
+                                            Margin="34,15,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Background="{x:Null}"
+                                            Orientation="Horizontal"
+                                            Visibility="{TemplateBinding NavBarVisible}">
+                                            <!--  back button Start  -->
+                                            <abb:AppBarButton
+                                                x:Name="BackButton"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Content="  "
+                                                Icon="ab_arrow_left"
+                                                IconHeight="25"
+                                                IconWidth="25"
+                                                ToolTip="back"
+                                                Visibility="{TemplateBinding NavBarBackButtonVisible}"
+                                                WindowChrome.IsHitTestVisibleInChrome="True" />
+                                            <!--  back button End  -->
+                                            <!--  Title Logo Start  -->
+                                            <Grid VerticalAlignment="Top" Visibility="{TemplateBinding NavBarLogoVisible}">
+                                                <Image Height="40" Source="{TemplateBinding TitleLogo}" />
+                                                <Path
+                                                    Height="40"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Data="{TemplateBinding TitleLogoData}"
+                                                    Fill="{TemplateBinding Foreground}"
+                                                    RenderTransformOrigin="0.5,0.5"
+                                                    Stretch="Uniform">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                                            <SkewTransform AngleX="0" AngleY="0" />
+                                                            <RotateTransform Angle="0" />
+                                                            <TranslateTransform />
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+                                            </Grid>
+                                            <!--  Title Logo End  -->
+                                            <!--  Main Title Begin  -->
+                                            <bbcode:BBCodeBlock
+                                                Margin="{TemplateBinding TitleMargin}"
+                                                VerticalAlignment="Top"
+                                                BBCode="{TemplateBinding MainTitle}"
+                                                FontFamily="{TemplateBinding MainTitleFont}"
+                                                FontSize="30" />
+                                            <!--  Main Title End  -->
+                                            <!--  Nav Bar Begin  -->
+                                            <StackPanel
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal">
+                                                <ItemsControl ItemsSource="{TemplateBinding NavBar}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel controls:MarginSetter.Margin="5,0" Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                            <!--  Nav Bar End  -->
+                                        </StackPanel>
+                                        <!--  NAV BAR END  -->
+                                        <!--  main menu Start  -->
+                                        <Grid
+                                            Grid.Row="1"
+                                            MinHeight="43"
+                                            Margin="0,0,0,0"
+                                            Background="{DynamicResource SystemAccentColorBrush}"
+                                            Visibility="{TemplateBinding MainMenuVisible}">
+                                            <ItemsControl
+                                                Margin="36,0,16,0"
+                                                HorizontalContentAlignment="Center"
+                                                ItemsSource="{TemplateBinding MainMenu}" />
+                                        </Grid>
+                                        <!--  main menu End  -->
+                                        <Grid
+                                            Grid.Row="3"
+                                            Grid.RowSpan="2"
+                                            Margin="0,8,0,0">
+                                            <!--  LEFT NAV BAR START  -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <ItemsControl ItemsSource="{TemplateBinding NavBarLeft}" />
+                                                <!--  CONTENT FRAME START  -->
+                                                <rxNav:ViewModelRoutedViewHost
+                                                    x:Name="NavigationFrame"
+                                                    Grid.Column="1"
+                                                    Margin="36,0,16,0"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    HostName="{TemplateBinding Name}"
+                                                    NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
+                                                    Transition="{TemplateBinding Transition}" />
+                                                <!--  CONTENT FRAME END  -->
+                                            </Grid>
+                                            <!--  LEFT NAV BAR END  -->
+                                            <!--  window foreground content  -->
+                                            <ItemsControl Grid.RowSpan="5" ItemsSource="{TemplateBinding ForegroundContent}" />
+                                            <!--  APP BAR START  -->
+                                            <Grid
+                                                x:Name="BottomAppBar"
+                                                Height="0"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Background="{DynamicResource SystemAccentColorBrush}">
+                                                <Grid.Resources>
+                                                    <Storyboard x:Key="Hide">
+                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BottomAppBar" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                    <Storyboard x:Key="Show">
+                                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BottomAppBar" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                                                            <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                                                            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="88">
+                                                                <EasingDoubleKeyFrame.EasingFunction>
+                                                                    <BounceEase
+                                                                        Bounces="1"
+                                                                        Bounciness="5"
+                                                                        EasingMode="EaseOut" />
+                                                                </EasingDoubleKeyFrame.EasingFunction>
+                                                            </EasingDoubleKeyFrame>
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </Grid.Resources>
+
+                                                <Grid MinHeight="88">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <ItemsControl
+                                                        x:Name="AppBarIC"
+                                                        HorizontalAlignment="Left"
+                                                        ItemsSource="{TemplateBinding AppBarLeft}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel
+                                                                    x:Name="AppBarPanelLeft"
+                                                                    HorizontalAlignment="Left"
+                                                                    controls:MarginSetter.Margin="5,0"
+                                                                    CanHorizontallyScroll="True"
+                                                                    Orientation="Horizontal" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                    <ItemsControl
+                                                        Grid.Column="1"
+                                                        HorizontalAlignment="Right"
+                                                        ItemsSource="{TemplateBinding AppBarRight}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel
+                                                                    x:Name="AppBarPanelRight"
+                                                                    Grid.Column="1"
+                                                                    HorizontalAlignment="Right"
+                                                                    controls:MarginSetter.Margin="5,0"
+                                                                    CanHorizontallyScroll="True"
+                                                                    Orientation="Horizontal" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                    </ItemsControl>
+                                                </Grid>
+                                            </Grid>
+                                            <!--  APP BAR END  -->
+                                            <!--  Message Start  -->
+                                            <Grid
+                                                Grid.RowSpan="5"
+                                                Background="#7F000000"
+                                                Visibility="{TemplateBinding MessageVisible}">
+                                                <Grid
+                                                    x:Name="Message"
+                                                    VerticalAlignment="Center"
+                                                    Background="{DynamicResource SystemAccentColorBrush}">
+                                                    <!--  header background  -->
+                                                    <Rectangle
+                                                        Height="96"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Top"
+                                                        Fill="{DynamicResource WindowHeaderGradient}" />
+
+                                                    <Grid Margin="24">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="*" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <!--  title  -->
+                                                        <TextBlock
+                                                            HorizontalAlignment="Center"
+                                                            DataContext="{TemplateBinding MessageTitle}"
+                                                            FontFamily="Segoe UI"
+                                                            FontSize="24"
+                                                            Text="{Binding Converter={StaticResource ToUpperConverter}}"
+                                                            TextOptions.TextFormattingMode="Ideal"
+                                                            TextTrimming="CharacterEllipsis" />
+
+                                                        <!--  content  -->
+                                                        <ScrollViewer
+                                                            Grid.Row="1"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalScrollBarVisibility="Auto">
+                                                            <ContentControl Content="{TemplateBinding MessageContent}" />
+                                                        </ScrollViewer>
+                                                        <!--  buttons  -->
+                                                        <ItemsControl
+                                                            Grid.Row="2"
+                                                            HorizontalAlignment="Center"
+                                                            ItemsSource="{TemplateBinding Buttons}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                        </ItemsControl>
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                            <!--  Message End  -->
+                                            <Grid Grid.Row="4">
+                                                <!--  resize grip  -->
+                                                <Path
+                                                    x:Name="ResizeGrip"
+                                                    Width="12"
+                                                    Height="12"
+                                                    Margin="1"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Bottom"
+                                                    Data="F1 M1,10 L3,10 M5,10 L7,10 M9,10 L11,10 M2,9 L2,11 M6,9 L6,11 M10,9 L10,11 M5,6 L7,6 M9,6 L11,6 M6,5 L6,7 M10,5 L10,7 M9,2 L11,2 M10,1 L10,3"
+                                                    Stretch="None"
+                                                    Stroke="{DynamicResource WindowText}"
+                                                    StrokeThickness="1"
+                                                    Visibility="Collapsed" />
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </AdornerDecorator>
+                            </Border>
+                            <Border
+                                BorderBrush="{DynamicResource WindowBorderActive}"
+                                BorderThickness="1"
+                                Visibility="{Binding IsActive, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="ResizeMode" Value="CanResizeWithGrip" />
+                                <Condition Property="WindowState" Value="Normal" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="ResizeGrip" Property="Visibility" Value="Visible" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome
+                    CornerRadius="0"
+                    GlassFrameThickness="1"
+                    NonClientFrameEdges="None"
+                    UseAeroCaptionButtons="False" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
