@@ -10,7 +10,7 @@ namespace CrissCross.WPF.UI.Test.ViewModels;
 /// DashboardViewModel.
 /// </summary>
 /// <seealso cref="RxObject" />
-public class DashboardViewModel : RxObject
+public class DashboardViewModel : RxObject, IControlAppBar
 {
     private int _counter;
 
@@ -39,5 +39,9 @@ public class DashboardViewModel : RxObject
     /// </value>
     public ReactiveCommand<Unit, Unit> CounterIncrementCommand { get; }
 
-    private void OnCounterIncrement() => Counter++;
+    private void OnCounterIncrement()
+    {
+        Counter++;
+        this.ShowAppBar();
+    }
 }

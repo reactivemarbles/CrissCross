@@ -16,7 +16,7 @@ namespace CrissCross.WPF;
 /// View Model Routed View Host.
 /// </summary>
 /// <seealso cref="RoutedViewHost" />
-public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRoutedViewHost
+public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRoutedViewHost, IDisposable
 {
     /// <summary>
     /// The navigate back is enabled property.
@@ -33,14 +33,15 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
     /// </summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(nameof(NavigateBackIsEnabled), typeof(bool?), typeof(ViewModelRoutedViewHost), new PropertyMetadata(true));
 
-    private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
-    private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
+    private readonly Subject<bool?> _canNavigateBackSubject = new();
+    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
     private IRxObject? __currentViewModel;
     private IViewFor? _currentView;
     private IViewFor? _lastView;
     private bool _navigateBack;
     private bool _resetStack;
     private IRxObject? _toViewModel;
+    private bool _disposedValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.
@@ -132,7 +133,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
     /// <value>
     /// The navigation stack.
     /// </value>
-    public ObservableCollection<Type?> NavigationStack { get; } = new();
+    public ObservableCollection<Type?> NavigationStack { get; } = [];
 
     /// <summary>
     /// Gets a value indicating whether [requires setup].
@@ -323,6 +324,34 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
             _resetStack = false;
             _navigateBack = false;
         });
+    }
+
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Disposes the specified disposing.
+    /// </summary>
+    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _canNavigateBackSubject.Dispose();
+                _currentViewModel.Dispose();
+            }
+
+            _disposedValue = true;
+        }
     }
 
     private void InternalNavigate<T>(string? contract, object? parameter)

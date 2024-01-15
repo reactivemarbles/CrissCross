@@ -6,4 +6,4 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross", "CrissCross.WPF.UI")]
 [assembly: XmlnsPrefix("https://github.com/ChrisPulman/CrissCross", "rxNav")]
-[assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
+[assembly: ThemeInfo(ResourceDictionaryLocation.SourceAssembly, ResourceDictionaryLocation.SourceAssembly)]

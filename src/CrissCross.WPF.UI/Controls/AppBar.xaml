@@ -1,0 +1,79 @@
+﻿<UserControl
+    x:Class="CrissCross.WPF.UI.AppBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ab="clr-namespace:CrissCross.WPF.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DesignHeight="88"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ui:ThemesDictionary Theme="Dark" />
+    </UserControl.Resources>
+    <!--  APP BAR START  -->
+    <Grid
+        x:Name="BottomAppBar"
+        Height="0"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Bottom"
+        Background="{DynamicResource SystemAccentColorBrush}">
+        <Grid.Resources>
+            <Storyboard x:Key="Hide">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BottomAppBar" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="Show">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="BottomAppBar" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="88">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <BounceEase
+                                Bounces="1"
+                                Bounciness="5"
+                                EasingMode="EaseOut" />
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </Grid.Resources>
+
+        <Grid MinHeight="88">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ItemsControl x:Name="AppBarLeftControl" HorizontalAlignment="Left">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            x:Name="AppBarPanelLeft"
+                            HorizontalAlignment="Left"
+                            ab:MarginSetter.Margin="5,0"
+                            CanHorizontallyScroll="True"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <ItemsControl
+                x:Name="AppBarRightControl"
+                Grid.Column="1"
+                HorizontalAlignment="Right">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel
+                            x:Name="AppBarPanelRight"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            ab:MarginSetter.Margin="5,0"
+                            CanHorizontallyScroll="True"
+                            Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+    <!--  APP BAR END  -->
+</UserControl>
