@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxNav="clr-namespace:CrissCross.WPF.UI;assembly=CrissCross.WPF.UI"
     xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
@@ -74,5 +75,13 @@
                 <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
             </tray:NotifyIcon.Menu>
         </tray:NotifyIcon>
+        <rxNav:AppBar
+            Grid.RowSpan="2"
+            Height="88"
+            VerticalAlignment="Bottom">
+            <rxNav:AppBar.AppBarLeft>
+                <ui:Button Content="Hello" />
+            </rxNav:AppBar.AppBarLeft>
+        </rxNav:AppBar>
     </Grid>
 </ui:FluentWindow>
