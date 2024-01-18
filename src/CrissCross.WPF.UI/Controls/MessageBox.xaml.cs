@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Windows;
 using System.Windows.Input;
 using CP.BBCode.WPF;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using Wpf.Ui.Controls;
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -40,7 +41,6 @@ namespace CrissCross.WPF.UI
         private Button? _noButton;
         private Button? _okbutton;
         private Button? _yesButton;
-        private bool _mouseIsOverMessage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBox"/> class.
@@ -48,6 +48,7 @@ namespace CrissCross.WPF.UI
         public MessageBox()
         {
             InitializeComponent();
+            Visibility = Visibility.Collapsed;
             _closeOkCommand = ReactiveCommand.Create(() => _messageBoxResult = MessageBoxResult.OK);
             CloseTrueCommand = ReactiveCommand.Create(() => _messageBoxResult = MessageBoxResult.Yes);
             CloseFalseCommand = ReactiveCommand.Create(() => _messageBoxResult = MessageBoxResult.No);
@@ -64,32 +65,26 @@ namespace CrissCross.WPF.UI
             _custom9Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom9);
 
             Buttons = new[] { CloseButton };
-            MouseEnter += (o, e) => _mouseIsOverMessage = true;
-            MouseLeave += (o, e) => _mouseIsOverMessage = false;
-
-            // Find the parent window
-            var parentWindow = Window.GetWindow(this);
-            if (parentWindow != null)
+            ButtonsSource.ItemsSource = Buttons;
+            this.Events().Loaded.Subscribe(_ =>
             {
-                parentWindow.PreviewMouseDown += ModernWindow_PreviewMouseDown;
-            }
-
-            // Set up magic functions
-            this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
-            this.ListenForCustomMessages(
-                async message =>
-                await MessageBoxShow(
-                                     message.Item1,
-                                     message.Item2,
-                                     message.Item3,
-                                     message.Item4,
-                                     message.Item5,
-                                     message.Item6,
-                                     message.Item7,
-                                     message.Rest.Item1,
-                                     message.Rest.Item2,
-                                     message.Rest.Item3,
-                                     message.Rest.Item4).ConfigureAwait(false));
+                // Set up magic functions
+                this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
+                ////this.ListenForCustomMessages(
+                ////    async message =>
+                ////    await MessageBoxShow(
+                ////                         message.Item1,
+                ////                         message.Item2,
+                ////                         message.Item3,
+                ////                         message.Item4,
+                ////                         message.Item5,
+                ////                         message.Item6,
+                ////                         message.Item7,
+                ////                         message.Rest.Item1,
+                ////                         message.Rest.Item2,
+                ////                         message.Rest.Item3,
+                ////                         message.Rest.Item4).ConfigureAwait(false));
+            });
         }
 
         /// <summary>
@@ -305,10 +300,8 @@ namespace CrissCross.WPF.UI
                 await Task.Delay(100).ConfigureAwait(true);
             }
 
-            await Dispatcher.InvokeAsync(() =>
-
-                // hide the message box and return result
-                Visibility = Visibility.Collapsed);
+            // hide the message box and return result
+            await Dispatcher.InvokeAsync(() => Visibility = Visibility.Collapsed);
             return _messageBoxResult;
         }
 
@@ -393,24 +386,6 @@ namespace CrissCross.WPF.UI
                     yield return owner.NoButton;
                     yield return owner.CancelButton;
                     break;
-            }
-        }
-
-        /// <summary>
-        /// Handles the PreviewMouseDown event of the ModernWindow control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">
-        /// The <see cref="MouseButtonEventArgs"/> instance containing the event data.
-        /// </param>
-        private void ModernWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!_mouseIsOverMessage
-                && Visibility == Visibility.Visible && e.ButtonState == MouseButtonState.Pressed)
-            {
-                Visibility = Visibility.Collapsed;
-                _messageBoxResult = MessageBoxResult.Cancel;
-                _customMessageBoxResult = CustomMessageBoxResult.Cancel;
             }
         }
     }

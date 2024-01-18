@@ -2,13 +2,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Test.ViewModels;
+using ReactiveMarbles.ObservableEvents;
+using MessageBoxButton = System.Windows.MessageBoxButton;
 
 namespace CrissCross.WPF.UI.Test.Views.Pages;
 
 /// <summary>
 /// Interaction logic for DashboardPage.xaml.
 /// </summary>
-public partial class DashboardPage : INavigableView<DashboardViewModel>
+public partial class DashboardPage : INavigableView<DashboardViewModel>, ICanShowMessages
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DashboardPage"/> class.
@@ -20,6 +22,7 @@ public partial class DashboardPage : INavigableView<DashboardViewModel>
         DataContext = this;
 
         InitializeComponent();
+        this.Events().Loaded.Subscribe(async _ => await this.MessageBoxShow("I am a message box", "Message Box"));
     }
 
     /// <summary>
