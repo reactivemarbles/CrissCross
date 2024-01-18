@@ -83,5 +83,6 @@
                 <ui:Button Content="Hello" />
             </rxNav:AppBar.AppBarLeft>
         </rxNav:AppBar>
+        <rxNav:MessageBox Grid.RowSpan="2" />
     </Grid>
 </ui:FluentWindow>

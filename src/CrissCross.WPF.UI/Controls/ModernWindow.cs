@@ -741,20 +741,20 @@ public class ModernWindow
 
         // Set up magic functions
         this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
-        this.ListenForCustomMessages(
-            async message =>
-            await MessageBoxShow(
-                                 message.Item1,
-                                 message.Item2,
-                                 message.Item3,
-                                 message.Item4,
-                                 message.Item5,
-                                 message.Item6,
-                                 message.Item7,
-                                 message.Rest.Item1,
-                                 message.Rest.Item2,
-                                 message.Rest.Item3,
-                                 message.Rest.Item4).ConfigureAwait(false));
+        ////this.ListenForCustomMessages(
+        ////    async message =>
+        ////    await MessageBoxShow(
+        ////                         message.Item1,
+        ////                         message.Item2,
+        ////                         message.Item3,
+        ////                         message.Item4,
+        ////                         message.Item5,
+        ////                         message.Item6,
+        ////                         message.Item7,
+        ////                         message.Rest.Item1,
+        ////                         message.Rest.Item2,
+        ////                         message.Rest.Item3,
+        ////                         message.Rest.Item4).ConfigureAwait(false));
         this.AppBarIsStickyListener(() => AppBarIsSticky, isSticky => AppBarIsSticky = isSticky);
         this.ShowAppBarListener(ShowAppBar);
         this.HideAppBarListener(HideAppBar);
