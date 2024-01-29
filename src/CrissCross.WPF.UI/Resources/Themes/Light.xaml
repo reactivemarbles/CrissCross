@@ -685,12 +685,12 @@
     <SolidColorBrush x:Key="TreeViewItemSelectionIndicatorForeground" Color="{DynamicResource SystemAccentColorPrimary}" />
 
     <!--  default accent colors and brushes  -->
-    <SolidColorBrush x:Key="Accent" Color="{DynamicResource SystemAccentColorPrimary}" />
+    <SolidColorBrush x:Key="Accent" Color="{DynamicResource SystemAccentColor}" />
     <SolidColorBrush x:Key="AppBarButtonBorder" Color="#919191" />
     <SolidColorBrush x:Key="AppBarButtonBorderHover" Color="#333333" />
     <SolidColorBrush x:Key="AppBarButtonBorderPressed" Color="#333333" />
     <SolidColorBrush x:Key="AppBarButtonBorderDisabled" Color="#919191" />
-    <SolidColorBrush x:Key="AppBarButtonIconBackgroundPressed" Color="{DynamicResource SystemAccentColorPrimary}" />
+    <SolidColorBrush x:Key="AppBarButtonIconBackgroundPressed" Color="{DynamicResource SystemAccentColor}" />
     <SolidColorBrush x:Key="AppBarButtonIconForegroundPressed" Color="#ffffff" />
     <SolidColorBrush x:Key="AppBarButtonText" Color="#333333" />
     <SolidColorBrush x:Key="AppBarButtonTextHover" Color="#333333" />

@@ -42,7 +42,7 @@ public static class ApplicationThemeManager
 
     internal const string LibraryNamespace = "ui;";
 
-    internal const string ThemesDictionaryPath = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Theme/";
+    internal const string ThemesDictionaryPath = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Themes/";
 
     /// <summary>
     /// Event triggered when the application's theme is changed.

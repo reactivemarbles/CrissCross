@@ -44,7 +44,7 @@ public class ThemesDictionary : ResourceDictionary
 
     public ThemesDictionary()
     {
-        SetSourceBasedOnSelectedTheme(ApplicationTheme.Light);
+        SetSourceBasedOnSelectedTheme(ApplicationTheme.Dark);
     }
 
     private void SetSourceBasedOnSelectedTheme(ApplicationTheme? selectedApplicationTheme)
