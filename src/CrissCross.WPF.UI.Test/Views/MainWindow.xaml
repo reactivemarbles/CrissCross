@@ -2,12 +2,12 @@
     x:Class="CrissCross.WPF.UI.Test.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rxNav="clr-namespace:CrissCross.WPF.UI;assembly=CrissCross.WPF.UI"
-    xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui"
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
     Width="1100"
     Height="650"
@@ -23,7 +23,7 @@
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-
+    <!--  xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"  -->
     <ui:FluentWindow.InputBindings>
         <KeyBinding
             Key="F"
@@ -65,7 +65,7 @@
             </ui:NavigationView.Header>
         </ui:NavigationView>
 
-        <tray:NotifyIcon
+        <!--<tray:NotifyIcon
             Grid.Row="0"
             FocusOnLeftClick="True"
             Icon="/Assets/CrissCrossIcon_256.png"
@@ -74,13 +74,14 @@
             <tray:NotifyIcon.Menu>
                 <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
             </tray:NotifyIcon.Menu>
-        </tray:NotifyIcon>
+        </tray:NotifyIcon>-->
         <rxNav:AppBar
             Grid.RowSpan="2"
             Height="88"
             VerticalAlignment="Bottom">
             <rxNav:AppBar.AppBarLeft>
                 <ui:Button Content="Hello" />
+                <abb:AppBarButton Content="Hello" Icon="ab_heart" />
             </rxNav:AppBar.AppBarLeft>
         </rxNav:AppBar>
         <rxNav:MessageBox Grid.RowSpan="2" />

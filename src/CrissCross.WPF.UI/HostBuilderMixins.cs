@@ -4,7 +4,6 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using CP.Extensions.Hosting.Wpf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
