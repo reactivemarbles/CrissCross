@@ -2,13 +2,11 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cc="https://github.com/ChrisPulman/CrissCross"
-    xmlns:ccwpfui="clr-namespace:CrissCross.WPF.UI"
     xmlns:converters="https://github.com/ChrisPulman/XamlConverters">
 
     <ResourceDictionary.MergedDictionaries>
         <cc:CrissCrossWpfDictionary />
         <converters:ConvertersDictionary />
-        <ccwpfui:ThemesDictionary Theme="Light" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Variables.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Fonts.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Typography.xaml" />
