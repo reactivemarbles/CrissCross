@@ -8,7 +8,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Wpf.Ui.Controls">
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
 
     <Style TargetType="{x:Type controls:VirtualizingItemsControl}">
         <Setter Property="Margin" Value="0" />

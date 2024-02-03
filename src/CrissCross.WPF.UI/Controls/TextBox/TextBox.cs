@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -9,11 +11,11 @@
 
 using System.Diagnostics;
 using System.Windows.Controls;
-using Wpf.Ui.Converters;
-using Wpf.Ui.Input;
+using CrissCross.WPF.UI.Converters;
+using CrissCross.WPF.UI.Input;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Extended <see cref="System.Windows.Controls.TextBox"/> with additional parameters like <see cref="PlaceholderText"/>.
@@ -258,7 +260,7 @@ public class TextBox : System.Windows.Controls.TextBox
     /// </summary>
     protected virtual void OnTemplateButtonClick(string? parameter)
     {
-        Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "Wpf.Ui.TextBox");
+        Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "CrissCross.WPF.UI.TextBox");
 
         OnClearButtonClick();
     }

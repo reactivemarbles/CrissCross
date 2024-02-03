@@ -2,19 +2,21 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Diagnostics;
-using Wpf.Ui.Designer;
-using Wpf.Ui.Extensions;
-using Wpf.Ui.Input;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Designer;
+using CrissCross.WPF.UI.Extensions;
+using CrissCross.WPF.UI.Input;
+using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Custom navigation buttons for the window.
@@ -497,7 +499,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         Debug.WriteLine(
             $"INFO | {typeof(TitleBar)} received theme -  {currentApplicationTheme}",
-            "Wpf.Ui.TitleBar"
+            "CrissCross.WPF.UI.TitleBar"
         );
 
         ApplicationTheme = currentApplicationTheme;
@@ -507,7 +509,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         Debug.WriteLine(
             $"INFO | {typeof(TitleBar)}.CloseWindow:ForceShutdown -  {ForceShutdown}",
-            "Wpf.Ui.TitleBar"
+            "CrissCross.WPF.UI.TitleBar"
         );
 
         if (ForceShutdown)
@@ -557,7 +559,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         }
     }
 
-    private void OnParentWindowStateChanged(object sender, EventArgs e)
+    private void OnParentWindowStateChanged(object? sender, EventArgs e)
     {
         if (IsMaximized != (_currentWindow.WindowState == WindowState.Maximized))
         {

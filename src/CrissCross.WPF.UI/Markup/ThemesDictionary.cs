@@ -2,15 +2,17 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Windows.Markup;
-using Wpf.Ui.Appearance;
+using CrissCross.WPF.UI.Appearance;
 
-namespace Wpf.Ui.Markup;
+namespace CrissCross.WPF.UI.Markup;
 
 /// <summary>
 /// Provides a dictionary implementation that contains <c>WPF UI</c> theme resources used by components and other elements of a WPF application.

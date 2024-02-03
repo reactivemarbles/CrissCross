@@ -2,15 +2,17 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Wpf.Ui.Controls;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Controls;
+using CrissCross.WPF.UI.Interop;
 
-namespace Wpf.Ui.Appearance;
+namespace CrissCross.WPF.UI.Appearance;
 
 /// <summary>
 /// Facilitates the management of the window background.
@@ -142,7 +144,7 @@ public static class WindowBackgroundManager
         //            mainWindow.Background = new SolidColorBrush(color);
 
         //#if DEBUG
-        //        System.Diagnostics.Debug.WriteLine($"INFO | Current background color: {backgroundColor}", "Wpf.Ui.Theme");
+        //        System.Diagnostics.Debug.WriteLine($"INFO | Current background color: {backgroundColor}", "CrissCross.WPF.UI.Theme");
         //#endif
 
         //        var windowHandle = new WindowInteropHelper(mainWindow).Handle;

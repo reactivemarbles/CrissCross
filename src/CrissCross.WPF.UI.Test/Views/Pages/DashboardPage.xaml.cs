@@ -27,7 +27,7 @@ public partial class DashboardPage : INavigableView<DashboardViewModel>, ICanSho
 
     /// <summary>
     /// Gets viewModel used by the view.
-    /// Optionally, it may implement <see cref="T:Wpf.Ui.Controls.INavigationAware" /> and be navigated by <see cref="T:Wpf.Ui.Controls.INavigationView" />.
+    /// Optionally, it may implement <see cref="T:CrissCross.WPF.UI.Controls.INavigationAware" /> and be navigated by <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
     public DashboardViewModel ViewModel { get; }
 }

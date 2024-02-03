@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -10,7 +12,7 @@
 using System.Windows.Controls;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 // TODO: This is an initial implementation and requires the necessary corrections, tests and adjustments.
 
@@ -22,7 +24,7 @@ namespace Wpf.Ui.Controls;
 /// <summary>
 /// The modified password control.
 /// </summary>
-public class PasswordBox : Wpf.Ui.Controls.TextBox
+public class PasswordBox : CrissCross.WPF.UI.Controls.TextBox
 {
     private bool _lockUpdatingContents;
 
@@ -194,9 +196,8 @@ public class PasswordBox : Wpf.Ui.Controls.TextBox
     /// <summary>
     /// Triggered by clicking a button in the control template.
     /// </summary>
-    /// <param name="sender">Sender of the click event.</param>
     /// <param name="parameter">Additional parameters.</param>
-    protected override void OnTemplateButtonClick(string parameter)
+    protected override void OnTemplateButtonClick(string? parameter)
     {
 #if DEBUG
         System
@@ -204,7 +205,7 @@ public class PasswordBox : Wpf.Ui.Controls.TextBox
             .Debug
             .WriteLine(
                 $"INFO: {typeof(PasswordBox)} button clicked with param: {parameter}",
-                "Wpf.Ui.PasswordBox"
+                "CrissCross.WPF.UI.PasswordBox"
             );
 #endif
 

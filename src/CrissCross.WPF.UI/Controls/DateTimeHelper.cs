@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -14,7 +16,7 @@
 using System.Diagnostics;
 using System.Windows.Controls;
 
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 // NOTICE: This date time helper assumes it is working in a Gregorian calendar
 //         If we ever support non Gregorian calendars this class would need to be redesigned
@@ -76,7 +78,7 @@ internal static class DateTimeHelper
 
     public static int CompareDays(DateTime dt1, DateTime dt2)
     {
-        return DateTime.Compare(DiscardTime(dt1).Value, DiscardTime(dt2).Value);
+        return DateTime.Compare(DiscardTime(dt1)!.Value, DiscardTime(dt2)!.Value);
     }
 
     public static int CompareYearMonth(DateTime dt1, DateTime dt2)
@@ -121,7 +123,7 @@ internal static class DateTimeHelper
             return culture.DateTimeFormat;
         }
 
-        GregorianCalendar foundCal = default!;
+        GregorianCalendar? foundCal = default;
         DateTimeFormatInfo dtfi = default!;
 
         foreach (var cal in culture.OptionalCalendars)

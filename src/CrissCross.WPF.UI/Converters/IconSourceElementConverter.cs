@@ -2,15 +2,19 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Windows.Data;
-using Wpf.Ui.Controls;
+using CrissCross.WPF.UI.Controls;
 
-namespace Wpf.Ui.Converters;
+namespace CrissCross.WPF.UI.Converters;
 
 /// <summary>
 /// Converts an <see cref="IconSourceElement"/> to an <see cref="IconElement"/>.
@@ -25,7 +29,7 @@ public class IconSourceElementConverter : IValueConverter
     /// <param name="parameter">The converter parameter.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>The converted <see cref="IconElement"/>.</returns>
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         return ConvertToIconElement(value);
     }
@@ -38,7 +42,7 @@ public class IconSourceElementConverter : IValueConverter
     /// <param name="parameter">The converter parameter.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>The converted IconSourceElement.</returns>
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

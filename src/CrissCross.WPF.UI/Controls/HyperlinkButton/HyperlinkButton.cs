@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -10,12 +12,12 @@
 using System.Diagnostics;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Button that opens a URL in a web browser.
 /// </summary>
-public class HyperlinkButton : Wpf.Ui.Controls.Button
+public class HyperlinkButton : CrissCross.WPF.UI.Controls.Button
 {
     /// <summary>
     /// Property for <see cref="NavigateUri"/>.
@@ -48,7 +50,7 @@ public class HyperlinkButton : Wpf.Ui.Controls.Button
         {
             Debug.WriteLine(
                 $"INFO | HyperlinkButton clicked, with href: {NavigateUri}",
-                "Wpf.Ui.HyperlinkButton"
+                "CrissCross.WPF.UI.HyperlinkButton"
             );
 
             ProcessStartInfo sInfo = new(new Uri(NavigateUri).AbsoluteUri) { UseShellExecute = true };

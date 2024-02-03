@@ -2,15 +2,17 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Runtime.CompilerServices;
-using Wpf.Ui.Controls;
+using CrissCross.WPF.UI.Controls;
 
-namespace Wpf.Ui.Appearance;
+namespace CrissCross.WPF.UI.Appearance;
 
 /// <summary>
 /// Allows to manage the application theme by swapping resource dictionaries containing dynamic resources with color information.
@@ -131,7 +133,7 @@ public static class ApplicationThemeManager
         //var isCoreUpdated = appDictionaries.UpdateDictionary(
         //    "wpf.ui",
         //    new Uri(
-        //        AppearanceData.LibraryDictionariesUri + "Wpf.Ui.xaml",
+        //        AppearanceData.LibraryDictionariesUri + "CrissCross.WPF.UI.xaml",
         //        UriKind.Absolute
         //    )
         //);

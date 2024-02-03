@@ -15,7 +15,7 @@ public class SettingsViewModel : RxObject, INavigationAware
 {
     private bool _isInitialized;
     private string _appVersion = string.Empty;
-    private Wpf.Ui.Appearance.ApplicationTheme _currentApplicationTheme = Wpf.Ui
+    private CrissCross.WPF.UI.Appearance.ApplicationTheme _currentApplicationTheme = CrissCross.WPF.UI
         .Appearance
         .ApplicationTheme
         .Unknown;
@@ -31,7 +31,7 @@ public class SettingsViewModel : RxObject, INavigationAware
     /// <value>
     /// The change theme command.
     /// </value>
-    public ReactiveCommand<string, Unit> ChangeThemeCommand { get; private set; }
+    public ReactiveCommand<string, Unit> ChangeThemeCommand { get; }
 
     /// <summary>
     /// Gets or sets the application version.
@@ -51,7 +51,7 @@ public class SettingsViewModel : RxObject, INavigationAware
     /// <value>
     /// The current application theme.
     /// </value>
-    public Wpf.Ui.Appearance.ApplicationTheme CurrentApplicationTheme
+    public CrissCross.WPF.UI.Appearance.ApplicationTheme CurrentApplicationTheme
     {
         get => _currentApplicationTheme;
         set => this.RaiseAndSetIfChanged(ref _currentApplicationTheme, value);
@@ -80,7 +80,7 @@ public class SettingsViewModel : RxObject, INavigationAware
 
     private void InitializeViewModel()
     {
-        CurrentApplicationTheme = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme();
+        CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationThemeManager.GetAppTheme();
         AppVersion = $"CrissCross.WPF.UI.Test - {GetAssemblyVersion()}";
 
         _isInitialized = true;
@@ -91,24 +91,24 @@ public class SettingsViewModel : RxObject, INavigationAware
         switch (parameter)
         {
             case "theme_light":
-                if (CurrentApplicationTheme == Wpf.Ui.Appearance.ApplicationTheme.Light)
+                if (CurrentApplicationTheme == CrissCross.WPF.UI.Appearance.ApplicationTheme.Light)
                 {
                     break;
                 }
 
-                Wpf.Ui.Appearance.ApplicationThemeManager.Apply(Wpf.Ui.Appearance.ApplicationTheme.Light);
-                CurrentApplicationTheme = Wpf.Ui.Appearance.ApplicationTheme.Light;
+                CrissCross.WPF.UI.Appearance.ApplicationThemeManager.Apply(CrissCross.WPF.UI.Appearance.ApplicationTheme.Light);
+                CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationTheme.Light;
 
                 break;
 
             default:
-                if (CurrentApplicationTheme == Wpf.Ui.Appearance.ApplicationTheme.Dark)
+                if (CurrentApplicationTheme == CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark)
                 {
                     break;
                 }
 
-                Wpf.Ui.Appearance.ApplicationThemeManager.Apply(Wpf.Ui.Appearance.ApplicationTheme.Dark);
-                CurrentApplicationTheme = Wpf.Ui.Appearance.ApplicationTheme.Dark;
+                CrissCross.WPF.UI.Appearance.ApplicationThemeManager.Apply(CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark);
+                CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark;
 
                 break;
         }

@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf" />
-    <EmbeddedResource Include="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
+    <Resource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf" />
+    <Resource Include="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>

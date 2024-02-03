@@ -2,13 +2,15 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Wpf.Ui.Controls;
+using CrissCross.WPF.UI.Controls;
 
-namespace Wpf.Ui.Converters;
+namespace CrissCross.WPF.UI.Converters;
 
 internal class ContentDialogButtonEnumToBoolConverter : EnumToBoolConverter<ContentDialogButton> { }

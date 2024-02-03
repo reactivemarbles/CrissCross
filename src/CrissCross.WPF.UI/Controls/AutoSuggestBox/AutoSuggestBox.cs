@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -11,11 +13,11 @@ using System.Collections;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using Wpf.Ui.Input;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Input;
+using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Represents a text control that makes suggestions to users as they enter text using a keyboard. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.
@@ -303,7 +305,7 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
     /// <inheritdoc cref="UIElement.Focus" />
     public new void Focus()
     {
-        TextBox.Focus();
+        TextBox?.Focus();
     }
 
     protected T GetTemplateChild<T>(string name)
@@ -445,7 +447,7 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
         {
             SetCurrentValue(IsSuggestionListOpenProperty, false);
 
-            OnQuerySubmitted(TextBox.Text);
+            OnQuerySubmitted(TextBox!.Text);
 
             return;
         }
@@ -455,7 +457,7 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
             return;
         }
 
-        _ = SuggestionsList.Focus();
+        _ = SuggestionsList?.Focus();
     }
 
     private void TextBoxOnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -482,9 +484,9 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
             changeReason = AutoSuggestionBoxTextChangeReason.ProgrammaticChange;
         }
 
-        OnTextChanged(changeReason, TextBox.Text);
+        OnTextChanged(changeReason, TextBox!.Text);
 
-        SuggestionsList.SetCurrentValue(Selector.SelectedItemProperty, null);
+        SuggestionsList?.SetCurrentValue(Selector.SelectedItemProperty, null);
 
         if (changeReason is not AutoSuggestionBoxTextChangeReason.UserInput)
         {
@@ -513,12 +515,12 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
 
         SetCurrentValue(IsSuggestionListOpenProperty, false);
 
-        OnSelectedChanged(SuggestionsList.SelectedItem);
+        OnSelectedChanged(SuggestionsList!.SelectedItem);
     }
 
     private void SuggestionsListOnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (SuggestionsList.SelectedItem is not null)
+        if (SuggestionsList?.SelectedItem is not null)
         {
             return;
         }
@@ -533,7 +535,7 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
 
     private void SuggestionsListOnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (SuggestionsList.SelectedItem is null)
+        if (SuggestionsList?.SelectedItem is null)
         {
             return;
         }
@@ -569,7 +571,7 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
     {
         _changingTextAfterSuggestionChosen = true;
 
-        TextBox.SetCurrentValue(System.Windows.Controls.TextBox.TextProperty, GetStringFromObj(selectedObj));
+        TextBox?.SetCurrentValue(System.Windows.Controls.TextBox.TextProperty, GetStringFromObj(selectedObj));
 
         _changingTextAfterSuggestionChosen = false;
     }
@@ -589,13 +591,13 @@ public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
         for (var i = 0; i < OriginalItemsSource.Count; i++)
         {
             var item = OriginalItemsSource[i];
-            var itemText = GetStringFromObj(item);
+            var itemText = GetStringFromObj(item!);
 
-            var found = splitText.All(key => itemText.ToLower().Contains(key));
+            var found = splitText.All(key => itemText!.ToLower().Contains(key));
 
             if (found)
             {
-                suitableItems.Add(item);
+                suitableItems.Add(item!);
             }
         }
 

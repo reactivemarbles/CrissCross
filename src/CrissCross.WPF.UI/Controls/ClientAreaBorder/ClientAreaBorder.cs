@@ -2,19 +2,21 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Windows.Shell;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Hardware;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Appearance;
+using CrissCross.WPF.UI.Hardware;
+using CrissCross.WPF.UI.Interop;
 using Size = System.Windows.Size;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// If you use <see cref="WindowChrome"/> to extend the UI elements to the non-client area, you can include this container

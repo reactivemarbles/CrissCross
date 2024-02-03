@@ -2,12 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Reactive;
-using System.Windows;
 using System.Windows.Input;
 using CP.BBCode.WPF;
+using CrissCross.WPF.UI.Controls;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using Wpf.Ui.Controls;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 

@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -9,13 +11,13 @@
 
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
-using Wpf.Ui.Extensions;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Extensions;
+using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
-internal class TitleBarButton : Wpf.Ui.Controls.Button
+internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
 {
     /// <summary>
     /// Property for <see cref="ButtonType"/>.

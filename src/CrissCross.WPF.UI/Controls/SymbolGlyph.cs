@@ -2,12 +2,14 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Set of static methods to operate on <see cref="SymbolRegular"/> and <see cref="SymbolFilled"/>.
@@ -39,7 +41,7 @@ public static class SymbolGlyph
         {
             return (SymbolRegular)Enum.Parse(typeof(SymbolRegular), name);
         }
-        catch (Exception _)
+        catch (Exception)
         {
 #if DEBUG
             throw;
@@ -64,7 +66,7 @@ public static class SymbolGlyph
         {
             return (SymbolFilled)Enum.Parse(typeof(SymbolFilled), name);
         }
-        catch (Exception e)
+        catch (Exception)
         {
 #if DEBUG
             throw;
