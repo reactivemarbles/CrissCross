@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -12,7 +14,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Wpf.Ui.Styles.Controls
+namespace CrissCross.WPF.UI.Styles.Controls
 {
     /// <summary>
     /// Overwrites ContextMenu-Style for some UIElements (like RichTextBox) that don't take the default ContextMenu-Style by default.

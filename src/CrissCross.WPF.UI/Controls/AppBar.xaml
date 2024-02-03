@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ab="clr-namespace:CrissCross.WPF.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ma="clr-namespace:Wpf.Ui.Markup"
+    xmlns:ma="clr-namespace:CrissCross.WPF.UI.Markup"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="88"
     d:DesignWidth="800"

@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -11,13 +13,13 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Represents a button with two parts that can be invoked separately. One part behaves like a standard button and the other part invokes a flyout.
 /// </summary>
 [TemplatePart(Name = TemplateElementToggleButton, Type = typeof(ToggleButton))]
-public class SplitButton : Wpf.Ui.Controls.Button
+public class SplitButton : CrissCross.WPF.UI.Controls.Button
 {
     private ContextMenu? _contextMenu;
 

@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -11,10 +13,10 @@
 // and is intended for use on Windows systems only.
 // This Source Code is partially based on the source code provided by the .NET Foundation.
 
-using Wpf.Ui.Controls;
-using Wpf.Ui.TaskBar;
+using CrissCross.WPF.UI.Controls;
+using CrissCross.WPF.UI.TaskBar;
 
-namespace Wpf.Ui.Interop;
+namespace CrissCross.WPF.UI.Interop;
 
 /// <summary>
 /// A set of dangerous methods to modify the appearance.
@@ -22,7 +24,7 @@ namespace Wpf.Ui.Interop;
 internal static class UnsafeReflection
 {
     /// <summary>
-    /// Casts <see cref="BackgroundType"/> to <see cref="Dwmapi.DWMSBT"/>.
+    /// Casts <see cref="WindowBackdropType"/> to <see cref="Dwmapi.DWMSBT"/>.
     /// </summary>
     public static Dwmapi.DWMSBT Cast(WindowBackdropType backgroundType)
     {
@@ -61,7 +63,7 @@ internal static class UnsafeReflection
             TaskBarProgressState.Error => ShObjIdl.TBPFLAG.TBPF_ERROR,
             TaskBarProgressState.Paused => ShObjIdl.TBPFLAG.TBPF_PAUSED,
             TaskBarProgressState.Normal => ShObjIdl.TBPFLAG.TBPF_NORMAL,
-            _ => Wpf.Ui.Interop.ShObjIdl.TBPFLAG.TBPF_NOPROGRESS
+            _ => CrissCross.WPF.UI.Interop.ShObjIdl.TBPFLAG.TBPF_NOPROGRESS
         };
     }
 

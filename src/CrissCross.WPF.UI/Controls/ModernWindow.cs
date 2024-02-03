@@ -2,21 +2,18 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using CP.BBCode.WPF;
 using CP.Extensions.Hosting.Wpf;
 using CP.WPF.Controls;
 using ReactiveUI;
-using Button = Wpf.Ui.Controls.Button;
+using Button = CrissCross.WPF.UI.Controls.Button;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 

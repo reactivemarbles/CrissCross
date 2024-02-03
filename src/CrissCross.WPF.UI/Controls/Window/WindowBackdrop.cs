@@ -2,17 +2,19 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Runtime.InteropServices;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Interop;
+using CrissCross.WPF.UI.Appearance;
+using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Applies the chosen backdrop effect to the selected window.
@@ -37,10 +39,13 @@ public static class WindowBackdrop
     }
 
     /// <summary>
-    /// Applies backdrop effect to the selected <see cref="System.Windows.Window"/>.
+    /// Applies backdrop effect to the selected <see cref="System.Windows.Window" />.
     /// </summary>
     /// <param name="window">Selected window.</param>
-    /// <returns><see langword="true"/> if the operation was successfull, otherwise <see langword="false"/>.</returns>
+    /// <param name="backdropType">Type of the backdrop.</param>
+    /// <returns>
+    ///   <see langword="true" /> if the operation was successfull, otherwise <see langword="false" />.
+    /// </returns>
     public static bool ApplyBackdrop(System.Windows.Window window, WindowBackdropType backdropType)
     {
         if (window is null)
@@ -80,7 +85,10 @@ public static class WindowBackdrop
     /// Applies backdrop effect to the selected handle.
     /// </summary>
     /// <param name="hWnd">Window handle.</param>
-    /// <returns><see langword="true"/> if the operation was successfull, otherwise <see langword="false"/>.</returns>
+    /// <param name="backdropType">Type of the backdrop.</param>
+    /// <returns>
+    ///   <see langword="true" /> if the operation was successfull, otherwise <see langword="false" />.
+    /// </returns>
     public static bool ApplyBackdrop(IntPtr hWnd, WindowBackdropType backdropType)
     {
         if (hWnd == IntPtr.Zero)

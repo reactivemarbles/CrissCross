@@ -24,7 +24,7 @@ public partial class MainWindow : INavigationWindow
         ViewModel = viewModel;
         DataContext = this;
 
-        Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+        CrissCross.WPF.UI.Appearance.SystemThemeWatcher.Watch(this);
 
         InitializeComponent();
         SetPageService(pageService);
@@ -45,12 +45,12 @@ public partial class MainWindow : INavigationWindow
     /// Provides direct access to the control responsible for navigation.
     /// </summary>
     /// <returns>
-    /// Instance of the <see cref="T:Wpf.Ui.Controls.INavigationView" /> control.
+    /// Instance of the <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" /> control.
     /// </returns>
     public INavigationView GetNavigation() => RootNavigation;
 
     /// <summary>
-    /// Lets you navigate to the selected page based on it's type. Should be used with <see cref="T:Wpf.Ui.IPageService" />.
+    /// Lets you navigate to the selected page based on it's type. Should be used with <see cref="T:CrissCross.WPF.UI.IPageService" />.
     /// </summary>
     /// <param name="pageType"><see langword="Type" /> of the page.</param>
     /// <returns>
@@ -59,9 +59,9 @@ public partial class MainWindow : INavigationWindow
     public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
     /// <summary>
-    /// Lets you attach the service that delivers page instances to <see cref="T:Wpf.Ui.Controls.INavigationView" />.
+    /// Lets you attach the service that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
-    /// <param name="pageService">Instance of the <see cref="T:Wpf.Ui.IPageService" /> with attached service provider.</param>
+    /// <param name="pageService">Instance of the <see cref="T:CrissCross.WPF.UI.IPageService" /> with attached service provider.</param>
     public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
 
     /// <summary>
@@ -75,7 +75,7 @@ public partial class MainWindow : INavigationWindow
     public void CloseWindow() => Close();
 
     /// <summary>
-    /// Lets you attach the service provider that delivers page instances to <see cref="T:Wpf.Ui.Controls.INavigationView" />.
+    /// Lets you attach the service provider that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
     /// <param name="serviceProvider">Instance of the <see cref="T:System.IServiceProvider" />.</param>
     public void SetServiceProvider(IServiceProvider serviceProvider)

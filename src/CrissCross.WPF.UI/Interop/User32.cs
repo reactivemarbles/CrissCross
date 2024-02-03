@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -20,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
-namespace Wpf.Ui.Interop;
+namespace CrissCross.WPF.UI.Interop;
 
 /// <summary>
 /// USER procedure declarations, constant definitions and macros.
@@ -1153,7 +1155,6 @@ internal static class User32
     /// <summary>
     /// Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) value at the specified offset into the extra window memory.
     /// <para>If you are retrieving a pointer or a handle, this function has been superseded by the <see cref="GetWindowLongPtr"/> function.</para>
-    /// <para>Unicode declaration for <see cref="GetWindowLong"/></para>
     /// </summary>
     /// <param name="hWnd">A handle to the window and, indirectly, the class to which the window belongs.</param>
     /// <param name="nIndex">The zero-based offset to the value to be retrieved.</param>
@@ -1164,7 +1165,6 @@ internal static class User32
     /// <summary>
     /// Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) value at the specified offset into the extra window memory.
     /// <para>If you are retrieving a pointer or a handle, this function has been superseded by the <see cref="GetWindowLongPtr"/> function.</para>
-    /// <para>ANSI declaration for <see cref="GetWindowLong"/></para>
     /// </summary>
     /// <param name="hWnd">A handle to the window and, indirectly, the class to which the window belongs.</param>
     /// <param name="nIndex">The zero-based offset to the value to be retrieved.</param>

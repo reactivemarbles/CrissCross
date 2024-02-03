@@ -9,11 +9,11 @@
 
 using System.Windows.Data;
 
-namespace Wpf.Ui.Converters;
+namespace CrissCross.WPF.UI.Converters;
 
 internal class ProgressThicknessConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         // TODO: It's too hardcoded, we should define better formula.
 
@@ -25,7 +25,7 @@ internal class ProgressThicknessConverter : IValueConverter
         return 12.0d;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

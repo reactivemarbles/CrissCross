@@ -2,17 +2,19 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
 using System.Windows.Controls;
-using Wpf.Ui.Converters;
-using Wpf.Ui.Input;
+using CrissCross.WPF.UI.Converters;
+using CrissCross.WPF.UI.Input;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 // TODO: Refactor as popup, detach from the window renderer
 

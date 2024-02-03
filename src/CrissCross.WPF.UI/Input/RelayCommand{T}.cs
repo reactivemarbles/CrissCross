@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -15,7 +17,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace Wpf.Ui.Input;
+namespace CrissCross.WPF.UI.Input;
 
 /// <summary>
 /// A generic command whose sole purpose is to relay its functionality to other
@@ -64,7 +66,6 @@ public class RelayCommand<T> : IRelayCommand<T>
     /// </summary>
     /// <param name="execute">The execution logic.</param>
     /// <param name="canExecute">The execution status logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(System.Action{T?})"/>.</remarks>
     /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
     {

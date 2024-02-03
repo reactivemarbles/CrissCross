@@ -10,7 +10,7 @@
 using System.Reflection;
 using System.Windows;
 
-namespace Wpf.Ui.Styles.Controls
+namespace CrissCross.WPF.UI.Styles.Controls
 {
     /// <summary>
     /// Extension to the menu.

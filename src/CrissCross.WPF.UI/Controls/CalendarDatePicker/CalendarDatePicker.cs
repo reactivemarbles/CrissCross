@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -13,7 +15,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Represents a control that allows a user to pick a date from a calendar display.
@@ -23,7 +25,7 @@ namespace Wpf.Ui.Controls;
 /// &lt;ui:CalendarDatePicker /&gt;
 /// </code>
 /// </example>
-public class CalendarDatePicker : Wpf.Ui.Controls.Button
+public class CalendarDatePicker : CrissCross.WPF.UI.Controls.Button
 {
     private Popup? _popup;
 

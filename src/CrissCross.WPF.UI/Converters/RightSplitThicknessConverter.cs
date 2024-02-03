@@ -9,11 +9,11 @@
 
 using System.Windows.Data;
 
-namespace Wpf.Ui.Converters;
+namespace CrissCross.WPF.UI.Converters;
 
 internal class RightSplitThicknessConverter : IValueConverter
 {
-    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is not Thickness thickness)
         {
@@ -23,7 +23,7 @@ internal class RightSplitThicknessConverter : IValueConverter
         return new Thickness(thickness.Left, thickness.Top, thickness.Right, thickness.Bottom);
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }

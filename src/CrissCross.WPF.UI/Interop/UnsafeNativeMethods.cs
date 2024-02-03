@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -13,10 +15,10 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
-using Wpf.Ui.Controls;
-using Wpf.Ui.Hardware;
+using CrissCross.WPF.UI.Controls;
+using CrissCross.WPF.UI.Hardware;
 
-namespace Wpf.Ui.Interop;
+namespace CrissCross.WPF.UI.Interop;
 
 /// <summary>
 /// A set of dangerous methods to modify the appearance.
@@ -421,8 +423,10 @@ public static class UnsafeNativeMethods
     /// Tries to set taskbar value for the selected window handle.
     /// </summary>
     /// <param name="hWnd">Window handle.</param>
+    /// <param name="taskbarFlag">The taskbar flag.</param>
     /// <param name="current">Current value.</param>
     /// <param name="total">Total value to divide.</param>
+    /// <returns></returns>
     internal static bool SetTaskbarValue(IntPtr hWnd, ShObjIdl.TBPFLAG taskbarFlag, int current, int total)
     {
         if (hWnd == IntPtr.Zero)

@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -13,7 +15,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 // TODO: Mask (with placeholder); Clipboard paste;
 // TODO: Constant decimals when formatting. Although this can actually be done with NumberFormatter.
@@ -25,7 +27,7 @@ namespace Wpf.Ui.Controls;
 /// </summary>
 //[ToolboxItem(true)]
 //[ToolboxBitmap(typeof(NumberBox), "NumberBox.bmp")]
-public class NumberBox : Wpf.Ui.Controls.TextBox
+public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
 {
     private bool _valueUpdating;
 
@@ -302,7 +304,7 @@ public class NumberBox : Wpf.Ui.Controls.TextBox
             .Debug
             .WriteLine(
                 $"INFO: {typeof(NumberBox)} button clicked with param: {parameter}",
-                "Wpf.Ui.NumberBox"
+                "CrissCross.WPF.UI.NumberBox"
             );
 #endif
 
@@ -334,7 +336,7 @@ public class NumberBox : Wpf.Ui.Controls.TextBox
         ValidateInput();
     }
 
-    /// <inheritdoc />
+    ///// <inheritdoc />
     //protected override void OnTextChanged(System.Windows.Controls.TextChangedEventArgs e)
     //{
     //    base.OnTextChanged(e);
@@ -421,7 +423,7 @@ public class NumberBox : Wpf.Ui.Controls.TextBox
             .Debug
             .WriteLine(
                 $"INFO: {typeof(NumberBox)} {nameof(StepValue)} raised, change {change}",
-                "Wpf.Ui.NumberBox"
+                "CrissCross.WPF.UI.NumberBox"
             );
 #endif
 

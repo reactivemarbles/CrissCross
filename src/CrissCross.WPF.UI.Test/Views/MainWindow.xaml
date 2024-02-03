@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:rxNav="clr-namespace:CrissCross.WPF.UI;assembly=CrissCross.WPF.UI"
     xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui"
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
     Width="1100"
@@ -23,7 +22,6 @@
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <!--  xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"  -->
     <ui:FluentWindow.InputBindings>
         <KeyBinding
             Key="F"
@@ -64,26 +62,15 @@
                     FontWeight="DemiBold" />
             </ui:NavigationView.Header>
         </ui:NavigationView>
-
-        <!--<tray:NotifyIcon
-            Grid.Row="0"
-            FocusOnLeftClick="True"
-            Icon="/Assets/CrissCrossIcon_256.png"
-            MenuOnRightClick="True"
-            TooltipText="CrissCross.WPF.UI - Test">
-            <tray:NotifyIcon.Menu>
-                <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
-            </tray:NotifyIcon.Menu>
-        </tray:NotifyIcon>-->
-        <rxNav:AppBar
+        <ui:AppBar
             Grid.RowSpan="2"
             Height="88"
             VerticalAlignment="Bottom">
-            <rxNav:AppBar.AppBarLeft>
+            <ui:AppBar.AppBarLeft>
                 <ui:Button Content="Hello" />
                 <abb:AppBarButton Content="Hello" Icon="ab_heart" />
-            </rxNav:AppBar.AppBarLeft>
-        </rxNav:AppBar>
-        <rxNav:MessageBox Grid.RowSpan="2" />
+            </ui:AppBar.AppBarLeft>
+        </ui:AppBar>
+        <ui:MessageBox Grid.RowSpan="2" />
     </Grid>
 </ui:FluentWindow>

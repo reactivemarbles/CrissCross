@@ -2,6 +2,8 @@
 //   This file has been borrowed from Wpf-UI.
 // </auto-generated>
 
+#nullable enable
+
 // This Source Code Form is subject to the terms of the MIT License.
 // If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
@@ -9,10 +11,10 @@
 
 using System.Reflection;
 using System.Windows.Controls;
-using Wpf.Ui.Designer;
+using CrissCross.WPF.UI.Designer;
 
 // ReSharper disable once CheckNamespace
-namespace Wpf.Ui.Controls;
+namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Internal activator for creating content instances of the navigation view items.
@@ -136,7 +138,7 @@ internal static class NavigationViewActivator
                 return score == 0 ? null : new { Constructor = ctor, Score = score };
             })
             .Where(cs => cs != null)
-            .OrderBy(cs => cs.Score)
+            .OrderBy(cs => cs!.Score)
             .FirstOrDefault()
             ?.Constructor;
     }
