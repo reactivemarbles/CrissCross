@@ -9,8 +9,6 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using CrissCross.WPF.UI.TaskBar;
-
 namespace CrissCross.WPF.UI;
 
 /// <summary>

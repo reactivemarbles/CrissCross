@@ -10,7 +10,6 @@
 // All Rights Reserved.
 
 using CrissCross.WPF.UI.Extensions;
-using CrissCross.WPF.UI.Interop;
 
 namespace CrissCross.WPF.UI.Appearance;
 

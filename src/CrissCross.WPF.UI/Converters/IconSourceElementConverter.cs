@@ -12,7 +12,6 @@
 // All Rights Reserved.
 
 using System.Windows.Data;
-using CrissCross.WPF.UI.Controls;
 
 namespace CrissCross.WPF.UI.Converters;
 

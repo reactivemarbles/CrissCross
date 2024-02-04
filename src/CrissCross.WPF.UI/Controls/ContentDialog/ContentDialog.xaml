@@ -5,7 +5,6 @@
     xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
 
     <converters:ContentDialogButtonEnumToBoolConverter x:Key="EnumToBoolConverter" />
-    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
     <CornerRadius x:Key="DialogOverlayCornerRadius">8,8,0,0</CornerRadius>
     <CornerRadius x:Key="DialogFooterCornerRadius">0,0,8,8</CornerRadius>

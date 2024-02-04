@@ -10,7 +10,6 @@
 // All Rights Reserved.
 
 using System.Windows.Markup;
-using CrissCross.WPF.UI.Appearance;
 
 namespace CrissCross.WPF.UI.Markup;
 

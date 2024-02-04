@@ -40,7 +40,7 @@
     <Page Update="Resources\CrissCross.Wpf.UI.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Page>
-    <Page Update="Resources\ModernWindow.xaml">
+    <Page Update="Controls\ModernWindow\ModernWindow.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Page>
   </ItemGroup>

@@ -13,9 +13,6 @@
 // and is intended for use on Windows systems only.
 // This Source Code is partially based on the source code provided by the .NET Foundation.
 
-using CrissCross.WPF.UI.Controls;
-using CrissCross.WPF.UI.TaskBar;
-
 namespace CrissCross.WPF.UI.Interop;
 
 /// <summary>

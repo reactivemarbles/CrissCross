@@ -13,7 +13,5 @@
     <Thickness x:Key="PaneToggleButtonThickness">1,1,1,1</Thickness>
 
     <converters:BackButtonVisibilityToVisibilityConverter x:Key="BackButtonVisibilityToVisibilityConverter" />
-    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
 </ResourceDictionary>

@@ -9,9 +9,6 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using System.Runtime.CompilerServices;
-using CrissCross.WPF.UI.Controls;
-
 namespace CrissCross.WPF.UI.Appearance;
 
 /// <summary>

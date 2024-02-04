@@ -15,8 +15,6 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
-using CrissCross.WPF.UI.Controls;
-using CrissCross.WPF.UI.Hardware;
 
 namespace CrissCross.WPF.UI.Interop;
 
