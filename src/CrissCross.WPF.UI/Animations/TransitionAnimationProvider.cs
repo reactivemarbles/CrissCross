@@ -10,7 +10,6 @@
 // All Rights Reserved.
 
 using System.Windows.Media.Animation;
-using CrissCross.WPF.UI.Hardware;
 
 namespace CrissCross.WPF.UI.Animations;
 

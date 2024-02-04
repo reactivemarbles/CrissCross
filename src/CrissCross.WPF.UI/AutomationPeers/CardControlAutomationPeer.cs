@@ -11,7 +11,6 @@
 
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
-using CrissCross.WPF.UI.Controls;
 
 namespace CrissCross.WPF.UI.AutomationPeers;
 

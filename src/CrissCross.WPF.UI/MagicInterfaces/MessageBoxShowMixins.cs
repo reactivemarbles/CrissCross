@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxResult = System.Windows.MessageBoxResult;
+
 namespace CrissCross.WPF.UI
 {
 #pragma warning disable RCS1175 // Unused 'this' parameter
