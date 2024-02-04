@@ -8,8 +8,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
 
     <Duration x:Key="ScrollAnimationDuration">0:0:0.16</Duration>
     <Duration x:Key="ButtonHoverAnimationDuration">0:0:0.16</Duration>
@@ -36,7 +36,7 @@
                         Margin="{TemplateBinding Margin}"
                         Background="{DynamicResource ScrollBarButtonBackground}"
                         CornerRadius="6">
-                        <controls:SymbolIcon
+                        <ui:SymbolIcon
                             Margin="0,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -132,7 +132,7 @@
                 Grid.Row="0"
                 HorizontalContentAlignment="Left"
                 Command="ScrollBar.LineUpCommand"
-                Content="{x:Static controls:SymbolRegular.CaretUp24}"
+                Content="{x:Static ui:SymbolRegular.CaretUp24}"
                 Opacity="0"
                 Style="{StaticResource UiScrollBarLineButton}" />
             <Track
@@ -161,7 +161,7 @@
                 Grid.Row="2"
                 HorizontalContentAlignment="Left"
                 Command="ScrollBar.LineDownCommand"
-                Content="{x:Static controls:SymbolRegular.CaretDown24}"
+                Content="{x:Static ui:SymbolRegular.CaretDown24}"
                 Opacity="0"
                 Style="{StaticResource UiScrollBarLineButton}" />
         </Grid>
@@ -252,7 +252,7 @@
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Command="ScrollBar.LineLeftCommand"
-                Content="{x:Static controls:SymbolRegular.CaretLeft24}"
+                Content="{x:Static ui:SymbolRegular.CaretLeft24}"
                 Opacity="0"
                 Style="{StaticResource UiScrollBarLineButton}" />
             <Track
@@ -279,7 +279,7 @@
                 Grid.Column="2"
                 VerticalAlignment="Center"
                 Command="ScrollBar.LineRightCommand"
-                Content="{x:Static controls:SymbolRegular.CaretRight24}"
+                Content="{x:Static ui:SymbolRegular.CaretRight24}"
                 Opacity="0"
                 Style="{StaticResource UiScrollBarLineButton}" />
         </Grid>

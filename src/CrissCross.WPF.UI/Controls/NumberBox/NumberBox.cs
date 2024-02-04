@@ -270,6 +270,11 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
     {
         base.OnKeyUp(e);
 
+        if (IsReadOnly)
+        {
+            return;
+        }
+
         switch (e.Key)
         {
             case Key.PageUp:
