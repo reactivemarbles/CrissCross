@@ -3,8 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
     xmlns:bbcode="https://github.com/ChrisPulman/BBCode.WPF"
+    xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
     xmlns:rxNav="clr-namespace:CrissCross.WPF.UI"
     xmlns:rxNavWpf="clr-namespace:CrissCross.WPF;assembly=CrissCross.WPF">
+
+    <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converter:ToUpperConverter x:Key="ToUpperConverter" />
+    <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 
     <Style TargetType="{x:Type rxNav:ModernWindow}">
         <Setter Property="BackgroundContent" Value="{DynamicResource WindowBackgroundContent}" />

@@ -1,6 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
     xmlns:converters="clr-namespace:CrissCross.WPF.UI.Converters"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
@@ -13,5 +14,6 @@
     <Thickness x:Key="PaneToggleButtonThickness">1,1,1,1</Thickness>
 
     <converters:BackButtonVisibilityToVisibilityConverter x:Key="BackButtonVisibilityToVisibilityConverter" />
-
+    <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 </ResourceDictionary>
