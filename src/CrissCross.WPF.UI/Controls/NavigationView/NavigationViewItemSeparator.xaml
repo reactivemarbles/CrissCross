@@ -8,9 +8,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
 
-    <Style TargetType="{x:Type controls:NavigationViewItemSeparator}">
+    <Style TargetType="{x:Type ui:NavigationViewItemSeparator}">
         <Setter Property="BorderBrush" Value="{DynamicResource NavigationViewItemSeparatorForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Margin" Value="0,4" />
@@ -19,7 +19,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:NavigationViewItemSeparator}">
+                <ControlTemplate TargetType="{x:Type ui:NavigationViewItemSeparator}">
                     <Border
                         Width="{TemplateBinding Width}"
                         Margin="{TemplateBinding Margin}"

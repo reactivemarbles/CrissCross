@@ -8,7 +8,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
 
     <Style x:Key="UiScrollViewer" TargetType="{x:Type ScrollViewer}">
         <Setter Property="Margin" Value="0" />
@@ -69,5 +69,5 @@
     </Style>
 
     <Style BasedOn="{StaticResource UiScrollViewer}" TargetType="{x:Type ScrollViewer}" />
-    <Style BasedOn="{StaticResource UiScrollViewer}" TargetType="{x:Type controls:PassiveScrollViewer}" />
+    <Style BasedOn="{StaticResource UiScrollViewer}" TargetType="{x:Type ui:PassiveScrollViewer}" />
 </ResourceDictionary>

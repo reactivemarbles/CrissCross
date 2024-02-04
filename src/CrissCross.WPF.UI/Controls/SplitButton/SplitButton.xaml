@@ -11,8 +11,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
-    xmlns:converters="clr-namespace:CrissCross.WPF.UI.Converters">
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/Button.xaml" />
@@ -20,10 +19,10 @@
 
     <Thickness x:Key="ButtonChevronIconMargin">8,0,0,0</Thickness>
 
-    <converters:LeftSplitThicknessConverter x:Key="LeftSplitThicknessConverter" />
-    <converters:RightSplitThicknessConverter x:Key="RightSplitThicknessConverter" />
-    <converters:LeftSplitCornerRadiusConverter x:Key="LeftSplitCornerRadiusConverter" />
-    <converters:RightSplitCornerRadiusConverter x:Key="RightSplitCornerRadiusConverter" />
+    <ui:LeftSplitThicknessConverter x:Key="LeftSplitThicknessConverter" />
+    <ui:RightSplitThicknessConverter x:Key="RightSplitThicknessConverter" />
+    <ui:LeftSplitCornerRadiusConverter x:Key="LeftSplitCornerRadiusConverter" />
+    <ui:RightSplitCornerRadiusConverter x:Key="RightSplitCornerRadiusConverter" />
 
 
     <Style x:Key="DefaultSplitButtonToggleButtonStyle" TargetType="{x:Type ToggleButton}">
@@ -60,14 +59,14 @@
     <Style
         x:Key="DefaultUiSplitButtonStyle"
         BasedOn="{StaticResource DefaultUiButtonStyle}"
-        TargetType="{x:Type controls:SplitButton}">
+        TargetType="{x:Type ui:SplitButton}">
         <Setter Property="Popup.PopupAnimation" Value="None" />
         <!--  WPF doesn't like centering, the animation is ugly and the mouse button sometimes clicks right away.  -->
         <Setter Property="Popup.Placement" Value="Bottom" />
         <Setter Property="IsDropDownOpen" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:SplitButton}">
+                <ControlTemplate TargetType="{x:Type ui:SplitButton}">
                     <Border
                         x:Name="ContentBorder"
                         Grid.Row="0"
@@ -134,7 +133,7 @@
                                     Foreground="{TemplateBinding Foreground}"
                                     IsChecked="{TemplateBinding IsDropDownOpen}"
                                     Style="{StaticResource DefaultSplitButtonToggleButtonStyle}">
-                                    <controls:SymbolIcon FontSize="10" Symbol="ChevronDown24" />
+                                    <ui:SymbolIcon FontSize="10" Symbol="ChevronDown24" />
                                 </ToggleButton>
                             </Border>
                         </Grid>
@@ -179,6 +178,6 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultUiSplitButtonStyle}" TargetType="{x:Type controls:SplitButton}" />
+    <Style BasedOn="{StaticResource DefaultUiSplitButtonStyle}" TargetType="{x:Type ui:SplitButton}" />
 
 </ResourceDictionary>

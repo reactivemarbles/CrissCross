@@ -1,12 +1,12 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NavigationView/NavigationViewConstants.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="LeftFluentNavigationViewItemTemplate" TargetType="{x:Type controls:NavigationViewItem}">
+    <ControlTemplate x:Key="LeftFluentNavigationViewItemTemplate" TargetType="{x:Type ui:NavigationViewItem}">
         <Border
             x:Name="MainBorder"
             Width="{StaticResource PaneFluentButtonWidth}"

@@ -1,14 +1,14 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NavigationView/NavigationViewBasePaneButtonStyle.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NavigationView/NavigationViewItemDefaultStyle.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NavigationView/NavigationViewConstants.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ControlTemplate x:Key="BottomNavigationViewTemplate" TargetType="{x:Type controls:NavigationView}">
+    <ControlTemplate x:Key="BottomNavigationViewTemplate" TargetType="{x:Type ui:NavigationView}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -29,7 +29,7 @@
                     Visibility="{TemplateBinding HeaderVisibility}" />
 
                 <!--  Page content  -->
-                <controls:NavigationViewContentPresenter
+                <ui:NavigationViewContentPresenter
                     x:Name="PART_NavigationViewContentPresenter"
                     Grid.Row="1"
                     Margin="{TemplateBinding Padding}"
@@ -53,17 +53,17 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <controls:Button
+                <ui:Button
                     x:Name="PART_BackButton"
                     Grid.Column="0"
                     IsEnabled="{TemplateBinding IsBackEnabled}"
                     Style="{StaticResource BasePaneButtonStyle}"
                     Visibility="{TemplateBinding IsBackButtonVisible,
                                                  Converter={StaticResource BackButtonVisibilityToVisibilityConverter}}">
-                    <controls:Button.Icon>
-                        <controls:SymbolIcon Symbol="ArrowLeft48" />
-                    </controls:Button.Icon>
-                </controls:Button>
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="ArrowLeft48" />
+                    </ui:Button.Icon>
+                </ui:Button>
 
                 <!--  Pane header  -->
                 <ContentPresenter
@@ -117,7 +117,7 @@
         </Grid>
     </ControlTemplate>
 
-    <ControlTemplate x:Key="BottomCompactNavigationViewItemTemplate" TargetType="{x:Type controls:NavigationViewItem}">
+    <ControlTemplate x:Key="BottomCompactNavigationViewItemTemplate" TargetType="{x:Type ui:NavigationViewItem}">
         <Border x:Name="MainBorder">
             <Grid>
                 <Grid

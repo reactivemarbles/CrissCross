@@ -8,8 +8,7 @@
 <ResourceDictionary
     x:Class="CrissCross.WPF.UI.Styles.Controls.Menu"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="DefaultMenuStyle" TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{DynamicResource MenuBarBackground}" />
