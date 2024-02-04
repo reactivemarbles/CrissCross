@@ -11,8 +11,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:CrissCross.WPF.UI.Converters"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
-    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui">
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
 
     <!--
         I don't see that CheckBox had combined states. Without it,
@@ -21,7 +22,7 @@
         Have to figure it out or make a new CheckBox control.
     -->
 
-    <ui:FallbackBrushConverter x:Key="FallbackBrushConverter" />
+    <converters:FallbackBrushConverter x:Key="FallbackBrushConverter" />
 
     <Color x:Key="FallbackColor">#FFFF0000</Color>
 

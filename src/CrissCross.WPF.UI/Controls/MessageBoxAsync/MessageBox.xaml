@@ -5,7 +5,8 @@
     xmlns:converters="https://github.com/ChrisPulman/XamlConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui"
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls"
+    xmlns:uim="clr-namespace:CrissCross.WPF.UI.Markup"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="#7F000000"
@@ -13,7 +14,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Dark" />
+                <uim:ThemesDictionary Theme="Dark" />
                 <converters:ConvertersDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
