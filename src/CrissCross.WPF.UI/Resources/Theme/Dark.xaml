@@ -16,7 +16,6 @@
         https://github.com/microsoft/microsoft-ui-xaml/blob/main/dev/CommonStyles/Common_themeresources_any.xaml
     -->
 
-
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/AppBarButton.WPF;component/Themes/AppBarButton.xaml" />
     </ResourceDictionary.MergedDictionaries>

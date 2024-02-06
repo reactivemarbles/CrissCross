@@ -37,9 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resources\CrissCross.Wpf.UI.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Page>
     <Page Update="Controls\ModernWindow\ModernWindow.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Page>

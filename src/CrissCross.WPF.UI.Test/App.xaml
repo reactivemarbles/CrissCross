@@ -10,7 +10,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <rxNav:CrissCrossDictionary />
+                <rxNav:ControlsDictionary />
                 <rxNav:ThemesDictionary Theme="Light" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
