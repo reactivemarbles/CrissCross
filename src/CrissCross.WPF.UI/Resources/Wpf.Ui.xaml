@@ -1,12 +1,11 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cc="https://github.com/ChrisPulman/CrissCross"
-    xmlns:converters="https://github.com/ChrisPulman/XamlConverters">
-
+<!--
+    This Source Code Form is subject to the terms of the MIT License.
+    If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
+    Copyright (C) Leszek Pomianowski and WPF UI Contributors.
+    All Rights Reserved.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
-        <cc:CrissCrossWpfDictionary />
-        <converters:ConvertersDictionary />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Variables.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Fonts.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/Typography.xaml" />

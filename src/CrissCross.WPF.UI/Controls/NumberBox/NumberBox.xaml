@@ -11,8 +11,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:system="clr-namespace:System;assembly=mscorlib"
-    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <Thickness x:Key="NumberBoxBorderThemeThickness">1,1,1,0</Thickness>
     <Thickness x:Key="NumberBoxAccentBorderThemeThickness">0,0,0,1</Thickness>
@@ -23,7 +23,7 @@
     <system:Double x:Key="NumberBoxButtonHeight">24</system:Double>
     <system:Double x:Key="NumberBoxButtonIconSize">14</system:Double>
 
-    <Style x:Key="DefaultUiNumberBoxStyle" TargetType="{x:Type ui:NumberBox}">
+    <Style x:Key="DefaultUiNumberBoxStyle" TargetType="{x:Type controls:NumberBox}">
         <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <!--  Universal WPF UI focus  -->
@@ -50,14 +50,14 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ui:NumberBox}">
+                <ControlTemplate TargetType="{x:Type controls:NumberBox}">
                     <Grid HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
                         <Border
                             x:Name="ContentBorder"
-                            Width="{TemplateBinding Width}"
-                            Height="{TemplateBinding Height}"
                             MinWidth="{TemplateBinding MinWidth}"
                             MinHeight="{TemplateBinding MinHeight}"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
@@ -98,7 +98,7 @@
                                         Text="{TemplateBinding PlaceholderText}" />
                                 </Grid>
                                 <!--  Buttons and Icons have no padding from the main element to allow absolute positions if height is larger than the text entry zone  -->
-                                <ui:Button
+                                <controls:Button
                                     x:Name="ClearButton"
                                     Grid.Column="2"
                                     Width="{StaticResource NumberBoxButtonHeight}"
@@ -116,11 +116,11 @@
                                     CommandParameter="clear"
                                     Cursor="Arrow"
                                     Foreground="{DynamicResource TextControlButtonForeground}">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="Dismiss24" />
-                                    </ui:Button.Icon>
-                                </ui:Button>
-                                <ui:Button
+                                    <controls:Button.Icon>
+                                        <controls:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="Dismiss24" />
+                                    </controls:Button.Icon>
+                                </controls:Button>
+                                <controls:Button
                                     x:Name="InlineIncrementButton"
                                     Grid.Column="3"
                                     Width="{StaticResource NumberBoxButtonHeight}"
@@ -139,11 +139,11 @@
                                     Cursor="Arrow"
                                     Foreground="{DynamicResource TextControlButtonForeground}"
                                     Visibility="Collapsed">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="ChevronUp24" />
-                                    </ui:Button.Icon>
-                                </ui:Button>
-                                <ui:Button
+                                    <controls:Button.Icon>
+                                        <controls:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="ChevronUp24" />
+                                    </controls:Button.Icon>
+                                </controls:Button>
+                                <controls:Button
                                     x:Name="InlineDecrementButton"
                                     Grid.Column="4"
                                     Width="{StaticResource NumberBoxButtonHeight}"
@@ -163,10 +163,10 @@
                                     FontSize="{StaticResource NumberBoxButtonIconSize}"
                                     Foreground="{DynamicResource TextControlButtonForeground}"
                                     Visibility="Collapsed">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="ChevronDown24" />
-                                    </ui:Button.Icon>
-                                </ui:Button>
+                                    <controls:Button.Icon>
+                                        <controls:SymbolIcon FontSize="{StaticResource NumberBoxButtonIconSize}" Symbol="ChevronDown24" />
+                                    </controls:Button.Icon>
+                                </controls:Button>
                                 <ContentControl
                                     x:Name="ControlIconRight"
                                     Grid.Column="5"
@@ -259,6 +259,6 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource DefaultUiNumberBoxStyle}" TargetType="{x:Type ui:NumberBox}" />
+    <Style BasedOn="{StaticResource DefaultUiNumberBoxStyle}" TargetType="{x:Type controls:NumberBox}" />
 
 </ResourceDictionary>

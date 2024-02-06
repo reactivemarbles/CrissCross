@@ -17,7 +17,7 @@ using System.Windows.Markup;
 namespace CrissCross.WPF.UI.Markup;
 
 /// <summary>
-/// Provides a dictionary implementation that contains <c>WPF UI</c> theme resources used by components and other elements of a WPF application.
+/// Provides a dictionary implementation that contains <c>WPF UI</c> controls resources used by components and other elements of a WPF application.
 /// </summary>
 /// <example>
 /// <code lang="xml">
@@ -26,7 +26,7 @@ namespace CrissCross.WPF.UI.Markup;
 ///     &lt;Application.Resources&gt;
 ///         &lt;ResourceDictionary&gt;
 ///             &lt;ResourceDictionary.MergedDictionaries&gt;
-///                 &lt;ui:ThemesDictionary Theme = "Dark" /&gt;
+///                 &lt;ui:ControlsDictionary /&gt;
 ///             &lt;/ResourceDictionary.MergedDictionaries&gt;
 ///         &lt;/ResourceDictionary&gt;
 ///     &lt;/Application.Resources&gt;
@@ -36,30 +36,16 @@ namespace CrissCross.WPF.UI.Markup;
 [Localizability(LocalizationCategory.Ignore)]
 [Ambient]
 [UsableDuringInitialization(true)]
-public class ThemesDictionary : ResourceDictionary
+public class ControlsDictionary : ResourceDictionary
 {
+    private const string DictionaryUri = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Wpf.Ui.xaml";
+
     /// <summary>
-    /// Sets the default application theme.
+    /// Initializes a new instance of the <see cref="ControlsDictionary"/> class.
+    /// Default constructor defining <see cref="ResourceDictionary.Source"/> of the <c>WPF UI</c> controls dictionary.
     /// </summary>
-    public ApplicationTheme Theme
+    public ControlsDictionary()
     {
-        set => SetSourceBasedOnSelectedTheme(value);
-    }
-
-    public ThemesDictionary()
-    {
-        SetSourceBasedOnSelectedTheme(ApplicationTheme.Light);
-    }
-
-    private void SetSourceBasedOnSelectedTheme(ApplicationTheme? selectedApplicationTheme)
-    {
-        var themeName = selectedApplicationTheme switch
-        {
-            ApplicationTheme.Dark => "Dark",
-            ApplicationTheme.HighContrast => "HighContrast",
-            _ => "Light"
-        };
-
-        Source = new Uri($"{ApplicationThemeManager.ThemesDictionaryPath}{themeName}.xaml", UriKind.Absolute);
+        Source = new Uri(DictionaryUri, UriKind.Absolute);
     }
 }

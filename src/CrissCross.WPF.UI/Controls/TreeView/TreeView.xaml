@@ -8,7 +8,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
 
     <Style x:Key="DefaultTreeViewStyle" TargetType="{x:Type TreeView}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -33,13 +33,13 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="4">
-                        <ui:PassiveScrollViewer
+                        <controls:PassiveScrollViewer
                             x:Name="ItemsPresenterScrollViewer"
                             CanContentScroll="False"
                             HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                             VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
                             <ItemsPresenter Margin="{TemplateBinding Padding}" />
-                        </ui:PassiveScrollViewer>
+                        </controls:PassiveScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="VirtualizingPanel.IsVirtualizing" Value="True">
