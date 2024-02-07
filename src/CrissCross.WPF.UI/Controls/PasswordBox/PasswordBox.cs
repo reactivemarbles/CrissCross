@@ -193,9 +193,8 @@ public class PasswordBox : CrissCross.WPF.UI.Controls.TextBox
     /// <summary>
     /// Triggered by clicking a button in the control template.
     /// </summary>
-    /// <param name="sender">Sender of the click event.</param>
     /// <param name="parameter">Additional parameters.</param>
-    protected override void OnTemplateButtonClick(string parameter)
+    protected override void OnTemplateButtonClick(string? parameter)
     {
 #if DEBUG
         System.Diagnostics.Debug.WriteLine(

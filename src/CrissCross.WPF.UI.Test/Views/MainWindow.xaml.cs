@@ -11,26 +11,49 @@ namespace CrissCross.WPF.UI.Test.Views;
 public partial class MainWindow : INavigationWindow
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="MainWindow"/> class.
+    /// The tracker property.
+    /// </summary>
+    public static readonly DependencyProperty TrackerProperty = DependencyProperty.Register(
+        nameof(Tracker),
+        typeof(Tracker),
+        typeof(MainWindow),
+        new PropertyMetadata(null));
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainWindow" /> class.
     /// </summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="pageService">The page service.</param>
     /// <param name="navigationService">The navigation service.</param>
+    /// <param name="tracker">The tracker.</param>
     public MainWindow(
         MainWindowViewModel viewModel,
         IPageService pageService,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        Tracker tracker)
     {
         ViewModel = viewModel;
         DataContext = this;
 
-        CrissCross.WPF.UI.Appearance.SystemThemeWatcher.Watch(this);
+        Appearance.SystemThemeWatcher.Watch(this);
 
         InitializeComponent();
         SetPageService(pageService);
-
+        tracker?.Track(this);
         navigationService?.SetNavigationControl(RootNavigation);
         Loaded += (s, e) => RootNavigation.IsPaneOpen = false;
+    }
+
+    /// <summary>
+    /// Gets or sets the tracker.
+    /// </summary>
+    /// <value>
+    /// The tracker.
+    /// </value>
+    public Tracker Tracker
+    {
+        get => (Tracker)GetValue(TrackerProperty);
+        set => SetValue(TrackerProperty, value);
     }
 
     /// <summary>

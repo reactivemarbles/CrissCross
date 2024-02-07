@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using CrissCross.WPF.UI.Storage;
 using CrissCross.WPF.UI.Test.Models;
 using CrissCross.WPF.UI.Test.ViewModels;
 using CrissCross.WPF.UI.Test.Views;
@@ -18,6 +19,8 @@ public partial class App
         .ConfigureServices(
             (context, services) =>
             {
+                services.AddSingleton<Tracker>();
+
                 // Register Main window View Model.
                 services.AddSingleton<MainWindowViewModel>();
 
@@ -31,6 +34,13 @@ public partial class App
             })
         .Build();
 
+    private readonly Tracker? _tracker;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="App"/> class.
+    /// </summary>
+    public App() => _tracker = GetService<Tracker>();
+
     /// <summary>
     /// Gets registered service.
     /// </summary>
@@ -42,7 +52,16 @@ public partial class App
     /// <summary>
     /// Occurs when the application is loading.
     /// </summary>
-    private async void OnStartup(object sender, StartupEventArgs e) => await _host.StartAsync();
+    private async void OnStartup(object sender, StartupEventArgs e)
+    {
+        _tracker?.Configure<MainWindow>()
+                .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
+                .Properties(w => new { w.Height, w.Width, w.Left, w.Top, w.WindowState })
+                .PersistOn(w => nameof(w.Closing))
+                .StopTrackingOn(w => nameof(w.Closing));
+
+        await _host.StartAsync();
+    }
 
     /// <summary>
     /// Occurs when the application is closing.
