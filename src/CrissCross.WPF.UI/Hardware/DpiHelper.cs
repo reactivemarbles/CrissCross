@@ -31,11 +31,6 @@ internal static class DpiHelper
     internal const int DefaultDpi = 96;
 
     /// <summary>
-    /// Occurs when application DPI is changed.
-    /// </summary>
-    //public static event EventHandler<DpiChangedEventArgs> DpiChanged;
-
-    /// <summary>
     /// Gets DPI of the selected <see cref="Window"/>.
     /// </summary>
     /// <param name="window">The window that you want to get information about.</param>
