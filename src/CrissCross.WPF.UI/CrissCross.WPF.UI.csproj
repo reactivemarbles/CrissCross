@@ -5,15 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <IsPackable>false</IsPackable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Fonts\FluentSystemIcons-Filled.ttf" />
-    <None Remove="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
-  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf" />

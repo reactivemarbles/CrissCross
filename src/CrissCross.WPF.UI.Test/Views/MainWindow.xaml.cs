@@ -40,6 +40,8 @@ public partial class MainWindow : INavigationWindow
         InitializeComponent();
         SetPageService(pageService);
         tracker?.Track(this);
+        SetCurrentValue(TrackerProperty, tracker);
+
         navigationService?.SetNavigationControl(RootNavigation);
         Loaded += (s, e) => RootNavigation.IsPaneOpen = false;
     }

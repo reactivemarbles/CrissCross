@@ -14,12 +14,12 @@ namespace CrissCross.WPF.UI.Configuration
     /// </summary>
     public class TrackingConfiguration : ITrackingConfiguration
     {
-        private Func<object, string> _idFunc;
+        private Func<object, string>? _idFunc;
         private Func<object, bool> _canPersistFunc = _ => true;
-        private Action<object, PropertyOperationData> _applyingPropertyAction;
-        private Action<object, PropertyOperationData> _persistingPropertyAction;
-        private Action<object> _appliedAction;
-        private Action<object> _persistedAction;
+        private Action<object, PropertyOperationData>? _applyingPropertyAction;
+        private Action<object, PropertyOperationData>? _persistingPropertyAction;
+        private Action<object>? _appliedAction;
+        private Action<object>? _persistedAction;
 
         internal TrackingConfiguration()
         {
@@ -66,12 +66,12 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The type of the target.
         /// </value>
-        public Type TargetType { get; }
+        public Type? TargetType { get; }
 
         /// <summary>
         /// Gets the StateTracker that owns this tracking configuration.
         /// </summary>
-        public virtual Tracker Tracker { get; }
+        public virtual Tracker? Tracker { get; }
 
         /// <summary>
         /// Gets a dictionary containing the tracked properties.
@@ -92,7 +92,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The stop tracking trigger.
         /// </value>
-        public Trigger StopTrackingTrigger { get; set; }
+        public Trigger? StopTrackingTrigger { get; set; }
 
         /// <summary>
         /// Allows value conversion and cancallation when applying a stored value to a property.
@@ -151,7 +151,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// </summary>
         /// <param name="target">The target.</param>
         /// <returns>A string.</returns>
-        public string GetStoreId(object target) => _idFunc(target);
+        public string GetStoreId(object target) => _idFunc!(target);
 
         /// <summary>
         /// Identifiers the specified identifier function.
@@ -353,7 +353,7 @@ namespace CrissCross.WPF.UI.Configuration
 
             if (newExp != null)
             {
-                var accessors = newExp.Members.Select((m, i) =>
+                var accessors = newExp.Members?.Select((m, i) =>
                 {
                     var right = Expression.Parameter(typeof(object));
                     var propType = (m as PropertyInfo)?.PropertyType;
@@ -361,14 +361,14 @@ namespace CrissCross.WPF.UI.Configuration
                     {
                         name = m.Name,
                         type = propType,
-                        getter = Expression.Lambda(Expression.Convert(newExp.Arguments[i] as MemberExpression, typeof(object)), projection.Parameters[0]).Compile() as Func<T, object>,
+                        getter = Expression.Lambda(Expression.Convert((newExp.Arguments[i] as MemberExpression)!, typeof(object)), projection.Parameters[0]).Compile() as Func<T, object>,
 
                         // todo: call the Convert method instead of using Expression.Convert which will not work for enums
-                        setter = Expression.Lambda(Expression.Block(Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType)), Expression.Empty()), projection.Parameters[0], right).Compile() as Action<T, object?>
+                        setter = Expression.Lambda(Expression.Block(Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType!)), Expression.Empty()), projection.Parameters[0], right).Compile() as Action<T, object?>
                     };
                 });
 
-                foreach (var a in accessors)
+                foreach (var a in accessors!)
                 {
                     TrackedProperties[a.name] = new TrackedPropertyInfo(x => a.getter!((T)x), (x, v) => a.setter!((T)x, Convert(v, a.name, a.type)));
                 }
@@ -388,7 +388,7 @@ namespace CrissCross.WPF.UI.Configuration
         {
             if (_canPersistFunc(target))
             {
-                var name = _idFunc(target);
+                var name = _idFunc!(target);
 
                 IDictionary<string, object?>? originalValues = null;
                 var values = new Dictionary<string, object?>();
@@ -405,8 +405,8 @@ namespace CrissCross.WPF.UI.Configuration
                         else
                         {
                             // keeping previously stored value in case persist cancelled
-                            originalValues ??= Tracker.Store.GetData(name);
-                            values[propertyName] = originalValues[propertyName];
+                            originalValues ??= Tracker?.Store.GetData(name);
+                            values[propertyName] = originalValues?[propertyName];
                             Trace.WriteLine($"Persisting cancelled, key='{name}', property='{propertyName}'.");
                         }
                     }
@@ -416,7 +416,7 @@ namespace CrissCross.WPF.UI.Configuration
                     }
                 }
 
-                Tracker.Store.SetData(name, values);
+                Tracker?.Store.SetData(name, values);
 
                 OnStatePersisted(target);
             }
@@ -432,8 +432,8 @@ namespace CrissCross.WPF.UI.Configuration
                 return;
             }
 
-            var name = _idFunc(target);
-            var data = Tracker.Store.GetData(name);
+            var name = _idFunc!(target);
+            var data = Tracker?.Store.GetData(name);
 
             foreach (var propertyName in TrackedProperties.Keys)
             {
@@ -478,8 +478,8 @@ namespace CrissCross.WPF.UI.Configuration
                 return;
             }
 
-            var name = _idFunc(target);
-            var data = Tracker.Store.GetData(name);
+            var name = _idFunc!(target);
+            var data = Tracker?.Store.GetData(name);
 
             foreach (var propertyName in TrackedProperties.Keys)
             {
@@ -505,7 +505,7 @@ namespace CrissCross.WPF.UI.Configuration
             // unsubscribe from stoptracking trigger too
             StopTrackingTrigger?.Unsubscribe(target);
 
-            Tracker.RemoveFromList(target);
+            Tracker?.RemoveFromList(target);
         }
 
         internal void StartTracking(object target)
@@ -536,7 +536,7 @@ namespace CrissCross.WPF.UI.Configuration
 
             var right = Expression.Parameter(typeof(object));
             var propType = membershipExpression?.Type;
-            var setter = Expression.Lambda(Expression.Block(Expression.Assign(membershipExpression, Expression.Convert(right, membershipExpression?.Type)), Expression.Empty()), propertyAccessExpression?.Parameters[0], right).Compile() as Action<T, object?>;
+            var setter = Expression.Lambda(Expression.Block(Expression.Assign(membershipExpression!, Expression.Convert(right, membershipExpression?.Type!)), Expression.Empty()), propertyAccessExpression?.Parameters[0]!, right).Compile() as Action<T, object?>;
             if (defaultSpecified)
             {
                 TrackedProperties[name!] = new TrackedPropertyInfo(x => getter!((T)x), (x, v) => setter!((T)x, v), defaultValue);
@@ -583,7 +583,7 @@ namespace CrissCross.WPF.UI.Configuration
                     }
                     else
                     {
-                        return System.Convert.ChangeType(value, t);
+                        return System.Convert.ChangeType(value, t!);
                     }
                 }
             }
@@ -593,13 +593,13 @@ namespace CrissCross.WPF.UI.Configuration
 
         private void ReadAttributes()
         {
-            var keyProperty = TargetType.GetProperties().SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
+            var keyProperty = TargetType?.GetProperties().SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
             if (keyProperty != null)
             {
-                _idFunc = (t) => keyProperty.GetValue(t, null).ToString();
+                _idFunc = (t) => keyProperty.GetValue(t, null)?.ToString()!;
             }
 
-            foreach (var pi in TargetType.GetProperties())
+            foreach (var pi in TargetType?.GetProperties()!)
             {
                 var propTrackableAtt = pi.GetCustomAttributes(true).OfType<TrackableAttribute>().SingleOrDefault();
                 if (propTrackableAtt != null)

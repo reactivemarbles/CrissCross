@@ -100,7 +100,7 @@ namespace CrissCross.WPF.UI.Storage
             var directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
             {
-                Directory.CreateDirectory(directory);
+                Directory.CreateDirectory(directory!);
             }
 
             File.WriteAllText(filePath, serialized);
@@ -110,7 +110,7 @@ namespace CrissCross.WPF.UI.Storage
         /// Lists the ids.
         /// </summary>
         /// <returns>A string array.</returns>
-        public IEnumerable<string> ListIds() => Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension);
+        public IEnumerable<string> ListIds() => Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension)!;
 
         /// <summary>
         /// Clears the data.
@@ -137,14 +137,14 @@ namespace CrissCross.WPF.UI.Storage
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly != null)
             {
-                var companyAttribute = (AssemblyCompanyAttribute)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
-                if (!string.IsNullOrEmpty(companyAttribute.Company))
+                var companyAttribute = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
+                if (!string.IsNullOrEmpty(companyAttribute?.Company))
                 {
                     companyPart = $"{companyAttribute.Company}\\";
                 }
 
-                var titleAttribute = (AssemblyTitleAttribute)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
-                if (!string.IsNullOrEmpty(titleAttribute.Title))
+                var titleAttribute = (AssemblyTitleAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
+                if (!string.IsNullOrEmpty(titleAttribute?.Title))
                 {
                     appNamePart = $"{titleAttribute.Title}\\";
                 }
@@ -164,7 +164,7 @@ namespace CrissCross.WPF.UI.Storage
                 var value = reader.Value;
                 if (value != null)
                 {
-                    return IPAddress.Parse((string?)reader.Value);
+                    return IPAddress.Parse((string?)reader.Value!);
                 }
 
                 return null;
