@@ -31,7 +31,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The tracker.
         /// </value>
-        public Tracker Tracker => _inner.Tracker;
+        public Tracker? Tracker => _inner.Tracker;
 
         /// <summary>
         /// Gets the persist triggers.
@@ -47,7 +47,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The stop tracking trigger.
         /// </value>
-        public Trigger StopTrackingTrigger { get => _inner.StopTrackingTrigger; set => _inner.StopTrackingTrigger = value; }
+        public Trigger? StopTrackingTrigger { get => _inner.StopTrackingTrigger; set => _inner.StopTrackingTrigger = value; }
 
         /// <summary>
         /// Gets the type of the target.
@@ -55,7 +55,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The type of the target.
         /// </value>
-        public Type TargetType => _inner.TargetType;
+        public Type? TargetType => _inner.TargetType;
 
         /// <summary>
         /// Gets the tracked properties.
@@ -71,7 +71,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// </summary>
         /// <param name="target">The target object to track.</param>
         public void Track(T target)
-            => _inner.Tracker.Track(target, _inner);
+            => _inner.Tracker?.Track(target!, _inner);
 
         /// <summary>
         /// Allows value conversion and cancellation when applying a stored value to a property.

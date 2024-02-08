@@ -12,6 +12,8 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using ReactiveMarbles.ObservableEvents;
+
 namespace CrissCross.WPF.UI.TaskBar;
 
 /// <summary>
@@ -44,10 +46,10 @@ public static class TaskBarProgress
             return SetState(new WindowInteropHelper(window).Handle, taskBarProgressState);
         }
 
-        window.Loaded += (_, _) =>
+        window.Events().Loaded.Subscribe(__ =>
         {
             _ = SetState(new WindowInteropHelper(window).Handle, taskBarProgressState);
-        };
+        });
 
         return true;
     }
@@ -112,10 +114,10 @@ public static class TaskBarProgress
             return SetValue(new WindowInteropHelper(window).Handle, taskBarProgressState, current, total);
         }
 
-        window.Loaded += (_, _) =>
+        window.Events().Loaded.Subscribe(__ =>
         {
             _ = SetValue(new WindowInteropHelper(window).Handle, taskBarProgressState, current, total);
-        };
+        });
 
         return false;
     }

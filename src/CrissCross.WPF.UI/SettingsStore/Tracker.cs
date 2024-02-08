@@ -204,9 +204,9 @@ namespace CrissCross.WPF.UI
 
             foreach (var target in _trackedObjects.Where(o => o.IsAlive).Select(o => o.Target))
             {
-                if (_configurationsDict.TryGetValue(target, out var configuration))
+                if (_configurationsDict.TryGetValue(target!, out var configuration))
                 {
-                    configuration.Persist(target);
+                    configuration.Persist(target!);
                 }
             }
         }

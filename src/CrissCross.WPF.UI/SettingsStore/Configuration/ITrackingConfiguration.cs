@@ -22,7 +22,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The stop tracking trigger.
         /// </value>
-        Trigger StopTrackingTrigger { get; set; }
+        Trigger? StopTrackingTrigger { get; set; }
 
         /// <summary>
         /// Gets the type of the target.
@@ -30,7 +30,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The type of the target.
         /// </value>
-        Type TargetType { get; }
+        Type? TargetType { get; }
 
         /// <summary>
         /// Gets the tracked properties.
@@ -46,7 +46,7 @@ namespace CrissCross.WPF.UI.Configuration
         /// <value>
         /// The tracker.
         /// </value>
-        Tracker Tracker { get; }
+        Tracker? Tracker { get; }
 
         /// <summary>
         /// Determines whether this instance can persist the specified can persist function.

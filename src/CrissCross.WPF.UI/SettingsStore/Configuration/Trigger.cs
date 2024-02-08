@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using Expression = System.Linq.Expressions.Expression;
 
@@ -49,14 +48,14 @@ namespace CrissCross.WPF.UI.Configuration
             var source = SourceGetter(target);
 
             var eventInfo = source.GetType().GetEvent(EventName) ?? throw new ArgumentException($"Event '{EventName}' not found on target of type '{source.GetType().Name}'. Check the tracking configuration for this type.");
-            var parameters = eventInfo.EventHandlerType
-                .GetMethod("Invoke")
+            var parameters = eventInfo.EventHandlerType?
+                .GetMethod("Invoke")?
                 .GetParameters()
                 .Select(parameter => Expression.Parameter(parameter.ParameterType))
                 .ToArray();
 
             var handler = Expression.Lambda(
-                    eventInfo.EventHandlerType,
+                    eventInfo.EventHandlerType!,
                     Expression.Call(Expression.Constant(action), "Invoke", Type.EmptyTypes),
                     parameters)
               .Compile();
@@ -76,7 +75,7 @@ namespace CrissCross.WPF.UI.Configuration
             {
                 var source = SourceGetter(target);
                 var eventInfo = source.GetType().GetEvent(EventName);
-                eventInfo.RemoveEventHandler(source, handler);
+                eventInfo?.RemoveEventHandler(source, handler);
                 _handlers.Remove(target);
             }
         }
