@@ -81,7 +81,7 @@ internal static class DateTimeHelper
 
     public static int CompareDays(DateTime dt1, DateTime dt2)
     {
-        return DateTime.Compare(DiscardTime(dt1).Value, DiscardTime(dt2).Value);
+        return DateTime.Compare(DiscardTime(dt1)!.Value, DiscardTime(dt2)!.Value);
     }
 
     public static int CompareYearMonth(DateTime dt1, DateTime dt2)
@@ -126,7 +126,7 @@ internal static class DateTimeHelper
             return culture.DateTimeFormat;
         }
 
-        GregorianCalendar foundCal = default!;
+        GregorianCalendar? foundCal = default!;
         DateTimeFormatInfo dtfi = default!;
 
         foreach (System.Globalization.Calendar cal in culture.OptionalCalendars)

@@ -342,18 +342,6 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
     }
 
     /// <inheritdoc />
-    //protected override void OnTextChanged(System.Windows.Controls.TextChangedEventArgs e)
-    //{
-    //    base.OnTextChanged(e);
-
-    //    //if (new string[] { ",", ".", " " }.Any(s => Text.EndsWith(s)))
-    //    //    return;
-
-    //    //if (!_textUpdating)
-    //    //    UpdateValueToText();
-    //}
-
-    /// <inheritdoc />
     protected override void OnTemplateChanged(
         System.Windows.Controls.ControlTemplate oldTemplate,
         System.Windows.Controls.ControlTemplate newTemplate

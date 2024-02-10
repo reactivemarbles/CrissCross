@@ -40,7 +40,7 @@ internal class ResourceDictionaryManager(string searchNamespace)
     /// <returns><see cref="ResourceDictionary"/>, <see langword="null"/> if it doesn't exist.</returns>
     public ResourceDictionary? GetDictionary(string resourceLookup)
     {
-        var applicationDictionaries = ResourceDictionaryManager.GetApplicationMergedDictionaries();
+        var applicationDictionaries = GetApplicationMergedDictionaries();
 
         if (applicationDictionaries.Count == 0)
         {

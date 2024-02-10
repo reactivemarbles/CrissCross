@@ -32,7 +32,7 @@ public class Badge : System.Windows.Controls.ContentControl, IAppearanceControl
         nameof(Appearance),
         typeof(Controls.ControlAppearance),
         typeof(Badge),
-        new PropertyMetadata(Controls.ControlAppearance.Primary));
+        new PropertyMetadata(ControlAppearance.Primary));
 
     /// <inheritdoc />
     public Controls.ControlAppearance Appearance

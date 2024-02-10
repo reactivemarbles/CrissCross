@@ -54,7 +54,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
 
         if (Content is null)
         {
-            ShowQueuedSnackbars(); // TODO: Fix detached process
+            _ = ShowQueuedSnackbars(); // TODO: Fix detached process
         }
     }
 
