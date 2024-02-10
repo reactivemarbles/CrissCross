@@ -141,7 +141,7 @@ internal static class NavigationViewActivator
                 return score == 0 ? null : new { Constructor = ctor, Score = score };
             })
             .Where(cs => cs != null)
-            .OrderBy(cs => cs.Score)
+            .OrderBy(cs => cs!.Score)
             .FirstOrDefault()
             ?.Constructor;
     }

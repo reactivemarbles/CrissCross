@@ -426,8 +426,10 @@ public static class UnsafeNativeMethods
     /// Tries to set taskbar value for the selected window handle.
     /// </summary>
     /// <param name="hWnd">Window handle.</param>
+    /// <param name="taskbarFlag">The taskbar flag.</param>
     /// <param name="current">Current value.</param>
     /// <param name="total">Total value to divide.</param>
+    /// <returns></returns>
     internal static bool SetTaskbarValue(IntPtr hWnd, ShObjIdl.TBPFLAG taskbarFlag, int current, int total)
     {
         if (hWnd == IntPtr.Zero)

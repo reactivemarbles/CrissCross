@@ -607,11 +607,11 @@ namespace CrissCross.WPF.UI.Configuration
                     var defaultAtt = pi.GetCustomAttribute<DefaultValueAttribute>();
                     if (defaultAtt != null)
                     {
-                        TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => TrackingConfiguration.SetValue(x, pi, v), defaultAtt.Value);
+                        TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v), defaultAtt.Value);
                     }
                     else
                     {
-                        TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => TrackingConfiguration.SetValue(x, pi, v));
+                        TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v));
                     }
                 }
             }

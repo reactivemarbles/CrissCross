@@ -140,13 +140,13 @@ namespace CrissCross.WPF.UI.Storage
                 var companyAttribute = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
                 if (!string.IsNullOrEmpty(companyAttribute?.Company))
                 {
-                    companyPart = $"{companyAttribute.Company}\\";
+                    companyPart = $"{companyAttribute?.Company}\\";
                 }
 
                 var titleAttribute = (AssemblyTitleAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
                 if (!string.IsNullOrEmpty(titleAttribute?.Title))
                 {
-                    appNamePart = $"{titleAttribute.Title}\\";
+                    appNamePart = $"{titleAttribute?.Title}\\";
                 }
             }
 

@@ -445,7 +445,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         Appearance.ApplicationThemeManager.Changed += OnThemeChanged;
     }
 
-    protected virtual void OnLoaded(object sender, RoutedEventArgs e)
+    protected virtual void OnLoaded(object? sender, RoutedEventArgs e)
     {
         if (DesignerHelper.IsInDesignMode)
         {
@@ -556,7 +556,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         }
     }
 
-    private void OnParentWindowStateChanged(object sender, EventArgs e)
+    private void OnParentWindowStateChanged(object? sender, EventArgs e)
     {
         if (IsMaximized != (_currentWindow.WindowState == WindowState.Maximized))
             IsMaximized = _currentWindow.WindowState == WindowState.Maximized;
@@ -591,9 +591,13 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     /// <summary>
     ///     Listening window hooks after rendering window content to SizeToContent support
     /// </summary>
-    private void OnWindowContentRendered(object sender, EventArgs e)
+    private void OnWindowContentRendered(object? sender, EventArgs e)
     {
-        var window = (Window)sender;
+        if (sender is not Window window)
+        {
+            return;
+        }
+
         window.ContentRendered -= OnWindowContentRendered;
 
         var handle = new WindowInteropHelper(window).Handle;

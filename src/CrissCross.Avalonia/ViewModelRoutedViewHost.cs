@@ -35,8 +35,8 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty =
         AvaloniaProperty.Register<ViewModelRoutedViewHost, bool?>(nameof(NavigateBackIsEnabled));
 
-    private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
-    private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
+    private readonly Subject<bool?> _canNavigateBackSubject = new();
+    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
     private IRxObject? __currentViewModel;
     private IViewFor? _currentView;
     private IViewFor? _lastView;
@@ -147,7 +147,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// <value>
     /// The navigation stack.
     /// </value>
-    public ObservableCollection<Type?> NavigationStack { get; } = new();
+    public ObservableCollection<Type?> NavigationStack { get; } = [];
 
     /// <summary>
     /// Gets a value indicating whether [requires setup].
@@ -279,7 +279,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         }
 
         // requested should return result here
-        ViewModelRoutedViewHostMixins.ResultNavigating[HostName].DistinctUntilChanged().ObserveOn(RxApp.MainThreadScheduler).Subscribe(e =>
+        ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].DistinctUntilChanged().ObserveOn(RxApp.MainThreadScheduler).Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
             if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
@@ -329,7 +329,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
 
                 if (callVmNavTo)
                 {
-                    tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName]);
+                    tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName!]);
                 }
 
                 if (callVmNavFrom)
@@ -343,6 +343,20 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
             _resetStack = false;
             _navigateBack = false;
         });
+    }
+
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        if (disposing)
+        {
+            _canNavigateBackSubject.Dispose();
+            _currentViewModel.Dispose();
+        }
     }
 
     private void InternalNavigate<T>(string? contract, object? parameter)

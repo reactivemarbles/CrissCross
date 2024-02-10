@@ -69,7 +69,6 @@ public class RelayCommand<T> : IRelayCommand<T>
     /// </summary>
     /// <param name="execute">The execution logic.</param>
     /// <param name="canExecute">The execution status logic.</param>
-    /// <remarks>See notes in <see cref="RelayCommand{T}(System.Action{T?})"/>.</remarks>
     /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
     {

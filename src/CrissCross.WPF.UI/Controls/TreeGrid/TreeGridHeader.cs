@@ -61,7 +61,7 @@ public class TreeGridHeader : System.Windows.FrameworkElement
     }
 
     /// <summary>
-    /// This virtual method is called when <see cref="Name"/> is changed.
+    /// This virtual method is called when <see cref="Title"/> is changed.
     /// </summary>
     protected virtual void OnTitleChanged()
     {
