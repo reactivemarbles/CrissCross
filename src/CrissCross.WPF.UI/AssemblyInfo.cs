@@ -7,5 +7,5 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross.ui", "CrissCross.WPF.UI.Controls")]
 [assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross.ui", "CrissCross.WPF.UI.Markup")]
 [assembly: XmlnsDefinition("https://github.com/ChrisPulman/CrissCross.ui", "CrissCross.WPF.UI.Converters")]
-[assembly: XmlnsPrefix("https://github.com/ChrisPulman/CrissCross.ui", "rxNav")]
+[assembly: XmlnsPrefix("https://github.com/ChrisPulman/CrissCross.ui", "ccUi")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
