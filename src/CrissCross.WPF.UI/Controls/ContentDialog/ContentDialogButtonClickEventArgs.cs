@@ -1,4 +1,4 @@
-// Copyright (c) Chris Pulman. All rights reserved.
+﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 ////   This file has been borrowed from Wpf-UI.
@@ -12,19 +12,16 @@
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="System.Windows.Controls.MenuItem"/> with <see cref="SymbolRegular"/> properties.
+/// ContentDialogButtonClickEventArgs.
 /// </summary>
-public class MenuItem : System.Windows.Controls.MenuItem
+/// <seealso cref="System.Windows.RoutedEventArgs" />
+public class ContentDialogButtonClickEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
 {
-    static MenuItem() =>
-        IconProperty.OverrideMetadata(typeof(MenuItem), new FrameworkPropertyMetadata(null));
-
     /// <summary>
-    /// Gets or sets displayed <see cref="IconElement"/>.
+    /// Gets the button.
     /// </summary>
-    public new IconElement Icon
-    {
-        get => (IconElement)GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
-    }
+    /// <value>
+    /// The button.
+    /// </value>
+    public required ContentDialogButton Button { get; init; }
 }
