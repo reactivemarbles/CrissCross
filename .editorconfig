@@ -506,6 +506,7 @@ dotnet_diagnostic.RCS1180.severity=warning
 dotnet_diagnostic.RCS1190.severity=error
 dotnet_diagnostic.RCS1195.severity=error
 dotnet_diagnostic.RCS1214.severity=error
+dotnet_diagnostic.RCS1264.severity=error
 csharp_style_namespace_declarations = block_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 
