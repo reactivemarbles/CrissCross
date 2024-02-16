@@ -184,14 +184,14 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl
         }
 
         var container = ItemContainerGenerator.ContainerFromItem(obj);
-        var index = ItemContainerGenerator.IndexFromContainer(container);
+        var index = container == null ? -1 : ItemContainerGenerator.IndexFromContainer(container);
 
         OnItemClicked(obj, index);
     }
 
     private void InteractWithItemContainer(int offsetFromEnd, Action<BreadcrumbBarItem> action)
     {
-        if (ItemContainerGenerator.Items.Count <= 0)
+        if (ItemContainerGenerator.Items.Count == 0)
         {
             return;
         }

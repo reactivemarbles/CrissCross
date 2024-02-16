@@ -32,6 +32,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -40,10 +41,13 @@
                 <ui:ImageIcon Source="/Assets/CrissCrossIcon_256.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
-
+        <ui:BreadcrumbBar x:Name="Breadcrumb" Grid.Row="1">
+            <ui:BreadcrumbBarItem Content="Home" />
+            <ui:BreadcrumbBarItem Content="Dashboard" />
+        </ui:BreadcrumbBar>
         <ui:NavigationView
             x:Name="RootNavigation"
-            Grid.Row="1"
+            Grid.Row="2"
             FooterMenuItemsSource="{Binding ViewModel.NavigationFooter, Mode=OneWay}"
             MenuItemsSource="{Binding ViewModel.NavigationItems, Mode=OneWay}">
             <ui:NavigationView.AutoSuggestBox>
@@ -71,6 +75,6 @@
                 <abb:AppBarButton Content="Hello" Icon="ab_heart" />
             </ui:AppBar.AppBarLeft>
         </ui:AppBar>
-        <ui:MessageBox Grid.RowSpan="2" />
+        <ui:MessageBox Grid.RowSpan="3" />
     </Grid>
 </ui:FluentWindow>
