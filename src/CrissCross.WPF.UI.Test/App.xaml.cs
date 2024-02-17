@@ -28,6 +28,7 @@ public partial class App
                 services.AddSingleton<DashboardPage>().AddSingleton<DashboardViewModel>();
                 services.AddSingleton<DataPage>().AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>().AddSingleton<SettingsViewModel>();
+                services.AddSingleton<LoginPage>().AddSingleton<LoginViewModel>();
 
                 // Configuration
                 services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
