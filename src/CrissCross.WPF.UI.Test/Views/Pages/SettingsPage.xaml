@@ -21,11 +21,11 @@
     </Page.Resources>
 
     <StackPanel Margin="42">
-        <TextBlock
+        <ui:TextBlock
             FontSize="20"
             FontWeight="Medium"
             Text="Personalization" />
-        <TextBlock Margin="0,12,0,0" Text="Theme" />
+        <ui:TextBlock Margin="0,12,0,0" Text="Theme" />
         <RadioButton
             Margin="0,12,0,0"
             Command="{Binding ViewModel.ChangeThemeCommand, Mode=OneWay}"
@@ -41,11 +41,11 @@
             GroupName="themeSelect"
             IsChecked="{Binding ViewModel.CurrentApplicationTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}" />
 
-        <TextBlock
+        <ui:TextBlock
             Margin="0,24,0,0"
             FontSize="20"
             FontWeight="Medium"
             Text="About CrissCross.WPF.UI" />
-        <TextBlock Margin="0,12,0,0" Text="{Binding ViewModel.AppVersion, Mode=OneWay}" />
+        <ui:TextBlock Margin="0,12,0,0" Text="{Binding ViewModel.AppVersion, Mode=OneWay}" />
     </StackPanel>
 </Page>

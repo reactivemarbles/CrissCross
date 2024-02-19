@@ -14,7 +14,6 @@ namespace CrissCross.WPF.UI.Controls;
 /// Represents a list of regular Fluent System Icons <c>v.1.1.226</c>.
 /// <para>May be converted to <see langword="char"/> using <c>GetGlyph()</c> or to <see langword="string"/> using <c>GetString()</c>.</para>
 /// </summary>
-#pragma warning disable CS1591
 public enum SymbolRegular
 {
     /// <summary>
@@ -17973,3167 +17972,12648 @@ public enum SymbolRegular
     /// The arrow trending24.
     /// </summary>
     ArrowTrending24 = 0xF198,
+    /// <summary>
+    /// The arrow undo20.
+    /// </summary>
     ArrowUndo20 = 0xF199,
+    /// <summary>
+    /// The arrow undo24.
+    /// </summary>
     ArrowUndo24 = 0xF19A,
+    /// <summary>
+    /// The arrow up20.
+    /// </summary>
     ArrowUp20 = 0xF19B,
+    /// <summary>
+    /// The arrow up24.
+    /// </summary>
     ArrowUp24 = 0xF19C,
+    /// <summary>
+    /// The arrow up28.
+    /// </summary>
     ArrowUp28 = 0xF19D,
+    /// <summary>
+    /// The arrow left48.
+    /// </summary>
     ArrowLeft48 = 0xF19E,
+    /// <summary>
+    /// The arrow reset20.
+    /// </summary>
     ArrowReset20 = 0xF19F,
+    /// <summary>
+    /// The arrow reset24.
+    /// </summary>
     ArrowReset24 = 0xF1A0,
+    /// <summary>
+    /// The arrow up left24.
+    /// </summary>
     ArrowUpLeft24 = 0xF1A1,
+    /// <summary>
+    /// The arrow right32.
+    /// </summary>
     ArrowRight32 = 0xF1A2,
+    /// <summary>
+    /// The arrow up right24.
+    /// </summary>
     ArrowUpRight24 = 0xF1A3,
+    /// <summary>
+    /// The arrow upload20.
+    /// </summary>
     ArrowUpload20 = 0xF1A4,
+    /// <summary>
+    /// The arrow upload24.
+    /// </summary>
     ArrowUpload24 = 0xF1A5,
+    /// <summary>
+    /// The arrows bidirectional24.
+    /// </summary>
     ArrowsBidirectional24 = 0xF1A6,
+    /// <summary>
+    /// The arrow right48.
+    /// </summary>
     ArrowRight48 = 0xF1A7,
+    /// <summary>
+    /// The attach16.
+    /// </summary>
     Attach16 = 0xF1A8,
+    /// <summary>
+    /// The attach20.
+    /// </summary>
     Attach20 = 0xF1A9,
+    /// <summary>
+    /// The attach24.
+    /// </summary>
     Attach24 = 0xF1AA,
+    /// <summary>
+    /// The arrow sort16.
+    /// </summary>
     ArrowSort16 = 0xF1AB,
+    /// <summary>
+    /// The arrow sort down16.
+    /// </summary>
     ArrowSortDown16 = 0xF1AC,
+    /// <summary>
+    /// The arrow sort down lines16.
+    /// </summary>
     ArrowSortDownLines16 = 0xF1AD,
+    /// <summary>
+    /// The autocorrect24.
+    /// </summary>
     Autocorrect24 = 0xF1AE,
+    /// <summary>
+    /// The autosum20.
+    /// </summary>
     Autosum20 = 0xF1AF,
+    /// <summary>
+    /// The autosum24.
+    /// </summary>
     Autosum24 = 0xF1B0,
+    /// <summary>
+    /// The backspace20.
+    /// </summary>
     Backspace20 = 0xF1B1,
+    /// <summary>
+    /// The backspace24.
+    /// </summary>
     Backspace24 = 0xF1B2,
+    /// <summary>
+    /// The arrow sort up16.
+    /// </summary>
     ArrowSortUp16 = 0xF1B3,
+    /// <summary>
+    /// The arrow up16.
+    /// </summary>
     ArrowUp16 = 0xF1B4,
+    /// <summary>
+    /// The badge24.
+    /// </summary>
     Badge24 = 0xF1B5,
+    /// <summary>
+    /// The balloon20.
+    /// </summary>
     Balloon20 = 0xF1B6,
+    /// <summary>
+    /// The balloon24.
+    /// </summary>
     Balloon24 = 0xF1B7,
+    /// <summary>
+    /// The arrow up32.
+    /// </summary>
     ArrowUp32 = 0xF1B8,
+    /// <summary>
+    /// The arrow up48.
+    /// </summary>
     ArrowUp48 = 0xF1B9,
+    /// <summary>
+    /// The barcode scanner20.
+    /// </summary>
     BarcodeScanner20 = 0xF1BA,
+    /// <summary>
+    /// The battery020.
+    /// </summary>
     Battery020 = 0xF1BB,
+    /// <summary>
+    /// The battery024.
+    /// </summary>
     Battery024 = 0xF1BC,
+    /// <summary>
+    /// The battery120.
+    /// </summary>
     Battery120 = 0xF1BD,
+    /// <summary>
+    /// The battery124.
+    /// </summary>
     Battery124 = 0xF1BE,
+    /// <summary>
+    /// The battery220.
+    /// </summary>
     Battery220 = 0xF1BF,
+    /// <summary>
+    /// The battery224.
+    /// </summary>
     Battery224 = 0xF1C0,
+    /// <summary>
+    /// The battery320.
+    /// </summary>
     Battery320 = 0xF1C1,
+    /// <summary>
+    /// The battery324.
+    /// </summary>
     Battery324 = 0xF1C2,
+    /// <summary>
+    /// The battery420.
+    /// </summary>
     Battery420 = 0xF1C3,
+    /// <summary>
+    /// The battery424.
+    /// </summary>
     Battery424 = 0xF1C4,
+    /// <summary>
+    /// The battery520.
+    /// </summary>
     Battery520 = 0xF1C5,
+    /// <summary>
+    /// The battery524.
+    /// </summary>
     Battery524 = 0xF1C6,
+    /// <summary>
+    /// The battery620.
+    /// </summary>
     Battery620 = 0xF1C7,
+    /// <summary>
+    /// The battery624.
+    /// </summary>
     Battery624 = 0xF1C8,
+    /// <summary>
+    /// The battery720.
+    /// </summary>
     Battery720 = 0xF1C9,
+    /// <summary>
+    /// The battery724.
+    /// </summary>
     Battery724 = 0xF1CA,
+    /// <summary>
+    /// The battery820.
+    /// </summary>
     Battery820 = 0xF1CB,
+    /// <summary>
+    /// The battery824.
+    /// </summary>
     Battery824 = 0xF1CC,
+    /// <summary>
+    /// The battery920.
+    /// </summary>
     Battery920 = 0xF1CD,
+    /// <summary>
+    /// The battery924.
+    /// </summary>
     Battery924 = 0xF1CE,
+    /// <summary>
+    /// The battery charge20.
+    /// </summary>
     BatteryCharge20 = 0xF1CF,
+    /// <summary>
+    /// The battery charge24.
+    /// </summary>
     BatteryCharge24 = 0xF1D0,
+    /// <summary>
+    /// The ram16.
+    /// </summary>
     Ram16 = 0xF1D1,
+    /// <summary>
+    /// The save multiple16.
+    /// </summary>
     SaveMultiple16 = 0xF1D2,
+    /// <summary>
+    /// The battery saver20.
+    /// </summary>
     BatterySaver20 = 0xF1D3,
+    /// <summary>
+    /// The battery saver24.
+    /// </summary>
     BatterySaver24 = 0xF1D4,
+    /// <summary>
+    /// The battery warning24.
+    /// </summary>
     BatteryWarning24 = 0xF1D5,
+    /// <summary>
+    /// The beaker16.
+    /// </summary>
     Beaker16 = 0xF1D6,
+    /// <summary>
+    /// The beaker20.
+    /// </summary>
     Beaker20 = 0xF1D7,
+    /// <summary>
+    /// The beaker24.
+    /// </summary>
     Beaker24 = 0xF1D8,
+    /// <summary>
+    /// The bed20.
+    /// </summary>
     Bed20 = 0xF1D9,
+    /// <summary>
+    /// The bed24.
+    /// </summary>
     Bed24 = 0xF1DA,
+    /// <summary>
+    /// The script16.
+    /// </summary>
     Script16 = 0xF1DB,
+    /// <summary>
+    /// The server16.
+    /// </summary>
     Server16 = 0xF1DC,
+    /// <summary>
+    /// The server surface16.
+    /// </summary>
     ServerSurface16 = 0xF1DD,
+    /// <summary>
+    /// The bluetooth20.
+    /// </summary>
     Bluetooth20 = 0xF1DE,
+    /// <summary>
+    /// The bluetooth24.
+    /// </summary>
     Bluetooth24 = 0xF1DF,
+    /// <summary>
+    /// The bluetooth connected24.
+    /// </summary>
     BluetoothConnected24 = 0xF1E0,
+    /// <summary>
+    /// The bluetooth disabled24.
+    /// </summary>
     BluetoothDisabled24 = 0xF1E1,
+    /// <summary>
+    /// The bluetooth searching24.
+    /// </summary>
     BluetoothSearching24 = 0xF1E2,
+    /// <summary>
+    /// The board24.
+    /// </summary>
     Board24 = 0xF1E3,
+    /// <summary>
+    /// The barcode scanner24.
+    /// </summary>
     BarcodeScanner24 = 0xF1E4,
+    /// <summary>
+    /// The beaker edit20.
+    /// </summary>
     BeakerEdit20 = 0xF1E5,
+    /// <summary>
+    /// The beaker edit24.
+    /// </summary>
     BeakerEdit24 = 0xF1E6,
+    /// <summary>
+    /// The book toolbox20.
+    /// </summary>
     BookToolbox20 = 0xF1E7,
+    /// <summary>
+    /// The bookmark add20.
+    /// </summary>
     BookmarkAdd20 = 0xF1E8,
+    /// <summary>
+    /// The bookmark add24.
+    /// </summary>
     BookmarkAdd24 = 0xF1E9,
+    /// <summary>
+    /// The bowl chopsticks16.
+    /// </summary>
     BowlChopsticks16 = 0xF1EA,
+    /// <summary>
+    /// The bowl chopsticks20.
+    /// </summary>
     BowlChopsticks20 = 0xF1EB,
+    /// <summary>
+    /// The bowl chopsticks24.
+    /// </summary>
     BowlChopsticks24 = 0xF1EC,
+    /// <summary>
+    /// The bowl chopsticks28.
+    /// </summary>
     BowlChopsticks28 = 0xF1ED,
+    /// <summary>
+    /// The brain circuit20.
+    /// </summary>
     BrainCircuit20 = 0xF1EE,
+    /// <summary>
+    /// The briefcase medical20.
+    /// </summary>
     BriefcaseMedical20 = 0xF1EF,
+    /// <summary>
+    /// The book globe24.
+    /// </summary>
     BookGlobe24 = 0xF1F0,
+    /// <summary>
+    /// The book number16.
+    /// </summary>
     BookNumber16 = 0xF1F1,
+    /// <summary>
+    /// The book number20.
+    /// </summary>
     BookNumber20 = 0xF1F2,
+    /// <summary>
+    /// The book number24.
+    /// </summary>
     BookNumber24 = 0xF1F3,
+    /// <summary>
+    /// The bookmark16.
+    /// </summary>
     Bookmark16 = 0xF1F4,
+    /// <summary>
+    /// The bookmark20.
+    /// </summary>
     Bookmark20 = 0xF1F5,
+    /// <summary>
+    /// The bookmark24.
+    /// </summary>
     Bookmark24 = 0xF1F6,
+    /// <summary>
+    /// The bookmark28.
+    /// </summary>
     Bookmark28 = 0xF1F7,
+    /// <summary>
+    /// The bookmark off24.
+    /// </summary>
     BookmarkOff24 = 0xF1F8,
+    /// <summary>
+    /// The bot24.
+    /// </summary>
     Bot24 = 0xF1F9,
+    /// <summary>
+    /// The bot add24.
+    /// </summary>
     BotAdd24 = 0xF1FA,
+    /// <summary>
+    /// The branch24.
+    /// </summary>
     Branch24 = 0xF1FB,
+    /// <summary>
+    /// The briefcase20.
+    /// </summary>
     Briefcase20 = 0xF1FC,
+    /// <summary>
+    /// The briefcase24.
+    /// </summary>
     Briefcase24 = 0xF1FD,
+    /// <summary>
+    /// The broom16.
+    /// </summary>
     Broom16 = 0xF1FE,
+    /// <summary>
+    /// The building bank toolbox20.
+    /// </summary>
     BuildingBankToolbox20 = 0xF1FF,
+    /// <summary>
+    /// The broad activity feed24.
+    /// </summary>
     BroadActivityFeed24 = 0xF200,
+    /// <summary>
+    /// The broom20.
+    /// </summary>
     Broom20 = 0xF201,
+    /// <summary>
+    /// The broom24.
+    /// </summary>
     Broom24 = 0xF202,
+    /// <summary>
+    /// The calendar info16.
+    /// </summary>
     CalendarInfo16 = 0xF203,
+    /// <summary>
+    /// The calendar multiple16.
+    /// </summary>
     CalendarMultiple16 = 0xF204,
+    /// <summary>
+    /// The building24.
+    /// </summary>
     Building24 = 0xF205,
+    /// <summary>
+    /// The server surface multiple16.
+    /// </summary>
     ServerSurfaceMultiple16 = 0xF206,
+    /// <summary>
+    /// The call checkmark20.
+    /// </summary>
     CallCheckmark20 = 0xF207,
+    /// <summary>
+    /// The call dismiss20.
+    /// </summary>
     CallDismiss20 = 0xF208,
+    /// <summary>
+    /// The building retail24.
+    /// </summary>
     BuildingRetail24 = 0xF209,
+    /// <summary>
+    /// The calculator20.
+    /// </summary>
     Calculator20 = 0xF20A,
+    /// <summary>
+    /// The call dismiss24.
+    /// </summary>
     CallDismiss24 = 0xF20B,
+    /// <summary>
+    /// The call pause20.
+    /// </summary>
     CallPause20 = 0xF20C,
+    /// <summary>
+    /// The call pause24.
+    /// </summary>
     CallPause24 = 0xF20D,
+    /// <summary>
+    /// The calendar3 day20.
+    /// </summary>
     Calendar3Day20 = 0xF20E,
+    /// <summary>
+    /// The calendar3 day24.
+    /// </summary>
     Calendar3Day24 = 0xF20F,
+    /// <summary>
+    /// The calendar3 day28.
+    /// </summary>
     Calendar3Day28 = 0xF210,
+    /// <summary>
+    /// The calendar add20.
+    /// </summary>
     CalendarAdd20 = 0xF211,
+    /// <summary>
+    /// The calendar add24.
+    /// </summary>
     CalendarAdd24 = 0xF212,
+    /// <summary>
+    /// The calendar agenda20.
+    /// </summary>
     CalendarAgenda20 = 0xF213,
+    /// <summary>
+    /// The calendar agenda24.
+    /// </summary>
     CalendarAgenda24 = 0xF214,
+    /// <summary>
+    /// The calendar agenda28.
+    /// </summary>
     CalendarAgenda28 = 0xF215,
+    /// <summary>
+    /// The calendar arrow right20.
+    /// </summary>
     CalendarArrowRight20 = 0xF216,
+    /// <summary>
+    /// The calendar assistant20.
+    /// </summary>
     CalendarAssistant20 = 0xF217,
+    /// <summary>
+    /// The calendar assistant24.
+    /// </summary>
     CalendarAssistant24 = 0xF218,
+    /// <summary>
+    /// The calendar cancel20.
+    /// </summary>
     CalendarCancel20 = 0xF219,
+    /// <summary>
+    /// The calendar cancel24.
+    /// </summary>
     CalendarCancel24 = 0xF21A,
+    /// <summary>
+    /// The calendar checkmark16.
+    /// </summary>
     CalendarCheckmark16 = 0xF21B,
+    /// <summary>
+    /// The calendar checkmark20.
+    /// </summary>
     CalendarCheckmark20 = 0xF21C,
+    /// <summary>
+    /// The calendar clock20.
+    /// </summary>
     CalendarClock20 = 0xF21D,
+    /// <summary>
+    /// The calendar clock24.
+    /// </summary>
     CalendarClock24 = 0xF21E,
+    /// <summary>
+    /// The shield12.
+    /// </summary>
     Shield12 = 0xF21F,
+    /// <summary>
+    /// The chat help20.
+    /// </summary>
     ChatHelp20 = 0xF220,
+    /// <summary>
+    /// The chat settings20.
+    /// </summary>
     ChatSettings20 = 0xF221,
+    /// <summary>
+    /// The calendar day20.
+    /// </summary>
     CalendarDay20 = 0xF222,
+    /// <summary>
+    /// The calendar day24.
+    /// </summary>
     CalendarDay24 = 0xF223,
+    /// <summary>
+    /// The calendar day28.
+    /// </summary>
     CalendarDay28 = 0xF224,
+    /// <summary>
+    /// The calendar empty16.
+    /// </summary>
     CalendarEmpty16 = 0xF225,
+    /// <summary>
+    /// The calendar empty20.
+    /// </summary>
     CalendarEmpty20 = 0xF226,
+    /// <summary>
+    /// The calendar empty24.
+    /// </summary>
     CalendarEmpty24 = 0xF227,
+    /// <summary>
+    /// The calendar empty28.
+    /// </summary>
     CalendarEmpty28 = 0xF228,
+    /// <summary>
+    /// The chat settings24.
+    /// </summary>
     ChatSettings24 = 0xF229,
+    /// <summary>
+    /// The calendar month20.
+    /// </summary>
     CalendarMonth20 = 0xF22A,
+    /// <summary>
+    /// The calendar month24.
+    /// </summary>
     CalendarMonth24 = 0xF22B,
+    /// <summary>
+    /// The calendar month28.
+    /// </summary>
     CalendarMonth28 = 0xF22C,
+    /// <summary>
+    /// The calendar multiple20.
+    /// </summary>
     CalendarMultiple20 = 0xF22D,
+    /// <summary>
+    /// The calendar multiple24.
+    /// </summary>
     CalendarMultiple24 = 0xF22E,
+    /// <summary>
+    /// The slide text person16.
+    /// </summary>
     SlideTextPerson16 = 0xF22F,
+    /// <summary>
+    /// The calendar person20.
+    /// </summary>
     CalendarPerson20 = 0xF230,
+    /// <summary>
+    /// The calendar reply16.
+    /// </summary>
     CalendarReply16 = 0xF231,
+    /// <summary>
+    /// The calendar reply20.
+    /// </summary>
     CalendarReply20 = 0xF232,
+    /// <summary>
+    /// The calendar reply24.
+    /// </summary>
     CalendarReply24 = 0xF233,
+    /// <summary>
+    /// The calendar reply28.
+    /// </summary>
     CalendarReply28 = 0xF234,
+    /// <summary>
+    /// The calendar settings20.
+    /// </summary>
     CalendarSettings20 = 0xF235,
+    /// <summary>
+    /// The calendar star20.
+    /// </summary>
     CalendarStar20 = 0xF236,
+    /// <summary>
+    /// The calendar star24.
+    /// </summary>
     CalendarStar24 = 0xF237,
+    /// <summary>
+    /// The calendar sync16.
+    /// </summary>
     CalendarSync16 = 0xF238,
+    /// <summary>
+    /// The calendar sync20.
+    /// </summary>
     CalendarSync20 = 0xF239,
+    /// <summary>
+    /// The calendar sync24.
+    /// </summary>
     CalendarSync24 = 0xF23A,
+    /// <summary>
+    /// The calendar today16.
+    /// </summary>
     CalendarToday16 = 0xF23B,
+    /// <summary>
+    /// The calendar today20.
+    /// </summary>
     CalendarToday20 = 0xF23C,
+    /// <summary>
+    /// The calendar today24.
+    /// </summary>
     CalendarToday24 = 0xF23D,
+    /// <summary>
+    /// The calendar today28.
+    /// </summary>
     CalendarToday28 = 0xF23E,
+    /// <summary>
+    /// The calendar week numbers24.
+    /// </summary>
     CalendarWeekNumbers24 = 0xF23F,
+    /// <summary>
+    /// The calendar week start20.
+    /// </summary>
     CalendarWeekStart20 = 0xF240,
+    /// <summary>
+    /// The calendar week start24.
+    /// </summary>
     CalendarWeekStart24 = 0xF241,
+    /// <summary>
+    /// The calendar week start28.
+    /// </summary>
     CalendarWeekStart28 = 0xF242,
+    /// <summary>
+    /// The calendar work week16.
+    /// </summary>
     CalendarWorkWeek16 = 0xF243,
+    /// <summary>
+    /// The calendar work week20.
+    /// </summary>
     CalendarWorkWeek20 = 0xF244,
+    /// <summary>
+    /// The calendar work week24.
+    /// </summary>
     CalendarWorkWeek24 = 0xF245,
+    /// <summary>
+    /// The call add24.
+    /// </summary>
     CallAdd24 = 0xF246,
+    /// <summary>
+    /// The call end20.
+    /// </summary>
     CallEnd20 = 0xF247,
+    /// <summary>
+    /// The call end24.
+    /// </summary>
     CallEnd24 = 0xF248,
+    /// <summary>
+    /// The call end28.
+    /// </summary>
     CallEnd28 = 0xF249,
+    /// <summary>
+    /// The call forward24.
+    /// </summary>
     CallForward24 = 0xF24A,
+    /// <summary>
+    /// The call inbound16.
+    /// </summary>
     CallInbound16 = 0xF24B,
+    /// <summary>
+    /// The call inbound24.
+    /// </summary>
     CallInbound24 = 0xF24C,
+    /// <summary>
+    /// The call missed16.
+    /// </summary>
     CallMissed16 = 0xF24D,
+    /// <summary>
+    /// The call missed24.
+    /// </summary>
     CallMissed24 = 0xF24E,
+    /// <summary>
+    /// The call outbound16.
+    /// </summary>
     CallOutbound16 = 0xF24F,
+    /// <summary>
+    /// The call outbound24.
+    /// </summary>
     CallOutbound24 = 0xF250,
+    /// <summary>
+    /// The call park24.
+    /// </summary>
     CallPark24 = 0xF251,
+    /// <summary>
+    /// The calligraphy pen20.
+    /// </summary>
     CalligraphyPen20 = 0xF252,
+    /// <summary>
+    /// The calligraphy pen24.
+    /// </summary>
     CalligraphyPen24 = 0xF253,
+    /// <summary>
+    /// The camera20.
+    /// </summary>
     Camera20 = 0xF254,
+    /// <summary>
+    /// The camera24.
+    /// </summary>
     Camera24 = 0xF255,
+    /// <summary>
+    /// The camera28.
+    /// </summary>
     Camera28 = 0xF256,
+    /// <summary>
+    /// The camera add20.
+    /// </summary>
     CameraAdd20 = 0xF257,
+    /// <summary>
+    /// The camera add24.
+    /// </summary>
     CameraAdd24 = 0xF258,
+    /// <summary>
+    /// The camera add48.
+    /// </summary>
     CameraAdd48 = 0xF259,
+    /// <summary>
+    /// The camera switch24.
+    /// </summary>
     CameraSwitch24 = 0xF25A,
+    /// <summary>
+    /// The slide text person20.
+    /// </summary>
     SlideTextPerson20 = 0xF25B,
+    /// <summary>
+    /// The slide text person24.
+    /// </summary>
     SlideTextPerson24 = 0xF25C,
+    /// <summary>
+    /// The slide text person28.
+    /// </summary>
     SlideTextPerson28 = 0xF25D,
+    /// <summary>
+    /// The slide text person32.
+    /// </summary>
     SlideTextPerson32 = 0xF25E,
+    /// <summary>
+    /// The caret down12.
+    /// </summary>
     CaretDown12 = 0xF25F,
+    /// <summary>
+    /// The caret down16.
+    /// </summary>
     CaretDown16 = 0xF260,
+    /// <summary>
+    /// The caret down20.
+    /// </summary>
     CaretDown20 = 0xF261,
+    /// <summary>
+    /// The caret down24.
+    /// </summary>
     CaretDown24 = 0xF262,
+    /// <summary>
+    /// The caret left12.
+    /// </summary>
     CaretLeft12 = 0xF263,
+    /// <summary>
+    /// The caret left16.
+    /// </summary>
     CaretLeft16 = 0xF264,
+    /// <summary>
+    /// The caret left20.
+    /// </summary>
     CaretLeft20 = 0xF265,
+    /// <summary>
+    /// The caret left24.
+    /// </summary>
     CaretLeft24 = 0xF266,
+    /// <summary>
+    /// The caret right12.
+    /// </summary>
     CaretRight12 = 0xF267,
+    /// <summary>
+    /// The caret right16.
+    /// </summary>
     CaretRight16 = 0xF268,
+    /// <summary>
+    /// The caret right20.
+    /// </summary>
     CaretRight20 = 0xF269,
+    /// <summary>
+    /// The caret right24.
+    /// </summary>
     CaretRight24 = 0xF26A,
+    /// <summary>
+    /// The cart24.
+    /// </summary>
     Cart24 = 0xF26B,
+    /// <summary>
+    /// The cast20.
+    /// </summary>
     Cast20 = 0xF26C,
+    /// <summary>
+    /// The cast24.
+    /// </summary>
     Cast24 = 0xF26D,
+    /// <summary>
+    /// The cast28.
+    /// </summary>
     Cast28 = 0xF26E,
+    /// <summary>
+    /// The cellular3g24.
+    /// </summary>
     Cellular3g24 = 0xF26F,
+    /// <summary>
+    /// The cellular4g24.
+    /// </summary>
     Cellular4g24 = 0xF270,
+    /// <summary>
+    /// The cellular data120.
+    /// </summary>
     CellularData120 = 0xF271,
+    /// <summary>
+    /// The cellular data124.
+    /// </summary>
     CellularData124 = 0xF272,
+    /// <summary>
+    /// The cellular data220.
+    /// </summary>
     CellularData220 = 0xF273,
+    /// <summary>
+    /// The cellular data224.
+    /// </summary>
     CellularData224 = 0xF274,
+    /// <summary>
+    /// The cellular data320.
+    /// </summary>
     CellularData320 = 0xF275,
+    /// <summary>
+    /// The cellular data324.
+    /// </summary>
     CellularData324 = 0xF276,
+    /// <summary>
+    /// The cellular data420.
+    /// </summary>
     CellularData420 = 0xF277,
+    /// <summary>
+    /// The cellular data424.
+    /// </summary>
     CellularData424 = 0xF278,
+    /// <summary>
+    /// The cellular data520.
+    /// </summary>
     CellularData520 = 0xF279,
+    /// <summary>
+    /// The cellular data524.
+    /// </summary>
     CellularData524 = 0xF27A,
+    /// <summary>
+    /// The check20.
+    /// </summary>
     Check20 = 0xF27B,
+    /// <summary>
+    /// The checkbox checked16.
+    /// </summary>
     CheckboxChecked16 = 0xF27C,
+    /// <summary>
+    /// The checkbox checked sync16.
+    /// </summary>
     CheckboxCheckedSync16 = 0xF27D,
+    /// <summary>
+    /// The certificate20.
+    /// </summary>
     Certificate20 = 0xF27E,
+    /// <summary>
+    /// The certificate24.
+    /// </summary>
     Certificate24 = 0xF27F,
+    /// <summary>
+    /// The channel16.
+    /// </summary>
     Channel16 = 0xF280,
+    /// <summary>
+    /// The channel20.
+    /// </summary>
     Channel20 = 0xF281,
+    /// <summary>
+    /// The channel24.
+    /// </summary>
     Channel24 = 0xF282,
+    /// <summary>
+    /// The checkmark starburst16.
+    /// </summary>
     CheckmarkStarburst16 = 0xF283,
+    /// <summary>
+    /// The chevron double down16.
+    /// </summary>
     ChevronDoubleDown16 = 0xF284,
+    /// <summary>
+    /// The chevron double left16.
+    /// </summary>
     ChevronDoubleLeft16 = 0xF285,
+    /// <summary>
+    /// The chat20.
+    /// </summary>
     Chat20 = 0xF286,
+    /// <summary>
+    /// The chat24.
+    /// </summary>
     Chat24 = 0xF287,
+    /// <summary>
+    /// The chat28.
+    /// </summary>
     Chat28 = 0xF288,
+    /// <summary>
+    /// The chat bubbles question24.
+    /// </summary>
     ChatBubblesQuestion24 = 0xF289,
+    /// <summary>
+    /// The chat help24.
+    /// </summary>
     ChatHelp24 = 0xF28A,
+    /// <summary>
+    /// The chat off24.
+    /// </summary>
     ChatOff24 = 0xF28B,
+    /// <summary>
+    /// The chat warning24.
+    /// </summary>
     ChatWarning24 = 0xF28C,
+    /// <summary>
+    /// The checkbox checked20.
+    /// </summary>
     CheckboxChecked20 = 0xF28D,
+    /// <summary>
+    /// The checkbox checked24.
+    /// </summary>
     CheckboxChecked24 = 0xF28E,
+    /// <summary>
+    /// The checkbox unchecked12.
+    /// </summary>
     CheckboxUnchecked12 = 0xF28F,
+    /// <summary>
+    /// The checkbox unchecked16.
+    /// </summary>
     CheckboxUnchecked16 = 0xF290,
+    /// <summary>
+    /// The checkbox unchecked20.
+    /// </summary>
     CheckboxUnchecked20 = 0xF291,
+    /// <summary>
+    /// The checkbox unchecked24.
+    /// </summary>
     CheckboxUnchecked24 = 0xF292,
+    /// <summary>
+    /// The checkmark12.
+    /// </summary>
     Checkmark12 = 0xF293,
+    /// <summary>
+    /// The checkmark20.
+    /// </summary>
     Checkmark20 = 0xF294,
+    /// <summary>
+    /// The checkmark24.
+    /// </summary>
     Checkmark24 = 0xF295,
+    /// <summary>
+    /// The checkmark28.
+    /// </summary>
     Checkmark28 = 0xF296,
+    /// <summary>
+    /// The checkmark circle16.
+    /// </summary>
     CheckmarkCircle16 = 0xF297,
+    /// <summary>
+    /// The checkmark circle20.
+    /// </summary>
     CheckmarkCircle20 = 0xF298,
+    /// <summary>
+    /// The checkmark circle24.
+    /// </summary>
     CheckmarkCircle24 = 0xF299,
+    /// <summary>
+    /// The checkmark circle48.
+    /// </summary>
     CheckmarkCircle48 = 0xF29A,
+    /// <summary>
+    /// The checkmark lock16.
+    /// </summary>
     CheckmarkLock16 = 0xF29B,
+    /// <summary>
+    /// The checkmark lock20.
+    /// </summary>
     CheckmarkLock20 = 0xF29C,
+    /// <summary>
+    /// The checkmark lock24.
+    /// </summary>
     CheckmarkLock24 = 0xF29D,
+    /// <summary>
+    /// The checkmark square24.
+    /// </summary>
     CheckmarkSquare24 = 0xF29E,
+    /// <summary>
+    /// The checkmark underline circle16.
+    /// </summary>
     CheckmarkUnderlineCircle16 = 0xF29F,
+    /// <summary>
+    /// The checkmark underline circle20.
+    /// </summary>
     CheckmarkUnderlineCircle20 = 0xF2A0,
+    /// <summary>
+    /// The chevron down12.
+    /// </summary>
     ChevronDown12 = 0xF2A1,
+    /// <summary>
+    /// The chevron down16.
+    /// </summary>
     ChevronDown16 = 0xF2A2,
+    /// <summary>
+    /// The chevron down20.
+    /// </summary>
     ChevronDown20 = 0xF2A3,
+    /// <summary>
+    /// The chevron down24.
+    /// </summary>
     ChevronDown24 = 0xF2A4,
+    /// <summary>
+    /// The chevron down28.
+    /// </summary>
     ChevronDown28 = 0xF2A5,
+    /// <summary>
+    /// The chevron down48.
+    /// </summary>
     ChevronDown48 = 0xF2A6,
+    /// <summary>
+    /// The chevron double right16.
+    /// </summary>
     ChevronDoubleRight16 = 0xF2A7,
+    /// <summary>
+    /// The chevron left12.
+    /// </summary>
     ChevronLeft12 = 0xF2A8,
+    /// <summary>
+    /// The chevron left16.
+    /// </summary>
     ChevronLeft16 = 0xF2A9,
+    /// <summary>
+    /// The chevron left20.
+    /// </summary>
     ChevronLeft20 = 0xF2AA,
+    /// <summary>
+    /// The chevron left24.
+    /// </summary>
     ChevronLeft24 = 0xF2AB,
+    /// <summary>
+    /// The chevron left28.
+    /// </summary>
     ChevronLeft28 = 0xF2AC,
+    /// <summary>
+    /// The chevron left48.
+    /// </summary>
     ChevronLeft48 = 0xF2AD,
+    /// <summary>
+    /// The chevron right12.
+    /// </summary>
     ChevronRight12 = 0xF2AE,
+    /// <summary>
+    /// The chevron right16.
+    /// </summary>
     ChevronRight16 = 0xF2AF,
+    /// <summary>
+    /// The chevron right20.
+    /// </summary>
     ChevronRight20 = 0xF2B0,
+    /// <summary>
+    /// The chevron right24.
+    /// </summary>
     ChevronRight24 = 0xF2B1,
+    /// <summary>
+    /// The chevron right28.
+    /// </summary>
     ChevronRight28 = 0xF2B2,
+    /// <summary>
+    /// The chevron right48.
+    /// </summary>
     ChevronRight48 = 0xF2B3,
+    /// <summary>
+    /// The chevron up12.
+    /// </summary>
     ChevronUp12 = 0xF2B4,
+    /// <summary>
+    /// The chevron up16.
+    /// </summary>
     ChevronUp16 = 0xF2B5,
+    /// <summary>
+    /// The chevron up20.
+    /// </summary>
     ChevronUp20 = 0xF2B6,
+    /// <summary>
+    /// The chevron up24.
+    /// </summary>
     ChevronUp24 = 0xF2B7,
+    /// <summary>
+    /// The chevron up28.
+    /// </summary>
     ChevronUp28 = 0xF2B8,
+    /// <summary>
+    /// The chevron up48.
+    /// </summary>
     ChevronUp48 = 0xF2B9,
+    /// <summary>
+    /// The circle16.
+    /// </summary>
     Circle16 = 0xF2BA,
+    /// <summary>
+    /// The circle20.
+    /// </summary>
     Circle20 = 0xF2BB,
+    /// <summary>
+    /// The circle24.
+    /// </summary>
     Circle24 = 0xF2BC,
+    /// <summary>
+    /// The circle half fill20.
+    /// </summary>
     CircleHalfFill20 = 0xF2BD,
+    /// <summary>
+    /// The circle half fill24.
+    /// </summary>
     CircleHalfFill24 = 0xF2BE,
+    /// <summary>
+    /// The circle line24.
+    /// </summary>
     CircleLine24 = 0xF2BF,
+    /// <summary>
+    /// The circle small24.
+    /// </summary>
     CircleSmall24 = 0xF2C0,
+    /// <summary>
+    /// The city16.
+    /// </summary>
     City16 = 0xF2C1,
+    /// <summary>
+    /// The city20.
+    /// </summary>
     City20 = 0xF2C2,
+    /// <summary>
+    /// The city24.
+    /// </summary>
     City24 = 0xF2C3,
+    /// <summary>
+    /// The class24.
+    /// </summary>
     Class24 = 0xF2C4,
+    /// <summary>
+    /// The classification16.
+    /// </summary>
     Classification16 = 0xF2C5,
+    /// <summary>
+    /// The classification20.
+    /// </summary>
     Classification20 = 0xF2C6,
+    /// <summary>
+    /// The classification24.
+    /// </summary>
     Classification24 = 0xF2C7,
+    /// <summary>
+    /// The clear formatting24.
+    /// </summary>
     ClearFormatting24 = 0xF2C8,
+    /// <summary>
+    /// The clipboard20.
+    /// </summary>
     Clipboard20 = 0xF2C9,
+    /// <summary>
+    /// The clipboard24.
+    /// </summary>
     Clipboard24 = 0xF2CA,
+    /// <summary>
+    /// The clipboard code16.
+    /// </summary>
     ClipboardCode16 = 0xF2CB,
+    /// <summary>
+    /// The clipboard code20.
+    /// </summary>
     ClipboardCode20 = 0xF2CC,
+    /// <summary>
+    /// The clipboard code24.
+    /// </summary>
     ClipboardCode24 = 0xF2CD,
+    /// <summary>
+    /// The clipboard letter16.
+    /// </summary>
     ClipboardLetter16 = 0xF2CE,
+    /// <summary>
+    /// The clipboard letter20.
+    /// </summary>
     ClipboardLetter20 = 0xF2CF,
+    /// <summary>
+    /// The clipboard letter24.
+    /// </summary>
     ClipboardLetter24 = 0xF2D0,
+    /// <summary>
+    /// The clipboard link16.
+    /// </summary>
     ClipboardLink16 = 0xF2D1,
+    /// <summary>
+    /// The clipboard link20.
+    /// </summary>
     ClipboardLink20 = 0xF2D2,
+    /// <summary>
+    /// The clipboard link24.
+    /// </summary>
     ClipboardLink24 = 0xF2D3,
+    /// <summary>
+    /// The clipboard more24.
+    /// </summary>
     ClipboardMore24 = 0xF2D4,
+    /// <summary>
+    /// The clipboard paste20.
+    /// </summary>
     ClipboardPaste20 = 0xF2D5,
+    /// <summary>
+    /// The clipboard paste24.
+    /// </summary>
     ClipboardPaste24 = 0xF2D6,
+    /// <summary>
+    /// The clipboard search20.
+    /// </summary>
     ClipboardSearch20 = 0xF2D7,
+    /// <summary>
+    /// The clipboard search24.
+    /// </summary>
     ClipboardSearch24 = 0xF2D8,
+    /// <summary>
+    /// The slide text person48.
+    /// </summary>
     SlideTextPerson48 = 0xF2D9,
+    /// <summary>
+    /// The spray can16.
+    /// </summary>
     SprayCan16 = 0xF2DA,
+    /// <summary>
+    /// The clock12.
+    /// </summary>
     Clock12 = 0xF2DB,
+    /// <summary>
+    /// The clock16.
+    /// </summary>
     Clock16 = 0xF2DC,
+    /// <summary>
+    /// The clock20.
+    /// </summary>
     Clock20 = 0xF2DD,
+    /// <summary>
+    /// The clock24.
+    /// </summary>
     Clock24 = 0xF2DE,
+    /// <summary>
+    /// The clock28.
+    /// </summary>
     Clock28 = 0xF2DF,
+    /// <summary>
+    /// The clock48.
+    /// </summary>
     Clock48 = 0xF2E0,
+    /// <summary>
+    /// The clock alarm20.
+    /// </summary>
     ClockAlarm20 = 0xF2E1,
+    /// <summary>
+    /// The clock alarm24.
+    /// </summary>
     ClockAlarm24 = 0xF2E2,
+    /// <summary>
+    /// The closed caption24.
+    /// </summary>
     ClosedCaption24 = 0xF2E3,
+    /// <summary>
+    /// The cloud20.
+    /// </summary>
     Cloud20 = 0xF2E4,
+    /// <summary>
+    /// The cloud24.
+    /// </summary>
     Cloud24 = 0xF2E5,
+    /// <summary>
+    /// The cloud48.
+    /// </summary>
     Cloud48 = 0xF2E6,
+    /// <summary>
+    /// The step16.
+    /// </summary>
     Step16 = 0xF2E7,
+    /// <summary>
+    /// The steps16.
+    /// </summary>
     Steps16 = 0xF2E8,
+    /// <summary>
+    /// The table lock16.
+    /// </summary>
     TableLock16 = 0xF2E9,
+    /// <summary>
+    /// The cloud off24.
+    /// </summary>
     CloudOff24 = 0xF2EA,
+    /// <summary>
+    /// The cloud off48.
+    /// </summary>
     CloudOff48 = 0xF2EB,
+    /// <summary>
+    /// The table lock20.
+    /// </summary>
     TableLock20 = 0xF2EC,
+    /// <summary>
+    /// The table lock24.
+    /// </summary>
     TableLock24 = 0xF2ED,
+    /// <summary>
+    /// The table lock28.
+    /// </summary>
     TableLock28 = 0xF2EE,
+    /// <summary>
+    /// The code20.
+    /// </summary>
     Code20 = 0xF2EF,
+    /// <summary>
+    /// The code24.
+    /// </summary>
     Code24 = 0xF2F0,
+    /// <summary>
+    /// The collections20.
+    /// </summary>
     Collections20 = 0xF2F1,
+    /// <summary>
+    /// The collections24.
+    /// </summary>
     Collections24 = 0xF2F2,
+    /// <summary>
+    /// The collections add20.
+    /// </summary>
     CollectionsAdd20 = 0xF2F3,
+    /// <summary>
+    /// The collections add24.
+    /// </summary>
     CollectionsAdd24 = 0xF2F4,
+    /// <summary>
+    /// The color20.
+    /// </summary>
     Color20 = 0xF2F5,
+    /// <summary>
+    /// The color24.
+    /// </summary>
     Color24 = 0xF2F6,
+    /// <summary>
+    /// The color background20.
+    /// </summary>
     ColorBackground20 = 0xF2F7,
+    /// <summary>
+    /// The color background24.
+    /// </summary>
     ColorBackground24 = 0xF2F8,
+    /// <summary>
+    /// The color fill20.
+    /// </summary>
     ColorFill20 = 0xF2F9,
+    /// <summary>
+    /// The color fill24.
+    /// </summary>
     ColorFill24 = 0xF2FA,
+    /// <summary>
+    /// The color line20.
+    /// </summary>
     ColorLine20 = 0xF2FB,
+    /// <summary>
+    /// The color line24.
+    /// </summary>
     ColorLine24 = 0xF2FC,
+    /// <summary>
+    /// The column triple24.
+    /// </summary>
     ColumnTriple24 = 0xF2FD,
+    /// <summary>
+    /// The comment16.
+    /// </summary>
     Comment16 = 0xF2FE,
+    /// <summary>
+    /// The comment20.
+    /// </summary>
     Comment20 = 0xF2FF,
+    /// <summary>
+    /// The comment24.
+    /// </summary>
     Comment24 = 0xF300,
+    /// <summary>
+    /// The comment add24.
+    /// </summary>
     CommentAdd24 = 0xF301,
+    /// <summary>
+    /// The table lock32.
+    /// </summary>
     TableLock32 = 0xF302,
+    /// <summary>
+    /// The comment mention16.
+    /// </summary>
     CommentMention16 = 0xF303,
+    /// <summary>
+    /// The comment mention20.
+    /// </summary>
     CommentMention20 = 0xF304,
+    /// <summary>
+    /// The comment mention24.
+    /// </summary>
     CommentMention24 = 0xF305,
+    /// <summary>
+    /// The comment multiple16.
+    /// </summary>
     CommentMultiple16 = 0xF306,
+    /// <summary>
+    /// The comment multiple20.
+    /// </summary>
     CommentMultiple20 = 0xF307,
+    /// <summary>
+    /// The comment multiple24.
+    /// </summary>
     CommentMultiple24 = 0xF308,
+    /// <summary>
+    /// The table lock48.
+    /// </summary>
     TableLock48 = 0xF309,
+    /// <summary>
+    /// The circle half fill16.
+    /// </summary>
     CircleHalfFill16 = 0xF30A,
+    /// <summary>
+    /// The clipboard heart20.
+    /// </summary>
     ClipboardHeart20 = 0xF30B,
+    /// <summary>
+    /// The communication16.
+    /// </summary>
     Communication16 = 0xF30C,
+    /// <summary>
+    /// The communication20.
+    /// </summary>
     Communication20 = 0xF30D,
+    /// <summary>
+    /// The communication24.
+    /// </summary>
     Communication24 = 0xF30E,
+    /// <summary>
+    /// The compass northwest16.
+    /// </summary>
     CompassNorthwest16 = 0xF30F,
+    /// <summary>
+    /// The compass northwest20.
+    /// </summary>
     CompassNorthwest20 = 0xF310,
+    /// <summary>
+    /// The compass northwest24.
+    /// </summary>
     CompassNorthwest24 = 0xF311,
+    /// <summary>
+    /// The compass northwest28.
+    /// </summary>
     CompassNorthwest28 = 0xF312,
+    /// <summary>
+    /// The compose16.
+    /// </summary>
     Compose16 = 0xF313,
+    /// <summary>
+    /// The compose20.
+    /// </summary>
     Compose20 = 0xF314,
+    /// <summary>
+    /// The compose24.
+    /// </summary>
     Compose24 = 0xF315,
+    /// <summary>
+    /// The compose28.
+    /// </summary>
     Compose28 = 0xF316,
+    /// <summary>
+    /// The conference room16.
+    /// </summary>
     ConferenceRoom16 = 0xF317,
+    /// <summary>
+    /// The conference room20.
+    /// </summary>
     ConferenceRoom20 = 0xF318,
+    /// <summary>
+    /// The conference room24.
+    /// </summary>
     ConferenceRoom24 = 0xF319,
+    /// <summary>
+    /// The conference room28.
+    /// </summary>
     ConferenceRoom28 = 0xF31A,
+    /// <summary>
+    /// The conference room48.
+    /// </summary>
     ConferenceRoom48 = 0xF31B,
+    /// <summary>
+    /// The connector16.
+    /// </summary>
     Connector16 = 0xF31C,
+    /// <summary>
+    /// The connector20.
+    /// </summary>
     Connector20 = 0xF31D,
+    /// <summary>
+    /// The connector24.
+    /// </summary>
     Connector24 = 0xF31E,
+    /// <summary>
+    /// The contact card20.
+    /// </summary>
     ContactCard20 = 0xF31F,
+    /// <summary>
+    /// The contact card24.
+    /// </summary>
     ContactCard24 = 0xF320,
+    /// <summary>
+    /// The contact card group24.
+    /// </summary>
     ContactCardGroup24 = 0xF321,
+    /// <summary>
+    /// The clipboard pulse20.
+    /// </summary>
     ClipboardPulse20 = 0xF322,
+    /// <summary>
+    /// The content settings16.
+    /// </summary>
     ContentSettings16 = 0xF323,
+    /// <summary>
+    /// The content settings20.
+    /// </summary>
     ContentSettings20 = 0xF324,
+    /// <summary>
+    /// The content settings24.
+    /// </summary>
     ContentSettings24 = 0xF325,
+    /// <summary>
+    /// The text t tag16.
+    /// </summary>
     TextTTag16 = 0xF326,
+    /// <summary>
+    /// The video person32.
+    /// </summary>
     VideoPerson32 = 0xF327,
+    /// <summary>
+    /// The cookies20.
+    /// </summary>
     Cookies20 = 0xF328,
+    /// <summary>
+    /// The cookies24.
+    /// </summary>
     Cookies24 = 0xF329,
+    /// <summary>
+    /// The copy16.
+    /// </summary>
     Copy16 = 0xF32A,
+    /// <summary>
+    /// The copy20.
+    /// </summary>
     Copy20 = 0xF32B,
+    /// <summary>
+    /// The copy24.
+    /// </summary>
     Copy24 = 0xF32C,
+    /// <summary>
+    /// The clipboard settings20.
+    /// </summary>
     ClipboardSettings20 = 0xF32D,
+    /// <summary>
+    /// The clock arrow download20.
+    /// </summary>
     ClockArrowDownload20 = 0xF32E,
+    /// <summary>
+    /// The cloud add16.
+    /// </summary>
     CloudAdd16 = 0xF32F,
+    /// <summary>
+    /// The cloud edit16.
+    /// </summary>
     CloudEdit16 = 0xF330,
+    /// <summary>
+    /// The crop24.
+    /// </summary>
     Crop24 = 0xF331,
+    /// <summary>
+    /// The crop interim24.
+    /// </summary>
     CropInterim24 = 0xF332,
+    /// <summary>
+    /// The crop interim off24.
+    /// </summary>
     CropInterimOff24 = 0xF333,
+    /// <summary>
+    /// The cube16.
+    /// </summary>
     Cube16 = 0xF334,
+    /// <summary>
+    /// The cube20.
+    /// </summary>
     Cube20 = 0xF335,
+    /// <summary>
+    /// The cube24.
+    /// </summary>
     Cube24 = 0xF336,
+    /// <summary>
+    /// The cloud flow20.
+    /// </summary>
     CloudFlow20 = 0xF337,
+    /// <summary>
+    /// The cloud link16.
+    /// </summary>
     CloudLink16 = 0xF338,
+    /// <summary>
+    /// The code16.
+    /// </summary>
     Code16 = 0xF339,
+    /// <summary>
+    /// The cut20.
+    /// </summary>
     Cut20 = 0xF33A,
+    /// <summary>
+    /// The cut24.
+    /// </summary>
     Cut24 = 0xF33B,
+    /// <summary>
+    /// The dark theme24.
+    /// </summary>
     DarkTheme24 = 0xF33C,
+    /// <summary>
+    /// The data area24.
+    /// </summary>
     DataArea24 = 0xF33D,
+    /// <summary>
+    /// The data bar horizontal24.
+    /// </summary>
     DataBarHorizontal24 = 0xF33E,
+    /// <summary>
+    /// The data bar vertical20.
+    /// </summary>
     DataBarVertical20 = 0xF33F,
+    /// <summary>
+    /// The data bar vertical24.
+    /// </summary>
     DataBarVertical24 = 0xF340,
+    /// <summary>
+    /// The data funnel24.
+    /// </summary>
     DataFunnel24 = 0xF341,
+    /// <summary>
+    /// The data histogram24.
+    /// </summary>
     DataHistogram24 = 0xF342,
+    /// <summary>
+    /// The data line24.
+    /// </summary>
     DataLine24 = 0xF343,
+    /// <summary>
+    /// The data pie20.
+    /// </summary>
     DataPie20 = 0xF344,
+    /// <summary>
+    /// The data pie24.
+    /// </summary>
     DataPie24 = 0xF345,
+    /// <summary>
+    /// The data scatter24.
+    /// </summary>
     DataScatter24 = 0xF346,
+    /// <summary>
+    /// The data sunburst24.
+    /// </summary>
     DataSunburst24 = 0xF347,
+    /// <summary>
+    /// The data treemap24.
+    /// </summary>
     DataTreemap24 = 0xF348,
+    /// <summary>
+    /// The data usage24.
+    /// </summary>
     DataUsage24 = 0xF349,
+    /// <summary>
+    /// The data waterfall24.
+    /// </summary>
     DataWaterfall24 = 0xF34A,
+    /// <summary>
+    /// The data whisker24.
+    /// </summary>
     DataWhisker24 = 0xF34B,
+    /// <summary>
+    /// The delete20.
+    /// </summary>
     Delete20 = 0xF34C,
+    /// <summary>
+    /// The delete24.
+    /// </summary>
     Delete24 = 0xF34D,
+    /// <summary>
+    /// The delete28.
+    /// </summary>
     Delete28 = 0xF34E,
+    /// <summary>
+    /// The delete48.
+    /// </summary>
     Delete48 = 0xF34F,
+    /// <summary>
+    /// The comment error16.
+    /// </summary>
     CommentError16 = 0xF350,
+    /// <summary>
+    /// The comment lightning20.
+    /// </summary>
     CommentLightning20 = 0xF351,
+    /// <summary>
+    /// The delete off20.
+    /// </summary>
     DeleteOff20 = 0xF352,
+    /// <summary>
+    /// The delete off24.
+    /// </summary>
     DeleteOff24 = 0xF353,
+    /// <summary>
+    /// The dentist24.
+    /// </summary>
     Dentist24 = 0xF354,
+    /// <summary>
+    /// The design ideas16.
+    /// </summary>
     DesignIdeas16 = 0xF355,
+    /// <summary>
+    /// The design ideas20.
+    /// </summary>
     DesignIdeas20 = 0xF356,
+    /// <summary>
+    /// The design ideas24.
+    /// </summary>
     DesignIdeas24 = 0xF357,
+    /// <summary>
+    /// The desktop16.
+    /// </summary>
     Desktop16 = 0xF358,
+    /// <summary>
+    /// The desktop20.
+    /// </summary>
     Desktop20 = 0xF359,
+    /// <summary>
+    /// The desktop24.
+    /// </summary>
     Desktop24 = 0xF35A,
+    /// <summary>
+    /// The desktop28.
+    /// </summary>
     Desktop28 = 0xF35B,
+    /// <summary>
+    /// The developer board24.
+    /// </summary>
     DeveloperBoard24 = 0xF35C,
+    /// <summary>
+    /// The device eq24.
+    /// </summary>
     DeviceEq24 = 0xF35D,
+    /// <summary>
+    /// The dialpad20.
+    /// </summary>
     Dialpad20 = 0xF35E,
+    /// <summary>
+    /// The dialpad24.
+    /// </summary>
     Dialpad24 = 0xF35F,
+    /// <summary>
+    /// The dialpad off24.
+    /// </summary>
     DialpadOff24 = 0xF360,
+    /// <summary>
+    /// The comment lightning24.
+    /// </summary>
     CommentLightning24 = 0xF361,
+    /// <summary>
+    /// The contact card16.
+    /// </summary>
     ContactCard16 = 0xF362,
+    /// <summary>
+    /// The contact card link16.
+    /// </summary>
     ContactCardLink16 = 0xF363,
+    /// <summary>
+    /// The contract down left16.
+    /// </summary>
     ContractDownLeft16 = 0xF364,
+    /// <summary>
+    /// The directions20.
+    /// </summary>
     Directions20 = 0xF365,
+    /// <summary>
+    /// The directions24.
+    /// </summary>
     Directions24 = 0xF366,
+    /// <summary>
+    /// The dismiss12.
+    /// </summary>
     Dismiss12 = 0xF367,
+    /// <summary>
+    /// The dismiss16.
+    /// </summary>
     Dismiss16 = 0xF368,
+    /// <summary>
+    /// The dismiss20.
+    /// </summary>
     Dismiss20 = 0xF369,
+    /// <summary>
+    /// The dismiss24.
+    /// </summary>
     Dismiss24 = 0xF36A,
+    /// <summary>
+    /// The dismiss28.
+    /// </summary>
     Dismiss28 = 0xF36B,
+    /// <summary>
+    /// The dismiss circle16.
+    /// </summary>
     DismissCircle16 = 0xF36C,
+    /// <summary>
+    /// The dismiss circle20.
+    /// </summary>
     DismissCircle20 = 0xF36D,
+    /// <summary>
+    /// The dismiss circle24.
+    /// </summary>
     DismissCircle24 = 0xF36E,
+    /// <summary>
+    /// The dismiss circle48.
+    /// </summary>
     DismissCircle48 = 0xF36F,
+    /// <summary>
+    /// The divider short24.
+    /// </summary>
     DividerShort24 = 0xF370,
+    /// <summary>
+    /// The divider tall24.
+    /// </summary>
     DividerTall24 = 0xF371,
+    /// <summary>
+    /// The dock24.
+    /// </summary>
     Dock24 = 0xF372,
+    /// <summary>
+    /// The contract down left20.
+    /// </summary>
     ContractDownLeft20 = 0xF373,
+    /// <summary>
+    /// The contract down left24.
+    /// </summary>
     ContractDownLeft24 = 0xF374,
+    /// <summary>
+    /// The contract down left28.
+    /// </summary>
     ContractDownLeft28 = 0xF375,
+    /// <summary>
+    /// The dock row24.
+    /// </summary>
     DockRow24 = 0xF376,
+    /// <summary>
+    /// The doctor24.
+    /// </summary>
     Doctor24 = 0xF377,
+    /// <summary>
+    /// The document20.
+    /// </summary>
     Document20 = 0xF378,
+    /// <summary>
+    /// The document24.
+    /// </summary>
     Document24 = 0xF379,
+    /// <summary>
+    /// The document28.
+    /// </summary>
     Document28 = 0xF37A,
+    /// <summary>
+    /// The contract down left32.
+    /// </summary>
     ContractDownLeft32 = 0xF37B,
+    /// <summary>
+    /// The document briefcase20.
+    /// </summary>
     DocumentBriefcase20 = 0xF37C,
+    /// <summary>
+    /// The document briefcase24.
+    /// </summary>
     DocumentBriefcase24 = 0xF37D,
+    /// <summary>
+    /// The document catch up24.
+    /// </summary>
     DocumentCatchUp24 = 0xF37E,
+    /// <summary>
+    /// The document copy16.
+    /// </summary>
     DocumentCopy16 = 0xF37F,
+    /// <summary>
+    /// The document copy20.
+    /// </summary>
     DocumentCopy20 = 0xF380,
+    /// <summary>
+    /// The document copy24.
+    /// </summary>
     DocumentCopy24 = 0xF381,
+    /// <summary>
+    /// The document copy48.
+    /// </summary>
     DocumentCopy48 = 0xF382,
+    /// <summary>
+    /// The document dismiss20.
+    /// </summary>
     DocumentDismiss20 = 0xF383,
+    /// <summary>
+    /// The document dismiss24.
+    /// </summary>
     DocumentDismiss24 = 0xF384,
+    /// <summary>
+    /// The document edit16.
+    /// </summary>
     DocumentEdit16 = 0xF385,
+    /// <summary>
+    /// The document edit20.
+    /// </summary>
     DocumentEdit20 = 0xF386,
+    /// <summary>
+    /// The document edit24.
+    /// </summary>
     DocumentEdit24 = 0xF387,
+    /// <summary>
+    /// The document endnote20.
+    /// </summary>
     DocumentEndnote20 = 0xF388,
+    /// <summary>
+    /// The document endnote24.
+    /// </summary>
     DocumentEndnote24 = 0xF389,
+    /// <summary>
+    /// The document error16.
+    /// </summary>
     DocumentError16 = 0xF38A,
+    /// <summary>
+    /// The document error20.
+    /// </summary>
     DocumentError20 = 0xF38B,
+    /// <summary>
+    /// The document error24.
+    /// </summary>
     DocumentError24 = 0xF38C,
+    /// <summary>
+    /// The document footer24.
+    /// </summary>
     DocumentFooter24 = 0xF38D,
+    /// <summary>
+    /// The video person clock16.
+    /// </summary>
     VideoPersonClock16 = 0xF38E,
+    /// <summary>
+    /// The document header24.
+    /// </summary>
     DocumentHeader24 = 0xF38F,
+    /// <summary>
+    /// The document header footer20.
+    /// </summary>
     DocumentHeaderFooter20 = 0xF390,
+    /// <summary>
+    /// The document header footer24.
+    /// </summary>
     DocumentHeaderFooter24 = 0xF391,
+    /// <summary>
+    /// The video person clock20.
+    /// </summary>
     VideoPersonClock20 = 0xF392,
+    /// <summary>
+    /// The document landscape20.
+    /// </summary>
     DocumentLandscape20 = 0xF393,
+    /// <summary>
+    /// The document landscape24.
+    /// </summary>
     DocumentLandscape24 = 0xF394,
+    /// <summary>
+    /// The document margins20.
+    /// </summary>
     DocumentMargins20 = 0xF395,
+    /// <summary>
+    /// The document margins24.
+    /// </summary>
     DocumentMargins24 = 0xF396,
+    /// <summary>
+    /// The contract down left48.
+    /// </summary>
     ContractDownLeft48 = 0xF397,
+    /// <summary>
+    /// The credit card toolbox20.
+    /// </summary>
     CreditCardToolbox20 = 0xF398,
+    /// <summary>
+    /// The document one page20.
+    /// </summary>
     DocumentOnePage20 = 0xF399,
+    /// <summary>
+    /// The document one page24.
+    /// </summary>
     DocumentOnePage24 = 0xF39A,
+    /// <summary>
+    /// The data bar horizontal20.
+    /// </summary>
     DataBarHorizontal20 = 0xF39B,
+    /// <summary>
+    /// The document page bottom center20.
+    /// </summary>
     DocumentPageBottomCenter20 = 0xF39C,
+    /// <summary>
+    /// The document page bottom center24.
+    /// </summary>
     DocumentPageBottomCenter24 = 0xF39D,
+    /// <summary>
+    /// The document page bottom left20.
+    /// </summary>
     DocumentPageBottomLeft20 = 0xF39E,
+    /// <summary>
+    /// The document page bottom left24.
+    /// </summary>
     DocumentPageBottomLeft24 = 0xF39F,
+    /// <summary>
+    /// The document page bottom right20.
+    /// </summary>
     DocumentPageBottomRight20 = 0xF3A0,
+    /// <summary>
+    /// The document page bottom right24.
+    /// </summary>
     DocumentPageBottomRight24 = 0xF3A1,
+    /// <summary>
+    /// The document page break24.
+    /// </summary>
     DocumentPageBreak24 = 0xF3A2,
+    /// <summary>
+    /// The document page number20.
+    /// </summary>
     DocumentPageNumber20 = 0xF3A3,
+    /// <summary>
+    /// The document page number24.
+    /// </summary>
     DocumentPageNumber24 = 0xF3A4,
+    /// <summary>
+    /// The document page top center20.
+    /// </summary>
     DocumentPageTopCenter20 = 0xF3A5,
+    /// <summary>
+    /// The document page top center24.
+    /// </summary>
     DocumentPageTopCenter24 = 0xF3A6,
+    /// <summary>
+    /// The document page top left20.
+    /// </summary>
     DocumentPageTopLeft20 = 0xF3A7,
+    /// <summary>
+    /// The document page top left24.
+    /// </summary>
     DocumentPageTopLeft24 = 0xF3A8,
+    /// <summary>
+    /// The document page top right20.
+    /// </summary>
     DocumentPageTopRight20 = 0xF3A9,
+    /// <summary>
+    /// The document page top right24.
+    /// </summary>
     DocumentPageTopRight24 = 0xF3AA,
+    /// <summary>
+    /// The document PDF16.
+    /// </summary>
     DocumentPdf16 = 0xF3AB,
+    /// <summary>
+    /// The document PDF20.
+    /// </summary>
     DocumentPdf20 = 0xF3AC,
+    /// <summary>
+    /// The document PDF24.
+    /// </summary>
     DocumentPdf24 = 0xF3AD,
+    /// <summary>
+    /// The document search20.
+    /// </summary>
     DocumentSearch20 = 0xF3AE,
+    /// <summary>
+    /// The document search24.
+    /// </summary>
     DocumentSearch24 = 0xF3AF,
+    /// <summary>
+    /// The document toolbox20.
+    /// </summary>
     DocumentToolbox20 = 0xF3B0,
+    /// <summary>
+    /// The document toolbox24.
+    /// </summary>
     DocumentToolbox24 = 0xF3B1,
+    /// <summary>
+    /// The data usage edit20.
+    /// </summary>
     DataUsageEdit20 = 0xF3B2,
+    /// <summary>
+    /// The desktop sync16.
+    /// </summary>
     DesktopSync16 = 0xF3B3,
+    /// <summary>
+    /// The device meeting room16.
+    /// </summary>
     DeviceMeetingRoom16 = 0xF3B4,
+    /// <summary>
+    /// The device meeting room24.
+    /// </summary>
     DeviceMeetingRoom24 = 0xF3B5,
+    /// <summary>
+    /// The device meeting room28.
+    /// </summary>
     DeviceMeetingRoom28 = 0xF3B6,
+    /// <summary>
+    /// The device meeting room32.
+    /// </summary>
     DeviceMeetingRoom32 = 0xF3B7,
+    /// <summary>
+    /// The document width20.
+    /// </summary>
     DocumentWidth20 = 0xF3B8,
+    /// <summary>
+    /// The document width24.
+    /// </summary>
     DocumentWidth24 = 0xF3B9,
+    /// <summary>
+    /// The double swipe down24.
+    /// </summary>
     DoubleSwipeDown24 = 0xF3BA,
+    /// <summary>
+    /// The double swipe up24.
+    /// </summary>
     DoubleSwipeUp24 = 0xF3BB,
+    /// <summary>
+    /// The device meeting room48.
+    /// </summary>
     DeviceMeetingRoom48 = 0xF3BC,
+    /// <summary>
+    /// The device meeting room remote16.
+    /// </summary>
     DeviceMeetingRoomRemote16 = 0xF3BD,
+    /// <summary>
+    /// The drafts16.
+    /// </summary>
     Drafts16 = 0xF3BE,
+    /// <summary>
+    /// The drafts20.
+    /// </summary>
     Drafts20 = 0xF3BF,
+    /// <summary>
+    /// The drafts24.
+    /// </summary>
     Drafts24 = 0xF3C0,
+    /// <summary>
+    /// The drag24.
+    /// </summary>
     Drag24 = 0xF3C1,
+    /// <summary>
+    /// The device meeting room remote24.
+    /// </summary>
     DeviceMeetingRoomRemote24 = 0xF3C2,
+    /// <summary>
+    /// The drink beer24.
+    /// </summary>
     DrinkBeer24 = 0xF3C3,
+    /// <summary>
+    /// The drink coffee20.
+    /// </summary>
     DrinkCoffee20 = 0xF3C4,
+    /// <summary>
+    /// The drink coffee24.
+    /// </summary>
     DrinkCoffee24 = 0xF3C5,
+    /// <summary>
+    /// The drink margarita24.
+    /// </summary>
     DrinkMargarita24 = 0xF3C6,
+    /// <summary>
+    /// The drink wine24.
+    /// </summary>
     DrinkWine24 = 0xF3C7,
+    /// <summary>
+    /// The dual screen24.
+    /// </summary>
     DualScreen24 = 0xF3C8,
+    /// <summary>
+    /// The dual screen add24.
+    /// </summary>
     DualScreenAdd24 = 0xF3C9,
+    /// <summary>
+    /// The dual screen arrow right24.
+    /// </summary>
     DualScreenArrowRight24 = 0xF3CA,
+    /// <summary>
+    /// The dual screen clock24.
+    /// </summary>
     DualScreenClock24 = 0xF3CB,
+    /// <summary>
+    /// The dual screen desktop24.
+    /// </summary>
     DualScreenDesktop24 = 0xF3CC,
+    /// <summary>
+    /// The device meeting room remote28.
+    /// </summary>
     DeviceMeetingRoomRemote28 = 0xF3CD,
+    /// <summary>
+    /// The dual screen group24.
+    /// </summary>
     DualScreenGroup24 = 0xF3CE,
+    /// <summary>
+    /// The dual screen header24.
+    /// </summary>
     DualScreenHeader24 = 0xF3CF,
+    /// <summary>
+    /// The dual screen lock24.
+    /// </summary>
     DualScreenLock24 = 0xF3D0,
+    /// <summary>
+    /// The dual screen mirror24.
+    /// </summary>
     DualScreenMirror24 = 0xF3D1,
+    /// <summary>
+    /// The dual screen pagination24.
+    /// </summary>
     DualScreenPagination24 = 0xF3D2,
+    /// <summary>
+    /// The dual screen settings24.
+    /// </summary>
     DualScreenSettings24 = 0xF3D3,
+    /// <summary>
+    /// The dual screen status bar24.
+    /// </summary>
     DualScreenStatusBar24 = 0xF3D4,
+    /// <summary>
+    /// The dual screen tablet24.
+    /// </summary>
     DualScreenTablet24 = 0xF3D5,
+    /// <summary>
+    /// The dual screen update24.
+    /// </summary>
     DualScreenUpdate24 = 0xF3D6,
+    /// <summary>
+    /// The dual screen vertical scroll24.
+    /// </summary>
     DualScreenVerticalScroll24 = 0xF3D7,
+    /// <summary>
+    /// The dual screen vibrate24.
+    /// </summary>
     DualScreenVibrate24 = 0xF3D8,
+    /// <summary>
+    /// The earth16.
+    /// </summary>
     Earth16 = 0xF3D9,
+    /// <summary>
+    /// The earth20.
+    /// </summary>
     Earth20 = 0xF3DA,
+    /// <summary>
+    /// The earth24.
+    /// </summary>
     Earth24 = 0xF3DB,
+    /// <summary>
+    /// The edit16.
+    /// </summary>
     Edit16 = 0xF3DC,
+    /// <summary>
+    /// The edit20.
+    /// </summary>
     Edit20 = 0xF3DD,
+    /// <summary>
+    /// The edit24.
+    /// </summary>
     Edit24 = 0xF3DE,
+    /// <summary>
+    /// The emoji16.
+    /// </summary>
     Emoji16 = 0xF3DF,
+    /// <summary>
+    /// The emoji20.
+    /// </summary>
     Emoji20 = 0xF3E0,
+    /// <summary>
+    /// The emoji24.
+    /// </summary>
     Emoji24 = 0xF3E1,
+    /// <summary>
+    /// The emoji add24.
+    /// </summary>
     EmojiAdd24 = 0xF3E2,
+    /// <summary>
+    /// The emoji angry20.
+    /// </summary>
     EmojiAngry20 = 0xF3E3,
+    /// <summary>
+    /// The emoji angry24.
+    /// </summary>
     EmojiAngry24 = 0xF3E4,
+    /// <summary>
+    /// The emoji laugh20.
+    /// </summary>
     EmojiLaugh20 = 0xF3E5,
+    /// <summary>
+    /// The emoji laugh24.
+    /// </summary>
     EmojiLaugh24 = 0xF3E6,
+    /// <summary>
+    /// The emoji meh20.
+    /// </summary>
     EmojiMeh20 = 0xF3E7,
+    /// <summary>
+    /// The emoji meh24.
+    /// </summary>
     EmojiMeh24 = 0xF3E8,
+    /// <summary>
+    /// The emoji sad20.
+    /// </summary>
     EmojiSad20 = 0xF3E9,
+    /// <summary>
+    /// The emoji sad24.
+    /// </summary>
     EmojiSad24 = 0xF3EA,
+    /// <summary>
+    /// The emoji surprise20.
+    /// </summary>
     EmojiSurprise20 = 0xF3EB,
+    /// <summary>
+    /// The emoji surprise24.
+    /// </summary>
     EmojiSurprise24 = 0xF3EC,
+    /// <summary>
+    /// The device meeting room remote32.
+    /// </summary>
     DeviceMeetingRoomRemote32 = 0xF3ED,
+    /// <summary>
+    /// The device meeting room remote48.
+    /// </summary>
     DeviceMeetingRoomRemote48 = 0xF3EE,
+    /// <summary>
+    /// The eraser tool24.
+    /// </summary>
     EraserTool24 = 0xF3EF,
+    /// <summary>
+    /// The error circle16.
+    /// </summary>
     ErrorCircle16 = 0xF3F0,
+    /// <summary>
+    /// The error circle20.
+    /// </summary>
     ErrorCircle20 = 0xF3F1,
+    /// <summary>
+    /// The error circle24.
+    /// </summary>
     ErrorCircle24 = 0xF3F2,
+    /// <summary>
+    /// The dismiss32.
+    /// </summary>
     Dismiss32 = 0xF3F3,
+    /// <summary>
+    /// The extended dock24.
+    /// </summary>
     ExtendedDock24 = 0xF3F4,
+    /// <summary>
+    /// The video person clock24.
+    /// </summary>
     VideoPersonClock24 = 0xF3F5,
+    /// <summary>
+    /// The video person clock28.
+    /// </summary>
     VideoPersonClock28 = 0xF3F6,
+    /// <summary>
+    /// The video person clock32.
+    /// </summary>
     VideoPersonClock32 = 0xF3F7,
+    /// <summary>
+    /// The video person clock48.
+    /// </summary>
     VideoPersonClock48 = 0xF3F8,
+    /// <summary>
+    /// The voicemail32.
+    /// </summary>
     Voicemail32 = 0xF3F9,
+    /// <summary>
+    /// The web asset16.
+    /// </summary>
     WebAsset16 = 0xF3FA,
+    /// <summary>
+    /// The text indent increase RTL rotate27020.
+    /// </summary>
     TextIndentIncreaseRtlRotate27020 = 0xF3FB,
+    /// <summary>
+    /// The text indent increase RTL rotate27024.
+    /// </summary>
     TextIndentIncreaseRtlRotate27024 = 0xF3FC,
+    /// <summary>
+    /// The fast acceleration24.
+    /// </summary>
     FastAcceleration24 = 0xF3FD,
+    /// <summary>
+    /// The fast forward20.
+    /// </summary>
     FastForward20 = 0xF3FE,
+    /// <summary>
+    /// The fast forward24.
+    /// </summary>
     FastForward24 = 0xF3FF,
+    /// <summary>
+    /// The dismiss48.
+    /// </summary>
     Dismiss48 = 0xF400,
+    /// <summary>
+    /// The document arrow up16.
+    /// </summary>
     DocumentArrowUp16 = 0xF401,
+    /// <summary>
+    /// The document bullet list20.
+    /// </summary>
     DocumentBulletList20 = 0xF402,
+    /// <summary>
+    /// The document bullet list24.
+    /// </summary>
     DocumentBulletList24 = 0xF403,
+    /// <summary>
+    /// The document link20.
+    /// </summary>
     DocumentLink20 = 0xF404,
+    /// <summary>
+    /// The document link24.
+    /// </summary>
     DocumentLink24 = 0xF405,
+    /// <summary>
+    /// The filter20.
+    /// </summary>
     Filter20 = 0xF406,
+    /// <summary>
+    /// The filter24.
+    /// </summary>
     Filter24 = 0xF407,
+    /// <summary>
+    /// The filter28.
+    /// </summary>
     Filter28 = 0xF408,
+    /// <summary>
+    /// The fingerprint24.
+    /// </summary>
     Fingerprint24 = 0xF409,
+    /// <summary>
+    /// The flag16.
+    /// </summary>
     Flag16 = 0xF40A,
+    /// <summary>
+    /// The flag20.
+    /// </summary>
     Flag20 = 0xF40B,
+    /// <summary>
+    /// The flag24.
+    /// </summary>
     Flag24 = 0xF40C,
+    /// <summary>
+    /// The flag28.
+    /// </summary>
     Flag28 = 0xF40D,
+    /// <summary>
+    /// The flag48.
+    /// </summary>
     Flag48 = 0xF40E,
+    /// <summary>
+    /// The flag off24.
+    /// </summary>
     FlagOff24 = 0xF40F,
+    /// <summary>
+    /// The flag off28.
+    /// </summary>
     FlagOff28 = 0xF410,
+    /// <summary>
+    /// The flag off48.
+    /// </summary>
     FlagOff48 = 0xF411,
+    /// <summary>
+    /// The flash auto24.
+    /// </summary>
     FlashAuto24 = 0xF412,
+    /// <summary>
+    /// The flash off24.
+    /// </summary>
     FlashOff24 = 0xF413,
+    /// <summary>
+    /// The text number list LTR9020.
+    /// </summary>
     TextNumberListLtr9020 = 0xF414,
+    /// <summary>
+    /// The text number list LTR9024.
+    /// </summary>
     TextNumberListLtr9024 = 0xF415,
+    /// <summary>
+    /// The flashlight24.
+    /// </summary>
     Flashlight24 = 0xF416,
+    /// <summary>
+    /// The flashlight off24.
+    /// </summary>
     FlashlightOff24 = 0xF417,
+    /// <summary>
+    /// The folder20.
+    /// </summary>
     Folder20 = 0xF418,
+    /// <summary>
+    /// The folder24.
+    /// </summary>
     Folder24 = 0xF419,
+    /// <summary>
+    /// The folder28.
+    /// </summary>
     Folder28 = 0xF41A,
+    /// <summary>
+    /// The folder48.
+    /// </summary>
     Folder48 = 0xF41B,
+    /// <summary>
+    /// The folder add20.
+    /// </summary>
     FolderAdd20 = 0xF41C,
+    /// <summary>
+    /// The folder add24.
+    /// </summary>
     FolderAdd24 = 0xF41D,
+    /// <summary>
+    /// The folder add28.
+    /// </summary>
     FolderAdd28 = 0xF41E,
+    /// <summary>
+    /// The folder add48.
+    /// </summary>
     FolderAdd48 = 0xF41F,
+    /// <summary>
+    /// The folder briefcase20.
+    /// </summary>
     FolderBriefcase20 = 0xF420,
+    /// <summary>
+    /// The document person16.
+    /// </summary>
     DocumentPerson16 = 0xF421,
+    /// <summary>
+    /// The document settings16.
+    /// </summary>
     DocumentSettings16 = 0xF422,
+    /// <summary>
+    /// The document split hint24.
+    /// </summary>
     DocumentSplitHint24 = 0xF423,
+    /// <summary>
+    /// The document split hint off24.
+    /// </summary>
     DocumentSplitHintOff24 = 0xF424,
+    /// <summary>
+    /// The folder link20.
+    /// </summary>
     FolderLink20 = 0xF425,
+    /// <summary>
+    /// The folder link24.
+    /// </summary>
     FolderLink24 = 0xF426,
+    /// <summary>
+    /// The folder link28.
+    /// </summary>
     FolderLink28 = 0xF427,
+    /// <summary>
+    /// The folder link48.
+    /// </summary>
     FolderLink48 = 0xF428,
+    /// <summary>
+    /// The edit arrow back16.
+    /// </summary>
     EditArrowBack16 = 0xF429,
+    /// <summary>
+    /// The equal off20.
+    /// </summary>
     EqualOff20 = 0xF42A,
+    /// <summary>
+    /// The error circle settings16.
+    /// </summary>
     ErrorCircleSettings16 = 0xF42B,
+    /// <summary>
+    /// The expand up left16.
+    /// </summary>
     ExpandUpLeft16 = 0xF42C,
+    /// <summary>
+    /// The folder open16.
+    /// </summary>
     FolderOpen16 = 0xF42D,
+    /// <summary>
+    /// The folder open20.
+    /// </summary>
     FolderOpen20 = 0xF42E,
+    /// <summary>
+    /// The folder open24.
+    /// </summary>
     FolderOpen24 = 0xF42F,
+    /// <summary>
+    /// The folder open vertical20.
+    /// </summary>
     FolderOpenVertical20 = 0xF430,
+    /// <summary>
+    /// The expand up left20.
+    /// </summary>
     ExpandUpLeft20 = 0xF431,
+    /// <summary>
+    /// The expand up left24.
+    /// </summary>
     ExpandUpLeft24 = 0xF432,
+    /// <summary>
+    /// The expand up left28.
+    /// </summary>
     ExpandUpLeft28 = 0xF433,
+    /// <summary>
+    /// The folder zip16.
+    /// </summary>
     FolderZip16 = 0xF434,
+    /// <summary>
+    /// The folder zip20.
+    /// </summary>
     FolderZip20 = 0xF435,
+    /// <summary>
+    /// The folder zip24.
+    /// </summary>
     FolderZip24 = 0xF436,
+    /// <summary>
+    /// The font decrease20.
+    /// </summary>
     FontDecrease20 = 0xF437,
+    /// <summary>
+    /// The font decrease24.
+    /// </summary>
     FontDecrease24 = 0xF438,
+    /// <summary>
+    /// The font increase20.
+    /// </summary>
     FontIncrease20 = 0xF439,
+    /// <summary>
+    /// The font increase24.
+    /// </summary>
     FontIncrease24 = 0xF43A,
+    /// <summary>
+    /// The font space tracking in16.
+    /// </summary>
     FontSpaceTrackingIn16 = 0xF43B,
+    /// <summary>
+    /// The font space tracking in20.
+    /// </summary>
     FontSpaceTrackingIn20 = 0xF43C,
+    /// <summary>
+    /// The font space tracking in24.
+    /// </summary>
     FontSpaceTrackingIn24 = 0xF43D,
+    /// <summary>
+    /// The font space tracking in28.
+    /// </summary>
     FontSpaceTrackingIn28 = 0xF43E,
+    /// <summary>
+    /// The font space tracking out16.
+    /// </summary>
     FontSpaceTrackingOut16 = 0xF43F,
+    /// <summary>
+    /// The font space tracking out20.
+    /// </summary>
     FontSpaceTrackingOut20 = 0xF440,
+    /// <summary>
+    /// The font space tracking out24.
+    /// </summary>
     FontSpaceTrackingOut24 = 0xF441,
+    /// <summary>
+    /// The font space tracking out28.
+    /// </summary>
     FontSpaceTrackingOut28 = 0xF442,
+    /// <summary>
+    /// The food20.
+    /// </summary>
     Food20 = 0xF443,
+    /// <summary>
+    /// The food24.
+    /// </summary>
     Food24 = 0xF444,
+    /// <summary>
+    /// The food cake24.
+    /// </summary>
     FoodCake24 = 0xF445,
+    /// <summary>
+    /// The food egg24.
+    /// </summary>
     FoodEgg24 = 0xF446,
+    /// <summary>
+    /// The food toast24.
+    /// </summary>
     FoodToast24 = 0xF447,
+    /// <summary>
+    /// The form new24.
+    /// </summary>
     FormNew24 = 0xF448,
+    /// <summary>
+    /// The form new28.
+    /// </summary>
     FormNew28 = 0xF449,
+    /// <summary>
+    /// The form new48.
+    /// </summary>
     FormNew48 = 0xF44A,
+    /// <summary>
+    /// The expand up left32.
+    /// </summary>
     ExpandUpLeft32 = 0xF44B,
+    /// <summary>
+    /// The expand up left48.
+    /// </summary>
     ExpandUpLeft48 = 0xF44C,
+    /// <summary>
+    /// The FPS24024.
+    /// </summary>
     Fps24024 = 0xF44D,
+    /// <summary>
+    /// The FPS96024.
+    /// </summary>
     Fps96024 = 0xF44E,
+    /// <summary>
+    /// The expand up right16.
+    /// </summary>
     ExpandUpRight16 = 0xF44F,
+    /// <summary>
+    /// The expand up right20.
+    /// </summary>
     ExpandUpRight20 = 0xF450,
+    /// <summary>
+    /// The games24.
+    /// </summary>
     Games24 = 0xF451,
+    /// <summary>
+    /// The gesture24.
+    /// </summary>
     Gesture24 = 0xF452,
+    /// <summary>
+    /// The gif20.
+    /// </summary>
     Gif20 = 0xF453,
+    /// <summary>
+    /// The gif24.
+    /// </summary>
     Gif24 = 0xF454,
+    /// <summary>
+    /// The gift20.
+    /// </summary>
     Gift20 = 0xF455,
+    /// <summary>
+    /// The gift24.
+    /// </summary>
     Gift24 = 0xF456,
+    /// <summary>
+    /// The glance24.
+    /// </summary>
     Glance24 = 0xF457,
+    /// <summary>
+    /// The glasses24.
+    /// </summary>
     Glasses24 = 0xF458,
+    /// <summary>
+    /// The glasses off24.
+    /// </summary>
     GlassesOff24 = 0xF459,
+    /// <summary>
+    /// The globe20.
+    /// </summary>
     Globe20 = 0xF45A,
+    /// <summary>
+    /// The globe24.
+    /// </summary>
     Globe24 = 0xF45B,
+    /// <summary>
+    /// The globe add24.
+    /// </summary>
     GlobeAdd24 = 0xF45C,
+    /// <summary>
+    /// The globe clock24.
+    /// </summary>
     GlobeClock24 = 0xF45D,
+    /// <summary>
+    /// The globe desktop24.
+    /// </summary>
     GlobeDesktop24 = 0xF45E,
+    /// <summary>
+    /// The globe location24.
+    /// </summary>
     GlobeLocation24 = 0xF45F,
+    /// <summary>
+    /// The globe search24.
+    /// </summary>
     GlobeSearch24 = 0xF460,
+    /// <summary>
+    /// The globe video24.
+    /// </summary>
     GlobeVideo24 = 0xF461,
+    /// <summary>
+    /// The grid20.
+    /// </summary>
     Grid20 = 0xF462,
+    /// <summary>
+    /// The grid24.
+    /// </summary>
     Grid24 = 0xF463,
+    /// <summary>
+    /// The grid28.
+    /// </summary>
     Grid28 = 0xF464,
+    /// <summary>
+    /// The group20.
+    /// </summary>
     Group20 = 0xF465,
+    /// <summary>
+    /// The group24.
+    /// </summary>
     Group24 = 0xF466,
+    /// <summary>
+    /// The group list24.
+    /// </summary>
     GroupList24 = 0xF467,
+    /// <summary>
+    /// The guest16.
+    /// </summary>
     Guest16 = 0xF468,
+    /// <summary>
+    /// The guest20.
+    /// </summary>
     Guest20 = 0xF469,
+    /// <summary>
+    /// The guest24.
+    /// </summary>
     Guest24 = 0xF46A,
+    /// <summary>
+    /// The guest28.
+    /// </summary>
     Guest28 = 0xF46B,
+    /// <summary>
+    /// The guest add24.
+    /// </summary>
     GuestAdd24 = 0xF46C,
+    /// <summary>
+    /// The expand up right24.
+    /// </summary>
     ExpandUpRight24 = 0xF46D,
+    /// <summary>
+    /// The handshake16.
+    /// </summary>
     Handshake16 = 0xF46E,
+    /// <summary>
+    /// The handshake20.
+    /// </summary>
     Handshake20 = 0xF46F,
+    /// <summary>
+    /// The handshake24.
+    /// </summary>
     Handshake24 = 0xF470,
+    /// <summary>
+    /// The HDR24.
+    /// </summary>
     Hdr24 = 0xF471,
+    /// <summary>
+    /// The headphones24.
+    /// </summary>
     Headphones24 = 0xF472,
+    /// <summary>
+    /// The headphones28.
+    /// </summary>
     Headphones28 = 0xF473,
+    /// <summary>
+    /// The headset24.
+    /// </summary>
     Headset24 = 0xF474,
+    /// <summary>
+    /// The headset28.
+    /// </summary>
     Headset28 = 0xF475,
+    /// <summary>
+    /// The headset VR20.
+    /// </summary>
     HeadsetVr20 = 0xF476,
+    /// <summary>
+    /// The headset VR24.
+    /// </summary>
     HeadsetVr24 = 0xF477,
+    /// <summary>
+    /// The heart16.
+    /// </summary>
     Heart16 = 0xF478,
+    /// <summary>
+    /// The heart20.
+    /// </summary>
     Heart20 = 0xF479,
+    /// <summary>
+    /// The heart24.
+    /// </summary>
     Heart24 = 0xF47A,
+    /// <summary>
+    /// The highlight16.
+    /// </summary>
     Highlight16 = 0xF47B,
+    /// <summary>
+    /// The highlight20.
+    /// </summary>
     Highlight20 = 0xF47C,
+    /// <summary>
+    /// The highlight24.
+    /// </summary>
     Highlight24 = 0xF47D,
+    /// <summary>
+    /// The history20.
+    /// </summary>
     History20 = 0xF47E,
+    /// <summary>
+    /// The history24.
+    /// </summary>
     History24 = 0xF47F,
+    /// <summary>
+    /// The home20.
+    /// </summary>
     Home20 = 0xF480,
+    /// <summary>
+    /// The home24.
+    /// </summary>
     Home24 = 0xF481,
+    /// <summary>
+    /// The home28.
+    /// </summary>
     Home28 = 0xF482,
+    /// <summary>
+    /// The home add24.
+    /// </summary>
     HomeAdd24 = 0xF483,
+    /// <summary>
+    /// The home checkmark24.
+    /// </summary>
     HomeCheckmark24 = 0xF484,
+    /// <summary>
+    /// The icons20.
+    /// </summary>
     Icons20 = 0xF485,
+    /// <summary>
+    /// The icons24.
+    /// </summary>
     Icons24 = 0xF486,
+    /// <summary>
+    /// The image16.
+    /// </summary>
     Image16 = 0xF487,
+    /// <summary>
+    /// The image20.
+    /// </summary>
     Image20 = 0xF488,
+    /// <summary>
+    /// The image24.
+    /// </summary>
     Image24 = 0xF489,
+    /// <summary>
+    /// The image28.
+    /// </summary>
     Image28 = 0xF48A,
+    /// <summary>
+    /// The image48.
+    /// </summary>
     Image48 = 0xF48B,
+    /// <summary>
+    /// The image add24.
+    /// </summary>
     ImageAdd24 = 0xF48C,
+    /// <summary>
+    /// The image alt text20.
+    /// </summary>
     ImageAltText20 = 0xF48D,
+    /// <summary>
+    /// The image alt text24.
+    /// </summary>
     ImageAltText24 = 0xF48E,
+    /// <summary>
+    /// The image copy20.
+    /// </summary>
     ImageCopy20 = 0xF48F,
+    /// <summary>
+    /// The image copy24.
+    /// </summary>
     ImageCopy24 = 0xF490,
+    /// <summary>
+    /// The image copy28.
+    /// </summary>
     ImageCopy28 = 0xF491,
+    /// <summary>
+    /// The image edit16.
+    /// </summary>
     ImageEdit16 = 0xF492,
+    /// <summary>
+    /// The image edit20.
+    /// </summary>
     ImageEdit20 = 0xF493,
+    /// <summary>
+    /// The image edit24.
+    /// </summary>
     ImageEdit24 = 0xF494,
+    /// <summary>
+    /// The expand up right28.
+    /// </summary>
     ExpandUpRight28 = 0xF495,
+    /// <summary>
+    /// The expand up right32.
+    /// </summary>
     ExpandUpRight32 = 0xF496,
+    /// <summary>
+    /// The expand up right48.
+    /// </summary>
     ExpandUpRight48 = 0xF497,
+    /// <summary>
+    /// The image off24.
+    /// </summary>
     ImageOff24 = 0xF498,
+    /// <summary>
+    /// The image search20.
+    /// </summary>
     ImageSearch20 = 0xF499,
+    /// <summary>
+    /// The image search24.
+    /// </summary>
     ImageSearch24 = 0xF49A,
+    /// <summary>
+    /// The immersive reader20.
+    /// </summary>
     ImmersiveReader20 = 0xF49B,
+    /// <summary>
+    /// The immersive reader24.
+    /// </summary>
     ImmersiveReader24 = 0xF49C,
+    /// <summary>
+    /// The important12.
+    /// </summary>
     Important12 = 0xF49D,
+    /// <summary>
+    /// The important16.
+    /// </summary>
     Important16 = 0xF49E,
+    /// <summary>
+    /// The important20.
+    /// </summary>
     Important20 = 0xF49F,
+    /// <summary>
+    /// The important24.
+    /// </summary>
     Important24 = 0xF4A0,
+    /// <summary>
+    /// The incognito24.
+    /// </summary>
     Incognito24 = 0xF4A1,
+    /// <summary>
+    /// The info16.
+    /// </summary>
     Info16 = 0xF4A2,
+    /// <summary>
+    /// The info20.
+    /// </summary>
     Info20 = 0xF4A3,
+    /// <summary>
+    /// The info24.
+    /// </summary>
     Info24 = 0xF4A4,
+    /// <summary>
+    /// The info28.
+    /// </summary>
     Info28 = 0xF4A5,
+    /// <summary>
+    /// The inking tool16.
+    /// </summary>
     InkingTool16 = 0xF4A6,
+    /// <summary>
+    /// The inking tool20.
+    /// </summary>
     InkingTool20 = 0xF4A7,
+    /// <summary>
+    /// The inking tool24.
+    /// </summary>
     InkingTool24 = 0xF4A8,
+    /// <summary>
+    /// The inprivate account16.
+    /// </summary>
     InprivateAccount16 = 0xF4A9,
+    /// <summary>
+    /// The inprivate account20.
+    /// </summary>
     InprivateAccount20 = 0xF4AA,
+    /// <summary>
+    /// The inprivate account24.
+    /// </summary>
     InprivateAccount24 = 0xF4AB,
+    /// <summary>
+    /// The inprivate account28.
+    /// </summary>
     InprivateAccount28 = 0xF4AC,
+    /// <summary>
+    /// The insert20.
+    /// </summary>
     Insert20 = 0xF4AD,
+    /// <summary>
+    /// The fax16.
+    /// </summary>
     Fax16 = 0xF4AE,
+    /// <summary>
+    /// The flow16.
+    /// </summary>
     Flow16 = 0xF4AF,
+    /// <summary>
+    /// The text number list LTR rotate27020.
+    /// </summary>
     TextNumberListLtrRotate27020 = 0xF4B0,
+    /// <summary>
+    /// The folder globe16.
+    /// </summary>
     FolderGlobe16 = 0xF4B1,
+    /// <summary>
+    /// The ios chevron right20.
+    /// </summary>
     IosChevronRight20 = 0xF4B2,
+    /// <summary>
+    /// The javascript16.
+    /// </summary>
     Javascript16 = 0xF4B3,
+    /// <summary>
+    /// The javascript20.
+    /// </summary>
     Javascript20 = 0xF4B4,
+    /// <summary>
+    /// The javascript24.
+    /// </summary>
     Javascript24 = 0xF4B5,
+    /// <summary>
+    /// The key20.
+    /// </summary>
     Key20 = 0xF4B6,
+    /// <summary>
+    /// The key24.
+    /// </summary>
     Key24 = 0xF4B7,
+    /// <summary>
+    /// The keyboard20.
+    /// </summary>
     Keyboard20 = 0xF4B8,
+    /// <summary>
+    /// The keyboard24.
+    /// </summary>
     Keyboard24 = 0xF4B9,
+    /// <summary>
+    /// The keyboard dock24.
+    /// </summary>
     KeyboardDock24 = 0xF4BA,
+    /// <summary>
+    /// The keyboard layout float24.
+    /// </summary>
     KeyboardLayoutFloat24 = 0xF4BB,
+    /// <summary>
+    /// The keyboard layout one handed left24.
+    /// </summary>
     KeyboardLayoutOneHandedLeft24 = 0xF4BC,
+    /// <summary>
+    /// The keyboard layout resize24.
+    /// </summary>
     KeyboardLayoutResize24 = 0xF4BD,
+    /// <summary>
+    /// The keyboard layout split24.
+    /// </summary>
     KeyboardLayoutSplit24 = 0xF4BE,
+    /// <summary>
+    /// The keyboard shift24.
+    /// </summary>
     KeyboardShift24 = 0xF4BF,
+    /// <summary>
+    /// The keyboard shift uppercase24.
+    /// </summary>
     KeyboardShiftUppercase24 = 0xF4C0,
+    /// <summary>
+    /// The keyboard tab24.
+    /// </summary>
     KeyboardTab24 = 0xF4C1,
+    /// <summary>
+    /// The laptop16.
+    /// </summary>
     Laptop16 = 0xF4C2,
+    /// <summary>
+    /// The laptop20.
+    /// </summary>
     Laptop20 = 0xF4C3,
+    /// <summary>
+    /// The laptop24.
+    /// </summary>
     Laptop24 = 0xF4C4,
+    /// <summary>
+    /// The laptop28.
+    /// </summary>
     Laptop28 = 0xF4C5,
+    /// <summary>
+    /// The folder person16.
+    /// </summary>
     FolderPerson16 = 0xF4C6,
+    /// <summary>
+    /// The gauge20.
+    /// </summary>
     Gauge20 = 0xF4C7,
+    /// <summary>
+    /// The gauge24.
+    /// </summary>
     Gauge24 = 0xF4C8,
+    /// <summary>
+    /// The lasso24.
+    /// </summary>
     Lasso24 = 0xF4C9,
+    /// <summary>
+    /// The launcher settings24.
+    /// </summary>
     LauncherSettings24 = 0xF4CA,
+    /// <summary>
+    /// The layer20.
+    /// </summary>
     Layer20 = 0xF4CB,
+    /// <summary>
+    /// The layer24.
+    /// </summary>
     Layer24 = 0xF4CC,
+    /// <summary>
+    /// The gift card16.
+    /// </summary>
     GiftCard16 = 0xF4CD,
+    /// <summary>
+    /// The gift card20.
+    /// </summary>
     GiftCard20 = 0xF4CE,
+    /// <summary>
+    /// The gift card add20.
+    /// </summary>
     GiftCardAdd20 = 0xF4CF,
+    /// <summary>
+    /// The leaf two16.
+    /// </summary>
     LeafTwo16 = 0xF4D0,
+    /// <summary>
+    /// The leaf two20.
+    /// </summary>
     LeafTwo20 = 0xF4D1,
+    /// <summary>
+    /// The leaf two24.
+    /// </summary>
     LeafTwo24 = 0xF4D2,
+    /// <summary>
+    /// The library24.
+    /// </summary>
     Library24 = 0xF4D3,
+    /// <summary>
+    /// The library28.
+    /// </summary>
     Library28 = 0xF4D4,
+    /// <summary>
+    /// The lightbulb16.
+    /// </summary>
     Lightbulb16 = 0xF4D5,
+    /// <summary>
+    /// The lightbulb20.
+    /// </summary>
     Lightbulb20 = 0xF4D6,
+    /// <summary>
+    /// The lightbulb24.
+    /// </summary>
     Lightbulb24 = 0xF4D7,
+    /// <summary>
+    /// The lightbulb circle24.
+    /// </summary>
     LightbulbCircle24 = 0xF4D8,
+    /// <summary>
+    /// The lightbulb filament16.
+    /// </summary>
     LightbulbFilament16 = 0xF4D9,
+    /// <summary>
+    /// The lightbulb filament20.
+    /// </summary>
     LightbulbFilament20 = 0xF4DA,
+    /// <summary>
+    /// The lightbulb filament24.
+    /// </summary>
     LightbulbFilament24 = 0xF4DB,
+    /// <summary>
+    /// The globe location20.
+    /// </summary>
     GlobeLocation20 = 0xF4DC,
+    /// <summary>
+    /// The likert16.
+    /// </summary>
     Likert16 = 0xF4DD,
+    /// <summary>
+    /// The likert20.
+    /// </summary>
     Likert20 = 0xF4DE,
+    /// <summary>
+    /// The likert24.
+    /// </summary>
     Likert24 = 0xF4DF,
+    /// <summary>
+    /// The line horizontal120.
+    /// </summary>
     LineHorizontal120 = 0xF4E0,
+    /// <summary>
+    /// The line horizontal320.
+    /// </summary>
     LineHorizontal320 = 0xF4E1,
+    /// <summary>
+    /// The line horizontal520.
+    /// </summary>
     LineHorizontal520 = 0xF4E2,
+    /// <summary>
+    /// The link16.
+    /// </summary>
     Link16 = 0xF4E3,
+    /// <summary>
+    /// The link20.
+    /// </summary>
     Link20 = 0xF4E4,
+    /// <summary>
+    /// The link24.
+    /// </summary>
     Link24 = 0xF4E5,
+    /// <summary>
+    /// The link28.
+    /// </summary>
     Link28 = 0xF4E6,
+    /// <summary>
+    /// The link48.
+    /// </summary>
     Link48 = 0xF4E7,
+    /// <summary>
+    /// The link edit16.
+    /// </summary>
     LinkEdit16 = 0xF4E8,
+    /// <summary>
+    /// The link edit20.
+    /// </summary>
     LinkEdit20 = 0xF4E9,
+    /// <summary>
+    /// The link edit24.
+    /// </summary>
     LinkEdit24 = 0xF4EA,
+    /// <summary>
+    /// The globe star16.
+    /// </summary>
     GlobeStar16 = 0xF4EB,
+    /// <summary>
+    /// The link square24.
+    /// </summary>
     LinkSquare24 = 0xF4EC,
+    /// <summary>
+    /// The list20.
+    /// </summary>
     List20 = 0xF4ED,
+    /// <summary>
+    /// The list24.
+    /// </summary>
     List24 = 0xF4EE,
+    /// <summary>
+    /// The list28.
+    /// </summary>
     List28 = 0xF4EF,
+    /// <summary>
+    /// The live20.
+    /// </summary>
     Live20 = 0xF4F0,
+    /// <summary>
+    /// The live24.
+    /// </summary>
     Live24 = 0xF4F1,
+    /// <summary>
+    /// The local language16.
+    /// </summary>
     LocalLanguage16 = 0xF4F2,
+    /// <summary>
+    /// The local language20.
+    /// </summary>
     LocalLanguage20 = 0xF4F3,
+    /// <summary>
+    /// The local language24.
+    /// </summary>
     LocalLanguage24 = 0xF4F4,
+    /// <summary>
+    /// The local language28.
+    /// </summary>
     LocalLanguage28 = 0xF4F5,
+    /// <summary>
+    /// The location12.
+    /// </summary>
     Location12 = 0xF4F6,
+    /// <summary>
+    /// The location16.
+    /// </summary>
     Location16 = 0xF4F7,
+    /// <summary>
+    /// The location20.
+    /// </summary>
     Location20 = 0xF4F8,
+    /// <summary>
+    /// The location24.
+    /// </summary>
     Location24 = 0xF4F9,
+    /// <summary>
+    /// The location28.
+    /// </summary>
     Location28 = 0xF4FA,
+    /// <summary>
+    /// The location live20.
+    /// </summary>
     LocationLive20 = 0xF4FB,
+    /// <summary>
+    /// The location live24.
+    /// </summary>
     LocationLive24 = 0xF4FC,
+    /// <summary>
+    /// The globe video20.
+    /// </summary>
     GlobeVideo20 = 0xF4FD,
+    /// <summary>
+    /// The headset add20.
+    /// </summary>
     HeadsetAdd20 = 0xF4FE,
+    /// <summary>
+    /// The headset add24.
+    /// </summary>
     HeadsetAdd24 = 0xF4FF,
+    /// <summary>
+    /// The heart28.
+    /// </summary>
     Heart28 = 0xF500,
+    /// <summary>
+    /// The heart broken16.
+    /// </summary>
     HeartBroken16 = 0xF501,
+    /// <summary>
+    /// The lock shield20.
+    /// </summary>
     LockShield20 = 0xF502,
+    /// <summary>
+    /// The lock shield24.
+    /// </summary>
     LockShield24 = 0xF503,
+    /// <summary>
+    /// The lock shield48.
+    /// </summary>
     LockShield48 = 0xF504,
+    /// <summary>
+    /// The laptop dismiss16.
+    /// </summary>
     LaptopDismiss16 = 0xF505,
+    /// <summary>
+    /// The mail20.
+    /// </summary>
     Mail20 = 0xF506,
+    /// <summary>
+    /// The mail24.
+    /// </summary>
     Mail24 = 0xF507,
+    /// <summary>
+    /// The mail28.
+    /// </summary>
     Mail28 = 0xF508,
+    /// <summary>
+    /// The mail48.
+    /// </summary>
     Mail48 = 0xF509,
+    /// <summary>
+    /// The mail add24.
+    /// </summary>
     MailAdd24 = 0xF50A,
+    /// <summary>
+    /// The text number list LTR rotate27024.
+    /// </summary>
     TextNumberListLtrRotate27024 = 0xF50B,
+    /// <summary>
+    /// The text number list RTL9020.
+    /// </summary>
     TextNumberListRtl9020 = 0xF50C,
+    /// <summary>
+    /// The mail add16.
+    /// </summary>
     MailAdd16 = 0xF50D,
+    /// <summary>
+    /// The mail all read20.
+    /// </summary>
     MailAllRead20 = 0xF50E,
+    /// <summary>
+    /// The mail all unread20.
+    /// </summary>
     MailAllUnread20 = 0xF50F,
+    /// <summary>
+    /// The mail clock20.
+    /// </summary>
     MailClock20 = 0xF510,
+    /// <summary>
+    /// The mail copy20.
+    /// </summary>
     MailCopy20 = 0xF511,
+    /// <summary>
+    /// The mail copy24.
+    /// </summary>
     MailCopy24 = 0xF512,
+    /// <summary>
+    /// The mail inbox16.
+    /// </summary>
     MailInbox16 = 0xF513,
+    /// <summary>
+    /// The mail inbox20.
+    /// </summary>
     MailInbox20 = 0xF514,
+    /// <summary>
+    /// The mail inbox24.
+    /// </summary>
     MailInbox24 = 0xF515,
+    /// <summary>
+    /// The mail inbox28.
+    /// </summary>
     MailInbox28 = 0xF516,
+    /// <summary>
+    /// The mail inbox add16.
+    /// </summary>
     MailInboxAdd16 = 0xF517,
+    /// <summary>
+    /// The mail inbox add20.
+    /// </summary>
     MailInboxAdd20 = 0xF518,
+    /// <summary>
+    /// The mail inbox add24.
+    /// </summary>
     MailInboxAdd24 = 0xF519,
+    /// <summary>
+    /// The mail inbox add28.
+    /// </summary>
     MailInboxAdd28 = 0xF51A,
+    /// <summary>
+    /// The mail inbox dismiss16.
+    /// </summary>
     MailInboxDismiss16 = 0xF51B,
+    /// <summary>
+    /// The mail inbox dismiss20.
+    /// </summary>
     MailInboxDismiss20 = 0xF51C,
+    /// <summary>
+    /// The mail inbox dismiss24.
+    /// </summary>
     MailInboxDismiss24 = 0xF51D,
+    /// <summary>
+    /// The mail inbox dismiss28.
+    /// </summary>
     MailInboxDismiss28 = 0xF51E,
+    /// <summary>
+    /// The mail add20.
+    /// </summary>
     MailAdd20 = 0xF51F,
+    /// <summary>
+    /// The mail alert16.
+    /// </summary>
     MailAlert16 = 0xF520,
+    /// <summary>
+    /// The mail read20.
+    /// </summary>
     MailRead20 = 0xF521,
+    /// <summary>
+    /// The mail read24.
+    /// </summary>
     MailRead24 = 0xF522,
+    /// <summary>
+    /// The mail read28.
+    /// </summary>
     MailRead28 = 0xF523,
+    /// <summary>
+    /// The mail read48.
+    /// </summary>
     MailRead48 = 0xF524,
+    /// <summary>
+    /// The mail unread16.
+    /// </summary>
     MailUnread16 = 0xF525,
+    /// <summary>
+    /// The mail unread20.
+    /// </summary>
     MailUnread20 = 0xF526,
+    /// <summary>
+    /// The mail unread24.
+    /// </summary>
     MailUnread24 = 0xF527,
+    /// <summary>
+    /// The mail unread28.
+    /// </summary>
     MailUnread28 = 0xF528,
+    /// <summary>
+    /// The mail unread48.
+    /// </summary>
     MailUnread48 = 0xF529,
+    /// <summary>
+    /// The mail alert20.
+    /// </summary>
     MailAlert20 = 0xF52A,
+    /// <summary>
+    /// The mail alert24.
+    /// </summary>
     MailAlert24 = 0xF52B,
+    /// <summary>
+    /// The mail arrow down16.
+    /// </summary>
     MailArrowDown16 = 0xF52C,
+    /// <summary>
+    /// The mail arrow up20.
+    /// </summary>
     MailArrowUp20 = 0xF52D,
+    /// <summary>
+    /// The map24.
+    /// </summary>
     Map24 = 0xF52E,
+    /// <summary>
+    /// The map drive16.
+    /// </summary>
     MapDrive16 = 0xF52F,
+    /// <summary>
+    /// The map drive20.
+    /// </summary>
     MapDrive20 = 0xF530,
+    /// <summary>
+    /// The map drive24.
+    /// </summary>
     MapDrive24 = 0xF531,
+    /// <summary>
+    /// The match application layout24.
+    /// </summary>
     MatchAppLayout24 = 0xF532,
+    /// <summary>
+    /// The maximize16.
+    /// </summary>
     Maximize16 = 0xF533,
+    /// <summary>
+    /// The meet now20.
+    /// </summary>
     MeetNow20 = 0xF534,
+    /// <summary>
+    /// The meet now24.
+    /// </summary>
     MeetNow24 = 0xF535,
+    /// <summary>
+    /// The megaphone16.
+    /// </summary>
     Megaphone16 = 0xF536,
+    /// <summary>
+    /// The megaphone20.
+    /// </summary>
     Megaphone20 = 0xF537,
+    /// <summary>
+    /// The megaphone24.
+    /// </summary>
     Megaphone24 = 0xF538,
+    /// <summary>
+    /// The megaphone28.
+    /// </summary>
     Megaphone28 = 0xF539,
+    /// <summary>
+    /// The megaphone off24.
+    /// </summary>
     MegaphoneOff24 = 0xF53A,
+    /// <summary>
+    /// The mention16.
+    /// </summary>
     Mention16 = 0xF53B,
+    /// <summary>
+    /// The mention20.
+    /// </summary>
     Mention20 = 0xF53C,
+    /// <summary>
+    /// The mention24.
+    /// </summary>
     Mention24 = 0xF53D,
+    /// <summary>
+    /// The merge24.
+    /// </summary>
     Merge24 = 0xF53E,
+    /// <summary>
+    /// The mic off12.
+    /// </summary>
     MicOff12 = 0xF53F,
+    /// <summary>
+    /// The mic off16.
+    /// </summary>
     MicOff16 = 0xF540,
+    /// <summary>
+    /// The mic off24.
+    /// </summary>
     MicOff24 = 0xF541,
+    /// <summary>
+    /// The mic off28.
+    /// </summary>
     MicOff28 = 0xF542,
+    /// <summary>
+    /// The text number list RTL9024.
+    /// </summary>
     TextNumberListRtl9024 = 0xF543,
+    /// <summary>
+    /// The text number list RTL rotate27020.
+    /// </summary>
     TextNumberListRtlRotate27020 = 0xF544,
+    /// <summary>
+    /// The text number list RTL rotate27024.
+    /// </summary>
     TextNumberListRtlRotate27024 = 0xF545,
+    /// <summary>
+    /// The text T12.
+    /// </summary>
     TextT12 = 0xF546,
+    /// <summary>
+    /// The text T16.
+    /// </summary>
     TextT16 = 0xF547,
+    /// <summary>
+    /// The mic settings24.
+    /// </summary>
     MicSettings24 = 0xF548,
+    /// <summary>
+    /// The midi20.
+    /// </summary>
     Midi20 = 0xF549,
+    /// <summary>
+    /// The midi24.
+    /// </summary>
     Midi24 = 0xF54A,
+    /// <summary>
+    /// The mail arrow up24.
+    /// </summary>
     MailArrowUp24 = 0xF54B,
+    /// <summary>
+    /// The mail checkmark16.
+    /// </summary>
     MailCheckmark16 = 0xF54C,
+    /// <summary>
+    /// The mobile optimized24.
+    /// </summary>
     MobileOptimized24 = 0xF54D,
+    /// <summary>
+    /// The money16.
+    /// </summary>
     Money16 = 0xF54E,
+    /// <summary>
+    /// The money20.
+    /// </summary>
     Money20 = 0xF54F,
+    /// <summary>
+    /// The money24.
+    /// </summary>
     Money24 = 0xF550,
+    /// <summary>
+    /// The mail clock16.
+    /// </summary>
     MailClock16 = 0xF551,
+    /// <summary>
+    /// The mail clock24.
+    /// </summary>
     MailClock24 = 0xF552,
+    /// <summary>
+    /// The mail dismiss20.
+    /// </summary>
     MailDismiss20 = 0xF553,
+    /// <summary>
+    /// The mail dismiss24.
+    /// </summary>
     MailDismiss24 = 0xF554,
+    /// <summary>
+    /// The mail error20.
+    /// </summary>
     MailError20 = 0xF555,
+    /// <summary>
+    /// The more vertical20.
+    /// </summary>
     MoreVertical20 = 0xF556,
+    /// <summary>
+    /// The more vertical24.
+    /// </summary>
     MoreVertical24 = 0xF557,
+    /// <summary>
+    /// The more vertical28.
+    /// </summary>
     MoreVertical28 = 0xF558,
+    /// <summary>
+    /// The more vertical48.
+    /// </summary>
     MoreVertical48 = 0xF559,
+    /// <summary>
+    /// The movies and TV24.
+    /// </summary>
     MoviesAndTv24 = 0xF55A,
+    /// <summary>
+    /// The text T32.
+    /// </summary>
     TextT32 = 0xF55B,
+    /// <summary>
+    /// The textbox settings20.
+    /// </summary>
     TextboxSettings20 = 0xF55C,
+    /// <summary>
+    /// The mail error24.
+    /// </summary>
     MailError24 = 0xF55D,
+    /// <summary>
+    /// The mail inbox arrow down16.
+    /// </summary>
     MailInboxArrowDown16 = 0xF55E,
+    /// <summary>
+    /// My location24.
+    /// </summary>
     MyLocation24 = 0xF55F,
+    /// <summary>
+    /// The navigation20.
+    /// </summary>
     Navigation20 = 0xF560,
+    /// <summary>
+    /// The navigation24.
+    /// </summary>
     Navigation24 = 0xF561,
+    /// <summary>
+    /// The network check24.
+    /// </summary>
     NetworkCheck24 = 0xF562,
+    /// <summary>
+    /// Creates new 16.
+    /// </summary>
     New16 = 0xF563,
+    /// <summary>
+    /// Creates new 24.
+    /// </summary>
     New24 = 0xF564,
+    /// <summary>
+    /// The news20.
+    /// </summary>
     News20 = 0xF565,
+    /// <summary>
+    /// The news24.
+    /// </summary>
     News24 = 0xF566,
+    /// <summary>
+    /// The news28.
+    /// </summary>
     News28 = 0xF567,
+    /// <summary>
+    /// The next16.
+    /// </summary>
     Next16 = 0xF568,
+    /// <summary>
+    /// The next20.
+    /// </summary>
     Next20 = 0xF569,
+    /// <summary>
+    /// The next24.
+    /// </summary>
     Next24 = 0xF56A,
+    /// <summary>
+    /// The note20.
+    /// </summary>
     Note20 = 0xF56B,
+    /// <summary>
+    /// The note24.
+    /// </summary>
     Note24 = 0xF56C,
+    /// <summary>
+    /// The note add16.
+    /// </summary>
     NoteAdd16 = 0xF56D,
+    /// <summary>
+    /// The note add20.
+    /// </summary>
     NoteAdd20 = 0xF56E,
+    /// <summary>
+    /// The note add24.
+    /// </summary>
     NoteAdd24 = 0xF56F,
+    /// <summary>
+    /// The notebook24.
+    /// </summary>
     Notebook24 = 0xF570,
+    /// <summary>
+    /// The notebook error24.
+    /// </summary>
     NotebookError24 = 0xF571,
+    /// <summary>
+    /// The notebook lightning24.
+    /// </summary>
     NotebookLightning24 = 0xF572,
+    /// <summary>
+    /// The notebook question mark24.
+    /// </summary>
     NotebookQuestionMark24 = 0xF573,
+    /// <summary>
+    /// The notebook section24.
+    /// </summary>
     NotebookSection24 = 0xF574,
+    /// <summary>
+    /// The notebook sync24.
+    /// </summary>
     NotebookSync24 = 0xF575,
+    /// <summary>
+    /// The notepad20.
+    /// </summary>
     Notepad20 = 0xF576,
+    /// <summary>
+    /// The notepad24.
+    /// </summary>
     Notepad24 = 0xF577,
+    /// <summary>
+    /// The notepad28.
+    /// </summary>
     Notepad28 = 0xF578,
+    /// <summary>
+    /// The number row16.
+    /// </summary>
     NumberRow16 = 0xF579,
+    /// <summary>
+    /// The number row20.
+    /// </summary>
     NumberRow20 = 0xF57A,
+    /// <summary>
+    /// The number row24.
+    /// </summary>
     NumberRow24 = 0xF57B,
+    /// <summary>
+    /// The number symbol16.
+    /// </summary>
     NumberSymbol16 = 0xF57C,
+    /// <summary>
+    /// The number symbol20.
+    /// </summary>
     NumberSymbol20 = 0xF57D,
+    /// <summary>
+    /// The number symbol24.
+    /// </summary>
     NumberSymbol24 = 0xF57E,
+    /// <summary>
+    /// The textbox settings24.
+    /// </summary>
     TextboxSettings24 = 0xF57F,
+    /// <summary>
+    /// The voicemail subtract20.
+    /// </summary>
     VoicemailSubtract20 = 0xF580,
+    /// <summary>
+    /// The open16.
+    /// </summary>
     Open16 = 0xF581,
+    /// <summary>
+    /// The open20.
+    /// </summary>
     Open20 = 0xF582,
+    /// <summary>
+    /// The open24.
+    /// </summary>
     Open24 = 0xF583,
+    /// <summary>
+    /// The open folder24.
+    /// </summary>
     OpenFolder24 = 0xF584,
+    /// <summary>
+    /// The mail link20.
+    /// </summary>
     MailLink20 = 0xF585,
+    /// <summary>
+    /// The options16.
+    /// </summary>
     Options16 = 0xF586,
+    /// <summary>
+    /// The options20.
+    /// </summary>
     Options20 = 0xF587,
+    /// <summary>
+    /// The options24.
+    /// </summary>
     Options24 = 0xF588,
+    /// <summary>
+    /// The organization20.
+    /// </summary>
     Organization20 = 0xF589,
+    /// <summary>
+    /// The organization24.
+    /// </summary>
     Organization24 = 0xF58A,
+    /// <summary>
+    /// The organization28.
+    /// </summary>
     Organization28 = 0xF58B,
+    /// <summary>
+    /// The mail link24.
+    /// </summary>
     MailLink24 = 0xF58C,
+    /// <summary>
+    /// The add32.
+    /// </summary>
     Add32 = 0xF58D,
+    /// <summary>
+    /// The page fit16.
+    /// </summary>
     PageFit16 = 0xF58E,
+    /// <summary>
+    /// The page fit20.
+    /// </summary>
     PageFit20 = 0xF58F,
+    /// <summary>
+    /// The page fit24.
+    /// </summary>
     PageFit24 = 0xF590,
+    /// <summary>
+    /// The paint brush16.
+    /// </summary>
     PaintBrush16 = 0xF591,
+    /// <summary>
+    /// The paint brush20.
+    /// </summary>
     PaintBrush20 = 0xF592,
+    /// <summary>
+    /// The paint brush24.
+    /// </summary>
     PaintBrush24 = 0xF593,
+    /// <summary>
+    /// The paint bucket16.
+    /// </summary>
     PaintBucket16 = 0xF594,
+    /// <summary>
+    /// The paint bucket20.
+    /// </summary>
     PaintBucket20 = 0xF595,
+    /// <summary>
+    /// The paint bucket24.
+    /// </summary>
     PaintBucket24 = 0xF596,
+    /// <summary>
+    /// The pair24.
+    /// </summary>
     Pair24 = 0xF597,
+    /// <summary>
+    /// The add48.
+    /// </summary>
     Add48 = 0xF598,
+    /// <summary>
+    /// The apps48.
+    /// </summary>
     Apps48 = 0xF599,
+    /// <summary>
+    /// The arrow trending sparkle20.
+    /// </summary>
     ArrowTrendingSparkle20 = 0xF59A,
+    /// <summary>
+    /// The arrow trending sparkle24.
+    /// </summary>
     ArrowTrendingSparkle24 = 0xF59B,
+    /// <summary>
+    /// The bluetooth16.
+    /// </summary>
     Bluetooth16 = 0xF59C,
+    /// <summary>
+    /// The bluetooth32.
+    /// </summary>
     Bluetooth32 = 0xF59D,
+    /// <summary>
+    /// The password24.
+    /// </summary>
     Password24 = 0xF59E,
+    /// <summary>
+    /// The patient24.
+    /// </summary>
     Patient24 = 0xF59F,
+    /// <summary>
+    /// The pause16.
+    /// </summary>
     Pause16 = 0xF5A0,
+    /// <summary>
+    /// The pause20.
+    /// </summary>
     Pause20 = 0xF5A1,
+    /// <summary>
+    /// The pause24.
+    /// </summary>
     Pause24 = 0xF5A2,
+    /// <summary>
+    /// The pause48.
+    /// </summary>
     Pause48 = 0xF5A3,
+    /// <summary>
+    /// The payment20.
+    /// </summary>
     Payment20 = 0xF5A4,
+    /// <summary>
+    /// The payment24.
+    /// </summary>
     Payment24 = 0xF5A5,
+    /// <summary>
+    /// The mail pause16.
+    /// </summary>
     MailPause16 = 0xF5A6,
+    /// <summary>
+    /// The people16.
+    /// </summary>
     People16 = 0xF5A7,
+    /// <summary>
+    /// The people20.
+    /// </summary>
     People20 = 0xF5A8,
+    /// <summary>
+    /// The people24.
+    /// </summary>
     People24 = 0xF5A9,
+    /// <summary>
+    /// The people28.
+    /// </summary>
     People28 = 0xF5AA,
+    /// <summary>
+    /// The people add16.
+    /// </summary>
     PeopleAdd16 = 0xF5AB,
+    /// <summary>
+    /// The people add20.
+    /// </summary>
     PeopleAdd20 = 0xF5AC,
+    /// <summary>
+    /// The people add24.
+    /// </summary>
     PeopleAdd24 = 0xF5AD,
+    /// <summary>
+    /// The people audience24.
+    /// </summary>
     PeopleAudience24 = 0xF5AE,
+    /// <summary>
+    /// The people community16.
+    /// </summary>
     PeopleCommunity16 = 0xF5AF,
+    /// <summary>
+    /// The people community20.
+    /// </summary>
     PeopleCommunity20 = 0xF5B0,
+    /// <summary>
+    /// The people community24.
+    /// </summary>
     PeopleCommunity24 = 0xF5B1,
+    /// <summary>
+    /// The people community28.
+    /// </summary>
     PeopleCommunity28 = 0xF5B2,
+    /// <summary>
+    /// The people community add24.
+    /// </summary>
     PeopleCommunityAdd24 = 0xF5B3,
+    /// <summary>
+    /// The people prohibited20.
+    /// </summary>
     PeopleProhibited20 = 0xF5B4,
+    /// <summary>
+    /// The people search24.
+    /// </summary>
     PeopleSearch24 = 0xF5B5,
+    /// <summary>
+    /// The people settings20.
+    /// </summary>
     PeopleSettings20 = 0xF5B6,
+    /// <summary>
+    /// The people team16.
+    /// </summary>
     PeopleTeam16 = 0xF5B7,
+    /// <summary>
+    /// The people team20.
+    /// </summary>
     PeopleTeam20 = 0xF5B8,
+    /// <summary>
+    /// The people team24.
+    /// </summary>
     PeopleTeam24 = 0xF5B9,
+    /// <summary>
+    /// The people team28.
+    /// </summary>
     PeopleTeam28 = 0xF5BA,
+    /// <summary>
+    /// The person12.
+    /// </summary>
     Person12 = 0xF5BB,
+    /// <summary>
+    /// The person16.
+    /// </summary>
     Person16 = 0xF5BC,
+    /// <summary>
+    /// The person20.
+    /// </summary>
     Person20 = 0xF5BD,
+    /// <summary>
+    /// The person24.
+    /// </summary>
     Person24 = 0xF5BE,
+    /// <summary>
+    /// The person28.
+    /// </summary>
     Person28 = 0xF5BF,
+    /// <summary>
+    /// The person48.
+    /// </summary>
     Person48 = 0xF5C0,
+    /// <summary>
+    /// The person accounts24.
+    /// </summary>
     PersonAccounts24 = 0xF5C1,
+    /// <summary>
+    /// The person add20.
+    /// </summary>
     PersonAdd20 = 0xF5C2,
+    /// <summary>
+    /// The person add24.
+    /// </summary>
     PersonAdd24 = 0xF5C3,
+    /// <summary>
+    /// The person arrow left20.
+    /// </summary>
     PersonArrowLeft20 = 0xF5C4,
+    /// <summary>
+    /// The person arrow left24.
+    /// </summary>
     PersonArrowLeft24 = 0xF5C5,
+    /// <summary>
+    /// The person arrow right16.
+    /// </summary>
     PersonArrowRight16 = 0xF5C6,
+    /// <summary>
+    /// The person arrow right20.
+    /// </summary>
     PersonArrowRight20 = 0xF5C7,
+    /// <summary>
+    /// The person arrow right24.
+    /// </summary>
     PersonArrowRight24 = 0xF5C8,
+    /// <summary>
+    /// The person available16.
+    /// </summary>
     PersonAvailable16 = 0xF5C9,
+    /// <summary>
+    /// The person available24.
+    /// </summary>
     PersonAvailable24 = 0xF5CA,
+    /// <summary>
+    /// The mail prohibited20.
+    /// </summary>
     MailProhibited20 = 0xF5CB,
+    /// <summary>
+    /// The person board16.
+    /// </summary>
     PersonBoard16 = 0xF5CC,
+    /// <summary>
+    /// The person board20.
+    /// </summary>
     PersonBoard20 = 0xF5CD,
+    /// <summary>
+    /// The person board24.
+    /// </summary>
     PersonBoard24 = 0xF5CE,
+    /// <summary>
+    /// The person call24.
+    /// </summary>
     PersonCall24 = 0xF5CF,
+    /// <summary>
+    /// The person delete16.
+    /// </summary>
     PersonDelete16 = 0xF5D0,
+    /// <summary>
+    /// The person delete24.
+    /// </summary>
     PersonDelete24 = 0xF5D1,
+    /// <summary>
+    /// The person feedback20.
+    /// </summary>
     PersonFeedback20 = 0xF5D2,
+    /// <summary>
+    /// The person feedback24.
+    /// </summary>
     PersonFeedback24 = 0xF5D3,
+    /// <summary>
+    /// The person prohibited20.
+    /// </summary>
     PersonProhibited20 = 0xF5D4,
+    /// <summary>
+    /// The person question mark16.
+    /// </summary>
     PersonQuestionMark16 = 0xF5D5,
+    /// <summary>
+    /// The person question mark20.
+    /// </summary>
     PersonQuestionMark20 = 0xF5D6,
+    /// <summary>
+    /// The person question mark24.
+    /// </summary>
     PersonQuestionMark24 = 0xF5D7,
+    /// <summary>
+    /// The person support16.
+    /// </summary>
     PersonSupport16 = 0xF5D8,
+    /// <summary>
+    /// The person support20.
+    /// </summary>
     PersonSupport20 = 0xF5D9,
+    /// <summary>
+    /// The person support24.
+    /// </summary>
     PersonSupport24 = 0xF5DA,
+    /// <summary>
+    /// The person swap16.
+    /// </summary>
     PersonSwap16 = 0xF5DB,
+    /// <summary>
+    /// The person swap20.
+    /// </summary>
     PersonSwap20 = 0xF5DC,
+    /// <summary>
+    /// The person swap24.
+    /// </summary>
     PersonSwap24 = 0xF5DD,
+    /// <summary>
+    /// The person voice20.
+    /// </summary>
     PersonVoice20 = 0xF5DE,
+    /// <summary>
+    /// The person voice24.
+    /// </summary>
     PersonVoice24 = 0xF5DF,
+    /// <summary>
+    /// The phone20.
+    /// </summary>
     Phone20 = 0xF5E0,
+    /// <summary>
+    /// The phone24.
+    /// </summary>
     Phone24 = 0xF5E1,
+    /// <summary>
+    /// The mail prohibited24.
+    /// </summary>
     MailProhibited24 = 0xF5E2,
+    /// <summary>
+    /// The mail settings16.
+    /// </summary>
     MailSettings16 = 0xF5E3,
+    /// <summary>
+    /// The phone desktop16.
+    /// </summary>
     PhoneDesktop16 = 0xF5E4,
+    /// <summary>
+    /// The phone desktop20.
+    /// </summary>
     PhoneDesktop20 = 0xF5E5,
+    /// <summary>
+    /// The phone desktop24.
+    /// </summary>
     PhoneDesktop24 = 0xF5E6,
+    /// <summary>
+    /// The phone desktop28.
+    /// </summary>
     PhoneDesktop28 = 0xF5E7,
+    /// <summary>
+    /// The mail shield16.
+    /// </summary>
     MailShield16 = 0xF5E8,
+    /// <summary>
+    /// The mail template20.
+    /// </summary>
     MailTemplate20 = 0xF5E9,
+    /// <summary>
+    /// The phone laptop20.
+    /// </summary>
     PhoneLaptop20 = 0xF5EA,
+    /// <summary>
+    /// The phone laptop24.
+    /// </summary>
     PhoneLaptop24 = 0xF5EB,
+    /// <summary>
+    /// The phone link setup24.
+    /// </summary>
     PhoneLinkSetup24 = 0xF5EC,
+    /// <summary>
+    /// The mail template24.
+    /// </summary>
     MailTemplate24 = 0xF5ED,
+    /// <summary>
+    /// The mail warning16.
+    /// </summary>
     MailWarning16 = 0xF5EE,
+    /// <summary>
+    /// The phone page header24.
+    /// </summary>
     PhonePageHeader24 = 0xF5EF,
+    /// <summary>
+    /// The phone pagination24.
+    /// </summary>
     PhonePagination24 = 0xF5F0,
+    /// <summary>
+    /// The phone screen time24.
+    /// </summary>
     PhoneScreenTime24 = 0xF5F1,
+    /// <summary>
+    /// The phone shake24.
+    /// </summary>
     PhoneShake24 = 0xF5F2,
+    /// <summary>
+    /// The phone status bar24.
+    /// </summary>
     PhoneStatusBar24 = 0xF5F3,
+    /// <summary>
+    /// The phone tablet20.
+    /// </summary>
     PhoneTablet20 = 0xF5F4,
+    /// <summary>
+    /// The phone tablet24.
+    /// </summary>
     PhoneTablet24 = 0xF5F5,
+    /// <summary>
+    /// The meet now28.
+    /// </summary>
     MeetNow28 = 0xF5F6,
+    /// <summary>
+    /// The meet now32.
+    /// </summary>
     MeetNow32 = 0xF5F7,
+    /// <summary>
+    /// The phone update24.
+    /// </summary>
     PhoneUpdate24 = 0xF5F8,
+    /// <summary>
+    /// The phone vertical scroll24.
+    /// </summary>
     PhoneVerticalScroll24 = 0xF5F9,
+    /// <summary>
+    /// The phone vibrate24.
+    /// </summary>
     PhoneVibrate24 = 0xF5FA,
+    /// <summary>
+    /// The photo filter24.
+    /// </summary>
     PhotoFilter24 = 0xF5FB,
+    /// <summary>
+    /// The picture in picture16.
+    /// </summary>
     PictureInPicture16 = 0xF5FC,
+    /// <summary>
+    /// The picture in picture20.
+    /// </summary>
     PictureInPicture20 = 0xF5FD,
+    /// <summary>
+    /// The picture in picture24.
+    /// </summary>
     PictureInPicture24 = 0xF5FE,
+    /// <summary>
+    /// The pin12.
+    /// </summary>
     Pin12 = 0xF5FF,
+    /// <summary>
+    /// The pin16.
+    /// </summary>
     Pin16 = 0xF600,
+    /// <summary>
+    /// The pin20.
+    /// </summary>
     Pin20 = 0xF601,
+    /// <summary>
+    /// The pin24.
+    /// </summary>
     Pin24 = 0xF602,
+    /// <summary>
+    /// The pin off20.
+    /// </summary>
     PinOff20 = 0xF603,
+    /// <summary>
+    /// The pin off24.
+    /// </summary>
     PinOff24 = 0xF604,
+    /// <summary>
+    /// The play20.
+    /// </summary>
     Play20 = 0xF605,
+    /// <summary>
+    /// The play24.
+    /// </summary>
     Play24 = 0xF606,
+    /// <summary>
+    /// The play48.
+    /// </summary>
     Play48 = 0xF607,
+    /// <summary>
+    /// The play circle24.
+    /// </summary>
     PlayCircle24 = 0xF608,
+    /// <summary>
+    /// The plug disconnected20.
+    /// </summary>
     PlugDisconnected20 = 0xF609,
+    /// <summary>
+    /// The plug disconnected24.
+    /// </summary>
     PlugDisconnected24 = 0xF60A,
+    /// <summary>
+    /// The plug disconnected28.
+    /// </summary>
     PlugDisconnected28 = 0xF60B,
+    /// <summary>
+    /// The point scan24.
+    /// </summary>
     PointScan24 = 0xF60C,
+    /// <summary>
+    /// The poll24.
+    /// </summary>
     Poll24 = 0xF60D,
+    /// <summary>
+    /// The power20.
+    /// </summary>
     Power20 = 0xF60E,
+    /// <summary>
+    /// The power24.
+    /// </summary>
     Power24 = 0xF60F,
+    /// <summary>
+    /// The power28.
+    /// </summary>
     Power28 = 0xF610,
+    /// <summary>
+    /// The predictions24.
+    /// </summary>
     Predictions24 = 0xF611,
+    /// <summary>
+    /// The premium16.
+    /// </summary>
     Premium16 = 0xF612,
+    /// <summary>
+    /// The premium20.
+    /// </summary>
     Premium20 = 0xF613,
+    /// <summary>
+    /// The premium24.
+    /// </summary>
     Premium24 = 0xF614,
+    /// <summary>
+    /// The premium28.
+    /// </summary>
     Premium28 = 0xF615,
+    /// <summary>
+    /// The presenter24.
+    /// </summary>
     Presenter24 = 0xF622,
+    /// <summary>
+    /// The presenter off24.
+    /// </summary>
     PresenterOff24 = 0xF623,
+    /// <summary>
+    /// The preview link16.
+    /// </summary>
     PreviewLink16 = 0xF624,
+    /// <summary>
+    /// The preview link20.
+    /// </summary>
     PreviewLink20 = 0xF625,
+    /// <summary>
+    /// The preview link24.
+    /// </summary>
     PreviewLink24 = 0xF626,
+    /// <summary>
+    /// The previous16.
+    /// </summary>
     Previous16 = 0xF627,
+    /// <summary>
+    /// The previous20.
+    /// </summary>
     Previous20 = 0xF628,
+    /// <summary>
+    /// The previous24.
+    /// </summary>
     Previous24 = 0xF629,
+    /// <summary>
+    /// The print20.
+    /// </summary>
     Print20 = 0xF62A,
+    /// <summary>
+    /// The print24.
+    /// </summary>
     Print24 = 0xF62B,
+    /// <summary>
+    /// The print48.
+    /// </summary>
     Print48 = 0xF62C,
+    /// <summary>
+    /// The prohibited20.
+    /// </summary>
     Prohibited20 = 0xF62D,
+    /// <summary>
+    /// The prohibited24.
+    /// </summary>
     Prohibited24 = 0xF62E,
+    /// <summary>
+    /// The prohibited28.
+    /// </summary>
     Prohibited28 = 0xF62F,
+    /// <summary>
+    /// The prohibited48.
+    /// </summary>
     Prohibited48 = 0xF630,
+    /// <summary>
+    /// The meet now48.
+    /// </summary>
     MeetNow48 = 0xF631,
+    /// <summary>
+    /// The protocol handler16.
+    /// </summary>
     ProtocolHandler16 = 0xF632,
+    /// <summary>
+    /// The protocol handler20.
+    /// </summary>
     ProtocolHandler20 = 0xF633,
+    /// <summary>
+    /// The protocol handler24.
+    /// </summary>
     ProtocolHandler24 = 0xF634,
+    /// <summary>
+    /// The qr code24.
+    /// </summary>
     QrCode24 = 0xF635,
+    /// <summary>
+    /// The qr code28.
+    /// </summary>
     QrCode28 = 0xF636,
+    /// <summary>
+    /// The question16.
+    /// </summary>
     Question16 = 0xF637,
+    /// <summary>
+    /// The question20.
+    /// </summary>
     Question20 = 0xF638,
+    /// <summary>
+    /// The question24.
+    /// </summary>
     Question24 = 0xF639,
+    /// <summary>
+    /// The question28.
+    /// </summary>
     Question28 = 0xF63A,
+    /// <summary>
+    /// The question48.
+    /// </summary>
     Question48 = 0xF63B,
+    /// <summary>
+    /// The question circle16.
+    /// </summary>
     QuestionCircle16 = 0xF63C,
+    /// <summary>
+    /// The question circle20.
+    /// </summary>
     QuestionCircle20 = 0xF63D,
+    /// <summary>
+    /// The question circle24.
+    /// </summary>
     QuestionCircle24 = 0xF63E,
+    /// <summary>
+    /// The question circle28.
+    /// </summary>
     QuestionCircle28 = 0xF63F,
+    /// <summary>
+    /// The question circle48.
+    /// </summary>
     QuestionCircle48 = 0xF640,
+    /// <summary>
+    /// The quiz new24.
+    /// </summary>
     QuizNew24 = 0xF641,
+    /// <summary>
+    /// The quiz new28.
+    /// </summary>
     QuizNew28 = 0xF642,
+    /// <summary>
+    /// The quiz new48.
+    /// </summary>
     QuizNew48 = 0xF643,
+    /// <summary>
+    /// The radio button20.
+    /// </summary>
     RadioButton20 = 0xF644,
+    /// <summary>
+    /// The radio button24.
+    /// </summary>
     RadioButton24 = 0xF645,
+    /// <summary>
+    /// The rating mature16.
+    /// </summary>
     RatingMature16 = 0xF646,
+    /// <summary>
+    /// The rating mature20.
+    /// </summary>
     RatingMature20 = 0xF647,
+    /// <summary>
+    /// The rating mature24.
+    /// </summary>
     RatingMature24 = 0xF648,
+    /// <summary>
+    /// The re order16.
+    /// </summary>
     ReOrder16 = 0xF649,
+    /// <summary>
+    /// The re order24.
+    /// </summary>
     ReOrder24 = 0xF64A,
+    /// <summary>
+    /// The megaphone loud20.
+    /// </summary>
     MegaphoneLoud20 = 0xF64B,
+    /// <summary>
+    /// The microscope20.
+    /// </summary>
     Microscope20 = 0xF64C,
+    /// <summary>
+    /// The read aloud20.
+    /// </summary>
     ReadAloud20 = 0xF64D,
+    /// <summary>
+    /// The read aloud24.
+    /// </summary>
     ReadAloud24 = 0xF64E,
+    /// <summary>
+    /// The microscope24.
+    /// </summary>
     Microscope24 = 0xF64F,
+    /// <summary>
+    /// The molecule16.
+    /// </summary>
     Molecule16 = 0xF650,
+    /// <summary>
+    /// The reading list16.
+    /// </summary>
     ReadingList16 = 0xF651,
+    /// <summary>
+    /// The reading list20.
+    /// </summary>
     ReadingList20 = 0xF652,
+    /// <summary>
+    /// The reading list24.
+    /// </summary>
     ReadingList24 = 0xF653,
+    /// <summary>
+    /// The reading list28.
+    /// </summary>
     ReadingList28 = 0xF654,
+    /// <summary>
+    /// The reading list add16.
+    /// </summary>
     ReadingListAdd16 = 0xF655,
+    /// <summary>
+    /// The reading list add20.
+    /// </summary>
     ReadingListAdd20 = 0xF656,
+    /// <summary>
+    /// The reading list add24.
+    /// </summary>
     ReadingListAdd24 = 0xF657,
+    /// <summary>
+    /// The reading list add28.
+    /// </summary>
     ReadingListAdd28 = 0xF658,
+    /// <summary>
+    /// The molecule20.
+    /// </summary>
     Molecule20 = 0xF659,
+    /// <summary>
+    /// The molecule24.
+    /// </summary>
     Molecule24 = 0xF65A,
+    /// <summary>
+    /// The reading mode mobile20.
+    /// </summary>
     ReadingModeMobile20 = 0xF65B,
+    /// <summary>
+    /// The reading mode mobile24.
+    /// </summary>
     ReadingModeMobile24 = 0xF65C,
+    /// <summary>
+    /// The molecule28.
+    /// </summary>
     Molecule28 = 0xF65D,
+    /// <summary>
+    /// The molecule32.
+    /// </summary>
     Molecule32 = 0xF65E,
+    /// <summary>
+    /// The molecule48.
+    /// </summary>
     Molecule48 = 0xF65F,
+    /// <summary>
+    /// The record16.
+    /// </summary>
     Record16 = 0xF660,
+    /// <summary>
+    /// The record20.
+    /// </summary>
     Record20 = 0xF661,
+    /// <summary>
+    /// The record24.
+    /// </summary>
     Record24 = 0xF662,
+    /// <summary>
+    /// The note16.
+    /// </summary>
     Note16 = 0xF663,
+    /// <summary>
+    /// The note pin16.
+    /// </summary>
     NotePin16 = 0xF664,
+    /// <summary>
+    /// The notepad16.
+    /// </summary>
     Notepad16 = 0xF665,
+    /// <summary>
+    /// The notepad edit16.
+    /// </summary>
     NotepadEdit16 = 0xF666,
+    /// <summary>
+    /// The open32.
+    /// </summary>
     Open32 = 0xF667,
+    /// <summary>
+    /// The rename16.
+    /// </summary>
     Rename16 = 0xF668,
+    /// <summary>
+    /// The rename20.
+    /// </summary>
     Rename20 = 0xF669,
+    /// <summary>
+    /// The rename24.
+    /// </summary>
     Rename24 = 0xF66A,
+    /// <summary>
+    /// The rename28.
+    /// </summary>
     Rename28 = 0xF66B,
+    /// <summary>
+    /// The resize20.
+    /// </summary>
     Resize20 = 0xF66C,
+    /// <summary>
+    /// The resize image24.
+    /// </summary>
     ResizeImage24 = 0xF66D,
+    /// <summary>
+    /// The resize table24.
+    /// </summary>
     ResizeTable24 = 0xF66E,
+    /// <summary>
+    /// The resize video24.
+    /// </summary>
     ResizeVideo24 = 0xF66F,
+    /// <summary>
+    /// The bluetooth48.
+    /// </summary>
     Bluetooth48 = 0xF670,
+    /// <summary>
+    /// The reward16.
+    /// </summary>
     Reward16 = 0xF671,
+    /// <summary>
+    /// The reward20.
+    /// </summary>
     Reward20 = 0xF672,
+    /// <summary>
+    /// The reward24.
+    /// </summary>
     Reward24 = 0xF673,
+    /// <summary>
+    /// The rewind20.
+    /// </summary>
     Rewind20 = 0xF674,
+    /// <summary>
+    /// The rewind24.
+    /// </summary>
     Rewind24 = 0xF675,
+    /// <summary>
+    /// The rocket16.
+    /// </summary>
     Rocket16 = 0xF676,
+    /// <summary>
+    /// The rocket20.
+    /// </summary>
     Rocket20 = 0xF677,
+    /// <summary>
+    /// The rocket24.
+    /// </summary>
     Rocket24 = 0xF678,
+    /// <summary>
+    /// The router24.
+    /// </summary>
     Router24 = 0xF679,
+    /// <summary>
+    /// The row triple24.
+    /// </summary>
     RowTriple24 = 0xF67A,
+    /// <summary>
+    /// The ruler16.
+    /// </summary>
     Ruler16 = 0xF67B,
+    /// <summary>
+    /// The ruler20.
+    /// </summary>
     Ruler20 = 0xF67C,
+    /// <summary>
+    /// The ruler24.
+    /// </summary>
     Ruler24 = 0xF67D,
+    /// <summary>
+    /// The run24.
+    /// </summary>
     Run24 = 0xF67E,
+    /// <summary>
+    /// The save20.
+    /// </summary>
     Save20 = 0xF67F,
+    /// <summary>
+    /// The save24.
+    /// </summary>
     Save24 = 0xF680,
+    /// <summary>
+    /// The padding down20.
+    /// </summary>
     PaddingDown20 = 0xF681,
+    /// <summary>
+    /// The padding down24.
+    /// </summary>
     PaddingDown24 = 0xF682,
+    /// <summary>
+    /// The save copy24.
+    /// </summary>
     SaveCopy24 = 0xF683,
+    /// <summary>
+    /// The savings16.
+    /// </summary>
     Savings16 = 0xF684,
+    /// <summary>
+    /// The savings20.
+    /// </summary>
     Savings20 = 0xF685,
+    /// <summary>
+    /// The savings24.
+    /// </summary>
     Savings24 = 0xF686,
+    /// <summary>
+    /// The scale fill24.
+    /// </summary>
     ScaleFill24 = 0xF687,
+    /// <summary>
+    /// The scale fit16.
+    /// </summary>
     ScaleFit16 = 0xF688,
+    /// <summary>
+    /// The scale fit20.
+    /// </summary>
     ScaleFit20 = 0xF689,
+    /// <summary>
+    /// The scale fit24.
+    /// </summary>
     ScaleFit24 = 0xF68A,
+    /// <summary>
+    /// The scan24.
+    /// </summary>
     Scan24 = 0xF68B,
+    /// <summary>
+    /// The scratchpad24.
+    /// </summary>
     Scratchpad24 = 0xF68C,
+    /// <summary>
+    /// The screenshot20.
+    /// </summary>
     Screenshot20 = 0xF68D,
+    /// <summary>
+    /// The screenshot24.
+    /// </summary>
     Screenshot24 = 0xF68E,
+    /// <summary>
+    /// The search20.
+    /// </summary>
     Search20 = 0xF68F,
+    /// <summary>
+    /// The search24.
+    /// </summary>
     Search24 = 0xF690,
+    /// <summary>
+    /// The search28.
+    /// </summary>
     Search28 = 0xF691,
+    /// <summary>
+    /// The search info20.
+    /// </summary>
     SearchInfo20 = 0xF692,
+    /// <summary>
+    /// The search info24.
+    /// </summary>
     SearchInfo24 = 0xF693,
+    /// <summary>
+    /// The search square24.
+    /// </summary>
     SearchSquare24 = 0xF694,
+    /// <summary>
+    /// The padding left20.
+    /// </summary>
     PaddingLeft20 = 0xF695,
+    /// <summary>
+    /// The select all off24.
+    /// </summary>
     SelectAllOff24 = 0xF696,
+    /// <summary>
+    /// The select object20.
+    /// </summary>
     SelectObject20 = 0xF697,
+    /// <summary>
+    /// The select object24.
+    /// </summary>
     SelectObject24 = 0xF698,
+    /// <summary>
+    /// The send20.
+    /// </summary>
     Send20 = 0xF699,
+    /// <summary>
+    /// The send24.
+    /// </summary>
     Send24 = 0xF69A,
+    /// <summary>
+    /// The send28.
+    /// </summary>
     Send28 = 0xF69B,
+    /// <summary>
+    /// The send clock20.
+    /// </summary>
     SendClock20 = 0xF69C,
+    /// <summary>
+    /// The send copy24.
+    /// </summary>
     SendCopy24 = 0xF69D,
+    /// <summary>
+    /// The padding left24.
+    /// </summary>
     PaddingLeft24 = 0xF69E,
+    /// <summary>
+    /// The padding right20.
+    /// </summary>
     PaddingRight20 = 0xF69F,
+    /// <summary>
+    /// The padding right24.
+    /// </summary>
     PaddingRight24 = 0xF6A0,
+    /// <summary>
+    /// The serial port16.
+    /// </summary>
     SerialPort16 = 0xF6A1,
+    /// <summary>
+    /// The serial port20.
+    /// </summary>
     SerialPort20 = 0xF6A2,
+    /// <summary>
+    /// The serial port24.
+    /// </summary>
     SerialPort24 = 0xF6A3,
+    /// <summary>
+    /// The service bell24.
+    /// </summary>
     ServiceBell24 = 0xF6A4,
+    /// <summary>
+    /// The bot sparkle20.
+    /// </summary>
     BotSparkle20 = 0xF6A5,
+    /// <summary>
+    /// The bot sparkle24.
+    /// </summary>
     BotSparkle24 = 0xF6A6,
+    /// <summary>
+    /// The box search16.
+    /// </summary>
     BoxSearch16 = 0xF6A7,
+    /// <summary>
+    /// The settings16.
+    /// </summary>
     Settings16 = 0xF6A8,
+    /// <summary>
+    /// The settings20.
+    /// </summary>
     Settings20 = 0xF6A9,
+    /// <summary>
+    /// The settings24.
+    /// </summary>
     Settings24 = 0xF6AA,
+    /// <summary>
+    /// The settings28.
+    /// </summary>
     Settings28 = 0xF6AB,
+    /// <summary>
+    /// The shapes16.
+    /// </summary>
     Shapes16 = 0xF6AC,
+    /// <summary>
+    /// The shapes20.
+    /// </summary>
     Shapes20 = 0xF6AD,
+    /// <summary>
+    /// The shapes24.
+    /// </summary>
     Shapes24 = 0xF6AE,
+    /// <summary>
+    /// The share20.
+    /// </summary>
     Share20 = 0xF6AF,
+    /// <summary>
+    /// The share24.
+    /// </summary>
     Share24 = 0xF6B0,
+    /// <summary>
+    /// The share android20.
+    /// </summary>
     ShareAndroid20 = 0xF6B1,
+    /// <summary>
+    /// The share android24.
+    /// </summary>
     ShareAndroid24 = 0xF6B2,
+    /// <summary>
+    /// The share close tray24.
+    /// </summary>
     ShareCloseTray24 = 0xF6B3,
+    /// <summary>
+    /// The padding top20.
+    /// </summary>
     PaddingTop20 = 0xF6B4,
+    /// <summary>
+    /// The share ios20.
+    /// </summary>
     ShareIos20 = 0xF6B5,
+    /// <summary>
+    /// The share ios24.
+    /// </summary>
     ShareIos24 = 0xF6B6,
+    /// <summary>
+    /// The share ios28.
+    /// </summary>
     ShareIos28 = 0xF6B7,
+    /// <summary>
+    /// The share ios48.
+    /// </summary>
     ShareIos48 = 0xF6B8,
+    /// <summary>
+    /// The padding top24.
+    /// </summary>
     PaddingTop24 = 0xF6B9,
+    /// <summary>
+    /// The patch20.
+    /// </summary>
     Patch20 = 0xF6BA,
+    /// <summary>
+    /// The patch24.
+    /// </summary>
     Patch24 = 0xF6BB,
+    /// <summary>
+    /// The pause circle20.
+    /// </summary>
     PauseCircle20 = 0xF6BC,
+    /// <summary>
+    /// The people sync16.
+    /// </summary>
     PeopleSync16 = 0xF6BD,
+    /// <summary>
+    /// The shield20.
+    /// </summary>
     Shield20 = 0xF6BE,
+    /// <summary>
+    /// The shield24.
+    /// </summary>
     Shield24 = 0xF6BF,
+    /// <summary>
+    /// The shield dismiss20.
+    /// </summary>
     ShieldDismiss20 = 0xF6C0,
+    /// <summary>
+    /// The shield dismiss24.
+    /// </summary>
     ShieldDismiss24 = 0xF6C1,
+    /// <summary>
+    /// The shield error20.
+    /// </summary>
     ShieldError20 = 0xF6C2,
+    /// <summary>
+    /// The shield error24.
+    /// </summary>
     ShieldError24 = 0xF6C3,
+    /// <summary>
+    /// The shield keyhole16.
+    /// </summary>
     ShieldKeyhole16 = 0xF6C4,
+    /// <summary>
+    /// The shield keyhole20.
+    /// </summary>
     ShieldKeyhole20 = 0xF6C5,
+    /// <summary>
+    /// The shield keyhole24.
+    /// </summary>
     ShieldKeyhole24 = 0xF6C6,
+    /// <summary>
+    /// The shield prohibited20.
+    /// </summary>
     ShieldProhibited20 = 0xF6C7,
+    /// <summary>
+    /// The shield prohibited24.
+    /// </summary>
     ShieldProhibited24 = 0xF6C8,
+    /// <summary>
+    /// The shifts24.
+    /// </summary>
     Shifts24 = 0xF6C9,
+    /// <summary>
+    /// The people toolbox16.
+    /// </summary>
     PeopleToolbox16 = 0xF6CA,
+    /// <summary>
+    /// The person chat16.
+    /// </summary>
     PersonChat16 = 0xF6CB,
+    /// <summary>
+    /// The shifts28.
+    /// </summary>
     Shifts28 = 0xF6CC,
+    /// <summary>
+    /// The shifts30 minutes24.
+    /// </summary>
     Shifts30Minutes24 = 0xF6CD,
+    /// <summary>
+    /// The shifts activity20.
+    /// </summary>
     ShiftsActivity20 = 0xF6CE,
+    /// <summary>
+    /// The shifts activity24.
+    /// </summary>
     ShiftsActivity24 = 0xF6CF,
+    /// <summary>
+    /// The shifts add24.
+    /// </summary>
     ShiftsAdd24 = 0xF6D0,
+    /// <summary>
+    /// The person chat20.
+    /// </summary>
     PersonChat20 = 0xF6D1,
+    /// <summary>
+    /// The shifts availability24.
+    /// </summary>
     ShiftsAvailability24 = 0xF6D2,
+    /// <summary>
+    /// The person chat24.
+    /// </summary>
     PersonChat24 = 0xF6D3,
+    /// <summary>
+    /// The shifts open20.
+    /// </summary>
     ShiftsOpen20 = 0xF6D4,
+    /// <summary>
+    /// The shifts open24.
+    /// </summary>
     ShiftsOpen24 = 0xF6D5,
+    /// <summary>
+    /// The person info16.
+    /// </summary>
     PersonInfo16 = 0xF6D6,
+    /// <summary>
+    /// The shifts team24.
+    /// </summary>
     ShiftsTeam24 = 0xF6D7,
+    /// <summary>
+    /// The person lock16.
+    /// </summary>
     PersonLock16 = 0xF6D8,
+    /// <summary>
+    /// The person lock20.
+    /// </summary>
     PersonLock20 = 0xF6D9,
+    /// <summary>
+    /// The sign out24.
+    /// </summary>
     SignOut24 = 0xF6DA,
+    /// <summary>
+    /// The signature16.
+    /// </summary>
     Signature16 = 0xF6DB,
+    /// <summary>
+    /// The signature20.
+    /// </summary>
     Signature20 = 0xF6DC,
+    /// <summary>
+    /// The signature24.
+    /// </summary>
     Signature24 = 0xF6DD,
+    /// <summary>
+    /// The signature28.
+    /// </summary>
     Signature28 = 0xF6DE,
+    /// <summary>
+    /// The building32.
+    /// </summary>
     Building32 = 0xF6DF,
+    /// <summary>
+    /// The building48.
+    /// </summary>
     Building48 = 0xF6E0,
+    /// <summary>
+    /// The calendar error16.
+    /// </summary>
     CalendarError16 = 0xF6E1,
+    /// <summary>
+    /// The sim16.
+    /// </summary>
     Sim16 = 0xF6E2,
+    /// <summary>
+    /// The sim20.
+    /// </summary>
     Sim20 = 0xF6E3,
+    /// <summary>
+    /// The sim24.
+    /// </summary>
     Sim24 = 0xF6E4,
+    /// <summary>
+    /// The sleep24.
+    /// </summary>
     Sleep24 = 0xF6E5,
+    /// <summary>
+    /// The slide add24.
+    /// </summary>
     SlideAdd24 = 0xF6E6,
+    /// <summary>
+    /// The call forward32.
+    /// </summary>
     CallForward32 = 0xF6E7,
+    /// <summary>
+    /// The slide hide24.
+    /// </summary>
     SlideHide24 = 0xF6E8,
+    /// <summary>
+    /// The slide layout20.
+    /// </summary>
     SlideLayout20 = 0xF6E9,
+    /// <summary>
+    /// The slide layout24.
+    /// </summary>
     SlideLayout24 = 0xF6EA,
+    /// <summary>
+    /// The slide microphone24.
+    /// </summary>
     SlideMicrophone24 = 0xF6EB,
+    /// <summary>
+    /// The slide text24.
+    /// </summary>
     SlideText24 = 0xF6EC,
+    /// <summary>
+    /// The person subtract16.
+    /// </summary>
     PersonSubtract16 = 0xF6ED,
+    /// <summary>
+    /// The phone16.
+    /// </summary>
     Phone16 = 0xF6EE,
+    /// <summary>
+    /// The phone checkmark16.
+    /// </summary>
     PhoneCheckmark16 = 0xF6EF,
+    /// <summary>
+    /// The pill16.
+    /// </summary>
     Pill16 = 0xF6F0,
+    /// <summary>
+    /// The pill20.
+    /// </summary>
     Pill20 = 0xF6F1,
+    /// <summary>
+    /// The pill24.
+    /// </summary>
     Pill24 = 0xF6F2,
+    /// <summary>
+    /// The pill28.
+    /// </summary>
     Pill28 = 0xF6F3,
+    /// <summary>
+    /// The snooze16.
+    /// </summary>
     Snooze16 = 0xF6F4,
+    /// <summary>
+    /// The snooze24.
+    /// </summary>
     Snooze24 = 0xF6F5,
+    /// <summary>
+    /// The sound source24.
+    /// </summary>
     SoundSource24 = 0xF6F6,
+    /// <summary>
+    /// The sound source28.
+    /// </summary>
     SoundSource28 = 0xF6F7,
+    /// <summary>
+    /// The spacebar24.
+    /// </summary>
     Spacebar24 = 0xF6F8,
+    /// <summary>
+    /// The speaker024.
+    /// </summary>
     Speaker024 = 0xF6F9,
+    /// <summary>
+    /// The print16.
+    /// </summary>
     Print16 = 0xF6FA,
+    /// <summary>
+    /// The speaker124.
+    /// </summary>
     Speaker124 = 0xF6FB,
+    /// <summary>
+    /// The print add20.
+    /// </summary>
     PrintAdd20 = 0xF6FC,
+    /// <summary>
+    /// The production20.
+    /// </summary>
     Production20 = 0xF6FD,
+    /// <summary>
+    /// The production24.
+    /// </summary>
     Production24 = 0xF6FE,
+    /// <summary>
+    /// The speaker bluetooth24.
+    /// </summary>
     SpeakerBluetooth24 = 0xF6FF,
+    /// <summary>
+    /// The speaker edit16.
+    /// </summary>
     SpeakerEdit16 = 0xF700,
+    /// <summary>
+    /// The speaker edit20.
+    /// </summary>
     SpeakerEdit20 = 0xF701,
+    /// <summary>
+    /// The speaker edit24.
+    /// </summary>
     SpeakerEdit24 = 0xF702,
+    /// <summary>
+    /// The production checkmark20.
+    /// </summary>
     ProductionCheckmark20 = 0xF703,
+    /// <summary>
+    /// The production checkmark24.
+    /// </summary>
     ProductionCheckmark24 = 0xF704,
+    /// <summary>
+    /// The prohibited16.
+    /// </summary>
     Prohibited16 = 0xF705,
+    /// <summary>
+    /// The speaker off24.
+    /// </summary>
     SpeakerOff24 = 0xF706,
+    /// <summary>
+    /// The speaker off28.
+    /// </summary>
     SpeakerOff28 = 0xF707,
+    /// <summary>
+    /// The speaker settings24.
+    /// </summary>
     SpeakerSettings24 = 0xF708,
+    /// <summary>
+    /// The spinner ios20.
+    /// </summary>
     SpinnerIos20 = 0xF709,
+    /// <summary>
+    /// The ratio one to one20.
+    /// </summary>
     RatioOneToOne20 = 0xF70A,
+    /// <summary>
+    /// The ratio one to one24.
+    /// </summary>
     RatioOneToOne24 = 0xF70B,
+    /// <summary>
+    /// The receipt add20.
+    /// </summary>
     ReceiptAdd20 = 0xF70C,
+    /// <summary>
+    /// The star12.
+    /// </summary>
     Star12 = 0xF70D,
+    /// <summary>
+    /// The star16.
+    /// </summary>
     Star16 = 0xF70E,
+    /// <summary>
+    /// The star20.
+    /// </summary>
     Star20 = 0xF70F,
+    /// <summary>
+    /// The star24.
+    /// </summary>
     Star24 = 0xF710,
+    /// <summary>
+    /// The star28.
+    /// </summary>
     Star28 = 0xF711,
+    /// <summary>
+    /// The star add16.
+    /// </summary>
     StarAdd16 = 0xF712,
+    /// <summary>
+    /// The star add20.
+    /// </summary>
     StarAdd20 = 0xF713,
+    /// <summary>
+    /// The star add24.
+    /// </summary>
     StarAdd24 = 0xF714,
+    /// <summary>
+    /// The receipt bag20.
+    /// </summary>
     ReceiptBag20 = 0xF715,
+    /// <summary>
+    /// The star arrow right start24.
+    /// </summary>
     StarArrowRightStart24 = 0xF716,
+    /// <summary>
+    /// The star emphasis24.
+    /// </summary>
     StarEmphasis24 = 0xF717,
+    /// <summary>
+    /// The star off12.
+    /// </summary>
     StarOff12 = 0xF718,
+    /// <summary>
+    /// The star off16.
+    /// </summary>
     StarOff16 = 0xF719,
+    /// <summary>
+    /// The star off20.
+    /// </summary>
     StarOff20 = 0xF71A,
+    /// <summary>
+    /// The star off24.
+    /// </summary>
     StarOff24 = 0xF71B,
+    /// <summary>
+    /// The star off28.
+    /// </summary>
     StarOff28 = 0xF71C,
+    /// <summary>
+    /// The star prohibited16.
+    /// </summary>
     StarProhibited16 = 0xF71D,
+    /// <summary>
+    /// The star prohibited20.
+    /// </summary>
     StarProhibited20 = 0xF71E,
+    /// <summary>
+    /// The star prohibited24.
+    /// </summary>
     StarProhibited24 = 0xF71F,
+    /// <summary>
+    /// The star settings24.
+    /// </summary>
     StarSettings24 = 0xF720,
+    /// <summary>
+    /// The status16.
+    /// </summary>
     Status16 = 0xF721,
+    /// <summary>
+    /// The status20.
+    /// </summary>
     Status20 = 0xF722,
+    /// <summary>
+    /// The status24.
+    /// </summary>
     Status24 = 0xF723,
+    /// <summary>
+    /// The stethoscope20.
+    /// </summary>
     Stethoscope20 = 0xF724,
+    /// <summary>
+    /// The stethoscope24.
+    /// </summary>
     Stethoscope24 = 0xF725,
+    /// <summary>
+    /// The sticker20.
+    /// </summary>
     Sticker20 = 0xF726,
+    /// <summary>
+    /// The sticker24.
+    /// </summary>
     Sticker24 = 0xF727,
+    /// <summary>
+    /// The sticker add24.
+    /// </summary>
     StickerAdd24 = 0xF728,
+    /// <summary>
+    /// The stop16.
+    /// </summary>
     Stop16 = 0xF729,
+    /// <summary>
+    /// The stop20.
+    /// </summary>
     Stop20 = 0xF72A,
+    /// <summary>
+    /// The stop24.
+    /// </summary>
     Stop24 = 0xF72B,
+    /// <summary>
+    /// The storage24.
+    /// </summary>
     Storage24 = 0xF72C,
+    /// <summary>
+    /// The receipt cube20.
+    /// </summary>
     ReceiptCube20 = 0xF72D,
+    /// <summary>
+    /// The receipt money20.
+    /// </summary>
     ReceiptMoney20 = 0xF72E,
+    /// <summary>
+    /// The record12.
+    /// </summary>
     Record12 = 0xF72F,
+    /// <summary>
+    /// The store microsoft16.
+    /// </summary>
     StoreMicrosoft16 = 0xF730,
+    /// <summary>
+    /// The store microsoft20.
+    /// </summary>
     StoreMicrosoft20 = 0xF731,
+    /// <summary>
+    /// The store microsoft24.
+    /// </summary>
     StoreMicrosoft24 = 0xF732,
+    /// <summary>
+    /// The style guide24.
+    /// </summary>
     StyleGuide24 = 0xF733,
+    /// <summary>
+    /// The sub grid24.
+    /// </summary>
     SubGrid24 = 0xF734,
+    /// <summary>
+    /// The record28.
+    /// </summary>
     Record28 = 0xF735,
+    /// <summary>
+    /// The record32.
+    /// </summary>
     Record32 = 0xF736,
+    /// <summary>
+    /// The record48.
+    /// </summary>
     Record48 = 0xF737,
+    /// <summary>
+    /// The surface earbuds20.
+    /// </summary>
     SurfaceEarbuds20 = 0xF738,
+    /// <summary>
+    /// The surface earbuds24.
+    /// </summary>
     SurfaceEarbuds24 = 0xF739,
+    /// <summary>
+    /// The surface hub20.
+    /// </summary>
     SurfaceHub20 = 0xF73A,
+    /// <summary>
+    /// The surface hub24.
+    /// </summary>
     SurfaceHub24 = 0xF73B,
+    /// <summary>
+    /// The swipe down24.
+    /// </summary>
     SwipeDown24 = 0xF73C,
+    /// <summary>
+    /// The swipe right24.
+    /// </summary>
     SwipeRight24 = 0xF73D,
+    /// <summary>
+    /// The swipe up24.
+    /// </summary>
     SwipeUp24 = 0xF73E,
+    /// <summary>
+    /// The symbols24.
+    /// </summary>
     Symbols24 = 0xF73F,
+    /// <summary>
+    /// The synchronize off16.
+    /// </summary>
     SyncOff16 = 0xF740,
+    /// <summary>
+    /// The synchronize off20.
+    /// </summary>
     SyncOff20 = 0xF741,
+    /// <summary>
+    /// The system24.
+    /// </summary>
     System24 = 0xF742,
+    /// <summary>
+    /// The tab16.
+    /// </summary>
     Tab16 = 0xF743,
+    /// <summary>
+    /// The tab20.
+    /// </summary>
     Tab20 = 0xF744,
+    /// <summary>
+    /// The tab24.
+    /// </summary>
     Tab24 = 0xF745,
+    /// <summary>
+    /// The tab28.
+    /// </summary>
     Tab28 = 0xF746,
+    /// <summary>
+    /// The tab desktop20.
+    /// </summary>
     TabDesktop20 = 0xF747,
+    /// <summary>
+    /// The tab desktop arrow clockwise16.
+    /// </summary>
     TabDesktopArrowClockwise16 = 0xF748,
+    /// <summary>
+    /// The tab desktop arrow clockwise20.
+    /// </summary>
     TabDesktopArrowClockwise20 = 0xF749,
+    /// <summary>
+    /// The tab desktop arrow clockwise24.
+    /// </summary>
     TabDesktopArrowClockwise24 = 0xF74A,
+    /// <summary>
+    /// The tab desktop clock20.
+    /// </summary>
     TabDesktopClock20 = 0xF74B,
+    /// <summary>
+    /// The tab desktop copy20.
+    /// </summary>
     TabDesktopCopy20 = 0xF74C,
+    /// <summary>
+    /// The tab desktop image16.
+    /// </summary>
     TabDesktopImage16 = 0xF74D,
+    /// <summary>
+    /// The tab desktop image20.
+    /// </summary>
     TabDesktopImage20 = 0xF74E,
+    /// <summary>
+    /// The tab desktop image24.
+    /// </summary>
     TabDesktopImage24 = 0xF74F,
+    /// <summary>
+    /// The tab desktop multiple20.
+    /// </summary>
     TabDesktopMultiple20 = 0xF750,
+    /// <summary>
+    /// The tab desktop new page20.
+    /// </summary>
     TabDesktopNewPage20 = 0xF751,
+    /// <summary>
+    /// The tab in private16.
+    /// </summary>
     TabInPrivate16 = 0xF752,
+    /// <summary>
+    /// The tab in private20.
+    /// </summary>
     TabInPrivate20 = 0xF753,
+    /// <summary>
+    /// The tab in private24.
+    /// </summary>
     TabInPrivate24 = 0xF754,
+    /// <summary>
+    /// The tab in private28.
+    /// </summary>
     TabInPrivate28 = 0xF755,
+    /// <summary>
+    /// The tab inprivate account20.
+    /// </summary>
     TabInprivateAccount20 = 0xF756,
+    /// <summary>
+    /// The tab inprivate account24.
+    /// </summary>
     TabInprivateAccount24 = 0xF757,
+    /// <summary>
+    /// The record stop12.
+    /// </summary>
     RecordStop12 = 0xF758,
+    /// <summary>
+    /// The record stop16.
+    /// </summary>
     RecordStop16 = 0xF759,
+    /// <summary>
+    /// The record stop20.
+    /// </summary>
     RecordStop20 = 0xF75A,
+    /// <summary>
+    /// The record stop24.
+    /// </summary>
     RecordStop24 = 0xF75B,
+    /// <summary>
+    /// The record stop28.
+    /// </summary>
     RecordStop28 = 0xF75C,
+    /// <summary>
+    /// The table20.
+    /// </summary>
     Table20 = 0xF75D,
+    /// <summary>
+    /// The table24.
+    /// </summary>
     Table24 = 0xF75E,
+    /// <summary>
+    /// The table add24.
+    /// </summary>
     TableAdd24 = 0xF75F,
+    /// <summary>
+    /// The table cells merge20.
+    /// </summary>
     TableCellsMerge20 = 0xF760,
+    /// <summary>
+    /// The table cells merge24.
+    /// </summary>
     TableCellsMerge24 = 0xF761,
+    /// <summary>
+    /// The table cells split20.
+    /// </summary>
     TableCellsSplit20 = 0xF762,
+    /// <summary>
+    /// The table cells split24.
+    /// </summary>
     TableCellsSplit24 = 0xF763,
+    /// <summary>
+    /// The record stop32.
+    /// </summary>
     RecordStop32 = 0xF764,
+    /// <summary>
+    /// The record stop48.
+    /// </summary>
     RecordStop48 = 0xF765,
+    /// <summary>
+    /// The ribbon add20.
+    /// </summary>
     RibbonAdd20 = 0xF766,
+    /// <summary>
+    /// The ribbon add24.
+    /// </summary>
     RibbonAdd24 = 0xF767,
+    /// <summary>
+    /// The table edit24.
+    /// </summary>
     TableEdit24 = 0xF768,
+    /// <summary>
+    /// The server20.
+    /// </summary>
     Server20 = 0xF769,
+    /// <summary>
+    /// The table freeze column24.
+    /// </summary>
     TableFreezeColumn24 = 0xF76A,
+    /// <summary>
+    /// The table freeze row24.
+    /// </summary>
     TableFreezeRow24 = 0xF76B,
+    /// <summary>
+    /// The server24.
+    /// </summary>
     Server24 = 0xF76C,
+    /// <summary>
+    /// The shield badge20.
+    /// </summary>
     ShieldBadge20 = 0xF76D,
+    /// <summary>
+    /// The shopping bag16.
+    /// </summary>
     ShoppingBag16 = 0xF76E,
+    /// <summary>
+    /// The shopping bag20.
+    /// </summary>
     ShoppingBag20 = 0xF76F,
+    /// <summary>
+    /// The shopping bag24.
+    /// </summary>
     ShoppingBag24 = 0xF770,
+    /// <summary>
+    /// The table move left24.
+    /// </summary>
     TableMoveLeft24 = 0xF771,
+    /// <summary>
+    /// The table move right24.
+    /// </summary>
     TableMoveRight24 = 0xF772,
+    /// <summary>
+    /// The slide multiple search20.
+    /// </summary>
     SlideMultipleSearch20 = 0xF773,
+    /// <summary>
+    /// The slide multiple search24.
+    /// </summary>
     SlideMultipleSearch24 = 0xF774,
+    /// <summary>
+    /// The smartwatch20.
+    /// </summary>
     Smartwatch20 = 0xF775,
+    /// <summary>
+    /// The smartwatch24.
+    /// </summary>
     Smartwatch24 = 0xF776,
+    /// <summary>
+    /// The table settings24.
+    /// </summary>
     TableSettings24 = 0xF777,
+    /// <summary>
+    /// The table switch24.
+    /// </summary>
     TableSwitch24 = 0xF778,
+    /// <summary>
+    /// The tablet20.
+    /// </summary>
     Tablet20 = 0xF779,
+    /// <summary>
+    /// The tablet24.
+    /// </summary>
     Tablet24 = 0xF77A,
+    /// <summary>
+    /// The tabs24.
+    /// </summary>
     Tabs24 = 0xF77B,
+    /// <summary>
+    /// The tag20.
+    /// </summary>
     Tag20 = 0xF77C,
+    /// <summary>
+    /// The tag24.
+    /// </summary>
     Tag24 = 0xF77D,
+    /// <summary>
+    /// The tap double24.
+    /// </summary>
     TapDouble24 = 0xF77E,
+    /// <summary>
+    /// The tap single24.
+    /// </summary>
     TapSingle24 = 0xF77F,
+    /// <summary>
+    /// The target16.
+    /// </summary>
     Target16 = 0xF780,
+    /// <summary>
+    /// The target20.
+    /// </summary>
     Target20 = 0xF781,
+    /// <summary>
+    /// The target24.
+    /// </summary>
     Target24 = 0xF782,
+    /// <summary>
+    /// The target edit16.
+    /// </summary>
     TargetEdit16 = 0xF783,
+    /// <summary>
+    /// The target edit20.
+    /// </summary>
     TargetEdit20 = 0xF784,
+    /// <summary>
+    /// The target edit24.
+    /// </summary>
     TargetEdit24 = 0xF785,
+    /// <summary>
+    /// The smartwatch dot20.
+    /// </summary>
     SmartwatchDot20 = 0xF786,
+    /// <summary>
+    /// The smartwatch dot24.
+    /// </summary>
     SmartwatchDot24 = 0xF787,
+    /// <summary>
+    /// The task list add20.
+    /// </summary>
     TaskListAdd20 = 0xF788,
+    /// <summary>
+    /// The task list add24.
+    /// </summary>
     TaskListAdd24 = 0xF789,
+    /// <summary>
+    /// The tasks app24.
+    /// </summary>
     TasksApp24 = 0xF78A,
+    /// <summary>
+    /// The tasks app28.
+    /// </summary>
     TasksApp28 = 0xF78B,
+    /// <summary>
+    /// The square multiple24.
+    /// </summary>
     SquareMultiple24 = 0xF78C,
+    /// <summary>
+    /// The stack16.
+    /// </summary>
     Stack16 = 0xF78D,
+    /// <summary>
+    /// The teddy24.
+    /// </summary>
     Teddy24 = 0xF78E,
+    /// <summary>
+    /// The temperature20.
+    /// </summary>
     Temperature20 = 0xF78F,
+    /// <summary>
+    /// The temperature24.
+    /// </summary>
     Temperature24 = 0xF790,
+    /// <summary>
+    /// The tent24.
+    /// </summary>
     Tent24 = 0xF791,
+    /// <summary>
+    /// The stack20.
+    /// </summary>
     Stack20 = 0xF792,
+    /// <summary>
+    /// The chat multiple heart16.
+    /// </summary>
     ChatMultipleHeart16 = 0xF793,
+    /// <summary>
+    /// The chat multiple heart20.
+    /// </summary>
     ChatMultipleHeart20 = 0xF794,
+    /// <summary>
+    /// The text add space after20.
+    /// </summary>
     TextAddSpaceAfter20 = 0xF795,
+    /// <summary>
+    /// The text add space after24.
+    /// </summary>
     TextAddSpaceAfter24 = 0xF796,
+    /// <summary>
+    /// The text add space before20.
+    /// </summary>
     TextAddSpaceBefore20 = 0xF797,
+    /// <summary>
+    /// The text add space before24.
+    /// </summary>
     TextAddSpaceBefore24 = 0xF798,
+    /// <summary>
+    /// The text align center20.
+    /// </summary>
     TextAlignCenter20 = 0xF799,
+    /// <summary>
+    /// The text align center24.
+    /// </summary>
     TextAlignCenter24 = 0xF79A,
+    /// <summary>
+    /// The text align distributed20.
+    /// </summary>
     TextAlignDistributed20 = 0xF79B,
+    /// <summary>
+    /// The text align distributed24.
+    /// </summary>
     TextAlignDistributed24 = 0xF79C,
+    /// <summary>
+    /// The text align justify20.
+    /// </summary>
     TextAlignJustify20 = 0xF79D,
+    /// <summary>
+    /// The text align justify24.
+    /// </summary>
     TextAlignJustify24 = 0xF79E,
+    /// <summary>
+    /// The text align left20.
+    /// </summary>
     TextAlignLeft20 = 0xF79F,
+    /// <summary>
+    /// The text align left24.
+    /// </summary>
     TextAlignLeft24 = 0xF7A0,
+    /// <summary>
+    /// The text align right20.
+    /// </summary>
     TextAlignRight20 = 0xF7A1,
+    /// <summary>
+    /// The text align right24.
+    /// </summary>
     TextAlignRight24 = 0xF7A2,
+    /// <summary>
+    /// The text asterisk20.
+    /// </summary>
     TextAsterisk20 = 0xF7A3,
+    /// <summary>
+    /// The text bold20.
+    /// </summary>
     TextBold20 = 0xF7A4,
+    /// <summary>
+    /// The text bold24.
+    /// </summary>
     TextBold24 = 0xF7A5,
+    /// <summary>
+    /// The stack24.
+    /// </summary>
     Stack24 = 0xF7A6,
+    /// <summary>
+    /// The subtract circle16.
+    /// </summary>
     SubtractCircle16 = 0xF7A7,
+    /// <summary>
+    /// The text bullet list add24.
+    /// </summary>
     TextBulletListAdd24 = 0xF7A8,
+    /// <summary>
+    /// The text bullet list square24.
+    /// </summary>
     TextBulletListSquare24 = 0xF7A9,
+    /// <summary>
+    /// The text bullet list square warning16.
+    /// </summary>
     TextBulletListSquareWarning16 = 0xF7AA,
+    /// <summary>
+    /// The text bullet list square warning20.
+    /// </summary>
     TextBulletListSquareWarning20 = 0xF7AB,
+    /// <summary>
+    /// The text bullet list square warning24.
+    /// </summary>
     TextBulletListSquareWarning24 = 0xF7AC,
+    /// <summary>
+    /// The text bullet list tree16.
+    /// </summary>
     TextBulletListTree16 = 0xF7AD,
+    /// <summary>
+    /// The text bullet list tree20.
+    /// </summary>
     TextBulletListTree20 = 0xF7AE,
+    /// <summary>
+    /// The text bullet list tree24.
+    /// </summary>
     TextBulletListTree24 = 0xF7AF,
+    /// <summary>
+    /// The subtract circle20.
+    /// </summary>
     SubtractCircle20 = 0xF7B0,
+    /// <summary>
+    /// The subtract circle24.
+    /// </summary>
     SubtractCircle24 = 0xF7B1,
+    /// <summary>
+    /// The text change case20.
+    /// </summary>
     TextChangeCase20 = 0xF7B2,
+    /// <summary>
+    /// The text change case24.
+    /// </summary>
     TextChangeCase24 = 0xF7B3,
+    /// <summary>
+    /// The subtract circle28.
+    /// </summary>
     SubtractCircle28 = 0xF7B4,
+    /// <summary>
+    /// The subtract circle32.
+    /// </summary>
     SubtractCircle32 = 0xF7B5,
+    /// <summary>
+    /// The tag multiple16.
+    /// </summary>
     TagMultiple16 = 0xF7B6,
+    /// <summary>
+    /// The target arrow16.
+    /// </summary>
     TargetArrow16 = 0xF7B7,
+    /// <summary>
+    /// The target arrow20.
+    /// </summary>
     TargetArrow20 = 0xF7B8,
+    /// <summary>
+    /// The text bullet list square edit20.
+    /// </summary>
     TextBulletListSquareEdit20 = 0xF7B9,
+    /// <summary>
+    /// The text bullet list square edit24.
+    /// </summary>
     TextBulletListSquareEdit24 = 0xF7BA,
+    /// <summary>
+    /// The tooltip quote20.
+    /// </summary>
     TooltipQuote20 = 0xF7BB,
+    /// <summary>
+    /// The text clear formatting20.
+    /// </summary>
     TextClearFormatting20 = 0xF7BC,
+    /// <summary>
+    /// The text clear formatting24.
+    /// </summary>
     TextClearFormatting24 = 0xF7BD,
+    /// <summary>
+    /// The text collapse24.
+    /// </summary>
     TextCollapse24 = 0xF7BE,
+    /// <summary>
+    /// The text color20.
+    /// </summary>
     TextColor20 = 0xF7BF,
+    /// <summary>
+    /// The text color24.
+    /// </summary>
     TextColor24 = 0xF7C0,
+    /// <summary>
+    /// The text column one20.
+    /// </summary>
     TextColumnOne20 = 0xF7C1,
+    /// <summary>
+    /// The text column one24.
+    /// </summary>
     TextColumnOne24 = 0xF7C2,
+    /// <summary>
+    /// The text column three20.
+    /// </summary>
     TextColumnThree20 = 0xF7C3,
+    /// <summary>
+    /// The text column three24.
+    /// </summary>
     TextColumnThree24 = 0xF7C4,
+    /// <summary>
+    /// The text column two20.
+    /// </summary>
     TextColumnTwo20 = 0xF7C5,
+    /// <summary>
+    /// The text column two24.
+    /// </summary>
     TextColumnTwo24 = 0xF7C6,
+    /// <summary>
+    /// The text column two left20.
+    /// </summary>
     TextColumnTwoLeft20 = 0xF7C7,
+    /// <summary>
+    /// The text column two left24.
+    /// </summary>
     TextColumnTwoLeft24 = 0xF7C8,
+    /// <summary>
+    /// The text column two right20.
+    /// </summary>
     TextColumnTwoRight20 = 0xF7C9,
+    /// <summary>
+    /// The text column two right24.
+    /// </summary>
     TextColumnTwoRight24 = 0xF7CA,
+    /// <summary>
+    /// The text description20.
+    /// </summary>
     TextDescription20 = 0xF7CB,
+    /// <summary>
+    /// The text description24.
+    /// </summary>
     TextDescription24 = 0xF7CC,
+    /// <summary>
+    /// The vehicle car profile LTR16.
+    /// </summary>
     VehicleCarProfileLtr16 = 0xF7CD,
+    /// <summary>
+    /// The vehicle car profile RTL16.
+    /// </summary>
     VehicleCarProfileRtl16 = 0xF7CE,
+    /// <summary>
+    /// The chat multiple heart24.
+    /// </summary>
     ChatMultipleHeart24 = 0xF7CF,
+    /// <summary>
+    /// The chat multiple heart28.
+    /// </summary>
     ChatMultipleHeart28 = 0xF7D0,
+    /// <summary>
+    /// The chat multiple heart32.
+    /// </summary>
     ChatMultipleHeart32 = 0xF7D1,
+    /// <summary>
+    /// The chat sparkle16.
+    /// </summary>
     ChatSparkle16 = 0xF7D2,
+    /// <summary>
+    /// The chat sparkle20.
+    /// </summary>
     ChatSparkle20 = 0xF7D3,
+    /// <summary>
+    /// The chat sparkle24.
+    /// </summary>
     ChatSparkle24 = 0xF7D4,
+    /// <summary>
+    /// The chat sparkle28.
+    /// </summary>
     ChatSparkle28 = 0xF7D5,
+    /// <summary>
+    /// The chat sparkle32.
+    /// </summary>
     ChatSparkle32 = 0xF7D6,
+    /// <summary>
+    /// The text direction vertical20.
+    /// </summary>
     TextDirectionVertical20 = 0xF7D7,
+    /// <summary>
+    /// The text direction vertical24.
+    /// </summary>
     TextDirectionVertical24 = 0xF7D8,
+    /// <summary>
+    /// The text edit style20.
+    /// </summary>
     TextEditStyle20 = 0xF7D9,
+    /// <summary>
+    /// The text edit style24.
+    /// </summary>
     TextEditStyle24 = 0xF7DA,
+    /// <summary>
+    /// The text effects20.
+    /// </summary>
     TextEffects20 = 0xF7DB,
+    /// <summary>
+    /// The text effects24.
+    /// </summary>
     TextEffects24 = 0xF7DC,
+    /// <summary>
+    /// The text expand24.
+    /// </summary>
     TextExpand24 = 0xF7DD,
+    /// <summary>
+    /// The text field16.
+    /// </summary>
     TextField16 = 0xF7DE,
+    /// <summary>
+    /// The text field20.
+    /// </summary>
     TextField20 = 0xF7DF,
+    /// <summary>
+    /// The text field24.
+    /// </summary>
     TextField24 = 0xF7E0,
+    /// <summary>
+    /// The text first line20.
+    /// </summary>
     TextFirstLine20 = 0xF7E1,
+    /// <summary>
+    /// The text first line24.
+    /// </summary>
     TextFirstLine24 = 0xF7E2,
+    /// <summary>
+    /// The text font16.
+    /// </summary>
     TextFont16 = 0xF7E3,
+    /// <summary>
+    /// The text font20.
+    /// </summary>
     TextFont20 = 0xF7E4,
+    /// <summary>
+    /// The text font24.
+    /// </summary>
     TextFont24 = 0xF7E5,
+    /// <summary>
+    /// The text font size20.
+    /// </summary>
     TextFontSize20 = 0xF7E6,
+    /// <summary>
+    /// The text font size24.
+    /// </summary>
     TextFontSize24 = 0xF7E7,
+    /// <summary>
+    /// The text footnote20.
+    /// </summary>
     TextFootnote20 = 0xF7E8,
+    /// <summary>
+    /// The text footnote24.
+    /// </summary>
     TextFootnote24 = 0xF7E9,
+    /// <summary>
+    /// The vehicle truck profile16.
+    /// </summary>
     VehicleTruckProfile16 = 0xF7EA,
+    /// <summary>
+    /// The voicemail arrow back16.
+    /// </summary>
     VoicemailArrowBack16 = 0xF7EB,
+    /// <summary>
+    /// The voicemail arrow forward16.
+    /// </summary>
     VoicemailArrowForward16 = 0xF7EC,
+    /// <summary>
+    /// The text hanging20.
+    /// </summary>
     TextHanging20 = 0xF7ED,
+    /// <summary>
+    /// The text hanging24.
+    /// </summary>
     TextHanging24 = 0xF7EE,
+    /// <summary>
+    /// The text header120.
+    /// </summary>
     TextHeader120 = 0xF7EF,
+    /// <summary>
+    /// The text header220.
+    /// </summary>
     TextHeader220 = 0xF7F0,
+    /// <summary>
+    /// The text header320.
+    /// </summary>
     TextHeader320 = 0xF7F1,
+    /// <summary>
+    /// The chat sparkle48.
+    /// </summary>
     ChatSparkle48 = 0xF7F2,
+    /// <summary>
+    /// The clipboard checkmark16.
+    /// </summary>
     ClipboardCheckmark16 = 0xF7F3,
+    /// <summary>
+    /// The text italic20.
+    /// </summary>
     TextItalic20 = 0xF7F4,
+    /// <summary>
+    /// The text italic24.
+    /// </summary>
     TextItalic24 = 0xF7F5,
+    /// <summary>
+    /// The text line spacing20.
+    /// </summary>
     TextLineSpacing20 = 0xF7F6,
+    /// <summary>
+    /// The text line spacing24.
+    /// </summary>
     TextLineSpacing24 = 0xF7F7,
+    /// <summary>
+    /// The text number format24.
+    /// </summary>
     TextNumberFormat24 = 0xF7F8,
+    /// <summary>
+    /// The text number list LTR20.
+    /// </summary>
     TextNumberListLtr20 = 0xF7F9,
+    /// <summary>
+    /// The text number list LTR24.
+    /// </summary>
     TextNumberListLtr24 = 0xF7FA,
+    /// <summary>
+    /// The text number list RTL24.
+    /// </summary>
     TextNumberListRtl24 = 0xF7FB,
+    /// <summary>
+    /// The voicemail subtract16.
+    /// </summary>
     VoicemailSubtract16 = 0xF7FC,
+    /// <summary>
+    /// The wifi warning24.
+    /// </summary>
     WifiWarning24 = 0xF7FD,
+    /// <summary>
+    /// The text proofing tools20.
+    /// </summary>
     TextProofingTools20 = 0xF7FE,
+    /// <summary>
+    /// The text proofing tools24.
+    /// </summary>
     TextProofingTools24 = 0xF7FF,
+    /// <summary>
+    /// The text quote20.
+    /// </summary>
     TextQuote20 = 0xF800,
+    /// <summary>
+    /// The text quote24.
+    /// </summary>
     TextQuote24 = 0xF801,
+    /// <summary>
+    /// The text sort ascending20.
+    /// </summary>
     TextSortAscending20 = 0xF802,
+    /// <summary>
+    /// The text sort descending20.
+    /// </summary>
     TextSortDescending20 = 0xF803,
+    /// <summary>
+    /// The window edit16.
+    /// </summary>
     WindowEdit16 = 0xF804,
+    /// <summary>
+    /// The arrow sort down20.
+    /// </summary>
     ArrowSortDown20 = 0xF805,
+    /// <summary>
+    /// The text subscript20.
+    /// </summary>
     TextSubscript20 = 0xF806,
+    /// <summary>
+    /// The text subscript24.
+    /// </summary>
     TextSubscript24 = 0xF807,
+    /// <summary>
+    /// The text superscript20.
+    /// </summary>
     TextSuperscript20 = 0xF808,
+    /// <summary>
+    /// The text superscript24.
+    /// </summary>
     TextSuperscript24 = 0xF809,
+    /// <summary>
+    /// The text underline20.
+    /// </summary>
     TextUnderline20 = 0xF80A,
+    /// <summary>
+    /// The text underline24.
+    /// </summary>
     TextUnderline24 = 0xF80B,
+    /// <summary>
+    /// The text word count20.
+    /// </summary>
     TextWordCount20 = 0xF80C,
+    /// <summary>
+    /// The text word count24.
+    /// </summary>
     TextWordCount24 = 0xF80D,
+    /// <summary>
+    /// The text wrap24.
+    /// </summary>
     TextWrap24 = 0xF80E,
+    /// <summary>
+    /// The textbox20.
+    /// </summary>
     Textbox20 = 0xF80F,
+    /// <summary>
+    /// The textbox24.
+    /// </summary>
     Textbox24 = 0xF810,
+    /// <summary>
+    /// The arrow sort down24.
+    /// </summary>
     ArrowSortDown24 = 0xF811,
+    /// <summary>
+    /// The arrow sort up20.
+    /// </summary>
     ArrowSortUp20 = 0xF812,
+    /// <summary>
+    /// The textbox align bottom20.
+    /// </summary>
     TextboxAlignBottom20 = 0xF813,
+    /// <summary>
+    /// The textbox align bottom24.
+    /// </summary>
     TextboxAlignBottom24 = 0xF814,
+    /// <summary>
+    /// The textbox align middle20.
+    /// </summary>
     TextboxAlignMiddle20 = 0xF815,
+    /// <summary>
+    /// The textbox align middle24.
+    /// </summary>
     TextboxAlignMiddle24 = 0xF816,
+    /// <summary>
+    /// The textbox align top20.
+    /// </summary>
     TextboxAlignTop20 = 0xF817,
+    /// <summary>
+    /// The textbox align top24.
+    /// </summary>
     TextboxAlignTop24 = 0xF818,
+    /// <summary>
+    /// The clock lock16.
+    /// </summary>
     ClockLock16 = 0xF819,
+    /// <summary>
+    /// The clock lock20.
+    /// </summary>
     ClockLock20 = 0xF81A,
+    /// <summary>
+    /// The thinking20.
+    /// </summary>
     Thinking20 = 0xF81B,
+    /// <summary>
+    /// The thinking24.
+    /// </summary>
     Thinking24 = 0xF81C,
+    /// <summary>
+    /// The thumb dislike20.
+    /// </summary>
     ThumbDislike20 = 0xF81D,
+    /// <summary>
+    /// The thumb dislike24.
+    /// </summary>
     ThumbDislike24 = 0xF81E,
+    /// <summary>
+    /// The thumb like20.
+    /// </summary>
     ThumbLike20 = 0xF81F,
+    /// <summary>
+    /// The thumb like24.
+    /// </summary>
     ThumbLike24 = 0xF820,
+    /// <summary>
+    /// The arrow sort up24.
+    /// </summary>
     ArrowSortUp24 = 0xF821,
+    /// <summary>
+    /// The arrow turn bidirectional down right24.
+    /// </summary>
     ArrowTurnBidirectionalDownRight24 = 0xF822,
+    /// <summary>
+    /// The time and weather24.
+    /// </summary>
     TimeAndWeather24 = 0xF823,
+    /// <summary>
+    /// The time picker24.
+    /// </summary>
     TimePicker24 = 0xF824,
+    /// <summary>
+    /// The timeline24.
+    /// </summary>
     Timeline24 = 0xF825,
+    /// <summary>
+    /// The timer1024.
+    /// </summary>
     Timer1024 = 0xF826,
+    /// <summary>
+    /// The timer24.
+    /// </summary>
     Timer24 = 0xF827,
+    /// <summary>
+    /// The timer224.
+    /// </summary>
     Timer224 = 0xF828,
+    /// <summary>
+    /// The timer off24.
+    /// </summary>
     TimerOff24 = 0xF829,
+    /// <summary>
+    /// The toggle right16.
+    /// </summary>
     ToggleRight16 = 0xF82A,
+    /// <summary>
+    /// The toggle right20.
+    /// </summary>
     ToggleRight20 = 0xF82B,
+    /// <summary>
+    /// The toggle right24.
+    /// </summary>
     ToggleRight24 = 0xF82C,
+    /// <summary>
+    /// The toolbox16.
+    /// </summary>
     Toolbox16 = 0xF82D,
+    /// <summary>
+    /// The toolbox20.
+    /// </summary>
     Toolbox20 = 0xF82E,
+    /// <summary>
+    /// The toolbox24.
+    /// </summary>
     Toolbox24 = 0xF82F,
+    /// <summary>
+    /// The toolbox28.
+    /// </summary>
     Toolbox28 = 0xF830,
+    /// <summary>
+    /// The top speed24.
+    /// </summary>
     TopSpeed24 = 0xF831,
+    /// <summary>
+    /// The translate16.
+    /// </summary>
     Translate16 = 0xF832,
+    /// <summary>
+    /// The translate20.
+    /// </summary>
     Translate20 = 0xF833,
+    /// <summary>
+    /// The translate24.
+    /// </summary>
     Translate24 = 0xF834,
+    /// <summary>
+    /// The trophy16.
+    /// </summary>
     Trophy16 = 0xF835,
+    /// <summary>
+    /// The trophy20.
+    /// </summary>
     Trophy20 = 0xF836,
+    /// <summary>
+    /// The trophy24.
+    /// </summary>
     Trophy24 = 0xF837,
+    /// <summary>
+    /// The uninstall app24.
+    /// </summary>
     UninstallApp24 = 0xF838,
+    /// <summary>
+    /// The arrow turn right24.
+    /// </summary>
     ArrowTurnRight24 = 0xF839,
+    /// <summary>
+    /// The book question mark RTL24.
+    /// </summary>
     BookQuestionMarkRtl24 = 0xF83A,
+    /// <summary>
+    /// The brain circuit24.
+    /// </summary>
     BrainCircuit24 = 0xF83B,
+    /// <summary>
+    /// The building bank toolbox24.
+    /// </summary>
     BuildingBankToolbox24 = 0xF83C,
+    /// <summary>
+    /// The clock lock24.
+    /// </summary>
     ClockLock24 = 0xF83D,
+    /// <summary>
+    /// The clover16.
+    /// </summary>
     Clover16 = 0xF83E,
+    /// <summary>
+    /// The usb stick20.
+    /// </summary>
     UsbStick20 = 0xF83F,
+    /// <summary>
+    /// The usb stick24.
+    /// </summary>
     UsbStick24 = 0xF840,
+    /// <summary>
+    /// The vault16.
+    /// </summary>
     Vault16 = 0xF841,
+    /// <summary>
+    /// The vault20.
+    /// </summary>
     Vault20 = 0xF842,
+    /// <summary>
+    /// The vault24.
+    /// </summary>
     Vault24 = 0xF843,
+    /// <summary>
+    /// The vehicle bicycle24.
+    /// </summary>
     VehicleBicycle24 = 0xF844,
+    /// <summary>
+    /// The vehicle bus24.
+    /// </summary>
     VehicleBus24 = 0xF845,
+    /// <summary>
+    /// The vehicle cab24.
+    /// </summary>
     VehicleCab24 = 0xF846,
+    /// <summary>
+    /// The vehicle car16.
+    /// </summary>
     VehicleCar16 = 0xF847,
+    /// <summary>
+    /// The vehicle car20.
+    /// </summary>
     VehicleCar20 = 0xF848,
+    /// <summary>
+    /// The vehicle car24.
+    /// </summary>
     VehicleCar24 = 0xF849,
+    /// <summary>
+    /// The vehicle truck24.
+    /// </summary>
     VehicleTruck24 = 0xF84A,
+    /// <summary>
+    /// The video16.
+    /// </summary>
     Video16 = 0xF84B,
+    /// <summary>
+    /// The video20.
+    /// </summary>
     Video20 = 0xF84C,
+    /// <summary>
+    /// The video24.
+    /// </summary>
     Video24 = 0xF84D,
+    /// <summary>
+    /// The video28.
+    /// </summary>
     Video28 = 0xF84E,
+    /// <summary>
+    /// The video background effect24.
+    /// </summary>
     VideoBackgroundEffect24 = 0xF84F,
+    /// <summary>
+    /// The video clip24.
+    /// </summary>
     VideoClip24 = 0xF850,
+    /// <summary>
+    /// The video off20.
+    /// </summary>
     VideoOff20 = 0xF851,
+    /// <summary>
+    /// The video off24.
+    /// </summary>
     VideoOff24 = 0xF852,
+    /// <summary>
+    /// The video off28.
+    /// </summary>
     VideoOff28 = 0xF853,
+    /// <summary>
+    /// The video person24.
+    /// </summary>
     VideoPerson24 = 0xF854,
+    /// <summary>
+    /// The video person off24.
+    /// </summary>
     VideoPersonOff24 = 0xF855,
+    /// <summary>
+    /// The video person star24.
+    /// </summary>
     VideoPersonStar24 = 0xF856,
+    /// <summary>
+    /// The video play pause24.
+    /// </summary>
     VideoPlayPause24 = 0xF857,
+    /// <summary>
+    /// The video security20.
+    /// </summary>
     VideoSecurity20 = 0xF858,
+    /// <summary>
+    /// The video security24.
+    /// </summary>
     VideoSecurity24 = 0xF859,
+    /// <summary>
+    /// The video switch24.
+    /// </summary>
     VideoSwitch24 = 0xF85A,
+    /// <summary>
+    /// The view desktop20.
+    /// </summary>
     ViewDesktop20 = 0xF85B,
+    /// <summary>
+    /// The view desktop24.
+    /// </summary>
     ViewDesktop24 = 0xF85C,
+    /// <summary>
+    /// The view desktop mobile20.
+    /// </summary>
     ViewDesktopMobile20 = 0xF85D,
+    /// <summary>
+    /// The view desktop mobile24.
+    /// </summary>
     ViewDesktopMobile24 = 0xF85E,
+    /// <summary>
+    /// The calendar checkmark28.
+    /// </summary>
     CalendarCheckmark28 = 0xF85F,
+    /// <summary>
+    /// The calendar search16.
+    /// </summary>
     CalendarSearch16 = 0xF860,
+    /// <summary>
+    /// The call park32.
+    /// </summary>
     CallPark32 = 0xF861,
+    /// <summary>
+    /// The voicemail16.
+    /// </summary>
     Voicemail16 = 0xF862,
+    /// <summary>
+    /// The voicemail20.
+    /// </summary>
     Voicemail20 = 0xF863,
+    /// <summary>
+    /// The voicemail24.
+    /// </summary>
     Voicemail24 = 0xF864,
+    /// <summary>
+    /// The walkie talkie24.
+    /// </summary>
     WalkieTalkie24 = 0xF865,
+    /// <summary>
+    /// The walkie talkie28.
+    /// </summary>
     WalkieTalkie28 = 0xF866,
+    /// <summary>
+    /// The wallpaper24.
+    /// </summary>
     Wallpaper24 = 0xF867,
+    /// <summary>
+    /// The warning16.
+    /// </summary>
     Warning16 = 0xF868,
+    /// <summary>
+    /// The warning20.
+    /// </summary>
     Warning20 = 0xF869,
+    /// <summary>
+    /// The warning24.
+    /// </summary>
     Warning24 = 0xF86A,
+    /// <summary>
+    /// The weather blowing snow20.
+    /// </summary>
     WeatherBlowingSnow20 = 0xF86B,
+    /// <summary>
+    /// The weather blowing snow24.
+    /// </summary>
     WeatherBlowingSnow24 = 0xF86C,
+    /// <summary>
+    /// The weather blowing snow48.
+    /// </summary>
     WeatherBlowingSnow48 = 0xF86D,
+    /// <summary>
+    /// The weather cloudy20.
+    /// </summary>
     WeatherCloudy20 = 0xF86E,
+    /// <summary>
+    /// The weather cloudy24.
+    /// </summary>
     WeatherCloudy24 = 0xF86F,
+    /// <summary>
+    /// The weather cloudy48.
+    /// </summary>
     WeatherCloudy48 = 0xF870,
+    /// <summary>
+    /// The weather duststorm20.
+    /// </summary>
     WeatherDuststorm20 = 0xF871,
+    /// <summary>
+    /// The weather duststorm24.
+    /// </summary>
     WeatherDuststorm24 = 0xF872,
+    /// <summary>
+    /// The weather duststorm48.
+    /// </summary>
     WeatherDuststorm48 = 0xF873,
+    /// <summary>
+    /// The weather fog20.
+    /// </summary>
     WeatherFog20 = 0xF874,
+    /// <summary>
+    /// The weather fog24.
+    /// </summary>
     WeatherFog24 = 0xF875,
+    /// <summary>
+    /// The weather fog48.
+    /// </summary>
     WeatherFog48 = 0xF876,
+    /// <summary>
+    /// The weather hail day20.
+    /// </summary>
     WeatherHailDay20 = 0xF877,
+    /// <summary>
+    /// The weather hail day24.
+    /// </summary>
     WeatherHailDay24 = 0xF878,
+    /// <summary>
+    /// The weather hail day48.
+    /// </summary>
     WeatherHailDay48 = 0xF879,
+    /// <summary>
+    /// The weather hail night20.
+    /// </summary>
     WeatherHailNight20 = 0xF87A,
+    /// <summary>
+    /// The weather hail night24.
+    /// </summary>
     WeatherHailNight24 = 0xF87B,
+    /// <summary>
+    /// The weather hail night48.
+    /// </summary>
     WeatherHailNight48 = 0xF87C,
+    /// <summary>
+    /// The weather moon20.
+    /// </summary>
     WeatherMoon20 = 0xF87D,
+    /// <summary>
+    /// The weather moon24.
+    /// </summary>
     WeatherMoon24 = 0xF87E,
+    /// <summary>
+    /// The weather moon48.
+    /// </summary>
     WeatherMoon48 = 0xF87F,
+    /// <summary>
+    /// The weather partly cloudy day20.
+    /// </summary>
     WeatherPartlyCloudyDay20 = 0xF880,
+    /// <summary>
+    /// The weather partly cloudy day24.
+    /// </summary>
     WeatherPartlyCloudyDay24 = 0xF881,
+    /// <summary>
+    /// The weather partly cloudy day48.
+    /// </summary>
     WeatherPartlyCloudyDay48 = 0xF882,
+    /// <summary>
+    /// The weather partly cloudy night20.
+    /// </summary>
     WeatherPartlyCloudyNight20 = 0xF883,
+    /// <summary>
+    /// The weather partly cloudy night24.
+    /// </summary>
     WeatherPartlyCloudyNight24 = 0xF884,
+    /// <summary>
+    /// The weather partly cloudy night48.
+    /// </summary>
     WeatherPartlyCloudyNight48 = 0xF885,
+    /// <summary>
+    /// The weather rain20.
+    /// </summary>
     WeatherRain20 = 0xF886,
+    /// <summary>
+    /// The weather rain24.
+    /// </summary>
     WeatherRain24 = 0xF887,
+    /// <summary>
+    /// The weather rain48.
+    /// </summary>
     WeatherRain48 = 0xF888,
+    /// <summary>
+    /// The weather rain showers day20.
+    /// </summary>
     WeatherRainShowersDay20 = 0xF889,
+    /// <summary>
+    /// The weather rain showers day24.
+    /// </summary>
     WeatherRainShowersDay24 = 0xF88A,
+    /// <summary>
+    /// The weather rain showers day48.
+    /// </summary>
     WeatherRainShowersDay48 = 0xF88B,
+    /// <summary>
+    /// The weather rain showers night20.
+    /// </summary>
     WeatherRainShowersNight20 = 0xF88C,
+    /// <summary>
+    /// The weather rain showers night24.
+    /// </summary>
     WeatherRainShowersNight24 = 0xF88D,
+    /// <summary>
+    /// The weather rain showers night48.
+    /// </summary>
     WeatherRainShowersNight48 = 0xF88E,
+    /// <summary>
+    /// The weather rain snow20.
+    /// </summary>
     WeatherRainSnow20 = 0xF88F,
+    /// <summary>
+    /// The weather rain snow24.
+    /// </summary>
     WeatherRainSnow24 = 0xF890,
+    /// <summary>
+    /// The weather rain snow48.
+    /// </summary>
     WeatherRainSnow48 = 0xF891,
+    /// <summary>
+    /// The weather snow20.
+    /// </summary>
     WeatherSnow20 = 0xF892,
+    /// <summary>
+    /// The weather snow24.
+    /// </summary>
     WeatherSnow24 = 0xF893,
+    /// <summary>
+    /// The weather snow48.
+    /// </summary>
     WeatherSnow48 = 0xF894,
+    /// <summary>
+    /// The weather snow shower day20.
+    /// </summary>
     WeatherSnowShowerDay20 = 0xF895,
+    /// <summary>
+    /// The weather snow shower day24.
+    /// </summary>
     WeatherSnowShowerDay24 = 0xF896,
+    /// <summary>
+    /// The weather snow shower day48.
+    /// </summary>
     WeatherSnowShowerDay48 = 0xF897,
+    /// <summary>
+    /// The weather snow shower night20.
+    /// </summary>
     WeatherSnowShowerNight20 = 0xF898,
+    /// <summary>
+    /// The weather snow shower night24.
+    /// </summary>
     WeatherSnowShowerNight24 = 0xF899,
+    /// <summary>
+    /// The weather snow shower night48.
+    /// </summary>
     WeatherSnowShowerNight48 = 0xF89A,
+    /// <summary>
+    /// The weather snowflake20.
+    /// </summary>
     WeatherSnowflake20 = 0xF89B,
+    /// <summary>
+    /// The weather snowflake24.
+    /// </summary>
     WeatherSnowflake24 = 0xF89C,
+    /// <summary>
+    /// The weather snowflake48.
+    /// </summary>
     WeatherSnowflake48 = 0xF89D,
+    /// <summary>
+    /// The weather squalls20.
+    /// </summary>
     WeatherSqualls20 = 0xF89E,
+    /// <summary>
+    /// The weather squalls24.
+    /// </summary>
     WeatherSqualls24 = 0xF89F,
+    /// <summary>
+    /// The weather squalls48.
+    /// </summary>
     WeatherSqualls48 = 0xF8A0,
+    /// <summary>
+    /// The weather sunny20.
+    /// </summary>
     WeatherSunny20 = 0xF8A1,
+    /// <summary>
+    /// The weather sunny24.
+    /// </summary>
     WeatherSunny24 = 0xF8A2,
+    /// <summary>
+    /// The weather sunny48.
+    /// </summary>
     WeatherSunny48 = 0xF8A3,
+    /// <summary>
+    /// The weather thunderstorm20.
+    /// </summary>
     WeatherThunderstorm20 = 0xF8A4,
+    /// <summary>
+    /// The weather thunderstorm24.
+    /// </summary>
     WeatherThunderstorm24 = 0xF8A5,
+    /// <summary>
+    /// The weather thunderstorm48.
+    /// </summary>
     WeatherThunderstorm48 = 0xF8A6,
+    /// <summary>
+    /// The web asset24.
+    /// </summary>
     WebAsset24 = 0xF8A7,
+    /// <summary>
+    /// The chat bubbles question16.
+    /// </summary>
     ChatBubblesQuestion16 = 0xF8A8,
+    /// <summary>
+    /// The chat multiple16.
+    /// </summary>
     ChatMultiple16 = 0xF8A9,
+    /// <summary>
+    /// The whiteboard20.
+    /// </summary>
     Whiteboard20 = 0xF8AA,
+    /// <summary>
+    /// The whiteboard24.
+    /// </summary>
     Whiteboard24 = 0xF8AB,
+    /// <summary>
+    /// The wifi120.
+    /// </summary>
     Wifi120 = 0xF8AC,
+    /// <summary>
+    /// The wifi124.
+    /// </summary>
     Wifi124 = 0xF8AD,
+    /// <summary>
+    /// The wifi220.
+    /// </summary>
     Wifi220 = 0xF8AE,
+    /// <summary>
+    /// The wifi224.
+    /// </summary>
     Wifi224 = 0xF8AF,
+    /// <summary>
+    /// The wifi320.
+    /// </summary>
     Wifi320 = 0xF8B0,
+    /// <summary>
+    /// The wifi324.
+    /// </summary>
     Wifi324 = 0xF8B1,
+    /// <summary>
+    /// The wifi420.
+    /// </summary>
     Wifi420 = 0xF8B2,
+    /// <summary>
+    /// The wifi424.
+    /// </summary>
     Wifi424 = 0xF8B3,
+    /// <summary>
+    /// The clover20.
+    /// </summary>
     Clover20 = 0xF8B4,
+    /// <summary>
+    /// The window20.
+    /// </summary>
     Window20 = 0xF8B5,
+    /// <summary>
+    /// The window ad20.
+    /// </summary>
     WindowAd20 = 0xF8B6,
+    /// <summary>
+    /// The window dev tools16.
+    /// </summary>
     WindowDevTools16 = 0xF8B7,
+    /// <summary>
+    /// The window dev tools20.
+    /// </summary>
     WindowDevTools20 = 0xF8B8,
+    /// <summary>
+    /// The window dev tools24.
+    /// </summary>
     WindowDevTools24 = 0xF8B9,
+    /// <summary>
+    /// The window inprivate20.
+    /// </summary>
     WindowInprivate20 = 0xF8BA,
+    /// <summary>
+    /// The window inprivate account20.
+    /// </summary>
     WindowInprivateAccount20 = 0xF8BB,
+    /// <summary>
+    /// The window multiple20.
+    /// </summary>
     WindowMultiple20 = 0xF8BC,
+    /// <summary>
+    /// The window new20.
+    /// </summary>
     WindowNew20 = 0xF8BD,
+    /// <summary>
+    /// The window shield16.
+    /// </summary>
     WindowShield16 = 0xF8BE,
+    /// <summary>
+    /// The window shield20.
+    /// </summary>
     WindowShield20 = 0xF8BF,
+    /// <summary>
+    /// The window shield24.
+    /// </summary>
     WindowShield24 = 0xF8C0,
+    /// <summary>
+    /// The wrench24.
+    /// </summary>
     Wrench24 = 0xF8C1,
+    /// <summary>
+    /// The xbox console20.
+    /// </summary>
     XboxConsole20 = 0xF8C2,
+    /// <summary>
+    /// The xbox console24.
+    /// </summary>
     XboxConsole24 = 0xF8C3,
+    /// <summary>
+    /// The zoom in20.
+    /// </summary>
     ZoomIn20 = 0xF8C4,
+    /// <summary>
+    /// The zoom in24.
+    /// </summary>
     ZoomIn24 = 0xF8C5,
+    /// <summary>
+    /// The zoom out20.
+    /// </summary>
     ZoomOut20 = 0xF8C6,
+    /// <summary>
+    /// The zoom out24.
+    /// </summary>
     ZoomOut24 = 0xF8C7,
+    /// <summary>
+    /// The chat multiple20.
+    /// </summary>
     ChatMultiple20 = 0xF8C8,
+    /// <summary>
+    /// The calendar checkmark24.
+    /// </summary>
     CalendarCheckmark24 = 0xF8C9,
+    /// <summary>
+    /// The add square24.
+    /// </summary>
     AddSquare24 = 0xF8CA,
+    /// <summary>
+    /// The apps list20.
+    /// </summary>
     AppsList20 = 0xF8CB,
+    /// <summary>
+    /// The archive16.
+    /// </summary>
     Archive16 = 0xF8CC,
+    /// <summary>
+    /// The arrow autofit height24.
+    /// </summary>
     ArrowAutofitHeight24 = 0xF8CD,
+    /// <summary>
+    /// The arrow autofit width24.
+    /// </summary>
     ArrowAutofitWidth24 = 0xF8CE,
+    /// <summary>
+    /// The arrow counterclockwise28.
+    /// </summary>
     ArrowCounterclockwise28 = 0xF8CF,
+    /// <summary>
+    /// The arrow down12.
+    /// </summary>
     ArrowDown12 = 0xF8D0,
+    /// <summary>
+    /// The arrow down left16.
+    /// </summary>
     ArrowDownLeft16 = 0xF8D1,
+    /// <summary>
+    /// The arrow export RTL20.
+    /// </summary>
     ArrowExportRtl20 = 0xF8D2,
+    /// <summary>
+    /// The chat multiple24.
+    /// </summary>
     ChatMultiple24 = 0xF8D3,
+    /// <summary>
+    /// The checkmark32.
+    /// </summary>
     Checkmark32 = 0xF8D4,
+    /// <summary>
+    /// The arrow hook down left16.
+    /// </summary>
     ArrowHookDownLeft16 = 0xF8D5,
+    /// <summary>
+    /// The arrow hook down left20.
+    /// </summary>
     ArrowHookDownLeft20 = 0xF8D6,
+    /// <summary>
+    /// The arrow hook down left24.
+    /// </summary>
     ArrowHookDownLeft24 = 0xF8D7,
+    /// <summary>
+    /// The arrow hook down left28.
+    /// </summary>
     ArrowHookDownLeft28 = 0xF8D8,
+    /// <summary>
+    /// The arrow hook down right16.
+    /// </summary>
     ArrowHookDownRight16 = 0xF8D9,
+    /// <summary>
+    /// The arrow hook down right20.
+    /// </summary>
     ArrowHookDownRight20 = 0xF8DA,
+    /// <summary>
+    /// The arrow hook down right24.
+    /// </summary>
     ArrowHookDownRight24 = 0xF8DB,
+    /// <summary>
+    /// The arrow hook down right28.
+    /// </summary>
     ArrowHookDownRight28 = 0xF8DC,
+    /// <summary>
+    /// The arrow hook up left16.
+    /// </summary>
     ArrowHookUpLeft16 = 0xF8DD,
+    /// <summary>
+    /// The arrow hook up left20.
+    /// </summary>
     ArrowHookUpLeft20 = 0xF8DE,
+    /// <summary>
+    /// The arrow hook up left24.
+    /// </summary>
     ArrowHookUpLeft24 = 0xF8DF,
+    /// <summary>
+    /// The arrow hook up left28.
+    /// </summary>
     ArrowHookUpLeft28 = 0xF8E0,
+    /// <summary>
+    /// The arrow hook up right16.
+    /// </summary>
     ArrowHookUpRight16 = 0xF8E1,
+    /// <summary>
+    /// The arrow hook up right20.
+    /// </summary>
     ArrowHookUpRight20 = 0xF8E2,
+    /// <summary>
+    /// The arrow hook up right24.
+    /// </summary>
     ArrowHookUpRight24 = 0xF8E3,
+    /// <summary>
+    /// The arrow hook up right28.
+    /// </summary>
     ArrowHookUpRight28 = 0xF8E4,
+    /// <summary>
+    /// The arrow move20.
+    /// </summary>
     ArrowMove20 = 0xF8E5,
+    /// <summary>
+    /// The arrow redo32.
+    /// </summary>
     ArrowRedo32 = 0xF8E6,
+    /// <summary>
+    /// The arrow redo48.
+    /// </summary>
     ArrowRedo48 = 0xF8E7,
+    /// <summary>
+    /// The checkmark circle32.
+    /// </summary>
     CheckmarkCircle32 = 0xF8E8,
+    /// <summary>
+    /// The clover24.
+    /// </summary>
     Clover24 = 0xF8E9,
+    /// <summary>
+    /// The clover28.
+    /// </summary>
     Clover28 = 0xF8EA,
+    /// <summary>
+    /// The arrow up right16.
+    /// </summary>
     ArrowUpRight16 = 0xF8EB,
+    /// <summary>
+    /// The attach arrow right20.
+    /// </summary>
     AttachArrowRight20 = 0xF8EC,
+    /// <summary>
+    /// The attach arrow right24.
+    /// </summary>
     AttachArrowRight24 = 0xF8ED,
+    /// <summary>
+    /// The attach text24.
+    /// </summary>
     AttachText24 = 0xF8EE,
+    /// <summary>
+    /// The clover32.
+    /// </summary>
     Clover32 = 0xF8EF,
+    /// <summary>
+    /// The backpack12.
+    /// </summary>
     Backpack12 = 0xF8F0,
+    /// <summary>
+    /// The backpack16.
+    /// </summary>
     Backpack16 = 0xF8F1,
+    /// <summary>
+    /// The backpack20.
+    /// </summary>
     Backpack20 = 0xF8F2,
+    /// <summary>
+    /// The backpack24.
+    /// </summary>
     Backpack24 = 0xF8F3,
+    /// <summary>
+    /// The backpack28.
+    /// </summary>
     Backpack28 = 0xF8F4,
+    /// <summary>
+    /// The backpack48.
+    /// </summary>
     Backpack48 = 0xF8F5,
+    /// <summary>
+    /// The balloon16.
+    /// </summary>
     Balloon16 = 0xF8F6,
+    /// <summary>
+    /// The bed16.
+    /// </summary>
     Bed16 = 0xF8F7,
+    /// <summary>
+    /// The bluetooth28.
+    /// </summary>
     Bluetooth28 = 0xF8F8,
+    /// <summary>
+    /// The blur16.
+    /// </summary>
     Blur16 = 0xF8F9,
+    /// <summary>
+    /// The blur20.
+    /// </summary>
     Blur20 = 0xF8FA,
+    /// <summary>
+    /// The blur24.
+    /// </summary>
     Blur24 = 0xF8FB,
+    /// <summary>
+    /// The blur28.
+    /// </summary>
     Blur28 = 0xF8FC,
+    /// <summary>
+    /// The book20.
+    /// </summary>
     Book20 = 0xF8FD,
+    /// <summary>
+    /// The book24.
+    /// </summary>
     Book24 = 0xF8FE,
+    /// <summary>
+    /// The book add20.
+    /// </summary>
     BookAdd20 = 0xF8FF,
+    /// <summary>
+    /// The clover48.
+    /// </summary>
     Clover48 = 0xF0000,
+    /// <summary>
+    /// The comment link16.
+    /// </summary>
     CommentLink16 = 0xF0001,
+    /// <summary>
+    /// The comment link20.
+    /// </summary>
     CommentLink20 = 0xF0002,
+    /// <summary>
+    /// The comment link24.
+    /// </summary>
     CommentLink24 = 0xF0003,
+    /// <summary>
+    /// The comment link28.
+    /// </summary>
     CommentLink28 = 0xF0004,
+    /// <summary>
+    /// The comment link48.
+    /// </summary>
     CommentLink48 = 0xF0005,
+    /// <summary>
+    /// The copy32.
+    /// </summary>
     Copy32 = 0xF0006,
+    /// <summary>
+    /// The copy select24.
+    /// </summary>
     CopySelect24 = 0xF0007,
+    /// <summary>
+    /// The database48.
+    /// </summary>
     Database48 = 0xF0008,
+    /// <summary>
+    /// The database multiple32.
+    /// </summary>
     DatabaseMultiple32 = 0xF0009,
+    /// <summary>
+    /// The device eq16.
+    /// </summary>
     DeviceEq16 = 0xF000A,
+    /// <summary>
+    /// The document10016.
+    /// </summary>
     Document10016 = 0xF000B,
+    /// <summary>
+    /// The document10020.
+    /// </summary>
     Document10020 = 0xF000C,
+    /// <summary>
+    /// The document10024.
+    /// </summary>
     Document10024 = 0xF000D,
+    /// <summary>
+    /// The document border20.
+    /// </summary>
     DocumentBorder20 = 0xF000E,
+    /// <summary>
+    /// The document border24.
+    /// </summary>
     DocumentBorder24 = 0xF000F,
+    /// <summary>
+    /// The document border32.
+    /// </summary>
     DocumentBorder32 = 0xF0010,
+    /// <summary>
+    /// The document border print20.
+    /// </summary>
     DocumentBorderPrint20 = 0xF0011,
+    /// <summary>
+    /// The document border print24.
+    /// </summary>
     DocumentBorderPrint24 = 0xF0012,
+    /// <summary>
+    /// The document border print32.
+    /// </summary>
     DocumentBorderPrint32 = 0xF0013,
+    /// <summary>
+    /// The document bullet list16.
+    /// </summary>
     DocumentBulletList16 = 0xF0014,
+    /// <summary>
+    /// The document bullet list arrow left16.
+    /// </summary>
     DocumentBulletListArrowLeft16 = 0xF0015,
+    /// <summary>
+    /// The document bullet list arrow left20.
+    /// </summary>
     DocumentBulletListArrowLeft20 = 0xF0016,
+    /// <summary>
+    /// The document bullet list arrow left24.
+    /// </summary>
     DocumentBulletListArrowLeft24 = 0xF0017,
+    /// <summary>
+    /// The document bullet list cube16.
+    /// </summary>
     DocumentBulletListCube16 = 0xF0018,
+    /// <summary>
+    /// The document bullet list cube20.
+    /// </summary>
     DocumentBulletListCube20 = 0xF0019,
+    /// <summary>
+    /// The document bullet list cube24.
+    /// </summary>
     DocumentBulletListCube24 = 0xF001A,
+    /// <summary>
+    /// The document data link16.
+    /// </summary>
     DocumentDataLink16 = 0xF001B,
+    /// <summary>
+    /// The document data link20.
+    /// </summary>
     DocumentDataLink20 = 0xF001C,
+    /// <summary>
+    /// The document data link24.
+    /// </summary>
     DocumentDataLink24 = 0xF001D,
+    /// <summary>
+    /// The document data link32.
+    /// </summary>
     DocumentDataLink32 = 0xF001E,
+    /// <summary>
+    /// The document fit16.
+    /// </summary>
     DocumentFit16 = 0xF001F,
+    /// <summary>
+    /// The document fit20.
+    /// </summary>
     DocumentFit20 = 0xF0020,
+    /// <summary>
+    /// The document fit24.
+    /// </summary>
     DocumentFit24 = 0xF0021,
+    /// <summary>
+    /// The document folder16.
+    /// </summary>
     DocumentFolder16 = 0xF0022,
+    /// <summary>
+    /// The document folder20.
+    /// </summary>
     DocumentFolder20 = 0xF0023,
+    /// <summary>
+    /// The document folder24.
+    /// </summary>
     DocumentFolder24 = 0xF0024,
+    /// <summary>
+    /// The document one page16.
+    /// </summary>
     DocumentOnePage16 = 0xF0025,
+    /// <summary>
+    /// The document one page add16.
+    /// </summary>
     DocumentOnePageAdd16 = 0xF0026,
+    /// <summary>
+    /// The document one page add20.
+    /// </summary>
     DocumentOnePageAdd20 = 0xF0027,
+    /// <summary>
+    /// The document one page add24.
+    /// </summary>
     DocumentOnePageAdd24 = 0xF0028,
+    /// <summary>
+    /// The document one page columns20.
+    /// </summary>
     DocumentOnePageColumns20 = 0xF0029,
+    /// <summary>
+    /// The document one page columns24.
+    /// </summary>
     DocumentOnePageColumns24 = 0xF002A,
+    /// <summary>
+    /// The document one page link16.
+    /// </summary>
     DocumentOnePageLink16 = 0xF002B,
+    /// <summary>
+    /// The document one page link20.
+    /// </summary>
     DocumentOnePageLink20 = 0xF002C,
+    /// <summary>
+    /// The document one page link24.
+    /// </summary>
     DocumentOnePageLink24 = 0xF002D,
+    /// <summary>
+    /// The document print20.
+    /// </summary>
     DocumentPrint20 = 0xF002E,
+    /// <summary>
+    /// The document print24.
+    /// </summary>
     DocumentPrint24 = 0xF002F,
+    /// <summary>
+    /// The document print28.
+    /// </summary>
     DocumentPrint28 = 0xF0030,
+    /// <summary>
+    /// The document print32.
+    /// </summary>
     DocumentPrint32 = 0xF0031,
+    /// <summary>
+    /// The document print48.
+    /// </summary>
     DocumentPrint48 = 0xF0032,
+    /// <summary>
+    /// The emoji angry16.
+    /// </summary>
     EmojiAngry16 = 0xF0033,
+    /// <summary>
+    /// The emoji hand16.
+    /// </summary>
     EmojiHand16 = 0xF0034,
+    /// <summary>
+    /// The emoji meh16.
+    /// </summary>
     EmojiMeh16 = 0xF0035,
+    /// <summary>
+    /// The filmstrip16.
+    /// </summary>
     Filmstrip16 = 0xF0036,
+    /// <summary>
+    /// The filmstrip32.
+    /// </summary>
     Filmstrip32 = 0xF0037,
+    /// <summary>
+    /// The filmstrip play16.
+    /// </summary>
     FilmstripPlay16 = 0xF0038,
+    /// <summary>
+    /// The filmstrip play20.
+    /// </summary>
     FilmstripPlay20 = 0xF0039,
+    /// <summary>
+    /// The filmstrip play24.
+    /// </summary>
     FilmstripPlay24 = 0xF003A,
+    /// <summary>
+    /// The filmstrip play32.
+    /// </summary>
     FilmstripPlay32 = 0xF003B,
+    /// <summary>
+    /// The flag32.
+    /// </summary>
     Flag32 = 0xF003C,
+    /// <summary>
+    /// The flag clock16.
+    /// </summary>
     FlagClock16 = 0xF003D,
+    /// <summary>
+    /// The flag clock20.
+    /// </summary>
     FlagClock20 = 0xF003E,
+    /// <summary>
+    /// The flag clock24.
+    /// </summary>
     FlagClock24 = 0xF003F,
+    /// <summary>
+    /// The flag clock28.
+    /// </summary>
     FlagClock28 = 0xF0040,
+    /// <summary>
+    /// The flag clock32.
+    /// </summary>
     FlagClock32 = 0xF0041,
+    /// <summary>
+    /// The flag clock48.
+    /// </summary>
     FlagClock48 = 0xF0042,
+    /// <summary>
+    /// The glasses32.
+    /// </summary>
     Glasses32 = 0xF0043,
+    /// <summary>
+    /// The glasses off32.
+    /// </summary>
     GlassesOff32 = 0xF0044,
+    /// <summary>
+    /// The globe surface32.
+    /// </summary>
     GlobeSurface32 = 0xF0045,
+    /// <summary>
+    /// The home more48.
+    /// </summary>
     HomeMore48 = 0xF0046,
+    /// <summary>
+    /// The image border16.
+    /// </summary>
     ImageBorder16 = 0xF0047,
+    /// <summary>
+    /// The image border20.
+    /// </summary>
     ImageBorder20 = 0xF0048,
+    /// <summary>
+    /// The image border24.
+    /// </summary>
     ImageBorder24 = 0xF0049,
+    /// <summary>
+    /// The image border28.
+    /// </summary>
     ImageBorder28 = 0xF004A,
+    /// <summary>
+    /// The image border32.
+    /// </summary>
     ImageBorder32 = 0xF004B,
+    /// <summary>
+    /// The image border48.
+    /// </summary>
     ImageBorder48 = 0xF004C,
+    /// <summary>
+    /// The image circle16.
+    /// </summary>
     ImageCircle16 = 0xF004D,
+    /// <summary>
+    /// The image circle20.
+    /// </summary>
     ImageCircle20 = 0xF004E,
+    /// <summary>
+    /// The image circle24.
+    /// </summary>
     ImageCircle24 = 0xF004F,
+    /// <summary>
+    /// The image circle28.
+    /// </summary>
     ImageCircle28 = 0xF0050,
+    /// <summary>
+    /// The image circle32.
+    /// </summary>
     ImageCircle32 = 0xF0051,
+    /// <summary>
+    /// The image circle48.
+    /// </summary>
     ImageCircle48 = 0xF0052,
+    /// <summary>
+    /// The image table16.
+    /// </summary>
     ImageTable16 = 0xF0053,
+    /// <summary>
+    /// The image table20.
+    /// </summary>
     ImageTable20 = 0xF0054,
+    /// <summary>
+    /// The image table24.
+    /// </summary>
     ImageTable24 = 0xF0055,
+    /// <summary>
+    /// The image table28.
+    /// </summary>
     ImageTable28 = 0xF0056,
+    /// <summary>
+    /// The image table32.
+    /// </summary>
     ImageTable32 = 0xF0057,
+    /// <summary>
+    /// The image table48.
+    /// </summary>
     ImageTable48 = 0xF0058,
+    /// <summary>
+    /// The info32.
+    /// </summary>
     Info32 = 0xF0059,
+    /// <summary>
+    /// The info48.
+    /// </summary>
     Info48 = 0xF005A,
+    /// <summary>
+    /// The iot16.
+    /// </summary>
     Iot16 = 0xF005B,
+    /// <summary>
+    /// The iot alert16.
+    /// </summary>
     IotAlert16 = 0xF005C,
+    /// <summary>
+    /// The iot alert20.
+    /// </summary>
     IotAlert20 = 0xF005D,
+    /// <summary>
+    /// The iot alert24.
+    /// </summary>
     IotAlert24 = 0xF005E,
+    /// <summary>
+    /// The line horizontal420.
+    /// </summary>
     LineHorizontal420 = 0xF005F,
+    /// <summary>
+    /// The line horizontal4 search20.
+    /// </summary>
     LineHorizontal4Search20 = 0xF0060,
+    /// <summary>
+    /// The line thickness20.
+    /// </summary>
     LineThickness20 = 0xF0061,
+    /// <summary>
+    /// The line thickness24.
+    /// </summary>
     LineThickness24 = 0xF0062,
+    /// <summary>
+    /// The location arrow12.
+    /// </summary>
     LocationArrow12 = 0xF0063,
+    /// <summary>
+    /// The location arrow16.
+    /// </summary>
     LocationArrow16 = 0xF0064,
+    /// <summary>
+    /// The location arrow20.
+    /// </summary>
     LocationArrow20 = 0xF0065,
+    /// <summary>
+    /// The location arrow24.
+    /// </summary>
     LocationArrow24 = 0xF0066,
+    /// <summary>
+    /// The location arrow28.
+    /// </summary>
     LocationArrow28 = 0xF0067,
+    /// <summary>
+    /// The location arrow32.
+    /// </summary>
     LocationArrow32 = 0xF0068,
+    /// <summary>
+    /// The location arrow48.
+    /// </summary>
     LocationArrow48 = 0xF0069,
+    /// <summary>
+    /// The location arrow left16.
+    /// </summary>
     LocationArrowLeft16 = 0xF006A,
+    /// <summary>
+    /// The location arrow right16.
+    /// </summary>
     LocationArrowRight16 = 0xF006B,
+    /// <summary>
+    /// The location arrow up16.
+    /// </summary>
     LocationArrowUp16 = 0xF006C,
+    /// <summary>
+    /// The mail arrow double back24.
+    /// </summary>
     MailArrowDoubleBack24 = 0xF006D,
+    /// <summary>
+    /// The mail checkmark24.
+    /// </summary>
     MailCheckmark24 = 0xF006E,
+    /// <summary>
+    /// The mail unread12.
+    /// </summary>
     MailUnread12 = 0xF006F,
+    /// <summary>
+    /// The map16.
+    /// </summary>
     Map16 = 0xF0070,
+    /// <summary>
+    /// The mention32.
+    /// </summary>
     Mention32 = 0xF0071,
+    /// <summary>
+    /// The mention48.
+    /// </summary>
     Mention48 = 0xF0072,
+    /// <summary>
+    /// The panel left header16.
+    /// </summary>
     PanelLeftHeader16 = 0xF0073,
+    /// <summary>
+    /// The panel left header20.
+    /// </summary>
     PanelLeftHeader20 = 0xF0074,
+    /// <summary>
+    /// The panel left header24.
+    /// </summary>
     PanelLeftHeader24 = 0xF0075,
+    /// <summary>
+    /// The panel left header28.
+    /// </summary>
     PanelLeftHeader28 = 0xF0076,
+    /// <summary>
+    /// The panel left header32.
+    /// </summary>
     PanelLeftHeader32 = 0xF0077,
+    /// <summary>
+    /// The panel left header48.
+    /// </summary>
     PanelLeftHeader48 = 0xF0078,
+    /// <summary>
+    /// The panel left header add16.
+    /// </summary>
     PanelLeftHeaderAdd16 = 0xF0079,
+    /// <summary>
+    /// The panel left header add20.
+    /// </summary>
     PanelLeftHeaderAdd20 = 0xF007A,
+    /// <summary>
+    /// The panel left header add24.
+    /// </summary>
     PanelLeftHeaderAdd24 = 0xF007B,
+    /// <summary>
+    /// The panel left header add28.
+    /// </summary>
     PanelLeftHeaderAdd28 = 0xF007C,
+    /// <summary>
+    /// The panel left header add32.
+    /// </summary>
     PanelLeftHeaderAdd32 = 0xF007D,
+    /// <summary>
+    /// The panel left header add48.
+    /// </summary>
     PanelLeftHeaderAdd48 = 0xF007E,
+    /// <summary>
+    /// The panel left header key16.
+    /// </summary>
     PanelLeftHeaderKey16 = 0xF007F,
+    /// <summary>
+    /// The panel left header key20.
+    /// </summary>
     PanelLeftHeaderKey20 = 0xF0080,
+    /// <summary>
+    /// The panel left header key24.
+    /// </summary>
     PanelLeftHeaderKey24 = 0xF0081,
+    /// <summary>
+    /// The people call24.
+    /// </summary>
     PeopleCall24 = 0xF0082,
+    /// <summary>
+    /// The people community32.
+    /// </summary>
     PeopleCommunity32 = 0xF0083,
+    /// <summary>
+    /// The people community48.
+    /// </summary>
     PeopleCommunity48 = 0xF0084,
+    /// <summary>
+    /// The person feedback28.
+    /// </summary>
     PersonFeedback28 = 0xF0085,
+    /// <summary>
+    /// The person feedback32.
+    /// </summary>
     PersonFeedback32 = 0xF0086,
+    /// <summary>
+    /// The person feedback48.
+    /// </summary>
     PersonFeedback48 = 0xF0087,
+    /// <summary>
+    /// The phone desktop32.
+    /// </summary>
     PhoneDesktop32 = 0xF0088,
+    /// <summary>
+    /// The phone desktop48.
+    /// </summary>
     PhoneDesktop48 = 0xF0089,
+    /// <summary>
+    /// The play circle hint16.
+    /// </summary>
     PlayCircleHint16 = 0xF008A,
+    /// <summary>
+    /// The play circle hint20.
+    /// </summary>
     PlayCircleHint20 = 0xF008B,
+    /// <summary>
+    /// The play circle hint24.
+    /// </summary>
     PlayCircleHint24 = 0xF008C,
+    /// <summary>
+    /// The poll horizontal16.
+    /// </summary>
     PollHorizontal16 = 0xF008D,
+    /// <summary>
+    /// The poll horizontal20.
+    /// </summary>
     PollHorizontal20 = 0xF008E,
+    /// <summary>
+    /// The poll horizontal24.
+    /// </summary>
     PollHorizontal24 = 0xF008F,
+    /// <summary>
+    /// The presence away10.
+    /// </summary>
     PresenceAway10 = 0xF0090,
+    /// <summary>
+    /// The presence away12.
+    /// </summary>
     PresenceAway12 = 0xF0091,
+    /// <summary>
+    /// The presence away16.
+    /// </summary>
     PresenceAway16 = 0xF0092,
+    /// <summary>
+    /// The presence away20.
+    /// </summary>
     PresenceAway20 = 0xF0093,
+    /// <summary>
+    /// The presence away24.
+    /// </summary>
     PresenceAway24 = 0xF0094,
+    /// <summary>
+    /// The projection screen text24.
+    /// </summary>
     ProjectionScreenText24 = 0xF0095,
+    /// <summary>
+    /// The receipt32.
+    /// </summary>
     Receipt32 = 0xF0096,
+    /// <summary>
+    /// The receipt money16.
+    /// </summary>
     ReceiptMoney16 = 0xF0097,
+    /// <summary>
+    /// The send32.
+    /// </summary>
     Send32 = 0xF0098,
+    /// <summary>
+    /// The send48.
+    /// </summary>
     Send48 = 0xF0099,
+    /// <summary>
+    /// The service bell16.
+    /// </summary>
     ServiceBell16 = 0xF009A,
+    /// <summary>
+    /// The shifts activity16.
+    /// </summary>
     ShiftsActivity16 = 0xF009B,
+    /// <summary>
+    /// The slash forward12.
+    /// </summary>
     SlashForward12 = 0xF009C,
+    /// <summary>
+    /// The slash forward16.
+    /// </summary>
     SlashForward16 = 0xF009D,
+    /// <summary>
+    /// The slash forward20.
+    /// </summary>
     SlashForward20 = 0xF009E,
+    /// <summary>
+    /// The slash forward24.
+    /// </summary>
     SlashForward24 = 0xF009F,
+    /// <summary>
+    /// The space3d16.
+    /// </summary>
     Space3d16 = 0xF00A0,
+    /// <summary>
+    /// The space3d20.
+    /// </summary>
     Space3d20 = 0xF00A1,
+    /// <summary>
+    /// The space3d24.
+    /// </summary>
     Space3d24 = 0xF00A2,
+    /// <summary>
+    /// The space3d28.
+    /// </summary>
     Space3d28 = 0xF00A3,
+    /// <summary>
+    /// The space3d32.
+    /// </summary>
     Space3d32 = 0xF00A4,
+    /// <summary>
+    /// The space3d48.
+    /// </summary>
     Space3d48 = 0xF00A5,
+    /// <summary>
+    /// The sparkle32.
+    /// </summary>
     Sparkle32 = 0xF00A6,
+    /// <summary>
+    /// The sparkle circle16.
+    /// </summary>
     SparkleCircle16 = 0xF00A7,
+    /// <summary>
+    /// The sparkle circle28.
+    /// </summary>
     SparkleCircle28 = 0xF00A8,
+    /// <summary>
+    /// The sparkle circle32.
+    /// </summary>
     SparkleCircle32 = 0xF00A9,
+    /// <summary>
+    /// The sparkle circle48.
+    /// </summary>
     SparkleCircle48 = 0xF00AA,
+    /// <summary>
+    /// The star arrow back16.
+    /// </summary>
     StarArrowBack16 = 0xF00AB,
+    /// <summary>
+    /// The star arrow back20.
+    /// </summary>
     StarArrowBack20 = 0xF00AC,
+    /// <summary>
+    /// The star arrow back24.
+    /// </summary>
     StarArrowBack24 = 0xF00AD,
+    /// <summary>
+    /// The table simple multiple20.
+    /// </summary>
     TableSimpleMultiple20 = 0xF00AE,
+    /// <summary>
+    /// The table simple multiple24.
+    /// </summary>
     TableSimpleMultiple24 = 0xF00AF,
+    /// <summary>
+    /// The text abc underline double32.
+    /// </summary>
     TextAbcUnderlineDouble32 = 0xF00B0,
+    /// <summary>
+    /// The text column one semi narrow20.
+    /// </summary>
     TextColumnOneSemiNarrow20 = 0xF00B1,
+    /// <summary>
+    /// The text column one semi narrow24.
+    /// </summary>
     TextColumnOneSemiNarrow24 = 0xF00B2,
+    /// <summary>
+    /// The text expand16.
+    /// </summary>
     TextExpand16 = 0xF00B3,
+    /// <summary>
+    /// The text position square left16.
+    /// </summary>
     TextPositionSquareLeft16 = 0xF00B4,
+    /// <summary>
+    /// The text position square left20.
+    /// </summary>
     TextPositionSquareLeft20 = 0xF00B5,
+    /// <summary>
+    /// The text position square left24.
+    /// </summary>
     TextPositionSquareLeft24 = 0xF00B6,
+    /// <summary>
+    /// The text position square right16.
+    /// </summary>
     TextPositionSquareRight16 = 0xF00B7,
+    /// <summary>
+    /// The text position square right20.
+    /// </summary>
     TextPositionSquareRight20 = 0xF00B8,
+    /// <summary>
+    /// The text position square right24.
+    /// </summary>
     TextPositionSquareRight24 = 0xF00B9,
+    /// <summary>
+    /// The text underline character u16.
+    /// </summary>
     TextUnderlineCharacterU16 = 0xF00BA,
+    /// <summary>
+    /// The text underline character u20.
+    /// </summary>
     TextUnderlineCharacterU20 = 0xF00BB,
+    /// <summary>
+    /// The text underline character u24.
+    /// </summary>
     TextUnderlineCharacterU24 = 0xF00BC,
+    /// <summary>
+    /// The translate off16.
+    /// </summary>
     TranslateOff16 = 0xF00BD,
+    /// <summary>
+    /// The translate off20.
+    /// </summary>
     TranslateOff20 = 0xF00BE,
+    /// <summary>
+    /// The translate off24.
+    /// </summary>
     TranslateOff24 = 0xF00BF,
+    /// <summary>
+    /// The video background effect16.
+    /// </summary>
     VideoBackgroundEffect16 = 0xF00C0,
+    /// <summary>
+    /// The video background effect28.
+    /// </summary>
     VideoBackgroundEffect28 = 0xF00C1,
+    /// <summary>
+    /// The video background effect32.
+    /// </summary>
     VideoBackgroundEffect32 = 0xF00C2,
+    /// <summary>
+    /// The video background effect48.
+    /// </summary>
     VideoBackgroundEffect48 = 0xF00C3,
+    /// <summary>
+    /// The video background effect horizontal16.
+    /// </summary>
     VideoBackgroundEffectHorizontal16 = 0xF00C4,
+    /// <summary>
+    /// The video background effect horizontal20.
+    /// </summary>
     VideoBackgroundEffectHorizontal20 = 0xF00C5,
+    /// <summary>
+    /// The video background effect horizontal24.
+    /// </summary>
     VideoBackgroundEffectHorizontal24 = 0xF00C6,
+    /// <summary>
+    /// The video background effect horizontal28.
+    /// </summary>
     VideoBackgroundEffectHorizontal28 = 0xF00C7,
+    /// <summary>
+    /// The video background effect horizontal32.
+    /// </summary>
     VideoBackgroundEffectHorizontal32 = 0xF00C8,
+    /// <summary>
+    /// The video background effect horizontal48.
+    /// </summary>
     VideoBackgroundEffectHorizontal48 = 0xF00C9,
+    /// <summary>
+    /// The video clip28.
+    /// </summary>
     VideoClip28 = 0xF00CA,
+    /// <summary>
+    /// The video clip32.
+    /// </summary>
     VideoClip32 = 0xF00CB,
+    /// <summary>
+    /// The video clip48.
+    /// </summary>
     VideoClip48 = 0xF00CC,
+    /// <summary>
+    /// The voicemail48.
+    /// </summary>
     Voicemail48 = 0xF00CD,
+    /// <summary>
+    /// The arrow circle up right20.
+    /// </summary>
     ArrowCircleUpRight20 = 0xF00CE,
+    /// <summary>
+    /// The arrow circle up right24.
+    /// </summary>
     ArrowCircleUpRight24 = 0xF00CF,
+    /// <summary>
+    /// The backspace16.
+    /// </summary>
     Backspace16 = 0xF00D0,
+    /// <summary>
+    /// The binder triangle20.
+    /// </summary>
     BinderTriangle20 = 0xF00D1,
+    /// <summary>
+    /// The binder triangle24.
+    /// </summary>
     BinderTriangle24 = 0xF00D2,
+    /// <summary>
+    /// The binder triangle32.
+    /// </summary>
     BinderTriangle32 = 0xF00D3,
+    /// <summary>
+    /// The bow tie20.
+    /// </summary>
     BowTie20 = 0xF00D4,
+    /// <summary>
+    /// The bow tie24.
+    /// </summary>
     BowTie24 = 0xF00D5,
+    /// <summary>
+    /// The circle28.
+    /// </summary>
     Circle28 = 0xF00D6,
+    /// <summary>
+    /// The document one page sparkle16.
+    /// </summary>
     DocumentOnePageSparkle16 = 0xF00D7,
+    /// <summary>
+    /// The document one page sparkle20.
+    /// </summary>
     DocumentOnePageSparkle20 = 0xF00D8,
+    /// <summary>
+    /// The document one page sparkle24.
+    /// </summary>
     DocumentOnePageSparkle24 = 0xF00D9,
+    /// <summary>
+    /// The emoji hand32.
+    /// </summary>
     EmojiHand32 = 0xF00DA,
+    /// <summary>
+    /// The emoji hand48.
+    /// </summary>
     EmojiHand48 = 0xF00DB,
+    /// <summary>
+    /// The frame16.
+    /// </summary>
     Frame16 = 0xF00DC,
+    /// <summary>
+    /// The frame20.
+    /// </summary>
     Frame20 = 0xF00DD,
+    /// <summary>
+    /// The frame24.
+    /// </summary>
     Frame24 = 0xF00DE,
+    /// <summary>
+    /// The lock closed key16.
+    /// </summary>
     LockClosedKey16 = 0xF00DF,
+    /// <summary>
+    /// The lock closed key20.
+    /// </summary>
     LockClosedKey20 = 0xF00E0,
+    /// <summary>
+    /// The lock closed key24.
+    /// </summary>
     LockClosedKey24 = 0xF00E1,
+    /// <summary>
+    /// The mountain location bottom20.
+    /// </summary>
     MountainLocationBottom20 = 0xF00E2,
+    /// <summary>
+    /// The mountain location bottom24.
+    /// </summary>
     MountainLocationBottom24 = 0xF00E3,
+    /// <summary>
+    /// The mountain location bottom28.
+    /// </summary>
     MountainLocationBottom28 = 0xF00E4,
+    /// <summary>
+    /// The mountain location top20.
+    /// </summary>
     MountainLocationTop20 = 0xF00E5,
+    /// <summary>
+    /// The mountain location top24.
+    /// </summary>
     MountainLocationTop24 = 0xF00E6,
+    /// <summary>
+    /// The mountain location top28.
+    /// </summary>
     MountainLocationTop28 = 0xF00E7,
+    /// <summary>
+    /// The mountain trail20.
+    /// </summary>
     MountainTrail20 = 0xF00E8,
+    /// <summary>
+    /// The mountain trail24.
+    /// </summary>
     MountainTrail24 = 0xF00E9,
+    /// <summary>
+    /// The mountain trail28.
+    /// </summary>
     MountainTrail28 = 0xF00EA,
+    /// <summary>
+    /// The pen dismiss16.
+    /// </summary>
     PenDismiss16 = 0xF00EB,
+    /// <summary>
+    /// The pen dismiss20.
+    /// </summary>
     PenDismiss20 = 0xF00EC,
+    /// <summary>
+    /// The pen dismiss24.
+    /// </summary>
     PenDismiss24 = 0xF00ED,
+    /// <summary>
+    /// The pen dismiss28.
+    /// </summary>
     PenDismiss28 = 0xF00EE,
+    /// <summary>
+    /// The pen dismiss32.
+    /// </summary>
     PenDismiss32 = 0xF00EF,
+    /// <summary>
+    /// The pen dismiss48.
+    /// </summary>
     PenDismiss48 = 0xF00F0,
+    /// <summary>
+    /// The phone edit20.
+    /// </summary>
     PhoneEdit20 = 0xF00F1,
+    /// <summary>
+    /// The phone edit24.
+    /// </summary>
     PhoneEdit24 = 0xF00F2,
+    /// <summary>
+    /// The send beaker16.
+    /// </summary>
     SendBeaker16 = 0xF00F3,
+    /// <summary>
+    /// The send beaker20.
+    /// </summary>
     SendBeaker20 = 0xF00F4,
+    /// <summary>
+    /// The send beaker24.
+    /// </summary>
     SendBeaker24 = 0xF00F5,
+    /// <summary>
+    /// The send beaker28.
+    /// </summary>
     SendBeaker28 = 0xF00F6,
+    /// <summary>
+    /// The send beaker32.
+    /// </summary>
     SendBeaker32 = 0xF00F7,
+    /// <summary>
+    /// The send beaker48.
+    /// </summary>
     SendBeaker48 = 0xF00F8,
+    /// <summary>
+    /// The slide text sparkle16.
+    /// </summary>
     SlideTextSparkle16 = 0xF00F9,
+    /// <summary>
+    /// The slide text sparkle20.
+    /// </summary>
     SlideTextSparkle20 = 0xF00FA,
+    /// <summary>
+    /// The slide text sparkle24.
+    /// </summary>
     SlideTextSparkle24 = 0xF00FB,
+    /// <summary>
+    /// The slide text sparkle28.
+    /// </summary>
     SlideTextSparkle28 = 0xF00FC,
+    /// <summary>
+    /// The slide text sparkle32.
+    /// </summary>
     SlideTextSparkle32 = 0xF00FD,
+    /// <summary>
+    /// The slide text sparkle48.
+    /// </summary>
     SlideTextSparkle48 = 0xF00FE,
+    /// <summary>
+    /// The stack vertical20.
+    /// </summary>
     StackVertical20 = 0xF00FF,
+    /// <summary>
+    /// The stack vertical24.
+    /// </summary>
     StackVertical24 = 0xF0100,
+    /// <summary>
+    /// The table column top bottom20.
+    /// </summary>
     TableColumnTopBottom20 = 0xF0101,
+    /// <summary>
+    /// The table column top bottom24.
+    /// </summary>
     TableColumnTopBottom24 = 0xF0102,
+    /// <summary>
+    /// The table offset20.
+    /// </summary>
     TableOffset20 = 0xF0103,
+    /// <summary>
+    /// The table offset24.
+    /// </summary>
     TableOffset24 = 0xF0104,
+    /// <summary>
+    /// The table offset add20.
+    /// </summary>
     TableOffsetAdd20 = 0xF0105,
+    /// <summary>
+    /// The table offset add24.
+    /// </summary>
     TableOffsetAdd24 = 0xF0106,
+    /// <summary>
+    /// The table offset less than or equal to20.
+    /// </summary>
     TableOffsetLessThanOrEqualTo20 = 0xF0107,
+    /// <summary>
+    /// The table offset less than or equal to24.
+    /// </summary>
     TableOffsetLessThanOrEqualTo24 = 0xF0108,
+    /// <summary>
+    /// The table offset settings20.
+    /// </summary>
     TableOffsetSettings20 = 0xF0109,
+    /// <summary>
+    /// The table offset settings24.
+    /// </summary>
     TableOffsetSettings24 = 0xF010A,
+    /// <summary>
+    /// The vehicle cable car20.
+    /// </summary>
     VehicleCableCar20 = 0xF010B,
+    /// <summary>
+    /// The vehicle cable car24.
+    /// </summary>
     VehicleCableCar24 = 0xF010C,
+    /// <summary>
+    /// The vehicle cable car28.
+    /// </summary>
     VehicleCableCar28 = 0xF010D,
+    /// <summary>
+    /// The arrow autofit height in20.
+    /// </summary>
     ArrowAutofitHeightIn20 = 0xF010E,
+    /// <summary>
+    /// The arrow autofit height in24.
+    /// </summary>
     ArrowAutofitHeightIn24 = 0xF010F,
+    /// <summary>
+    /// The circle hint16.
+    /// </summary>
     CircleHint16 = 0xF0110,
+    /// <summary>
+    /// The circle hint20.
+    /// </summary>
     CircleHint20 = 0xF0111,
+    /// <summary>
+    /// The cloud database20.
+    /// </summary>
     CloudDatabase20 = 0xF0112,
+    /// <summary>
+    /// The cloud desktop20.
+    /// </summary>
     CloudDesktop20 = 0xF0113,
+    /// <summary>
+    /// The code circle24.
+    /// </summary>
     CodeCircle24 = 0xF0114,
+    /// <summary>
+    /// The code circle32.
+    /// </summary>
     CodeCircle32 = 0xF0115,
+    /// <summary>
+    /// The column single16.
+    /// </summary>
     ColumnSingle16 = 0xF0116,
+    /// <summary>
+    /// The desktop arrow down16.
+    /// </summary>
     DesktopArrowDown16 = 0xF0117,
+    /// <summary>
+    /// The desktop arrow down20.
+    /// </summary>
     DesktopArrowDown20 = 0xF0118,
+    /// <summary>
+    /// The desktop arrow down24.
+    /// </summary>
     DesktopArrowDown24 = 0xF0119,
+    /// <summary>
+    /// The desktop tower20.
+    /// </summary>
     DesktopTower20 = 0xF011A,
+    /// <summary>
+    /// The desktop tower24.
+    /// </summary>
     DesktopTower24 = 0xF011B,
+    /// <summary>
+    /// The document checkmark16.
+    /// </summary>
     DocumentCheckmark16 = 0xF011C,
+    /// <summary>
+    /// The document key20.
+    /// </summary>
     DocumentKey20 = 0xF011D,
+    /// <summary>
+    /// The dust20.
+    /// </summary>
     Dust20 = 0xF011E,
+    /// <summary>
+    /// The dust24.
+    /// </summary>
     Dust24 = 0xF011F,
+    /// <summary>
+    /// The dust28.
+    /// </summary>
     Dust28 = 0xF0120,
+    /// <summary>
+    /// The edit arrow back24.
+    /// </summary>
     EditArrowBack24 = 0xF0121,
+    /// <summary>
+    /// The emoji hint16.
+    /// </summary>
     EmojiHint16 = 0xF0122,
+    /// <summary>
+    /// The emoji hint20.
+    /// </summary>
     EmojiHint20 = 0xF0123,
+    /// <summary>
+    /// The emoji hint24.
+    /// </summary>
     EmojiHint24 = 0xF0124,
+    /// <summary>
+    /// The emoji hint28.
+    /// </summary>
     EmojiHint28 = 0xF0125,
+    /// <summary>
+    /// The emoji hint32.
+    /// </summary>
     EmojiHint32 = 0xF0126,
+    /// <summary>
+    /// The emoji hint48.
+    /// </summary>
     EmojiHint48 = 0xF0127,
+    /// <summary>
+    /// The folder list16.
+    /// </summary>
     FolderList16 = 0xF0128,
+    /// <summary>
+    /// The folder list20.
+    /// </summary>
     FolderList20 = 0xF0129,
+    /// <summary>
+    /// The lightbulb checkmark20.
+    /// </summary>
     LightbulbCheckmark20 = 0xF012A,
+    /// <summary>
+    /// The line horizontal416.
+    /// </summary>
     LineHorizontal416 = 0xF012B,
+    /// <summary>
+    /// The line horizontal4 search16.
+    /// </summary>
     LineHorizontal4Search16 = 0xF012C,
+    /// <summary>
+    /// The math format professional16.
+    /// </summary>
     MathFormatProfessional16 = 0xF012D,
+    /// <summary>
+    /// The mold20.
+    /// </summary>
     Mold20 = 0xF012E,
+    /// <summary>
+    /// The mold24.
+    /// </summary>
     Mold24 = 0xF012F,
+    /// <summary>
+    /// The mold28.
+    /// </summary>
     Mold28 = 0xF0130,
+    /// <summary>
+    /// The people team48.
+    /// </summary>
     PeopleTeam48 = 0xF0131,
+    /// <summary>
+    /// The person desktop20.
+    /// </summary>
     PersonDesktop20 = 0xF0132,
+    /// <summary>
+    /// The person ribbon16.
+    /// </summary>
     PersonRibbon16 = 0xF0133,
+    /// <summary>
+    /// The person ribbon20.
+    /// </summary>
     PersonRibbon20 = 0xF0134,
+    /// <summary>
+    /// The person wrench20.
+    /// </summary>
     PersonWrench20 = 0xF0135,
+    /// <summary>
+    /// The plant grass20.
+    /// </summary>
     PlantGrass20 = 0xF0136,
+    /// <summary>
+    /// The plant grass24.
+    /// </summary>
     PlantGrass24 = 0xF0137,
+    /// <summary>
+    /// The plant grass28.
+    /// </summary>
     PlantGrass28 = 0xF0138,
+    /// <summary>
+    /// The plant ragweed20.
+    /// </summary>
     PlantRagweed20 = 0xF0139,
+    /// <summary>
+    /// The plant ragweed24.
+    /// </summary>
     PlantRagweed24 = 0xF013A,
+    /// <summary>
+    /// The plant ragweed28.
+    /// </summary>
     PlantRagweed28 = 0xF013B,
+    /// <summary>
+    /// The settings cog multiple20.
+    /// </summary>
     SettingsCogMultiple20 = 0xF013C,
+    /// <summary>
+    /// The settings cog multiple24.
+    /// </summary>
     SettingsCogMultiple24 = 0xF013D,
+    /// <summary>
+    /// The slide content24.
+    /// </summary>
     SlideContent24 = 0xF013E,
+    /// <summary>
+    /// The slide record16.
+    /// </summary>
     SlideRecord16 = 0xF013F,
+    /// <summary>
+    /// The slide record20.
+    /// </summary>
     SlideRecord20 = 0xF0140,
+    /// <summary>
+    /// The slide record24.
+    /// </summary>
     SlideRecord24 = 0xF0141,
+    /// <summary>
+    /// The slide record28.
+    /// </summary>
     SlideRecord28 = 0xF0142,
+    /// <summary>
+    /// The slide record48.
+    /// </summary>
     SlideRecord48 = 0xF0143,
+    /// <summary>
+    /// The stack add20.
+    /// </summary>
     StackAdd20 = 0xF0144,
+    /// <summary>
+    /// The stack add24.
+    /// </summary>
     StackAdd24 = 0xF0145,
+    /// <summary>
+    /// The star checkmark16.
+    /// </summary>
     StarCheckmark16 = 0xF0146,
+    /// <summary>
+    /// The star checkmark20.
+    /// </summary>
     StarCheckmark20 = 0xF0147,
+    /// <summary>
+    /// The star checkmark24.
+    /// </summary>
     StarCheckmark24 = 0xF0148,
+    /// <summary>
+    /// The star checkmark28.
+    /// </summary>
     StarCheckmark28 = 0xF0149,
+    /// <summary>
+    /// The stream32.
+    /// </summary>
     Stream32 = 0xF014A,
+    /// <summary>
+    /// The subtract square16.
+    /// </summary>
     SubtractSquare16 = 0xF014B,
+    /// <summary>
+    /// The table default32.
+    /// </summary>
     TableDefault32 = 0xF014C,
+    /// <summary>
+    /// The table simple32.
+    /// </summary>
     TableSimple32 = 0xF014D,
+    /// <summary>
+    /// The table simple exclude16.
+    /// </summary>
     TableSimpleExclude16 = 0xF014E,
+    /// <summary>
+    /// The table simple exclude20.
+    /// </summary>
     TableSimpleExclude20 = 0xF014F,
+    /// <summary>
+    /// The table simple exclude24.
+    /// </summary>
     TableSimpleExclude24 = 0xF0150,
+    /// <summary>
+    /// The table simple exclude28.
+    /// </summary>
     TableSimpleExclude28 = 0xF0151,
+    /// <summary>
+    /// The table simple exclude32.
+    /// </summary>
     TableSimpleExclude32 = 0xF0152,
+    /// <summary>
+    /// The table simple exclude48.
+    /// </summary>
     TableSimpleExclude48 = 0xF0153,
+    /// <summary>
+    /// The table simple include16.
+    /// </summary>
     TableSimpleInclude16 = 0xF0154,
+    /// <summary>
+    /// The table simple include20.
+    /// </summary>
     TableSimpleInclude20 = 0xF0155,
+    /// <summary>
+    /// The table simple include24.
+    /// </summary>
     TableSimpleInclude24 = 0xF0156,
+    /// <summary>
+    /// The table simple include28.
+    /// </summary>
     TableSimpleInclude28 = 0xF0157,
+    /// <summary>
+    /// The table simple include32.
+    /// </summary>
     TableSimpleInclude32 = 0xF0158,
+    /// <summary>
+    /// The table simple include48.
+    /// </summary>
     TableSimpleInclude48 = 0xF0159,
+    /// <summary>
+    /// The tablet laptop20.
+    /// </summary>
     TabletLaptop20 = 0xF015A,
+    /// <summary>
+    /// The textbox align middle16.
+    /// </summary>
     TextboxAlignMiddle16 = 0xF015B,
+    /// <summary>
+    /// The tree deciduous24.
+    /// </summary>
     TreeDeciduous24 = 0xF015C,
+    /// <summary>
+    /// The tree deciduous28.
+    /// </summary>
     TreeDeciduous28 = 0xF015D,
+    /// <summary>
+    /// The application generic48.
+    /// </summary>
     AppGeneric48 = 0xF015E,
+    /// <summary>
+    /// The arrow enter16.
+    /// </summary>
     ArrowEnter16 = 0xF015F,
+    /// <summary>
+    /// The arrow sprint16.
+    /// </summary>
     ArrowSprint16 = 0xF0160,
+    /// <summary>
+    /// The arrow sprint20.
+    /// </summary>
     ArrowSprint20 = 0xF0161,
+    /// <summary>
+    /// The beaker settings16.
+    /// </summary>
     BeakerSettings16 = 0xF0162,
+    /// <summary>
+    /// The beaker settings20.
+    /// </summary>
     BeakerSettings20 = 0xF0163,
+    /// <summary>
+    /// The binder triangle16.
+    /// </summary>
     BinderTriangle16 = 0xF0164,
+    /// <summary>
+    /// The book dismiss16.
+    /// </summary>
     BookDismiss16 = 0xF0165,
+    /// <summary>
+    /// The book dismiss20.
+    /// </summary>
     BookDismiss20 = 0xF0166,
+    /// <summary>
+    /// The button16.
+    /// </summary>
     Button16 = 0xF0167,
+    /// <summary>
+    /// The button20.
+    /// </summary>
     Button20 = 0xF0168,
+    /// <summary>
+    /// The card ui20.
+    /// </summary>
     CardUi20 = 0xF0169,
+    /// <summary>
+    /// The card ui24.
+    /// </summary>
     CardUi24 = 0xF016A,
+    /// <summary>
+    /// The chevron down up16.
+    /// </summary>
     ChevronDownUp16 = 0xF016B,
+    /// <summary>
+    /// The chevron down up20.
+    /// </summary>
     ChevronDownUp20 = 0xF016C,
+    /// <summary>
+    /// The chevron down up24.
+    /// </summary>
     ChevronDownUp24 = 0xF016D,
+    /// <summary>
+    /// The column single compare16.
+    /// </summary>
     ColumnSingleCompare16 = 0xF016E,
+    /// <summary>
+    /// The column single compare20.
+    /// </summary>
     ColumnSingleCompare20 = 0xF016F,
+    /// <summary>
+    /// The crop sparkle24.
+    /// </summary>
     CropSparkle24 = 0xF0170,
+    /// <summary>
+    /// The cursor16.
+    /// </summary>
     Cursor16 = 0xF0171,
+    /// <summary>
+    /// The cursor prohibited16.
+    /// </summary>
     CursorProhibited16 = 0xF0172,
+    /// <summary>
+    /// The cursor prohibited20.
+    /// </summary>
     CursorProhibited20 = 0xF0173,
+    /// <summary>
+    /// The data histogram16.
+    /// </summary>
     DataHistogram16 = 0xF0174,
+    /// <summary>
+    /// The document image16.
+    /// </summary>
     DocumentImage16 = 0xF0175,
+    /// <summary>
+    /// The document image20.
+    /// </summary>
     DocumentImage20 = 0xF0176,
+    /// <summary>
+    /// The document java16.
+    /// </summary>
     DocumentJava16 = 0xF0177,
+    /// <summary>
+    /// The document java20.
+    /// </summary>
     DocumentJava20 = 0xF0178,
+    /// <summary>
+    /// The document one page beaker16.
+    /// </summary>
     DocumentOnePageBeaker16 = 0xF0179,
+    /// <summary>
+    /// The document one page multiple16.
+    /// </summary>
     DocumentOnePageMultiple16 = 0xF017A,
+    /// <summary>
+    /// The document one page multiple20.
+    /// </summary>
     DocumentOnePageMultiple20 = 0xF017B,
+    /// <summary>
+    /// The document one page multiple24.
+    /// </summary>
     DocumentOnePageMultiple24 = 0xF017C,
+    /// <summary>
+    /// The document sass16.
+    /// </summary>
     DocumentSass16 = 0xF017D,
+    /// <summary>
+    /// The document sass20.
+    /// </summary>
     DocumentSass20 = 0xF017E,
+    /// <summary>
+    /// The document yml16.
+    /// </summary>
     DocumentYml16 = 0xF017F,
+    /// <summary>
+    /// The document yml20.
+    /// </summary>
     DocumentYml20 = 0xF0180,
+    /// <summary>
+    /// The filmstrip split16.
+    /// </summary>
     FilmstripSplit16 = 0xF0181,
+    /// <summary>
+    /// The filmstrip split20.
+    /// </summary>
     FilmstripSplit20 = 0xF0182,
+    /// <summary>
+    /// The filmstrip split24.
+    /// </summary>
     FilmstripSplit24 = 0xF0183,
+    /// <summary>
+    /// The filmstrip split32.
+    /// </summary>
     FilmstripSplit32 = 0xF0184,
+    /// <summary>
+    /// The gavel16.
+    /// </summary>
     Gavel16 = 0xF0185,
+    /// <summary>
+    /// The gavel prohibited16.
+    /// </summary>
     GavelProhibited16 = 0xF0186,
+    /// <summary>
+    /// The gavel prohibited20.
+    /// </summary>
     GavelProhibited20 = 0xF0187,
+    /// <summary>
+    /// The gift open16.
+    /// </summary>
     GiftOpen16 = 0xF0188,
+    /// <summary>
+    /// The gift open20.
+    /// </summary>
     GiftOpen20 = 0xF0189,
+    /// <summary>
+    /// The gift open24.
+    /// </summary>
     GiftOpen24 = 0xF018A,
+    /// <summary>
+    /// The globe12.
+    /// </summary>
     Globe12 = 0xF018B,
+    /// <summary>
+    /// The grid kanban16.
+    /// </summary>
     GridKanban16 = 0xF018C,
+    /// <summary>
+    /// The image stack16.
+    /// </summary>
     ImageStack16 = 0xF018D,
+    /// <summary>
+    /// The image stack20.
+    /// </summary>
     ImageStack20 = 0xF018E,
+    /// <summary>
+    /// The laptop shield16.
+    /// </summary>
     LaptopShield16 = 0xF018F,
+    /// <summary>
+    /// The laptop shield20.
+    /// </summary>
     LaptopShield20 = 0xF0190,
+    /// <summary>
+    /// The list bar16.
+    /// </summary>
     ListBar16 = 0xF0191,
+    /// <summary>
+    /// The list bar20.
+    /// </summary>
     ListBar20 = 0xF0192,
+    /// <summary>
+    /// The list bar tree16.
+    /// </summary>
     ListBarTree16 = 0xF0193,
+    /// <summary>
+    /// The list bar tree20.
+    /// </summary>
     ListBarTree20 = 0xF0194,
+    /// <summary>
+    /// The list bar tree offset16.
+    /// </summary>
     ListBarTreeOffset16 = 0xF0195,
+    /// <summary>
+    /// The list bar tree offset20.
+    /// </summary>
     ListBarTreeOffset20 = 0xF0196,
+    /// <summary>
+    /// The list RTL16.
+    /// </summary>
     ListRtl16 = 0xF0197,
+    /// <summary>
+    /// The list RTL20.
+    /// </summary>
     ListRtl20 = 0xF0198,
+    /// <summary>
+    /// The panel left text16.
+    /// </summary>
     PanelLeftText16 = 0xF0199,
+    /// <summary>
+    /// The panel left text20.
+    /// </summary>
     PanelLeftText20 = 0xF019A,
+    /// <summary>
+    /// The panel left text24.
+    /// </summary>
     PanelLeftText24 = 0xF019B,
+    /// <summary>
+    /// The panel left text28.
+    /// </summary>
     PanelLeftText28 = 0xF019C,
+    /// <summary>
+    /// The panel left text32.
+    /// </summary>
     PanelLeftText32 = 0xF019D,
+    /// <summary>
+    /// The panel left text48.
+    /// </summary>
     PanelLeftText48 = 0xF019E,
+    /// <summary>
+    /// The panel left text add16.
+    /// </summary>
     PanelLeftTextAdd16 = 0xF019F,
+    /// <summary>
+    /// The panel left text add20.
+    /// </summary>
     PanelLeftTextAdd20 = 0xF01A0,
+    /// <summary>
+    /// The panel left text add24.
+    /// </summary>
     PanelLeftTextAdd24 = 0xF01A1,
+    /// <summary>
+    /// The panel left text add28.
+    /// </summary>
     PanelLeftTextAdd28 = 0xF01A2,
+    /// <summary>
+    /// The panel left text add32.
+    /// </summary>
     PanelLeftTextAdd32 = 0xF01A3,
+    /// <summary>
+    /// The panel left text add48.
+    /// </summary>
     PanelLeftTextAdd48 = 0xF01A4,
+    /// <summary>
+    /// The panel left text dismiss16.
+    /// </summary>
     PanelLeftTextDismiss16 = 0xF01A5,
+    /// <summary>
+    /// The panel left text dismiss20.
+    /// </summary>
     PanelLeftTextDismiss20 = 0xF01A6,
+    /// <summary>
+    /// The panel left text dismiss24.
+    /// </summary>
     PanelLeftTextDismiss24 = 0xF01A7,
+    /// <summary>
+    /// The panel left text dismiss28.
+    /// </summary>
     PanelLeftTextDismiss28 = 0xF01A8,
+    /// <summary>
+    /// The panel left text dismiss32.
+    /// </summary>
     PanelLeftTextDismiss32 = 0xF01A9,
+    /// <summary>
+    /// The panel left text dismiss48.
+    /// </summary>
     PanelLeftTextDismiss48 = 0xF01AA,
+    /// <summary>
+    /// The person lightning16.
+    /// </summary>
     PersonLightning16 = 0xF01AB,
+    /// <summary>
+    /// The person lightning20.
+    /// </summary>
     PersonLightning20 = 0xF01AC,
+    /// <summary>
+    /// The text bullet list square16.
+    /// </summary>
     TextBulletListSquare16 = 0xF01AD,
+    /// <summary>
+    /// The text bullet list square32.
+    /// </summary>
     TextBulletListSquare32 = 0xF01AE,
+    /// <summary>
+    /// The text bullet list square sparkle16.
+    /// </summary>
     TextBulletListSquareSparkle16 = 0xF01AF,
+    /// <summary>
+    /// The text bullet list square sparkle20.
+    /// </summary>
     TextBulletListSquareSparkle20 = 0xF01B0,
+    /// <summary>
+    /// The text bullet list square sparkle24.
+    /// </summary>
     TextBulletListSquareSparkle24 = 0xF01B1,
+    /// <summary>
+    /// The translate auto16.
+    /// </summary>
     TranslateAuto16 = 0xF01B2,
+    /// <summary>
+    /// The translate auto20.
+    /// </summary>
     TranslateAuto20 = 0xF01B3,
+    /// <summary>
+    /// The translate auto24.
+    /// </summary>
     TranslateAuto24 = 0xF01B4,
+    /// <summary>
+    /// The align space evenly vertical24.
+    /// </summary>
     AlignSpaceEvenlyVertical24 = 0xF01B5,
+    /// <summary>
+    /// The align straighten20.
+    /// </summary>
     AlignStraighten20 = 0xF01B6,
+    /// <summary>
+    /// The align straighten24.
+    /// </summary>
     AlignStraighten24 = 0xF01B7,
+    /// <summary>
+    /// The arrow flow diagonal up right16.
+    /// </summary>
     ArrowFlowDiagonalUpRight16 = 0xF01B8,
+    /// <summary>
+    /// The arrow flow diagonal up right20.
+    /// </summary>
     ArrowFlowDiagonalUpRight20 = 0xF01B9,
+    /// <summary>
+    /// The arrow flow diagonal up right24.
+    /// </summary>
     ArrowFlowDiagonalUpRight24 = 0xF01BA,
+    /// <summary>
+    /// The arrow flow diagonal up right32.
+    /// </summary>
     ArrowFlowDiagonalUpRight32 = 0xF01BB,
+    /// <summary>
+    /// The arrow flow up right16.
+    /// </summary>
     ArrowFlowUpRight16 = 0xF01BC,
+    /// <summary>
+    /// The arrow flow up right20.
+    /// </summary>
     ArrowFlowUpRight20 = 0xF01BD,
+    /// <summary>
+    /// The arrow flow up right24.
+    /// </summary>
     ArrowFlowUpRight24 = 0xF01BE,
+    /// <summary>
+    /// The arrow flow up right32.
+    /// </summary>
     ArrowFlowUpRight32 = 0xF01BF,
+    /// <summary>
+    /// The arrow flow up right rectangle multiple20.
+    /// </summary>
     ArrowFlowUpRightRectangleMultiple20 = 0xF01C0,
+    /// <summary>
+    /// The arrow flow up right rectangle multiple24.
+    /// </summary>
     ArrowFlowUpRightRectangleMultiple24 = 0xF01C1,
+    /// <summary>
+    /// The arrow square up right20.
+    /// </summary>
     ArrowSquareUpRight20 = 0xF01C2,
+    /// <summary>
+    /// The arrow square up right24.
+    /// </summary>
     ArrowSquareUpRight24 = 0xF01C3,
+    /// <summary>
+    /// The bin recycle20.
+    /// </summary>
     BinRecycle20 = 0xF01C4,
+    /// <summary>
+    /// The bin recycle24.
+    /// </summary>
     BinRecycle24 = 0xF01C5,
+    /// <summary>
+    /// The bin recycle full20.
+    /// </summary>
     BinRecycleFull20 = 0xF01C6,
+    /// <summary>
+    /// The bin recycle full24.
+    /// </summary>
     BinRecycleFull24 = 0xF01C7,
+    /// <summary>
+    /// The briefcase search20.
+    /// </summary>
     BriefcaseSearch20 = 0xF01C8,
+    /// <summary>
+    /// The briefcase search24.
+    /// </summary>
     BriefcaseSearch24 = 0xF01C9,
+    /// <summary>
+    /// The circle line16.
+    /// </summary>
     CircleLine16 = 0xF01CA,
+    /// <summary>
+    /// The desk20.
+    /// </summary>
     Desk20 = 0xF01CB,
+    /// <summary>
+    /// The desk24.
+    /// </summary>
     Desk24 = 0xF01CC,
+    /// <summary>
+    /// The filmstrip48.
+    /// </summary>
     Filmstrip48 = 0xF01CD,
+    /// <summary>
+    /// The filmstrip off48.
+    /// </summary>
     FilmstripOff48 = 0xF01CE,
+    /// <summary>
+    /// The flash32.
+    /// </summary>
     Flash32 = 0xF01CF,
+    /// <summary>
+    /// The flow24.
+    /// </summary>
     Flow24 = 0xF01D0,
+    /// <summary>
+    /// The flow32.
+    /// </summary>
     Flow32 = 0xF01D1,
+    /// <summary>
+    /// The heart pulse checkmark20.
+    /// </summary>
     HeartPulseCheckmark20 = 0xF01D2,
+    /// <summary>
+    /// The heart pulse error20.
+    /// </summary>
     HeartPulseError20 = 0xF01D3,
+    /// <summary>
+    /// The heart pulse warning20.
+    /// </summary>
     HeartPulseWarning20 = 0xF01D4,
+    /// <summary>
+    /// The home heart16.
+    /// </summary>
     HomeHeart16 = 0xF01D5,
+    /// <summary>
+    /// The home heart20.
+    /// </summary>
     HomeHeart20 = 0xF01D6,
+    /// <summary>
+    /// The home heart24.
+    /// </summary>
     HomeHeart24 = 0xF01D7,
+    /// <summary>
+    /// The home heart32.
+    /// </summary>
     HomeHeart32 = 0xF01D8,
+    /// <summary>
+    /// The image off28.
+    /// </summary>
     ImageOff28 = 0xF01D9,
+    /// <summary>
+    /// The image off32.
+    /// </summary>
     ImageOff32 = 0xF01DA,
+    /// <summary>
+    /// The image off48.
+    /// </summary>
     ImageOff48 = 0xF01DB,
+    /// <summary>
+    /// The money hand16.
+    /// </summary>
     MoneyHand16 = 0xF01DC,
+    /// <summary>
+    /// The money settings16.
+    /// </summary>
     MoneySettings16 = 0xF01DD,
+    /// <summary>
+    /// The money settings24.
+    /// </summary>
     MoneySettings24 = 0xF01DE,
+    /// <summary>
+    /// The people edit16.
+    /// </summary>
     PeopleEdit16 = 0xF01DF,
+    /// <summary>
+    /// The people edit24.
+    /// </summary>
     PeopleEdit24 = 0xF01E0,
+    /// <summary>
+    /// The triangle up20.
+    /// </summary>
     TriangleUp20 = 0xF01E1,
+    /// <summary>
+    /// The add square16.
+    /// </summary>
     AddSquare16 = 0xF01E2,
+    /// <summary>
+    /// The add square28.
+    /// </summary>
     AddSquare28 = 0xF01E3,
+    /// <summary>
+    /// The add square32.
+    /// </summary>
     AddSquare32 = 0xF01E4,
+    /// <summary>
+    /// The add square48.
+    /// </summary>
     AddSquare48 = 0xF01E5,
+    /// <summary>
+    /// The arrow routing20.
+    /// </summary>
     ArrowRouting20 = 0xF01E6,
+    /// <summary>
+    /// The arrow routing24.
+    /// </summary>
     ArrowRouting24 = 0xF01E7,
+    /// <summary>
+    /// The arrow routing rectangle multiple20.
+    /// </summary>
     ArrowRoutingRectangleMultiple20 = 0xF01E8,
+    /// <summary>
+    /// The arrow routing rectangle multiple24.
+    /// </summary>
     ArrowRoutingRectangleMultiple24 = 0xF01E9,
+    /// <summary>
+    /// The book add28.
+    /// </summary>
     BookAdd28 = 0xF01EA,
+    /// <summary>
+    /// The book default28.
+    /// </summary>
     BookDefault28 = 0xF01EB,
+    /// <summary>
+    /// The folder lightning16.
+    /// </summary>
     FolderLightning16 = 0xF01EC,
+    /// <summary>
+    /// The folder lightning20.
+    /// </summary>
     FolderLightning20 = 0xF01ED,
+    /// <summary>
+    /// The folder lightning24.
+    /// </summary>
     FolderLightning24 = 0xF01EE,
+    /// <summary>
+    /// The hat graduation28.
+    /// </summary>
     HatGraduation28 = 0xF01EF,
+    /// <summary>
+    /// The image sparkle16.
+    /// </summary>
     ImageSparkle16 = 0xF01F0,
+    /// <summary>
+    /// The image sparkle20.
+    /// </summary>
     ImageSparkle20 = 0xF01F1,
+    /// <summary>
+    /// The image sparkle24.
+    /// </summary>
     ImageSparkle24 = 0xF01F2,
+    /// <summary>
+    /// The mail32.
+    /// </summary>
     Mail32 = 0xF01F3,
+    /// <summary>
+    /// The person info24.
+    /// </summary>
     PersonInfo24 = 0xF01F4,
+    /// <summary>
+    /// The prohibited32.
+    /// </summary>
     Prohibited32 = 0xF01F5,
+    /// <summary>
+    /// The prohibited multiple28.
+    /// </summary>
     ProhibitedMultiple28 = 0xF01F6,
+    /// <summary>
+    /// The spinner ios16.
+    /// </summary>
     SpinnerIos16 = 0xF01F7,
+    /// <summary>
+    /// The star emphasis16.
+    /// </summary>
     StarEmphasis16 = 0xF01F8,
+    /// <summary>
+    /// The text direction rotate315 right20.
+    /// </summary>
     TextDirectionRotate315Right20 = 0xF01F9,
+    /// <summary>
+    /// The text direction rotate315 right24.
+    /// </summary>
     TextDirectionRotate315Right24 = 0xF01FA,
+    /// <summary>
+    /// The text direction rotate45 right20.
+    /// </summary>
     TextDirectionRotate45Right20 = 0xF01FB,
+    /// <summary>
+    /// The text direction rotate45 right24.
+    /// </summary>
     TextDirectionRotate45Right24 = 0xF01FC,
+    /// <summary>
+    /// The arrow outline down left16.
+    /// </summary>
     ArrowOutlineDownLeft16 = 0xF01FD,
+    /// <summary>
+    /// The arrow outline down left20.
+    /// </summary>
     ArrowOutlineDownLeft20 = 0xF01FE,
+    /// <summary>
+    /// The arrow outline down left24.
+    /// </summary>
     ArrowOutlineDownLeft24 = 0xF01FF,
+    /// <summary>
+    /// The arrow outline down left28.
+    /// </summary>
     ArrowOutlineDownLeft28 = 0xF0200,
+    /// <summary>
+    /// The arrow outline down left32.
+    /// </summary>
     ArrowOutlineDownLeft32 = 0xF0201,
+    /// <summary>
+    /// The arrow outline down left48.
+    /// </summary>
     ArrowOutlineDownLeft48 = 0xF0202,
+    /// <summary>
+    /// The arrow step in diagonal down left16.
+    /// </summary>
     ArrowStepInDiagonalDownLeft16 = 0xF0203,
+    /// <summary>
+    /// The arrow step in diagonal down left20.
+    /// </summary>
     ArrowStepInDiagonalDownLeft20 = 0xF0204,
+    /// <summary>
+    /// The arrow step in diagonal down left24.
+    /// </summary>
     ArrowStepInDiagonalDownLeft24 = 0xF0205,
+    /// <summary>
+    /// The arrow step in diagonal down left28.
+    /// </summary>
     ArrowStepInDiagonalDownLeft28 = 0xF0206,
+    /// <summary>
+    /// The arrow up square settings24.
+    /// </summary>
     ArrowUpSquareSettings24 = 0xF0207,
+    /// <summary>
+    /// The briefcase person24.
+    /// </summary>
     BriefcasePerson24 = 0xF0208,
+    /// <summary>
+    /// The building cloud24.
+    /// </summary>
     BuildingCloud24 = 0xF0209,
+    /// <summary>
+    /// The calendar eye20.
+    /// </summary>
     CalendarEye20 = 0xF020A,
+    /// <summary>
+    /// The clipboard paste32.
+    /// </summary>
     ClipboardPaste32 = 0xF020B,
+    /// <summary>
+    /// The cloud bidirectional20.
+    /// </summary>
     CloudBidirectional20 = 0xF020C,
+    /// <summary>
+    /// The cloud bidirectional24.
+    /// </summary>
     CloudBidirectional24 = 0xF020D,
+    /// <summary>
+    /// The comment edit16.
+    /// </summary>
     CommentEdit16 = 0xF020E,
+    /// <summary>
+    /// The crown24.
+    /// </summary>
     Crown24 = 0xF020F,
+    /// <summary>
+    /// The crown subtract24.
+    /// </summary>
     CrownSubtract24 = 0xF0210,
+    /// <summary>
+    /// The folder add32.
+    /// </summary>
     FolderAdd32 = 0xF0211,
+    /// <summary>
+    /// The folder arrow left48.
+    /// </summary>
     FolderArrowLeft48 = 0xF0212,
+    /// <summary>
+    /// The folder arrow right32.
+    /// </summary>
     FolderArrowRight32 = 0xF0213,
+    /// <summary>
+    /// The folder arrow up32.
+    /// </summary>
     FolderArrowUp32 = 0xF0214,
+    /// <summary>
+    /// The folder link16.
+    /// </summary>
     FolderLink16 = 0xF0215,
+    /// <summary>
+    /// The folder link32.
+    /// </summary>
     FolderLink32 = 0xF0216,
+    /// <summary>
+    /// The folder prohibited32.
+    /// </summary>
     FolderProhibited32 = 0xF0217,
+    /// <summary>
+    /// The hat graduation sparkle20.
+    /// </summary>
     HatGraduationSparkle20 = 0xF0218,
+    /// <summary>
+    /// The hat graduation sparkle24.
+    /// </summary>
     HatGraduationSparkle24 = 0xF0219,
+    /// <summary>
+    /// The hat graduation sparkle28.
+    /// </summary>
     HatGraduationSparkle28 = 0xF021A,
+    /// <summary>
+    /// The kiosk24.
+    /// </summary>
     Kiosk24 = 0xF021B,
+    /// <summary>
+    /// The laptop multiple24.
+    /// </summary>
     LaptopMultiple24 = 0xF021C,
+    /// <summary>
+    /// The link add24.
+    /// </summary>
     LinkAdd24 = 0xF021D,
+    /// <summary>
+    /// The link settings24.
+    /// </summary>
     LinkSettings24 = 0xF021E,
+    /// <summary>
+    /// The lock closed28.
+    /// </summary>
     LockClosed28 = 0xF021F,
+    /// <summary>
+    /// The lock closed48.
+    /// </summary>
     LockClosed48 = 0xF0220,
+    /// <summary>
+    /// The lock open12.
+    /// </summary>
     LockOpen12 = 0xF0221,
+    /// <summary>
+    /// The lock open32.
+    /// </summary>
     LockOpen32 = 0xF0222,
+    /// <summary>
+    /// The lock open48.
+    /// </summary>
     LockOpen48 = 0xF0223,
+    /// <summary>
+    /// The paint brush32.
+    /// </summary>
     PaintBrush32 = 0xF0224,
+    /// <summary>
+    /// The pause circle32.
+    /// </summary>
     PauseCircle32 = 0xF0225,
+    /// <summary>
+    /// The pause circle48.
+    /// </summary>
     PauseCircle48 = 0xF0226,
+    /// <summary>
+    /// The pen sparkle16.
+    /// </summary>
     PenSparkle16 = 0xF0227,
+    /// <summary>
+    /// The pen sparkle20.
+    /// </summary>
     PenSparkle20 = 0xF0228,
+    /// <summary>
+    /// The pen sparkle24.
+    /// </summary>
     PenSparkle24 = 0xF0229,
+    /// <summary>
+    /// The pen sparkle28.
+    /// </summary>
     PenSparkle28 = 0xF022A,
+    /// <summary>
+    /// The pen sparkle32.
+    /// </summary>
     PenSparkle32 = 0xF022B,
+    /// <summary>
+    /// The pen sparkle48.
+    /// </summary>
     PenSparkle48 = 0xF022C,
+    /// <summary>
+    /// The person phone24.
+    /// </summary>
     PersonPhone24 = 0xF022D,
+    /// <summary>
+    /// The person subtract24.
+    /// </summary>
     PersonSubtract24 = 0xF022E,
+    /// <summary>
+    /// The phone briefcase24.
+    /// </summary>
     PhoneBriefcase24 = 0xF022F,
+    /// <summary>
+    /// The phone multiple24.
+    /// </summary>
     PhoneMultiple24 = 0xF0230,
+    /// <summary>
+    /// The phone multiple settings24.
+    /// </summary>
     PhoneMultipleSettings24 = 0xF0231,
+    /// <summary>
+    /// The phone person24.
+    /// </summary>
     PhonePerson24 = 0xF0232,
+    /// <summary>
+    /// The phone subtract24.
+    /// </summary>
     PhoneSubtract24 = 0xF0233,
+    /// <summary>
+    /// The plug connected settings20.
+    /// </summary>
     PlugConnectedSettings20 = 0xF0234,
+    /// <summary>
+    /// The plug connected settings24.
+    /// </summary>
     PlugConnectedSettings24 = 0xF0235,
+    /// <summary>
+    /// The rectangle landscape hint copy16.
+    /// </summary>
     RectangleLandscapeHintCopy16 = 0xF0236,
+    /// <summary>
+    /// The rectangle landscape hint copy20.
+    /// </summary>
     RectangleLandscapeHintCopy20 = 0xF0237,
+    /// <summary>
+    /// The rectangle landscape hint copy24.
+    /// </summary>
     RectangleLandscapeHintCopy24 = 0xF0238,
+    /// <summary>
+    /// The script20.
+    /// </summary>
     Script20 = 0xF0239,
+    /// <summary>
+    /// The script24.
+    /// </summary>
     Script24 = 0xF023A,
+    /// <summary>
+    /// The script32.
+    /// </summary>
     Script32 = 0xF023B,
+    /// <summary>
+    /// The server link24.
+    /// </summary>
     ServerLink24 = 0xF023C,
+    /// <summary>
+    /// The signature32.
+    /// </summary>
     Signature32 = 0xF023D,
+    /// <summary>
+    /// The speaker mute32.
+    /// </summary>
     SpeakerMute32 = 0xF023E,
+    /// <summary>
+    /// The tab desktop28.
+    /// </summary>
     TabDesktop28 = 0xF023F,
+    /// <summary>
+    /// The tab desktop link16.
+    /// </summary>
     TabDesktopLink16 = 0xF0240,
+    /// <summary>
+    /// The tab desktop link20.
+    /// </summary>
     TabDesktopLink20 = 0xF0241,
+    /// <summary>
+    /// The tab desktop link24.
+    /// </summary>
     TabDesktopLink24 = 0xF0242,
+    /// <summary>
+    /// The tab desktop link28.
+    /// </summary>
     TabDesktopLink28 = 0xF0243,
+    /// <summary>
+    /// The table arrow up20.
+    /// </summary>
     TableArrowUp20 = 0xF0244,
+    /// <summary>
+    /// The table arrow up24.
+    /// </summary>
     TableArrowUp24 = 0xF0245,
+    /// <summary>
+    /// The tablet laptop24.
+    /// </summary>
     TabletLaptop24 = 0xF0246,
+    /// <summary>
+    /// The thumb like dislike16.
+    /// </summary>
     ThumbLikeDislike16 = 0xF0247,
+    /// <summary>
+    /// The thumb like dislike20.
+    /// </summary>
     ThumbLikeDislike20 = 0xF0248,
+    /// <summary>
+    /// The thumb like dislike24.
+    /// </summary>
     ThumbLikeDislike24 = 0xF0249,
+    /// <summary>
+    /// The warning32.
+    /// </summary>
     Warning32 = 0xF024A,
+    /// <summary>
+    /// The number circle128.
+    /// </summary>
     NumberCircle128 = 0xF024B,
+    /// <summary>
+    /// The number circle132.
+    /// </summary>
     NumberCircle132 = 0xF024C,
+    /// <summary>
+    /// The number circle148.
+    /// </summary>
     NumberCircle148 = 0xF024D,
+    /// <summary>
+    /// The number circle216.
+    /// </summary>
     NumberCircle216 = 0xF024E,
+    /// <summary>
+    /// The number circle220.
+    /// </summary>
     NumberCircle220 = 0xF024F,
+    /// <summary>
+    /// The number circle224.
+    /// </summary>
     NumberCircle224 = 0xF0250,
+    /// <summary>
+    /// The number circle228.
+    /// </summary>
     NumberCircle228 = 0xF0251,
+    /// <summary>
+    /// The number circle232.
+    /// </summary>
     NumberCircle232 = 0xF0252,
+    /// <summary>
+    /// The number circle248.
+    /// </summary>
     NumberCircle248 = 0xF0253,
+    /// <summary>
+    /// The number circle316.
+    /// </summary>
     NumberCircle316 = 0xF0254,
+    /// <summary>
+    /// The number circle320.
+    /// </summary>
     NumberCircle320 = 0xF0255,
+    /// <summary>
+    /// The number circle324.
+    /// </summary>
     NumberCircle324 = 0xF0256,
+    /// <summary>
+    /// The number circle328.
+    /// </summary>
     NumberCircle328 = 0xF0257,
+    /// <summary>
+    /// The number circle332.
+    /// </summary>
     NumberCircle332 = 0xF0258,
+    /// <summary>
+    /// The number circle348.
+    /// </summary>
     NumberCircle348 = 0xF0259,
+    /// <summary>
+    /// The number circle416.
+    /// </summary>
     NumberCircle416 = 0xF025A,
+    /// <summary>
+    /// The number circle420.
+    /// </summary>
     NumberCircle420 = 0xF025B,
+    /// <summary>
+    /// The number circle424.
+    /// </summary>
     NumberCircle424 = 0xF025C,
+    /// <summary>
+    /// The number circle428.
+    /// </summary>
     NumberCircle428 = 0xF025D,
+    /// <summary>
+    /// The number circle432.
+    /// </summary>
     NumberCircle432 = 0xF025E,
+    /// <summary>
+    /// The number circle448.
+    /// </summary>
     NumberCircle448 = 0xF025F,
+    /// <summary>
+    /// The number circle516.
+    /// </summary>
     NumberCircle516 = 0xF0260,
+    /// <summary>
+    /// The number circle520.
+    /// </summary>
     NumberCircle520 = 0xF0261,
+    /// <summary>
+    /// The number circle524.
+    /// </summary>
     NumberCircle524 = 0xF0262,
+    /// <summary>
+    /// The number circle528.
+    /// </summary>
     NumberCircle528 = 0xF0263,
+    /// <summary>
+    /// The number circle532.
+    /// </summary>
     NumberCircle532 = 0xF0264,
+    /// <summary>
+    /// The number circle548.
+    /// </summary>
     NumberCircle548 = 0xF0265,
+    /// <summary>
+    /// The add square multiple24.
+    /// </summary>
     AddSquareMultiple24 = 0xF0266,
+    /// <summary>
+    /// The braces variable48.
+    /// </summary>
     BracesVariable48 = 0xF0267,
+    /// <summary>
+    /// The cube48.
+    /// </summary>
     Cube48 = 0xF0268,
+    /// <summary>
+    /// The desk16.
+    /// </summary>
     Desk16 = 0xF0269,
+    /// <summary>
+    /// The desk28.
+    /// </summary>
     Desk28 = 0xF026A,
+    /// <summary>
+    /// The desk32.
+    /// </summary>
     Desk32 = 0xF026B,
+    /// <summary>
+    /// The desk48.
+    /// </summary>
     Desk48 = 0xF026C,
+    /// <summary>
+    /// The folder open vertical24.
+    /// </summary>
     FolderOpenVertical24 = 0xF026D,
+    /// <summary>
+    /// The globe48.
+    /// </summary>
     Globe48 = 0xF026E,
+    /// <summary>
+    /// The globe shield48.
+    /// </summary>
     GlobeShield48 = 0xF026F,
+    /// <summary>
+    /// The hand right off16.
+    /// </summary>
     HandRightOff16 = 0xF0270,
+    /// <summary>
+    /// The hand right off24.
+    /// </summary>
     HandRightOff24 = 0xF0271,
+    /// <summary>
+    /// The hand right off28.
+    /// </summary>
     HandRightOff28 = 0xF0272,
+    /// <summary>
+    /// The hat graduation sparkle16.
+    /// </summary>
     HatGraduationSparkle16 = 0xF0273,
+    /// <summary>
+    /// The key multiple16.
+    /// </summary>
     KeyMultiple16 = 0xF0274,
+    /// <summary>
+    /// The key multiple24.
+    /// </summary>
     KeyMultiple24 = 0xF0275,
+    /// <summary>
+    /// The link multiple16.
+    /// </summary>
     LinkMultiple16 = 0xF0276,
+    /// <summary>
+    /// The link multiple20.
+    /// </summary>
     LinkMultiple20 = 0xF0277,
+    /// <summary>
+    /// The link multiple24.
+    /// </summary>
     LinkMultiple24 = 0xF0278,
+    /// <summary>
+    /// The mail off16.
+    /// </summary>
     MailOff16 = 0xF0279,
+    /// <summary>
+    /// The person edit48.
+    /// </summary>
     PersonEdit48 = 0xF027A,
+    /// <summary>
+    /// The plug disconnected48.
+    /// </summary>
     PlugDisconnected48 = 0xF027B,
+    /// <summary>
+    /// The stream48.
+    /// </summary>
     Stream48 = 0xF027C,
+    /// <summary>
+    /// The text bullet list square48.
+    /// </summary>
     TextBulletListSquare48 = 0xF027D,
+    /// <summary>
+    /// The text bullet list square shield48.
+    /// </summary>
     TextBulletListSquareShield48 = 0xF027E,
+    /// <summary>
+    /// The arrow export16.
+    /// </summary>
     ArrowExport16 = 0xF027F,
+    /// <summary>
+    /// The arrow export20.
+    /// </summary>
     ArrowExport20 = 0xF0280,
+    /// <summary>
+    /// The arrow export24.
+    /// </summary>
     ArrowExport24 = 0xF0281,
+    /// <summary>
+    /// The calendar12.
+    /// </summary>
     Calendar12 = 0xF0282,
+    /// <summary>
+    /// The calendar16.
+    /// </summary>
     Calendar16 = 0xF0283,
+    /// <summary>
+    /// The calendar20.
+    /// </summary>
     Calendar20 = 0xF0284,
+    /// <summary>
+    /// The calendar24.
+    /// </summary>
     Calendar24 = 0xF0285,
+    /// <summary>
+    /// The calendar28.
+    /// </summary>
     Calendar28 = 0xF0286,
+    /// <summary>
+    /// The calendar32.
+    /// </summary>
     Calendar32 = 0xF0287,
+    /// <summary>
+    /// The calendar48.
+    /// </summary>
     Calendar48 = 0xF0288,
+    /// <summary>
+    /// The calendar date20.
+    /// </summary>
     CalendarDate20 = 0xF0289,
+    /// <summary>
+    /// The calendar date24.
+    /// </summary>
     CalendarDate24 = 0xF028A,
+    /// <summary>
+    /// The calendar date28.
+    /// </summary>
     CalendarDate28 = 0xF028B,
+    /// <summary>
+    /// The clipboard bullet list16.
+    /// </summary>
     ClipboardBulletList16 = 0xF028C,
+    /// <summary>
+    /// The clipboard bullet list20.
+    /// </summary>
     ClipboardBulletList20 = 0xF028D,
+    /// <summary>
+    /// The ios arrow24.
+    /// </summary>
     IosArrow24 = 0xF028E,
+    /// <summary>
+    /// The text bullet list16.
+    /// </summary>
     TextBulletList16 = 0xF028F,
+    /// <summary>
+    /// The text bullet list20.
+    /// </summary>
     TextBulletList20 = 0xF0290,
+    /// <summary>
+    /// The text bullet list24.
+    /// </summary>
     TextBulletList24 = 0xF0291,
+    /// <summary>
+    /// The text bullet list27024.
+    /// </summary>
     TextBulletList27024 = 0xF0292,
+    /// <summary>
+    /// The text bullet list9020.
+    /// </summary>
     TextBulletList9020 = 0xF0293,
+    /// <summary>
+    /// The text bullet list9024.
+    /// </summary>
     TextBulletList9024 = 0xF0294,
+    /// <summary>
+    /// The text column wide20.
+    /// </summary>
     TextColumnWide20 = 0xF0295,
+    /// <summary>
+    /// The text column wide24.
+    /// </summary>
     TextColumnWide24 = 0xF0296,
+    /// <summary>
+    /// The text indent decrease16.
+    /// </summary>
     TextIndentDecrease16 = 0xF0297,
+    /// <summary>
+    /// The text indent decrease20.
+    /// </summary>
     TextIndentDecrease20 = 0xF0298,
+    /// <summary>
+    /// The text indent decrease24.
+    /// </summary>
     TextIndentDecrease24 = 0xF0299,
+    /// <summary>
+    /// The text indent increase16.
+    /// </summary>
     TextIndentIncrease16 = 0xF029A,
+    /// <summary>
+    /// The text indent increase20.
+    /// </summary>
     TextIndentIncrease20 = 0xF029B,
+    /// <summary>
+    /// The text indent increase24.
+    /// </summary>
     TextIndentIncrease24 = 0xF029C,
+    /// <summary>
+    /// The vehicle car profile16.
+    /// </summary>
     VehicleCarProfile16 = 0xF029D,
+    /// <summary>
+    /// The vehicle car profile20.
+    /// </summary>
     VehicleCarProfile20 = 0xF029E,
+    /// <summary>
+    /// The vehicle car profile24.
+    /// </summary>
     VehicleCarProfile24 = 0xF029F,
+    /// <summary>
+    /// The arrow bidirectional left right16.
+    /// </summary>
     ArrowBidirectionalLeftRight16 = 0xF02A0,
+    /// <summary>
+    /// The arrow bidirectional left right20.
+    /// </summary>
     ArrowBidirectionalLeftRight20 = 0xF02A1,
+    /// <summary>
+    /// The arrow bidirectional left right24.
+    /// </summary>
     ArrowBidirectionalLeftRight24 = 0xF02A2,
+    /// <summary>
+    /// The arrow bidirectional left right28.
+    /// </summary>
     ArrowBidirectionalLeftRight28 = 0xF02A3,
+    /// <summary>
+    /// The arrow swap16.
+    /// </summary>
     ArrowSwap16 = 0xF02A4,
+    /// <summary>
+    /// The arrow swap28.
+    /// </summary>
     ArrowSwap28 = 0xF02A5,
+    /// <summary>
+    /// The building mosque12.
+    /// </summary>
     BuildingMosque12 = 0xF02A6,
+    /// <summary>
+    /// The building mosque16.
+    /// </summary>
     BuildingMosque16 = 0xF02A7,
+    /// <summary>
+    /// The building mosque20.
+    /// </summary>
     BuildingMosque20 = 0xF02A8,
+    /// <summary>
+    /// The building mosque24.
+    /// </summary>
     BuildingMosque24 = 0xF02A9,
+    /// <summary>
+    /// The building mosque28.
+    /// </summary>
     BuildingMosque28 = 0xF02AA,
+    /// <summary>
+    /// The building mosque32.
+    /// </summary>
     BuildingMosque32 = 0xF02AB,
+    /// <summary>
+    /// The building mosque48.
+    /// </summary>
     BuildingMosque48 = 0xF02AC,
+    /// <summary>
+    /// The checkmark circle square16.
+    /// </summary>
     CheckmarkCircleSquare16 = 0xF02AD,
+    /// <summary>
+    /// The checkmark circle square20.
+    /// </summary>
     CheckmarkCircleSquare20 = 0xF02AE,
+    /// <summary>
+    /// The checkmark circle square24.
+    /// </summary>
     CheckmarkCircleSquare24 = 0xF02AF,
+    /// <summary>
+    /// The heart off16.
+    /// </summary>
     HeartOff16 = 0xF02B0,
+    /// <summary>
+    /// The heart off20.
+    /// </summary>
     HeartOff20 = 0xF02B1,
+    /// <summary>
+    /// The heart off24.
+    /// </summary>
     HeartOff24 = 0xF02B2,
+    /// <summary>
+    /// The hexagon16.
+    /// </summary>
     Hexagon16 = 0xF02B3,
+    /// <summary>
+    /// The hexagon20.
+    /// </summary>
     Hexagon20 = 0xF02B4,
+    /// <summary>
+    /// The hexagon three16.
+    /// </summary>
     HexagonThree16 = 0xF02B5,
+    /// <summary>
+    /// The hexagon three20.
+    /// </summary>
     HexagonThree20 = 0xF02B6,
+    /// <summary>
+    /// The line horizontal116.
+    /// </summary>
     LineHorizontal116 = 0xF02B7,
+    /// <summary>
+    /// The line horizontal124.
+    /// </summary>
     LineHorizontal124 = 0xF02B8,
+    /// <summary>
+    /// The line horizontal128.
+    /// </summary>
     LineHorizontal128 = 0xF02B9,
+    /// <summary>
+    /// The line horizontal1 dashes16.
+    /// </summary>
     LineHorizontal1Dashes16 = 0xF02BA,
+    /// <summary>
+    /// The line horizontal1 dashes20.
+    /// </summary>
     LineHorizontal1Dashes20 = 0xF02BB,
+    /// <summary>
+    /// The line horizontal1 dashes24.
+    /// </summary>
     LineHorizontal1Dashes24 = 0xF02BC,
+    /// <summary>
+    /// The line horizontal1 dashes28.
+    /// </summary>
     LineHorizontal1Dashes28 = 0xF02BD,
+    /// <summary>
+    /// The line horizontal2 dashes solid16.
+    /// </summary>
     LineHorizontal2DashesSolid16 = 0xF02BE,
+    /// <summary>
+    /// The line horizontal2 dashes solid20.
+    /// </summary>
     LineHorizontal2DashesSolid20 = 0xF02BF,
+    /// <summary>
+    /// The line horizontal2 dashes solid24.
+    /// </summary>
     LineHorizontal2DashesSolid24 = 0xF02C0,
+    /// <summary>
+    /// The line horizontal2 dashes solid28.
+    /// </summary>
     LineHorizontal2DashesSolid28 = 0xF02C1,
+    /// <summary>
+    /// The mic record20.
+    /// </summary>
     MicRecord20 = 0xF02C2,
+    /// <summary>
+    /// The mic record24.
+    /// </summary>
     MicRecord24 = 0xF02C3,
+    /// <summary>
+    /// The mic record28.
+    /// </summary>
     MicRecord28 = 0xF02C4,
+    /// <summary>
+    /// The open12.
+    /// </summary>
     Open12 = 0xF02C5,
+    /// <summary>
+    /// The remix add16.
+    /// </summary>
     RemixAdd16 = 0xF02C6,
+    /// <summary>
+    /// The remix add20.
+    /// </summary>
     RemixAdd20 = 0xF02C7,
+    /// <summary>
+    /// The remix add24.
+    /// </summary>
     RemixAdd24 = 0xF02C8,
+    /// <summary>
+    /// The remix add32.
+    /// </summary>
     RemixAdd32 = 0xF02C9,
+    /// <summary>
+    /// The video person sparkle off20.
+    /// </summary>
     VideoPersonSparkleOff20 = 0xF02CA,
+    /// <summary>
+    /// The video person sparkle off24.
+    /// </summary>
     VideoPersonSparkleOff24 = 0xF02CB,
+    /// <summary>
+    /// The voicemail shield20.
+    /// </summary>
     VoicemailShield20 = 0xF02CC,
+    /// <summary>
+    /// The voicemail shield24.
+    /// </summary>
     VoicemailShield24 = 0xF02CD,
+    /// <summary>
+    /// The voicemail shield32.
+    /// </summary>
     VoicemailShield32 = 0xF02CE,
+    /// <summary>
+    /// The window database32.
+    /// </summary>
     WindowDatabase32 = 0xF02CF,
+    /// <summary>
+    /// The cast multiple20.
+    /// </summary>
     CastMultiple20 = 0xF02D0,
+    /// <summary>
+    /// The cast multiple24.
+    /// </summary>
     CastMultiple24 = 0xF02D1,
+    /// <summary>
+    /// The cast multiple28.
+    /// </summary>
     CastMultiple28 = 0xF02D2,
+    /// <summary>
+    /// The circle hint half vertical16.
+    /// </summary>
     CircleHintHalfVertical16 = 0xF02D3,
+    /// <summary>
+    /// The circle hint half vertical20.
+    /// </summary>
     CircleHintHalfVertical20 = 0xF02D4,
+    /// <summary>
+    /// The circle hint half vertical24.
+    /// </summary>
     CircleHintHalfVertical24 = 0xF02D5,
+    /// <summary>
+    /// The flash sparkle20.
+    /// </summary>
     FlashSparkle20 = 0xF02D6,
+    /// <summary>
+    /// The flash sparkle24.
+    /// </summary>
     FlashSparkle24 = 0xF02D7,
+    /// <summary>
+    /// The hexagon12.
+    /// </summary>
     Hexagon12 = 0xF02D8,
+    /// <summary>
+    /// The hexagon24.
+    /// </summary>
     Hexagon24 = 0xF02D9,
+    /// <summary>
+    /// The hexagon three12.
+    /// </summary>
     HexagonThree12 = 0xF02DA,
+    /// <summary>
+    /// The hexagon three24.
+    /// </summary>
     HexagonThree24 = 0xF02DB,
+    /// <summary>
+    /// The next frame20.
+    /// </summary>
     NextFrame20 = 0xF02DC,
+    /// <summary>
+    /// The next frame24.
+    /// </summary>
     NextFrame24 = 0xF02DD,
+    /// <summary>
+    /// The previous frame20.
+    /// </summary>
     PreviousFrame20 = 0xF02DE,
+    /// <summary>
+    /// The previous frame24.
+    /// </summary>
     PreviousFrame24 = 0xF02DF,
+    /// <summary>
+    /// The textbox align bottom center16.
+    /// </summary>
     TextboxAlignBottomCenter16 = 0xF02E0,
+    /// <summary>
+    /// The textbox align bottom center20.
+    /// </summary>
     TextboxAlignBottomCenter20 = 0xF02E1,
+    /// <summary>
+    /// The textbox align bottom center24.
+    /// </summary>
     TextboxAlignBottomCenter24 = 0xF02E2,
+    /// <summary>
+    /// The textbox align bottom left16.
+    /// </summary>
     TextboxAlignBottomLeft16 = 0xF02E3,
+    /// <summary>
+    /// The textbox align bottom left20.
+    /// </summary>
     TextboxAlignBottomLeft20 = 0xF02E4,
+    /// <summary>
+    /// The textbox align bottom left24.
+    /// </summary>
     TextboxAlignBottomLeft24 = 0xF02E5,
+    /// <summary>
+    /// The textbox align bottom right16.
+    /// </summary>
     TextboxAlignBottomRight16 = 0xF02E6,
+    /// <summary>
+    /// The textbox align bottom right20.
+    /// </summary>
     TextboxAlignBottomRight20 = 0xF02E7,
+    /// <summary>
+    /// The textbox align bottom right24.
+    /// </summary>
     TextboxAlignBottomRight24 = 0xF02E8,
+    /// <summary>
+    /// The textbox align center16.
+    /// </summary>
     TextboxAlignCenter16 = 0xF02E9,
+    /// <summary>
+    /// The textbox align middle left16.
+    /// </summary>
     TextboxAlignMiddleLeft16 = 0xF02EA,
+    /// <summary>
+    /// The textbox align middle left20.
+    /// </summary>
     TextboxAlignMiddleLeft20 = 0xF02EB,
+    /// <summary>
+    /// The textbox align middle left24.
+    /// </summary>
     TextboxAlignMiddleLeft24 = 0xF02EC,
+    /// <summary>
+    /// The textbox align middle right16.
+    /// </summary>
     TextboxAlignMiddleRight16 = 0xF02ED,
+    /// <summary>
+    /// The textbox align middle right20.
+    /// </summary>
     TextboxAlignMiddleRight20 = 0xF02EE,
+    /// <summary>
+    /// The textbox align middle right24.
+    /// </summary>
     TextboxAlignMiddleRight24 = 0xF02EF,
+    /// <summary>
+    /// The textbox align top center16.
+    /// </summary>
     TextboxAlignTopCenter16 = 0xF02F0,
+    /// <summary>
+    /// The textbox align top center20.
+    /// </summary>
     TextboxAlignTopCenter20 = 0xF02F1,
+    /// <summary>
+    /// The textbox align top center24.
+    /// </summary>
     TextboxAlignTopCenter24 = 0xF02F2,
+    /// <summary>
+    /// The textbox align top left16.
+    /// </summary>
     TextboxAlignTopLeft16 = 0xF02F3,
+    /// <summary>
+    /// The textbox align top left20.
+    /// </summary>
     TextboxAlignTopLeft20 = 0xF02F4,
+    /// <summary>
+    /// The textbox align top left24.
+    /// </summary>
     TextboxAlignTopLeft24 = 0xF02F5,
+    /// <summary>
+    /// The textbox align top right16.
+    /// </summary>
     TextboxAlignTopRight16 = 0xF02F6,
+    /// <summary>
+    /// The textbox align top right20.
+    /// </summary>
     TextboxAlignTopRight20 = 0xF02F7,
+    /// <summary>
+    /// The textbox align top right24.
+    /// </summary>
     TextboxAlignTopRight24 = 0xF02F8,
+    /// <summary>
+    /// The triangle down24.
+    /// </summary>
     TriangleDown24 = 0xF02F9,
+    /// <summary>
+    /// The call end12.
+    /// </summary>
     CallEnd12 = 0xF02FA,
+    /// <summary>
+    /// The call end32.
+    /// </summary>
     CallEnd32 = 0xF02FB,
+    /// <summary>
+    /// The call end48.
+    /// </summary>
     CallEnd48 = 0xF02FC,
+    /// <summary>
+    /// The content view gallery16.
+    /// </summary>
     ContentViewGallery16 = 0xF02FD,
+    /// <summary>
+    /// The content view gallery lightning16.
+    /// </summary>
     ContentViewGalleryLightning16 = 0xF02FE,
+    /// <summary>
+    /// The content view gallery lightning20.
+    /// </summary>
     ContentViewGalleryLightning20 = 0xF02FF,
+    /// <summary>
+    /// The content view gallery lightning24.
+    /// </summary>
     ContentViewGalleryLightning24 = 0xF0300,
+    /// <summary>
+    /// The content view gallery lightning28.
+    /// </summary>
     ContentViewGalleryLightning28 = 0xF0301,
+    /// <summary>
+    /// The globe arrow forward16.
+    /// </summary>
     GlobeArrowForward16 = 0xF0302,
+    /// <summary>
+    /// The globe arrow forward20.
+    /// </summary>
     GlobeArrowForward20 = 0xF0303,
+    /// <summary>
+    /// The globe arrow forward24.
+    /// </summary>
     GlobeArrowForward24 = 0xF0304,
+    /// <summary>
+    /// The globe arrow forward32.
+    /// </summary>
     GlobeArrowForward32 = 0xF0305,
+    /// <summary>
+    /// The hard drive24.
+    /// </summary>
     HardDrive24 = 0xF0306,
+    /// <summary>
+    /// The hard drive32.
+    /// </summary>
     HardDrive32 = 0xF0307,
+    /// <summary>
+    /// The hard drive call24.
+    /// </summary>
     HardDriveCall24 = 0xF0308,
+    /// <summary>
+    /// The hard drive call32.
+    /// </summary>
     HardDriveCall32 = 0xF0309,
+    /// <summary>
+    /// The mail rewind16.
+    /// </summary>
     MailRewind16 = 0xF030A,
+    /// <summary>
+    /// The mail rewind20.
+    /// </summary>
     MailRewind20 = 0xF030B,
+    /// <summary>
+    /// The mail rewind24.
+    /// </summary>
     MailRewind24 = 0xF030C,
+    /// <summary>
+    /// The panel right gallery16.
+    /// </summary>
     PanelRightGallery16 = 0xF030D,
+    /// <summary>
+    /// The panel right gallery20.
+    /// </summary>
     PanelRightGallery20 = 0xF030E,
+    /// <summary>
+    /// The panel right gallery24.
+    /// </summary>
     PanelRightGallery24 = 0xF030F,
+    /// <summary>
+    /// The panel right gallery28.
+    /// </summary>
     PanelRightGallery28 = 0xF0310,
+    /// <summary>
+    /// The panel top gallery16.
+    /// </summary>
     PanelTopGallery16 = 0xF0311,
+    /// <summary>
+    /// The panel top gallery20.
+    /// </summary>
     PanelTopGallery20 = 0xF0312,
+    /// <summary>
+    /// The panel top gallery24.
+    /// </summary>
     PanelTopGallery24 = 0xF0313,
+    /// <summary>
+    /// The panel top gallery28.
+    /// </summary>
     PanelTopGallery28 = 0xF0314,
+    /// <summary>
+    /// The rectangle landscape sparkle16.
+    /// </summary>
     RectangleLandscapeSparkle16 = 0xF0315,
+    /// <summary>
+    /// The rectangle landscape sparkle20.
+    /// </summary>
     RectangleLandscapeSparkle20 = 0xF0316,
+    /// <summary>
+    /// The rectangle landscape sparkle24.
+    /// </summary>
     RectangleLandscapeSparkle24 = 0xF0317,
+    /// <summary>
+    /// The rectangle landscape sparkle28.
+    /// </summary>
     RectangleLandscapeSparkle28 = 0xF0318,
+    /// <summary>
+    /// The rectangle landscape sparkle32.
+    /// </summary>
     RectangleLandscapeSparkle32 = 0xF0319,
+    /// <summary>
+    /// The scan person16.
+    /// </summary>
     ScanPerson16 = 0xF031A,
+    /// <summary>
+    /// The scan person20.
+    /// </summary>
     ScanPerson20 = 0xF031B,
+    /// <summary>
+    /// The scan person24.
+    /// </summary>
     ScanPerson24 = 0xF031C,
+    /// <summary>
+    /// The scan person28.
+    /// </summary>
     ScanPerson28 = 0xF031D,
+    /// <summary>
+    /// The scan person48.
+    /// </summary>
     ScanPerson48 = 0xF031E,
+    /// <summary>
+    /// The voicemail shield16.
+    /// </summary>
     VoicemailShield16 = 0xF031F,
+    /// <summary>
+    /// The chevron down32.
+    /// </summary>
     ChevronDown32 = 0xF0320,
+    /// <summary>
+    /// The chevron left32.
+    /// </summary>
     ChevronLeft32 = 0xF0321,
+    /// <summary>
+    /// The chevron right32.
+    /// </summary>
     ChevronRight32 = 0xF0322,
+    /// <summary>
+    /// The chevron up32.
+    /// </summary>
     ChevronUp32 = 0xF0323,
+    /// <summary>
+    /// The document lightning16.
+    /// </summary>
     DocumentLightning16 = 0xF0324,
+    /// <summary>
+    /// The document lightning20.
+    /// </summary>
     DocumentLightning20 = 0xF0325,
+    /// <summary>
+    /// The document lightning24.
+    /// </summary>
     DocumentLightning24 = 0xF0326,
+    /// <summary>
+    /// The document lightning28.
+    /// </summary>
     DocumentLightning28 = 0xF0327,
+    /// <summary>
+    /// The document lightning32.
+    /// </summary>
     DocumentLightning32 = 0xF0328,
+    /// <summary>
+    /// The document lightning48.
+    /// </summary>
     DocumentLightning48 = 0xF0329,
+    /// <summary>
+    /// The edit12.
+    /// </summary>
     Edit12 = 0xF032A,
+    /// <summary>
+    /// The server link16.
+    /// </summary>
     ServerLink16 = 0xF032B,
+    /// <summary>
+    /// The server link20.
+    /// </summary>
     ServerLink20 = 0xF032C,
+    /// <summary>
+    /// The step20.
+    /// </summary>
     Step20 = 0xF032D,
+    /// <summary>
+    /// The step24.
+    /// </summary>
     Step24 = 0xF032E,
+    /// <summary>
+    /// The tab desktop multiple add20.
+    /// </summary>
     TabDesktopMultipleAdd20 = 0xF032F,
+    /// <summary>
+    /// The text description16.
+    /// </summary>
     TextDescription16 = 0xF0330,
+    /// <summary>
+    /// The text description28.
+    /// </summary>
     TextDescription28 = 0xF0331,
+    /// <summary>
+    /// The text description32.
+    /// </summary>
     TextDescription32 = 0xF0332,
+    /// <summary>
+    /// The text grammar lightning16.
+    /// </summary>
     TextGrammarLightning16 = 0xF0333,
+    /// <summary>
+    /// The text grammar lightning20.
+    /// </summary>
     TextGrammarLightning20 = 0xF0334,
+    /// <summary>
+    /// The text grammar lightning24.
+    /// </summary>
     TextGrammarLightning24 = 0xF0335,
+    /// <summary>
+    /// The text grammar lightning28.
+    /// </summary>
     TextGrammarLightning28 = 0xF0336,
+    /// <summary>
+    /// The text grammar lightning32.
+    /// </summary>
     TextGrammarLightning32 = 0xF0337,
+    /// <summary>
+    /// The beaker add20.
+    /// </summary>
     BeakerAdd20 = 0xF0338,
+    /// <summary>
+    /// The beaker add24.
+    /// </summary>
     BeakerAdd24 = 0xF0339,
+    /// <summary>
+    /// The beaker dismiss20.
+    /// </summary>
     BeakerDismiss20 = 0xF033A,
+    /// <summary>
+    /// The beaker dismiss24.
+    /// </summary>
     BeakerDismiss24 = 0xF033B,
+    /// <summary>
+    /// The document cube20.
+    /// </summary>
     DocumentCube20 = 0xF033C,
+    /// <summary>
+    /// The document cube24.
+    /// </summary>
     DocumentCube24 = 0xF033D,
+    /// <summary>
+    /// The drawer20.
+    /// </summary>
     Drawer20 = 0xF033E,
+    /// <summary>
+    /// The drawer24.
+    /// </summary>
     Drawer24 = 0xF033F,
+    /// <summary>
+    /// The filmstrip image20.
+    /// </summary>
     FilmstripImage20 = 0xF0340,
+    /// <summary>
+    /// The filmstrip image24.
+    /// </summary>
     FilmstripImage24 = 0xF0341,
+    /// <summary>
+    /// The number circle016.
+    /// </summary>
     NumberCircle016 = 0xF0342,
+    /// <summary>
+    /// The number circle020.
+    /// </summary>
     NumberCircle020 = 0xF0343,
+    /// <summary>
+    /// The number circle024.
+    /// </summary>
     NumberCircle024 = 0xF0344,
+    /// <summary>
+    /// The number circle028.
+    /// </summary>
     NumberCircle028 = 0xF0345,
+    /// <summary>
+    /// The number circle032.
+    /// </summary>
     NumberCircle032 = 0xF0346,
+    /// <summary>
+    /// The number circle048.
+    /// </summary>
     NumberCircle048 = 0xF0347,
+    /// <summary>
+    /// The number circle616.
+    /// </summary>
     NumberCircle616 = 0xF0348,
+    /// <summary>
+    /// The number circle620.
+    /// </summary>
     NumberCircle620 = 0xF0349,
+    /// <summary>
+    /// The number circle624.
+    /// </summary>
     NumberCircle624 = 0xF034A,
+    /// <summary>
+    /// The number circle628.
+    /// </summary>
     NumberCircle628 = 0xF034B,
+    /// <summary>
+    /// The number circle632.
+    /// </summary>
     NumberCircle632 = 0xF034C,
+    /// <summary>
+    /// The number circle648.
+    /// </summary>
     NumberCircle648 = 0xF034D,
+    /// <summary>
+    /// The number circle716.
+    /// </summary>
     NumberCircle716 = 0xF034E,
+    /// <summary>
+    /// The number circle720.
+    /// </summary>
     NumberCircle720 = 0xF034F,
+    /// <summary>
+    /// The number circle724.
+    /// </summary>
     NumberCircle724 = 0xF0350,
+    /// <summary>
+    /// The number circle728.
+    /// </summary>
     NumberCircle728 = 0xF0351,
+    /// <summary>
+    /// The number circle732.
+    /// </summary>
     NumberCircle732 = 0xF0352,
+    /// <summary>
+    /// The number circle748.
+    /// </summary>
     NumberCircle748 = 0xF0353,
+    /// <summary>
+    /// The number circle816.
+    /// </summary>
     NumberCircle816 = 0xF0354,
+    /// <summary>
+    /// The number circle820.
+    /// </summary>
     NumberCircle820 = 0xF0355,
+    /// <summary>
+    /// The number circle824.
+    /// </summary>
     NumberCircle824 = 0xF0356,
+    /// <summary>
+    /// The number circle828.
+    /// </summary>
     NumberCircle828 = 0xF0357,
+    /// <summary>
+    /// The number circle832.
+    /// </summary>
     NumberCircle832 = 0xF0358,
+    /// <summary>
+    /// The number circle848.
+    /// </summary>
     NumberCircle848 = 0xF0359,
+    /// <summary>
+    /// The number circle916.
+    /// </summary>
     NumberCircle916 = 0xF035A,
+    /// <summary>
+    /// The number circle920.
+    /// </summary>
     NumberCircle920 = 0xF035B,
+    /// <summary>
+    /// The number circle924.
+    /// </summary>
     NumberCircle924 = 0xF035C,
+    /// <summary>
+    /// The number circle928.
+    /// </summary>
     NumberCircle928 = 0xF035D,
+    /// <summary>
+    /// The number circle932.
+    /// </summary>
     NumberCircle932 = 0xF035E,
+    /// <summary>
+    /// The number circle948.
+    /// </summary>
     NumberCircle948 = 0xF035F,
+    /// <summary>
+    /// The server12.
+    /// </summary>
     Server12 = 0xF0360,
+    /// <summary>
+    /// The square hint hexagon12.
+    /// </summary>
     SquareHintHexagon12 = 0xF0361,
+    /// <summary>
+    /// The square hint hexagon16.
+    /// </summary>
     SquareHintHexagon16 = 0xF0362,
+    /// <summary>
+    /// The square hint hexagon20.
+    /// </summary>
     SquareHintHexagon20 = 0xF0363,
+    /// <summary>
+    /// The square hint hexagon24.
+    /// </summary>
     SquareHintHexagon24 = 0xF0364,
+    /// <summary>
+    /// The square hint hexagon28.
+    /// </summary>
     SquareHintHexagon28 = 0xF0365,
+    /// <summary>
+    /// The square hint hexagon32.
+    /// </summary>
     SquareHintHexagon32 = 0xF0366,
+    /// <summary>
+    /// The square hint hexagon48.
+    /// </summary>
     SquareHintHexagon48 = 0xF0367,
+    /// <summary>
+    /// The tab desktop multiple16.
+    /// </summary>
     TabDesktopMultiple16 = 0xF0368,
+    /// <summary>
+    /// The tab desktop multiple add16.
+    /// </summary>
     TabDesktopMultipleAdd16 = 0xF0369,
+    /// <summary>
+    /// The target add20.
+    /// </summary>
     TargetAdd20 = 0xF036A,
+    /// <summary>
+    /// The target add24.
+    /// </summary>
     TargetAdd24 = 0xF036B,
+    /// <summary>
+    /// The target dismiss20.
+    /// </summary>
     TargetDismiss20 = 0xF036C,
+    /// <summary>
+    /// The target dismiss24.
+    /// </summary>
     TargetDismiss24 = 0xF036D,
+    /// <summary>
+    /// The text header1 lines16.
+    /// </summary>
     TextHeader1Lines16 = 0xF036E,
+    /// <summary>
+    /// The text header1 lines20.
+    /// </summary>
     TextHeader1Lines20 = 0xF036F,
+    /// <summary>
+    /// The text header1 lines24.
+    /// </summary>
     TextHeader1Lines24 = 0xF0370,
+    /// <summary>
+    /// The text header1 lines caret16.
+    /// </summary>
     TextHeader1LinesCaret16 = 0xF0371,
+    /// <summary>
+    /// The text header1 lines caret20.
+    /// </summary>
     TextHeader1LinesCaret20 = 0xF0372,
+    /// <summary>
+    /// The text header1 lines caret24.
+    /// </summary>
     TextHeader1LinesCaret24 = 0xF0373,
+    /// <summary>
+    /// The text header2 lines16.
+    /// </summary>
     TextHeader2Lines16 = 0xF0374,
+    /// <summary>
+    /// The text header2 lines20.
+    /// </summary>
     TextHeader2Lines20 = 0xF0375,
+    /// <summary>
+    /// The text header2 lines24.
+    /// </summary>
     TextHeader2Lines24 = 0xF0376,
+    /// <summary>
+    /// The text header2 lines caret16.
+    /// </summary>
     TextHeader2LinesCaret16 = 0xF0377,
+    /// <summary>
+    /// The text header2 lines caret20.
+    /// </summary>
     TextHeader2LinesCaret20 = 0xF0378,
+    /// <summary>
+    /// The text header2 lines caret24.
+    /// </summary>
     TextHeader2LinesCaret24 = 0xF0379,
+    /// <summary>
+    /// The text header3 lines16.
+    /// </summary>
     TextHeader3Lines16 = 0xF037A,
+    /// <summary>
+    /// The text header3 lines20.
+    /// </summary>
     TextHeader3Lines20 = 0xF037B,
+    /// <summary>
+    /// The text header3 lines24.
+    /// </summary>
     TextHeader3Lines24 = 0xF037C,
+    /// <summary>
+    /// The text header3 lines caret16.
+    /// </summary>
     TextHeader3LinesCaret16 = 0xF037D,
+    /// <summary>
+    /// The text header3 lines caret20.
+    /// </summary>
     TextHeader3LinesCaret20 = 0xF037E,
+    /// <summary>
+    /// The text header3 lines caret24.
+    /// </summary>
     TextHeader3LinesCaret24 = 0xF037F,
+    /// <summary>
+    /// The arrow download28.
+    /// </summary>
     ArrowDownload28 = 0xF0380,
+    /// <summary>
+    /// The arrow download32.
+    /// </summary>
     ArrowDownload32 = 0xF0381,
+    /// <summary>
+    /// The arrow expand16.
+    /// </summary>
     ArrowExpand16 = 0xF0382,
+    /// <summary>
+    /// The arrow export up16.
+    /// </summary>
     ArrowExportUp16 = 0xF0383,
+    /// <summary>
+    /// The arrow import16.
+    /// </summary>
     ArrowImport16 = 0xF0384,
+    /// <summary>
+    /// The arrow up right dashes16.
+    /// </summary>
     ArrowUpRightDashes16 = 0xF0385,
+    /// <summary>
+    /// The battery1016.
+    /// </summary>
     Battery1016 = 0xF0386,
+    /// <summary>
+    /// The beaker empty16.
+    /// </summary>
     BeakerEmpty16 = 0xF0387,
+    /// <summary>
+    /// The book16.
+    /// </summary>
     Book16 = 0xF0388,
+    /// <summary>
+    /// The border none16.
+    /// </summary>
     BorderNone16 = 0xF0389,
+    /// <summary>
+    /// The branch request16.
+    /// </summary>
     BranchRequest16 = 0xF038A,
+    /// <summary>
+    /// The clipboard task list16.
+    /// </summary>
     ClipboardTaskList16 = 0xF038B,
+    /// <summary>
+    /// The cut16.
+    /// </summary>
     Cut16 = 0xF038C,
+    /// <summary>
+    /// The folder search16.
+    /// </summary>
     FolderSearch16 = 0xF038D,
+    /// <summary>
+    /// The folder search20.
+    /// </summary>
     FolderSearch20 = 0xF038E,
+    /// <summary>
+    /// The folder search24.
+    /// </summary>
     FolderSearch24 = 0xF038F,
+    /// <summary>
+    /// The hexagon28.
+    /// </summary>
     Hexagon28 = 0xF0390,
+    /// <summary>
+    /// The hexagon32.
+    /// </summary>
     Hexagon32 = 0xF0391,
+    /// <summary>
+    /// The hexagon48.
+    /// </summary>
     Hexagon48 = 0xF0392,
+    /// <summary>
+    /// The plug connected16.
+    /// </summary>
     PlugConnected16 = 0xF0393,
+    /// <summary>
+    /// The plug disconnected16.
+    /// </summary>
     PlugDisconnected16 = 0xF0394,
+    /// <summary>
+    /// The projection screen text20.
+    /// </summary>
     ProjectionScreenText20 = 0xF0395,
+    /// <summary>
+    /// The RSS16.
+    /// </summary>
     Rss16 = 0xF0396,
+    /// <summary>
+    /// The shape organic16.
+    /// </summary>
     ShapeOrganic16 = 0xF0397,
+    /// <summary>
+    /// The shape organic20.
+    /// </summary>
     ShapeOrganic20 = 0xF0398,
+    /// <summary>
+    /// The shape organic24.
+    /// </summary>
     ShapeOrganic24 = 0xF0399,
+    /// <summary>
+    /// The shape organic28.
+    /// </summary>
     ShapeOrganic28 = 0xF039A,
+    /// <summary>
+    /// The shape organic32.
+    /// </summary>
     ShapeOrganic32 = 0xF039B,
+    /// <summary>
+    /// The shape organic48.
+    /// </summary>
     ShapeOrganic48 = 0xF039C,
+    /// <summary>
+    /// The teardrop bottom right16.
+    /// </summary>
     TeardropBottomRight16 = 0xF039D,
+    /// <summary>
+    /// The teardrop bottom right20.
+    /// </summary>
     TeardropBottomRight20 = 0xF039E,
+    /// <summary>
+    /// The teardrop bottom right24.
+    /// </summary>
     TeardropBottomRight24 = 0xF039F,
+    /// <summary>
+    /// The teardrop bottom right28.
+    /// </summary>
     TeardropBottomRight28 = 0xF03A0,
+    /// <summary>
+    /// The teardrop bottom right32.
+    /// </summary>
     TeardropBottomRight32 = 0xF03A1,
+    /// <summary>
+    /// The teardrop bottom right48.
+    /// </summary>
     TeardropBottomRight48 = 0xF03A2,
+    /// <summary>
+    /// The text edit style16.
+    /// </summary>
     TextEditStyle16 = 0xF03A3,
+    /// <summary>
+    /// The text whole word16.
+    /// </summary>
     TextWholeWord16 = 0xF03A4,
+    /// <summary>
+    /// The triangle24.
+    /// </summary>
     Triangle24 = 0xF03A5,
+    /// <summary>
+    /// The triangle28.
+    /// </summary>
     Triangle28 = 0xF03A6,
+    /// <summary>
+    /// The text asterisk16.
+    /// </summary>
     TextAsterisk16 = 0xF03A7,
+    /// <summary>
+    /// The arrow download off16.
+    /// </summary>
     ArrowDownloadOff16 = 0xF03A8,
+    /// <summary>
+    /// The arrow download off20.
+    /// </summary>
     ArrowDownloadOff20 = 0xF03A9,
+    /// <summary>
+    /// The arrow download off24.
+    /// </summary>
     ArrowDownloadOff24 = 0xF03AA,
+    /// <summary>
+    /// The arrow download off28.
+    /// </summary>
     ArrowDownloadOff28 = 0xF03AB,
+    /// <summary>
+    /// The arrow download off32.
+    /// </summary>
     ArrowDownloadOff32 = 0xF03AC,
+    /// <summary>
+    /// The arrow download off48.
+    /// </summary>
     ArrowDownloadOff48 = 0xF03AD,
+    /// <summary>
+    /// The border inside16.
+    /// </summary>
     BorderInside16 = 0xF03AE,
+    /// <summary>
+    /// The border inside20.
+    /// </summary>
     BorderInside20 = 0xF03AF,
+    /// <summary>
+    /// The border inside24.
+    /// </summary>
     BorderInside24 = 0xF03B0,
+    /// <summary>
+    /// The chat lock16.
+    /// </summary>
     ChatLock16 = 0xF03B1,
+    /// <summary>
+    /// The chat lock20.
+    /// </summary>
     ChatLock20 = 0xF03B2,
+    /// <summary>
+    /// The chat lock24.
+    /// </summary>
     ChatLock24 = 0xF03B3,
+    /// <summary>
+    /// The chat lock28.
+    /// </summary>
     ChatLock28 = 0xF03B4,
+    /// <summary>
+    /// The error circle48.
+    /// </summary>
     ErrorCircle48 = 0xF03B5,
+    /// <summary>
+    /// The full screen maximize28.
+    /// </summary>
     FullScreenMaximize28 = 0xF03B6,
+    /// <summary>
+    /// The full screen maximize32.
+    /// </summary>
     FullScreenMaximize32 = 0xF03B7,
+    /// <summary>
+    /// The full screen minimize28.
+    /// </summary>
     FullScreenMinimize28 = 0xF03B8,
+    /// <summary>
+    /// The full screen minimize32.
+    /// </summary>
     FullScreenMinimize32 = 0xF03B9,
+    /// <summary>
+    /// The link person16.
+    /// </summary>
     LinkPerson16 = 0xF03BA,
+    /// <summary>
+    /// The link person20.
+    /// </summary>
     LinkPerson20 = 0xF03BB,
+    /// <summary>
+    /// The link person24.
+    /// </summary>
     LinkPerson24 = 0xF03BC,
+    /// <summary>
+    /// The link person32.
+    /// </summary>
     LinkPerson32 = 0xF03BD,
+    /// <summary>
+    /// The link person48.
+    /// </summary>
     LinkPerson48 = 0xF03BE,
+    /// <summary>
+    /// The people chat16.
+    /// </summary>
     PeopleChat16 = 0xF03BF,
+    /// <summary>
+    /// The people chat20.
+    /// </summary>
     PeopleChat20 = 0xF03C0,
+    /// <summary>
+    /// The people chat24.
+    /// </summary>
     PeopleChat24 = 0xF03C1,
+    /// <summary>
+    /// The person support28.
+    /// </summary>
     PersonSupport28 = 0xF03C2,
+    /// <summary>
+    /// The shapes32.
+    /// </summary>
     Shapes32 = 0xF03C3,
+    /// <summary>
+    /// The slide text edit16.
+    /// </summary>
     SlideTextEdit16 = 0xF03C4,
+    /// <summary>
+    /// The slide text edit20.
+    /// </summary>
     SlideTextEdit20 = 0xF03C5,
+    /// <summary>
+    /// The slide text edit24.
+    /// </summary>
     SlideTextEdit24 = 0xF03C6,
+    /// <summary>
+    /// The slide text edit28.
+    /// </summary>
     SlideTextEdit28 = 0xF03C7,
+    /// <summary>
+    /// The subtract circle48.
+    /// </summary>
     SubtractCircle48 = 0xF03C8,
+    /// <summary>
+    /// The subtract parentheses16.
+    /// </summary>
     SubtractParentheses16 = 0xF03C9,
+    /// <summary>
+    /// The subtract parentheses20.
+    /// </summary>
     SubtractParentheses20 = 0xF03CA,
+    /// <summary>
+    /// The subtract parentheses24.
+    /// </summary>
     SubtractParentheses24 = 0xF03CB,
+    /// <summary>
+    /// The subtract parentheses28.
+    /// </summary>
     SubtractParentheses28 = 0xF03CC,
+    /// <summary>
+    /// The subtract parentheses32.
+    /// </summary>
     SubtractParentheses32 = 0xF03CD,
+    /// <summary>
+    /// The subtract parentheses48.
+    /// </summary>
     SubtractParentheses48 = 0xF03CE,
+    /// <summary>
+    /// The warning48.
+    /// </summary>
     Warning48 = 0xF03CF,
+    /// <summary>
+    /// The alert on16.
+    /// </summary>
     AlertOn16 = 0xF03D0,
+    /// <summary>
+    /// The arrow down exclamation16.
+    /// </summary>
     ArrowDownExclamation16 = 0xF03D1,
+    /// <summary>
+    /// The arrow down exclamation20.
+    /// </summary>
     ArrowDownExclamation20 = 0xF03D2,
+    /// <summary>
+    /// The arrow fit24.
+    /// </summary>
     ArrowFit24 = 0xF03D3,
+    /// <summary>
+    /// The arrow fit in24.
+    /// </summary>
     ArrowFitIn24 = 0xF03D4,
+    /// <summary>
+    /// The book32.
+    /// </summary>
     Book32 = 0xF03D5,
+    /// <summary>
+    /// The book database16.
+    /// </summary>
     BookDatabase16 = 0xF03D6,
+    /// <summary>
+    /// The book database32.
+    /// </summary>
     BookDatabase32 = 0xF03D7,
+    /// <summary>
+    /// The book toolbox16.
+    /// </summary>
     BookToolbox16 = 0xF03D8,
+    /// <summary>
+    /// The building desktop32.
+    /// </summary>
     BuildingDesktop32 = 0xF03D9,
+    /// <summary>
+    /// The building government16.
+    /// </summary>
     BuildingGovernment16 = 0xF03DA,
+    /// <summary>
+    /// The building government search16.
+    /// </summary>
     BuildingGovernmentSearch16 = 0xF03DB,
+    /// <summary>
+    /// The building government search20.
+    /// </summary>
     BuildingGovernmentSearch20 = 0xF03DC,
+    /// <summary>
+    /// The building government search24.
+    /// </summary>
     BuildingGovernmentSearch24 = 0xF03DD,
+    /// <summary>
+    /// The building government search32.
+    /// </summary>
     BuildingGovernmentSearch32 = 0xF03DE,
+    /// <summary>
+    /// The calendar record16.
+    /// </summary>
     CalendarRecord16 = 0xF03DF,
+    /// <summary>
+    /// The calendar record20.
+    /// </summary>
     CalendarRecord20 = 0xF03E0,
+    /// <summary>
+    /// The calendar record24.
+    /// </summary>
     CalendarRecord24 = 0xF03E1,
+    /// <summary>
+    /// The calendar record28.
+    /// </summary>
     CalendarRecord28 = 0xF03E2,
+    /// <summary>
+    /// The calendar record32.
+    /// </summary>
     CalendarRecord32 = 0xF03E3,
+    /// <summary>
+    /// The calendar record48.
+    /// </summary>
     CalendarRecord48 = 0xF03E4,
+    /// <summary>
+    /// The clipboard28.
+    /// </summary>
     Clipboard28 = 0xF03E5,
+    /// <summary>
+    /// The clipboard math formula16.
+    /// </summary>
     ClipboardMathFormula16 = 0xF03E6,
+    /// <summary>
+    /// The clipboard math formula20.
+    /// </summary>
     ClipboardMathFormula20 = 0xF03E7,
+    /// <summary>
+    /// The clipboard math formula24.
+    /// </summary>
     ClipboardMathFormula24 = 0xF03E8,
+    /// <summary>
+    /// The clipboard math formula28.
+    /// </summary>
     ClipboardMathFormula28 = 0xF03E9,
+    /// <summary>
+    /// The clipboard math formula32.
+    /// </summary>
     ClipboardMathFormula32 = 0xF03EA,
+    /// <summary>
+    /// The clipboard number12316.
+    /// </summary>
     ClipboardNumber12316 = 0xF03EB,
+    /// <summary>
+    /// The clipboard number12320.
+    /// </summary>
     ClipboardNumber12320 = 0xF03EC,
+    /// <summary>
+    /// The clipboard number12324.
+    /// </summary>
     ClipboardNumber12324 = 0xF03ED,
+    /// <summary>
+    /// The clipboard number12328.
+    /// </summary>
     ClipboardNumber12328 = 0xF03EE,
+    /// <summary>
+    /// The clipboard number12332.
+    /// </summary>
     ClipboardNumber12332 = 0xF03EF,
+    /// <summary>
+    /// The collections16.
+    /// </summary>
     Collections16 = 0xF03F0,
+    /// <summary>
+    /// The communication shield16.
+    /// </summary>
     CommunicationShield16 = 0xF03F1,
+    /// <summary>
+    /// The communication shield20.
+    /// </summary>
     CommunicationShield20 = 0xF03F2,
+    /// <summary>
+    /// The communication shield24.
+    /// </summary>
     CommunicationShield24 = 0xF03F3,
+    /// <summary>
+    /// The dialpad question mark20.
+    /// </summary>
     DialpadQuestionMark20 = 0xF03F4,
+    /// <summary>
+    /// The dialpad question mark24.
+    /// </summary>
     DialpadQuestionMark24 = 0xF03F5,
+    /// <summary>
+    /// The document briefcase16.
+    /// </summary>
     DocumentBriefcase16 = 0xF03F6,
+    /// <summary>
+    /// The document briefcase32.
+    /// </summary>
     DocumentBriefcase32 = 0xF03F7,
+    /// <summary>
+    /// The document search32.
+    /// </summary>
     DocumentSearch32 = 0xF03F8,
+    /// <summary>
+    /// The fingerprint16.
+    /// </summary>
     Fingerprint16 = 0xF03F9,
+    /// <summary>
+    /// The fingerprint32.
+    /// </summary>
     Fingerprint32 = 0xF03FA,
+    /// <summary>
+    /// The folder person24.
+    /// </summary>
     FolderPerson24 = 0xF03FB,
+    /// <summary>
+    /// The folder person28.
+    /// </summary>
     FolderPerson28 = 0xF03FC,
+    /// <summary>
+    /// The folder person32.
+    /// </summary>
     FolderPerson32 = 0xF03FD,
+    /// <summary>
+    /// The folder person48.
+    /// </summary>
     FolderPerson48 = 0xF03FE,
+    /// <summary>
+    /// The hat graduation add16.
+    /// </summary>
     HatGraduationAdd16 = 0xF03FF,
+    /// <summary>
+    /// The hat graduation add20.
+    /// </summary>
     HatGraduationAdd20 = 0xF0400,
+    /// <summary>
+    /// The hat graduation add24.
+    /// </summary>
     HatGraduationAdd24 = 0xF0401,
+    /// <summary>
+    /// The layer diagonal add20.
+    /// </summary>
     LayerDiagonalAdd20 = 0xF0402,
+    /// <summary>
+    /// The library32.
+    /// </summary>
     Library32 = 0xF0403,
+    /// <summary>
+    /// The lightbulb filament32.
+    /// </summary>
     LightbulbFilament32 = 0xF0404,
+    /// <summary>
+    /// The link add16.
+    /// </summary>
     LinkAdd16 = 0xF0405,
+    /// <summary>
+    /// The link add20.
+    /// </summary>
     LinkAdd20 = 0xF0406,
+    /// <summary>
+    /// The lock shield16.
+    /// </summary>
     LockShield16 = 0xF0407,
+    /// <summary>
+    /// The lock shield28.
+    /// </summary>
     LockShield28 = 0xF0408,
+    /// <summary>
+    /// The lock shield32.
+    /// </summary>
     LockShield32 = 0xF0409,
+    /// <summary>
+    /// The person voice16.
+    /// </summary>
     PersonVoice16 = 0xF040A,
+    /// <summary>
+    /// The person warning16.
+    /// </summary>
     PersonWarning16 = 0xF040B,
+    /// <summary>
+    /// The person warning20.
+    /// </summary>
     PersonWarning20 = 0xF040C,
+    /// <summary>
+    /// The person warning24.
+    /// </summary>
     PersonWarning24 = 0xF040D,
+    /// <summary>
+    /// The person warning28.
+    /// </summary>
     PersonWarning28 = 0xF040E,
+    /// <summary>
+    /// The person warning32.
+    /// </summary>
     PersonWarning32 = 0xF040F,
+    /// <summary>
+    /// The person warning48.
+    /// </summary>
     PersonWarning48 = 0xF0410,
+    /// <summary>
+    /// The scan type off24.
+    /// </summary>
     ScanTypeOff24 = 0xF0411,
+    /// <summary>
+    /// The screenshot16.
+    /// </summary>
     Screenshot16 = 0xF0412,
+    /// <summary>
+    /// The screenshot record16.
+    /// </summary>
     ScreenshotRecord16 = 0xF0413,
+    /// <summary>
+    /// The screenshot record20.
+    /// </summary>
     ScreenshotRecord20 = 0xF0414,
+    /// <summary>
+    /// The screenshot record24.
+    /// </summary>
     ScreenshotRecord24 = 0xF0415,
+    /// <summary>
+    /// The slide search16.
+    /// </summary>
     SlideSearch16 = 0xF0416,
+    /// <summary>
+    /// The slide search32.
+    /// </summary>
     SlideSearch32 = 0xF0417,
+    /// <summary>
+    /// The vehicle subway clock16.
+    /// </summary>
     VehicleSubwayClock16 = 0xF0418,
+    /// <summary>
+    /// The vehicle subway clock20.
+    /// </summary>
     VehicleSubwayClock20 = 0xF0419,
+    /// <summary>
+    /// The vehicle subway clock24.
+    /// </summary>
     VehicleSubwayClock24 = 0xF041A,
+    /// <summary>
+    /// The video clip optimize16.
+    /// </summary>
     VideoClipOptimize16 = 0xF041B,
+    /// <summary>
+    /// The video clip optimize20.
+    /// </summary>
     VideoClipOptimize20 = 0xF041C,
+    /// <summary>
+    /// The video clip optimize24.
+    /// </summary>
     VideoClipOptimize24 = 0xF041D,
+    /// <summary>
+    /// The video clip optimize28.
+    /// </summary>
     VideoClipOptimize28 = 0xF041E,
+    /// <summary>
+    /// The video person pulse16.
+    /// </summary>
     VideoPersonPulse16 = 0xF041F,
+    /// <summary>
+    /// The video person pulse20.
+    /// </summary>
     VideoPersonPulse20 = 0xF0420,
+    /// <summary>
+    /// The video person pulse24.
+    /// </summary>
     VideoPersonPulse24 = 0xF0421,
+    /// <summary>
+    /// The video person pulse28.
+    /// </summary>
     VideoPersonPulse28 = 0xF0422,
+    /// <summary>
+    /// The archive settings32.
+    /// </summary>
     ArchiveSettings32 = 0xF0423,
+    /// <summary>
+    /// The arrow forward32.
+    /// </summary>
     ArrowForward32 = 0xF0424,
+    /// <summary>
+    /// The arrow reply32.
+    /// </summary>
     ArrowReply32 = 0xF0425,
+    /// <summary>
+    /// The arrow reply all32.
+    /// </summary>
     ArrowReplyAll32 = 0xF0426,
+    /// <summary>
+    /// The attach32.
+    /// </summary>
     Attach32 = 0xF0427,
+    /// <summary>
+    /// The autocorrect32.
+    /// </summary>
     Autocorrect32 = 0xF0428,
+    /// <summary>
+    /// The broom32.
+    /// </summary>
     Broom32 = 0xF0429,
+    /// <summary>
+    /// The calendar note16.
+    /// </summary>
     CalendarNote16 = 0xF042A,
+    /// <summary>
+    /// The calendar note20.
+    /// </summary>
     CalendarNote20 = 0xF042B,
+    /// <summary>
+    /// The calendar note24.
+    /// </summary>
     CalendarNote24 = 0xF042C,
+    /// <summary>
+    /// The calendar note32.
+    /// </summary>
     CalendarNote32 = 0xF042D,
+    /// <summary>
+    /// The checkmark underline circle24.
+    /// </summary>
     CheckmarkUnderlineCircle24 = 0xF042E,
+    /// <summary>
+    /// The data bar vertical ascending20.
+    /// </summary>
     DataBarVerticalAscending20 = 0xF042F,
+    /// <summary>
+    /// The data bar vertical ascending24.
+    /// </summary>
     DataBarVerticalAscending24 = 0xF0430,
+    /// <summary>
+    /// The diversity16.
+    /// </summary>
     Diversity16 = 0xF0431,
+    /// <summary>
+    /// The filter32.
+    /// </summary>
     Filter32 = 0xF0432,
+    /// <summary>
+    /// The folder mail32.
+    /// </summary>
     FolderMail32 = 0xF0433,
+    /// <summary>
+    /// The glance horizontal32.
+    /// </summary>
     GlanceHorizontal32 = 0xF0434,
+    /// <summary>
+    /// The glance horizontal sparkle32.
+    /// </summary>
     GlanceHorizontalSparkle32 = 0xF0435,
+    /// <summary>
+    /// The globe arrow up16.
+    /// </summary>
     GlobeArrowUp16 = 0xF0436,
+    /// <summary>
+    /// The globe arrow up20.
+    /// </summary>
     GlobeArrowUp20 = 0xF0437,
+    /// <summary>
+    /// The globe arrow up24.
+    /// </summary>
     GlobeArrowUp24 = 0xF0438,
+    /// <summary>
+    /// The globe error16.
+    /// </summary>
     GlobeError16 = 0xF0439,
+    /// <summary>
+    /// The globe error20.
+    /// </summary>
     GlobeError20 = 0xF043A,
+    /// <summary>
+    /// The globe error24.
+    /// </summary>
     GlobeError24 = 0xF043B,
+    /// <summary>
+    /// The globe prohibited16.
+    /// </summary>
     GlobeProhibited16 = 0xF043C,
+    /// <summary>
+    /// The globe prohibited24.
+    /// </summary>
     GlobeProhibited24 = 0xF043D,
+    /// <summary>
+    /// The globe sync16.
+    /// </summary>
     GlobeSync16 = 0xF043E,
+    /// <summary>
+    /// The globe sync20.
+    /// </summary>
     GlobeSync20 = 0xF043F,
+    /// <summary>
+    /// The globe sync24.
+    /// </summary>
     GlobeSync24 = 0xF0440,
+    /// <summary>
+    /// The globe warning16.
+    /// </summary>
     GlobeWarning16 = 0xF0441,
+    /// <summary>
+    /// The globe warning20.
+    /// </summary>
     GlobeWarning20 = 0xF0442,
+    /// <summary>
+    /// The globe warning24.
+    /// </summary>
     GlobeWarning24 = 0xF0443,
+    /// <summary>
+    /// The important32.
+    /// </summary>
     Important32 = 0xF0444,
+    /// <summary>
+    /// The layer diagonal16.
+    /// </summary>
     LayerDiagonal16 = 0xF0445,
+    /// <summary>
+    /// The layer diagonal person16.
+    /// </summary>
     LayerDiagonalPerson16 = 0xF0446,
+    /// <summary>
+    /// The mail multiple32.
+    /// </summary>
     MailMultiple32 = 0xF0447,
+    /// <summary>
+    /// The mail read32.
+    /// </summary>
     MailRead32 = 0xF0448,
+    /// <summary>
+    /// The mail unread32.
+    /// </summary>
     MailUnread32 = 0xF0449,
+    /// <summary>
+    /// The mailbox16.
+    /// </summary>
     Mailbox16 = 0xF044A,
+    /// <summary>
+    /// The mailbox20.
+    /// </summary>
     Mailbox20 = 0xF044B,
+    /// <summary>
+    /// The organization horizontal16.
+    /// </summary>
     OrganizationHorizontal16 = 0xF044C,
+    /// <summary>
+    /// The organization horizontal24.
+    /// </summary>
     OrganizationHorizontal24 = 0xF044D,
+    /// <summary>
+    /// The people list32.
+    /// </summary>
     PeopleList32 = 0xF044E,
+    /// <summary>
+    /// The person add32.
+    /// </summary>
     PersonAdd32 = 0xF044F,
+    /// <summary>
+    /// The person square16.
+    /// </summary>
     PersonSquare16 = 0xF0450,
+    /// <summary>
+    /// The person square32.
+    /// </summary>
     PersonSquare32 = 0xF0451,
+    /// <summary>
+    /// The person square checkmark16.
+    /// </summary>
     PersonSquareCheckmark16 = 0xF0452,
+    /// <summary>
+    /// The person square checkmark20.
+    /// </summary>
     PersonSquareCheckmark20 = 0xF0453,
+    /// <summary>
+    /// The person square checkmark24.
+    /// </summary>
     PersonSquareCheckmark24 = 0xF0454,
+    /// <summary>
+    /// The person square checkmark32.
+    /// </summary>
     PersonSquareCheckmark32 = 0xF0455,
+    /// <summary>
+    /// The phone footer arrow down20.
+    /// </summary>
     PhoneFooterArrowDown20 = 0xF0456,
+    /// <summary>
+    /// The phone footer arrow down24.
+    /// </summary>
     PhoneFooterArrowDown24 = 0xF0457,
+    /// <summary>
+    /// The phone header arrow up20.
+    /// </summary>
     PhoneHeaderArrowUp20 = 0xF0458,
+    /// <summary>
+    /// The phone header arrow up24.
+    /// </summary>
     PhoneHeaderArrowUp24 = 0xF0459,
+    /// <summary>
+    /// The poll32.
+    /// </summary>
     Poll32 = 0xF045A,
+    /// <summary>
+    /// The question32.
+    /// </summary>
     Question32 = 0xF045B,
+    /// <summary>
+    /// The screenshot28.
+    /// </summary>
     Screenshot28 = 0xF045C,
+    /// <summary>
+    /// The screenshot record28.
+    /// </summary>
     ScreenshotRecord28 = 0xF045D,
+    /// <summary>
+    /// The star32.
+    /// </summary>
     Star32 = 0xF045E,
+    /// <summary>
+    /// The text density32.
+    /// </summary>
     TextDensity32 = 0xF045F,
+    /// <summary>
+    /// The text edit style character a32.
+    /// </summary>
     TextEditStyleCharacterA32 = 0xF0460,
+    /// <summary>
+    /// The wrench screwdriver32.
+    /// </summary>
     WrenchScrewdriver32 = 0xF0461,
+    /// <summary>
+    /// The arrow clockwise dashes16.
+    /// </summary>
     ArrowClockwiseDashes16 = 0xF0462,
+    /// <summary>
+    /// The arrow clockwise dashes32.
+    /// </summary>
     ArrowClockwiseDashes32 = 0xF0463,
+    /// <summary>
+    /// The building swap16.
+    /// </summary>
     BuildingSwap16 = 0xF0464,
+    /// <summary>
+    /// The building swap20.
+    /// </summary>
     BuildingSwap20 = 0xF0465,
+    /// <summary>
+    /// The building swap24.
+    /// </summary>
     BuildingSwap24 = 0xF0466,
+    /// <summary>
+    /// The building swap32.
+    /// </summary>
     BuildingSwap32 = 0xF0467,
+    /// <summary>
+    /// The building swap48.
+    /// </summary>
     BuildingSwap48 = 0xF0468,
+    /// <summary>
+    /// The certificate32.
+    /// </summary>
     Certificate32 = 0xF0469,
+    /// <summary>
+    /// The clipboard brush16.
+    /// </summary>
     ClipboardBrush16 = 0xF046A,
+    /// <summary>
+    /// The clipboard brush20.
+    /// </summary>
     ClipboardBrush20 = 0xF046B,
+    /// <summary>
+    /// The clipboard brush24.
+    /// </summary>
     ClipboardBrush24 = 0xF046C,
+    /// <summary>
+    /// The clipboard brush28.
+    /// </summary>
     ClipboardBrush28 = 0xF046D,
+    /// <summary>
+    /// The clipboard brush32.
+    /// </summary>
     ClipboardBrush32 = 0xF046E,
+    /// <summary>
+    /// The cloud beaker16.
+    /// </summary>
     CloudBeaker16 = 0xF046F,
+    /// <summary>
+    /// The cloud beaker20.
+    /// </summary>
     CloudBeaker20 = 0xF0470,
+    /// <summary>
+    /// The cloud beaker24.
+    /// </summary>
     CloudBeaker24 = 0xF0471,
+    /// <summary>
+    /// The cloud beaker28.
+    /// </summary>
     CloudBeaker28 = 0xF0472,
+    /// <summary>
+    /// The cloud beaker32.
+    /// </summary>
     CloudBeaker32 = 0xF0473,
+    /// <summary>
+    /// The cloud beaker48.
+    /// </summary>
     CloudBeaker48 = 0xF0474,
+    /// <summary>
+    /// The cloud cube16.
+    /// </summary>
     CloudCube16 = 0xF0475,
+    /// <summary>
+    /// The cloud cube20.
+    /// </summary>
     CloudCube20 = 0xF0476,
+    /// <summary>
+    /// The cloud cube24.
+    /// </summary>
     CloudCube24 = 0xF0477,
+    /// <summary>
+    /// The cloud cube28.
+    /// </summary>
     CloudCube28 = 0xF0478,
+    /// <summary>
+    /// The cloud cube32.
+    /// </summary>
     CloudCube32 = 0xF0479,
+    /// <summary>
+    /// The cloud cube48.
+    /// </summary>
     CloudCube48 = 0xF047A,
+    /// <summary>
+    /// The contract up right16.
+    /// </summary>
     ContractUpRight16 = 0xF047B,
+    /// <summary>
+    /// The contract up right20.
+    /// </summary>
     ContractUpRight20 = 0xF047C,
+    /// <summary>
+    /// The contract up right24.
+    /// </summary>
     ContractUpRight24 = 0xF047D,
+    /// <summary>
+    /// The contract up right28.
+    /// </summary>
     ContractUpRight28 = 0xF047E,
+    /// <summary>
+    /// The contract up right32.
+    /// </summary>
     ContractUpRight32 = 0xF047F,
+    /// <summary>
+    /// The contract up right48.
+    /// </summary>
     ContractUpRight48 = 0xF0480,
+    /// <summary>
+    /// The document data lock16.
+    /// </summary>
     DocumentDataLock16 = 0xF0481,
+    /// <summary>
+    /// The document data lock20.
+    /// </summary>
     DocumentDataLock20 = 0xF0482,
+    /// <summary>
+    /// The document data lock24.
+    /// </summary>
     DocumentDataLock24 = 0xF0483,
+    /// <summary>
+    /// The document data lock32.
+    /// </summary>
     DocumentDataLock32 = 0xF0484,
+    /// <summary>
+    /// The glance horizontal sparkles20.
+    /// </summary>
     GlanceHorizontalSparkles20 = 0xF0485,
+    /// <summary>
+    /// The layout cell four16.
+    /// </summary>
     LayoutCellFour16 = 0xF0486,
+    /// <summary>
+    /// The layout cell four20.
+    /// </summary>
     LayoutCellFour20 = 0xF0487,
+    /// <summary>
+    /// The layout cell four24.
+    /// </summary>
     LayoutCellFour24 = 0xF0488,
+    /// <summary>
+    /// The layout column four16.
+    /// </summary>
     LayoutColumnFour16 = 0xF0489,
+    /// <summary>
+    /// The layout column four20.
+    /// </summary>
     LayoutColumnFour20 = 0xF048A,
+    /// <summary>
+    /// The layout column four24.
+    /// </summary>
     LayoutColumnFour24 = 0xF048B,
+    /// <summary>
+    /// The layout column one third left16.
+    /// </summary>
     LayoutColumnOneThirdLeft16 = 0xF048C,
+    /// <summary>
+    /// The layout column one third left20.
+    /// </summary>
     LayoutColumnOneThirdLeft20 = 0xF048D,
+    /// <summary>
+    /// The layout column one third left24.
+    /// </summary>
     LayoutColumnOneThirdLeft24 = 0xF048E,
+    /// <summary>
+    /// The layout column one third right16.
+    /// </summary>
     LayoutColumnOneThirdRight16 = 0xF048F,
+    /// <summary>
+    /// The layout column one third right20.
+    /// </summary>
     LayoutColumnOneThirdRight20 = 0xF0490,
+    /// <summary>
+    /// The layout column one third right24.
+    /// </summary>
     LayoutColumnOneThirdRight24 = 0xF0491,
+    /// <summary>
+    /// The layout column one third right hint16.
+    /// </summary>
     LayoutColumnOneThirdRightHint16 = 0xF0492,
+    /// <summary>
+    /// The layout column one third right hint20.
+    /// </summary>
     LayoutColumnOneThirdRightHint20 = 0xF0493,
+    /// <summary>
+    /// The layout column one third right hint24.
+    /// </summary>
     LayoutColumnOneThirdRightHint24 = 0xF0494,
+    /// <summary>
+    /// The layout column three16.
+    /// </summary>
     LayoutColumnThree16 = 0xF0495,
+    /// <summary>
+    /// The layout column three20.
+    /// </summary>
     LayoutColumnThree20 = 0xF0496,
+    /// <summary>
+    /// The layout column three24.
+    /// </summary>
     LayoutColumnThree24 = 0xF0497,
+    /// <summary>
+    /// The layout column two16.
+    /// </summary>
     LayoutColumnTwo16 = 0xF0498,
+    /// <summary>
+    /// The layout column two20.
+    /// </summary>
     LayoutColumnTwo20 = 0xF0499,
+    /// <summary>
+    /// The layout column two24.
+    /// </summary>
     LayoutColumnTwo24 = 0xF049A,
+    /// <summary>
+    /// The layout column two split left16.
+    /// </summary>
     LayoutColumnTwoSplitLeft16 = 0xF049B,
+    /// <summary>
+    /// The layout column two split left20.
+    /// </summary>
     LayoutColumnTwoSplitLeft20 = 0xF049C,
+    /// <summary>
+    /// The layout column two split left24.
+    /// </summary>
     LayoutColumnTwoSplitLeft24 = 0xF049D,
+    /// <summary>
+    /// The layout column two split right16.
+    /// </summary>
     LayoutColumnTwoSplitRight16 = 0xF049E,
+    /// <summary>
+    /// The layout column two split right20.
+    /// </summary>
     LayoutColumnTwoSplitRight20 = 0xF049F,
+    /// <summary>
+    /// The layout column two split right24.
+    /// </summary>
     LayoutColumnTwoSplitRight24 = 0xF04A0,
+    /// <summary>
+    /// The layout row four16.
+    /// </summary>
     LayoutRowFour16 = 0xF04A1,
+    /// <summary>
+    /// The layout row four20.
+    /// </summary>
     LayoutRowFour20 = 0xF04A2,
+    /// <summary>
+    /// The layout row four24.
+    /// </summary>
     LayoutRowFour24 = 0xF04A3,
+    /// <summary>
+    /// The layout row three16.
+    /// </summary>
     LayoutRowThree16 = 0xF04A4,
+    /// <summary>
+    /// The layout row three20.
+    /// </summary>
     LayoutRowThree20 = 0xF04A5,
+    /// <summary>
+    /// The layout row three24.
+    /// </summary>
     LayoutRowThree24 = 0xF04A6,
+    /// <summary>
+    /// The layout row two16.
+    /// </summary>
     LayoutRowTwo16 = 0xF04A7,
+    /// <summary>
+    /// The layout row two20.
+    /// </summary>
     LayoutRowTwo20 = 0xF04A8,
+    /// <summary>
+    /// The layout row two24.
+    /// </summary>
     LayoutRowTwo24 = 0xF04A9,
+    /// <summary>
+    /// The layout row two split bottom16.
+    /// </summary>
     LayoutRowTwoSplitBottom16 = 0xF04AA,
+    /// <summary>
+    /// The layout row two split bottom20.
+    /// </summary>
     LayoutRowTwoSplitBottom20 = 0xF04AB,
+    /// <summary>
+    /// The layout row two split bottom24.
+    /// </summary>
     LayoutRowTwoSplitBottom24 = 0xF04AC,
+    /// <summary>
+    /// The layout row two split top16.
+    /// </summary>
     LayoutRowTwoSplitTop16 = 0xF04AD,
+    /// <summary>
+    /// The layout row two split top20.
+    /// </summary>
     LayoutRowTwoSplitTop20 = 0xF04AE,
+    /// <summary>
+    /// The layout row two split top24.
+    /// </summary>
     LayoutRowTwoSplitTop24 = 0xF04AF,
+    /// <summary>
+    /// The location target square16.
+    /// </summary>
     LocationTargetSquare16 = 0xF04B0,
+    /// <summary>
+    /// The location target square20.
+    /// </summary>
     LocationTargetSquare20 = 0xF04B1,
+    /// <summary>
+    /// The location target square24.
+    /// </summary>
     LocationTargetSquare24 = 0xF04B2,
+    /// <summary>
+    /// The location target square32.
+    /// </summary>
     LocationTargetSquare32 = 0xF04B3,
+    /// <summary>
+    /// The resize16.
+    /// </summary>
     Resize16 = 0xF04B4,
+    /// <summary>
+    /// The resize28.
+    /// </summary>
     Resize28 = 0xF04B5,
+    /// <summary>
+    /// The resize32.
+    /// </summary>
     Resize32 = 0xF04B6,
+    /// <summary>
+    /// The resize48.
+    /// </summary>
     Resize48 = 0xF04B7,
+    /// <summary>
+    /// The select all off16.
+    /// </summary>
     SelectAllOff16 = 0xF04B8,
+    /// <summary>
+    /// The select all on16.
+    /// </summary>
     SelectAllOn16 = 0xF04B9,
+    /// <summary>
+    /// The share android16.
+    /// </summary>
     ShareAndroid16 = 0xF04BA,
+    /// <summary>
+    /// The share android32.
+    /// </summary>
     ShareAndroid32 = 0xF04BB,
+    /// <summary>
+    /// The text arrow down right column16.
+    /// </summary>
     TextArrowDownRightColumn16 = 0xF04BC,
+    /// <summary>
+    /// The text arrow down right column20.
+    /// </summary>
     TextArrowDownRightColumn20 = 0xF04BD,
+    /// <summary>
+    /// The text arrow down right column24.
+    /// </summary>
     TextArrowDownRightColumn24 = 0xF04BE,
+    /// <summary>
+    /// The text arrow down right column28.
+    /// </summary>
     TextArrowDownRightColumn28 = 0xF04BF,
+    /// <summary>
+    /// The text arrow down right column32.
+    /// </summary>
     TextArrowDownRightColumn32 = 0xF04C0,
+    /// <summary>
+    /// The text arrow down right column48.
+    /// </summary>
     TextArrowDownRightColumn48 = 0xF04C1,
+    /// <summary>
+    /// The text effects sparkle20.
+    /// </summary>
     TextEffectsSparkle20 = 0xF04C2,
+    /// <summary>
+    /// The text effects sparkle24.
+    /// </summary>
     TextEffectsSparkle24 = 0xF04C3,
+    /// <summary>
+    /// The whiteboard16.
+    /// </summary>
     Whiteboard16 = 0xF04C4,
+    /// <summary>
+    /// The whiteboard off16.
+    /// </summary>
     WhiteboardOff16 = 0xF04C5,
+    /// <summary>
+    /// The whiteboard off20.
+    /// </summary>
     WhiteboardOff20 = 0xF04C6,
+    /// <summary>
+    /// The whiteboard off24.
+    /// </summary>
     WhiteboardOff24 = 0xF04C7,
+    /// <summary>
+    /// The flowchart16.
+    /// </summary>
     Flowchart16 = 0xF04C8,
+    /// <summary>
+    /// The flowchart32.
+    /// </summary>
     Flowchart32 = 0xF04C9,
+    /// <summary>
+    /// The layer diagonal24.
+    /// </summary>
     LayerDiagonal24 = 0xF04CA,
+    /// <summary>
+    /// The layer diagonal person24.
+    /// </summary>
     LayerDiagonalPerson24 = 0xF04CB,
+    /// <summary>
+    /// The poll off16.
+    /// </summary>
     PollOff16 = 0xF04CC,
+    /// <summary>
+    /// The poll off20.
+    /// </summary>
     PollOff20 = 0xF04CD,
+    /// <summary>
+    /// The poll off24.
+    /// </summary>
     PollOff24 = 0xF04CE,
+    /// <summary>
+    /// The poll off32.
+    /// </summary>
     PollOff32 = 0xF04CF,
+    /// <summary>
+    /// The rectangle landscape sparkle48.
+    /// </summary>
     RectangleLandscapeSparkle48 = 0xF04D0,
+    /// <summary>
+    /// The rectangle landscape sync16.
+    /// </summary>
     RectangleLandscapeSync16 = 0xF04D1,
+    /// <summary>
+    /// The rectangle landscape sync20.
+    /// </summary>
     RectangleLandscapeSync20 = 0xF04D2,
+    /// <summary>
+    /// The rectangle landscape sync24.
+    /// </summary>
     RectangleLandscapeSync24 = 0xF04D3,
+    /// <summary>
+    /// The rectangle landscape sync28.
+    /// </summary>
     RectangleLandscapeSync28 = 0xF04D4,
+    /// <summary>
+    /// The rectangle landscape synchronize off16.
+    /// </summary>
     RectangleLandscapeSyncOff16 = 0xF04D5,
+    /// <summary>
+    /// The rectangle landscape synchronize off20.
+    /// </summary>
     RectangleLandscapeSyncOff20 = 0xF04D6,
+    /// <summary>
+    /// The rectangle landscape synchronize off24.
+    /// </summary>
     RectangleLandscapeSyncOff24 = 0xF04D7,
+    /// <summary>
+    /// The rectangle landscape synchronize off28.
+    /// </summary>
     RectangleLandscapeSyncOff28 = 0xF04D8,
+    /// <summary>
+    /// The seat16.
+    /// </summary>
     Seat16 = 0xF04D9,
+    /// <summary>
+    /// The seat20.
+    /// </summary>
     Seat20 = 0xF04DA,
+    /// <summary>
+    /// The seat24.
+    /// </summary>
     Seat24 = 0xF04DB,
+    /// <summary>
+    /// The seat add16.
+    /// </summary>
     SeatAdd16 = 0xF04DC,
+    /// <summary>
+    /// The seat add20.
+    /// </summary>
     SeatAdd20 = 0xF04DD,
+    /// <summary>
+    /// The seat add24.
+    /// </summary>
     SeatAdd24 = 0xF04DE,
+    /// <summary>
+    /// The speaker box16.
+    /// </summary>
     SpeakerBox16 = 0xF04DF,
+    /// <summary>
+    /// The speaker box20.
+    /// </summary>
     SpeakerBox20 = 0xF04E0,
+    /// <summary>
+    /// The speaker box24.
+    /// </summary>
     SpeakerBox24 = 0xF04E1,
+    /// <summary>
+    /// The text edit style character ga32.
+    /// </summary>
     TextEditStyleCharacterGa32 = 0xF04E2,
+    /// <summary>
+    /// The window ad24.
+    /// </summary>
     WindowAd24 = 0xF04E3,
+    /// <summary>
+    /// The wrench settings20.
+    /// </summary>
     WrenchSettings20 = 0xF04E4,
+    /// <summary>
+    /// The wrench settings24.
+    /// </summary>
     WrenchSettings24 = 0xF04E5,
+    /// <summary>
+    /// The building lighthouse24.
+    /// </summary>
     BuildingLighthouse24 = 0xF04E6,
+    /// <summary>
+    /// The building lighthouse32.
+    /// </summary>
     BuildingLighthouse32 = 0xF04E7,
+    /// <summary>
+    /// The building lighthouse48.
+    /// </summary>
     BuildingLighthouse48 = 0xF04E8,
+    /// <summary>
+    /// The calendar link24.
+    /// </summary>
     CalendarLink24 = 0xF04E9,
+    /// <summary>
+    /// The calendar link28.
+    /// </summary>
     CalendarLink28 = 0xF04EA,
+    /// <summary>
+    /// The calendar video24.
+    /// </summary>
     CalendarVideo24 = 0xF04EB,
+    /// <summary>
+    /// The calendar video28.
+    /// </summary>
     CalendarVideo28 = 0xF04EC,
+    /// <summary>
+    /// The cookies16.
+    /// </summary>
     Cookies16 = 0xF04ED,
+    /// <summary>
+    /// The cookies28.
+    /// </summary>
     Cookies28 = 0xF04EE,
+    /// <summary>
+    /// The cookies32.
+    /// </summary>
     Cookies32 = 0xF04EF,
+    /// <summary>
+    /// The cookies48.
+    /// </summary>
     Cookies48 = 0xF04F0,
+    /// <summary>
+    /// The hard drive28.
+    /// </summary>
     HardDrive28 = 0xF04F1,
+    /// <summary>
+    /// The hard drive48.
+    /// </summary>
     HardDrive48 = 0xF04F2,
+    /// <summary>
+    /// The laptop32.
+    /// </summary>
     Laptop32 = 0xF04F3,
+    /// <summary>
+    /// The laptop settings20.
+    /// </summary>
     LaptopSettings20 = 0xF04F4,
+    /// <summary>
+    /// The laptop settings24.
+    /// </summary>
     LaptopSettings24 = 0xF04F5,
+    /// <summary>
+    /// The laptop settings32.
+    /// </summary>
     LaptopSettings32 = 0xF04F6,
+    /// <summary>
+    /// The people audience32.
+    /// </summary>
     PeopleAudience32 = 0xF04F7,
+    /// <summary>
+    /// The shopping bag add20.
+    /// </summary>
     ShoppingBagAdd20 = 0xF04F8,
+    /// <summary>
+    /// The shopping bag add24.
+    /// </summary>
     ShoppingBagAdd24 = 0xF04F9,
+    /// <summary>
+    /// The street sign20.
+    /// </summary>
     StreetSign20 = 0xF04FA,
+    /// <summary>
+    /// The street sign24.
+    /// </summary>
     StreetSign24 = 0xF04FB,
+    /// <summary>
+    /// The video link24.
+    /// </summary>
     VideoLink24 = 0xF04FC,
+    /// <summary>
+    /// The video link28.
+    /// </summary>
     VideoLink28 = 0xF04FD,
 }
-
-#pragma warning restore CS1591
