@@ -122,6 +122,7 @@ internal static class Shell32
         /// 0x00000004. The szTip member is valid.
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x80)] // 128
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string szTip;
 
         /// <summary>
@@ -143,6 +144,7 @@ internal static class Shell32
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x40)] // 64
         public string szInfoTitle;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public uint dwInfoFlags;
 
