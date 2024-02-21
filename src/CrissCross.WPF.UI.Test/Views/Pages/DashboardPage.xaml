@@ -41,6 +41,9 @@
             Minimum="1"
             SpinButtonPlacementMode="Inline"
             Value="1" />
-        <ui:PersonPicture Grid.Column="3" />
+        <ui:PersonPicture
+            Grid.Column="3"
+            BadgeNumber="1"
+            DisplayName="Chris Pulman" />
     </Grid>
 </Page>

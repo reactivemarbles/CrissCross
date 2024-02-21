@@ -27,7 +27,7 @@
                             Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                             StrokeThickness="{DynamicResource PersonPictureEllipseStrokeThickness}" />
 
-                        <TextBlock
+                        <local:TextBlock
                             x:Name="InitialsTextBlock"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -36,10 +36,10 @@
                             FontWeight="{TemplateBinding FontWeight}"
                             Foreground="{TemplateBinding Foreground}"
                             Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.ActualInitials}">
-                            <TextBlock.RenderTransform>
+                            <local:TextBlock.RenderTransform>
                                 <TranslateTransform Y="-2" />
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
+                            </local:TextBlock.RenderTransform>
+                        </local:TextBlock>
 
                         <local:FontIconFallback
                             x:Name="PlaceholderIcon"
@@ -77,17 +77,17 @@
                                 FlowDirection="LeftToRight"
                                 Opacity="0" />
 
-                            <TextBlock
+                            <local:TextBlock
                                 x:Name="BadgeNumberTextBlock"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontFamily="{TemplateBinding FontFamily}"
                                 FontWeight="{TemplateBinding FontWeight}"
                                 Foreground="{DynamicResource PersonPictureEllipseBadgeForegroundThemeBrush}">
-                                <TextBlock.RenderTransform>
+                                <local:TextBlock.RenderTransform>
                                     <TranslateTransform Y="-1" />
-                                </TextBlock.RenderTransform>
-                            </TextBlock>
+                                </local:TextBlock.RenderTransform>
+                            </local:TextBlock>
 
                             <!--  Default font family to "Segoe MDL2 Assets"  -->
                             <local:FontIcon
