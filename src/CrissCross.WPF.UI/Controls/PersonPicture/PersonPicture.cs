@@ -17,8 +17,6 @@ namespace CrissCross.WPF.UI.Controls
     {
         private static readonly ResourceAccessor ResourceAccessor = new(typeof(PersonPicture));
 
-        private readonly string? _m_contactDisplayNameInitials;
-        private readonly ImageSource? _m_contactImageSource;
         private TextBlock? _m_initialsTextBlock;
         private TextBlock? _m_badgeNumberTextBlock;
         private FontIcon? _m_badgeGlyphIcon;
@@ -128,14 +126,14 @@ namespace CrissCross.WPF.UI.Controls
             }
             else
             {
-                return _m_contactDisplayNameInitials;
+                return null;
             }
         }
 
         /// <summary>
         /// Helper to determine the image source that should be shown.
         /// </summary>
-        private ImageSource? GetImageSource() => ProfilePicture ?? _m_contactImageSource;
+        private ImageSource? GetImageSource() => ProfilePicture;
 
         /// <summary>
         /// Updates Control elements, if available, with the latest values.
@@ -395,7 +393,7 @@ namespace CrissCross.WPF.UI.Controls
             }
             else if (property == DisplayNameProperty)
             {
-                OnDisplayNameChanged(args);
+                OnDisplayNameChanged();
             }
             else if (property == ProfilePictureProperty ||
                 property == InitialsProperty ||
@@ -406,7 +404,7 @@ namespace CrissCross.WPF.UI.Controls
         }
 
         // DependencyProperty changed event handlers
-        private void OnDisplayNameChanged(DependencyPropertyChangedEventArgs args)
+        private void OnDisplayNameChanged()
         {
             _m_displayNameInitials = InitialsGenerator.InitialsFromDisplayName(DisplayName);
 

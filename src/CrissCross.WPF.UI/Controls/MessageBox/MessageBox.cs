@@ -164,7 +164,7 @@ public class MessageBox : Window
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that determines whether to show the <see cref="Window.Title"/> in <see cref="TitleBar"/>.
+    /// Gets or sets a value indicating whether gets or sets a value that determines whether to show the Title in <see cref="TitleBar"/>.
     /// </summary>
     public bool ShowTitle
     {

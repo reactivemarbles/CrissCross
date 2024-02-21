@@ -9,6 +9,7 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
+#nullable enable
 using System.Windows.Data;
 
 namespace CrissCross.WPF.UI.Converters;

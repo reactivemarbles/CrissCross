@@ -22,6 +22,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <ui:Button
@@ -40,6 +41,9 @@
             Minimum="1"
             SpinButtonPlacementMode="Inline"
             Value="1" />
-        <ui:PersonPicture Grid.Column="3" Initials="CP" />
+        <ui:PersonPicture
+            Grid.Column="3"
+            BadgeNumber="1"
+            DisplayName="Chris Pulman" />
     </Grid>
 </Page>

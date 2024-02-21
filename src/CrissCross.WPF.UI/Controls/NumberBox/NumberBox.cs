@@ -134,7 +134,6 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
         typeof(NumberBox));
 
     private bool _valueUpdating;
-    private bool _textUpdating;
 
     static NumberBox()
     {
@@ -443,8 +442,6 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
 
     private void UpdateTextToValue()
     {
-        _textUpdating = true;
-
         // text = value
         var newText = string.Empty;
 
@@ -454,8 +451,6 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
         }
 
         SetCurrentValue(TextProperty, newText);
-
-        _textUpdating = false;
     }
 
     private void UpdateValueToText() => ValidateInput();
