@@ -94,5 +94,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/VirtualizingItemsControl/VirtualizingItemsControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/VirtualizingWrapPanel/VirtualizingWrapPanel.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Window/Window.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/PersonPicture/PersonPicture.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/IconElement/FontIconFallback.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

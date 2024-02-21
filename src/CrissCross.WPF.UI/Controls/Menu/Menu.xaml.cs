@@ -8,30 +8,29 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
-namespace CrissCross.WPF.UI.Styles.Controls
+namespace CrissCross.WPF.UI.Styles.Controls;
+
+/// <summary>
+/// Extension to the menu.
+/// </summary>
+public partial class Menu : ResourceDictionary
 {
     /// <summary>
-    /// Extension to the menu.
+    /// Initializes a new instance of the <see cref="Menu"/> class.
+    /// Sets menu alignment on initialization.
     /// </summary>
-    public partial class Menu : ResourceDictionary
+    public Menu() => Initialize();
+
+    private static void Initialize()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Menu"/> class.
-        /// Sets menu alignment on initialization.
-        /// </summary>
-        public Menu() => Initialize();
-
-        private static void Initialize()
+        if (!SystemParameters.MenuDropAlignment)
         {
-            if (!SystemParameters.MenuDropAlignment)
-            {
-                return;
-            }
-
-            var fieldInfo = typeof(SystemParameters).GetField(
-                "_menuDropAlignment",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            fieldInfo?.SetValue(null, false);
+            return;
         }
+
+        var fieldInfo = typeof(SystemParameters).GetField(
+            "_menuDropAlignment",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        fieldInfo?.SetValue(null, false);
     }
 }

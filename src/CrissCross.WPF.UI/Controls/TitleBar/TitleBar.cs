@@ -12,7 +12,6 @@ using System.Diagnostics;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
 using CrissCross.WPF.UI.Input;
-using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
@@ -212,7 +211,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     private const string ElementCloseButton = "PART_CloseButton";
 
     private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
-    private Window _currentWindow = null!;
+    private System.Windows.Window _currentWindow = null!;
     private System.Windows.Controls.Grid _mainGrid = null!;
     private System.Windows.Controls.ContentPresenter _icon = null!;
 
@@ -399,12 +398,12 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     /// <summary>
     /// Gets or sets lets you override the behavior of the Maximize/Restore button with an <see cref="Action"/>.
     /// </summary>
-    public Action<TitleBar, Window>? MaximizeActionOverride { get; set; }
+    public Action<TitleBar, System.Windows.Window>? MaximizeActionOverride { get; set; }
 
     /// <summary>
     /// Gets or sets lets you override the behavior of the Minimize button with an <see cref="Action"/>.
     /// </summary>
-    public Action<TitleBar, Window>? MinimizeActionOverride { get; set; }
+    public Action<TitleBar, System.Windows.Window>? MinimizeActionOverride { get; set; }
 
     /// <summary>
     /// Invoked whenever application code or an internal process,
@@ -450,7 +449,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
             return;
         }
 
-        _currentWindow = Window.GetWindow(this) ?? throw new ArgumentNullException("Window is null");
+        _currentWindow = System.Windows.Window.GetWindow(this) ?? throw new ArgumentNullException("Window is null");
         _currentWindow.StateChanged += OnParentWindowStateChanged;
         _currentWindow.ContentRendered += OnWindowContentRendered;
     }
@@ -571,7 +570,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     /// </summary>
     private void OnWindowContentRendered(object? sender, EventArgs e)
     {
-        if (sender is not Window window)
+        if (sender is not System.Windows.Window window)
         {
             return;
         }

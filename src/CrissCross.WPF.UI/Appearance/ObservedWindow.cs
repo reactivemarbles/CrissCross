@@ -8,6 +8,8 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
+using Window = System.Windows.Window;
+
 namespace CrissCross.WPF.UI.Appearance;
 
 internal class ObservedWindow

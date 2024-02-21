@@ -53,7 +53,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
 
     private bool _borderBrushApplied;
 
-    private Window? _oldWindow;
+    private System.Windows.Window? _oldWindow;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ClientAreaBorder"/> class.
@@ -131,7 +131,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
             oldWindow.Closing -= OnWindowClosing;
         }
 
-        var newWindow = (System.Windows.Window?)Window.GetWindow(this);
+        var newWindow = (System.Windows.Window?)System.Windows.Window.GetWindow(this);
 
         if (newWindow is not null)
         {

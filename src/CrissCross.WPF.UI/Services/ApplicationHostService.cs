@@ -3,6 +3,7 @@
 
 using System.Windows.Controls;
 using Microsoft.Extensions.Hosting;
+using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;
 #pragma warning disable CA1812

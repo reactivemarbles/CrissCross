@@ -20,6 +20,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <ui:Button
@@ -32,5 +34,12 @@
             Margin="12,0,0,0"
             VerticalAlignment="Center"
             Text="{Binding ViewModel.Counter, Mode=OneWay}" />
+        <ui:NumberBox
+            Grid.Column="2"
+            Width="300"
+            Minimum="1"
+            SpinButtonPlacementMode="Inline"
+            Value="1" />
+        <ui:PersonPicture Grid.Column="3" Initials="CP" />
     </Grid>
 </Page>

@@ -41,7 +41,7 @@ public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
             OnValuePropertyChanged,
             null,
             false,
-            UpdateSourceTrigger.LostFocus));
+            UpdateSourceTrigger.PropertyChanged));
 
     /// <summary>
     /// Property for <see cref="MaxDecimalPlaces"/>.
