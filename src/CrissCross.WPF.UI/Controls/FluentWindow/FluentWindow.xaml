@@ -8,7 +8,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
+    xmlns:mb="clr-namespace:CrissCross.WPF.UI">
 
     <Style
         x:Key="DefaultFluentWindowStyle"
@@ -37,7 +38,10 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter x:Name="ContentPresenter" />
+                            <Grid>
+                                <ContentPresenter x:Name="ContentPresenter" />
+                                <mb:MessageBoxAsync />
+                            </Grid>
                         </controls:ClientAreaBorder>
                     </AdornerDecorator>
                 </ControlTemplate>

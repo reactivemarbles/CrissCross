@@ -9,6 +9,7 @@
 //// All Rights Reserved.
 
 using ReactiveMarbles.ObservableEvents;
+using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.TaskBar;
 

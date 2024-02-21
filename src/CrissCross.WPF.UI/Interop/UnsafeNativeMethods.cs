@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using CrissCross.WPF.UI.Controls;
 using CrissCross.WPF.UI.Hardware;
+using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.Interop;
 
@@ -74,7 +75,7 @@ public static class UnsafeNativeMethods
     /// </summary>
     /// <param name="window">The window to which the effect is to be applied.</param>
     /// <returns><see langword="true"/> if invocation of native Windows function succeeds.</returns>
-    public static bool RemoveWindowDarkMode(Window? window) =>
+    public static bool RemoveWindowDarkMode(System.Windows.Window? window) =>
         GetHandle(window, out IntPtr windowHandle) && RemoveWindowDarkMode(windowHandle);
 
     /// <summary>

@@ -8,7 +8,7 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
-using ReactiveMarbles.ObservableEvents;
+using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.Appearance;
 
@@ -31,7 +31,7 @@ public static class WindowBackgroundManager
     /// Tries to apply dark theme to <see cref="Window" />.
     /// </summary>
     /// <param name="window">The window.</param>
-    public static void ApplyDarkThemeToWindow(Window? window)
+    public static void ApplyDarkThemeToWindow(System.Windows.Window? window)
     {
         if (window is null)
         {
@@ -43,14 +43,14 @@ public static class WindowBackgroundManager
             _ = UnsafeNativeMethods.ApplyWindowDarkMode(window);
         }
 
-        window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as Window);
+        window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as System.Windows.Window);
     }
 
     /// <summary>
-    /// Tries to remove dark theme from <see cref="Window" />.
+    /// Tries to remove dark theme from <see cref="System.Windows.Window" />.
     /// </summary>
     /// <param name="window">The window.</param>
-    public static void RemoveDarkThemeFromWindow(Window? window)
+    public static void RemoveDarkThemeFromWindow(System.Windows.Window? window)
     {
         if (window is null)
         {
@@ -107,7 +107,7 @@ public static class WindowBackgroundManager
 
         foreach (var subWindow in window.OwnedWindows)
         {
-            if (subWindow is Window windowSubWindow)
+            if (subWindow is System.Windows.Window windowSubWindow)
             {
                 _ = WindowBackdrop.ApplyBackdrop(windowSubWindow, backdrop);
 

@@ -67,6 +67,7 @@
             </ui:NavigationView.Header>
         </ui:NavigationView>
         <ui:AppBar
+            Grid.Row="2"
             Grid.RowSpan="2"
             Height="88"
             VerticalAlignment="Bottom">
@@ -75,6 +76,5 @@
                 <abb:AppBarButton Content="Hello" Icon="ab_heart" />
             </ui:AppBar.AppBarLeft>
         </ui:AppBar>
-        <ui:MessageBox Grid.RowSpan="3" />
     </Grid>
 </ui:FluentWindow>

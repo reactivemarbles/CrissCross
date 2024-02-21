@@ -4,6 +4,7 @@
     xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
     xmlns:bbcode="https://github.com/ChrisPulman/BBCode.WPF"
     xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
+    xmlns:mb="clr-namespace:CrissCross.WPF.UI"
     xmlns:rxNav="clr-namespace:CrissCross.WPF.UI"
     xmlns:rxNavWpf="clr-namespace:CrissCross.WPF;assembly=CrissCross.WPF">
 
@@ -290,59 +291,7 @@
                                             </Grid>
                                             <!--  APP BAR END  -->
                                             <!--  Message Start  -->
-                                            <Grid
-                                                Grid.RowSpan="5"
-                                                Background="#7F000000"
-                                                Visibility="{TemplateBinding MessageVisible}">
-                                                <Grid
-                                                    x:Name="Message"
-                                                    VerticalAlignment="Center"
-                                                    Background="{DynamicResource SystemAccentColorBrush}">
-                                                    <!--  header background  -->
-                                                    <Rectangle
-                                                        Height="96"
-                                                        HorizontalAlignment="Stretch"
-                                                        VerticalAlignment="Top"
-                                                        Fill="{DynamicResource WindowHeaderGradient}" />
-
-                                                    <Grid Margin="24">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="*" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-
-                                                        <!--  title  -->
-                                                        <TextBlock
-                                                            HorizontalAlignment="Center"
-                                                            DataContext="{TemplateBinding MessageTitle}"
-                                                            FontFamily="Segoe UI"
-                                                            FontSize="24"
-                                                            Text="{Binding Converter={StaticResource ToUpperConverter}}"
-                                                            TextOptions.TextFormattingMode="Ideal"
-                                                            TextTrimming="CharacterEllipsis" />
-
-                                                        <!--  content  -->
-                                                        <ScrollViewer
-                                                            Grid.Row="1"
-                                                            HorizontalAlignment="Center"
-                                                            VerticalScrollBarVisibility="Auto">
-                                                            <ContentControl Content="{TemplateBinding MessageContent}" />
-                                                        </ScrollViewer>
-                                                        <!--  buttons  -->
-                                                        <ItemsControl
-                                                            Grid.Row="2"
-                                                            HorizontalAlignment="Center"
-                                                            ItemsSource="{TemplateBinding Buttons}">
-                                                            <ItemsControl.ItemsPanel>
-                                                                <ItemsPanelTemplate>
-                                                                    <StackPanel Orientation="Horizontal" />
-                                                                </ItemsPanelTemplate>
-                                                            </ItemsControl.ItemsPanel>
-                                                        </ItemsControl>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
+                                            <mb:MessageBoxAsync />
                                             <!--  Message End  -->
                                             <Grid Grid.Row="4">
                                                 <!--  resize grip  -->

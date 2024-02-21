@@ -10,7 +10,6 @@
 
 using System.Drawing;
 using System.Windows.Shell;
-using CrissCross.WPF.UI.Interop;
 
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
@@ -20,7 +19,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(FluentWindow), "FluentWindow.bmp")]
-public class FluentWindow : System.Windows.Window
+public class FluentWindow : System.Windows.Window, ICanShowMessages
 {
     /// <summary>
     /// Property for <see cref="WindowCornerPreference"/>.
