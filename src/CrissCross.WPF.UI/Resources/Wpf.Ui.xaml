@@ -41,6 +41,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DynamicScrollViewer/DynamicScrollViewer.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Expander/Expander.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/FluentWindow/FluentWindow.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/FluentNavigationWindow/FluentNavigationWindow.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Flyout/Flyout.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Frame/Frame.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/HyperlinkButton/HyperlinkButton.xaml" />
