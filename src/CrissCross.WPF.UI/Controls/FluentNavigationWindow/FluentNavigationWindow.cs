@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Collections.ObjectModel;
 using ReactiveUI;
 using static ReactiveUI.TransitioningContentControl;
 
@@ -23,15 +24,6 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         typeof(bool?),
         typeof(FluentNavigationWindow),
         new PropertyMetadata(true));
-
-    /// <summary>
-    /// The application title property.
-    /// </summary>
-    public static readonly DependencyProperty ApplicationTitleProperty = DependencyProperty.Register(
-            nameof(ApplicationTitle),
-            typeof(string),
-            typeof(FluentNavigationWindow),
-            new PropertyMetadata(string.Empty));
 
     /// <summary>
     /// The navigation frame property.
@@ -58,6 +50,22 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         typeof(ImageSource),
         typeof(FluentNavigationWindow));
 
+    /// <summary>
+    /// The title content property.
+    /// </summary>
+    public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(
+        nameof(TitleContent),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
+    /// <summary>
+    /// The title header property.
+    /// </summary>
+    public static readonly DependencyProperty TitleHeaderProperty = DependencyProperty.Register(
+        nameof(TitleHeader),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
     static FluentNavigationWindow() => DefaultStyleKeyProperty.OverrideMetadata(
            typeof(FluentNavigationWindow),
            new FrameworkPropertyMetadata(typeof(FluentNavigationWindow)));
@@ -65,7 +73,10 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     /// <summary>
     /// Initializes a new instance of the <see cref="FluentNavigationWindow"/> class.
     /// </summary>
-    public FluentNavigationWindow() => SetResourceReference(StyleProperty, typeof(FluentNavigationWindow));
+    public FluentNavigationWindow()
+    {
+        SetResourceReference(StyleProperty, typeof(FluentNavigationWindow));
+    }
 
     /// <summary>
     /// Gets the can navigate back.
@@ -98,15 +109,27 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     }
 
     /// <summary>
-    /// Gets or sets the application title.
+    /// Gets or sets the content of the title.
     /// </summary>
     /// <value>
-    /// The application title.
+    /// The content of the title.
     /// </value>
-    public string ApplicationTitle
+    public object? TitleContent
     {
-        get => (string)GetValue(ApplicationTitleProperty);
-        set => SetValue(ApplicationTitleProperty, value);
+        get => GetValue(TitleContentProperty);
+        set => SetValue(TitleContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the title header.
+    /// </summary>
+    /// <value>
+    /// The title header.
+    /// </value>
+    public object? TitleHeader
+    {
+        get => GetValue(TitleHeaderProperty);
+        set => SetValue(TitleHeaderProperty, value);
     }
 
     /// <summary>
@@ -146,5 +169,11 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);
+
+        ////if (TitleContent?.Count > 0)
+        ////{
+        ////    var titleBar = (TitleBar)Template.FindName("PART_TitleBar", this);
+        ////    titleBar.Content = TitleContent;
+        ////}
     }
 }

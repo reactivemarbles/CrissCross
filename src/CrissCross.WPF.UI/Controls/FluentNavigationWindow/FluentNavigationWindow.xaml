@@ -14,8 +14,8 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Height" Value="600" />
         <Setter Property="MinHeight" Value="320" />
-        <Setter Property="Width" Value="1100" />
-        <Setter Property="MinWidth" Value="460" />
+        <Setter Property="Width" Value="970" />
+        <Setter Property="MinWidth" Value="518" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
@@ -32,15 +32,31 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
+                                <Grid.Background>
+                                    <LinearGradientBrush StartPoint="0.1,0" EndPoint="0.1,0.04">
+                                        <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" />
+                                        <GradientStop Offset="0.2" Color="Transparent" />
+                                    </LinearGradientBrush>
+                                </Grid.Background>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <controls:TitleBar Title="{TemplateBinding ApplicationTitle}" Grid.Row="0">
+                                <ContentPresenter
+                                    x:Name="ContentPresenter"
+                                    Grid.RowSpan="2"
+                                    Content="{TemplateBinding Content}" />
+                                <controls:TitleBar
+                                    x:Name="PART_TitleBar"
+                                    Title="{TemplateBinding Title}"
+                                    Grid.Row="0"
+                                    Header="{TemplateBinding TitleHeader}"
+                                    TitleContent="{TemplateBinding TitleContent}">
                                     <controls:TitleBar.Icon>
                                         <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />
                                     </controls:TitleBar.Icon>
                                 </controls:TitleBar>
+
                                 <ccwpf:ViewModelRoutedViewHost
                                     x:Name="NavigationFrame"
                                     Grid.Row="1"
@@ -49,10 +65,6 @@
                                     HostName="{TemplateBinding Name}"
                                     NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
                                     Transition="{TemplateBinding Transition}" />
-                                <ContentPresenter
-                                    x:Name="ContentPresenter"
-                                    Grid.Row="1"
-                                    Content="{TemplateBinding Content}" />
                                 <mb:MessageBoxAsync Grid.Row="1" />
                             </Grid>
                         </controls:ClientAreaBorder>

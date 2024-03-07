@@ -8,10 +8,13 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Windows.Controls;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
 using CrissCross.WPF.UI.Input;
+using ReactiveMarbles.ObservableEvents;
 
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
@@ -51,6 +54,15 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     /// </summary>
     public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
         nameof(Header),
+        typeof(object),
+        typeof(TitleBar),
+        new PropertyMetadata(null));
+
+    /// <summary>
+    /// The title content property.
+    /// </summary>
+    public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(
+        nameof(TitleContent),
         typeof(object),
         typeof(TitleBar),
         new PropertyMetadata(null));
@@ -148,6 +160,14 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         new PropertyMetadata(null));
 
     /// <summary>
+    /// The content property.
+    /// </summary>
+    public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
+        nameof(Content),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(TitleBar));
+
+    /// <summary>
     /// Property for <see cref="CloseWindowByDoubleClickOnIcon"/>.
     /// </summary>
     public static readonly DependencyProperty CloseWindowByDoubleClickOnIconProperty =
@@ -209,17 +229,19 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     private const string ElementMaximizeButton = "PART_MaximizeButton";
     private const string ElementRestoreButton = "PART_RestoreButton";
     private const string ElementCloseButton = "PART_CloseButton";
+    private const string ElementTitleStackPanel = "TitleStackPanel";
 
     private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
     private System.Windows.Window _currentWindow = null!;
-    private System.Windows.Controls.Grid _mainGrid = null!;
-    private System.Windows.Controls.ContentPresenter _icon = null!;
+    private Grid _mainGrid = null!;
+    private ContentPresenter _icon = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TitleBar"/> class.
     /// </summary>
     public TitleBar()
     {
+        Content = [];
         SetValue(TemplateButtonCommandProperty, new RelayCommand<TitleBarButtonType>(OnTemplateButtonClick));
 
         Loaded += OnLoaded;
@@ -285,6 +307,18 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         get => GetValue(HeaderProperty);
         set => SetValue(HeaderProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the content of the title.
+    /// </summary>
+    /// <value>
+    /// The content of the title.
+    /// </value>
+    public object TitleContent
+    {
+        get => GetValue(TitleContentProperty);
+        set => SetValue(TitleContentProperty, value);
     }
 
     /// <summary>
@@ -382,6 +416,18 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     }
 
     /// <summary>
+    /// Gets or sets the content.
+    /// </summary>
+    /// <value>
+    /// The content.
+    /// </value>
+    public ObservableCollection<FrameworkElement> Content
+    {
+        get => (ObservableCollection<FrameworkElement>)GetValue(ContentProperty);
+        set => SetValue(ContentProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a value indicating whether enables or disable closing the window by double clicking on the icon.
     /// </summary>
     public bool CloseWindowByDoubleClickOnIcon
@@ -413,8 +459,8 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         base.OnApplyTemplate();
 
-        _mainGrid = GetTemplateChild<System.Windows.Controls.Grid>(ElementMainGrid);
-        _icon = GetTemplateChild<System.Windows.Controls.ContentPresenter>(ElementIcon);
+        _mainGrid = GetTemplateChild<Grid>(ElementMainGrid);
+        _icon = GetTemplateChild<ContentPresenter>(ElementIcon);
 
         var helpButton = GetTemplateChild<TitleBarButton>(ElementHelpButton);
         var minimizeButton = GetTemplateChild<TitleBarButton>(ElementMinimizeButton);
@@ -628,6 +674,11 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         if (message == User32.WM.NCHITTEST && Header is UIElement headerUiElement)
         {
             isMouseOverHeaderContent = headerUiElement.IsMouseOverElement(lParam);
+        }
+
+        if (message == User32.WM.NCHITTEST && TitleContent is UIElement titleUiElement)
+        {
+            isMouseOverHeaderContent = titleUiElement.IsMouseOverElement(lParam);
         }
 
         switch (message)

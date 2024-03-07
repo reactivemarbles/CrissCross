@@ -17,22 +17,22 @@ public partial class AppBar : IHaveAppBar
     /// <summary>
     /// The application bar enabled property.
     /// </summary>
-    public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(nameof(AppBarEnabled), typeof(bool), typeof(ModernWindow), new PropertyMetadata(true));
+    public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(nameof(AppBarEnabled), typeof(bool), typeof(AppBar), new PropertyMetadata(true));
 
     /// <summary>
     /// Holds AppBar open until explicitly closed.
     /// </summary>
-    public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(nameof(AppBarIsSticky), typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
+    public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(nameof(AppBarIsSticky), typeof(bool), typeof(AppBar), new PropertyMetadata(false));
 
     /// <summary>
     /// Recommended Height 88.
     /// </summary>
-    public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(nameof(AppBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(nameof(AppBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(AppBar));
 
     /// <summary>
     /// Recommended Height 88.
     /// </summary>
-    public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(nameof(AppBarRight), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(nameof(AppBarRight), typeof(ObservableCollection<FrameworkElement>), typeof(AppBar));
 
     private readonly Storyboard? _hide;
     private readonly Storyboard? _show;
