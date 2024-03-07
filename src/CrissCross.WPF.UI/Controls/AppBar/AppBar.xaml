@@ -50,7 +50,6 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel
-                            x:Name="AppBarPanelLeft"
                             HorizontalAlignment="Left"
                             local:MarginSetter.Margin="5,0"
                             CanHorizontallyScroll="True"
@@ -65,7 +64,6 @@
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel
-                            x:Name="AppBarPanelRight"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             local:MarginSetter.Margin="5,0"

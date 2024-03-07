@@ -15,6 +15,10 @@ using CrissCross.WPF.UI.Extensions;
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
 
+/// <summary>
+/// TitleBarButton.
+/// </summary>
+/// <seealso cref="CrissCross.WPF.UI.Controls.Button" />
 internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
 {
     /// <summary>
@@ -65,6 +69,12 @@ internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         set => SetValue(ButtonsForegroundProperty, value);
     }
 
+    /// <summary>
+    /// Gets a value indicating whether this instance is hovered.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is hovered; otherwise, <c>false</c>.
+    /// </value>
     public bool IsHovered { get; private set; }
 
     /// <summary>
