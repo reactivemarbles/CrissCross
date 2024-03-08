@@ -59,6 +59,38 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         typeof(FluentNavigationWindow));
 
     /// <summary>
+    /// The top content property.
+    /// </summary>
+    public static readonly DependencyProperty TopContentProperty = DependencyProperty.Register(
+        nameof(TopContent),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
+    /// <summary>
+    /// The left content property.
+    /// </summary>
+    public static readonly DependencyProperty LeftContentProperty = DependencyProperty.Register(
+        nameof(LeftContent),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
+    /// <summary>
+    /// The right content property.
+    /// </summary>
+    public static readonly DependencyProperty RightContentProperty = DependencyProperty.Register(
+        nameof(RightContent),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
+    /// <summary>
+    /// The bottom content property.
+    /// </summary>
+    public static readonly DependencyProperty BottomContentProperty = DependencyProperty.Register(
+        nameof(BottomContent),
+        typeof(object),
+        typeof(FluentNavigationWindow));
+
+    /// <summary>
     /// The title header property.
     /// </summary>
     public static readonly DependencyProperty TitleHeaderProperty = DependencyProperty.Register(
@@ -118,6 +150,54 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     {
         get => GetValue(TitleContentProperty);
         set => SetValue(TitleContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the content of the top.
+    /// </summary>
+    /// <value>
+    /// The content of the top.
+    /// </value>
+    public object? TopContent
+    {
+        get => GetValue(TopContentProperty);
+        set => SetValue(TopContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the content of the bottom.
+    /// </summary>
+    /// <value>
+    /// The content of the bottom.
+    /// </value>
+    public object? BottomContent
+    {
+        get => GetValue(BottomContentProperty);
+        set => SetValue(BottomContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the content of the left.
+    /// </summary>
+    /// <value>
+    /// The content of the left.
+    /// </value>
+    public object? LeftContent
+    {
+        get => GetValue(LeftContentProperty);
+        set => SetValue(LeftContentProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the content of the right.
+    /// </summary>
+    /// <value>
+    /// The content of the right.
+    /// </value>
+    public object? RightContent
+    {
+        get => GetValue(RightContentProperty);
+        set => SetValue(RightContentProperty, value);
     }
 
     /// <summary>
