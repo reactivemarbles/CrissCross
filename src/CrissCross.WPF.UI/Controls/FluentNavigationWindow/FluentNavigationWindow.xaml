@@ -56,15 +56,47 @@
                                         <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />
                                     </controls:TitleBar.Icon>
                                 </controls:TitleBar>
-
-                                <ccwpf:ViewModelRoutedViewHost
-                                    x:Name="NavigationFrame"
-                                    Grid.Row="1"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    HostName="{TemplateBinding Name}"
-                                    NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
-                                    Transition="{TemplateBinding Transition}" />
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter
+                                        x:Name="TopContentPresenter"
+                                        Grid.Row="0"
+                                        Content="{TemplateBinding TopContent}" />
+                                    <ContentPresenter
+                                        x:Name="LeftContentPresenter"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="0"
+                                        Content="{TemplateBinding LeftContent}" />
+                                    <ContentPresenter
+                                        x:Name="RightContentPresenter"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="2"
+                                        Content="{TemplateBinding RightContent}" />
+                                    <ccwpf:ViewModelRoutedViewHost
+                                        x:Name="NavigationFrame"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        HostName="{TemplateBinding Name}"
+                                        NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
+                                        Transition="{TemplateBinding Transition}" />
+                                    <ContentPresenter
+                                        x:Name="BottomContentPresenter"
+                                        Grid.Row="2"
+                                        Content="{TemplateBinding BottomContent}" />
+                                </Grid>
                                 <mb:MessageBoxAsync Grid.Row="1" />
                             </Grid>
                         </controls:ClientAreaBorder>
