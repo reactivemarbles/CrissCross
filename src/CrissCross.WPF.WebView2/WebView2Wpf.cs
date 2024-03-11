@@ -36,6 +36,16 @@ public class WebView2Wpf : ContentControl, IDisposable
 #pragma warning disable SA1202 // Elements should be ordered by access
 
     /// <summary>
+    /// The automatic dispose property.
+    /// </summary>
+    public static readonly DependencyProperty AutoDisposeProperty =
+        DependencyProperty.Register(
+            nameof(AutoDispose),
+            typeof(bool),
+            typeof(WebView2Wpf),
+            new PropertyMetadata(true, AutoDisposePropertyChanged));
+
+    /// <summary>
     /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CreationProperties property.
     /// </summary>
     public static readonly DependencyProperty CreationPropertiesProperty = DependencyProperty.Register(
@@ -51,7 +61,7 @@ public class WebView2Wpf : ContentControl, IDisposable
         nameof(Source),
         typeof(Uri),
         typeof(WebView2Wpf),
-        new PropertyMetadata(SourceChanged));
+        new PropertyMetadata(SourcePropertyChanged));
 
     /// <summary>
     /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.
@@ -88,14 +98,73 @@ public class WebView2Wpf : ContentControl, IDisposable
     /// <summary>
     /// Initializes a new instance of the <see cref="WebView2Wpf"/> class.
     /// </summary>
-    public WebView2Wpf()
+    public WebView2Wpf() => _WebBrowser = new()
     {
-        _WebBrowser = new()
-        {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
-        Unloaded += (s, e) => Dispose();
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        VerticalAlignment = VerticalAlignment.Stretch,
+    };
+
+    /// <summary>
+    /// Occurs when [core web view2 initialization completed].
+    /// </summary>
+    public event EventHandler<CoreWebView2InitializationCompletedEventArgs> CoreWebView2InitializationCompleted
+    {
+        add => _WebBrowser.CoreWebView2InitializationCompleted += value;
+        remove => _WebBrowser.CoreWebView2InitializationCompleted -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [source changed].
+    /// </summary>
+    public event EventHandler<CoreWebView2SourceChangedEventArgs> SourceChanged
+    {
+        add => _WebBrowser.SourceChanged += value;
+        remove => _WebBrowser.SourceChanged -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [navigation starting].
+    /// </summary>
+    public event EventHandler<CoreWebView2NavigationStartingEventArgs> NavigationStarting
+    {
+        add => _WebBrowser.NavigationStarting += value;
+        remove => _WebBrowser.NavigationStarting -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [navigation completed].
+    /// </summary>
+    public event EventHandler<CoreWebView2NavigationCompletedEventArgs> NavigationCompleted
+    {
+        add => _WebBrowser.NavigationCompleted += value;
+        remove => _WebBrowser.NavigationCompleted -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [zoom factor changed].
+    /// </summary>
+    public event EventHandler<EventArgs> ZoomFactorChanged
+    {
+        add => _WebBrowser.ZoomFactorChanged += value;
+        remove => _WebBrowser.ZoomFactorChanged -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [content loading].
+    /// </summary>
+    public event EventHandler<CoreWebView2ContentLoadingEventArgs> ContentLoading
+    {
+        add => _WebBrowser.ContentLoading += value;
+        remove => _WebBrowser.ContentLoading -= value;
+    }
+
+    /// <summary>
+    /// Occurs when [web message received].
+    /// </summary>
+    public event EventHandler<CoreWebView2WebMessageReceivedEventArgs> WebMessageReceived
+    {
+        add => _WebBrowser.WebMessageReceived += value;
+        remove => _WebBrowser.WebMessageReceived -= value;
     }
 
     /// <summary>
@@ -246,6 +315,18 @@ public class WebView2Wpf : ContentControl, IDisposable
     public new InputScope InputScope => _WebBrowser.InputScope;
 
     /// <summary>
+    /// Gets or sets a value indicating whether [automatic dispose].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [automatic dispose]; otherwise, <c>false</c>.
+    /// </value>
+    public bool AutoDispose
+    {
+        get => (bool)GetValue(AutoDisposeProperty);
+        set => SetValue(AutoDisposeProperty, value);
+    }
+
+    /// <summary>
     /// Navigates the WebView to the previous page in the navigation history. Equivalent
     ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
@@ -289,6 +370,28 @@ public class WebView2Wpf : ContentControl, IDisposable
     public async Task<string> ExecuteScriptAsync(string javaScript) => await _WebBrowser.ExecuteScriptAsync(javaScript);
 
     /// <summary>
+    /// Ensures the core web view2 asynchronous.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <param name="controllerOptions">The controller options.</param>
+    /// <returns>A Task that represents the background initialization process. When the task completes
+    ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
+    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    ///     event will be invoked before the task completes.</returns>
+    public Task EnsureCoreWebView2Async(CoreWebView2Environment? environment = null, CoreWebView2ControllerOptions? controllerOptions = null) =>
+        _WebBrowser.EnsureCoreWebView2Async(environment, controllerOptions);
+
+    /// <summary>
+    /// Ensures the core web view2 asynchronous.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <returns>A Task that represents the background initialization process. When the task completes
+    ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
+    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    ///     event will be invoked before the task completes.</returns>
+    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) => _WebBrowser.EnsureCoreWebView2Async(environment);
+
+    /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
     public void Dispose()
@@ -312,6 +415,7 @@ public class WebView2Wpf : ContentControl, IDisposable
         layoutRoot.Children.Add(_WebBrowser);
         layoutRoot.Children.Add(_windowHost);
         base.Content = layoutRoot;
+        AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
     }
 
     /// <summary>
@@ -341,7 +445,7 @@ public class WebView2Wpf : ContentControl, IDisposable
         }
     }
 
-    private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void SourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is WebView2Wpf browser && e.NewValue is Uri source)
         {
@@ -354,6 +458,21 @@ public class WebView2Wpf : ContentControl, IDisposable
         if (d is WebView2Wpf browser && browser._windowHost?.Window is not null)
         {
             browser._windowHost.Window.Content = e.NewValue;
+        }
+    }
+
+    private static void AutoDisposePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WebView2Wpf browser)
+        {
+            if (browser.AutoDispose)
+            {
+                browser._WebBrowser.Unloaded += (s, e) => browser.Dispose();
+            }
+            else
+            {
+                browser._WebBrowser.Unloaded -= (s, e) => browser.Dispose();
+            }
         }
     }
 }

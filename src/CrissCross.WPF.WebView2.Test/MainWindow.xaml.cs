@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.ComponentModel;
 using System.Windows;
 
 namespace CrissCross.WPF.WebView2.Test
@@ -18,6 +19,16 @@ namespace CrissCross.WPF.WebView2.Test
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Window.Closing" /> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs" /> that contains the event data.</param>
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            ////WebView2Wpf.Dispose();
+            base.OnClosing(e);
         }
 
         private void WindowsXp_Click(object sender, RoutedEventArgs e)
