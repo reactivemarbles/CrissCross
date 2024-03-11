@@ -11,7 +11,10 @@
     Height="450"
     mc:Ignorable="d">
     <Grid>
-        <rxnav:WebView2Wpf x:Name="WebView2Wpf" Source="https://www.aicsolutions.com">
+        <rxnav:WebView2Wpf
+            x:Name="WebView2Wpf"
+            AutoDispose="True"
+            Source="https://www.aicsolutions.com">
             <StackPanel HorizontalAlignment="Left">
                 <TextBlock
                     x:Name="Greeting"

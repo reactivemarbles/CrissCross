@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using ReactiveUI;
+using Splat;
 
 [assembly: InternalsVisibleTo(" CrissCross.WPF")]
 [assembly: InternalsVisibleTo(" CrissCross.XamForms")]
@@ -286,6 +287,41 @@ public static class ViewModelRoutedViewHostMixins
     }
 
     /// <summary>
+    /// Navigates the specified contract.
+    /// </summary>
+    /// <param name="this">The this.</param>
+    /// <param name="rxObject">The rx object.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <exception cref="System.ArgumentNullException">this.</exception>
+    /// <exception cref="System.InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
+    public static void NavigateToView(this IUseNavigation @this, Type rxObject, string? contract = null, object? parameter = null)
+    {
+        if (@this == null)
+        {
+            throw new ArgumentNullException(nameof(@this));
+        }
+
+        if (NavigationHost.Count == 0)
+        {
+            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+        }
+
+        if (NavigationHost.Count > 0 && @this.Name != null && Locator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
+        {
+            switch (@this.Name.Length)
+            {
+                case 0:
+                    NavigationHost.First().Value.Navigate(toViewModel, contract, parameter);
+                    break;
+                default:
+                    NavigationHost[@this.Name].Navigate(toViewModel, contract, parameter);
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
     /// Navigates to view.
     /// </summary>
     /// <typeparam name="T">The Type.</typeparam>
@@ -312,6 +348,40 @@ public static class ViewModelRoutedViewHostMixins
                     if (NavigationHost.TryGetValue(hostName, out var value))
                     {
                         value.Navigate<T>(contract, parameter);
+                    }
+
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Navigates to view.
+    /// </summary>
+    /// <param name="dummy">The dummy.</param>
+    /// <param name="rxObject">The rx object.</param>
+    /// <param name="hostName">Name of the host.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    /// <exception cref="InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
+    public static void NavigateToView(this IUseHostedNavigation dummy, Type rxObject, string? hostName = "", string? contract = null, object? parameter = null)
+    {
+        if (NavigationHost.Count == 0)
+        {
+            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+        }
+
+        if (NavigationHost.Count > 0 && hostName != null && Locator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
+        {
+            switch (hostName.Length)
+            {
+                case 0:
+                    NavigationHost.First().Value.Navigate(toViewModel, contract, parameter);
+                    break;
+                default:
+                    if (NavigationHost.TryGetValue(hostName, out var value))
+                    {
+                        value.Navigate(toViewModel, contract, parameter);
                     }
 
                     break;

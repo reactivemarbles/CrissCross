@@ -22,7 +22,7 @@ namespace CrissCross.WPF.UI.CC_Nav.Test
             this.WhenActivated(d =>
             {
                 NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
-                this.NavigateToView<MainViewModel>();
+                this.NavigateToView(typeof(MainViewModel));
             });
         }
     }
