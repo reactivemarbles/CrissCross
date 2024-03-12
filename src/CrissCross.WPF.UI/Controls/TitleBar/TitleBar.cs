@@ -22,7 +22,6 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// Custom navigation buttons for the window.
 /// </summary>
-[TemplatePart(Name = ElementMainGrid, Type = typeof(System.Windows.Controls.Grid))]
 [TemplatePart(Name = ElementIcon, Type = typeof(System.Windows.Controls.Image))]
 [TemplatePart(Name = ElementHelpButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementMinimizeButton, Type = typeof(TitleBarButton))]
@@ -223,17 +222,14 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         new PropertyMetadata(null));
 
     private const string ElementIcon = "PART_Icon";
-    private const string ElementMainGrid = "PART_MainGrid";
     private const string ElementHelpButton = "PART_HelpButton";
     private const string ElementMinimizeButton = "PART_MinimizeButton";
     private const string ElementMaximizeButton = "PART_MaximizeButton";
     private const string ElementRestoreButton = "PART_RestoreButton";
     private const string ElementCloseButton = "PART_CloseButton";
-    private const string ElementTitleStackPanel = "TitleStackPanel";
 
     private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
     private System.Windows.Window _currentWindow = null!;
-    private Grid _mainGrid = null!;
     private ContentPresenter _icon = null!;
 
     /// <summary>
@@ -459,7 +455,6 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         base.OnApplyTemplate();
 
-        _mainGrid = GetTemplateChild<Grid>(ElementMainGrid);
         _icon = GetTemplateChild<ContentPresenter>(ElementIcon);
 
         var helpButton = GetTemplateChild<TitleBarButton>(ElementHelpButton);
@@ -496,8 +491,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
         }
 
         _currentWindow = System.Windows.Window.GetWindow(this) ?? throw new ArgumentNullException("Window is null");
-        _currentWindow.StateChanged += OnParentWindowStateChanged;
-        _currentWindow.ContentRendered += OnWindowContentRendered;
+        AddWindowEvents(_currentWindow);
     }
 
     /// <summary>
@@ -614,15 +608,9 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     /// <summary>
     ///     Listening window hooks after rendering window content to SizeToContent support.
     /// </summary>
-    private void OnWindowContentRendered(object? sender, EventArgs e)
+    private void AddWindowEvents(System.Windows.Window window)
     {
-        if (sender is not System.Windows.Window window)
-        {
-            return;
-        }
-
-        window.ContentRendered -= OnWindowContentRendered;
-
+        window.StateChanged += OnParentWindowStateChanged;
         var handle = new WindowInteropHelper(window).Handle;
         var windowSource = HwndSource.FromHwnd(handle) ?? throw new ArgumentNullException("Window source is null");
         windowSource.AddHook(HwndSourceHook);

@@ -42,10 +42,6 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <ContentPresenter
-                                    x:Name="ContentPresenter"
-                                    Grid.RowSpan="2"
-                                    Content="{TemplateBinding Content}" />
                                 <controls:TitleBar
                                     x:Name="PART_TitleBar"
                                     Title="{TemplateBinding Title}"
@@ -56,6 +52,10 @@
                                         <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />
                                     </controls:TitleBar.Icon>
                                 </controls:TitleBar>
+                                <ContentPresenter
+                                    x:Name="ContentPresenter"
+                                    Grid.Row="1"
+                                    Content="{TemplateBinding Content}" />
                                 <Grid Grid.Row="1">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -70,17 +70,16 @@
                                     <ContentPresenter
                                         x:Name="TopContentPresenter"
                                         Grid.Row="0"
+                                        Grid.ColumnSpan="3"
                                         Content="{TemplateBinding TopContent}" />
                                     <ContentPresenter
                                         x:Name="LeftContentPresenter"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="3"
+                                        Grid.Row="1"
                                         Grid.Column="0"
                                         Content="{TemplateBinding LeftContent}" />
                                     <ContentPresenter
                                         x:Name="RightContentPresenter"
-                                        Grid.Row="0"
-                                        Grid.RowSpan="3"
+                                        Grid.Row="1"
                                         Grid.Column="2"
                                         Content="{TemplateBinding RightContent}" />
                                     <ccwpf:ViewModelRoutedViewHost
@@ -95,6 +94,7 @@
                                     <ContentPresenter
                                         x:Name="BottomContentPresenter"
                                         Grid.Row="2"
+                                        Grid.ColumnSpan="3"
                                         Content="{TemplateBinding BottomContent}" />
                                 </Grid>
                                 <mb:MessageBoxAsync Grid.Row="1" />

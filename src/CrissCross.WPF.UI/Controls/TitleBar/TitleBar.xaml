@@ -200,6 +200,7 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="Icon" Value="{x:Null}" />
                                 <Condition Property="Title" Value="{x:Null}" />
+                                <Condition Property="TitleContent" Value="{x:Null}" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="TitleStackPanel" Property="Visibility" Value="Collapsed" />
                         </MultiTrigger>

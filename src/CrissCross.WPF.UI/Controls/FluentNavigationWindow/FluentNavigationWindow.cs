@@ -105,10 +105,8 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     /// <summary>
     /// Initializes a new instance of the <see cref="FluentNavigationWindow"/> class.
     /// </summary>
-    public FluentNavigationWindow()
-    {
+    public FluentNavigationWindow() =>
         SetResourceReference(StyleProperty, typeof(FluentNavigationWindow));
-    }
 
     /// <summary>
     /// Gets the can navigate back.
@@ -249,11 +247,5 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);
-
-        ////if (TitleContent?.Count > 0)
-        ////{
-        ////    var titleBar = (TitleBar)Template.FindName("PART_TitleBar", this);
-        ////    titleBar.Content = TitleContent;
-        ////}
     }
 }
