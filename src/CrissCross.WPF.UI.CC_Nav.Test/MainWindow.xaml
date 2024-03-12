@@ -19,5 +19,22 @@
             <ui:Button x:Name="NavBack" Content="Back" />
         </StackPanel>
     </ui:FluentNavigationWindow.TitleContent>
-    <Grid />
+    <ui:FluentNavigationWindow.TopContent>
+        <ui:Button
+            Height="40"
+            HorizontalAlignment="Stretch"
+            Content="TOP CONTENT" />
+    </ui:FluentNavigationWindow.TopContent>
+    <ui:FluentNavigationWindow.BottomContent>
+        <ui:Button
+            Height="40"
+            HorizontalAlignment="Stretch"
+            Content="BOTTOM CONTENT" />
+    </ui:FluentNavigationWindow.BottomContent>
+    <ui:FluentNavigationWindow.LeftContent>
+        <ui:Button Height="40" Content="LEFT CONTENT" />
+    </ui:FluentNavigationWindow.LeftContent>
+    <ui:FluentNavigationWindow.RightContent>
+        <ui:Button Height="40" Content="RIGHT CONTENT" />
+    </ui:FluentNavigationWindow.RightContent>
 </ui:FluentNavigationWindow>
