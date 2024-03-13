@@ -33,9 +33,10 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                             <Grid>
                                 <Grid.Background>
-                                    <LinearGradientBrush StartPoint="0.1,0" EndPoint="0.1,0.04">
-                                        <GradientStop Color="{DynamicResource SystemAccentColorPrimary}" />
-                                        <GradientStop Offset="0.2" Color="Transparent" />
+                                    <LinearGradientBrush Opacity=".1" StartPoint="0, 0" EndPoint="0, 0.1">
+                                        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorPrimary}" />
+                                        <GradientStop Offset=".3" Color="{DynamicResource SystemAccentColorPrimary}" />
+                                        <GradientStop Offset="1" Color="Transparent" />
                                     </LinearGradientBrush>
                                 </Grid.Background>
                                 <Grid.RowDefinitions>
