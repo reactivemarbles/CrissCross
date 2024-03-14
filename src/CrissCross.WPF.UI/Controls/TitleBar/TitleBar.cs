@@ -11,6 +11,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Controls;
+using System.Windows.Input;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
 using CrissCross.WPF.UI.Input;
@@ -228,6 +229,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     private const string ElementRestoreButton = "PART_RestoreButton";
     private const string ElementCloseButton = "PART_CloseButton";
 
+    private static DpiScale? dpiScale;
     private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
     private System.Windows.Window _currentWindow = null!;
     private ContentPresenter _icon = null!;
@@ -239,6 +241,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         Content = [];
         SetValue(TemplateButtonCommandProperty, new RelayCommand<TitleBarButtonType>(OnTemplateButtonClick));
+        dpiScale ??= VisualTreeHelper.GetDpi(this);
 
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
@@ -455,6 +458,7 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
     {
         base.OnApplyTemplate();
 
+        MouseRightButtonUp += TitleBar_MouseRightButtonUp;
         _icon = GetTemplateChild<ContentPresenter>(ElementIcon);
 
         var helpButton = GetTemplateChild<TitleBarButton>(ElementHelpButton);
@@ -508,6 +512,15 @@ public class TitleBar : System.Windows.Controls.Control, IThemeControl
             "CrissCross.WPF.UI.TitleBar");
 
         ApplicationTheme = currentApplicationTheme;
+    }
+
+    /// <summary>
+    /// Show 'SystemMenu' on mouse right button up.
+    /// </summary>
+    private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        var point = PointToScreen(e.GetPosition(this));
+        SystemCommands.ShowSystemMenu(_currentWindow, new Point(point.X / dpiScale!.Value.DpiScaleX, point.Y / dpiScale.Value.DpiScaleY));
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)

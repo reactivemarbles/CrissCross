@@ -201,7 +201,7 @@ public static class ApplicationThemeManager
             themeToSet = ApplicationTheme.HighContrast;
         }
 
-        Apply(themeToSet);
+        Apply(themeToSet, updateAccent: updateAccent);
     }
 
     /// <summary>

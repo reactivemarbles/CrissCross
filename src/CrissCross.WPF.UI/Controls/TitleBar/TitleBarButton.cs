@@ -19,7 +19,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// TitleBarButton.
 /// </summary>
 /// <seealso cref="CrissCross.WPF.UI.Controls.Button" />
-internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
+public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
 {
     /// <summary>
     /// Property for <see cref="ButtonType"/>.
@@ -41,7 +41,19 @@ internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
             SystemColors.ControlTextBrush,
             FrameworkPropertyMetadataOptions.Inherits));
 
+    /// <summary>
+    /// Property for <see cref="MouseOverButtonsForeground"/>.
+    /// </summary>
+    public static readonly DependencyProperty MouseOverButtonsForegroundProperty = DependencyProperty.Register(
+        nameof(MouseOverButtonsForeground),
+        typeof(Brush),
+        typeof(TitleBarButton),
+        new FrameworkPropertyMetadata(
+            SystemColors.ControlTextBrush,
+            FrameworkPropertyMetadataOptions.Inherits));
+
     private readonly Brush _defaultBackgroundBrush = Brushes.Transparent; // TODO: Should it be transparent?
+    private Brush _cacheButtonsForeground = SystemColors.ControlTextBrush; // cache ButtonsForeground while mouse over
     private User32.WM_NCHITTEST _returnValue;
     private bool _isClickedDown;
 
@@ -70,6 +82,15 @@ internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
     }
 
     /// <summary>
+    /// Gets or sets foreground of the navigation buttons while mouse over.
+    /// </summary>
+    public Brush MouseOverButtonsForeground
+    {
+        get => (Brush)GetValue(MouseOverButtonsForegroundProperty);
+        set => SetValue(MouseOverButtonsForegroundProperty, value);
+    }
+
+    /// <summary>
     /// Gets a value indicating whether this instance is hovered.
     /// </summary>
     /// <value>
@@ -88,6 +109,8 @@ internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         }
 
         Background = MouseOverBackground;
+        _cacheButtonsForeground = ButtonsForeground;
+        ButtonsForeground = MouseOverButtonsForeground;
         IsHovered = true;
     }
 
@@ -102,6 +125,7 @@ internal class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         }
 
         Background = _defaultBackgroundBrush;
+        ButtonsForeground = _cacheButtonsForeground;
 
         IsHovered = false;
         _isClickedDown = false;
