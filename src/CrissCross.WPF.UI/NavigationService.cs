@@ -73,11 +73,27 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     }
 
     /// <inheritdoc />
+    public bool Navigate(Type pageType, object? dataContext)
+    {
+        ThrowIfNavigationControlIsNull();
+
+        return NavigationControl!.Navigate(pageType, dataContext);
+    }
+
+    /// <inheritdoc />
     public bool Navigate(string pageIdOrTargetTag)
     {
         ThrowIfNavigationControlIsNull();
 
         return NavigationControl!.Navigate(pageIdOrTargetTag);
+    }
+
+    /// <inheritdoc />
+    public bool Navigate(string pageIdOrTargetTag, object? dataContext)
+    {
+        ThrowIfNavigationControlIsNull();
+
+        return NavigationControl!.Navigate(pageIdOrTargetTag, dataContext);
     }
 
     /// <inheritdoc />
@@ -96,7 +112,19 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
         return NavigationControl!.NavigateWithHierarchy(pageType);
     }
 
-    private void ThrowIfNavigationControlIsNull()
+    /// <inheritdoc />
+    public bool NavigateWithHierarchy(Type pageType, object? dataContext)
+    {
+        ThrowIfNavigationControlIsNull();
+
+        return NavigationControl!.NavigateWithHierarchy(pageType, dataContext);
+    }
+
+    /// <summary>
+    /// Throws if navigation control is null.
+    /// </summary>
+    /// <exception cref="System.ArgumentNullException">NavigationControl.</exception>
+    protected void ThrowIfNavigationControlIsNull()
     {
         if (NavigationControl is null)
         {
@@ -104,7 +132,11 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
         }
     }
 
-    private void ThrowIfPageServiceIsNull()
+    /// <summary>
+    /// Throws if page service is null.
+    /// </summary>
+    /// <exception cref="System.ArgumentNullException">_pageService.</exception>
+    protected void ThrowIfPageServiceIsNull()
     {
         if (_pageService is null)
         {
