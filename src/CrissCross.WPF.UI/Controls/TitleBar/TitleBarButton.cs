@@ -52,10 +52,29 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
             SystemColors.ControlTextBrush,
             FrameworkPropertyMetadataOptions.Inherits));
 
+    /// <summary>
+    /// Property for <see cref="RenderButtonsForeground"/>.
+    /// </summary>
+    public static readonly DependencyProperty RenderButtonsForegroundProperty = DependencyProperty.Register(
+        nameof(RenderButtonsForeground),
+        typeof(Brush),
+        typeof(TitleBarButton),
+        new FrameworkPropertyMetadata(
+            SystemColors.ControlTextBrush,
+            FrameworkPropertyMetadataOptions.Inherits));
+
     private readonly Brush _defaultBackgroundBrush = Brushes.Transparent; // TODO: Should it be transparent?
-    private Brush _cacheButtonsForeground = SystemColors.ControlTextBrush; // cache ButtonsForeground while mouse over
     private User32.WM_NCHITTEST _returnValue;
     private bool _isClickedDown;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TitleBarButton"/> class.
+    /// </summary>
+    public TitleBarButton()
+    {
+        Loaded += TitleBarButton_Loaded;
+        Unloaded += TitleBarButton_Unloaded;
+    }
 
     /// <summary>
     /// Gets or sets the type of the button.
@@ -75,19 +94,31 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
     /// <value>
     /// The buttons foreground.
     /// </value>
-    public Brush ButtonsForeground
+    public Brush? ButtonsForeground
     {
-        get => (Brush)GetValue(ButtonsForegroundProperty);
+        get => (Brush?)GetValue(ButtonsForegroundProperty);
         set => SetValue(ButtonsForegroundProperty, value);
     }
 
     /// <summary>
     /// Gets or sets foreground of the navigation buttons while mouse over.
     /// </summary>
-    public Brush MouseOverButtonsForeground
+    public Brush? MouseOverButtonsForeground
     {
-        get => (Brush)GetValue(MouseOverButtonsForegroundProperty);
+        get => (Brush?)GetValue(MouseOverButtonsForegroundProperty);
         set => SetValue(MouseOverButtonsForegroundProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the render buttons foreground.
+    /// </summary>
+    /// <value>
+    /// The render buttons foreground.
+    /// </value>
+    public Brush? RenderButtonsForeground
+    {
+        get => (Brush?)GetValue(RenderButtonsForegroundProperty);
+        set => SetValue(RenderButtonsForegroundProperty, value);
     }
 
     /// <summary>
@@ -109,8 +140,11 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         }
 
         Background = MouseOverBackground;
-        _cacheButtonsForeground = ButtonsForeground;
-        ButtonsForeground = MouseOverButtonsForeground;
+        if (MouseOverButtonsForeground != null)
+        {
+            RenderButtonsForeground = MouseOverButtonsForeground;
+        }
+
         IsHovered = true;
     }
 
@@ -125,7 +159,7 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         }
 
         Background = _defaultBackgroundBrush;
-        ButtonsForeground = _cacheButtonsForeground;
+        RenderButtonsForeground = ButtonsForeground;
 
         IsHovered = false;
         _isClickedDown = false;
@@ -182,6 +216,17 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         var titleBarButton = (TitleBarButton)d;
         titleBarButton.UpdateReturnValue((TitleBarButtonType)e.NewValue);
     }
+
+    private void TitleBarButton_Unloaded(object sender, RoutedEventArgs e) =>
+        DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
+            .RemoveValueChanged(this, OnButtonsForegroundChanged);
+
+    private void TitleBarButton_Loaded(object sender, RoutedEventArgs e) =>
+        DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
+            .AddValueChanged(this, OnButtonsForegroundChanged);
+
+    private void OnButtonsForegroundChanged(object? sender, EventArgs e) =>
+        SetCurrentValue(RenderButtonsForegroundProperty, IsHovered ? MouseOverButtonsForeground : ButtonsForeground);
 
     private void UpdateReturnValue(TitleBarButtonType buttonType) =>
         _returnValue = buttonType switch
