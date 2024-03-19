@@ -29,8 +29,8 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.0.9</AvaloniaVersion>
-    <ReactiveUIVersion>19.5.41</ReactiveUIVersion>
+    <AvaloniaVersion>11.0.10</AvaloniaVersion>
+    <ReactiveUIVersion>19.5.72</ReactiveUIVersion>
     <CrissCrossCoreTargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</CrissCrossCoreTargetFrameworks>
     <CrissCrossWinTargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net7.0-windows10.0.17763.0;net8.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
     <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net6.0-windows;net7.0-windows;net8.0-windows</CrissCrossWebviewTargetFrameworks>

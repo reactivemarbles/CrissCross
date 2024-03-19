@@ -22,7 +22,7 @@ public partial class DataPage : INavigableView<DataViewModel>, ICanShowMessages
         DataContext = this;
 
         InitializeComponent();
-        this.Events().Loaded.Subscribe(async _ => await this.MessageBoxShow("I am a Custom message box", "Custom Message Box"));
+        this.Events().Loaded.Subscribe(async _ => await this.MessageBoxShow("I am a Custom message box", "Custom Message Box", "Custom Button"));
     }
 
     /// <summary>

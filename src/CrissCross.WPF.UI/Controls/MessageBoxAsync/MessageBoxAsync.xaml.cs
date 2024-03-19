@@ -4,6 +4,7 @@
 using System.Reactive;
 using System.Windows.Input;
 using CP.BBCode.WPF;
+using CP.Reactive;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -19,7 +20,10 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
     /// <summary>
     /// Identifies the Buttons dependency property.
     /// </summary>
-    public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(nameof(Buttons), typeof(IEnumerable<Button>), typeof(ModernWindow));
+    public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
+        nameof(Buttons),
+        typeof(ReactiveList<Button>),
+        typeof(MessageBoxAsync));
 
     private readonly ReactiveCommand<Unit, MessageBoxResult>? _closeOkCommand;
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom0Command;
@@ -62,35 +66,35 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
         _custom8Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom8);
         _custom9Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom9);
 
-        Buttons = new[] { CloseButton };
-        ButtonsSource.ItemsSource = Buttons;
+        Buttons = new(CloseButton);
+        ButtonsSource.ItemsSource = Buttons.Items;
         this.Events().Loaded.Subscribe(_ =>
         {
             // Set up magic functions
             this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
-            ////this.ListenForCustomMessages(
-            ////    async message =>
-            ////    await MessageBoxShow(
-            ////                         message.Item1,
-            ////                         message.Item2,
-            ////                         message.Item3,
-            ////                         message.Item4,
-            ////                         message.Item5,
-            ////                         message.Item6,
-            ////                         message.Item7,
-            ////                         message.Rest.Item1,
-            ////                         message.Rest.Item2,
-            ////                         message.Rest.Item3,
-            ////                         message.Rest.Item4).ConfigureAwait(false));
+            this.ListenForCustomMessages(
+                async message =>
+                await MessageBoxShow(
+                                     message.Item1,
+                                     message.Item2,
+                                     message.Item3,
+                                     message.Item4,
+                                     message.Item5,
+                                     message.Item6,
+                                     message.Item7,
+                                     message.Rest.Item1,
+                                     message.Rest.Item2,
+                                     message.Rest.Item3,
+                                     message.Rest.Item4).ConfigureAwait(false));
         });
     }
 
     /// <summary>
     /// Gets or sets the dialog buttons.
     /// </summary>
-    public IEnumerable<Button> Buttons
+    public ReactiveList<Button> Buttons
     {
-        get => (IEnumerable<Button>)GetValue(ButtonsProperty);
+        get => (ReactiveList<Button>)GetValue(ButtonsProperty);
         set => SetValue(ButtonsProperty, value);
     }
 
@@ -246,7 +250,8 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
         {
             MessageTitle.Text = title;
             MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
-            Buttons = GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9);
+            Buttons.Clear();
+            Buttons.AddRange(GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9));
             Visibility = Visibility.Visible;
         });
 
@@ -285,7 +290,8 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
         {
             MessageTitle.Text = title;
             MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
-            Buttons = GetButtons(button);
+            Buttons.Clear();
+            Buttons.AddRange(GetButtons(button));
             Visibility = Visibility.Visible;
         });
 
@@ -303,47 +309,48 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
         return _messageBoxResult;
     }
 
-    private IEnumerable<Button> GetButtons(string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
+    private List<Button> GetButtons(string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
     {
+        var result = new List<Button>();
         var owner = this;
         owner.CustomButton0 = CreateDialogButton(custom0, true, false, _custom0Command);
-        yield return owner.CustomButton0;
+        result.Add(owner.CustomButton0);
         if (custom1 != null)
         {
             owner.CustomButton1 = CreateDialogButton(custom1, false, false, _custom1Command);
-            yield return owner.CustomButton1;
+            result.Add(owner.CustomButton1);
             if (custom2 != null)
             {
                 owner.CustomButton2 = CreateDialogButton(custom2, false, false, _custom2Command);
-                yield return owner.CustomButton2;
+                result.Add(owner.CustomButton2);
                 if (custom3 != null)
                 {
                     owner.CustomButton3 = CreateDialogButton(custom3, false, false, _custom3Command);
-                    yield return owner.CustomButton3;
+                    result.Add(owner.CustomButton3);
                     if (custom4 != null)
                     {
                         owner.CustomButton4 = CreateDialogButton(custom4, false, false, _custom4Command);
-                        yield return owner.CustomButton4;
+                        result.Add(owner.CustomButton4);
                         if (custom5 != null)
                         {
                             owner.CustomButton5 = CreateDialogButton(custom5, false, false, _custom5Command);
-                            yield return owner.CustomButton5;
+                            result.Add(owner.CustomButton5);
                             if (custom6 != null)
                             {
                                 owner.CustomButton6 = CreateDialogButton(custom6, false, false, _custom6Command);
-                                yield return owner.CustomButton6;
+                                result.Add(owner.CustomButton6);
                                 if (custom7 != null)
                                 {
                                     owner.CustomButton7 = CreateDialogButton(custom7, false, false, _custom7Command);
-                                    yield return owner.CustomButton7;
+                                    result.Add(owner.CustomButton7);
                                     if (custom8 != null)
                                     {
                                         owner.CustomButton8 = CreateDialogButton(custom8, false, false, _custom8Command);
-                                        yield return owner.CustomButton8;
+                                        result.Add(owner.CustomButton8);
                                         if (custom9 != null)
                                         {
                                             owner.CustomButton9 = CreateDialogButton(custom9, false, false, _custom9Command);
-                                            yield return owner.CustomButton9;
+                                            result.Add(owner.CustomButton9);
                                         }
                                     }
                                 }
@@ -353,6 +360,8 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
                 }
             }
         }
+
+        return result;
     }
 
     /// <summary>
@@ -360,30 +369,33 @@ public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
     /// </summary>
     /// <param name="button">The button.</param>
     /// <returns>A IEnumerable of Buttons.</returns>
-    private IEnumerable<Button> GetButtons(MessageBoxButton button)
+    private List<Button> GetButtons(MessageBoxButton button)
     {
+        var result = new List<Button>();
         var owner = this;
         switch (button)
         {
             case MessageBoxButton.OK:
-                yield return owner.OkButton;
+                result.Add(owner.OkButton);
                 break;
 
             case MessageBoxButton.OKCancel:
-                yield return owner.OkButton;
-                yield return owner.CancelButton;
+                result.Add(owner.OkButton);
+                result.Add(owner.CancelButton);
                 break;
 
             case MessageBoxButton.YesNo:
-                yield return owner.YesButton;
-                yield return owner.NoButton;
+                result.Add(owner.YesButton);
+                result.Add(owner.NoButton);
                 break;
 
             case MessageBoxButton.YesNoCancel:
-                yield return owner.YesButton;
-                yield return owner.NoButton;
-                yield return owner.CancelButton;
+                result.Add(owner.YesButton);
+                result.Add(owner.NoButton);
+                result.Add(owner.CancelButton);
                 break;
         }
+
+        return result;
     }
 }
