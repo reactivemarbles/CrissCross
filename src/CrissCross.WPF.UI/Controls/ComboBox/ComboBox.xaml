@@ -46,9 +46,9 @@
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <controls:PassiveScrollViewer
                         x:Name="PART_ContentHost"
+                        Margin="{TemplateBinding Padding}"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Margin="{TemplateBinding Padding}"
                         Style="{DynamicResource DefaultTextBoxScrollViewerStyle}"
                         TextElement.Foreground="{TemplateBinding Foreground}" />
                 </ControlTemplate>

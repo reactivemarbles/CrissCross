@@ -43,7 +43,6 @@ public partial class MainWindow : INavigationWindow
         SetCurrentValue(TrackerProperty, tracker);
 
         navigationService?.SetNavigationControl(RootNavigation);
-        Loaded += (s, e) => RootNavigation.IsPaneOpen = false;
     }
 
     /// <summary>
