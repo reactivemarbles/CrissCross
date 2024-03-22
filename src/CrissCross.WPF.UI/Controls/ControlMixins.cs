@@ -11,13 +11,14 @@ namespace CrissCross.WPF.UI.Controls
     /// ControlMixins.
     /// </summary>
     public static class ControlMixins
-    {/// <summary>
-     /// Flattens the and select.
-     /// </summary>
-     /// <typeparam name="T">The type of the select.</typeparam>
-     /// <param name="list">The list.</param>
-     /// <param name="selector">The selector.</param>
-     /// <returns>An IObservable of T.</returns>
+    {
+        /// <summary>
+        /// Flattens the and select.
+        /// </summary>
+        /// <typeparam name="T">The type of the select.</typeparam>
+        /// <param name="list">The list.</param>
+        /// <param name="selector">The selector.</param>
+        /// <returns>An IObservable of T.</returns>
         public static IObservable<T> FlattenAndSelect<T>(this IObservable<IEnumerable<ReactiveTreeItem>> list, Func<ReactiveTreeItem, IObservable<T>> selector) =>
             Observable.Create<T>(o =>
             {
