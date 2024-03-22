@@ -589,10 +589,7 @@ public partial class NavigationView
                 MarginProperty,
                 navigationView.IsPaneOpen ? titleBarPaneOpenMargin : titleBarPaneCompactMargin);
 
-        _ = VisualStateManager.GoToState(
-            navigationView,
-            navigationView.IsPaneOpen ? "PaneOpen" : "PaneCompact",
-            true);
+        UpdateVisualState(navigationView);
     }
 
     private static void OnTitleBarPropertyChangedCallback(

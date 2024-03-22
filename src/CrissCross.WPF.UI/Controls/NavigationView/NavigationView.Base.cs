@@ -92,6 +92,20 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         NavigateInternal(navigationViewItem);
     }
 
+    /// <summary>
+    /// Updates the state of the visual.
+    /// </summary>
+    /// <param name="navigationView">The navigation view.</param>
+    protected static void UpdateVisualState(NavigationView navigationView)
+    {
+        if (navigationView == null)
+        {
+            return;
+        }
+
+        _ = VisualStateManager.GoToState(navigationView, navigationView.IsPaneOpen ? "PaneOpen" : "PaneCompact", true);
+    }
+
     /// <inheritdoc />
     protected override void OnInitialized(EventArgs e)
     {
@@ -476,10 +490,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
-    {
-        // TODO: Refresh
-    }
+    private void OnLoaded(object sender, RoutedEventArgs e) => UpdateVisualState((NavigationView)sender);
 
     private void UpdateAutoSuggestBoxSuggestions()
     {
