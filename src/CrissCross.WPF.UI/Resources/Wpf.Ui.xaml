@@ -100,5 +100,6 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Window/Window.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/PersonPicture/PersonPicture.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/IconElement/FontIconFallback.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NumericPushButton/NumericPushButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
