@@ -16,6 +16,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/DefaultFocusVisualStyle.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Resources/DefaultTextBoxScrollViewerStyle.xaml" />
 
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AccessText/AccessText.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Anchor/Anchor.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AutoSuggestBox/AutoSuggestBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Badge/Badge.xaml" />
@@ -45,6 +46,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/FluentNavigationWindow/FluentNavigationWindow.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Flyout/Flyout.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Frame/Frame.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/HyperlinkButton/HyperlinkButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Image/Image.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/InfoBar/InfoBar.xaml" />

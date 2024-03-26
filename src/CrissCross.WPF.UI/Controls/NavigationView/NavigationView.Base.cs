@@ -8,9 +8,6 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
-//// Based on Windows UI Library
-//// Copyright(c) Microsoft Corporation.All rights reserved.
-
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -68,13 +65,18 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     {
         NavigationParent = this;
 
-        // It really should be here
-        MenuItems = new ObservableCollection<object>();
-        FooterMenuItems = new ObservableCollection<object>();
-
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
         SizeChanged += OnSizeChanged;
+
+        // Initialize MenuItems collection
+        var menuItems = new ObservableCollection<object>();
+        menuItems.CollectionChanged += OnMenuItems_CollectionChanged;
+        SetValue(MenuItemsPropertyKey, menuItems);
+
+        var footerMenuItems = new ObservableCollection<object>();
+        footerMenuItems.CollectionChanged += OnMenuItems_CollectionChanged;
+        SetValue(FooterMenuItemsPropertyKey, footerMenuItems);
     }
 
     /// <inheritdoc/>
@@ -98,7 +100,11 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <param name="navigationView">The navigation view.</param>
     protected static void UpdateVisualState(NavigationView navigationView)
     {
-        if (navigationView == null)
+        // Skip display modes that don't have multiple states
+        if (navigationView == null || navigationView.PaneDisplayMode is
+            NavigationViewPaneDisplayMode.LeftFluent or
+            NavigationViewPaneDisplayMode.Top or
+            NavigationViewPaneDisplayMode.Bottom)
         {
             return;
         }
@@ -258,22 +264,15 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// Adds the items to dictionaries.
     /// </summary>
     /// <param name="list">The list.</param>
-    protected virtual void AddItemsToDictionaries(IList list)
+    protected virtual void AddItemsToDictionaries(IEnumerable list)
     {
         if (list is null)
         {
             return;
         }
 
-        for (var i = 0; i < list.Count; i++)
+        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
         {
-            var singleMenuItem = list[i];
-
-            if (singleMenuItem is not INavigationViewItem singleNavigationViewItem)
-            {
-                continue;
-            }
-
             if (!PageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
             {
                 PageIdOrTargetTagNavigationViewsDictionary.Add(
@@ -301,12 +300,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
 
             singleNavigationViewItem.IsMenuElement = true;
 
-            if (singleNavigationViewItem.MenuItems.Count <= 0)
+            if (singleNavigationViewItem.HasMenuItems)
             {
-                continue;
+                AddItemsToDictionaries(singleNavigationViewItem.MenuItems);
             }
-
-            AddItemsToDictionaries(singleNavigationViewItem.MenuItems);
         }
     }
 
@@ -323,22 +320,15 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// Adds the items to automatic suggest box items.
     /// </summary>
     /// <param name="list">The list.</param>
-    protected virtual void AddItemsToAutoSuggestBoxItems(IList list)
+    protected virtual void AddItemsToAutoSuggestBoxItems(IEnumerable list)
     {
         if (list is null)
         {
             return;
         }
 
-        for (var i = 0; i < list.Count; i++)
+        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
         {
-            var singleMenuItem = list[i];
-
-            if (singleMenuItem is not NavigationViewItem singleNavigationViewItem)
-            {
-                continue;
-            }
-
             if (
                 singleNavigationViewItem is { Content: string content, TargetPageType: { } }
                 && !string.IsNullOrWhiteSpace(content))
@@ -346,12 +336,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
                 _autoSuggestBoxItems.Add(content);
             }
 
-            if (singleNavigationViewItem.MenuItems.Count <= 0)
+            if (singleNavigationViewItem.HasMenuItems)
             {
-                continue;
+                AddItemsToAutoSuggestBoxItems(singleNavigationViewItem.MenuItems);
             }
-
-            AddItemsToAutoSuggestBoxItems(singleNavigationViewItem.MenuItems);
         }
     }
 
@@ -370,22 +358,15 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <param name="list">The list.</param>
     /// <param name="selectedSuggestBoxItem">The selected suggest box item.</param>
     /// <returns>A bool.</returns>
-    protected virtual bool NavigateToMenuItemFromAutoSuggestBox(IList list, string selectedSuggestBoxItem)
+    protected virtual bool NavigateToMenuItemFromAutoSuggestBox(IEnumerable list, string selectedSuggestBoxItem)
     {
         if (list is null)
         {
             return false;
         }
 
-        for (var i = 0; i < list.Count; i++)
+        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
         {
-            var singleMenuItem = list[i];
-
-            if (singleMenuItem is not NavigationViewItem singleNavigationViewItem)
-            {
-                continue;
-            }
-
             if (singleNavigationViewItem.Content is string content && content == selectedSuggestBoxItem)
             {
                 NavigateInternal(singleNavigationViewItem);
@@ -395,12 +376,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
                 return true;
             }
 
-            if (singleNavigationViewItem.MenuItems.Count <= 0)
+            if (NavigateToMenuItemFromAutoSuggestBox(singleNavigationViewItem.MenuItems, selectedSuggestBoxItem))
             {
-                continue;
+                return true;
             }
-
-            NavigateToMenuItemFromAutoSuggestBox(singleNavigationViewItem.MenuItems, selectedSuggestBoxItem);
         }
 
         return false;
@@ -470,23 +449,19 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// Deactivates the menu items.
     /// </summary>
     /// <param name="list">The list.</param>
-    protected void DeactivateMenuItems(IList list)
+    protected void DeactivateMenuItems(IEnumerable list)
     {
         if (list is null)
         {
             return;
         }
 
-        for (var i = 0; i < list.Count; i++)
+        foreach (var item in list)
         {
-            var singleMenuItem = list[i];
-
-            if (singleMenuItem is not NavigationViewItem singleNavigationViewItem)
+            if (item is NavigationViewItem singleNavigationViewItem)
             {
-                continue;
+                singleNavigationViewItem.Deactivate(this);
             }
-
-            singleNavigationViewItem.Deactivate(this);
         }
     }
 

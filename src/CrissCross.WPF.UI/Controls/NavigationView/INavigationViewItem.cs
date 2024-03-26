@@ -44,9 +44,9 @@ public interface INavigationViewItem
     IconElement? Icon { get; set; }
 
     /// <summary>
-    /// Gets or sets the collection of menu items displayed in the NavigationView.
+    /// Gets the collection of menu items displayed in the NavigationView.
     /// </summary>
-    IList MenuItems { get; set; }
+    IList MenuItems { get; }
 
     /// <summary>
     /// Gets or sets an object source used to generate the content of the NavigationView menu.
