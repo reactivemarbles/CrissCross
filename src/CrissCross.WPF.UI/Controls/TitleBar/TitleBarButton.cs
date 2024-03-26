@@ -221,9 +221,12 @@ public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .RemoveValueChanged(this, OnButtonsForegroundChanged);
 
-    private void TitleBarButton_Loaded(object sender, RoutedEventArgs e) =>
+    private void TitleBarButton_Loaded(object sender, RoutedEventArgs e)
+    {
+        RenderButtonsForeground = ButtonsForeground;
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .AddValueChanged(this, OnButtonsForegroundChanged);
+    }
 
     private void OnButtonsForegroundChanged(object? sender, EventArgs e) =>
         SetCurrentValue(RenderButtonsForegroundProperty, IsHovered ? MouseOverButtonsForeground : ButtonsForeground);
