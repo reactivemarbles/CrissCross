@@ -12,6 +12,7 @@
 //// Copyright(c) Microsoft Corporation.All rights reserved.
 
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Controls;
 using CrissCross.WPF.UI.Animations;
@@ -26,10 +27,24 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="CrissCross.WPF.UI.Controls.INavigationView" />
 public partial class NavigationView
 {
+    private static readonly DependencyPropertyKey MenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
+       nameof(MenuItems),
+       typeof(ObservableCollection<object>),
+       typeof(NavigationView),
+       new PropertyMetadata(null));
+
+    private static readonly DependencyPropertyKey FooterMenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
+       nameof(FooterMenuItems),
+       typeof(ObservableCollection<object>),
+       typeof(NavigationView),
+       new PropertyMetadata(null));
+
     /// <summary>
     /// Property for <see cref="Header"/>.
     /// </summary>
+#pragma warning disable SA1202 // Elements should be ordered by access
     public static readonly DependencyProperty EnableDebugMessagesProperty = DependencyProperty.Register(
+#pragma warning restore SA1202 // Elements should be ordered by access
         nameof(EnableDebugMessages),
         typeof(bool),
         typeof(NavigationView),
@@ -62,14 +77,11 @@ public partial class NavigationView
         typeof(NavigationView),
         new FrameworkPropertyMetadata(false));
 
-    /// <summary>
-    /// Property for <see cref="MenuItems"/>.
-    /// </summary>
-    public static readonly DependencyProperty MenuItemsProperty = DependencyProperty.Register(
-        nameof(MenuItems),
-        typeof(IList),
-        typeof(NavigationView),
-        new FrameworkPropertyMetadata(null, OnMenuItemsPropertyChanged));
+    /// <summary>Identifies the <see cref="MenuItems"/> dependency property.</summary>
+    public static readonly DependencyProperty MenuItemsProperty = MenuItemsPropertyKey.DependencyProperty;
+
+    /// <summary>Identifies the <see cref="FooterMenuItems"/> dependency property.</summary>
+    public static readonly DependencyProperty FooterMenuItemsProperty = FooterMenuItemsPropertyKey.DependencyProperty;
 
     /// <summary>
     /// Property for <see cref="MenuItemsSource"/>.
@@ -78,16 +90,7 @@ public partial class NavigationView
         nameof(MenuItemsSource),
         typeof(object),
         typeof(NavigationView),
-        new FrameworkPropertyMetadata(null, OnMenuItemsSourcePropertyChanged));
-
-    /// <summary>
-    /// Property for <see cref="FooterMenuItems"/>.
-    /// </summary>
-    public static readonly DependencyProperty FooterMenuItemsProperty = DependencyProperty.Register(
-        nameof(FooterMenuItemsProperty),
-        typeof(IList),
-        typeof(NavigationView),
-        new FrameworkPropertyMetadata(null, OnFooterMenuItemsPropertyChanged));
+        new FrameworkPropertyMetadata(null, OnMenuItemsSourceChanged));
 
     /// <summary>
     /// Property for <see cref="FooterMenuItemsSource"/>.
@@ -96,7 +99,7 @@ public partial class NavigationView
         nameof(FooterMenuItemsSource),
         typeof(object),
         typeof(NavigationView),
-        new FrameworkPropertyMetadata(null, OnFooterMenuItemsSourcePropertyChanged));
+        new FrameworkPropertyMetadata(null, OnFooterMenuItemsSourceChanged));
 
     /// <summary>
     /// Property for <see cref="ContentOverlay"/>.
@@ -272,6 +275,9 @@ public partial class NavigationView
         typeof(NavigationView),
         new FrameworkPropertyMetadata(default(Thickness)));
 
+    private ObservableCollection<object>? _menuItems;
+    private ObservableCollection<object>? _footerMenuItems;
+
     /// <summary>
     /// Gets or sets a value indicating whether enables or disables debugging messages for this control.
     /// </summary>
@@ -305,8 +311,16 @@ public partial class NavigationView
     /// <inheritdoc/>
     public IList MenuItems
     {
-        get => (IList)GetValue(MenuItemsProperty);
-        set => SetValue(MenuItemsProperty, value);
+        get
+        {
+            if (_menuItems == null)
+            {
+                _menuItems = [];
+                _menuItems.CollectionChanged += OnMenuItems_CollectionChanged;
+            }
+
+            return _menuItems;
+        }
     }
 
     /// <inheritdoc/>
@@ -330,8 +344,16 @@ public partial class NavigationView
     /// <inheritdoc/>
     public IList FooterMenuItems
     {
-        get => (IList)GetValue(FooterMenuItemsProperty);
-        set => SetValue(FooterMenuItemsProperty, value);
+        get
+        {
+            if (_footerMenuItems == null)
+            {
+                _footerMenuItems = [];
+                _footerMenuItems.CollectionChanged += OnFooterMenuItems_CollectionChanged;
+            }
+
+            return _footerMenuItems;
+        }
     }
 
     /// <inheritdoc/>
@@ -487,60 +509,51 @@ public partial class NavigationView
         set => SetValue(FrameMarginProperty, value);
     }
 
-    private static void OnMenuItemsPropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
+    private static void OnMenuItemsSourceChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not NavigationView navigationView || e.NewValue is not IList enumerableNewValue)
+        if (d is not NavigationView navigationView)
         {
             return;
         }
 
-        if (navigationView.MenuItemsItemsControl is null)
+        navigationView.MenuItems.Clear();
+
+        if (e.NewValue is IEnumerable newItemsSource and not string)
         {
-            navigationView.UpdateCollectionChangedEvent(e.OldValue as IList, e.NewValue as IList);
-            return;
+            foreach (var item in newItemsSource)
+            {
+                navigationView.MenuItems.Add(item);
+            }
         }
-
-        if (navigationView.MenuItemsItemsControl.ItemsSource.Equals(enumerableNewValue))
+        else if (e.NewValue != null)
         {
-            navigationView.UpdateMenuItemsTemplate(enumerableNewValue);
-            return;
+            navigationView.MenuItems.Add(e.NewValue);
         }
-
-        navigationView.MenuItemsItemsControl.ItemsSource = null;
-        navigationView.MenuItemsItemsControl.ItemsSource = enumerableNewValue;
-        navigationView.UpdateMenuItemsTemplate(enumerableNewValue);
-        navigationView.AddItemsToDictionaries(enumerableNewValue);
-
-        navigationView.UpdateCollectionChangedEvent(e.OldValue as IList, e.NewValue as IList);
     }
 
-    private static void OnMenuItemsSourcePropertyChanged(
-        DependencyObject? d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnFooterMenuItemsSourceChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not NavigationView navigationView || e.NewValue is not IList enumerableNewValue)
+        if (d is not NavigationView navigationView)
         {
             return;
         }
 
-        navigationView.MenuItems = enumerableNewValue;
-    }
+        navigationView.FooterMenuItems.Clear();
 
-    private static void OnFooterMenuItemsSourcePropertyChanged(
-        DependencyObject? d,
-        DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not NavigationView navigationView || e.NewValue is not IList enumerableNewValue)
+        if (e.NewValue is IEnumerable newItemsSource and not string)
         {
-            return;
+            foreach (var item in newItemsSource)
+            {
+                navigationView.FooterMenuItems.Add(item);
+            }
         }
-
-        navigationView.FooterMenuItems = enumerableNewValue;
+        else if (e.NewValue != null)
+        {
+            navigationView.FooterMenuItems.Add(e.NewValue);
+        }
     }
 
-    private static void OnPaneDisplayModePropertyChanged(
-        DependencyObject? d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnPaneDisplayModePropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -550,9 +563,7 @@ public partial class NavigationView
         navigationView.OnPaneDisplayModeChanged();
     }
 
-    private static void OnItemTemplatePropertyChanged(
-        DependencyObject? d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnItemTemplatePropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -592,9 +603,7 @@ public partial class NavigationView
         UpdateVisualState(navigationView);
     }
 
-    private static void OnTitleBarPropertyChangedCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnTitleBarPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -628,9 +637,7 @@ public partial class NavigationView
         }
     }
 
-    private static void OnAutoSuggestBoxPropertyChangedCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnAutoSuggestBoxPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -653,17 +660,13 @@ public partial class NavigationView
         autoSuggestBox.SuggestionChosen += navigationView.AutoSuggestBoxOnSuggestionChosen;
         autoSuggestBox.QuerySubmitted += navigationView.AutoSuggestBoxOnQuerySubmitted;
 
-        if (
-            navigationView.TitleBar?.Margin == titleBarPaneOpenMargin
-            && autoSuggestBox.Margin is { Bottom: 0, Left: 0, Right: 0, Top: 0 })
+        if (navigationView.TitleBar?.Margin == titleBarPaneOpenMargin && autoSuggestBox.Margin is { Bottom: 0, Left: 0, Right: 0, Top: 0 })
         {
             autoSuggestBox.Margin = autoSuggestBoxMargin;
         }
     }
 
-    private static void OnBreadcrumbBarPropertyChangedCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnBreadcrumbBarPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -689,45 +692,18 @@ public partial class NavigationView
         breadcrumbBar.ItemClicked += navigationView.BreadcrumbBarOnItemClicked;
     }
 
-    private static void OnFooterMenuItemsPropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is not NavigationView navigationView || e.NewValue is not IList enumerableNewValue)
-        {
-            return;
-        }
-
-        if (navigationView.FooterMenuItemsItemsControl is null)
-        {
-            navigationView.UpdateCollectionChangedEvent(e.OldValue as IList, e.NewValue as IList);
-            return;
-        }
-
-        if (navigationView.FooterMenuItemsItemsControl.ItemsSource.Equals(enumerableNewValue))
-        {
-            return;
-        }
-
-        navigationView.FooterMenuItemsItemsControl.ItemsSource = null;
-        navigationView.FooterMenuItemsItemsControl.ItemsSource = enumerableNewValue;
-        navigationView.UpdateMenuItemsTemplate(enumerableNewValue);
-        navigationView.AddItemsToDictionaries(enumerableNewValue);
-        navigationView.UpdateCollectionChangedEvent(e.OldValue as IList, e.NewValue as IList);
-    }
-
-    private void UpdateCollectionChangedEvent(IList? oldMenuItems, IList? newMenuItems)
-    {
-        if (oldMenuItems is INotifyCollectionChanged notifyCollection)
-        {
-            notifyCollection.CollectionChanged -= OnMenuItems_CollectionChanged;
-        }
-
-        if (newMenuItems is INotifyCollectionChanged newNotifyCollection)
-        {
-            newNotifyCollection.CollectionChanged += OnMenuItems_CollectionChanged;
-        }
-    }
-
     private void OnMenuItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is null)
+        {
+            return;
+        }
+
+        UpdateMenuItemsTemplate(e.NewItems);
+        AddItemsToDictionaries(e.NewItems);
+    }
+
+    private void OnFooterMenuItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (e.NewItems is null)
         {
