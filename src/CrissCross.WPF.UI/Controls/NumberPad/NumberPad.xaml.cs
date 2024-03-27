@@ -58,6 +58,7 @@ namespace CrissCross.WPF.UI.Controls
                 throw new ArgumentNullException(nameof(newOwner));
             }
 
+            SystemThemeWatcher.Watch(this);
             InitializeComponent();
             Unit.Content = _owner.Units;
             _owner.IsEnabled = false;

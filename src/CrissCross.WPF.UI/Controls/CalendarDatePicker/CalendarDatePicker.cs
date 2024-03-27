@@ -24,7 +24,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// &lt;ui:CalendarDatePicker /&gt;
 /// </code>
 /// </example>
-public class CalendarDatePicker : CrissCross.WPF.UI.Controls.Button
+public class CalendarDatePicker : Button
 {
     /// <summary>
     /// Property for <see cref="IsCalendarOpen"/>.

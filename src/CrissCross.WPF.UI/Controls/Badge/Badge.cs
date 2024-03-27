@@ -30,14 +30,14 @@ public class Badge : System.Windows.Controls.ContentControl, IAppearanceControl
     /// </summary>
     public static readonly DependencyProperty AppearanceProperty = DependencyProperty.Register(
         nameof(Appearance),
-        typeof(Controls.ControlAppearance),
+        typeof(ControlAppearance),
         typeof(Badge),
         new PropertyMetadata(ControlAppearance.Primary));
 
     /// <inheritdoc />
-    public Controls.ControlAppearance Appearance
+    public ControlAppearance Appearance
     {
-        get => (Controls.ControlAppearance)GetValue(AppearanceProperty);
+        get => (ControlAppearance)GetValue(AppearanceProperty);
         set => SetValue(AppearanceProperty, value);
     }
 }
