@@ -11,7 +11,6 @@
 using System.Windows.Controls;
 using CrissCross.WPF.UI.Converters;
 
-// ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>

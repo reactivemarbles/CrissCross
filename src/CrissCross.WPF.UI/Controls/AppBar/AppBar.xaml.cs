@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using ReactiveMarbles.ObservableEvents;
@@ -36,6 +38,7 @@ public partial class AppBar : IHaveAppBar
 
     private readonly Storyboard? _hide;
     private readonly Storyboard? _show;
+    private readonly CompositeDisposable _disposables = [];
     private bool _appBarVisible;
     private bool _mouseIsOverAppBar;
 
@@ -51,25 +54,39 @@ public partial class AppBar : IHaveAppBar
         AppBarRightControl.ItemsSource = AppBarRight;
         _hide = BottomAppBar.Resources["Hide"] as Storyboard;
         _show = BottomAppBar.Resources["Show"] as Storyboard;
-        BottomAppBar.MouseEnter += AppBar_MouseEnter;
-        BottomAppBar.MouseLeave += AppBar_MouseLeave;
+        BottomAppBar.Events().MouseEnter.Select(_ => true)
+            .Merge(BottomAppBar.Events().MouseLeave.Select(_ => false))
+            .Subscribe(isOver => _mouseIsOverAppBar = isOver)
+            .DisposeWith(_disposables);
 
         HideAppBar();
         this.Events().Loaded.Subscribe(_ =>
         {
             // Find the parent window
             var parentWindow = Window.GetWindow(this);
-            if (parentWindow != null)
+            parentWindow?.Events().PreviewMouseDown.Subscribe(e =>
             {
-                parentWindow.PreviewMouseDown += ModernWindow_PreviewMouseDown;
-            }
+                if (!_mouseIsOverAppBar)
+                {
+                    if (!_appBarVisible && e.ButtonState == MouseButtonState.Pressed && e.ChangedButton == MouseButton.Right)
+                    {
+                        ShowAppBar();
+                    }
+                    else if (_appBarVisible && e.ChangedButton != MouseButton.Right && !AppBarIsSticky)
+                    {
+                        HideAppBar();
+                    }
+                }
+            })
+            .DisposeWith(_disposables);
 
             this.AppBarIsStickyListener(() => AppBarIsSticky, isSticky => AppBarIsSticky = isSticky);
             this.AppBarLeftListener(() => AppBarLeft);
             this.AppBarRightListener(() => AppBarRight);
             this.ShowAppBarListener(ShowAppBar);
             this.HideAppBarListener(HideAppBar);
-        });
+        }).DisposeWith(_disposables);
+        this.Events().Unloaded.Subscribe(_ => _disposables.Dispose()).DisposeWith(_disposables);
     }
 
     /// <summary>
@@ -174,42 +191,6 @@ public partial class AppBar : IHaveAppBar
         {
             _hide.Begin();
             _appBarVisible = false;
-        }
-    }
-
-    /// <summary>
-    /// Handles the MouseEnter event of the _AppBar control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
-    private void AppBar_MouseEnter(object sender, MouseEventArgs e) => _mouseIsOverAppBar = true;
-
-    /// <summary>
-    /// Handles the MouseLeave event of the _AppBar control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
-    private void AppBar_MouseLeave(object sender, MouseEventArgs e) => _mouseIsOverAppBar = false;
-
-    /// <summary>
-    /// Handles the PreviewMouseDown event of the ModernWindow control.
-    /// </summary>
-    /// <param name="sender">The source of the event.</param>
-    /// <param name="e">
-    /// The <see cref="MouseButtonEventArgs"/> instance containing the event data.
-    /// </param>
-    private void ModernWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if (!_mouseIsOverAppBar)
-        {
-            if (!_appBarVisible && e.ButtonState == MouseButtonState.Pressed && e.ChangedButton == MouseButton.Right)
-            {
-                ShowAppBar();
-            }
-            else if (_appBarVisible && e.ChangedButton != MouseButton.Right && !AppBarIsSticky)
-            {
-                HideAppBar();
-            }
         }
     }
 }
