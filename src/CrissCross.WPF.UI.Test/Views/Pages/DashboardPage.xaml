@@ -57,5 +57,13 @@
             Maximum="10000"
             Minimum="0"
             Units="Cross" />
+        <ui:CheckBoxModern
+            Grid.Row="1"
+            Grid.Column="2"
+            Text="I Am A Modern CheckBox" />
+        <CheckBox
+            Grid.Row="1"
+            Grid.Column="4"
+            Content="I Am A Standard CheckBox" />
     </Grid>
 </Page>
