@@ -27,6 +27,7 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ui:Button
             Grid.Column="0"
@@ -65,5 +66,6 @@
             Grid.Row="1"
             Grid.Column="4"
             Content="I Am A Standard CheckBox" />
+        <ui:DateTimePicker Grid.Row="2" Grid.ColumnSpan="3" />
     </Grid>
 </Page>
