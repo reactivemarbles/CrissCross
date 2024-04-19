@@ -2,12 +2,12 @@
     x:Class="CrissCross.WPF.UI.DateTimePicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    x:Name="userControl"
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls"
+    x:Name="dateTimePicker"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converter:BoolNegationConverter x:Key="BoolNegationConverter" />
@@ -29,7 +29,7 @@
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <controls:TextBox
+                <ui:TextBox
                     x:Name="DateDisplay"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
@@ -39,11 +39,11 @@
                     IsHitTestVisible="False"
                     IsReadOnly="True"
                     IsUndoEnabled="False" />
-                <controls:SymbolIcon
+                <ui:SymbolIcon
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Foreground="{Binding Foreground, ElementName=userControl}"
+                    Foreground="{Binding Foreground, ElementName=dateTimePicker}"
                     Symbol="CalendarRtl24" />
             </Grid>
         </ToggleButton>
@@ -69,7 +69,8 @@
                         x:Name="CalDisplay"
                         Grid.ColumnSpan="3"
                         Margin="0,-3,0,0"
-                        DisplayDateStart="{Binding Source={x:Static sys:DateTime.Today}, Mode=OneWay}"
+                        DisplayDateEnd="{Binding DisplayDateEnd, ElementName=dateTimePicker}"
+                        DisplayDateStart="{Binding DisplayDateStart, ElementName=dateTimePicker}"
                         PreviewMouseUp="CalDisplay_PreviewMouseUp"
                         SelectedDate="{x:Static sys:DateTime.Now}" />
                     <ComboBox
@@ -126,7 +127,7 @@
                         <ComboBoxItem Content="50" />
                         <ComboBoxItem Content="55" />
                     </ComboBox>
-                    <controls:Button
+                    <ui:Button
                         x:Name="SaveTime"
                         Grid.Row="1"
                         Grid.Column="2"

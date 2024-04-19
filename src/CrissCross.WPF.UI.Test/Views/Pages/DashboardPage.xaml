@@ -66,6 +66,16 @@
             Grid.Row="1"
             Grid.Column="4"
             Content="I Am A Standard CheckBox" />
-        <ui:DateTimePicker Grid.Row="2" Grid.ColumnSpan="3" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="5"
+            Orientation="Horizontal">
+            <ui:DateTimePicker x:Name="DateFrom" />
+            <ui:DateTimePicker x:Name="DateTo" />
+            <ui:DateTimePicker
+                x:Name="DateSelection"
+                DisplayDateEnd="{Binding SelectedDate, ElementName=DateTo}"
+                DisplayDateStart="{Binding SelectedDate, ElementName=DateFrom}" />
+        </StackPanel>
     </Grid>
 </Page>

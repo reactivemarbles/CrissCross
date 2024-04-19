@@ -21,6 +21,26 @@ namespace CrissCross.WPF.UI
             typeof(DateTimePicker),
             new FrameworkPropertyMetadata(DateTime.Now, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        /// <summary>
+        /// The display date start property.
+        /// </summary>
+        public static readonly DependencyProperty DisplayDateStartProperty =
+            DependencyProperty.Register(
+                nameof(DisplayDateStart),
+                typeof(DateTime),
+                typeof(DateTimePicker),
+                new PropertyMetadata(DateTime.MinValue, DateChanged));
+
+        /// <summary>
+        /// The display date end property.
+        /// </summary>
+        public static readonly DependencyProperty DisplayDateEndProperty =
+            DependencyProperty.Register(
+                nameof(DisplayDateEnd),
+                typeof(DateTime),
+                typeof(DateTimePicker),
+                new PropertyMetadata(DateTime.Now, DateChanged));
+
         private const string DateTimeFormat = "dd.MM.yyyy HH:mm";
 
         /// <summary>
@@ -30,22 +50,7 @@ namespace CrissCross.WPF.UI
         {
             InitializeComponent();
             CalDisplay.SelectedDatesChanged += CalDisplay_SelectedDatesChanged;
-            CalDisplay.SelectedDate = DateTime.Now.AddDays(1);
-
-            ////BitmapSource ConvertGDI_To_WPF(Bitmap bm)
-            ////{
-            ////    BitmapSource? bms = null;
-            ////    var h_bm = IntPtr.Zero;
-            ////    h_bm = bm.GetHbitmap();
-            ////    bms = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(h_bm, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            ////    bms.Freeze();
-            ////    h_bm = IntPtr.Zero;
-            ////    return bms;
-            ////}
-
-            ////Bitmap bitmap1 = Properties.Resources.DateTimePicker;
-            ////bitmap1.MakeTransparent(System.Drawing.Color.Black);
-            ////CalIco.Source = ConvertGDI_To_WPF(bitmap1);
+            CalDisplay.SelectedDate = DateTime.Now;
         }
 
         /// <summary>
@@ -60,7 +65,54 @@ namespace CrissCross.WPF.UI
             set => SetValue(SelectedDateProperty, value);
         }
 
-        private void CalDisplay_SelectedDatesChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Gets or sets the display date start.
+        /// </summary>
+        /// <value>
+        /// The display date start.
+        /// </value>
+        public DateTime DisplayDateStart
+        {
+            get => (DateTime)GetValue(DisplayDateStartProperty);
+            set => SetValue(DisplayDateStartProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the display date end.
+        /// </summary>
+        /// <value>
+        /// The display date end.
+        /// </value>
+        public DateTime DisplayDateEnd
+        {
+            get => (DateTime)GetValue(DisplayDateEndProperty);
+            set => SetValue(DisplayDateEndProperty, value);
+        }
+
+        private static void DateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is DateTimePicker dateTimePicker)
+            {
+                if (dateTimePicker.DisplayDateStart > dateTimePicker.DisplayDateEnd)
+                {
+                    dateTimePicker.DisplayDateEnd = dateTimePicker.DisplayDateStart;
+                }
+
+                if (dateTimePicker.DisplayDateStart > dateTimePicker.SelectedDate)
+                {
+                    dateTimePicker.SelectedDate = dateTimePicker.DisplayDateStart;
+                }
+
+                if (dateTimePicker.DisplayDateEnd < dateTimePicker.SelectedDate)
+                {
+                    dateTimePicker.SelectedDate = dateTimePicker.DisplayDateEnd;
+                }
+
+                dateTimePicker.CalDisplay_SelectedDatesChanged(null, EventArgs.Empty);
+            }
+        }
+
+        private void CalDisplay_SelectedDatesChanged(object? sender, EventArgs e)
         {
             var hours = (Hours?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
             var minutes = (Min?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
