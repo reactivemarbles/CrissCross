@@ -28,6 +28,7 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ui:Button
             Grid.Column="0"
@@ -66,10 +67,20 @@
             Grid.Row="1"
             Grid.Column="4"
             Content="I Am A Standard CheckBox" />
-        <ui:StandardColorPicker
+        <StackPanel
             Grid.Row="2"
+            Grid.ColumnSpan="5"
+            Orientation="Horizontal">
+            <ui:DateTimePicker x:Name="DateFrom" />
+            <ui:DateTimePicker x:Name="DateTo" />
+            <ui:DateTimePicker
+                x:Name="DateSelection"
+                DisplayDateEnd="{Binding SelectedDate, ElementName=DateTo}"
+                DisplayDateStart="{Binding SelectedDate, ElementName=DateFrom}" />
+        </StackPanel>
+        <ui:StandardColorPicker
+            Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Width="300" />
+            Grid.ColumnSpan="3" />
     </Grid>
 </Page>
