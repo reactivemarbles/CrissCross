@@ -11,9 +11,7 @@
     xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:uie="clr-namespace:CrissCross.WPF.UI.UIExtensions"
     x:Name="uc"
-    MinWidth="200"
-    MinHeight="150"
-    d:DesignHeight="150"
+    d:DesignHeight="120"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <local:PickerControlBase.Resources>
@@ -35,11 +33,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </local:PickerControlBase.Resources>
-    <TabControl
-        Canvas.Top="290"
-        MaxHeight="130"
-        Margin="10"
-        VerticalAlignment="Top">
+    <TabControl>
         <TabControl.Resources>
             <Style TargetType="TabPanel">
                 <Setter Property="HorizontalAlignment" Value="Right" />
@@ -48,18 +42,18 @@
         <TabItem Header="RGB">
             <Grid Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="45" />
+                    <ColumnDefinition Width="55" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition>
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value="20" />
+                                <Setter Property="Height" Value="Auto" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ShowAlpha, ElementName=uc}" Value="False">
                                         <Setter Property="Height" Value="0" />
@@ -90,8 +84,6 @@
                 <ui:TextBox
                     Grid.Row="0"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="5"
                     Text="{Binding Color.RGB_R, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"
                     TextAlignment="Center">
@@ -120,8 +112,6 @@
                 <ui:TextBox
                     Grid.Row="1"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="6"
                     Text="{Binding Color.RGB_G, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"
                     TextAlignment="Center">
@@ -150,8 +140,6 @@
                 <ui:TextBox
                     Grid.Row="2"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="7"
                     Text="{Binding Color.RGB_B, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"
                     TextAlignment="Center">
@@ -196,8 +184,6 @@
                 <ui:TextBox
                     Grid.Row="3"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     IsEnabled="{Binding ShowAlpha, ElementName=uc}"
                     TabIndex="8"
                     Text="{Binding Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"
@@ -211,18 +197,18 @@
         <TabItem Header="HSV">
             <Grid Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="18" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="45" />
+                    <ColumnDefinition Width="55" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition>
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value="20" />
+                                <Setter Property="Height" Value="Auto" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ShowAlpha, ElementName=uc}" Value="False">
                                         <Setter Property="Height" Value="0" />
@@ -253,8 +239,6 @@
                 <ui:TextBox
                     Grid.Row="0"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="5"
                     Text="{Binding Color.HSV_H, Converter={StaticResource HueChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -283,8 +267,6 @@
                 <ui:TextBox
                     Grid.Row="1"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="6"
                     Text="{Binding Color.HSV_S, Converter={StaticResource HundredChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -313,8 +295,6 @@
                 <ui:TextBox
                     Grid.Row="2"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="7"
                     Text="{Binding Color.HSV_V, Converter={StaticResource HundredChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -359,8 +339,6 @@
                 <ui:TextBox
                     Grid.Row="3"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     IsEnabled="{Binding ShowAlpha, ElementName=uc}"
                     TabIndex="8"
                     Text="{Binding Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"
@@ -376,16 +354,16 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="18" />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="45" />
+                    <ColumnDefinition Width="55" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition>
                         <RowDefinition.Style>
                             <Style TargetType="{x:Type RowDefinition}">
-                                <Setter Property="Height" Value="20" />
+                                <Setter Property="Height" Value="Auto" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ShowAlpha, ElementName=uc}" Value="False">
                                         <Setter Property="Height" Value="0" />
@@ -416,8 +394,6 @@
                 <ui:TextBox
                     Grid.Row="0"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="5"
                     Text="{Binding Color.HSL_H, Converter={StaticResource HueChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -446,8 +422,6 @@
                 <ui:TextBox
                     Grid.Row="1"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="6"
                     Text="{Binding Color.HSL_S, Converter={StaticResource HundredChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -476,8 +450,6 @@
                 <ui:TextBox
                     Grid.Row="2"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     TabIndex="7"
                     Text="{Binding Color.HSL_L, Converter={StaticResource HundredChannelConverter}, ElementName=uc, StringFormat=N1}"
                     TextAlignment="Center">
@@ -522,8 +494,6 @@
                 <ui:TextBox
                     Grid.Row="3"
                     Grid.Column="2"
-                    Width="40"
-                    Height="18"
                     IsEnabled="{Binding ShowAlpha, ElementName=uc}"
                     TabIndex="8"
                     Text="{Binding Color.A, Converter={StaticResource TwoFiftyFiveChannelConverter}, ElementName=uc, StringFormat=N0}"

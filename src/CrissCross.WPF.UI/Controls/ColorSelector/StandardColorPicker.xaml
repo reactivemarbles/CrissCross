@@ -7,11 +7,8 @@
     xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:CrissCross.WPF.UI"
+    xmlns:uic="clr-namespace:CrissCross.WPF.UI.Controls"
     x:Name="uc"
-    MinWidth="220"
-    MinHeight="380"
-    d:DesignHeight="463.308"
-    d:DesignWidth="268.356"
     mc:Ignorable="d">
     <ui:DualPickerControlBase.Resources>
         <ResourceDictionary>
@@ -20,44 +17,45 @@
     </ui:DualPickerControlBase.Resources>
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*" />
-            <RowDefinition Height="1.4*" />
-            <RowDefinition Height="0.5*" />
-            <RowDefinition Height="1.1*" MaxHeight="35" />
-            <RowDefinition Height="4*" MaxHeight="110" />
+            <RowDefinition Height="165" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="100" />
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
+
+        <ui:SquarePicker
+            Grid.Row="0"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="0,5,0,0"
+            VerticalAlignment="Stretch"
+            ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
+            PickerType="{Binding ElementName=uc, Path=PickerType}"
+            SmallChange="{Binding ElementName=uc, Path=SmallChange}" />
 
         <ComboBox
             Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,0,10,0"
+            Grid.Column="2"
             HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
+            VerticalAlignment="Center"
             SelectedIndex="{Binding ElementName=uc, Path=PickerType, Converter={StaticResource PickerTypeToIntConverter}}"
             Visibility="{Binding ElementName=uc, Path=ShowPickerType}">
             <ComboBoxItem IsSelected="True">HSV</ComboBoxItem>
             <ComboBoxItem>HSL</ComboBoxItem>
         </ComboBox>
-
-        <ui:SquarePicker
-            Grid.RowSpan="2"
-            Grid.ColumnSpan="3"
-            Margin="5,5,5,15"
-            VerticalAlignment="Stretch"
-            ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
-            PickerType="{Binding ElementName=uc, Path=PickerType}"
-            SmallChange="{Binding ElementName=uc, Path=SmallChange}" />
         <ui:ColorDisplay
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.RowSpan="3"
-            MaxWidth="80"
-            Margin="5"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            Grid.Column="1"
+            Width="80"
+            Height="80"
+            VerticalAlignment="Bottom"
             ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
             HintColorState="{Binding ElementName=uc, Path=HintColorState, Mode=TwoWay}"
             SecondColorState="{Binding ElementName=uc, Path=SecondColorState, Mode=TwoWay}"
@@ -65,19 +63,17 @@
             Visibility="{Binding ElementName=uc, Path=ShowColorSwap}" />
         <DockPanel
             Grid.Row="2"
-            Grid.RowSpan="2"
-            Grid.Column="1"
-            Margin="0,0,10,0"
+            Grid.Column="2"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top"
+            VerticalAlignment="Center"
             Visibility="{Binding ElementName=uc, Path=ShowHex}">
-            <Label Content="Hex" />
+            <uic:TextBlock Margin="0,0,2,0" Text="Hex" />
             <ui:HexColorTextBox ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}" ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}" />
         </DockPanel>
         <ui:ColorSliders
             Grid.Row="3"
-            Grid.RowSpan="3"
-            Grid.ColumnSpan="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
             ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
             ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}"
             SmallChange="{Binding ElementName=uc, Path=SmallChange}"

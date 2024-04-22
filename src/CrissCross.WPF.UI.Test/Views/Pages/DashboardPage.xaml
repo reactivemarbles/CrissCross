@@ -9,8 +9,8 @@
     Title="DashboardPage"
     d:DataContext="{d:DesignInstance local:DashboardPage,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="800"
+    d:DesignWidth="1000"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -80,7 +80,7 @@
         </StackPanel>
         <ui:StandardColorPicker
             Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="3" />
+            Grid.Column="1"
+            Grid.ColumnSpan="1" />
     </Grid>
 </Page>

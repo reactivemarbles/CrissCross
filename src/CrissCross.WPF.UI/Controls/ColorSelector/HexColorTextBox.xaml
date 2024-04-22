@@ -6,12 +6,10 @@
     xmlns:conv="clr-namespace:CrissCross.WPF.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="clr-namespace:CrissCross.WPF.UI"
     xmlns:uic="clr-namespace:CrissCross.WPF.UI.Controls"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="uc"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
     mc:Ignorable="d">
     <ui:PickerControlBase.Resources>
         <ResourceDictionary>
@@ -24,7 +22,6 @@
     <Grid>
         <uic:TextBox
             x:Name="textbox"
-            Width="70"
             VerticalAlignment="Center"
             Text="{Binding Path=SelectedColor, Converter={StaticResource ColorToHexConverter}, ElementName=uc}">
             <i:Interaction.Behaviors>
