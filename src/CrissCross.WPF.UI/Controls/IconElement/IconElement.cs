@@ -76,7 +76,7 @@ public abstract class IconElement : FrameworkElement
     /// <returns>
     /// The requested child element. This should not return null; if the provided index is out of range, an exception is thrown.
     /// </returns>
-    /// <exception cref="System.ArgumentOutOfRangeException">index.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">index.</exception>
     protected override Visual GetVisualChild(int index)
     {
         if (index != 0)

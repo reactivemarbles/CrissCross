@@ -17,7 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// BreadcrumbBarItemClickedEventArgs.
 /// </summary>
-/// <seealso cref="System.Windows.RoutedEventArgs" />
+/// <seealso cref="RoutedEventArgs" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="BreadcrumbBarItemClickedEventArgs"/> class.
 /// </remarks>

@@ -8,8 +8,6 @@
 //// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 //// All Rights Reserved.
 
-using System.Reflection;
-
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>

@@ -47,7 +47,7 @@ public static class TaskBarProgress
     /// <param name="hWnd">Window handle.</param>
     /// <param name="taskBarProgressState">State of the progress indicator.</param>
     /// <returns>A bool.</returns>
-    /// <exception cref="System.Exception">Taskbar functions not available.</exception>
+    /// <exception cref="Exception">Taskbar functions not available.</exception>
     public static bool SetState(IntPtr hWnd, TaskBarProgressState taskBarProgressState)
     {
         if (!IsSupported())
@@ -139,7 +139,7 @@ public static class TaskBarProgress
     /// <param name="current">Current value to display.</param>
     /// <param name="total">Total number for division.</param>
     /// <returns>A bool.</returns>
-    /// <exception cref="System.Exception">Taskbar functions not available.</exception>
+    /// <exception cref="Exception">Taskbar functions not available.</exception>
     public static bool SetValue(
         IntPtr hWnd,
         TaskBarProgressState taskBarProgressState,

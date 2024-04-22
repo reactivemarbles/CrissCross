@@ -123,7 +123,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     /// <summary>
     /// Throws if navigation control is null.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">NavigationControl.</exception>
+    /// <exception cref="ArgumentNullException">NavigationControl.</exception>
     protected void ThrowIfNavigationControlIsNull()
     {
         if (NavigationControl is null)
@@ -135,7 +135,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     /// <summary>
     /// Throws if page service is null.
     /// </summary>
-    /// <exception cref="System.ArgumentNullException">_pageService.</exception>
+    /// <exception cref="ArgumentNullException">_pageService.</exception>
     protected void ThrowIfPageServiceIsNull()
     {
         if (_pageService is null)

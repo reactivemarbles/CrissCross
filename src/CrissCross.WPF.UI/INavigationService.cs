@@ -11,7 +11,7 @@
 namespace CrissCross.WPF.UI;
 
 /// <summary>
-/// Represents a contract with a <see cref="System.Windows.FrameworkElement"/> that contains <see cref="INavigationView"/>.
+/// Represents a contract with a <see cref="FrameworkElement"/> that contains <see cref="INavigationView"/>.
 /// Through defined <see cref="IPageService"/> service allows you to use the Dependency Injection pattern in <c>WPF UI</c> navigation.
 /// </summary>
 public interface INavigationService

@@ -16,7 +16,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// Represents a control that creates a pop-up window that displays information for an element in the interface.
 /// </summary>
-[TemplatePart(Name = "PART_Popup", Type = typeof(System.Windows.Controls.Primitives.Popup))]
+[TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 public class Flyout : System.Windows.Controls.ContentControl
 {
     /// <summary>
@@ -106,7 +106,7 @@ public class Flyout : System.Windows.Controls.ContentControl
     {
         base.OnApplyTemplate();
 
-        _popup = GetTemplateChild(ElementPopup) as System.Windows.Controls.Primitives.Popup;
+        _popup = GetTemplateChild(ElementPopup) as Popup;
 
         if (_popup is null)
         {

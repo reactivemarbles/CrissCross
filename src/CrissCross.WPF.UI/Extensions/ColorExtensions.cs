@@ -11,7 +11,7 @@
 namespace CrissCross.WPF.UI.Extensions;
 
 /// <summary>
-/// Adds an extension for <see cref="System.Windows.Media.Color"/> that allows manipulation with HSL and HSV color spaces.
+/// Adds an extension for <see cref="Color"/> that allows manipulation with HSL and HSV color spaces.
 /// </summary>
 public static class ColorExtensions
 {
@@ -21,14 +21,14 @@ public static class ColorExtensions
     private const float _byteMax = (float)byte.MaxValue;
 
     /// <summary>
-    /// Creates a <see cref="SolidColorBrush"/> from a <see cref="System.Windows.Media.Color"/>.
+    /// Creates a <see cref="SolidColorBrush"/> from a <see cref="Color"/>.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <returns>Brush converted to color.</returns>
     public static SolidColorBrush ToBrush(this Color color) => new(color);
 
     /// <summary>
-    /// Creates a <see cref="SolidColorBrush"/> from a <see cref="System.Windows.Media.Color"/> with defined brush opacity.
+    /// Creates a <see cref="SolidColorBrush"/> from a <see cref="Color"/> with defined brush opacity.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <param name="opacity">Degree of opacity.</param>
@@ -36,7 +36,7 @@ public static class ColorExtensions
     public static SolidColorBrush ToBrush(this Color color, double opacity) => new() { Color = color, Opacity = opacity };
 
     /// <summary>
-    /// Gets <see cref="System.Windows.Media.Color"/> luminance based on HSL space.
+    /// Gets <see cref="Color"/> luminance based on HSL space.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <returns>A double.</returns>
@@ -48,7 +48,7 @@ public static class ColorExtensions
     }
 
     /// <summary>
-    /// Gets <see cref="System.Windows.Media.Color"/> brightness based on HSV space.
+    /// Gets <see cref="Color"/> brightness based on HSV space.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <returns>A double.</returns>
@@ -60,7 +60,7 @@ public static class ColorExtensions
     }
 
     /// <summary>
-    /// Gets <see cref="System.Windows.Media.Color"/> hue based on HSV space.
+    /// Gets <see cref="Color"/> hue based on HSV space.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <returns>A double.</returns>
@@ -72,7 +72,7 @@ public static class ColorExtensions
     }
 
     /// <summary>
-    /// Gets <see cref="System.Windows.Media.Color"/> saturation based on HSV space.
+    /// Gets <see cref="Color"/> saturation based on HSV space.
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <returns>A double.</returns>
@@ -88,7 +88,7 @@ public static class ColorExtensions
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <param name="factor">The value of the luminance change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-    /// <returns>Updated <see cref="System.Windows.Media.Color"/>.</returns>
+    /// <returns>Updated <see cref="Color"/>.</returns>
     public static Color UpdateLuminance(this Color color, float factor)
     {
         if (factor > 100f || factor < -100f)
@@ -108,7 +108,7 @@ public static class ColorExtensions
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <param name="factor">The value of the saturation change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-    /// <returns>Updated <see cref="System.Windows.Media.Color"/>.</returns>
+    /// <returns>Updated <see cref="Color"/>.</returns>
     public static Color UpdateSaturation(this Color color, float factor)
     {
         if (factor > 100f || factor < -100f)
@@ -128,7 +128,7 @@ public static class ColorExtensions
     /// </summary>
     /// <param name="color">Input color.</param>
     /// <param name="factor">The value of the brightness change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-    /// <returns>Updated <see cref="System.Windows.Media.Color"/>.</returns>
+    /// <returns>Updated <see cref="Color"/>.</returns>
     public static Color UpdateBrightness(this Color color, float factor)
     {
         if (factor > 100f || factor < -100f)
@@ -150,7 +150,7 @@ public static class ColorExtensions
     /// <param name="brightnessFactor">The value of the brightness change factor from <see langword="100"/> to <see langword="-100"/>.</param>
     /// <param name="saturationFactor">The value of the saturation change factor from <see langword="100"/> to <see langword="-100"/>.</param>
     /// <param name="luminanceFactor">The value of the luminance change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-    /// <returns>Updated <see cref="System.Windows.Media.Color"/>.</returns>
+    /// <returns>Updated <see cref="Color"/>.</returns>
     public static Color Update(
         this Color color,
         float brightnessFactor,

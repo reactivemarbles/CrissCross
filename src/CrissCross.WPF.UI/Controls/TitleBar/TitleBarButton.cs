@@ -18,8 +18,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// TitleBarButton.
 /// </summary>
-/// <seealso cref="CrissCross.WPF.UI.Controls.Button" />
-public class TitleBarButton : CrissCross.WPF.UI.Controls.Button
+/// <seealso cref="Button" />
+public class TitleBarButton : Button
 {
     /// <summary>
     /// Property for <see cref="ButtonType"/>.

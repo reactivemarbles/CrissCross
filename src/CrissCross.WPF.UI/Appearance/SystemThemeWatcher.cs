@@ -15,7 +15,7 @@ namespace CrissCross.WPF.UI.Appearance;
 
 /// <summary>
 /// Automatically updates the application background if the system theme or color is changed.
-/// <para><see cref="SystemThemeWatcher"/> settings work globally and cannot be changed for each <see cref="System.Windows.Window"/>.</para>
+/// <para><see cref="SystemThemeWatcher"/> settings work globally and cannot be changed for each <see cref="Window"/>.</para>
 /// </summary>
 /// <example>
 /// <code lang="csharp">
@@ -74,7 +74,7 @@ public static class SystemThemeWatcher
     /// Unwatches the window and removes the hook to receive messages from the system.
     /// </summary>
     /// <param name="window">The window.</param>
-    /// <exception cref="System.InvalidOperationException">
+    /// <exception cref="InvalidOperationException">
     /// You cannot unwatch a window that is not yet loaded.
     /// or
     /// Could not get window handle.

@@ -3,20 +3,19 @@
 
 using CP.Reactive;
 
-namespace CrissCross.WPF.UI.Controls
+namespace CrissCross.WPF.UI.Controls;
+
+/// <summary>
+/// ReactiveTreeViewModel.
+/// </summary>
+/// <seealso cref="RxObject" />
+public class ReactiveTreeViewModel : RxObject
 {
     /// <summary>
-    /// ReactiveTreeViewModel.
+    /// Gets or sets the children.
     /// </summary>
-    /// <seealso cref="RxObject" />
-    public class ReactiveTreeViewModel : RxObject
-    {
-        /// <summary>
-        /// Gets or sets the children.
-        /// </summary>
-        /// <value>
-        /// The children.
-        /// </value>
-        public ReactiveList<ReactiveTreeItem> Children { get; set; } = new();
-    }
+    /// <value>
+    /// The children.
+    /// </value>
+    public ReactiveList<ReactiveTreeItem> Children { get; set; } = new();
 }

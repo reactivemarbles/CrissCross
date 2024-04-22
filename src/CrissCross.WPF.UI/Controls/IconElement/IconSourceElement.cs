@@ -44,7 +44,7 @@ public class IconSourceElement : IconElement
     /// <returns>
     /// A UIElement.
     /// </returns>
-    /// <exception cref="System.InvalidOperationException">Use {nameof(IconSourceElementConverter)} class.</exception>
+    /// <exception cref="InvalidOperationException">Use {nameof(IconSourceElementConverter)} class.</exception>
     protected override UIElement InitializeChildren() => // TODO come up with an elegant solution
         throw new InvalidOperationException($"Use {nameof(IconSourceElementConverter)} class.");
 }

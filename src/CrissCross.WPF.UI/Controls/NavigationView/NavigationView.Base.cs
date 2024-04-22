@@ -30,20 +30,20 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// The page identifier or target tag navigation views dictionary.
     /// </summary>
 #pragma warning disable SA1401 // Fields should be private
-    protected Dictionary<string, INavigationViewItem> PageIdOrTargetTagNavigationViewsDictionary = new();
+    protected Dictionary<string, INavigationViewItem> PageIdOrTargetTagNavigationViewsDictionary = [];
 
     /// <summary>
     /// The page type navigation views dictionary.
     /// </summary>
-    protected Dictionary<Type, INavigationViewItem> PageTypeNavigationViewsDictionary = new();
+    protected Dictionary<Type, INavigationViewItem> PageTypeNavigationViewsDictionary = [];
 #pragma warning restore SA1401 // Fields should be private
 
     private static readonly Thickness titleBarPaneOpenMargin = new(35, 0, 0, 0);
     private static readonly Thickness titleBarPaneCompactMargin = new(55, 0, 0, 0);
     private static readonly Thickness autoSuggestBoxMargin = new(8, 8, 8, 16);
     private static readonly Thickness frameMargin = new(0, 50, 0, 0);
-    private readonly ObservableCollection<string> _autoSuggestBoxItems = new();
-    private readonly ObservableCollection<NavigationViewBreadcrumbItem> _breadcrumbBarItems = new();
+    private readonly ObservableCollection<string> _autoSuggestBoxItems = [];
+    private readonly ObservableCollection<NavigationViewBreadcrumbItem> _breadcrumbBarItems = [];
 
     /// <summary>
     /// Initializes static members of the <see cref="NavigationView"/> class.

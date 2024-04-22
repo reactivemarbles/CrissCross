@@ -16,7 +16,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// Button that opens a URL in a web browser.
 /// </summary>
-public class HyperlinkButton : CrissCross.WPF.UI.Controls.Button
+public class HyperlinkButton : Button
 {
     /// <summary>
     /// Property for <see cref="NavigateUri"/>.
