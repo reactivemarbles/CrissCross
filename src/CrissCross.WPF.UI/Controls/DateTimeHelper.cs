@@ -29,7 +29,7 @@ internal static class DateTimeHelper
         {
             return cal.AddDays(time, days);
         }
-        catch (System.ArgumentException)
+        catch (ArgumentException)
         {
             return null;
         }
@@ -41,7 +41,7 @@ internal static class DateTimeHelper
         {
             return cal.AddMonths(time, months);
         }
-        catch (System.ArgumentException)
+        catch (ArgumentException)
         {
             return null;
         }
@@ -53,7 +53,7 @@ internal static class DateTimeHelper
         {
             return cal.AddYears(time, years);
         }
-        catch (System.ArgumentException)
+        catch (ArgumentException)
         {
             return null;
         }

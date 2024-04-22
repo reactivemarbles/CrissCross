@@ -37,7 +37,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementTextBox, Type = typeof(TextBox))]
 [TemplatePart(Name = ElementSuggestionsPopup, Type = typeof(Popup))]
 [TemplatePart(Name = ElementSuggestionsList, Type = typeof(ListView))]
-public class AutoSuggestBox : System.Windows.Controls.ItemsControl, IIconControl
+public class AutoSuggestBox : ItemsControl, IIconControl
 {
     /// <summary>
     /// Property for <see cref="OriginalItemsSource"/>.

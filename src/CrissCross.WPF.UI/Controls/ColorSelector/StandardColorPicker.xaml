@@ -1,0 +1,82 @@
+﻿<ui:DualPickerControlBase
+    x:Class="CrissCross.WPF.UI.StandardColorPicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:CrissCross.WPF.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI"
+    xmlns:uic="clr-namespace:CrissCross.WPF.UI.Controls"
+    x:Name="uc"
+    mc:Ignorable="d">
+    <ui:DualPickerControlBase.Resources>
+        <ResourceDictionary>
+            <converters:PickerTypeToIntConverter x:Key="PickerTypeToIntConverter" />
+        </ResourceDictionary>
+    </ui:DualPickerControlBase.Resources>
+    <Grid Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="165" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+
+        <ui:SquarePicker
+            Grid.Row="0"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="0,5,0,0"
+            VerticalAlignment="Stretch"
+            ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
+            PickerType="{Binding ElementName=uc, Path=PickerType}"
+            SmallChange="{Binding ElementName=uc, Path=SmallChange}" />
+
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            SelectedIndex="{Binding ElementName=uc, Path=PickerType, Converter={StaticResource PickerTypeToIntConverter}}"
+            Visibility="{Binding ElementName=uc, Path=ShowPickerType}">
+            <ComboBoxItem IsSelected="True">HSV</ComboBoxItem>
+            <ComboBoxItem>HSL</ComboBoxItem>
+        </ComboBox>
+        <ui:ColorDisplay
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            Width="80"
+            Height="80"
+            VerticalAlignment="Bottom"
+            ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
+            HintColorState="{Binding ElementName=uc, Path=HintColorState, Mode=TwoWay}"
+            SecondColorState="{Binding ElementName=uc, Path=SecondColorState, Mode=TwoWay}"
+            UseHintColor="{Binding ElementName=uc, Path=UseHintColor, Mode=TwoWay}"
+            Visibility="{Binding ElementName=uc, Path=ShowColorSwap}" />
+        <DockPanel
+            Grid.Row="2"
+            Grid.Column="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Visibility="{Binding ElementName=uc, Path=ShowHex}">
+            <uic:TextBlock Margin="0,0,2,0" Text="Hex" />
+            <ui:HexColorTextBox ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}" ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}" />
+        </DockPanel>
+        <ui:ColorSliders
+            Grid.Row="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
+            ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}"
+            SmallChange="{Binding ElementName=uc, Path=SmallChange}"
+            Visibility="{Binding ElementName=uc, Path=ShowSliders}" />
+    </Grid>
+</ui:DualPickerControlBase>

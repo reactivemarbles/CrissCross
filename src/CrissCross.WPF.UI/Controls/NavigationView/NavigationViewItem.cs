@@ -424,7 +424,7 @@ public class NavigationViewItem
     /// <summary>
     /// Is called when mouse is clicked down.
     /// </summary>
-    /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         if (!HasMenuItems || e?.LeftButton != MouseButtonState.Pressed)

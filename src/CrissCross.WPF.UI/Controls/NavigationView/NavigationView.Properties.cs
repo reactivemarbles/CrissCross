@@ -23,8 +23,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// NavigationView.
 /// </summary>
-/// <seealso cref="System.Windows.Controls.Control" />
-/// <seealso cref="CrissCross.WPF.UI.Controls.INavigationView" />
+/// <seealso cref="Control" />
+/// <seealso cref="INavigationView" />
 public partial class NavigationView
 {
     private static readonly DependencyPropertyKey MenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(

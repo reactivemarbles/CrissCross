@@ -46,7 +46,7 @@ public class RelayCommand<T> : IRelayCommand<T>
     /// nullable <see cref="object"/> parameter, it is recommended that if <typeparamref name="T"/> is a reference type,
     /// you should always declare it as nullable, and to always perform checks within <paramref name="execute"/>.
     /// </remarks>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="execute"/> is <see langword="null"/>.</exception>
     public RelayCommand(Action<T?> execute)
     {
         if (execute is null)
@@ -62,7 +62,7 @@ public class RelayCommand<T> : IRelayCommand<T>
     /// </summary>
     /// <param name="execute">The execution logic.</param>
     /// <param name="canExecute">The execution status logic.</param>
-    /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="execute"/> or <paramref name="canExecute"/> are <see langword="null"/>.</exception>
     public RelayCommand(Action<T?> execute, Predicate<T?> canExecute)
     {
         if (execute is null)

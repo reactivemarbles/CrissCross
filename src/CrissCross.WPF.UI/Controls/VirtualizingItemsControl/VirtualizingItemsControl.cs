@@ -25,7 +25,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(VirtualizingItemsControl), "VirtualizingItemsControl.bmp")]
-public class VirtualizingItemsControl : System.Windows.Controls.ItemsControl
+public class VirtualizingItemsControl : ItemsControl
 {
     /// <summary>
     /// Property for <see cref="CacheLengthUnit"/>.

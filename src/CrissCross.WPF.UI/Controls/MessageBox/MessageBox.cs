@@ -10,7 +10,6 @@
 
 using System.Drawing;
 using CrissCross.WPF.UI.Input;
-using Size = System.Windows.Size;
 
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
@@ -380,7 +379,7 @@ public class MessageBox : Window
     /// <summary>
     /// Raises the <see cref="E:Closing" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
     protected override void OnClosing(CancelEventArgs e)
     {
         base.OnClosing(e);

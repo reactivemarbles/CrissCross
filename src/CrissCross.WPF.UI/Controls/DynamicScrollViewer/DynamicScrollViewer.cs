@@ -15,7 +15,7 @@ using System.Windows.Controls;
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
-/// Custom <see cref="System.Windows.Controls.ScrollViewer"/> with events depending on actions taken by the user.
+/// Custom <see cref="ScrollViewer"/> with events depending on actions taken by the user.
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(DynamicScrollViewer), "DynamicScrollViewer.bmp")]

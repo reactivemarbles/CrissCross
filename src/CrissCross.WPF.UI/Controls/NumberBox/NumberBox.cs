@@ -26,7 +26,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(NumberBox), "NumberBox.bmp")]
-public class NumberBox : CrissCross.WPF.UI.Controls.TextBox
+public class NumberBox : TextBox
 {
     /// <summary>
     /// Property for <see cref="Value"/>.

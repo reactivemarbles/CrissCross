@@ -17,7 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// NavigatingCancelEventArgs.
 /// </summary>
-/// <seealso cref="System.Windows.RoutedEventArgs" />
+/// <seealso cref="RoutedEventArgs" />
 public class NavigatingCancelEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>

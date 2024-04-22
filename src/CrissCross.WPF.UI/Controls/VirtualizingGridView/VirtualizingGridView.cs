@@ -98,7 +98,7 @@ public class VirtualizingGridView : ListView
     /// <summary>
     /// Raises the <see cref="E:Initialized" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);

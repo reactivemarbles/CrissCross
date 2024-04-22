@@ -31,7 +31,7 @@ public static class WindowBackgroundManager
     /// Tries to apply dark theme to <see cref="Window" />.
     /// </summary>
     /// <param name="window">The window.</param>
-    public static void ApplyDarkThemeToWindow(System.Windows.Window? window)
+    public static void ApplyDarkThemeToWindow(Window? window)
     {
         if (window is null)
         {
@@ -43,14 +43,14 @@ public static class WindowBackgroundManager
             _ = UnsafeNativeMethods.ApplyWindowDarkMode(window);
         }
 
-        window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as System.Windows.Window);
+        window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as Window);
     }
 
     /// <summary>
-    /// Tries to remove dark theme from <see cref="System.Windows.Window" />.
+    /// Tries to remove dark theme from <see cref="Window" />.
     /// </summary>
     /// <param name="window">The window.</param>
-    public static void RemoveDarkThemeFromWindow(System.Windows.Window? window)
+    public static void RemoveDarkThemeFromWindow(Window? window)
     {
         if (window is null)
         {
@@ -107,7 +107,7 @@ public static class WindowBackgroundManager
 
         foreach (var subWindow in window.OwnedWindows)
         {
-            if (subWindow is System.Windows.Window windowSubWindow)
+            if (subWindow is Window windowSubWindow)
             {
                 _ = WindowBackdrop.ApplyBackdrop(windowSubWindow, backdrop);
 

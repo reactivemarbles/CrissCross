@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net48;net6.0-windows10.0.17763;net7.0-windows10.0.17763</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageTags>color color-picker graphics wpf</PackageTags>
+		<Description>A collection of various WPF controls used to select colors.</Description>
+		<Title>A WPF Color Picker</Title>
+		<PackageIcon>icon.png</PackageIcon>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>sgkey.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<Resource Include="Images\*.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+	</ItemGroup>
+
+</Project>

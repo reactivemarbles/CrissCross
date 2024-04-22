@@ -22,7 +22,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// NavigationViewContentPresenter.
 /// </summary>
-/// <seealso cref="System.Windows.Controls.Frame" />
+/// <seealso cref="Frame" />
 public class NavigationViewContentPresenter : Frame
 {
     /// <summary>
@@ -140,7 +140,7 @@ public class NavigationViewContentPresenter : Frame
     /// <summary>
     /// Raises the <see cref="E:Initialized" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
@@ -158,7 +158,7 @@ public class NavigationViewContentPresenter : Frame
     /// <summary>
     /// Raises the <see cref="E:MouseDown" /> event.
     /// </summary>
-    /// <param name="e">The <see cref="System.Windows.Input.MouseButtonEventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         if (e?.ChangedButton is MouseButton.XButton1 or MouseButton.XButton2)
@@ -188,7 +188,7 @@ public class NavigationViewContentPresenter : Frame
     /// <summary>
     /// Raises the <see cref="E:Navigated" /> event.
     /// </summary>
-    /// <param name="eventArgs">The <see cref="System.Windows.Navigation.NavigationEventArgs"/> instance containing the event data.</param>
+    /// <param name="eventArgs">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
     protected virtual void OnNavigated(NavigationEventArgs eventArgs)
     {
         ApplyTransitionEffectToNavigatedPage(eventArgs?.Content);

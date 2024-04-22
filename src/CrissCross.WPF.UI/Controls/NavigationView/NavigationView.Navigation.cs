@@ -21,7 +21,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// NavigationView.
 /// </summary>
 /// <seealso cref="System.Windows.Controls.Control" />
-/// <seealso cref="CrissCross.WPF.UI.Controls.INavigationView" />
+/// <seealso cref="INavigationView" />
 public partial class NavigationView
 {
     /// <summary>
@@ -33,7 +33,7 @@ public partial class NavigationView
     /// <summary>
     /// The navigation stack.
     /// </summary>
-    protected readonly ObservableCollection<INavigationViewItem> NavigationStack = new();
+    protected readonly ObservableCollection<INavigationViewItem> NavigationStack = [];
 #pragma warning restore SA1401 // Fields should be private
 
     private readonly NavigationCache _cache = new();
@@ -41,7 +41,7 @@ public partial class NavigationView
     private readonly Dictionary<
         INavigationViewItem,
         List<INavigationViewItem?[]>
-    > _complexNavigationStackHistory = new();
+    > _complexNavigationStackHistory = [];
 
     private IServiceProvider? _serviceProvider;
     private IPageService? _pageService;

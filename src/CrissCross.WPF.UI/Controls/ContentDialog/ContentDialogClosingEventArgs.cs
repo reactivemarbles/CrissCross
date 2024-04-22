@@ -14,7 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// ContentDialogClosingEventArgs.
 /// </summary>
-/// <seealso cref="System.Windows.RoutedEventArgs" />
+/// <seealso cref="RoutedEventArgs" />
 public class ContentDialogClosingEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>

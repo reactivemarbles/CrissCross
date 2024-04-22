@@ -19,7 +19,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// Represents a button with two parts that can be invoked separately. One part behaves like a standard button and the other part invokes a flyout.
 /// </summary>
 [TemplatePart(Name = TemplateElementToggleButton, Type = typeof(ToggleButton))]
-public class SplitButton : CrissCross.WPF.UI.Controls.Button, IDisposable
+public class SplitButton : Button, IDisposable
 {
     /// <summary>
     /// Property for <see cref="Flyout"/>.

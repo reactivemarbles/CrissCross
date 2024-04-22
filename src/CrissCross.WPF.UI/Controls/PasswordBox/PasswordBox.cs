@@ -16,7 +16,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set to true, PasswordProperty always contains raw password.
 /// </summary>
-public class PasswordBox : CrissCross.WPF.UI.Controls.TextBox
+public class PasswordBox : TextBox
 {
     /// <summary>
     /// Property for <see cref="Password"/>.

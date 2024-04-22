@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\*.png" />
     <Resource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf" />
     <Resource Include="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
   </ItemGroup>
@@ -27,6 +28,7 @@
     <PackageReference Include="AppBarButton.WPF" Version="1.0.1" />
     <PackageReference Include="BBCode.WPF" Version="0.2.0" />
     <PackageReference Include="CP.Xaml.Converters" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="PolySharp" Version="1.14.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -45,6 +47,14 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Controls\**\*.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controls\ColorSelector\icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\ColorSelector\icon.png" />
   </ItemGroup>
 
 </Project>

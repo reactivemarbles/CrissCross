@@ -14,7 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// Work in progress.
 /// </summary>
-public class TreeGridHeader : System.Windows.FrameworkElement
+public class TreeGridHeader : FrameworkElement
 {
     /// <summary>
     /// Property for <see cref="Title"/>.

@@ -41,7 +41,7 @@ public class ThemeResourceExtension : DynamicResourceExtension
     /// Takes the resource key that this is a static reference to.
     /// </summary>
     /// <param name="resourceKey">The resource key.</param>
-    /// <exception cref="System.ArgumentNullException">resourceKey.</exception>
+    /// <exception cref="ArgumentNullException">resourceKey.</exception>
     public ThemeResourceExtension(ThemeResource resourceKey)
     {
         if (resourceKey == ThemeResource.Unknown)

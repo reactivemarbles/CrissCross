@@ -15,7 +15,6 @@ using System.Windows.Input;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
 using CrissCross.WPF.UI.Input;
-using ReactiveMarbles.ObservableEvents;
 
 // ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
@@ -29,7 +28,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementMaximizeButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementRestoreButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementCloseButton, Type = typeof(TitleBarButton))]
-public class TitleBar : System.Windows.Controls.Control, IThemeControl
+public class TitleBar : Control, IThemeControl
 {
     /// <summary>
     /// Property for <see cref="ApplicationTheme"/>.

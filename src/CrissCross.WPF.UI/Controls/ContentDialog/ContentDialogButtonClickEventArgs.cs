@@ -14,7 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// ContentDialogButtonClickEventArgs.
 /// </summary>
-/// <seealso cref="System.Windows.RoutedEventArgs" />
+/// <seealso cref="RoutedEventArgs" />
 public class ContentDialogButtonClickEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>

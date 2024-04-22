@@ -18,7 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// NavigationView.
 /// </summary>
 /// <seealso cref="System.Windows.Controls.Control" />
-/// <seealso cref="CrissCross.WPF.UI.Controls.INavigationView" />
+/// <seealso cref="INavigationView" />
 [TemplatePart(
     Name = TemplateElementNavigationViewContentPresenter,
     Type = typeof(NavigationViewContentPresenter))]

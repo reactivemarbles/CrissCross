@@ -127,7 +127,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
     /// </summary>
     /// <param name="oldValue">The old value.</param>
     /// <param name="newValue">The new value.</param>
-    /// <exception cref="System.InvalidOperationException">Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)} is false.</exception>
+    /// <exception cref="InvalidOperationException">Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)} is false.</exception>
     protected virtual void OnBackdropTypeChanged(WindowBackdropType oldValue, WindowBackdropType newValue)
     {
         if (Appearance.ApplicationThemeManager.GetAppTheme() == Appearance.ApplicationTheme.HighContrast)
