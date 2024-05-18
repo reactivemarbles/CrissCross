@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CrissCross.WPF.UI.CC_Nav.Test"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
     x:Name="mainWindow"
     Title="ViewModel Navigation Test"
     Width="800"

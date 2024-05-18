@@ -1,25 +1,12 @@
-// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
-////   This file has been borrowed from Wpf-UI.
-
-//// This Source Code Form is subject to the terms of the MIT License.
-//// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-//// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-//// All Rights Reserved.
-
-// This Source Code is partially based on the source code provided by the .NET Foundation.
 using System.Drawing;
 using System.Windows.Data;
 using System.Windows.Input;
 
-// ReSharper disable once CheckNamespace
 namespace CrissCross.WPF.UI.Controls;
-
-// TODO: Mask (with placeholder); Clipboard paste;
-// TODO: Constant decimals when formatting. Although this can actually be done with NumberFormatter.
-// TODO: Disable expression by default
-// TODO: Lock to digit characters only by property
 
 /// <summary>
 /// Represents a control that can be used to display and edit numbers.
@@ -391,7 +378,7 @@ public class NumberBox : TextBox
         ValidateInput();
     }
 
-    private static INumberFormatter GetRegionalSettingsAwareDecimalFormatter() => new ValidateNumberFormatter();
+    private static ValidateNumberFormatter GetRegionalSettingsAwareDecimalFormatter() => new();
 
     private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {

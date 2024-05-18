@@ -1,5 +1,6 @@
-﻿// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
@@ -8,8 +9,8 @@ using System.Reactive.Subjects;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using CP.Extensions.Hosting.Wpf;
 using CP.WPF.Controls;
+using ReactiveMarbles.Extensions.Hosting.Wpf;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI;

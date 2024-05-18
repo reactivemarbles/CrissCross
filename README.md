@@ -3,9 +3,9 @@ A Navigation Framework for ReactiveUI based projects
 
 ![Alt](https://repobeats.axiom.co/api/embed/3ffd196858ee7468fa2e28225b0edf635b6c740b.svg "Repobeats analytics image")
 
-![CrissCross](https://github.com/ChrisPulman/CrissCross/blob/master/Images/CrissCross.png)
+![CrissCross](https://github.com/reactivemarbles/CrissCross/blob/master/Images/CrissCross.png)
 
-[![CrissCross CI-Build](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml) 
+[![CrissCross CI-Build](https://github.com/reactivemarbles/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml) 
 
 ## What is CrissCross?
 
@@ -77,7 +77,7 @@ Create a ViewModel that inherits from `RxObject`. This is the ViewModel that wil
 ### Step 3: Create a View
 
 Create a View that inherits from `NavigationWindow`. This is the View that will be used for the MainWindow.
-add xmlns:rxNav="https://github.com/ChrisPulman/CrissCross" to the Window inherits in XAML.
+add xmlns:rxNav="https://github.com/reactivemarbles/CrissCross" to the Window inherits in XAML.
 Change Window to rxNav:NavigationWindow in XAML.
 Add x:TypeArguments="local:MainWindowViewModel"
 
@@ -201,7 +201,7 @@ Create a ViewModel that inherits from `RxObject`. This is the ViewModel that wil
 
 
 Create a View that inherits from `NavigationWindow` OR `NavigationUserControl`. This is the View that will be used for the MainWindow.
-add xmlns:rxNav="https://github.com/ChrisPulman/CrissCross"
+add xmlns:rxNav="https://github.com/reactivemarbles/CrissCross"
 Change Window to rxNav:NavigationWindow in XAML.
 OR Change UserControl to rxNav:NavigationUserControl in XAML.
 

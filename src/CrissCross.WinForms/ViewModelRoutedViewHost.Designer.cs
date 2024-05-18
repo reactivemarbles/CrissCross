@@ -16,6 +16,8 @@ partial class ViewModelRoutedViewHost
         if (disposing && (components != null))
         {
             components.Dispose();
+            _canNavigateBackSubject.Dispose();
+            _currentViewModel.Dispose();
         }
         base.Dispose(disposing);
     }

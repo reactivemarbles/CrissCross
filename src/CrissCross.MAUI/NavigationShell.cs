@@ -1,5 +1,6 @@
-﻿// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,7 +21,7 @@ namespace CrissCross.MAUI;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IViewModelRoutedViewHost" />
 /// <seealso cref="IUseNavigation" />
-public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation
+public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation, IDisposable
 {
     /// <summary>
     /// The navigate back is enabled property.
@@ -51,8 +52,8 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
         typeof(NavigationShell),
         true);
 
-    private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
-    private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
+    private readonly Subject<bool?> _canNavigateBackSubject = new();
+    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
     private IRxObject? __currentViewModel;
     private IViewFor? _currentView;
     private IViewFor? _lastView;
@@ -60,6 +61,7 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
     private bool _resetStack;
     private IRxObject? _toViewModel;
     private bool _userInstigated;
+    private bool _disposedValue;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NavigationShell"/> class.
@@ -154,7 +156,7 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
     /// <value>
     /// The navigation stack.
     /// </value>
-    public ObservableCollection<Type?> NavigationStack { get; } = new();
+    public ObservableCollection<Type?> NavigationStack { get; } = [];
 
     /// <summary>
     /// Gets a value indicating whether [requires setup].
@@ -438,11 +440,38 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
     }
 
     /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
     /// Converts to page.
     /// </summary>
     /// <param name="item">The item.</param>
     /// <returns>A Page.</returns>
     protected static Page? ToPage(object item) => item as Page;
+
+    /// <summary>
+    /// Disposes the specified disposing.
+    /// </summary>
+    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposedValue)
+        {
+            if (disposing)
+            {
+                _canNavigateBackSubject.Dispose();
+                _currentViewModel.Dispose();
+            }
+
+            _disposedValue = true;
+        }
+    }
 
     private static void NameChanged(BindableObject bindable, object oldValue, object newValue)
     {

@@ -6,7 +6,7 @@
     xmlns:helpers="clr-namespace:CrissCross.WPF.UI.Test.Helpers"
     xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/ChrisPulman/CrissCross.ui"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
     Title="SettingsPage"
     d:DataContext="{d:DesignInstance local:SettingsPage,
                                      IsDesignTimeCreatable=False}"

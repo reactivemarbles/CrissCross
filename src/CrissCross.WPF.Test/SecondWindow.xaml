@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CrissCross.WPF.Test"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:rxNav="https://github.com/ChrisPulman/CrissCross"
+    xmlns:rxNav="https://github.com/reactivemarbles/CrissCross"
     x:Name="secondWindow"
     Title="SecondWindow"
     Width="800"

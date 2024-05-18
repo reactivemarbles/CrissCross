@@ -32,7 +32,7 @@ partial class Build : NukeBuild
     ////   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ////   - Microsoft VSCode           https://nuke.build/vscode
 
-    public static int Main() => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Pack);
 
     [GitRepository] readonly GitRepository Repository;
     [Solution(GenerateProjects = true)] readonly Solution Solution;
@@ -71,7 +71,7 @@ partial class Build : NukeBuild
                 .SetRestore(false)));
 
     Target Pack => _ => _
-    .After(Compile)
+    .DependsOn(Compile)
     .Produces(PackagesDirectory / "*.nupkg")
     .Executes(() =>
     {
@@ -88,7 +88,6 @@ partial class Build : NukeBuild
     });
 
     Target Deploy => _ => _
-    .DependsOn(Pack)
     .Requires(() => NuGetApiKey)
     .Executes(() =>
     {

@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ccwpf="https://github.com/ChrisPulman/CrissCross"
+    xmlns:ccwpf="https://github.com/reactivemarbles/CrissCross"
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:mb="clr-namespace:CrissCross.WPF.UI">
     <Style
