@@ -1,28 +1,14 @@
-// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-////   This file has been borrowed from Wpf-UI.
-
-//// This Source Code Form is subject to the terms of the MIT License.
-//// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-//// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-//// All Rights Reserved.
+// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 
 namespace CrissCross.WPF.UI.AutomationPeers;
 
-internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
+internal class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)
 {
-    private readonly CardControl _owner;
-
-    public CardControlAutomationPeer(CardControl owner)
-        : base(owner)
-    {
-        _owner = owner;
-    }
-
     /// <summary>
     /// Gets the control pattern for the <see cref="T:System.Windows.UIElement" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.UIElementAutomationPeer" />.
     /// </summary>
@@ -46,7 +32,7 @@ internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
 
     protected override AutomationPeer GetLabeledByCore()
     {
-        if (_owner.Header is UIElement element)
+        if (owner.Header is UIElement element)
         {
             return CreatePeerForElement(element);
         }
@@ -60,15 +46,15 @@ internal class CardControlAutomationPeer : FrameworkElementAutomationPeer
 
         if (result?.Length == 0)
         {
-            result = AutomationProperties.GetName(_owner);
+            result = AutomationProperties.GetName(owner);
         }
 
-        if (result?.Length == 0 && _owner.Header is DependencyObject d)
+        if (result?.Length == 0 && owner.Header is DependencyObject d)
         {
             result = AutomationProperties.GetName(d);
         }
 
-        if (result?.Length == 0 && _owner.Header is string s)
+        if (result?.Length == 0 && owner.Header is string s)
         {
             result = s;
         }

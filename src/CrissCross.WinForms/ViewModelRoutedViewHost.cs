@@ -1,5 +1,6 @@
-﻿// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,8 +19,8 @@ namespace CrissCross.WinForms;
 /// <seealso cref="IViewModelRoutedViewHost" />
 public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedViewHost
 {
-    private readonly ISubject<bool?> _canNavigateBackSubject = new Subject<bool?>();
-    private readonly ISubject<INotifiyRoutableViewModel> _currentViewModel = new Subject<INotifiyRoutableViewModel>();
+    private readonly Subject<bool?> _canNavigateBackSubject = new();
+    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
     private IRxObject? __currentViewModel;
     private IViewFor? _currentView;
     private IViewFor? _lastView;
@@ -132,7 +133,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// <value>
     /// The navigation stack.
     /// </value>
-    public ObservableCollection<Type?> NavigationStack { get; } = new();
+    public ObservableCollection<Type?> NavigationStack { get; } = [];
 
     /// <summary>
     /// Gets a value indicating whether [requires setup].

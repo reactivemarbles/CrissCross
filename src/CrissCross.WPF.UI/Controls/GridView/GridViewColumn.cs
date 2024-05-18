@@ -1,12 +1,6 @@
-// Copyright (c) Chris Pulman. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-////   This file has been borrowed from Wpf-UI.
-
-//// This Source Code Form is subject to the terms of the MIT License.
-//// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-//// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-//// All Rights Reserved.
+// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -41,14 +35,9 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
 
     // use reflection to get the `UpdateActualWidth` private method.
     private static readonly Lazy<MethodInfo> _updateActualWidthMethod =
-        new(() =>
-        {
-            var methodInfo =
-                typeof(System.Windows.Controls.GridViewColumn).GetMethod(
+        new(() => typeof(System.Windows.Controls.GridViewColumn).GetMethod(
                     "UpdateActualWidth",
-                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found.");
-            return methodInfo;
-        });
+                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found."));
 
     /// <summary>Identifies the <see cref="MinWidth"/> dependency property.</summary>
 #pragma warning disable SA1202 // Elements should be ordered by access

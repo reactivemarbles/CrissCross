@@ -56,7 +56,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.UI", "CrissC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.UI.Test", "CrissCross.WPF.UI.Test\CrissCross.WPF.UI.Test.csproj", "{93F5CEFA-AB26-4530-A918-924F95F9A9A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrissCross.WPF.UI.CC_Nav.Test", "CrissCross.WPF.UI.CC_Nav.Test\CrissCross.WPF.UI.CC_Nav.Test.csproj", "{B9916462-57B0-4F2F-8D79-BFAED0894AD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.UI.CC_Nav.Test", "CrissCross.WPF.UI.CC_Nav.Test\CrissCross.WPF.UI.CC_Nav.Test.csproj", "{B9916462-57B0-4F2F-8D79-BFAED0894AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

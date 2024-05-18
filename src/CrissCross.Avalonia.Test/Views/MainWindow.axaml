@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:nav="https://github.com/ChrisPulman/CrissCross"
+    xmlns:nav="https://github.com/reactivemarbles/CrissCross"
     xmlns:views="clr-namespace:CrissCross.Avalonia.Test.Views"
     xmlns:vm="using:CrissCross.Avalonia.Test.ViewModels"
     Name="mainWindow"
