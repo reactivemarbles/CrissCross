@@ -269,3 +269,40 @@ Create a View that inherits from `ReactiveUserControl`. This is the View that wi
         }
     }
 ```
+
+
+### CrissCross.WPF.Plot
+
+CrissCross.WPF.Plot is a library that provides a simple way to plot data in WPF applications. It is designed to be used with CrissCross.
+
+Adriana Segher came up with the initial concept of creating a Plot that could accept a Reactive data source.
+This was then developed into a library that could be used with CrissCross Wpf.
+
+The library is built on top of ScottPlot and provides a simple way to plot Reactive data in WPF applications.
+
+The library is available on NuGet. You can install it using the NuGet Package Manager:
+
+![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.Plot) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.Plot)
+
+    Install-Package CrissCross.WPF.Plot
+
+### Current Features
+
+- Plot data from a Reactive data source
+- Plot data from a array of Reactive data source with multiple series (limited to 9 currently)
+- Cursor tracking via a CrossHair
+- Zooming and Panning
+- Dragging a zoom area
+- Visibility of plots
+- Auto Scale / Manual Scale
+- Enable / Disable interaction with the plot
+- Multiple Y Axis
+
+### Future Features
+
+- More than 9 series
+- Configuration of the Chart through a property dialog
+- Axis configuration, Color Configuration, Scale Configuration, Line Configuration
+- Multiple CrossHairs with differential analytics
+- Multiple X Axis for XY Plots
+- Select a plotalbe data from a large data source such as a Dynamic Data Source
