@@ -2,7 +2,6 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.ComponentModel;
 using System.Windows;
 
 namespace CrissCross.WPF.WebView2.Test
@@ -12,25 +11,12 @@ namespace CrissCross.WPF.WebView2.Test
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int _clickedXTimes = 1;
+        private int _clickedXTimes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:System.Windows.Window.Closing" /> event.
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs" /> that contains the event data.</param>
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            ////WebView2Wpf.Dispose();
-            base.OnClosing(e);
-        }
+        public MainWindow() => InitializeComponent();
 
         private void WindowsXp_Click(object sender, RoutedEventArgs e)
         {

@@ -34,9 +34,11 @@ public class WindowHost<TWindow> : HwndHost
         Window.WindowStyle = WindowStyle.None;
         Window.ShowInTaskbar = false;
         Window.AllowsTransparency = true;
+        Window.BorderBrush = Brushes.Transparent;
+        Window.BorderThickness = new Thickness(0);
         Window.Background = Brushes.Transparent;
+        Window.Loaded += HideFromAltTab;
         Window.Show();
-        WindowHandle = new WindowInteropHelper(Window).Handle;
     }
 
     /// <summary>
@@ -45,7 +47,7 @@ public class WindowHost<TWindow> : HwndHost
     /// <value>
     /// The window handle.
     /// </value>
-    public IntPtr WindowHandle { get; }
+    public IntPtr WindowHandle { get; private set; }
 
     /// <summary>
     /// Gets the window.
@@ -95,5 +97,12 @@ public class WindowHost<TWindow> : HwndHost
         {
             NativeMethods.SetParent(WindowHandle, hwnd.Handle);
         }
+    }
+
+    private void HideFromAltTab(object sender, RoutedEventArgs e)
+    {
+        Window.Loaded -= HideFromAltTab;
+        WindowHandle = new WindowInteropHelper(Window).Handle;
+        NativeMethods.HideFromAltTab(WindowHandle);
     }
 }

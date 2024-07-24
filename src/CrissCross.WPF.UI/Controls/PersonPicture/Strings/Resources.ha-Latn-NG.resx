@@ -153,4 +153,16 @@
     <value>Rukuni</value>
     <comment>This text is used as the generic narrator text when the group glyph is showing.</comment>
   </data>
+  <data name="BadgeItemTextOverride" xml:space="preserve">
+    <value>{0}, {1: d} {2}</value>
+  </data>
+  <data name="BadgeIcon" xml:space="preserve">
+    <value>{0}, gunki</value>
+  </data>
+  <data name="BadgeIconTextOverride" xml:space="preserve">
+    <value>{0}, {1}</value>
+  </data>
+  <data name="PersonName" xml:space="preserve">
+    <value>Mutum</value>
+  </data>
 </root>

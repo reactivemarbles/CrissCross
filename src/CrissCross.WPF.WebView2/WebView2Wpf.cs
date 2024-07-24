@@ -80,7 +80,8 @@ public class WebView2Wpf : ContentControl, IDisposable
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
-        typeof(WebView2Wpf));
+        typeof(WebView2Wpf),
+        new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
 
     /// <summary>
     /// The navigate back is enabled property.
@@ -90,6 +91,35 @@ public class WebView2Wpf : ContentControl, IDisposable
         typeof(object),
         typeof(WebView2Wpf),
         new PropertyMetadata(true, ContentChanged));
+
+    /// <summary>
+    /// The default background color property.
+    /// </summary>
+    public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
+            nameof(DefaultBackgroundColor),
+            typeof(System.Drawing.Color),
+            typeof(WebView2Wpf),
+            new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+
+    /// <summary>
+    /// The allow external drop property.
+    /// </summary>
+    public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
+            nameof(AllowExternalDrop),
+            typeof(bool),
+            typeof(WebView2Wpf),
+            new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+
+    // Using a DependencyProperty as the backing store for DesignModeForegroundColor.  This enables animation, styling, binding, etc...
+    /// <summary>
+    /// The design mode foreground color property.
+    /// </summary>
+    public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
+        nameof(DesignModeForegroundColor),
+        typeof(System.Drawing.Color),
+        typeof(WebView2Wpf),
+        new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
+
 #pragma warning restore SA1202 // Elements should be ordered by access
 
     private readonly WebView2 _WebBrowser;
@@ -193,6 +223,19 @@ public class WebView2Wpf : ContentControl, IDisposable
     }
 
     /// <summary>
+    /// Gets or sets the color of the design mode foreground.
+    /// </summary>
+    /// <value>
+    /// The color of the design mode foreground.
+    /// </value>
+    [Category("Common")]
+    public System.Drawing.Color DesignModeForegroundColor
+    {
+        get => (System.Drawing.Color)GetValue(DesignModeForegroundColorProperty);
+        set => SetValue(DesignModeForegroundColorProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the source.
     /// </summary>
     /// <value>
@@ -203,6 +246,32 @@ public class WebView2Wpf : ContentControl, IDisposable
     {
         get => (Uri)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the default color of the background.
+    /// </summary>
+    /// <value>
+    /// The default color of the background.
+    /// </value>
+    [Category("Common")]
+    public System.Drawing.Color DefaultBackgroundColor
+    {
+        get => (System.Drawing.Color)GetValue(DefaultBackgroundColorProperty);
+        set => SetValue(DefaultBackgroundColorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether [allow external drop].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [allow external drop]; otherwise, <c>false</c>.
+    /// </value>
+    [Category("Common")]
+    public bool AllowExternalDrop
+    {
+        get => (bool)GetValue(AllowExternalDropProperty);
+        set => SetValue(AllowExternalDropProperty, value);
     }
 
     /// <summary>
@@ -435,6 +504,38 @@ public class WebView2Wpf : ContentControl, IDisposable
             }
 
             _disposedValue = true;
+        }
+    }
+
+    private static void DefaultBackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WebView2Wpf browser && e.NewValue is System.Drawing.Color color)
+        {
+            browser._WebBrowser.DefaultBackgroundColor = color;
+        }
+    }
+
+    private static void ZoomFactorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WebView2Wpf browser && e.NewValue is double zoom)
+        {
+            browser._WebBrowser.ZoomFactor = zoom;
+        }
+    }
+
+    private static void AllowExternalDropPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WebView2Wpf browser && e.NewValue is bool allowDrop)
+        {
+            browser._WebBrowser.AllowExternalDrop = allowDrop;
+        }
+    }
+
+    private static void DesignModeForegroundColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WebView2Wpf browser && e.NewValue is System.Drawing.Color color)
+        {
+            browser._WebBrowser.DesignModeForegroundColor = color;
         }
     }
 
