@@ -74,7 +74,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
-        typeof(NavigationWebView));
+        typeof(NavigationWebView),
+        new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
 
     /// <summary>
     /// The navigate back is enabled property.
@@ -84,6 +85,34 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         typeof(object),
         typeof(NavigationWebView),
         new PropertyMetadata(true, ContentChanged));
+
+    /// <summary>
+    /// The default background color property.
+    /// </summary>
+    public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
+            nameof(DefaultBackgroundColor),
+            typeof(System.Drawing.Color),
+            typeof(NavigationWebView),
+            new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+
+    /// <summary>
+    /// The allow external drop property.
+    /// </summary>
+    public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
+            nameof(AllowExternalDrop),
+            typeof(bool),
+            typeof(NavigationWebView),
+            new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+
+    // Using a DependencyProperty as the backing store for DesignModeForegroundColor.  This enables animation, styling, binding, etc...
+    /// <summary>
+    /// The design mode foreground color property.
+    /// </summary>
+    public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
+        nameof(DesignModeForegroundColor),
+        typeof(System.Drawing.Color),
+        typeof(NavigationWebView),
+        new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
 
     private readonly WebView2 _WebBrowser;
     private WindowHost<NavigationWindow>? _navigationWindowHost;
@@ -113,10 +142,24 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <value>
     ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
+    [Category("Common")]
     public bool? NavigateBackIsEnabled
     {
         get => (bool?)GetValue(NavigateBackIsEnabledProperty);
         set => SetValue(NavigateBackIsEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the color of the design mode foreground.
+    /// </summary>
+    /// <value>
+    /// The color of the design mode foreground.
+    /// </value>
+    [Category("Common")]
+    public System.Drawing.Color DesignModeForegroundColor
+    {
+        get => (System.Drawing.Color)GetValue(DesignModeForegroundColorProperty);
+        set => SetValue(DesignModeForegroundColorProperty, value);
     }
 
     /// <summary>
@@ -125,10 +168,37 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <value>
     /// The source.
     /// </value>
+    [Category("Common")]
     public string? Source
     {
         get => (string?)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the default color of the background.
+    /// </summary>
+    /// <value>
+    /// The default color of the background.
+    /// </value>
+    [Category("Common")]
+    public System.Drawing.Color DefaultBackgroundColor
+    {
+        get => (System.Drawing.Color)GetValue(DefaultBackgroundColorProperty);
+        set => SetValue(DefaultBackgroundColorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether [allow external drop].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [allow external drop]; otherwise, <c>false</c>.
+    /// </value>
+    [Category("Common")]
+    public bool AllowExternalDrop
+    {
+        get => (bool)GetValue(AllowExternalDropProperty);
+        set => SetValue(AllowExternalDropProperty, value);
     }
 
     /// <summary>
@@ -259,6 +329,7 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <value>
     /// The transition.
     /// </value>
+    [Category("Common")]
     public TransitionType Transition
     {
         get => (TransitionType)GetValue(TransitionProperty);
@@ -388,6 +459,38 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
             }
 
             _disposedValue = true;
+        }
+    }
+
+    private static void DefaultBackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NavigationWebView browser && e.NewValue is System.Drawing.Color color)
+        {
+            browser._WebBrowser.DefaultBackgroundColor = color;
+        }
+    }
+
+    private static void ZoomFactorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NavigationWebView browser && e.NewValue is double zoom)
+        {
+            browser._WebBrowser.ZoomFactor = zoom;
+        }
+    }
+
+    private static void AllowExternalDropPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NavigationWebView browser && e.NewValue is bool allowDrop)
+        {
+            browser._WebBrowser.AllowExternalDrop = allowDrop;
+        }
+    }
+
+    private static void DesignModeForegroundColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NavigationWebView browser && e.NewValue is System.Drawing.Color color)
+        {
+            browser._WebBrowser.DesignModeForegroundColor = color;
         }
     }
 

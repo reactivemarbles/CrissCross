@@ -28,7 +28,7 @@
     <PackageReference Include="AppBarButton.WPF" Version="1.0.1" />
     <PackageReference Include="BBCode.WPF" Version="0.2.0" />
     <PackageReference Include="CP.Xaml.Converters" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
     <PackageReference Include="PolySharp" Version="1.14.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
