@@ -14,15 +14,13 @@ namespace CrissCross.WPF.UI.Controls;
 [TypeConverter(typeof(IconElementConverter))]
 public abstract class IconElement : FrameworkElement
 {
-    /// <summary>
-    /// Property for <see cref="Foreground"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="Foreground"/> dependency property.</summary>
     public static readonly DependencyProperty ForegroundProperty = TextElement.ForegroundProperty.AddOwner(
         typeof(IconElement),
         new FrameworkPropertyMetadata(
             SystemColors.ControlTextBrush,
             FrameworkPropertyMetadataOptions.Inherits,
-            static (d, args) => ((IconElement)d).OnForegroundPropertyChanged(args)));
+            static (d, args) => ((IconElement)d).OnForegroundChanged(args)));
 
     private Grid? _layoutRoot;
 
@@ -49,16 +47,32 @@ public abstract class IconElement : FrameworkElement
     protected override int VisualChildrenCount => 1;
 
     /// <summary>
+    /// Coerces the value of an Icon dependency property, allowing the use of either IconElement or IconSourceElement.
+    /// </summary>
+    /// <param name="o">The dependency object (unused).</param>
+    /// <param name="baseValue">The value to be coerced.</param>
+    /// <returns>An IconElement, either directly or derived from an IconSourceElement.</returns>
+    public static object? Coerce(DependencyObject o, object? baseValue) => baseValue switch
+    {
+        IconSourceElement iconSourceElement => iconSourceElement.CreateIconElement(),
+        IconElement or null => baseValue,
+        _
+            => throw new ArgumentException(
+                message: $"Expected either '{typeof(IconSourceElement)}' or '{typeof(IconElement)}' but got '{baseValue.GetType()}'.",
+                paramName: nameof(baseValue))
+    };
+
+    /// <summary>
     /// Initializes the children.
     /// </summary>
     /// <returns>A UIElement.</returns>
     protected abstract UIElement InitializeChildren();
 
     /// <summary>
-    /// Raises the <see cref="E:ForegroundPropertyChanged" /> event.
+    /// Raises the <see cref="E:ForegroundChanged" /> event.
     /// </summary>
     /// <param name="args">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-    protected virtual void OnForegroundPropertyChanged(DependencyPropertyChangedEventArgs args)
+    protected virtual void OnForegroundChanged(DependencyPropertyChangedEventArgs args)
     {
     }
 
@@ -69,12 +83,12 @@ public abstract class IconElement : FrameworkElement
     /// <returns>
     /// The requested child element. This should not return null; if the provided index is out of range, an exception is thrown.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException">index.</exception>
+    /// <exception cref="System.ArgumentOutOfRangeException">index - IconElement should have only 1 child.</exception>
     protected override Visual GetVisualChild(int index)
     {
         if (index != 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            throw new ArgumentOutOfRangeException(nameof(index), "IconElement should have only 1 child");
         }
 
         EnsureLayoutRoot();
@@ -120,7 +134,8 @@ public abstract class IconElement : FrameworkElement
 
         _layoutRoot = new Grid { Background = Brushes.Transparent, SnapsToDevicePixels = true, };
 
-        _layoutRoot.Children.Add(InitializeChildren());
+        _ = _layoutRoot.Children.Add(InitializeChildren());
+
         AddVisualChild(_layoutRoot);
     }
 }

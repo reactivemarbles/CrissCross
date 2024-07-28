@@ -135,7 +135,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
 
         if (newValue == WindowBackdropType.None)
         {
-            WindowBackdrop.RemoveBackdrop(this);
+            _ = WindowBackdrop.RemoveBackdrop(this);
             return;
         }
 
@@ -146,7 +146,8 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
 
         if (WindowBackdrop.IsSupported(newValue) && WindowBackdrop.RemoveBackground(this))
         {
-            WindowBackdrop.ApplyBackdrop(this, newValue);
+            _ = WindowBackdrop.ApplyBackdrop(this, newValue);
+            _ = WindowBackdrop.RemoveTitlebarBackground(this);
         }
     }
 

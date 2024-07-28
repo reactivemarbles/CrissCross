@@ -33,6 +33,13 @@ public class SymbolIconExtension : MarkupExtension
     /// <summary>
     /// Initializes a new instance of the <see cref="SymbolIconExtension"/> class.
     /// </summary>
+    public SymbolIconExtension()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SymbolIconExtension"/> class.
+    /// </summary>
     /// <param name="symbol">The symbol.</param>
     public SymbolIconExtension(SymbolRegular symbol) => Symbol = symbol;
 
@@ -40,7 +47,8 @@ public class SymbolIconExtension : MarkupExtension
     /// Initializes a new instance of the <see cref="SymbolIconExtension"/> class.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
-    public SymbolIconExtension(string symbol) => Symbol = (SymbolRegular)Enum.Parse(typeof(SymbolRegular), symbol);
+    public SymbolIconExtension(string symbol) =>
+        Symbol = (SymbolRegular)Enum.Parse(typeof(SymbolRegular), symbol);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SymbolIconExtension"/> class.
@@ -85,7 +93,7 @@ public class SymbolIconExtension : MarkupExtension
     /// </returns>
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        var symbolIcon = new SymbolIcon { Symbol = Symbol, Filled = Filled };
+        SymbolIcon symbolIcon = new() { Symbol = Symbol, Filled = Filled };
 
         if (FontSize > 0)
         {

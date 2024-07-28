@@ -198,8 +198,7 @@ public static class SystemThemeWatcher
             WindowBackgroundManager.UpdateBackground(
                 observedWindow.RootVisual,
                 currentApplicationTheme,
-                observedWindow.Backdrop,
-                observedWindow.ForceBackgroundReplace);
+                observedWindow.Backdrop);
         }
     }
 }

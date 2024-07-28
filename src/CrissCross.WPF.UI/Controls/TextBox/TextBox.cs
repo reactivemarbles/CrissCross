@@ -4,7 +4,6 @@
 
 using System.Diagnostics;
 using System.Windows.Controls;
-using CrissCross.WPF.UI.Converters;
 using CrissCross.WPF.UI.Input;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -14,72 +13,63 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 public class TextBox : System.Windows.Controls.TextBox
 {
-    /// <summary>
-    /// Property for <see cref="Icon"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="Icon"/> dependency property.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(TextBox),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new PropertyMetadata(null, null, IconElement.Coerce));
 
-    /// <summary>
-    /// Property for <see cref="IconPlacement"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="IconPlacement"/> dependency property.</summary>
     public static readonly DependencyProperty IconPlacementProperty = DependencyProperty.Register(
         nameof(IconPlacement),
         typeof(ElementPlacement),
         typeof(TextBox),
         new PropertyMetadata(ElementPlacement.Left));
 
-    /// <summary>
-    /// Property for <see cref="PlaceholderText"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="PlaceholderText"/> dependency property.</summary>
     public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
         nameof(PlaceholderText),
         typeof(string),
         typeof(TextBox),
         new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// Property for <see cref="PlaceholderEnabled"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="PlaceholderEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty PlaceholderEnabledProperty = DependencyProperty.Register(
         nameof(PlaceholderEnabled),
         typeof(bool),
         typeof(TextBox),
+        new PropertyMetadata(true, OnPlaceholderEnabledChanged));
+
+    /// <summary>Identifies the <see cref="CurrentPlaceholderEnabled"/> dependency property.</summary>
+    public static readonly DependencyProperty CurrentPlaceholderEnabledProperty = DependencyProperty.Register(
+        nameof(CurrentPlaceholderEnabled),
+        typeof(bool),
+        typeof(TextBox),
         new PropertyMetadata(true));
 
-    /// <summary>
-    /// Property for <see cref="ClearButtonEnabled"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="ClearButtonEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty ClearButtonEnabledProperty = DependencyProperty.Register(
         nameof(ClearButtonEnabled),
         typeof(bool),
         typeof(TextBox),
         new PropertyMetadata(true));
 
-    /// <summary>
-    /// Property for <see cref="ShowClearButton"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="ShowClearButton"/> dependency property.</summary>
     public static readonly DependencyProperty ShowClearButtonProperty = DependencyProperty.Register(
         nameof(ShowClearButton),
         typeof(bool),
         typeof(TextBox),
         new PropertyMetadata(false));
 
-    /// <summary>
-    /// Property for <see cref="IsTextSelectionEnabledProperty"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="IsTextSelectionEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
         nameof(IsTextSelectionEnabled),
         typeof(bool),
         typeof(TextBox),
         new PropertyMetadata(false));
 
-    /// <summary>
-    /// Property for <see cref="TemplateButtonCommand"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="TemplateButtonCommand"/> dependency property.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IRelayCommand),
@@ -89,20 +79,23 @@ public class TextBox : System.Windows.Controls.TextBox
     /// <summary>
     /// Initializes a new instance of the <see cref="TextBox"/> class.
     /// </summary>
-    public TextBox() =>
+    public TextBox()
+    {
         SetValue(TemplateButtonCommandProperty, new RelayCommand<string>(OnTemplateButtonClick));
+        CurrentPlaceholderEnabled = PlaceholderEnabled;
+    }
 
     /// <summary>
     /// Gets or sets displayed <see cref="IconElement"/>.
     /// </summary>
-    public IconElement Icon
+    public IconElement? Icon
     {
-        get => (IconElement)GetValue(IconProperty);
+        get => (IconElement?)GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets defines which side the icon should be placed on.
+    /// Gets or sets which side the icon should be placed on.
     /// </summary>
     public ElementPlacement IconPlacement
     {
@@ -111,7 +104,7 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets numbers pattern.
+    /// Gets or sets placeholder text.
     /// </summary>
     public string PlaceholderText
     {
@@ -120,7 +113,7 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value determining whether to display the placeholder.
+    /// Gets or sets a value indicating whether to enable the placeholder text.
     /// </summary>
     public bool PlaceholderEnabled
     {
@@ -129,7 +122,16 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value determining whether to enable the clear button.
+    /// Gets or sets a value indicating whether to display the placeholder text.
+    /// </summary>
+    public bool CurrentPlaceholderEnabled
+    {
+        get => (bool)GetValue(CurrentPlaceholderEnabledProperty);
+        protected set => SetValue(CurrentPlaceholderEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to enable the clear button.
     /// </summary>
     public bool ClearButtonEnabled
     {
@@ -138,7 +140,7 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value determining whether to show the clear button when <see cref="TextBox"/> is focused.
+    /// Gets or sets a value indicating whether to show the clear button when <see cref="TextBox"/> is focused.
     /// </summary>
     public bool ShowClearButton
     {
@@ -147,11 +149,8 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is text selection enabled.
+    /// Gets or sets a value indicating whether text selection is enabled.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is text selection enabled; otherwise, <c>false</c>.
-    /// </value>
     public bool IsTextSelectionEnabled
     {
         get => (bool)GetValue(IsTextSelectionEnabledProperty);
@@ -159,7 +158,7 @@ public class TextBox : System.Windows.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets command triggered after clicking the button.
+    /// Gets the command triggered when clicking the button.
     /// </summary>
     public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
 
@@ -168,17 +167,32 @@ public class TextBox : System.Windows.Controls.TextBox
     {
         base.OnTextChanged(e);
 
-        if (PlaceholderEnabled && Text.Length > 0)
-        {
-            PlaceholderEnabled = false;
-        }
-
-        if (!PlaceholderEnabled && Text.Length < 1)
-        {
-            PlaceholderEnabled = true;
-        }
+        SetPlaceholderTextVisibility();
 
         RevealClearButton();
+    }
+
+    /// <summary>
+    /// Sets the placeholder text visibility.
+    /// </summary>
+    protected void SetPlaceholderTextVisibility()
+    {
+        if (PlaceholderEnabled)
+        {
+            if (CurrentPlaceholderEnabled && Text.Length > 0)
+            {
+                SetCurrentValue(CurrentPlaceholderEnabledProperty, false);
+            }
+
+            if (!CurrentPlaceholderEnabled && Text.Length < 1)
+            {
+                SetCurrentValue(CurrentPlaceholderEnabledProperty, true);
+            }
+        }
+        else if (CurrentPlaceholderEnabled)
+        {
+            SetCurrentValue(CurrentPlaceholderEnabledProperty, false);
+        }
     }
 
     /// <inheritdoc />
@@ -206,7 +220,7 @@ public class TextBox : System.Windows.Controls.TextBox
     {
         if (ClearButtonEnabled && IsKeyboardFocusWithin)
         {
-            ShowClearButton = Text.Length > 0;
+            SetCurrentValue(ShowClearButtonProperty, Text.Length > 0);
         }
     }
 
@@ -217,7 +231,7 @@ public class TextBox : System.Windows.Controls.TextBox
     {
         if (ClearButtonEnabled && !IsKeyboardFocusWithin && ShowClearButton)
         {
-            ShowClearButton = false;
+            SetCurrentValue(ShowClearButtonProperty, false);
         }
     }
 
@@ -228,7 +242,7 @@ public class TextBox : System.Windows.Controls.TextBox
     {
         if (Text.Length > 0)
         {
-            Text = string.Empty;
+            SetCurrentValue(TextProperty, string.Empty);
         }
     }
 
@@ -238,8 +252,23 @@ public class TextBox : System.Windows.Controls.TextBox
     /// <param name="parameter">The parameter.</param>
     protected virtual void OnTemplateButtonClick(string? parameter)
     {
-        Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "CrissCross.WPF.UI.TextBox");
+        Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "Wpf.Ui.TextBox");
 
         OnClearButtonClick();
+    }
+
+    /// <summary>
+    /// Called when [placeholder enabled changed].
+    /// </summary>
+    protected virtual void OnPlaceholderEnabledChanged() => SetPlaceholderTextVisibility();
+
+    private static void OnPlaceholderEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not TextBox control)
+        {
+            return;
+        }
+
+        control.OnPlaceholderEnabledChanged();
     }
 }

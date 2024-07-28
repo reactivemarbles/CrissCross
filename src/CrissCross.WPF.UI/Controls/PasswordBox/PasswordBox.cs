@@ -123,16 +123,7 @@ public class PasswordBox : TextBox
         }
         else
         {
-            if (PlaceholderEnabled && Text.Length > 0)
-            {
-                PlaceholderEnabled = false;
-            }
-
-            if (!PlaceholderEnabled && Text.Length < 1)
-            {
-                PlaceholderEnabled = true;
-            }
-
+            SetPlaceholderTextVisibility();
             RevealClearButton();
         }
     }
@@ -276,7 +267,7 @@ public class PasswordBox : TextBox
 
         var caretIndex = CaretIndex;
         var selectionIndex = SelectionStart;
-        var currentPassword = Password;
+        var currentPassword = Password ?? string.Empty;
         var newPasswordValue = currentPassword;
 
         if (isTriggeredByTextInput)
