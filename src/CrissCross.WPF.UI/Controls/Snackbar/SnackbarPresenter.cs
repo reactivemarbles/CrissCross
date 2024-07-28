@@ -2,40 +2,35 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ReactiveMarbles.ObservableEvents;
-
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// SnackbarPresenter.
 /// </summary>
 /// <seealso cref="System.Windows.Controls.ContentPresenter" />
-public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisposable
+public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
 {
-    /// <summary>
-    /// The queue.
-    /// </summary>
-#pragma warning disable SA1401 // Fields should be private
-    protected readonly Queue<Snackbar> Queue = new();
-
-    /// <summary>
-    /// The cancellation token source.
-    /// </summary>
-    protected CancellationTokenSource CancellationTokenSource = new();
-#pragma warning restore SA1401 // Fields should be private
-
-    private readonly IDisposable? _unloadedSubscription;
-    private bool _disposedValue;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="SnackbarPresenter"/> class.
     /// </summary>
-    public SnackbarPresenter() =>
-        _unloadedSubscription = this.Events().Unloaded.Subscribe(sender =>
+    public SnackbarPresenter() => Unloaded += static (sender, _) =>
+                                       {
+                                           var self = (SnackbarPresenter)sender;
+                                           self.OnUnloaded();
+                                       };
+
+    /// <summary>
+    /// Finalizes an instance of the <see cref="SnackbarPresenter"/> class.
+    /// </summary>
+    ~SnackbarPresenter()
+    {
+        if (!CancellationTokenSource.IsCancellationRequested)
         {
-            var self = (SnackbarPresenter)sender.Source;
-            self.OnUnloaded();
-        });
+            CancellationTokenSource.Cancel();
+        }
+
+        CancellationTokenSource.Dispose();
+    }
 
     /// <summary>
     /// Gets or sets the content.
@@ -43,11 +38,31 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     /// <value>
     /// The content.
     /// </value>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "WpfAnalyzers.DependencyProperty",
+        "WPF0012:CLR property type should match registered type",
+        Justification = "seems harmless")]
     public new Snackbar? Content
     {
-        get => (Snackbar)GetValue(ContentProperty);
+        get => (Snackbar?)GetValue(ContentProperty);
         protected set => SetValue(ContentProperty, value);
     }
+
+    /// <summary>
+    /// Gets the queue.
+    /// </summary>
+    /// <value>
+    /// The queue.
+    /// </value>
+    protected Queue<Snackbar> Queue { get; } = new();
+
+    /// <summary>
+    /// Gets or sets the cancellation token source.
+    /// </summary>
+    /// <value>
+    /// The cancellation token source.
+    /// </value>
+    protected CancellationTokenSource CancellationTokenSource { get; set; } = new();
 
     /// <summary>
     /// Adds to que.
@@ -59,20 +74,20 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
 
         if (Content is null)
         {
-            _ = ShowQueuedSnackbars(); // TODO: Fix detached process
+            ShowQueuedSnackbars(); // TODO: Fix detached process
         }
     }
 
     /// <summary>
     /// Immediatelies the display.
     /// </summary>
-    /// <param name="snackbar">The snackbar.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <param name="snackbar">The snackbar.</param>
     public virtual async Task ImmediatelyDisplay(Snackbar snackbar)
     {
         if (snackbar is null)
         {
-            throw new ArgumentNullException(nameof(snackbar));
+            return;
         }
 
         await HideCurrent();
@@ -98,21 +113,17 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     }
 
     /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
     /// Called when [unloaded].
     /// </summary>
     protected virtual void OnUnloaded()
     {
-        CancellationTokenSource.Cancel();
-        CancellationTokenSource.Dispose();
+        if (CancellationTokenSource.IsCancellationRequested)
+        {
+            return;
+        }
+
+        ImmediatelyHideCurrent();
+        ResetCancellationTokenSource();
     }
 
     /// <summary>
@@ -124,24 +135,21 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
         CancellationTokenSource = new CancellationTokenSource();
     }
 
-    /// <summary>
-    /// Disposes the specified disposing.
-    /// </summary>
-    /// <param name="disposing">if set to <c>true</c> [disposing].</param>
-    protected virtual void Dispose(bool disposing)
+    private void ImmediatelyHideCurrent()
     {
-        if (!_disposedValue)
+        if (Content is null)
         {
-            if (disposing)
-            {
-                CancellationTokenSource.Dispose();
-                _unloadedSubscription?.Dispose();
-            }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
-            _disposedValue = true;
+            return;
         }
+
+        CancellationTokenSource.Cancel();
+        ImmediatelyHidSnackbar(Content);
+    }
+
+    private void ImmediatelyHidSnackbar(Snackbar snackbar)
+    {
+        snackbar.SetCurrentValue(Snackbar.IsShownProperty, false);
+        Content = null;
     }
 
     private async Task ShowQueuedSnackbars()
@@ -158,7 +166,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     {
         Content = snackbar;
 
-        snackbar.IsShown = true;
+        snackbar.SetCurrentValue(Snackbar.IsShownProperty, true);
 
         try
         {
@@ -174,7 +182,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
 
     private async Task HidSnackbar(Snackbar snackbar)
     {
-        snackbar.IsShown = false;
+        snackbar.SetCurrentValue(Snackbar.IsShownProperty, false);
 
         await Task.Delay(300);
 

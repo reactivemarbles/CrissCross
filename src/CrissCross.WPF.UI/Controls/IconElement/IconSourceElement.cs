@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
-using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -13,9 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 [ContentProperty(nameof(IconSource))]
 public class IconSourceElement : IconElement
 {
-    /// <summary>
-    /// Property for <see cref="IconSource"/>.
-    /// </summary>
+    /// <summary>Identifies the <see cref="IconSource"/> dependency property.</summary>
     public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
         nameof(IconSource),
         typeof(IconSource),
@@ -27,17 +24,24 @@ public class IconSourceElement : IconElement
     /// </summary>
     public IconSource? IconSource
     {
-        get => (IconSource)GetValue(IconSourceProperty);
+        get => (IconSource?)GetValue(IconSourceProperty);
         set => SetValue(IconSourceProperty, value);
     }
 
     /// <summary>
+    /// Creates the icon element.
+    /// </summary>
+    /// <returns>An IconElement.</returns>
+    public IconElement? CreateIconElement() => IconSource?.CreateIconElement();
+
+    /// <summary>
     /// Initializes the children.
     /// </summary>
-    /// <returns>
-    /// A UIElement.
-    /// </returns>
-    /// <exception cref="InvalidOperationException">Use {nameof(IconSourceElementConverter)} class.</exception>
-    protected override UIElement InitializeChildren() => // TODO come up with an elegant solution
-        throw new InvalidOperationException($"Use {nameof(IconSourceElementConverter)} class.");
+    /// <returns>A UIElement.</returns>
+    /// <exception cref="System.InvalidOperationException">Use {nameof(CreateIconElement)}.</exception>
+    protected override UIElement InitializeChildren()
+    {
+        // TODO: Come up with an elegant solution
+        throw new InvalidOperationException($"Use {nameof(CreateIconElement)}");
+    }
 }

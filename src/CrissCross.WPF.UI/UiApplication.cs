@@ -12,35 +12,65 @@ namespace CrissCross.WPF.UI;
 /// <remarks>
 /// Initializes a new instance of the <see cref="UiApplication" /> class.
 /// </remarks>
-/// <param name="application">The application.</param>
-public class UiApplication(Application application)
+public class UiApplication
 {
     private static UiApplication? _uiApplication;
+    private readonly Application? _application;
     private ResourceDictionary? _resources;
-
     private Window? _mainWindow;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UiApplication" /> class.
+    /// </summary>
+    /// <param name="application">The application.</param>
+    public UiApplication(Application application)
+    {
+        if (application is null)
+        {
+            return;
+        }
+
+        if (!ApplicationHasResources(application))
+        {
+            return;
+        }
+
+        _application = application;
+
+        System.Diagnostics.Debug.WriteLine(
+            $"INFO | {typeof(UiApplication)} application is {_application}",
+            "CrissCross.WPF.UI");
+    }
 
     /// <summary>
     /// Gets the current application.
     /// </summary>
-    public static UiApplication Current => GetUiApplication();
+    public static UiApplication Current
+    {
+        get
+        {
+            _uiApplication ??= new UiApplication(Application.Current);
+
+            return _uiApplication;
+        }
+    }
 
     /// <summary>
     /// Gets a value indicating whether the application is running outside of the desktop app context.
     /// </summary>
-    public bool IsApplication => application is not null;
+    public bool IsApplication => _application is not null;
 
     /// <summary>
     /// Gets or sets the application's main window.
     /// </summary>
     public Window? MainWindow
     {
-        get => application?.MainWindow ?? _mainWindow;
+        get => _application?.MainWindow ?? _mainWindow;
         set
         {
-            if (application is not null)
+            if (_application != null)
             {
-                application.MainWindow = value;
+                _application.MainWindow = value;
             }
 
             _mainWindow = value;
@@ -71,14 +101,14 @@ public class UiApplication(Application application)
                 }
             }
 
-            return application?.Resources ?? _resources;
+            return _application?.Resources ?? _resources;
         }
 
         set
         {
-            if (application is not null)
+            if (_application is not null)
             {
-                application.Resources = value;
+                _application.Resources = value;
             }
 
             _resources = value;
@@ -95,8 +125,9 @@ public class UiApplication(Application application)
     /// <summary>
     /// Turns the application's into shutdown mode.
     /// </summary>
-    public void Shutdown() => application?.Shutdown();
+    public void Shutdown() => _application?.Shutdown();
 
-    private static UiApplication GetUiApplication() =>
-        _uiApplication ??= new UiApplication(Application.Current);
+    private static bool ApplicationHasResources(Application application) =>
+        application.Resources.MergedDictionaries
+            .Any(e => e.Source?.ToString().ToLower().Contains(Appearance.ApplicationThemeManager.LibraryNamespace) == true);
 }

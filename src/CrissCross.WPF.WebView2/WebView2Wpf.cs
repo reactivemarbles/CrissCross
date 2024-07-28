@@ -125,6 +125,7 @@ public class WebView2Wpf : ContentControl, IDisposable
     private readonly WebView2 _WebBrowser;
     private WindowHost<Window>? _windowHost;
     private bool _disposedValue;
+    private Window? _parentWindow;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebView2Wpf"/> class.
@@ -477,15 +478,30 @@ public class WebView2Wpf : ContentControl, IDisposable
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        _windowHost = new(Name);
-        _windowHost.Window.HorizontalAlignment = HorizontalAlignment;
-        _windowHost.Window.VerticalAlignment = VerticalAlignment;
-        _windowHost.Window.Content = Content;
-        var layoutRoot = new Grid();
-        layoutRoot.Children.Add(_WebBrowser);
-        layoutRoot.Children.Add(_windowHost);
-        base.Content = layoutRoot;
-        AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
+        try
+        {
+            _parentWindow = Window.GetWindow(this);
+        }
+        catch
+        {
+        }
+
+        if (_parentWindow == null || _parentWindow.IsLoaded)
+        {
+            _windowHost = new(Name);
+            _windowHost.Window.HorizontalAlignment = HorizontalAlignment;
+            _windowHost.Window.VerticalAlignment = VerticalAlignment;
+            _windowHost.Window.Content = Content;
+            var layoutRoot = new Grid();
+            layoutRoot.Children.Add(_WebBrowser);
+            layoutRoot.Children.Add(_windowHost);
+            base.Content = layoutRoot;
+            AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
+        }
+        else
+        {
+            _parentWindow.Loaded += ParentWindow_Loaded;
+        }
     }
 
     /// <summary>
@@ -576,5 +592,19 @@ public class WebView2Wpf : ContentControl, IDisposable
                 browser._WebBrowser.Unloaded -= (s, e) => browser.Dispose();
             }
         }
+    }
+
+    private void ParentWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        _parentWindow!.Loaded -= ParentWindow_Loaded;
+        _windowHost = new(Name);
+        _windowHost.Window.HorizontalAlignment = HorizontalAlignment;
+        _windowHost.Window.VerticalAlignment = VerticalAlignment;
+        _windowHost.Window.Content = Content;
+        var layoutRoot = new Grid();
+        layoutRoot.Children.Add(_WebBrowser);
+        layoutRoot.Children.Add(_windowHost);
+        base.Content = layoutRoot;
+        AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
     }
 }

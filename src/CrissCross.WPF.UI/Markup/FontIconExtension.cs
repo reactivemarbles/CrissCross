@@ -29,18 +29,22 @@ namespace CrissCross.WPF.UI.Markup;
 /// <remarks>
 /// Initializes a new instance of the <see cref="FontIconExtension"/> class.
 /// </remarks>
-/// <param name="glyph">The glyph.</param>
 [ContentProperty(nameof(Glyph))]
 [MarkupExtensionReturnType(typeof(FontIcon))]
-public class FontIconExtension(string glyph) : MarkupExtension
+public class FontIconExtension : MarkupExtension
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FontIconExtension"/> class.
     /// </summary>
+    public FontIconExtension()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FontIconExtension"/> class.
+    /// </summary>
     /// <param name="glyph">The glyph.</param>
-    /// <param name="fontFamily">The font family.</param>
-    public FontIconExtension(string glyph, FontFamily fontFamily)
-        : this(glyph) => FontFamily = fontFamily;
+    public FontIconExtension(string glyph) => Glyph = glyph;
 
     /// <summary>
     /// Gets or sets the glyph.
@@ -49,7 +53,7 @@ public class FontIconExtension(string glyph) : MarkupExtension
     /// The glyph.
     /// </value>
     [ConstructorArgument("glyph")]
-    public string Glyph { get; set; } = glyph;
+    public string? Glyph { get; set; }
 
     /// <summary>
     /// Gets or sets the font family.
@@ -58,7 +62,7 @@ public class FontIconExtension(string glyph) : MarkupExtension
     /// The font family.
     /// </value>
     [ConstructorArgument("fontFamily")]
-    public FontFamily FontFamily { get; set; } = new FontFamily("FluentSystemIcons");
+    public FontFamily FontFamily { get; set; } = new("FluentSystemIcons");
 
     /// <summary>
     /// Gets or sets the size of the font.
@@ -77,7 +81,7 @@ public class FontIconExtension(string glyph) : MarkupExtension
     /// </returns>
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        var fontIcon = new FontIcon { Glyph = Glyph, FontFamily = FontFamily };
+        FontIcon fontIcon = new() { Glyph = Glyph, FontFamily = FontFamily };
 
         if (FontSize > 0)
         {

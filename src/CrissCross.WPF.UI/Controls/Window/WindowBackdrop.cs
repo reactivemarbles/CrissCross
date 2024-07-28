@@ -36,7 +36,7 @@ public static class WindowBackdrop
     /// <returns>
     ///   <see langword="true" /> if the operation was successfull, otherwise <see langword="false" />.
     /// </returns>
-    public static bool ApplyBackdrop(System.Windows.Window window, WindowBackdropType backdropType)
+    public static bool ApplyBackdrop(System.Windows.Window? window, WindowBackdropType backdropType)
     {
         if (window is null)
         {
@@ -209,6 +209,44 @@ public static class WindowBackdrop
         if (windowSource?.Handle != IntPtr.Zero && windowSource?.CompositionTarget != null)
         {
             windowSource.CompositionTarget.BackgroundColor = Colors.Transparent;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Removes the titlebar background.
+    /// </summary>
+    /// <param name="window">The window.</param>
+    /// <returns>A bool.</returns>
+    public static bool RemoveTitlebarBackground(System.Windows.Window? window)
+    {
+        if (window is null)
+        {
+            return false;
+        }
+
+        var windowHandle = new WindowInteropHelper(window).Handle;
+
+        if (windowHandle == IntPtr.Zero)
+        {
+            return false;
+        }
+
+        HwndSource? windowSource = HwndSource.FromHwnd(windowHandle);
+
+        // Remove background from client area
+        if (windowSource?.Handle != IntPtr.Zero && windowSource?.CompositionTarget != null)
+        {
+            // NOTE: https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
+            // Specifying DWMWA_COLOR_DEFAULT (value 0xFFFFFFFF) for the color will reset the window back to using the system's default behavior for the caption color.
+            var titlebarPvAttribute = 0xFFFFFFFEu;
+
+            _ = Dwmapi.DwmSetWindowAttribute(
+                windowSource.Handle,
+                Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_CAPTION_COLOR,
+                ref titlebarPvAttribute,
+                Marshal.SizeOf(typeof(uint)));
         }
 
         return true;

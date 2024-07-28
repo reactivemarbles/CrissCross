@@ -310,7 +310,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     }
 
     /// <inheritdoc cref="UIElement.Focus" />
-    public new void Focus() => TextBox?.Focus();
+    public new bool Focus() => TextBox?.Focus() == true;
 
     /// <summary>
     /// Gets the template child.
