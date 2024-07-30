@@ -8,7 +8,7 @@ namespace CrissCross.WPF.UI.Converters;
 
 internal class MinConverter : IMultiValueConverter
 {
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values.Min();
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values.Min()!;
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
         throw new NotImplementedException();

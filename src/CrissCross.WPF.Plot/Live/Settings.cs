@@ -4,7 +4,7 @@
 
 using System.Reactive;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.Plot;
 
@@ -16,19 +16,31 @@ namespace CrissCross.WPF.Plot;
 /// Initializes a new instance of the <see cref="Settings" /> class.
 /// </remarks>
 /// <param name="itemName">itemName.</param>
-public class Settings(string itemName) : RxObject
+public partial class Settings(string itemName) : RxObject
 {
     /// <summary>
     /// Gets or sets :  0 - scaled and calibrated raw data, 1 - fft data, 2 - velocity rms data.
     /// </summary>
     [Reactive]
-    public int DisplayedValue { get; set; }
+    private int _displayedValue;
 
     /// <summary>
     /// Gets or sets the name of data plot.
     /// </summary>
     [Reactive]
-    public string? ItemName { get; set; } = itemName;
+    private string? _itemName = itemName;
+
+    /// <summary>
+    /// Gets or sets the color text.
+    /// </summary>
+    [Reactive]
+    private string _colorText = "#FFD3D3D3";
+
+    /// <summary>
+    /// Gets or sets the color text.
+    /// </summary>
+    [Reactive]
+    private string? _icon;
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is checked.
@@ -37,16 +49,4 @@ public class Settings(string itemName) : RxObject
     ///   <c>true</c> if this instance is checked; otherwise, <c>false</c>.
     /// </value>
     public ReactiveCommand<Unit, Unit> IsChecked { get; set; } = ReactiveCommand.Create(() => { });
-
-    /// <summary>
-    /// Gets or sets the color text.
-    /// </summary>
-    [Reactive]
-    public string ColorText { get; set; } = "#FFD3D3D3";
-
-    /// <summary>
-    /// Gets or sets the color text.
-    /// </summary>
-    [Reactive]
-    public string? Icon { get; set; }
 }

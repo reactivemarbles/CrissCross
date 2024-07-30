@@ -114,7 +114,7 @@ public partial class LiveChart
         _needMarkerOff = !(_needMarkerOff && _markerOff);
         EnableMarkerBtn.ToolTip = _markerOff ? "Marker off" : "Marker";
         EnableMarkerBtn.Icon = _markerOff ? AppBarIcons.md_crosshairs_off : AppBarIcons.md_crosshairs;
-        ViewModel!.WpfPlot1vm?.Refresh();
+        ViewModel!.WpfLivePlot?.Refresh();
     }
 
     private void ExecuteLockUnlock()
@@ -131,7 +131,7 @@ public partial class LiveChart
         _needLock = !(_needLock && _locked);
         LiveHistory.ToolTip = _locked ? "Locked" : "Interact";
         LiveHistory.Icon = _locked ? AppBarIcons.md_lock : AppBarIcons.md_lock_open;
-        ViewModel!.WpfPlot1vm?.Refresh();
+        ViewModel!.WpfLivePlot?.Refresh();
     }
 
     private void ExecuteManAutoScale()
@@ -150,7 +150,7 @@ public partial class LiveChart
         AutoScale.Icon = _autoScaled ? AppBarIcons.md_hand_back_left_off : AppBarIcons.md_hand_back_left;
         _needLock = true;
         ExecuteLockUnlock();
-        ViewModel!.WpfPlot1vm?.Refresh();
+        ViewModel!.WpfLivePlot?.Refresh();
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ public partial class LiveChart
     {
         if (!_locked)
         {
-            ViewModel!.WpfPlot1vm?.Interaction.Disable();
+            ViewModel!.WpfLivePlot?.Interaction.Disable();
             _locked = true;
 
             // SIGNAL
@@ -168,7 +168,7 @@ public partial class LiveChart
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
                 }
 
                 item.ManualScale = !_autoScaled;
@@ -184,7 +184,7 @@ public partial class LiveChart
     {
         if (_locked)
         {
-            ViewModel!.WpfPlot1vm?.Interaction.Enable();
+            ViewModel!.WpfLivePlot?.Interaction.Enable();
             _locked = false;
 
             // SIGNAL
@@ -192,7 +192,7 @@ public partial class LiveChart
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
                 }
 
                 item.ManualScale = false;
@@ -213,7 +213,7 @@ public partial class LiveChart
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
                 }
 
                 item.ManualScale = true;
@@ -237,14 +237,14 @@ public partial class LiveChart
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
                 }
 
                 item.ManualScale = false;
                 item.AutoScale = true;
             }
 
-            ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
+            ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale();
             _autoScaled = true;
         }
     }

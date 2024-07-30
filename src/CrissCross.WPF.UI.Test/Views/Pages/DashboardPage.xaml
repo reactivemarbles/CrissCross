@@ -82,5 +82,10 @@
             Grid.Row="3"
             Grid.Column="1"
             Grid.ColumnSpan="1" />
+        <ui:GifImage
+            Grid.Row="3"
+            Grid.Column="2"
+            Height="312"
+            Source="/Assets/working.gif" AnimateInDesignMode="True" />
     </Grid>
 </Page>

@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using CP.Reactive;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Palettes;
 using ScottPlot.Plottables;
@@ -20,11 +20,20 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// AICSLiveChart.
 /// </summary>
-public class LiveChartViewModel : RxObject
+public partial class LiveChartViewModel : RxObject
 {
     private readonly ReactiveList<IYAxis> _yAxisList;
     private readonly IXAxis _xAxis1;
-    private WpfPlot? _wpfPlot1;
+    private WpfPlot? _wpfLivePlot;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether [enable marker].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [enable marker]; otherwise, <c>false</c>.
+    /// </value>
+    [Reactive]
+    private bool _enableMarker;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LiveChartViewModel" /> class.
@@ -33,9 +42,9 @@ public class LiveChartViewModel : RxObject
     public LiveChartViewModel(Grid grid)
     {
         // INITIALIZATION
-        if (WpfPlot1vm == null)
+        if (WpfLivePlot == null)
         {
-            WpfPlot1vm = new WpfPlot()
+            WpfLivePlot = new WpfPlot()
             {
                 Margin = new(10, 0, 0, 0),
                 Name = grid?.Name + "WpfPlot"
@@ -43,7 +52,7 @@ public class LiveChartViewModel : RxObject
 
             SetTheme();
             grid?.Children.Clear();
-            grid?.Children.Add(WpfPlot1vm);
+            grid?.Children.Add(WpfLivePlot);
         }
 
         // INITIALIZATION
@@ -51,8 +60,8 @@ public class LiveChartViewModel : RxObject
         ControlMenu = [];
 
         _yAxisList = [];
-        _xAxis1 = WpfPlot1vm.Plot.Axes.AddBottomAxis();
-        _xAxis1 = WpfPlot1vm.Plot.Axes.DateTimeTicksBottom();
+        _xAxis1 = WpfLivePlot.Plot.Axes.AddBottomAxis();
+        _xAxis1 = WpfLivePlot.Plot.Axes.DateTimeTicksBottom();
         AutoScale = ReactiveCommand.Create(() => { });
         GraphLocked = ReactiveCommand.Create(() => { });
         EnableMarkerBtn = ReactiveCommand.Create(() => { });
@@ -78,10 +87,10 @@ public class LiveChartViewModel : RxObject
     /// <value>
     /// The WPF plot.
     /// </value>
-    public WpfPlot? WpfPlot1vm
+    public WpfPlot? WpfLivePlot
     {
-        get => _wpfPlot1;
-        set => this.RaiseAndSetIfChanged(ref _wpfPlot1, value);
+        get => _wpfLivePlot;
+        set => this.RaiseAndSetIfChanged(ref _wpfLivePlot, value);
     }
 
     /// <summary>
@@ -109,20 +118,11 @@ public class LiveChartViewModel : RxObject
     public ReactiveCommand<Unit, Unit>? AutoScale { get; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether [enable marker].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [enable marker]; otherwise, <c>false</c>.
-    /// </value>
-    [Reactive]
-    public bool EnableMarker { get; set; }
-
-    /// <summary>
     /// Clears the content.
     /// </summary>
     public void ClearContent()
     {
-        WpfPlot1vm?.Plot.Clear();
+        WpfLivePlot?.Plot.Clear();
 
         // SIGNAL
         if (DataSignalUI?.Count > 0)
@@ -162,7 +162,7 @@ public class LiveChartViewModel : RxObject
         {
             if (i < 9)
             {
-                var newMyItem = new SignalUI(WpfPlot1vm!, observable, GetLegendColor(DataSignalUI!));
+                var newMyItem = new SignalUI(WpfLivePlot!, observable, GetLegendColor(DataSignalUI!));
                 observable.Select(x => x.Axis)
                     .DistinctUntilChanged()
                     .Subscribe(a =>
@@ -196,7 +196,7 @@ public class LiveChartViewModel : RxObject
             axis.IsVisible = false;
         }
 
-        var newMyItem = new SignalUI(WpfPlot1vm!, (data.Name, data.Value, data.DateTime, data.Axis), GetLegendColor(DataSignalUI!));
+        var newMyItem = new SignalUI(WpfLivePlot!, (data.Name, data.Value, data.DateTime, data.Axis), GetLegendColor(DataSignalUI!));
         newMyItem.SignalXY!.Axes.YAxis = _yAxisList[data.Axis];
 
         for (var j = 0; j < _yAxisList.Count; j++)
@@ -212,10 +212,10 @@ public class LiveChartViewModel : RxObject
     /// </summary>
     public void ManualScaleY()
     {
-        WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 100, _yAxisList[0]);
-        WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 1000, _yAxisList[1]);
-        WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 200, _yAxisList[2]);
-        WpfPlot1vm?.Refresh();
+        WpfLivePlot?.Plot.Axes.SetLimitsY(0, 100, _yAxisList[0]);
+        WpfLivePlot?.Plot.Axes.SetLimitsY(0, 1000, _yAxisList[1]);
+        WpfLivePlot?.Plot.Axes.SetLimitsY(0, 200, _yAxisList[2]);
+        WpfLivePlot?.Refresh();
     }
 
     private static string GetLegendColor(ReactiveList<StreamerUI> legend)
@@ -261,25 +261,25 @@ public class LiveChartViewModel : RxObject
         var color = Color.FromHex(backgroundColorHex);
         var axisColor = Color.FromHex(axisColorHex);
         var majorColor = Color.FromHex(majorColorHex);
-        WpfPlot1vm!.Plot.Add.Palette = new Penumbra();
-        WpfPlot1vm.Plot.Axes.Color(axisColor);
-        WpfPlot1vm.Plot.Grid.MajorLineColor = majorColor;
-        WpfPlot1vm.Plot.FigureBackground.Color = color;
-        WpfPlot1vm.Plot.DataBackground.Color = color;
-        WpfPlot1vm.Plot.Legend.BackgroundColor = majorColor;
-        WpfPlot1vm.Plot.Legend.FontColor = axisColor;
-        WpfPlot1vm.Plot.Legend.OutlineColor = axisColor;
+        WpfLivePlot!.Plot.Add.Palette = new Penumbra();
+        WpfLivePlot.Plot.Axes.Color(axisColor);
+        WpfLivePlot.Plot.Grid.MajorLineColor = majorColor;
+        WpfLivePlot.Plot.FigureBackground.Color = color;
+        WpfLivePlot.Plot.DataBackground.Color = color;
+        WpfLivePlot.Plot.Legend.BackgroundColor = majorColor;
+        WpfLivePlot.Plot.Legend.FontColor = axisColor;
+        WpfLivePlot.Plot.Legend.OutlineColor = axisColor;
     }
 
     private void Initializations2()
     {
         InitializeDraggableAxisRules();
         InitializeControlMenu();
-        WpfPlot1vm?.Refresh();
+        WpfLivePlot?.Refresh();
     }
 
     private void InitializeDraggableAxisRules() =>
-        WpfPlot1vm.Events().MouseMove.Select(e => e.GetPosition(e.Device.Target))
+        WpfLivePlot.Events().MouseMove.Select(e => e.GetPosition(e.Device.Target))
             .CombineLatest(
             DataSignalUI.CurrentItems.Select(x =>
             {
@@ -296,11 +296,11 @@ public class LiveChartViewModel : RxObject
                 var mousePosition = d.e;
                 var xx = Convert.ToSingle(mousePosition.X);
                 var yy = Convert.ToSingle(mousePosition.Y);
-                var rect = WpfPlot1vm!.Plot.GetCoordinates(xx, yy);
+                var rect = WpfLivePlot!.Plot.GetCoordinates(xx, yy);
                 foreach (var x in d.x)
                 {
-                    WpfPlot1vm!.Refresh();
-                    var closestCoordinate = x.MyItem.SignalXY!.Data.GetNearestX(rect, WpfPlot1vm!.Plot.LastRender).Coordinates;
+                    WpfLivePlot!.Refresh();
+                    var closestCoordinate = x.MyItem.SignalXY!.Data.GetNearestX(rect, WpfLivePlot!.Plot.LastRender).Coordinates;
 
                     // hide the crosshair, marker and text when no point is selected
                     var visible = x.MyItem.IsChecked && EnableMarker;
@@ -324,7 +324,7 @@ public class LiveChartViewModel : RxObject
                         x.Item2.Text.LabelFontColor = x.MyItem.SignalXY.Color;
                     }
 
-                    WpfPlot1vm?.Refresh();
+                    WpfLivePlot?.Refresh();
                 }
             });
 
@@ -333,19 +333,19 @@ public class LiveChartViewModel : RxObject
     private (Crosshair? Crosshair, Marker? Marker, Text? Text) CreateCursorValues()
     {
         // Create a crosshair to highlight the point under the cursor
-        var crosshair = WpfPlot1vm?.Plot.Add.Crosshair(0, 0);
+        var crosshair = WpfLivePlot?.Plot.Add.Crosshair(0, 0);
 
         crosshair!.IsVisible = false;
 
         // Create a marker to highlight the point under the cursor
-        var marker = WpfPlot1vm?.Plot.Add.Marker(0, 0);
+        var marker = WpfLivePlot?.Plot.Add.Marker(0, 0);
         marker!.Shape = MarkerShape.OpenCircle;
         marker.Size = 17;
         marker.LineWidth = 2;
         marker!.IsVisible = false;
 
         // Create a text label to place near the highlighted value
-        var text = WpfPlot1vm?.Plot.Add.Text(" ", 0, 0);
+        var text = WpfLivePlot?.Plot.Add.Text(" ", 0, 0);
         text!.LabelAlignment = Alignment.LowerLeft;
         text.LabelBold = true;
         text.OffsetX = 7;
@@ -374,7 +374,7 @@ public class LiveChartViewModel : RxObject
         // Setup Y Axis
         for (var i = 0; i < 3; i++)
         {
-            _yAxisList.Add(WpfPlot1vm!.Plot.Axes.AddRightAxis());
+            _yAxisList.Add(WpfLivePlot!.Plot.Axes.AddRightAxis());
             _yAxisList[i].FrameLineStyle.Color = baseColor;
             _yAxisList[i].TickLabelStyle.ForeColor = baseColor;
             _yAxisList[i].MajorTickStyle.Color = baseColor;
@@ -394,7 +394,7 @@ public class LiveChartViewModel : RxObject
 
     private void HideLeftAxis(Color color)
     {
-        var l = WpfPlot1vm?.Plot.Axes.Left;
+        var l = WpfLivePlot?.Plot.Axes.Left;
         var backColour = Color.FromHex("#252526");
         l!.Label.ForeColor = backColour;
         l.FrameLineStyle.Color = color;
@@ -412,7 +412,7 @@ public class LiveChartViewModel : RxObject
         var doublenow = now.ToOADate();
         var limits = now.Add(TimeSpan.FromMinutes(-60));
         var doublelimits = limits.ToOADate();
-        WpfPlot1vm?.Plot.Axes.SetLimitsX(doublelimits, doublenow, _xAxis1);
-        WpfPlot1vm?.Refresh();
+        WpfLivePlot?.Plot.Axes.SetLimitsX(doublelimits, doublenow, _xAxis1);
+        WpfLivePlot?.Refresh();
     }
 }

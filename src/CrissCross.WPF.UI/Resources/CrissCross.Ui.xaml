@@ -43,6 +43,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/HyperlinkButton/HyperlinkButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Image/Image.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/GifImage/GifImage.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/InfoBar/InfoBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/InfoBadge/InfoBadge.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ItemsControl/ItemsControl.xaml" />
