@@ -360,7 +360,7 @@ public class PasswordBox : TextBox
         private void UpdatePasswordWithInputCharacter(int insertIndex, string insertValue)
         {
             Debug.Assert(
-                _currentText == passwordBox.Text, 
+                _currentText == passwordBox.Text,
                 "_currentText == _passwordBox.Text");
 
             if (_currentText.Length == _newPasswordValue.Length)
