@@ -90,7 +90,7 @@ public class WebView2Wpf : ContentControl, IDisposable
         nameof(Content),
         typeof(object),
         typeof(WebView2Wpf),
-        new PropertyMetadata(true, ContentChanged));
+        new PropertyMetadata(null, ContentChanged));
 
     /// <summary>
     /// The default background color property.
