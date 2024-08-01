@@ -2,8 +2,8 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Windows.Controls;
 using Microsoft.Extensions.Hosting;
+using Page = System.Windows.Controls.Page;
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;

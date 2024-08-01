@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Page = System.Windows.Controls.Page;
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;
