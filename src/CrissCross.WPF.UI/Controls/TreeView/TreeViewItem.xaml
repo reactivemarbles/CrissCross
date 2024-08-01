@@ -4,10 +4,7 @@
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
-    <system:Double x:Key="TreeViewItemChevronSize">10</system:Double>
-    <system:Double x:Key="TreeViewItemFontSize">14</system:Double>
-
-    <Style x:Key="ExpandCollapseToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+    <Style x:Key="ExpandCollapseToggleButtonStyle" TargetType="{x:Type controls:ToggleButton}">
         <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <!--  Universal WPF UI focus  -->
@@ -16,7 +13,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="ToggleButton">
+                <ControlTemplate TargetType="{x:Type controls:ToggleButton}">
                     <Grid
                         x:Name="ChevronContainer"
                         Width="15"
@@ -29,7 +26,7 @@
                         <controls:SymbolIcon
                             x:Name="ChevronIcon"
                             VerticalAlignment="Center"
-                            FontSize="{StaticResource TreeViewItemChevronSize}"
+                            FontSize="{TemplateBinding ChevronSize}"
                             Symbol="ChevronRight28" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -70,7 +67,6 @@
         <Setter Property="Foreground" Value="{DynamicResource TreeViewItemForeground}" />
         <Setter Property="Background" Value="{DynamicResource TreeViewItemBackground}" />
         <Setter Property="Padding" Value="4" />
-        <Setter Property="FontSize" Value="{StaticResource TreeViewItemFontSize}" />
         <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="IsTabStop" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -105,13 +101,12 @@
                                     RadiusX="2"
                                     RadiusY="2"
                                     Visibility="Collapsed" />
-                                <ToggleButton
+                                <controls:ToggleButton
                                     x:Name="Expander"
                                     Grid.Column="0"
                                     Margin="8,0"
                                     ClickMode="Press"
-                                    IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Style="{StaticResource ExpandCollapseToggleButtonStyle}" />
+                                    IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                                 <ContentPresenter
                                     x:Name="PART_Header"
                                     Grid.Column="1"
@@ -199,13 +194,12 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <ToggleButton
+                        <controls:ToggleButton
                             x:Name="Expander"
                             Grid.Row="0"
                             Grid.Column="0"
                             ClickMode="Press"
-                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                            Style="{StaticResource ExpandCollapseToggleButtonStyle}" />
+                            IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Border
                             x:Name="Bd"
                             Grid.Row="0"
@@ -243,25 +237,6 @@
                             Grid.ColumnSpan="2"
                             Visibility="Collapsed" />
                         <VisualStateManager.VisualStateGroups>
-                            <!--
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.16" />
-                                </VisualStateGroup.Transitions>
-                                <VisualState Name="Normal" />
-                                <VisualState Name="MouseOver">
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Opacity)"
-                                            From="0.0"
-                                            To="0.5"
-                                            Duration="0:0:.16" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState Name="Pressed" />
-                                <VisualState Name="Disabled" />
-                            </VisualStateGroup>
-                            -->
                             <VisualStateGroup x:Name="SelectionStates">
                                 <VisualState x:Name="Selected">
                                     <Storyboard>

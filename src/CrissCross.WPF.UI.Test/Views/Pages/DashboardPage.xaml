@@ -86,6 +86,17 @@
             Grid.Row="3"
             Grid.Column="2"
             Height="312"
-            Source="/Assets/working.gif" AnimateInDesignMode="True" />
+            AnimateInDesignMode="True"
+            Source="/Assets/working.gif" />
+        <ui:TreeView
+            Grid.Row="3"
+            Grid.Column="4"
+            FontSize="24">
+            <ui:TreeViewItem FontSize="28" Header="Top">
+                <ui:TreeViewItem FontSize="32" Header="Middle">
+                    <ui:TreeViewItem FontSize="36" Header="Bottom" />
+                </ui:TreeViewItem>
+            </ui:TreeViewItem>
+        </ui:TreeView>
     </Grid>
 </Page>
