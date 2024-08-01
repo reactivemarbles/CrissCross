@@ -64,9 +64,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// </summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
-        typeof(string),
+        typeof(Uri),
         typeof(NavigationWebView),
-        new PropertyMetadata(string.Empty, SourceChanged));
+        new PropertyMetadata(SourceChanged));
 
     /// <summary>
     /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.ZoomFactor property.
@@ -84,7 +84,7 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         nameof(Content),
         typeof(object),
         typeof(NavigationWebView),
-        new PropertyMetadata(true, ContentChanged));
+        new PropertyMetadata(null, ContentChanged));
 
     /// <summary>
     /// The default background color property.
@@ -104,7 +104,6 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
             typeof(NavigationWebView),
             new PropertyMetadata(true, AllowExternalDropPropertyChanged));
 
-    // Using a DependencyProperty as the backing store for DesignModeForegroundColor.  This enables animation, styling, binding, etc...
     /// <summary>
     /// The design mode foreground color property.
     /// </summary>
@@ -169,9 +168,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// The source.
     /// </value>
     [Category("Common")]
-    public string? Source
+    public Uri Source
     {
-        get => (string?)GetValue(SourceProperty);
+        get => (Uri)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
@@ -496,9 +495,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
 
     private static void SourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NavigationWebView browser)
+        if (d is NavigationWebView browser && e.NewValue is Uri source)
         {
-            browser._WebBrowser.Source = new((string)e.NewValue);
+            browser._WebBrowser.Source = source;
         }
     }
 

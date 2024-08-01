@@ -156,7 +156,7 @@ internal partial class SquareSlider : UserControl, INotifyPropertyChanged
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var grid = (Grid)sender;
+        var grid = (System.Windows.Controls.Grid)sender;
         if (grid.IsMouseCaptured)
         {
             UpdatePos(e.GetPosition(this));
