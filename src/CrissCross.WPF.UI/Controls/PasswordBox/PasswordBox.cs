@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -56,12 +57,17 @@ public class PasswordBox : TextBox
         typeof(RoutedEventHandler),
         typeof(PasswordBox));
 
+    private readonly PasswordHelper _passwordHelper;
     private bool _lockUpdatingContents;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PasswordBox"/> class.
     /// </summary>
-    public PasswordBox() => _lockUpdatingContents = false;
+    public PasswordBox()
+    {
+        _lockUpdatingContents = false;
+        _passwordHelper = new(this);
+    }
 
     /// <summary>
     /// Event fired from this text box when its inner content
@@ -266,44 +272,11 @@ public class PasswordBox : TextBox
         }
 
         var caretIndex = CaretIndex;
-        var selectionIndex = SelectionStart;
-        var currentPassword = Password ?? string.Empty;
-        var newPasswordValue = currentPassword;
+        var newPasswordValue = _passwordHelper.GetPassword();
 
         if (isTriggeredByTextInput)
         {
-            var currentText = Text;
-            var newCharacters = currentText.Replace(PasswordChar.ToString(), string.Empty);
-
-            if (currentText.Length < currentPassword.Length)
-            {
-                newPasswordValue = currentPassword.Remove(selectionIndex, currentPassword.Length - currentText.Length);
-            }
-
-            if (newCharacters.Length > 1)
-            {
-                var index = currentText.IndexOf(newCharacters[0]);
-
-                newPasswordValue =
-                    index > newPasswordValue.Length - 1
-                        ? newPasswordValue + newCharacters
-                        : newPasswordValue.Insert(index, newCharacters);
-            }
-            else
-            {
-                for (var i = 0; i < currentText.Length; i++)
-                {
-                    if (currentText[i] == PasswordChar)
-                    {
-                        continue;
-                    }
-
-                    newPasswordValue =
-                        currentText.Length == newPasswordValue.Length
-                            ? newPasswordValue.Remove(i, 1).Insert(i, currentText[i].ToString())
-                            : newPasswordValue.Insert(i, currentText[i].ToString());
-                }
-            }
+            newPasswordValue = _passwordHelper.GetNewPassword();
         }
 
         _lockUpdatingContents = true;
@@ -315,5 +288,102 @@ public class PasswordBox : TextBox
         RaiseEvent(new RoutedEventArgs(PasswordChangedEvent));
 
         _lockUpdatingContents = false;
+    }
+
+    private class PasswordHelper(PasswordBox passwordBox)
+    {
+        private string _currentText = string.Empty;
+        private string _newPasswordValue = string.Empty;
+        private string _currentPassword = string.Empty;
+
+        public string GetNewPassword()
+        {
+            _currentPassword = GetPassword();
+            _newPasswordValue = _currentPassword;
+            _currentText = passwordBox.Text;
+            var selectionIndex = passwordBox.SelectionStart;
+            var passwordChar = passwordBox.PasswordChar;
+            var newCharacters = _currentText.Replace(passwordChar.ToString(), string.Empty);
+            var isDeleted = false;
+
+            if (IsDeleteOption())
+            {
+                _newPasswordValue = _currentPassword.Remove(
+                    selectionIndex,
+                    _currentPassword.Length - _currentText.Length);
+                isDeleted = true;
+            }
+
+            switch (newCharacters.Length)
+            {
+                case > 1:
+                    {
+                        var index = _currentText.IndexOf(newCharacters[0]);
+
+                        _newPasswordValue =
+                            index > _newPasswordValue.Length - 1
+                                ? _newPasswordValue + newCharacters
+                                : _newPasswordValue.Insert(index, newCharacters);
+                        break;
+                    }
+
+                case 1:
+                    {
+                        for (var i = 0; i < _currentText.Length; i++)
+                        {
+                            if (_currentText[i] == passwordChar)
+                            {
+                                continue;
+                            }
+
+                            UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
+                            break;
+                        }
+
+                        break;
+                    }
+
+                case 0 when !isDeleted:
+                    {
+                        // The input is a PasswordChar, which is to be inserted at the designated position.
+                        var insertIndex = selectionIndex - 1;
+                        UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
+                        break;
+                    }
+            }
+
+            return _newPasswordValue;
+        }
+
+        public string GetPassword() => passwordBox.Password ?? string.Empty;
+
+        private void UpdatePasswordWithInputCharacter(int insertIndex, string insertValue)
+        {
+            Debug.Assert(
+                _currentText == passwordBox.Text,
+                "_currentText == _passwordBox.Text");
+
+            if (_currentText.Length == _newPasswordValue.Length)
+            {
+                // If it's a direct character replacement, remove the existing one before inserting the new one.
+                _newPasswordValue = _newPasswordValue.Remove(insertIndex, 1).Insert(insertIndex, insertValue);
+            }
+            else
+            {
+                _newPasswordValue = _newPasswordValue.Insert(insertIndex, insertValue);
+            }
+        }
+
+        private bool IsDeleteOption()
+        {
+            Debug.Assert(
+                _currentText == passwordBox.Text,
+                "_currentText == _passwordBox.Text");
+            Debug.Assert(
+                _currentPassword == passwordBox.Password,
+                "_currentPassword == _passwordBox.Password");
+
+            return _currentText.Length < _currentPassword.Length;
+        }
     }
 }
