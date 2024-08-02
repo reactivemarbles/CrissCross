@@ -100,7 +100,7 @@
         <Setter Property="Padding" Value="{DynamicResource TextControlThemePadding}" />
         <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="BorderThickness" Value="{StaticResource AutoSuggestBoxBorderThemeThickness}" />
-        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource DefaultAutoSuggestBoxItemContainerStyle}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />

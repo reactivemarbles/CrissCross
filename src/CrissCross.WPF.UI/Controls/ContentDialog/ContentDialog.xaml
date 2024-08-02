@@ -16,7 +16,7 @@
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
-        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="Border.CornerRadius" Value="{DynamicResource PopupCornerRadius}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="DialogMaxHeight" Value="850" />
@@ -105,7 +105,7 @@
                                                 <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
                                                     <Setter Property="TextWrapping" Value="WrapWithOverflow" />
                                                     <Setter Property="TextAlignment" Value="Justify" />
-                                                    <Setter Property="FontSize" Value="14" />
+                                                    <!--<Setter Property="FontSize" Value="14" />-->
                                                 </Style>
                                             </ContentPresenter.Resources>
                                         </ContentPresenter>
