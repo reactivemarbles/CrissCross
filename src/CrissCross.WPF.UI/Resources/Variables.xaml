@@ -5,7 +5,7 @@
 
     <system:Double x:Key="DefaultIconFontSize">16</system:Double>
 
-    <system:Double x:Key="ControlContentThemeFontSize">14</system:Double>
+    <!--<system:Double x:Key="ControlContentThemeFontSize">14</system:Double>-->
     <CornerRadius x:Key="ControlCornerRadius">4,4,4,4</CornerRadius>
     <CornerRadius x:Key="OverlayCornerRadius">4,4,4,4</CornerRadius>
     <CornerRadius x:Key="PopupCornerRadius">8,8,8,8</CornerRadius>

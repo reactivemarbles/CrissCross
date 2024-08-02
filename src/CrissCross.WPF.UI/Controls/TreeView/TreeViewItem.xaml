@@ -212,20 +212,33 @@
                             </Border.Background>
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="19" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                <Rectangle
+                                    x:Name="ActiveRectangle"
+                                    Grid.Column="0"
+                                    Width="3"
+                                    Height="16"
+                                    Margin="0,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Fill="{DynamicResource TreeViewItemSelectionIndicatorForeground}"
+                                    RadiusX="2"
+                                    RadiusY="2"
+                                    Visibility="Collapsed" />
 
                                 <ContentPresenter
                                     x:Name="SymbolIcon"
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     Margin="0,0,8,0"
                                     Content="{TemplateBinding Icon}"
                                     TextElement.Foreground="{TemplateBinding Foreground}" />
 
                                 <ContentPresenter
                                     x:Name="PART_Header"
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     ContentSource="Header" />
                             </Grid>
@@ -277,6 +290,9 @@
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
                             <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ActiveRectangle" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

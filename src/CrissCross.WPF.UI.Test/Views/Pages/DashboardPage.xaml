@@ -62,6 +62,7 @@
         <ui:CheckBoxModern
             Grid.Row="1"
             Grid.Column="2"
+            FontSize="20"
             Text="I Am A Modern CheckBox" />
         <ui:CheckBox
             Grid.Row="1"
@@ -88,5 +89,15 @@
             Height="312"
             AnimateInDesignMode="True"
             Source="/Assets/working.gif" />
+        <ui:TreeView
+            Grid.Row="3"
+            Grid.Column="3"
+            FontSize="28">
+            <ui:TreeViewItem Header="Hello">
+                <ui:TreeViewItem Header="World1" />
+                <ui:TreeViewItem Header="World2" />
+            </ui:TreeViewItem>
+        </ui:TreeView>
+
     </ui:Grid>
 </ui:Page>

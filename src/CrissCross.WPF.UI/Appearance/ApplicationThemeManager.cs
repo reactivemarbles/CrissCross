@@ -30,7 +30,7 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class ApplicationThemeManager
 {
-    internal const string LibraryNamespace = "wpf.ui;";
+    internal const string LibraryNamespace = "crisscross.wpf.ui;";
 
     internal const string ThemesDictionaryPath = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Theme/";
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
