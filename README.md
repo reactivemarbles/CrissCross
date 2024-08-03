@@ -1,9 +1,7 @@
 # CrissCross
 A Navigation Framework for ReactiveUI based projects
 
-![Alt](https://repobeats.axiom.co/api/embed/3ffd196858ee7468fa2e28225b0edf635b6c740b.svg "Repobeats analytics image")
-
-![CrissCross](https://github.com/reactivemarbles/CrissCross/blob/master/Images/CrissCross.png)
+![CrissCross](https://github.com/reactivemarbles/CrissCross/blob/master/Images/CrissCrossIcon_256.png)
 
 [![CrissCross CI-Build](https://github.com/reactivemarbles/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml) 
 
@@ -306,3 +304,27 @@ The library is available on NuGet. You can install it using the NuGet Package Ma
 - Multiple CrossHairs with differential analytics
 - Multiple X Axis for XY Plots
 - Select a plotalbe data from a large data source such as a Dynamic Data Source
+
+### CrissCross.WPF.WebView2
+
+CrissCross.WPF.Webview2 is a control for Wpf allowing the placement of other wpf controls on top of the WebView2.
+The base Microsoft.Web.WebView2 library has a WebView2CompositionControl but this is only targeting net46 and does not work for net core.
+
+In CrissCross.WPF.Webview2 we have created a WebView2Wpf control that has the majority of the features that the WebView2CompositionControl has working, however some use an underlying private layer which we don't have access to.
+Further Documentation can be found here [microsoft.web.webview2.wpf](https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.wpf.webview2?view=webview2-dotnet-1.0.2646-prerelease)
+
+The library is available on NuGet. You can install it using the NuGet Package Manager:
+
+![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.WebView2) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.WebView2)
+
+```c#
+xmlns:webv="https://github.com/reactivemarbles/CrissCross"
+<webv:WebView2Wpf
+            x:Name="WebView2Wpf"
+            AutoDispose="True">
+<--! Add your Xaml here -->
+</webv:WebView2Wpf>
+
+// In Code behind set the Source to the Uri you wish to navigate to, this can be set in the Xaml too.
+WebView2Wpf.Source = new System.Uri("https://www.reactiveui.net/");
+```
