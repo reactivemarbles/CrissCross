@@ -4,44 +4,43 @@
 
 using System.IO;
 
-namespace CrissCross.WPF.UI.Controls.Decoding
+namespace CrissCross.WPF.UI.Controls.Decoding;
+
+internal sealed class GifHeader : GifBlock
 {
-    internal sealed class GifHeader : GifBlock
+    private GifHeader()
     {
-        private GifHeader()
+    }
+
+    public string? Signature { get; private set; }
+
+    public string? Version { get; private set; }
+
+    public GifLogicalScreenDescriptor? LogicalScreenDescriptor { get; private set; }
+
+    internal override GifBlockKind Kind => GifBlockKind.Other;
+
+    internal static GifHeader ReadHeader(Stream stream)
+    {
+        var header = new GifHeader();
+        header.Read(stream);
+        return header;
+    }
+
+    private void Read(Stream stream)
+    {
+        Signature = GifHelpers.ReadString(stream, 3);
+        if (Signature != "GIF")
         {
+            throw GifHelpers.InvalidSignatureException(Signature);
         }
 
-        public string? Signature { get; private set; }
-
-        public string? Version { get; private set; }
-
-        public GifLogicalScreenDescriptor? LogicalScreenDescriptor { get; private set; }
-
-        internal override GifBlockKind Kind => GifBlockKind.Other;
-
-        internal static GifHeader ReadHeader(Stream stream)
+        Version = GifHelpers.ReadString(stream, 3);
+        if (Version != "87a" && Version != "89a")
         {
-            var header = new GifHeader();
-            header.Read(stream);
-            return header;
+            throw GifHelpers.UnsupportedVersionException(Version);
         }
 
-        private void Read(Stream stream)
-        {
-            Signature = GifHelpers.ReadString(stream, 3);
-            if (Signature != "GIF")
-            {
-                throw GifHelpers.InvalidSignatureException(Signature);
-            }
-
-            Version = GifHelpers.ReadString(stream, 3);
-            if (Version != "87a" && Version != "89a")
-            {
-                throw GifHelpers.UnsupportedVersionException(Version);
-            }
-
-            LogicalScreenDescriptor = GifLogicalScreenDescriptor.ReadLogicalScreenDescriptor(stream);
-        }
+        LogicalScreenDescriptor = GifLogicalScreenDescriptor.ReadLogicalScreenDescriptor(stream);
     }
 }

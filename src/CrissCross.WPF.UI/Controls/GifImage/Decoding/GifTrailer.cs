@@ -2,18 +2,17 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-namespace CrissCross.WPF.UI.Controls.Decoding
+namespace CrissCross.WPF.UI.Controls.Decoding;
+
+internal sealed class GifTrailer : GifBlock
 {
-    internal sealed class GifTrailer : GifBlock
+    internal const int TrailerByte = 0x3B;
+
+    private GifTrailer()
     {
-        internal const int TrailerByte = 0x3B;
-
-        private GifTrailer()
-        {
-        }
-
-        internal override GifBlockKind Kind => GifBlockKind.Other;
-
-        internal static GifTrailer ReadTrailer() => new();
     }
+
+    internal override GifBlockKind Kind => GifBlockKind.Other;
+
+    internal static GifTrailer ReadTrailer() => new();
 }

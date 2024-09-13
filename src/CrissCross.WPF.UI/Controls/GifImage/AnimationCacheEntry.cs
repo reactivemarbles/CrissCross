@@ -4,14 +4,13 @@
 
 using System.Windows.Media.Animation;
 
-namespace CrissCross.WPF.UI.Controls
+namespace CrissCross.WPF.UI.Controls;
+
+internal class AnimationCacheEntry(ObjectKeyFrameCollection keyFrames, Duration duration, int repeatCountFromMetadata)
 {
-    internal class AnimationCacheEntry(ObjectKeyFrameCollection keyFrames, Duration duration, int repeatCountFromMetadata)
-    {
-        public ObjectKeyFrameCollection KeyFrames { get; } = keyFrames;
+    public ObjectKeyFrameCollection KeyFrames { get; } = keyFrames;
 
-        public Duration Duration { get; } = duration;
+    public Duration Duration { get; } = duration;
 
-        public int RepeatCountFromMetadata { get; } = repeatCountFromMetadata;
-    }
+    public int RepeatCountFromMetadata { get; } = repeatCountFromMetadata;
 }
