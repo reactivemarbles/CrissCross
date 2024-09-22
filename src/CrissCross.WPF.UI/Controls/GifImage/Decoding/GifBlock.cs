@@ -4,27 +4,26 @@
 
 using System.IO;
 
-namespace CrissCross.WPF.UI.Controls.Decoding
+namespace CrissCross.WPF.UI.Controls.Decoding;
+
+internal abstract class GifBlock
 {
-    internal abstract class GifBlock
+    internal abstract GifBlockKind Kind { get; }
+
+    internal static GifBlock ReadBlock(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
     {
-        internal abstract GifBlockKind Kind { get; }
-
-        internal static GifBlock ReadBlock(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+        var blockId = stream.ReadByte();
+        if (blockId < 0)
         {
-            var blockId = stream.ReadByte();
-            if (blockId < 0)
-            {
-                throw GifHelpers.UnexpectedEndOfStreamException();
-            }
-
-            return blockId switch
-            {
-                GifExtension.ExtensionIntroducer => GifExtension.ReadExtension(stream, controlExtensions, metadataOnly),
-                GifFrame.ImageSeparator => GifFrame.ReadFrame(stream, controlExtensions, metadataOnly),
-                GifTrailer.TrailerByte => GifTrailer.ReadTrailer(),
-                _ => throw GifHelpers.UnknownBlockTypeException(blockId),
-            };
+            throw GifHelpers.UnexpectedEndOfStreamException();
         }
+
+        return blockId switch
+        {
+            GifExtension.ExtensionIntroducer => GifExtension.ReadExtension(stream, controlExtensions, metadataOnly),
+            GifFrame.ImageSeparator => GifFrame.ReadFrame(stream, controlExtensions, metadataOnly),
+            GifTrailer.TrailerByte => GifTrailer.ReadTrailer(),
+            _ => throw GifHelpers.UnknownBlockTypeException(blockId),
+        };
     }
 }

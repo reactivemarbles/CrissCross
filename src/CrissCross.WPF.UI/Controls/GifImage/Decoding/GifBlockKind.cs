@@ -2,13 +2,12 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-namespace CrissCross.WPF.UI.Controls.Decoding
+namespace CrissCross.WPF.UI.Controls.Decoding;
+
+internal enum GifBlockKind
 {
-    internal enum GifBlockKind
-    {
-        Control,
-        GraphicRendering,
-        SpecialPurpose,
-        Other
-    }
+    Control,
+    GraphicRendering,
+    SpecialPurpose,
+    Other
 }

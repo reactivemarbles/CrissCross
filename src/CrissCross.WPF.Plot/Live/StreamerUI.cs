@@ -263,13 +263,16 @@ public partial class StreamerUI : RxObject
                     var datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new DateTime(Convert.ToInt64(x)).ToOADate()));
                     var coord = datetime.Zip(values, (d, v) => new Coordinates(d, v));
                     ItemName = data.Name;
-                    Streamer!.Data.Clear();
-                    Streamer.Add(coord);
+                    Streamer?.Data.Coordinates.Clear();
+                    foreach (var co in coord)
+                    {
+                        Streamer?.Data.Add(co);
+                    }
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
                     {
-                        Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, Streamer.Axes.XAxis);
+                        Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, Streamer!.Axes.XAxis);
                     }
                 }
 

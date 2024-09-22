@@ -4,29 +4,28 @@
 
 using System.IO;
 
-namespace CrissCross.WPF.UI.Controls.Decoding
+namespace CrissCross.WPF.UI.Controls.Decoding;
+
+internal sealed class GifImageData
 {
-    internal sealed class GifImageData
+    private GifImageData()
     {
-        private GifImageData()
-        {
-        }
+    }
 
-        public byte LzwMinimumCodeSize { get; set; }
+    public byte LzwMinimumCodeSize { get; set; }
 
-        public byte[]? CompressedData { get; set; }
+    public byte[]? CompressedData { get; set; }
 
-        internal static GifImageData ReadImageData(Stream stream, bool metadataOnly)
-        {
-            var imgData = new GifImageData();
-            imgData.Read(stream, metadataOnly);
-            return imgData;
-        }
+    internal static GifImageData ReadImageData(Stream stream, bool metadataOnly)
+    {
+        var imgData = new GifImageData();
+        imgData.Read(stream, metadataOnly);
+        return imgData;
+    }
 
-        private void Read(Stream stream, bool metadataOnly)
-        {
-            LzwMinimumCodeSize = (byte)stream.ReadByte();
-            CompressedData = GifHelpers.ReadDataBlocks(stream, metadataOnly);
-        }
+    private void Read(Stream stream, bool metadataOnly)
+    {
+        LzwMinimumCodeSize = (byte)stream.ReadByte();
+        CompressedData = GifHelpers.ReadDataBlocks(stream, metadataOnly);
     }
 }
