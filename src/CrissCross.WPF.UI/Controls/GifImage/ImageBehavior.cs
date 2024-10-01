@@ -4,7 +4,7 @@
 
 using System.IO;
 using System.IO.Packaging;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
@@ -557,7 +557,7 @@ internal static class ImageBehavior
         }
     }
 
-    private static void InitAnimationOrImage(Image imageControl)
+    private static async void InitAnimationOrImage(Image imageControl)
     {
         var controller = GetAnimationController(imageControl);
         controller?.Dispose();
@@ -597,7 +597,7 @@ internal static class ImageBehavior
                 return;
             }
 
-            var animation = GetAnimation(imageControl, source);
+            var animation = await GetAnimationAsync(imageControl, source);
             if (animation != null)
             {
                 if (animation.KeyFrames.Count > 0)
@@ -626,21 +626,22 @@ internal static class ImageBehavior
         }
     }
 
-    private static ObjectAnimationUsingKeyFrames? GetAnimation(Image imageControl, BitmapSource source)
+    private static async Task<ObjectAnimationUsingKeyFrames?> GetAnimationAsync(Image imageControl, BitmapSource source)
     {
         var cacheEntry = AnimationCache.Get(source);
         if (cacheEntry == null)
         {
-            if (GetDecoder(source, imageControl, out var gifMetadata) is GifBitmapDecoder decoder && decoder.Frames.Count > 1)
+            var (bitmapDecoder, gifFile) = await GetDecoderAsync(source, imageControl);
+            if (bitmapDecoder is GifBitmapDecoder decoder && decoder.Frames.Count > 1)
             {
-                var fullSize = GetFullSize(decoder, gifMetadata!);
+                var fullSize = GetFullSize(decoder, gifFile!);
                 var index = 0;
                 var keyFrames = new ObjectKeyFrameCollection();
                 var totalDuration = TimeSpan.Zero;
                 BitmapSource? baseFrame = null;
                 foreach (var rawFrame in decoder.Frames)
                 {
-                    var metadata = GetFrameMetadata(decoder, gifMetadata!, index);
+                    var metadata = GetFrameMetadata(decoder, gifFile!, index);
 
                     var frame = MakeFrame(fullSize, rawFrame, metadata, baseFrame!);
                     var keyFrame = new DiscreteObjectKeyFrame(frame, totalDuration);
@@ -673,7 +674,7 @@ internal static class ImageBehavior
                     index++;
                 }
 
-                var repeatCount = GetRepeatCountFromMetadata(decoder, gifMetadata!);
+                var repeatCount = GetRepeatCountFromMetadata(decoder, gifFile!);
                 cacheEntry = new AnimationCacheEntry(keyFrames, totalDuration, repeatCount);
                 AnimationCache.Add(source, cacheEntry);
             }
@@ -729,7 +730,7 @@ internal static class ImageBehavior
         return 1.0;
     }
 
-    private static BitmapSource ClearArea(BitmapSource frame, FrameMetadata metadata)
+    private static WriteableBitmap ClearArea(BitmapSource frame, FrameMetadata metadata)
     {
         var visual = new DrawingVisual();
         using (var context = visual.RenderOpen())
@@ -782,7 +783,7 @@ internal static class ImageBehavior
             return false;
         }
 
-        if (bmp.UriSource != null && !bmp.UriSource.IsAbsoluteUri)
+        if (bmp.UriSource?.IsAbsoluteUri == false)
         {
             return bmp.BaseUri == null && (imageControl as IUriContext)?.BaseUri == null;
         }
@@ -790,9 +791,9 @@ internal static class ImageBehavior
         return false;
     }
 
-    private static BitmapDecoder GetDecoder(BitmapSource image, Image imageControl, out GifFile? gifFile)
+    private static async Task<(BitmapDecoder bitmapDecoder, GifFile gifFile)> GetDecoderAsync(BitmapSource image, Image imageControl)
     {
-        gifFile = null;
+        GifFile? gifFile = default;
         BitmapDecoder? decoder = null;
         Stream? stream = null;
         Uri? uri = null;
@@ -831,7 +832,7 @@ internal static class ImageBehavior
                 stream.Position = 0;
                 decoder = BitmapDecoder.Create(stream, createOptions, BitmapCacheOption.OnLoad);
             }
-            else if (uri != null && uri.IsAbsoluteUri)
+            else if (uri?.IsAbsoluteUri == true)
             {
                 decoder = BitmapDecoder.Create(uri, createOptions, BitmapCacheOption.OnLoad);
             }
@@ -846,7 +847,7 @@ internal static class ImageBehavior
             }
             else if (uri != null)
             {
-                gifFile = DecodeGifFile(uri);
+                gifFile = await DecodeGifFileAsync(uri);
             }
             else
             {
@@ -859,7 +860,7 @@ internal static class ImageBehavior
             throw new InvalidOperationException("Can't get a decoder from the source. AnimatedSource should be either a BitmapImage or a BitmapFrame.");
         }
 
-        return decoder;
+        return (decoder, gifFile!);
     }
 
     private static bool CanReadNativeMetadata(BitmapDecoder decoder)
@@ -875,7 +876,7 @@ internal static class ImageBehavior
         }
     }
 
-    private static GifFile? DecodeGifFile(Uri uri)
+    private static async Task<GifFile?> DecodeGifFileAsync(Uri uri)
     {
         Stream? stream = default;
         if (uri.Scheme == PackUriHelper.UriSchemePack)
@@ -897,8 +898,8 @@ internal static class ImageBehavior
         }
         else
         {
-            var wc = new WebClient();
-            stream = wc.OpenRead(uri);
+            using var httpClient = new HttpClient();
+            stream = await httpClient.GetStreamAsync(uri);
         }
 
         if (stream != null)

@@ -118,7 +118,7 @@ public partial class DateTimePicker : UserControl
         var hours = (Hours?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
         var minutes = (Min?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
         var timeSpan = TimeSpan.Parse(hours + ":" + minutes);
-        if (CalDisplay.SelectedDate.Value.Date == DateTime.Today.Date && timeSpan.CompareTo(DateTime.Now.TimeOfDay) < 0)
+        if (CalDisplay.SelectedDate!.Value.Date == DateTime.Today.Date && timeSpan.CompareTo(DateTime.Now.TimeOfDay) < 0)
         {
             timeSpan = TimeSpan.FromHours(DateTime.Now.Hour + 1);
         }
@@ -134,14 +134,10 @@ public partial class DateTimePicker : UserControl
         PopUpCalendarButton.IsChecked = false;
     }
 
-    private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        CalDisplay_SelectedDatesChanged(sender, e);
-    }
+    private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e) => CalDisplay_SelectedDatesChanged(sender, e);
 
     private void CalDisplay_PreviewMouseUp(object sender, MouseButtonEventArgs e)
     {
-        // that it's not necessary to click twice after opening the calendar  https://stackoverflow.com/q/6024372
         if (Mouse.Captured is CalendarItem)
         {
             Mouse.Capture(null);

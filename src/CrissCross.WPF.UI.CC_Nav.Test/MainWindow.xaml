@@ -16,7 +16,10 @@
     mc:Ignorable="d">
     <ui:FluentNavigationWindow.TitleContent>
         <StackPanel ui:MarginSetter.Margin="5,0" Orientation="Horizontal">
-            <ui:Button x:Name="NavBack" Content="Back" />
+            <ui:Button
+                x:Name="NavBack"
+                Height="80"
+                Content="Back" />
         </StackPanel>
     </ui:FluentNavigationWindow.TitleContent>
     <ui:FluentNavigationWindow.TopContent>
