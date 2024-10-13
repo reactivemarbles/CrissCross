@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(CrissCrossCoreTargetFrameworks);Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;MonoAndroid13.0;tizen40</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin')) or $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('tizen'))">
