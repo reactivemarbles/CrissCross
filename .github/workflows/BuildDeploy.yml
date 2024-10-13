@@ -73,15 +73,15 @@ jobs:
           name: output
           path: output
 
-        # Decode the base 64 encoded pfx and save the Signing_Certificate
-      - name: Sign NuGet packages
-        shell: pwsh
-        run: |
-            $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERTIFICATE }}")
-            [IO.File]::WriteAllBytes("GitHubActionsWorkflow.pfx", $pfx_cert_byte)
-            $secure_password = ConvertTo-SecureString ${{ secrets.SIGN_CERTIFICATE_PASSWORD }} –asplaintext –force
-            Import-PfxCertificate -FilePath GitHubActionsWorkflow.pfx -Password $secure_password -CertStoreLocation Cert:\CurrentUser\My
-            nuget sign -Timestamper http://timestamp.digicert.com -CertificateFingerprint ${{ secrets.SIGN_CERTIFICATE_HASH }} **/*.nupkg
+      #   # Decode the base 64 encoded pfx and save the Signing_Certificate
+      # - name: Sign NuGet packages
+      #   shell: pwsh
+      #   run: |
+      #       $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERTIFICATE }}")
+      #       [IO.File]::WriteAllBytes("GitHubActionsWorkflow.pfx", $pfx_cert_byte)
+      #       $secure_password = ConvertTo-SecureString ${{ secrets.SIGN_CERTIFICATE_PASSWORD }} –asplaintext –force
+      #       Import-PfxCertificate -FilePath GitHubActionsWorkflow.pfx -Password $secure_password -CertStoreLocation Cert:\CurrentUser\My
+      #       nuget sign -Timestamper http://timestamp.digicert.com -CertificateFingerprint ${{ secrets.SIGN_CERTIFICATE_HASH }} **/*.nupkg
         
       - name: Changelog
         uses: glennawatson/ChangeLog@v1
