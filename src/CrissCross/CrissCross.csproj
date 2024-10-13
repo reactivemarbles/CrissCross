@@ -1,14 +1,11 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(CrissCrossCoreTargetFrameworks);Xamarin.iOS10;Xamarin.Mac20;Xamarin.TVOS10;MonoAndroid13.0;tizen40</TargetFrameworks>
+    <TargetFrameworks>$(CrissCrossCoreTargetFrameworks)</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">$(TargetFrameworks);$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin')) or $(TargetFramework.StartsWith('MonoAndroid')) or $(TargetFramework.StartsWith('tizen'))">
-    <PackageReference Include="ReactiveUI" Version="$(XamarinReactiveUIVersion)" />
-  </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('Xamarin')) and !$(TargetFramework.StartsWith('MonoAndroid')) and !$(TargetFramework.StartsWith('tizen'))">
+  <ItemGroup>
     <PackageReference Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
   </ItemGroup>
 
