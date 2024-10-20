@@ -56,11 +56,6 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
-      - name: 'Run: Compile'
-        run: ./build.cmd Compile
 
-      - name: Create NuGet Artifacts
-        uses: actions/upload-artifact@master
-        with:
-            name: nuget
-            path: '**/*.nupkg'
+      - name: 'Run: Compile and Pack'
+        run: ./build.cmd Pack
