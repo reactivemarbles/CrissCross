@@ -29,7 +29,7 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.1.4</AvaloniaVersion>
+    <AvaloniaVersion>11.2.0</AvaloniaVersion>
     <ReactiveUIVersion>20.1.63</ReactiveUIVersion>
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
     <CrissCrossCoreTargetFrameworks>netstandard2.0;net6.0;net8.0</CrissCrossCoreTargetFrameworks>
@@ -54,7 +54,7 @@
     <!--<Compile Update="**\*.cs" DependentUpon="I%(Filename).cs" />-->
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.143" PrivateAssets="all" Condition="!Exists('packages.config')" />
     <PackageReference Include="stylecop.analyzers" Version="1.2.0-beta.556" PrivateAssets="all" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.12.7" PrivateAssets="All" />
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.9" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 </Project>
