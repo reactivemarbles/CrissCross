@@ -32,8 +32,9 @@
         </ui:Grid.RowDefinitions>
         <ui:Button
             Grid.Column="0"
+            Width="118"
             Command="{Binding ViewModel.CounterIncrementCommand, Mode=OneWay}"
-            Content="Click me!"
+            Content="Click me! Because I am very long"
             Icon="{ui:SymbolIcon Fluent24}" />
         <ui:TextBlock
             Grid.Column="1"
