@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;

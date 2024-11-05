@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
+using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
@@ -10,19 +11,19 @@ internal abstract class GifBlock
 {
     internal abstract GifBlockKind Kind { get; }
 
-    internal static GifBlock ReadBlock(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+    internal static async Task<GifBlock> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
-        var blockId = stream.ReadByte();
+        var blockId = await stream.ReadByteAsync().ConfigureAwait(false);
         if (blockId < 0)
         {
-            throw GifHelpers.UnexpectedEndOfStreamException();
+            throw new EndOfStreamException();
         }
 
         return blockId switch
         {
-            GifExtension.ExtensionIntroducer => GifExtension.ReadExtension(stream, controlExtensions, metadataOnly),
-            GifFrame.ImageSeparator => GifFrame.ReadFrame(stream, controlExtensions, metadataOnly),
-            GifTrailer.TrailerByte => GifTrailer.ReadTrailer(),
+            GifExtension.ExtensionIntroducer => await GifExtension.ReadAsync(stream, controlExtensions).ConfigureAwait(false),
+            GifFrame.ImageSeparator => await GifFrame.ReadAsync(stream, controlExtensions).ConfigureAwait(false),
+            GifTrailer.TrailerByte => await GifTrailer.ReadAsync().ConfigureAwait(false),
             _ => throw GifHelpers.UnknownBlockTypeException(blockId),
         };
     }

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
-using System.Windows.Controls;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

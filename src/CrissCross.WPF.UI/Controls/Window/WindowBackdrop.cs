@@ -233,7 +233,7 @@ public static class WindowBackdrop
             return false;
         }
 
-        HwndSource? windowSource = HwndSource.FromHwnd(windowHandle);
+        var windowSource = HwndSource.FromHwnd(windowHandle);
 
         // Remove background from client area
         if (windowSource?.Handle != IntPtr.Zero && windowSource?.CompositionTarget != null)

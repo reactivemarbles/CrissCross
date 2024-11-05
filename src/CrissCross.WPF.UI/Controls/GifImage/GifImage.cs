@@ -18,7 +18,7 @@ public class GifImage : Control
     /// </summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
-        typeof(ImageSource),
+        typeof(Uri),
         typeof(GifImage),
         new FrameworkPropertyMetadata(
             null,
@@ -34,7 +34,7 @@ public class GifImage : Control
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(GifImage),
-        new PropertyMetadata(new CornerRadius(0)));
+        new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged)));
 
     /// <summary>
     /// DependencyProperty for StretchDirection property.
@@ -60,6 +60,22 @@ public class GifImage : Control
             StretchDirection.Both,
             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
         null);
+
+    /// <summary>
+    /// DependencyPropertyKey for InnerCornerRadius property.
+    /// </summary>
+    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            nameof(InnerCornerRadius),
+            typeof(CornerRadius),
+            typeof(GifImage),
+            new PropertyMetadata(new CornerRadius(0)));
+
+    /// <summary>
+    /// DependencyProperty for InnerCornerRadius property.
+    /// </summary>
+    public static readonly DependencyProperty InnerCornerRadiusProperty =
+        InnerCornerRadiusPropertyKey.DependencyProperty;
 
     /// <summary>
     /// Identifies the <c>RepeatBehavior</c> attached property.
@@ -115,9 +131,9 @@ public class GifImage : Control
     /// Gets or sets the Source on this Image.
     /// The Source property is the ImageSource that holds the actual image drawn.
     /// </summary>
-    public ImageSource Source
+    public Uri Source
     {
-        get => (ImageSource)GetValue(SourceProperty);
+        get => (Uri)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
@@ -212,5 +228,24 @@ public class GifImage : Control
     {
         get => (bool)GetValue(AutoStartProperty);
         set => SetValue(AutoStartProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the CornerRadius for the inner image's Mask.
+    /// </summary>
+    internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
+
+    private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var thickness = (Thickness)d.GetValue(BorderThicknessProperty);
+        var outerRarius = (CornerRadius)e.NewValue;
+
+        d.SetValue(
+            InnerCornerRadiusPropertyKey,
+            new CornerRadius(
+                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / 2), 0)),
+                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / 2), 0)),
+                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / 2), 0)),
+                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / 2), 0))));
     }
 }

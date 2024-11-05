@@ -16,17 +16,28 @@
                         ClipToBounds="True"
                         CornerRadius="{TemplateBinding CornerRadius}">
 
-                        <controls:Image
+                        <Image
+                            x:Name="PART_Image"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            controls:ImageBehavior.AnimateInDesignMode="{TemplateBinding AnimateInDesignMode}"
-                            controls:ImageBehavior.AnimatedSource="{TemplateBinding Source}"
-                            controls:ImageBehavior.AnimationDuration="{TemplateBinding AnimationDuration}"
-                            controls:ImageBehavior.AnimationSpeedRatio="{TemplateBinding AnimationSpeedRatio}"
-                            controls:ImageBehavior.AutoStart="{TemplateBinding AutoStart}"
-                            controls:ImageBehavior.RepeatBehavior="{TemplateBinding RepeatBehavior}"
+                            controls:AnimationBehavior.AnimateInDesignMode="{TemplateBinding AnimateInDesignMode}"
+                            controls:AnimationBehavior.AutoStart="{TemplateBinding AutoStart}"
+                            controls:AnimationBehavior.RepeatBehavior="{TemplateBinding RepeatBehavior}"
+                            controls:AnimationBehavior.SourceUri="{TemplateBinding Source}"
                             Stretch="{TemplateBinding Stretch}"
-                            StretchDirection="{TemplateBinding StretchDirection}" />
+                            StretchDirection="{TemplateBinding StretchDirection}">
+                            <Image.OpacityMask>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Border
+                                            Width="{TemplateBinding ActualWidth}"
+                                            Height="{TemplateBinding ActualHeight}"
+                                            Background="White"
+                                            CornerRadius="{TemplateBinding InnerCornerRadius}" />
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Image.OpacityMask>
+                        </Image>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -36,3 +47,14 @@
     <Style BasedOn="{StaticResource DefaultGifImageStyle}" TargetType="{x:Type controls:GifImage}" />
 
 </ResourceDictionary>
+
+
+<!--
+    controls:AnimationBehavior.SourceUri="{TemplateBinding Source}"
+    controls:AnimationBehavior.CacheFramesInMemory="{TemplateBinding CacheFramesInMemory}"
+    controls:AnimationBehavior.SourceUri="{TemplateBinding SelectedImage}"
+    
+    controls:ImageBehavior.AnimatedSource="{TemplateBinding Source}"
+    controls:ImageBehavior.AnimationDuration="{TemplateBinding AnimationDuration}"
+    controls:ImageBehavior.AnimationSpeedRatio="{TemplateBinding AnimationSpeedRatio}"
+-->
