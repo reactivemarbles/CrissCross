@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
-using System.Text;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
-internal sealed class GifCommentExtension : GifExtension
+internal class GifCommentExtension : GifExtension
 {
     internal const int ExtensionLabel = 0xFE;
 
@@ -17,22 +16,25 @@ internal sealed class GifCommentExtension : GifExtension
 
     public string? Text { get; private set; }
 
-    internal override GifBlockKind Kind => GifBlockKind.SpecialPurpose;
+    internal override GifBlockKind Kind
+    {
+        get { return GifBlockKind.SpecialPurpose; }
+    }
 
-    internal static GifCommentExtension ReadComment(Stream stream)
+    internal static async Task<GifCommentExtension> ReadAsync(Stream stream)
     {
         var comment = new GifCommentExtension();
-        comment.Read(stream);
+        await comment.ReadInternalAsync(stream).ConfigureAwait(false);
         return comment;
     }
 
-    private void Read(Stream stream)
+    private async Task ReadInternalAsync(Stream stream)
     {
         // Note: at this point, the label (0xFE) has already been read
-        var bytes = GifHelpers.ReadDataBlocks(stream, false);
+        var bytes = await GifHelpers.ReadDataBlocksAsync(stream).ConfigureAwait(false);
         if (bytes != null)
         {
-            Text = Encoding.ASCII.GetString(bytes);
+            Text = GifHelpers.GetString(bytes);
         }
     }
 }

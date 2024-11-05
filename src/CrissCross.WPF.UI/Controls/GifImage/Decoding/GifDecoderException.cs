@@ -5,22 +5,27 @@
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
 /// <summary>
-/// Gif Decoder Exception.
+/// GifDecoderException.
 /// </summary>
 /// <seealso cref="System.Exception" />
 [Serializable]
-public class GifDecoderException : Exception
+public abstract class GifDecoderException : Exception
 {
-    internal GifDecoderException()
-    {
-    }
-
-    internal GifDecoderException(string message)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GifDecoderException"/> class.
+    /// </summary>
+    /// <param name="message">The message that describes the error.</param>
+    protected GifDecoderException(string message)
         : base(message)
     {
     }
 
-    internal GifDecoderException(string message, Exception inner)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GifDecoderException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="inner">The inner.</param>
+    protected GifDecoderException(string message, Exception inner)
         : base(message, inner)
     {
     }

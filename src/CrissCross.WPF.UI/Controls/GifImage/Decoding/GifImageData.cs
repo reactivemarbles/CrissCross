@@ -14,18 +14,19 @@ internal sealed class GifImageData
 
     public byte LzwMinimumCodeSize { get; set; }
 
-    public byte[]? CompressedData { get; set; }
+    public long CompressedDataStartOffset { get; set; }
 
-    internal static GifImageData ReadImageData(Stream stream, bool metadataOnly)
+    internal static async Task<GifImageData> ReadAsync(Stream stream)
     {
         var imgData = new GifImageData();
-        imgData.Read(stream, metadataOnly);
+        await imgData.ReadInternalAsync(stream).ConfigureAwait(false);
         return imgData;
     }
 
-    private void Read(Stream stream, bool metadataOnly)
+    private async Task ReadInternalAsync(Stream stream)
     {
         LzwMinimumCodeSize = (byte)stream.ReadByte();
-        CompressedData = GifHelpers.ReadDataBlocks(stream, metadataOnly);
+        CompressedDataStartOffset = stream.Position;
+        await GifHelpers.ConsumeDataBlocksAsync(stream).ConfigureAwait(false);
     }
 }
