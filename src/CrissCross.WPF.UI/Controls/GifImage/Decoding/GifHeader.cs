@@ -20,27 +20,27 @@ internal sealed class GifHeader : GifBlock
 
     internal override GifBlockKind Kind => GifBlockKind.Other;
 
-    internal static GifHeader ReadHeader(Stream stream)
+    internal static async Task<GifHeader> ReadAsync(Stream stream)
     {
         var header = new GifHeader();
-        header.Read(stream);
+        await header.ReadInternalAsync(stream).ConfigureAwait(false);
         return header;
     }
 
-    private void Read(Stream stream)
+    private async Task ReadInternalAsync(Stream stream)
     {
-        Signature = GifHelpers.ReadString(stream, 3);
+        Signature = await GifHelpers.ReadStringAsync(stream, 3).ConfigureAwait(false);
         if (Signature != "GIF")
         {
             throw GifHelpers.InvalidSignatureException(Signature);
         }
 
-        Version = GifHelpers.ReadString(stream, 3);
+        Version = await GifHelpers.ReadStringAsync(stream, 3).ConfigureAwait(false);
         if (Version != "87a" && Version != "89a")
         {
             throw GifHelpers.UnsupportedVersionException(Version);
         }
 
-        LogicalScreenDescriptor = GifLogicalScreenDescriptor.ReadLogicalScreenDescriptor(stream);
+        LogicalScreenDescriptor = await GifLogicalScreenDescriptor.ReadAsync(stream).ConfigureAwait(false);
     }
 }

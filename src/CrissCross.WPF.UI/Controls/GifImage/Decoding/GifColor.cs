@@ -12,5 +12,5 @@ internal readonly record struct GifColor(byte R, byte G, byte B)
 
     public byte B { get; } = B;
 
-    public override readonly string ToString() => string.Format("#{0:x2}{1:x2}{2:x2}", R, G, B);
+    public override string ToString() => $"#{R:x2}{G:x2}{B:x2}";
 }

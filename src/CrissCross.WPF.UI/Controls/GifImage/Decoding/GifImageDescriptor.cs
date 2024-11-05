@@ -3,10 +3,11 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
+using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
-internal sealed class GifImageDescriptor
+internal sealed class GifImageDescriptor : IGifRect
 {
     private GifImageDescriptor()
     {
@@ -28,17 +29,17 @@ internal sealed class GifImageDescriptor
 
     public int LocalColorTableSize { get; private set; }
 
-    internal static GifImageDescriptor ReadImageDescriptor(Stream stream)
+    internal static async Task<GifImageDescriptor> ReadAsync(Stream stream)
     {
         var descriptor = new GifImageDescriptor();
-        descriptor.Read(stream);
+        await descriptor.ReadInternalAsync(stream).ConfigureAwait(false);
         return descriptor;
     }
 
-    private void Read(Stream stream)
+    private async Task ReadInternalAsync(Stream stream)
     {
         var bytes = new byte[9];
-        stream.ReadAll(bytes, 0, bytes.Length);
+        await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
         Left = BitConverter.ToUInt16(bytes, 0);
         Top = BitConverter.ToUInt16(bytes, 2);
         Width = BitConverter.ToUInt16(bytes, 4);

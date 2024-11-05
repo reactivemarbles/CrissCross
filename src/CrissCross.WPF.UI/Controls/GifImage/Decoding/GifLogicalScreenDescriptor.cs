@@ -3,10 +3,11 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
+using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
-internal class GifLogicalScreenDescriptor
+internal class GifLogicalScreenDescriptor : IGifRect
 {
     public int Width { get; private set; }
 
@@ -24,17 +25,21 @@ internal class GifLogicalScreenDescriptor
 
     public double PixelAspectRatio { get; private set; }
 
-    internal static GifLogicalScreenDescriptor ReadLogicalScreenDescriptor(Stream stream)
+    int IGifRect.Left => 0;
+
+    int IGifRect.Top => 0;
+
+    internal static async Task<GifLogicalScreenDescriptor> ReadAsync(Stream stream)
     {
         var descriptor = new GifLogicalScreenDescriptor();
-        descriptor.Read(stream);
+        await descriptor.ReadInternalAsync(stream).ConfigureAwait(false);
         return descriptor;
     }
 
-    private void Read(Stream stream)
+    private async Task ReadInternalAsync(Stream stream)
     {
         var bytes = new byte[7];
-        stream.ReadAll(bytes, 0, bytes.Length);
+        await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
         Width = BitConverter.ToUInt16(bytes, 0);
         Height = BitConverter.ToUInt16(bytes, 2);
@@ -45,8 +50,8 @@ internal class GifLogicalScreenDescriptor
         GlobalColorTableSize = 1 << ((packedFields & 0x07) + 1);
         BackgroundColorIndex = bytes[5];
         PixelAspectRatio =
-            bytes[5] == 0
+            bytes[6] == 0
                 ? 0.0
-                : (15 + bytes[5]) / 64.0;
+                : (15 + bytes[6]) / 64.0;
     }
 }

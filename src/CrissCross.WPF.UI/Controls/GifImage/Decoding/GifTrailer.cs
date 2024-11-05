@@ -14,5 +14,5 @@ internal sealed class GifTrailer : GifBlock
 
     internal override GifBlockKind Kind => GifBlockKind.Other;
 
-    internal static GifTrailer ReadTrailer() => new();
+    internal static Task<GifTrailer> ReadAsync() => Task.FromResult(new GifTrailer());
 }

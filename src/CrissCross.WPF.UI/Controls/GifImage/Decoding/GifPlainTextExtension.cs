@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
-using System.Text;
+using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
@@ -40,18 +40,18 @@ internal sealed class GifPlainTextExtension : GifExtension
 
     internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
-    internal static GifPlainTextExtension ReadPlainText(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+    internal static new async Task<GifPlainTextExtension> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
         var plainText = new GifPlainTextExtension();
-        plainText.Read(stream, controlExtensions, metadataOnly);
+        await plainText.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);
         return plainText;
     }
 
-    private void Read(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+    private async Task ReadInternalAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
         // Note: at this point, the label (0x01) has already been read
         var bytes = new byte[13];
-        stream.ReadAll(bytes, 0, bytes.Length);
+        await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
         BlockSize = bytes[0];
         if (BlockSize != 12)
@@ -68,8 +68,8 @@ internal sealed class GifPlainTextExtension : GifExtension
         ForegroundColorIndex = bytes[11];
         BackgroundColorIndex = bytes[12];
 
-        var dataBytes = GifHelpers.ReadDataBlocks(stream, metadataOnly);
-        Text = Encoding.ASCII.GetString(dataBytes ?? []);
+        var dataBytes = await GifHelpers.ReadDataBlocksAsync(stream).ConfigureAwait(false);
+        Text = GifHelpers.GetString(dataBytes);
         Extensions = controlExtensions.ToList().AsReadOnly();
     }
 }

@@ -4,45 +4,50 @@
 
 using System.IO;
 using System.Text;
+using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
 internal static class GifHelpers
 {
-    public static string ReadString(Stream stream, int length)
+    public static async Task<string> ReadStringAsync(Stream stream, int length)
     {
         var bytes = new byte[length];
-        stream.ReadAll(bytes, 0, length);
-        return Encoding.ASCII.GetString(bytes);
+        await stream.ReadAllAsync(bytes, 0, length).ConfigureAwait(false);
+        return GetString(bytes);
     }
 
-    public static byte[]? ReadDataBlocks(Stream stream, bool discard)
+    public static async Task ConsumeDataBlocksAsync(Stream sourceStream, CancellationToken cancellationToken = default) => await CopyDataBlocksToStreamAsync(sourceStream, Stream.Null, cancellationToken);
+
+    public static async Task<byte[]> ReadDataBlocksAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        var ms = discard ? null : new MemoryStream();
-        using (ms)
+        using var ms = new MemoryStream();
+        await CopyDataBlocksToStreamAsync(stream, ms, cancellationToken);
+        return ms.ToArray();
+    }
+
+    public static async Task CopyDataBlocksToStreamAsync(Stream sourceStream, Stream targetStream, CancellationToken cancellationToken = default)
+    {
+        int len;
+
+        // the length is on 1 byte, so each data sub-block can't be more than 255 bytes long
+        var buffer = new byte[255];
+        while ((len = await sourceStream.ReadByteAsync(cancellationToken)) > 0)
         {
-            int len;
-            while ((len = stream.ReadByte()) > 0)
-            {
-                var bytes = new byte[len];
-                stream.ReadAll(bytes, 0, len);
-                ms?.Write(bytes, 0, len);
-            }
-
-            if (ms != null)
-            {
-                return ms.ToArray();
-            }
-
-            return null;
+            await sourceStream.ReadAllAsync(buffer, 0, len, cancellationToken).ConfigureAwait(false);
+#if LACKS_STREAM_MEMORY_OVERLOADS
+            await targetStream.WriteAsync(buffer, 0, len, cancellationToken);
+#else
+            await targetStream.WriteAsync(buffer.AsMemory(0, len), cancellationToken);
+#endif
         }
     }
 
-    public static GifColor[] ReadColorTable(Stream stream, int size)
+    public static async Task<GifColor[]> ReadColorTableAsync(Stream stream, int size)
     {
         var length = 3 * size;
         var bytes = new byte[length];
-        stream.ReadAll(bytes, 0, length);
+        await stream.ReadAllAsync(bytes, 0, length).ConfigureAwait(false);
         var colorTable = new GifColor[size];
         for (var i = 0; i < size; i++)
         {
@@ -56,12 +61,11 @@ internal static class GifHelpers
     }
 
     public static bool IsNetscapeExtension(GifApplicationExtension ext) =>
-        ext.ApplicationIdentifier == "NETSCAPE"
-            && Encoding.ASCII.GetString(ext.AuthenticationCode ?? []) == "2.0";
+        ext.ApplicationIdentifier == "NETSCAPE" && GetString(ext.AuthenticationCode) == "2.0";
 
     public static ushort GetRepeatCount(GifApplicationExtension ext)
     {
-        if (ext.Data?.Length >= 3)
+        if (ext.Data.Length >= 3)
         {
             return BitConverter.ToUInt16(ext.Data, 1);
         }
@@ -69,29 +73,24 @@ internal static class GifHelpers
         return 1;
     }
 
-    public static Exception UnexpectedEndOfStreamException() => new GifDecoderException("Unexpected end of stream before trailer was encountered");
+    public static Exception UnknownBlockTypeException(int blockId) =>
+        new UnknownBlockTypeException("Unknown block type: 0x" + blockId.ToString("x2"));
 
-    public static Exception UnknownBlockTypeException(int blockId) => new GifDecoderException("Unknown block type: 0x" + blockId.ToString("x2"));
+    public static Exception UnknownExtensionTypeException(int extensionLabel) =>
+        new UnknownExtensionTypeException("Unknown extension type: 0x" + extensionLabel.ToString("x2"));
 
-    public static Exception UnknownExtensionTypeException(int extensionLabel) => new GifDecoderException("Unknown extension type: 0x" + extensionLabel.ToString("x2"));
+    public static Exception InvalidBlockSizeException(string blockName, int expectedBlockSize, int actualBlockSize) =>
+        new InvalidBlockSizeException($"Invalid block size for {blockName}. Expected {expectedBlockSize}, but was {actualBlockSize}");
 
-    public static Exception InvalidBlockSizeException(string blockName, int expectedBlockSize, int actualBlockSize) => new GifDecoderException(
-            string.Format(
-                "Invalid block size for {0}. Expected {1}, but was {2}",
-                blockName,
-                expectedBlockSize,
-                actualBlockSize));
+    public static Exception InvalidSignatureException(string signature) =>
+        new InvalidSignatureException("Invalid file signature: " + signature);
 
-    public static Exception InvalidSignatureException(string signature) => new GifDecoderException("Invalid file signature: " + signature);
+    public static Exception UnsupportedVersionException(string version) =>
+        new UnsupportedGifVersionException("Unsupported version: " + version);
 
-    public static Exception UnsupportedVersionException(string version) => new GifDecoderException("Unsupported version: " + version);
+    public static string GetString(byte[] bytes) =>
+        GetString(bytes, 0, bytes.Length);
 
-    public static void ReadAll(this Stream stream, byte[] buffer, int offset, int count)
-    {
-        var totalRead = 0;
-        while (totalRead < count)
-        {
-            totalRead += stream.Read(buffer, offset + totalRead, count - totalRead);
-        }
-    }
+    public static string GetString(byte[] bytes, int index, int count) =>
+        Encoding.UTF8.GetString(bytes, index, count);
 }

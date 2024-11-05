@@ -22,27 +22,30 @@ internal sealed class GifFrame : GifBlock
 
     public GifImageData? ImageData { get; private set; }
 
+    public GifGraphicControlExtension? GraphicControl { get; set; }
+
     internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
-    internal static GifFrame ReadFrame(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+    internal static new async Task<GifFrame> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
         var frame = new GifFrame();
 
-        frame.Read(stream, controlExtensions, metadataOnly);
+        await frame.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);
 
         return frame;
     }
 
-    private void Read(Stream stream, IEnumerable<GifExtension> controlExtensions, bool metadataOnly)
+    private async Task ReadInternalAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
         // Note: at this point, the Image Separator (0x2C) has already been read
-        Descriptor = GifImageDescriptor.ReadImageDescriptor(stream);
+        Descriptor = await GifImageDescriptor.ReadAsync(stream).ConfigureAwait(false);
         if (Descriptor.HasLocalColorTable)
         {
-            LocalColorTable = GifHelpers.ReadColorTable(stream, Descriptor.LocalColorTableSize);
+            LocalColorTable = await GifHelpers.ReadColorTableAsync(stream, Descriptor.LocalColorTableSize).ConfigureAwait(false);
         }
 
-        ImageData = GifImageData.ReadImageData(stream, metadataOnly);
+        ImageData = await GifImageData.ReadAsync(stream).ConfigureAwait(false);
         Extensions = controlExtensions.ToList().AsReadOnly();
+        GraphicControl = Extensions.OfType<GifGraphicControlExtension>().LastOrDefault();
     }
 }
