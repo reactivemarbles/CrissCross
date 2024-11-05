@@ -19,12 +19,12 @@
     <PackageReference Include="ScottPlot.WPF" Version="5.0.43" />
   </ItemGroup>
 
-  <!--<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="Polyfill" Version="7.0.0">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="Polyfill" Version="7.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-  </ItemGroup>-->
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
