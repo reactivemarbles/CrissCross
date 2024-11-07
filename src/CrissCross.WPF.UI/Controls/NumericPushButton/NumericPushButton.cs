@@ -15,16 +15,6 @@ namespace CrissCross.WPF.UI.Controls;
 public class NumericPushButton : System.Windows.Controls.Button, INumberPadButton, IDisposable
 {
     /// <summary>
-    /// Set Background.
-    /// </summary>
-    public static readonly DependencyProperty BackGroundColorProperty =
-        DependencyProperty.Register(
-            nameof(BackGroundColor),
-            typeof(Brush),
-            typeof(NumericPushButton),
-            new PropertyMetadata(Brushes.White, ChangeBackgroundColor));
-
-    /// <summary>
     /// Defaults decimal points.
     /// </summary>
     public static readonly DependencyProperty DecimalPlaceProperty =
@@ -128,6 +118,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     private readonly DispatcherTimer _isEnabledFalseTimer;
     private readonly ReplaySubject<(bool UserChanged, double Value)> _valueD = new(1);
     private readonly ReplaySubject<(bool UserChanged, float Value)> _valueF = new(1);
+    private readonly IDisposable _keypadDisposable;
     private NumberPad? _keypad;
     private bool _disposedValue;
 
@@ -138,7 +129,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     {
         DefaultStyleKey = typeof(NumericPushButton);
         ShowKeypad = ReactiveCommand.Create(() => { });
-        ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this));
+        _keypadDisposable = ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this) { MaskColor = MaskColor });
         _isEnabledFalseTimer = new DispatcherTimer(
             TimeSpan.FromMilliseconds(100),
             DispatcherPriority.Normal,
@@ -203,18 +194,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// Value changed and if user changed it
     /// </summary>
     public event EventHandler<(bool, double)>? ValueChanged;
-
-    /// <summary>
-    /// Gets or sets set the BackgroundColor.
-    /// </summary>
-    [Description("Sets Background of the Keypad")]
-    [Category("Brush")]
-    public Brush BackGroundColor
-    {
-        get => (Brush)GetValue(BackGroundColorProperty);
-
-        set => SetValue(BackGroundColorProperty, value);
-    }
 
     /// <summary>
     /// Gets or sets how many decimal places to visualize.
@@ -404,26 +383,10 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
                 _valueD.Dispose();
                 _valueF.Dispose();
                 _keypad?.Dispose();
+                _keypadDisposable.Dispose();
             }
 
             _disposedValue = true;
-        }
-    }
-
-    private static void ChangeBackgroundColor(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var npb = d as NumericPushButton;
-        var mycolor = (Brush)e.NewValue;
-        if (mycolor.IsFrozen)
-        {
-            mycolor = mycolor.Clone();
-        }
-
-        mycolor.Opacity = npb!.InDesignMode ? 0 : 0.5;
-
-        if (npb?._keypad != null)
-        {
-            npb._keypad.Background = mycolor;
         }
     }
 
@@ -510,7 +473,8 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     {
         if (d is NumericPushButton c && c._keypad != null)
         {
-            c._keypad.MaskColor = (Brush)e.NewValue;
+            c.MaskColor = (Brush)e.NewValue;
+            c._keypad.MaskColor = c.MaskColor;
         }
     }
 

@@ -31,7 +31,7 @@ public class ThemesDictionary : ResourceDictionary
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemesDictionary"/> class.
     /// </summary>
-    public ThemesDictionary() => SetSourceBasedOnSelectedTheme(ApplicationTheme.Light);
+    public ThemesDictionary() => SetSourceBasedOnSelectedTheme(ApplicationTheme.Dark);
 
     /// <summary>
     /// Sets the default application theme.

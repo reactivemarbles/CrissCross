@@ -59,6 +59,7 @@ public partial class NumberPad : IDisposable
             throw new ArgumentNullException(nameof(newOwner));
         }
 
+        DataContext = this;
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
         Unit.Content = _owner.Units;
@@ -160,6 +161,7 @@ public partial class NumberPad : IDisposable
     {
         if (d is NumberPad c)
         {
+            c.MaskColor = (Brush)e.NewValue;
             c.Mask.Background = (Brush)e.NewValue;
         }
     }
@@ -303,6 +305,7 @@ public partial class NumberPad : IDisposable
     private void Showkeypad()
     {
         Mask.Visibility = (Debugger.IsAttached || HideMask) ? Visibility.Collapsed : Visibility.Visible;
+        Mask.Background = MaskColor;
         FadeIn();
         _currentValue = string.Empty;
         Value.Value = _owner.Minimum > 0 ? _owner.Minimum : _owner.Maximum < 0 ? _owner.Maximum : 0;
