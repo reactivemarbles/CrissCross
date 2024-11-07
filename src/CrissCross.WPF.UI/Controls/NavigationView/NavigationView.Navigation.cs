@@ -185,14 +185,14 @@ public partial class NavigationView
         if (OnNavigating(pageInstance))
         {
 #if DEBUG
-            Debug.WriteLineIf(EnableDebugMessages, "Navigation canceled");
+            System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages, "Navigation canceled");
 #endif
 
             return false;
         }
 
 #if DEBUG
-        Debug.WriteLineIf(
+        System.Diagnostics.Debug.WriteLineIf(
             EnableDebugMessages,
             $"DEBUG | {viewItem.Id} - {(string.IsNullOrEmpty(viewItem.TargetPageTag) ? "NO_TAG" : viewItem.TargetPageTag)} - {viewItem.TargetPageType} | NAVIGATED");
 #endif
@@ -230,11 +230,11 @@ public partial class NavigationView
         IsBackEnabled = CanGoBack;
 
 #if DEBUG
-        Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL INDEX {_currentIndexInJournal}");
+        System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL INDEX {_currentIndexInJournal}");
 
         if (Journal.Count > 0)
         {
-            Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL LAST ELEMENT {Journal[^1]}");
+            System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL LAST ELEMENT {Journal[^1]}");
         }
 #endif
     }
@@ -278,7 +278,7 @@ public partial class NavigationView
         if (_serviceProvider is not null)
         {
 #if DEBUG
-            Debug.WriteLine(
+            System.Diagnostics.Debug.WriteLine(
                 $"Getting {targetPageType} from cache using IServiceProvider.");
 #endif
 
@@ -289,7 +289,7 @@ public partial class NavigationView
         if (_pageService is not null)
         {
 #if DEBUG
-            Debug.WriteLine($"Getting {targetPageType} from cache using IPageService.");
+            System.Diagnostics.Debug.WriteLine($"Getting {targetPageType} from cache using IPageService.");
 #endif
 
             return _pageService.GetPage(targetPageType)
@@ -297,7 +297,7 @@ public partial class NavigationView
         }
 
 #if DEBUG
-        Debug.WriteLine($"Getting {targetPageType} from cache using reflection.");
+        System.Diagnostics.Debug.WriteLine($"Getting {targetPageType} from cache using reflection.");
 #endif
 
         return NavigationViewActivator.CreateInstance(targetPageType)

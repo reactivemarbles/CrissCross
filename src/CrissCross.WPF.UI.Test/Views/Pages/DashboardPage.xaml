@@ -99,6 +99,46 @@
                 <ui:TreeViewItem Header="World2" />
             </ui:TreeViewItem>
         </ui:TreeView>
-
+        <ui:GelButton
+            Grid.Row="3"
+            Grid.Column="2"
+            Width="200"
+            Height="100"
+            Margin="0,60,0,0"
+            VerticalAlignment="Top"
+            BorderThickness="5"
+            Content="Gel Button"
+            FontSize="24" />
+        <ui:BezelButton
+            Grid.Row="3"
+            Grid.Column="3"
+            Grid.ColumnSpan="2"
+            Width="200"
+            Height="100"
+            Margin="0,60,0,0"
+            VerticalAlignment="Top"
+            BorderThickness="5"
+            Content="Button"
+            FontSize="24" />
+        <ui:BezelToggleButton
+            Grid.Row="3"
+            Grid.Column="3"
+            Grid.ColumnSpan="2"
+            Width="200"
+            Height="100"
+            Margin="0,180,0,0"
+            VerticalAlignment="Top"
+            BorderThickness="5"
+            Content="Toggle Button"
+            FontSize="24" />
+        <ui:BezelRepeatButton
+            Grid.Row="3"
+            Grid.Column="3"
+            Grid.ColumnSpan="2"
+            Width="200"
+            Height="100"
+            Margin="0,240,0,0"
+            Content="Repeat Button"
+            FontSize="24" />
     </ui:Grid>
 </ui:Page>

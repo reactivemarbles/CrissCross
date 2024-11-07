@@ -1,0 +1,107 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+    <Style TargetType="{x:Type controls:BezelRepeatButton}">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="FocusBrush" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+
+        <Setter Property="BorderThickness" Value="5" />
+        <Setter Property="FocusBorderThickness" Value="2,2,2,2" />
+        <Setter Property="MinorBorderThickness1" Value="5,5,5,5" />
+        <Setter Property="CornerRadius1" Value="20" />
+        <Setter Property="CornerRadius2" Value="20" />
+        <Setter Property="Padding" Value="1,1,1,1" />
+        <Setter Property="PressedBrush">
+            <Setter.Value>
+                <RadialGradientBrush Opacity="1">
+                    <GradientStop Offset="0.0605063069886678" Color="Transparent" />
+                    <GradientStop Offset="0.978151309464853" Color="Black" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush Opacity="1" StartPoint="0,0.260106210035765" EndPoint="0.0679527473718436,1">
+                    <GradientStop Offset="0.004" Color="Gainsboro" />
+                    <GradientStop Offset="1" Color="Black" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="MinorBorderBrush1">
+            <Setter.Value>
+                <LinearGradientBrush Opacity="1" EndPoint="0.376828871789314,1">
+                    <GradientStop Offset="0.004" Color="Black" />
+                    <GradientStop Offset="0.991260523785941" Color="LightGray" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Control.Template">
+
+            <Setter.Value>
+
+                <ControlTemplate TargetType="{x:Type controls:BezelRepeatButton}">
+
+                    <Grid
+                        x:Name="PART_MainGrid"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+
+                        <controls:RaisedBorder
+                            x:Name="PART_AICSBorder"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius1="{TemplateBinding CornerRadius1}"
+                            CornerRadius2="{TemplateBinding CornerRadius2}"
+                            GlareBrush="{TemplateBinding GlareBrush}"
+                            GlareOpacityMask="{TemplateBinding GlareOpacityMask}"
+                            MinorBorderBrush1="{TemplateBinding MinorBorderBrush1}"
+                            MinorBorderThickness1="{TemplateBinding MinorBorderThickness1}">
+
+                            <Grid
+                                Name="PART_DepressGrid"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+
+                                <Border
+                                    x:Name="PART_On"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{TemplateBinding PressedBrush}"
+                                    CornerRadius="{TemplateBinding CornerRadius2}"
+                                    Opacity="0.5"
+                                    Visibility="Hidden" />
+
+                                <ContentPresenter
+                                    x:Name="Content"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    ContentPresenter.Content="{TemplateBinding ContentControl.Content}" />
+                            </Grid>
+                        </controls:RaisedBorder>
+
+                        <Border
+                            x:Name="PART_UserHintBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            BorderBrush="{TemplateBinding FocusBrush}"
+                            BorderThickness="{TemplateBinding FocusBorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius1}" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsPressed" Value="True">
+                            <Setter TargetName="PART_On" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="PART_MainGrid" Property="Margin" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

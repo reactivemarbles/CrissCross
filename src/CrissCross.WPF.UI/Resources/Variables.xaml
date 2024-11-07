@@ -4,6 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <system:Double x:Key="DefaultIconFontSize">16</system:Double>
+    <system:Double x:Key="ControlCornerRadiusSize">4</system:Double>
 
     <!--<system:Double x:Key="ControlContentThemeFontSize">14</system:Double>-->
     <CornerRadius x:Key="ControlCornerRadius">4,4,4,4</CornerRadius>

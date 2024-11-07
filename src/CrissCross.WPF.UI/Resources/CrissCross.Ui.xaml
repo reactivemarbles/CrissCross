@@ -84,6 +84,14 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/TimePicker/TimePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ToggleButton/ToggleButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ToggleSwitch/ToggleSwitch.xaml" />
+
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/BezelButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/BezelRepeatButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/BezelToggleButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/GelButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/GelRepeatButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/GelToggleButton.xaml" />
+
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ToolBar/ToolBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ToolTip/ToolTip.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/TreeGrid/TreeGrid.xaml" />

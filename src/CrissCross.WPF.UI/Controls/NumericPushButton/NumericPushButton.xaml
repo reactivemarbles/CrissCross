@@ -15,15 +15,20 @@
                         <Rectangle
                             x:Name="FieldBorder"
                             Fill="{TemplateBinding BorderBrush}"
+                            RadiusX="{DynamicResource ControlCornerRadiusSize}"
+                            RadiusY="{DynamicResource ControlCornerRadiusSize}"
                             StrokeThickness="{TemplateBinding BorderThickness}" />
                         <Grid Margin="{TemplateBinding BorderThickness}">
                             <controls:Button
                                 x:Name="btn"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
+                                Background="{TemplateBinding Background}"
                                 Command="{TemplateBinding ShowKeypad}"
+                                Foreground="{TemplateBinding Foreground}"
                                 IsEnabled="{TemplateBinding IsEnabled}">
                                 <controls:TextBlock
+                                    Foreground="{TemplateBinding Foreground}"
                                     Text="{TemplateBinding Content}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
@@ -32,7 +37,6 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="Red"
-                                FontFamily="MS Reference Sans Serif"
                                 FontSize="13"
                                 Foreground="White"
                                 Text="{TemplateBinding ErrorText}"
@@ -46,7 +50,7 @@
                             <Setter TargetName="btn" Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="true">
-                            <Setter TargetName="FieldBorder" Property="Fill" Value="{DynamicResource Accent}" />
+                            <Setter TargetName="FieldBorder" Property="Fill" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

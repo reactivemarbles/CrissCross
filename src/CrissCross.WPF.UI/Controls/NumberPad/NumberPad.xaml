@@ -20,7 +20,7 @@
     <Grid>
         <Grid
             x:Name="Mask"
-            Background="Black"
+            Background="{Binding MaskColor}"
             Opacity="0.1" />
         <Grid
             x:Name="WGrid"
