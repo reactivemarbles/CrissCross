@@ -14,7 +14,7 @@
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Compatability with Net 6/8 and netstandard2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatability with Net 8/9 and netstandard2.0</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -29,12 +29,12 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.2.0</AvaloniaVersion>
+    <AvaloniaVersion>11.2.1</AvaloniaVersion>
     <ReactiveUIVersion>20.1.63</ReactiveUIVersion>
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
-    <CrissCrossCoreTargetFrameworks>netstandard2.0;net6.0;net8.0</CrissCrossCoreTargetFrameworks>
-    <CrissCrossWinTargetFrameworks>net462;net472;net48;net6.0-windows10.0.17763.0;net8.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
-    <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net6.0-windows;net8.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossCoreTargetFrameworks>netstandard2.0;net8.0;net9.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>net462;net472;net48;net8.0-windows10.0.17763.0;net9.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net8.0-windows;net9.0-windows</CrissCrossWebviewTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
