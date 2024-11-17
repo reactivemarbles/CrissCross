@@ -1,0 +1,72 @@
+﻿<UserControl
+    x:Class="CrissCross.WPF.UI.Gallery.Views.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CrissCross.WPF.UI.Gallery.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ui:DynamicScrollViewer
+        Margin="0,0,0,20"
+        CanContentScroll="True"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <ui:TextBlock
+                FontSize="20"
+                FontWeight="Medium"
+                Text="Welcome to CrissCross" />
+            <ui:TextBlock
+                FontSize="16"
+                FontWeight="Normal"
+                Text="Step 1: Add the CrissCross.UI namespace to your XAML file." />
+            <ui:TextBlock
+                FontSize="16"
+                FontWeight="Normal"
+                Text="xmlns:ui='https://github.com/reactivemarbles/CrissCross.ui'" />
+            <ui:TextBlock
+                FontSize="16"
+                FontWeight="Normal"
+                Text="Step 2: Use CrissCross UI components in your XAML." />
+            <ui:TextBlock
+                FontSize="16"
+                FontWeight="Normal"
+                Text="Example:" />
+            <Border
+                Padding="10"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <ui:TextBlock
+                    FontSize="14"
+                    FontWeight="Normal"
+                    Text="&lt;ui:TextBlock FontSize='20' FontWeight='Medium' Text='Welcome to CrissCross' /&gt;" />
+            </Border>
+            <ui:TextBlock
+                FontSize="16"
+                FontWeight="Normal"
+                Text="Step 3: Build and run your application to see the CrissCross UI components in action." />
+            <ui:TextBlock
+                Margin="0,10"
+                FontSize="20"
+                FontWeight="Medium"
+                Text="Project Setup - use the following as a guide for setting up your initial application" />
+            <ui:TextBlock
+                x:Name="AppXamlSetup"
+                Margin="0,10"
+                FontSize="12"
+                FontWeight="Normal" />
+            <ui:TextBlock
+                x:Name="MainWindowXamlSetup"
+                Margin="0,10"
+                FontSize="12"
+                FontWeight="Normal" />
+            <ui:TextBlock
+                x:Name="MainWindowXamlCsSetup"
+                Margin="0,10"
+                FontSize="12"
+                FontWeight="Normal" />
+        </StackPanel>
+    </ui:DynamicScrollViewer>
+</UserControl>

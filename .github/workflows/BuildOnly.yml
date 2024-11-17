@@ -25,6 +25,8 @@ jobs:
   windows-latest:
     name: windows-latest
     runs-on: windows-latest
+    outputs:
+      nbgv: ${{ steps.nbgv.outputs.SemVer2 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,11 +37,19 @@ jobs:
         with:
           distribution: 'microsoft'
           java-version: '11'
+
+      - name: Setup .NET 6/8/9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+            9.0.x
       
       - name: 'Install DotNet workloads'
         shell: bash
         run: |
-          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools
+          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools wasm-tools-net8
 
       - name: NBGV
         id: nbgv

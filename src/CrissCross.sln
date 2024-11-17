@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross", "CrissCross\CrissCross.csproj", "{C7547508-6BC9-46E6-A4B2-C9A359F19943}"
@@ -57,6 +57,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.UI.CC_Nav.Test", "CrissCross.WPF.UI.CC_Nav.Test\CrissCross.WPF.UI.CC_Nav.Test.csproj", "{B9916462-57B0-4F2F-8D79-BFAED0894AD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.Plot", "CrissCross.WPF.Plot\CrissCross.WPF.Plot.csproj", "{AE758CAF-4B9E-48EC-9BBF-81DCD19AFD4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrissCross.WPF.UI.Gallery", "CrissCross.WPF.UI.Gallery\CrissCross.WPF.UI.Gallery.csproj", "{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -611,6 +613,30 @@ Global
 		{AE758CAF-4B9E-48EC-9BBF-81DCD19AFD4E}.Release|x64.Build.0 = Release|Any CPU
 		{AE758CAF-4B9E-48EC-9BBF-81DCD19AFD4E}.Release|x86.ActiveCfg = Release|Any CPU
 		{AE758CAF-4B9E-48EC-9BBF-81DCD19AFD4E}.Release|x86.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Debug|x86.Build.0 = Debug|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|ARM.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|iPhone.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|x64.Build.0 = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -628,6 +654,7 @@ Global
 		{83C17C17-D457-4E6E-B460-A5755B04D38D} = {515C2FFD-32C9-4521-9671-A50B922CE976}
 		{93F5CEFA-AB26-4530-A918-924F95F9A9A7} = {515C2FFD-32C9-4521-9671-A50B922CE976}
 		{B9916462-57B0-4F2F-8D79-BFAED0894AD1} = {515C2FFD-32C9-4521-9671-A50B922CE976}
+		{EFB79B68-F718-4DFD-AC44-95C78F0E7E8C} = {515C2FFD-32C9-4521-9671-A50B922CE976}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC651710-D6F3-492D-9CF4-14892745A17E}

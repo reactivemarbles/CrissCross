@@ -4,6 +4,7 @@
 
 #if !DESIGN
 using System.Reactive;
+using System.Runtime.Versioning;
 using CrissCross.WinForms.Test.Views;
 using ReactiveUI;
 using Splat;
@@ -20,6 +21,7 @@ public class MainWindowViewModel : RxObject
     /// <summary>
     /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
     /// </summary>
+    [RequiresPreviewFeatures]
     public MainWindowViewModel()
     {
         Locator.CurrentMutable.RegisterConstant<MainViewModel>(new());

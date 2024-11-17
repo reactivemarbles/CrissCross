@@ -61,6 +61,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// Gets or sets the view locator.
     /// </summary>
     [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public IViewLocator? ViewLocator { get; set; }
 
     /// <summary>
@@ -69,6 +70,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// <value>
     /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public bool? CanNavigateBack { get; set; }
 
     /// <summary>
@@ -93,6 +95,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// <value>
     /// The name of the host.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public string HostName { get; set; } = string.Empty;
 
     /// <summary>
@@ -101,6 +104,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// <value>
     /// <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public bool? NavigateBackIsEnabled { get; set; }
 
     /// <summary>
@@ -109,6 +113,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     /// <value>
     /// The content.
     /// </value>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public Control? Content
     {
         get => _content;

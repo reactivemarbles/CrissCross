@@ -115,8 +115,8 @@
                                                                   Converter={StaticResource RightSplitThicknessConverter}}"
                                 CornerRadius="{TemplateBinding CornerRadius,
                                                                Converter={StaticResource RightSplitCornerRadiusConverter}}">
-                                <ToggleButton
-                                    Name="ToggleButton"
+                                <controls:ToggleButton
+                                    x:Name="ToggleButton"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     ClickMode="Press"
@@ -125,7 +125,7 @@
                                     IsChecked="{TemplateBinding IsDropDownOpen}"
                                     Style="{StaticResource DefaultSplitButtonToggleButtonStyle}">
                                     <controls:SymbolIcon FontSize="10" Symbol="ChevronDown24" />
-                                </ToggleButton>
+                                </controls:ToggleButton>
                             </Border>
                         </Grid>
                     </Border>
