@@ -14,14 +14,13 @@
     x:TypeArguments="local:MainWindowViewModel"
     mc:Ignorable="d">
     <ui:FluentNavigationWindow.LeftContent>
-        <StackPanel>
+        <ui:StackPanel>
             <ui:TextBox Margin="3,0,0,0" Text="{Binding Filter, ElementName=NavigationLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <ui:TextBox.Icon>
                     <ui:SymbolIcon Symbol="Search20" />
                 </ui:TextBox.Icon>
             </ui:TextBox>
             <ui:NavigationVMLeft x:Name="NavigationLeft" />
-        </StackPanel>
+        </ui:StackPanel>
     </ui:FluentNavigationWindow.LeftContent>
-    <Grid />
 </ui:FluentNavigationWindow>

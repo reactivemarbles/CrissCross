@@ -44,7 +44,9 @@
                                 Margin="0"
                                 FontSize="{TemplateBinding SubtitleFontSize}"
                                 Foreground="{DynamicResource CardForegroundPressed}"
-                                Text="{TemplateBinding Subtitle}" />
+                                Text="{TemplateBinding Subtitle}"
+                                TextAlignment="Center"
+                                TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
                 </ControlTemplate>
