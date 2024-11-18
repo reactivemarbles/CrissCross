@@ -24,7 +24,14 @@
                 Grid.Column="0"
                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                Content="{TemplateBinding Content}" />
+                Content="{TemplateBinding Content}">
+                <ContentPresenter.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="TextAlignment" Value="Center" />
+                    </Style>
+                </ContentPresenter.Resources>
+            </ContentPresenter>
             <Grid
                 x:Name="ChevronGrid"
                 Grid.Column="1"
@@ -147,7 +154,14 @@
                                             x:Name="HeaderContentPresenter"
                                             Grid.Column="1"
                                             Content="{TemplateBinding Header}"
-                                            TextElement.Foreground="{TemplateBinding Foreground}" />
+                                            TextElement.Foreground="{TemplateBinding Foreground}">
+                                            <ContentPresenter.Resources>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="TextWrapping" Value="Wrap" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </ContentPresenter.Resources>
+                                        </ContentPresenter>
                                     </Grid>
                                 </ToggleButton.Content>
                             </ToggleButton>

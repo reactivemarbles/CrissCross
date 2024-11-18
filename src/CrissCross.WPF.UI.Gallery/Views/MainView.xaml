@@ -13,28 +13,46 @@
         Margin="0,0,0,20"
         CanContentScroll="True"
         VerticalScrollBarVisibility="Auto">
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <ui:TextBlock
                 FontSize="20"
                 FontWeight="Medium"
                 Text="Welcome to CrissCross" />
             <ui:TextBlock
+                Grid.Row="1"
                 FontSize="16"
                 FontWeight="Normal"
                 Text="Step 1: Add the CrissCross.UI namespace to your XAML file." />
             <ui:TextBlock
+                Grid.Row="2"
                 FontSize="16"
                 FontWeight="Normal"
                 Text="xmlns:ui='https://github.com/reactivemarbles/CrissCross.ui'" />
             <ui:TextBlock
+                Grid.Row="3"
                 FontSize="16"
                 FontWeight="Normal"
                 Text="Step 2: Use CrissCross UI components in your XAML." />
             <ui:TextBlock
+                Grid.Row="4"
                 FontSize="16"
                 FontWeight="Normal"
                 Text="Example:" />
             <Border
+                Grid.Row="5"
                 Padding="10"
                 BorderBrush="Black"
                 BorderThickness="1">
@@ -44,29 +62,34 @@
                     Text="&lt;ui:TextBlock FontSize='20' FontWeight='Medium' Text='Welcome to CrissCross' /&gt;" />
             </Border>
             <ui:TextBlock
+                Grid.Row="6"
                 FontSize="16"
                 FontWeight="Normal"
                 Text="Step 3: Build and run your application to see the CrissCross UI components in action." />
             <ui:TextBlock
+                Grid.Row="7"
                 Margin="0,10"
                 FontSize="20"
                 FontWeight="Medium"
                 Text="Project Setup - use the following as a guide for setting up your initial application" />
             <ui:TextBlock
                 x:Name="AppXamlSetup"
+                Grid.Row="8"
                 Margin="0,10"
                 FontSize="12"
                 FontWeight="Normal" />
             <ui:TextBlock
                 x:Name="MainWindowXamlSetup"
+                Grid.Row="9"
                 Margin="0,10"
                 FontSize="12"
                 FontWeight="Normal" />
             <ui:TextBlock
                 x:Name="MainWindowXamlCsSetup"
+                Grid.Row="10"
                 Margin="0,10"
                 FontSize="12"
                 FontWeight="Normal" />
-        </StackPanel>
+        </Grid>
     </ui:DynamicScrollViewer>
 </UserControl>

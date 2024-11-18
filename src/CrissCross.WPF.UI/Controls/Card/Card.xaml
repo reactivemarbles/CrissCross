@@ -44,7 +44,14 @@
                             <ContentPresenter
                                 x:Name="ContentPresenter"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextAlignment" Value="Center" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
                         </Border>
 
                         <Border
@@ -56,7 +63,14 @@
                             BorderThickness="1"
                             CornerRadius="0,0,4,4"
                             Visibility="Collapsed">
-                            <ContentPresenter x:Name="FooterContentPresenter" Content="{TemplateBinding Footer}" />
+                            <ContentPresenter x:Name="FooterContentPresenter" Content="{TemplateBinding Footer}">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextAlignment" Value="Center" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
                         </Border>
                     </Grid>
 
