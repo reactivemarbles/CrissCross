@@ -4,14 +4,15 @@
 
 using System.Windows.Controls;
 using CrissCross.WPF.UI.Converters;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Snackbar inform user of a process that an app has performed or will perform. It appears temporarily, towards the bottom of the window.
 /// </summary>
-public class Snackbar : ContentControl, IAppearanceControl, IIconControl
+public partial class Snackbar : ContentControl, IAppearanceControl, IIconControl
 {
     /// <summary>
     /// Property for <see cref="IsCloseButtonEnabled"/>.
@@ -90,7 +91,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     /// </summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(Snackbar),
         new PropertyMetadata(null));
 
@@ -137,7 +138,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     {
         Presenter = presenter;
 
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<object>(_ => Hide()));
+        SetValue(TemplateButtonCommandProperty, HideCommand);
     }
 
     /// <summary>
@@ -258,7 +259,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     /// <summary>
     /// Gets command triggered after clicking the button in the template.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <summary>
     /// Shows the <see cref="Snackbar"/>.
@@ -309,6 +310,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     /// <summary>
     /// Hides the <see cref="Snackbar"/>.
     /// </summary>
+    [ReactiveCommand]
     protected virtual void Hide() => _ = Presenter.HideCurrent();
 
     /// <summary>

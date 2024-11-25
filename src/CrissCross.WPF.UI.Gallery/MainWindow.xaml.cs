@@ -5,6 +5,7 @@
 using System.Reactive.Disposables;
 using System.Windows;
 using CrissCross.WPF.UI.Appearance;
+using CrissCross.WPF.UI.Controls;
 using CrissCross.WPF.UI.Gallery.ViewModels;
 using ReactiveUI;
 using Splat;
@@ -33,6 +34,7 @@ public partial class MainWindow : IAmBuilt
         // Watch for system theme changes
         SystemThemeWatcher.Watch(this);
         InitializeComponent();
+        Navigation = NavBreadcrumb;
 
         // Set the data context
         DataContext = ViewModel = new();
@@ -47,11 +49,23 @@ public partial class MainWindow : IAmBuilt
             this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
             this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
 
+            NavBreadcrumb.SetupNavigation("mainWindow");
+
             // Navigate to the main view
-            this.NavigateToView<MainViewModel>();
+            NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
+
+            ////this.NavigateToView<MainViewModel>();
         });
 
         // Dispose the view model on close
         Closing += (s, e) => ViewModel.Dispose();
     }
+
+    /// <summary>
+    /// Gets the nav breadcrumb.
+    /// </summary>
+    /// <value>
+    /// The nav breadcrumb.
+    /// </value>
+    public static BreadcrumbBar? Navigation { get; private set; }
 }

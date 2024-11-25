@@ -3,7 +3,8 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -12,7 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(ThumbRate), "ThumbRate.bmp")]
-public class ThumbRate : System.Windows.Controls.Control
+public partial class ThumbRate : System.Windows.Controls.Control
 {
     /// <summary>
     /// Property for <see cref="State"/>.
@@ -37,14 +38,14 @@ public class ThumbRate : System.Windows.Controls.Control
     /// </summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(ThumbRate),
         new PropertyMetadata(null));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ThumbRate"/> class.
     /// </summary>
-    public ThumbRate() => SetValue(TemplateButtonCommandProperty, new RelayCommand<ThumbRateState>(OnTemplateButtonClick));
+    public ThumbRate() => SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
 
     /// <summary>
     /// Occurs when <see cref="State"/> is changed.
@@ -67,12 +68,13 @@ public class ThumbRate : System.Windows.Controls.Control
     /// <summary>
     /// Gets command triggered after clicking the button.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <summary>
     /// Triggered by clicking a button in the control template.
     /// </summary>
     /// <param name="parameter">The parameter.</param>
+    [ReactiveCommand]
     protected virtual void OnTemplateButtonClick(ThumbRateState parameter)
     {
         if (State == parameter)

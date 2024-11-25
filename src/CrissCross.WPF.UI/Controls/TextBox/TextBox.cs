@@ -4,14 +4,15 @@
 
 using System.Diagnostics;
 using System.Windows.Controls;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Extended <see cref="System.Windows.Controls.TextBox"/> with additional parameters like <see cref="PlaceholderText"/>.
 /// </summary>
-public class TextBox : System.Windows.Controls.TextBox
+public partial class TextBox : System.Windows.Controls.TextBox
 {
     /// <summary>Identifies the <see cref="Icon"/> dependency property.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
@@ -72,7 +73,7 @@ public class TextBox : System.Windows.Controls.TextBox
     /// <summary>Identifies the <see cref="TemplateButtonCommand"/> dependency property.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(TextBox),
         new PropertyMetadata(null));
 
@@ -81,7 +82,7 @@ public class TextBox : System.Windows.Controls.TextBox
     /// </summary>
     public TextBox()
     {
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<string>(OnTemplateButtonClick));
+        SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
         CurrentPlaceholderEnabled = PlaceholderEnabled;
     }
 
@@ -160,7 +161,7 @@ public class TextBox : System.Windows.Controls.TextBox
     /// <summary>
     /// Gets the command triggered when clicking the button.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <inheritdoc />
     protected override void OnTextChanged(TextChangedEventArgs e)
@@ -250,6 +251,7 @@ public class TextBox : System.Windows.Controls.TextBox
     /// Triggered by clicking a button in the control template.
     /// </summary>
     /// <param name="parameter">The parameter.</param>
+    [ReactiveCommand]
     protected virtual void OnTemplateButtonClick(string? parameter)
     {
         Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "Wpf.Ui.TextBox");

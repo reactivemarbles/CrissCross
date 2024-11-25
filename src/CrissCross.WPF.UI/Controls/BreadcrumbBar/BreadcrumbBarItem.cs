@@ -39,6 +39,55 @@ public class BreadcrumbBarItem : System.Windows.Controls.ContentControl
         new PropertyMetadata(false));
 
     /// <summary>
+    /// The self property.
+    /// </summary>
+    public static readonly DependencyProperty SelfProperty =
+        DependencyProperty.Register(
+            nameof(Self),
+            typeof(BreadcrumbBarItem),
+            typeof(BreadcrumbBarItem),
+            new PropertyMetadata(null));
+
+    /// <summary>
+    /// The navigation type property.
+    /// </summary>
+    public static readonly DependencyProperty NavigationTypeProperty =
+        DependencyProperty.Register(
+            nameof(NavigationType),
+            typeof(Type),
+            typeof(BreadcrumbBarItem),
+            new PropertyMetadata(null));
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BreadcrumbBarItem"/> class.
+    /// </summary>
+    public BreadcrumbBarItem() => Self = this;
+
+    /// <summary>
+    /// Gets or sets the type of the navigation.
+    /// </summary>
+    /// <value>
+    /// The type of the navigation.
+    /// </value>
+    public Type NavigationType
+    {
+        get => (Type)GetValue(NavigationTypeProperty);
+        set => SetValue(NavigationTypeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the self.
+    /// </summary>
+    /// <value>
+    /// The self.
+    /// </value>
+    public BreadcrumbBarItem Self
+    {
+        get => (BreadcrumbBarItem)GetValue(SelfProperty);
+        private set => SetValue(SelfProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets displayed <see cref="IconElement"/>.
     /// </summary>
     public IconElement? Icon

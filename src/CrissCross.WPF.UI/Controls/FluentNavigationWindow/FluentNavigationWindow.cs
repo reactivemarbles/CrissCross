@@ -14,7 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
 /// <seealso cref="IActivatableView" />
-public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigation, IActivatableView
+public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigation, IActivatableView, IAmBuilt
 {
     /// <summary>
     /// The navigate back is enabled property.
