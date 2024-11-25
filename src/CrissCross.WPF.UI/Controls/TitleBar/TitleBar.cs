@@ -8,7 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -21,7 +22,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementMaximizeButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementRestoreButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementCloseButton, Type = typeof(TitleBarButton))]
-public class TitleBar : Control, IThemeControl
+public partial class TitleBar : Control, IThemeControl
 {
     /// <summary>
     /// Property for <see cref="ApplicationTheme"/>.
@@ -210,7 +211,7 @@ public class TitleBar : Control, IThemeControl
     /// </summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(TitleBar),
         new PropertyMetadata(null));
 
@@ -232,7 +233,7 @@ public class TitleBar : Control, IThemeControl
     public TitleBar()
     {
         Content = [];
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<TitleBarButtonType>(OnTemplateButtonClick));
+        SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
         dpiScale ??= VisualTreeHelper.GetDpi(this);
 
         Loaded += OnLoaded;
@@ -430,7 +431,7 @@ public class TitleBar : Control, IThemeControl
     /// <summary>
     /// Gets command triggered after clicking the titlebar button.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <summary>
     /// Gets or sets lets you override the behavior of the Maximize/Restore button with an <see cref="Action"/>.
@@ -584,6 +585,7 @@ public class TitleBar : Control, IThemeControl
         }
     }
 
+    [ReactiveCommand]
     private void OnTemplateButtonClick(TitleBarButtonType buttonType)
     {
         switch (buttonType)

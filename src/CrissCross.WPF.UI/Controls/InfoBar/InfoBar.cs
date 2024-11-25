@@ -2,7 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -65,14 +65,14 @@ public class InfoBar : System.Windows.Controls.ContentControl
     /// </summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(InfoBar),
         new PropertyMetadata(null));
 
     /// <inheritdoc />
     public InfoBar() => SetValue(
             TemplateButtonCommandProperty,
-            new RelayCommand<object>(_ => SetCurrentValue(IsOpenProperty, false)));
+            ReactiveCommand.Create<object>(_ => SetCurrentValue(IsOpenProperty, false)));
 
     /// <summary>
     /// Gets or sets a value indicating whether the user can close the
@@ -124,8 +124,8 @@ public class InfoBar : System.Windows.Controls.ContentControl
     }
 
     /// <summary>
-    /// Gets the <see cref="RelayCommand{T}"/> triggered after clicking
+    /// Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking
     /// the close button.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 }

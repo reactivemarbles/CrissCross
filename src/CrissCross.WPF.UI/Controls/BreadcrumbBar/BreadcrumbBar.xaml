@@ -64,7 +64,7 @@
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Command="{Binding Path=TemplateButtonCommand, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type controls:BreadcrumbBar}}}"
-                            CommandParameter="{TemplateBinding Content}"
+                            CommandParameter="{TemplateBinding Self}"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{Binding Path=ItemTemplate, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type controls:BreadcrumbBar}}}"
                             ContentTemplateSelector="{Binding Path=ItemTemplateSelector, Mode=OneTime, RelativeSource={RelativeSource AncestorType={x:Type controls:BreadcrumbBar}}}"

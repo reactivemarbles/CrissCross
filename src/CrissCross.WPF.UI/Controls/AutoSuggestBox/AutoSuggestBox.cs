@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -30,7 +30,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementTextBox, Type = typeof(TextBox))]
 [TemplatePart(Name = ElementSuggestionsPopup, Type = typeof(Popup))]
 [TemplatePart(Name = ElementSuggestionsList, Type = typeof(ListView))]
-public class AutoSuggestBox : ItemsControl, IIconControl
+public partial class AutoSuggestBox : ItemsControl, IIconControl
 {
     /// <summary>
     /// Property for <see cref="OriginalItemsSource"/>.
@@ -190,7 +190,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
             self.ReleaseTemplateResources();
         };
 
-        SetValue(FocusCommandProperty, new RelayCommand<object>(_ => Focus()));
+        SetValue(FocusCommandProperty, ReactiveCommand.Create(Focus));
     }
 
     /// <summary>

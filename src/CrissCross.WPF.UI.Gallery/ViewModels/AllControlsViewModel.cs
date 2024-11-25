@@ -15,72 +15,72 @@ public partial class AllControlsViewModel : RxObject
     [ReactiveCommand]
     private void Buttons()
     {
-        this.NavigateToView<ButtonsViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<ButtonsViewModel>(breadcrumbItemContent: "Buttons");
     }
 
     [ReactiveCommand]
     private void CheckBox()
     {
-        this.NavigateToView<CheckBoxViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<CheckBoxViewModel>(breadcrumbItemContent: "CheckBox");
     }
 
     [ReactiveCommand]
     private void ComboBox()
     {
-        this.NavigateToView<ComboBoxViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<ComboBoxViewModel>(breadcrumbItemContent: "ComboBox");
     }
 
     [ReactiveCommand]
     private void DatePicker()
     {
-        this.NavigateToView<DatePickerViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<DatePickerViewModel>(breadcrumbItemContent: "DatePicker");
     }
 
     [ReactiveCommand]
     private void Image()
     {
-        this.NavigateToView<ImageViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<ImageViewModel>(breadcrumbItemContent: "Image");
     }
 
     [ReactiveCommand]
     private void NumericPushButton()
     {
-        this.NavigateToView<NumericPushButtonViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<NumericPushButtonViewModel>(breadcrumbItemContent: "NumericPushButton");
     }
 
     [ReactiveCommand]
     private void PasswordBox()
     {
-        this.NavigateToView<PasswordBoxViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<PasswordBoxViewModel>(breadcrumbItemContent: "PasswordBox");
     }
 
     [ReactiveCommand]
     private void RadioButton()
     {
-        this.NavigateToView<RadioButtonViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<RadioButtonViewModel>(breadcrumbItemContent: "RadioButton");
     }
 
     [ReactiveCommand]
     private void Slider()
     {
-        this.NavigateToView<SliderViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<SliderViewModel>(breadcrumbItemContent: "Slider");
     }
 
     [ReactiveCommand]
     private void TextBlock()
     {
-        this.NavigateToView<TextBlockViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<TextBlockViewModel>(breadcrumbItemContent: "TextBlock");
     }
 
     [ReactiveCommand]
     private void TextBox()
     {
-        this.NavigateToView<TextBoxViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<TextBoxViewModel>(breadcrumbItemContent: "TextBox");
     }
 
     [ReactiveCommand]
     private void ToggleButton()
     {
-        this.NavigateToView<ToggleButtonViewModel>("mainWindow");
+        MainWindow.Navigation?.NavigateTo<ToggleButtonViewModel>(breadcrumbItemContent: "ToggleButton");
     }
 }

@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using System.Runtime.CompilerServices;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -13,7 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(MessageBox), "MessageBox.bmp")]
-public class MessageBox : System.Windows.Window
+public partial class MessageBox : System.Windows.Window
 {
     /// <summary>Identifies the <see cref="ShowTitle"/> dependency property.</summary>
     public static readonly DependencyProperty ShowTitleProperty = DependencyProperty.Register(
@@ -102,7 +102,7 @@ public class MessageBox : System.Windows.Window
     /// <summary>Identifies the <see cref="TemplateButtonCommand"/> dependency property.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(MessageBox),
         new PropertyMetadata(null));
 
@@ -116,7 +116,7 @@ public class MessageBox : System.Windows.Window
     public MessageBox()
     {
         Topmost = true;
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<MessageBoxButton>(OnButtonClick));
+        SetValue(TemplateButtonCommandProperty, OnButtonClickCommand);
 
         PreviewMouseDoubleClick += static (_, args) => args.Handled = true;
 
@@ -238,7 +238,7 @@ public class MessageBox : System.Windows.Window
     /// <summary>
     /// Gets the command triggered after clicking the button on the Footer.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <summary>
     /// Gets or sets the TCS.
@@ -401,6 +401,7 @@ public class MessageBox : System.Windows.Window
     /// Occurs after the <see cref="MessageBoxButton"/> is clicked.
     /// </summary>
     /// <param name="button">The MessageBox button.</param>
+    [ReactiveCommand]
     protected virtual void OnButtonClick(MessageBoxButton button)
     {
         var result = button switch
@@ -415,7 +416,7 @@ public class MessageBox : System.Windows.Window
     }
 
 #if NET8_0_OR_GREATER
-    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_CanCenterOverWPFOwner")]
+    [System.Runtime.CompilerServices.UnsafeAccessor(System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "get_CanCenterOverWPFOwner")]
     private static extern bool CanCenterOverWPFOwnerAccessor(System.Windows.Window w);
 #endif
 

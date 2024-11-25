@@ -13,6 +13,9 @@
     d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
     x:TypeArguments="local:MainWindowViewModel"
     mc:Ignorable="d">
+    <ui:FluentNavigationWindow.TopContent>
+        <ui:BreadcrumbBar x:Name="NavBreadcrumb" />
+    </ui:FluentNavigationWindow.TopContent>
     <ui:FluentNavigationWindow.LeftContent>
         <ui:StackPanel>
             <ui:TextBox Margin="3,0,0,0" Text="{Binding Filter, ElementName=NavigationLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">

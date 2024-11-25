@@ -3,7 +3,8 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
-using CrissCross.WPF.UI.Input;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -39,7 +40,7 @@ namespace CrissCross.WPF.UI.Controls;
 ///     );
 /// </code>
 /// </example>
-public class ContentDialog : ContentControl
+public partial class ContentDialog : ContentControl
 {
     /// <summary>
     /// Property for <see cref="Title"/>.
@@ -225,7 +226,7 @@ public class ContentDialog : ContentControl
     /// </summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
-        typeof(IRelayCommand),
+        typeof(IReactiveCommand),
         typeof(ContentDialog),
         new PropertyMetadata(null));
 
@@ -277,7 +278,7 @@ public class ContentDialog : ContentControl
     /// </summary>
     public ContentDialog()
     {
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<ContentDialogButton>(OnButtonClick));
+        SetValue(TemplateButtonCommandProperty, OnButtonClickCommand);
 
         Loaded += static (sender, _) =>
         {
@@ -294,7 +295,7 @@ public class ContentDialog : ContentControl
     {
         ContentPresenter = contentPresenter;
 
-        SetValue(TemplateButtonCommandProperty, new RelayCommand<ContentDialogButton>(OnButtonClick));
+        SetValue(TemplateButtonCommandProperty, OnButtonClickCommand);
 
         Loaded += static (sender, _) =>
         {
@@ -522,7 +523,7 @@ public class ContentDialog : ContentControl
     /// <summary>
     /// Gets command triggered after clicking the button in the template.
     /// </summary>
-    public IRelayCommand TemplateButtonCommand => (IRelayCommand)GetValue(TemplateButtonCommandProperty);
+    public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
     /// <summary>
     ///  Gets or sets <see cref="ContentPresenter"/> inside of which the dialogue will be placed. The new <see cref="ContentDialog"/> will replace the current <see cref="ContentPresenter.Content"/>.
@@ -605,6 +606,7 @@ public class ContentDialog : ContentControl
     /// Occurs after the <see cref="ContentDialogButton" /> is clicked.
     /// </summary>
     /// <param name="button">The button.</param>
+    [ReactiveCommand]
     protected virtual void OnButtonClick(ContentDialogButton button)
     {
         var buttonClickEventArgs = new ContentDialogButtonClickEventArgs(
