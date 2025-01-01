@@ -56,7 +56,6 @@ partial class Build : NukeBuild
             }
 
             PackagesDirectory.CreateOrCleanDirectory();
-            ////await this.InstallDotNetSdk("8.x.x", "9.x.x");
         });
 
     Target Restore => _ => _
@@ -68,6 +67,7 @@ partial class Build : NukeBuild
         .Executes(() => MSBuildTasks.MSBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
+                .SetMaxCpuCount(Environment.ProcessorCount)
                 .SetRestore(false)));
 
     Target Pack => _ => _

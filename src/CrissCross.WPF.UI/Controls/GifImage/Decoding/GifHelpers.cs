@@ -65,7 +65,7 @@ internal static class GifHelpers
 
     public static ushort GetRepeatCount(GifApplicationExtension ext)
     {
-        if (ext.Data.Length >= 3)
+        if (ext.Data?.Length >= 3)
         {
             return BitConverter.ToUInt16(ext.Data, 1);
         }
@@ -88,8 +88,8 @@ internal static class GifHelpers
     public static Exception UnsupportedVersionException(string version) =>
         new UnsupportedGifVersionException("Unsupported version: " + version);
 
-    public static string GetString(byte[] bytes) =>
-        GetString(bytes, 0, bytes.Length);
+    public static string GetString(byte[]? bytes) =>
+       bytes == null ? string.Empty : GetString(bytes, 0, bytes.Length);
 
     public static string GetString(byte[] bytes, int index, int count) =>
         Encoding.UTF8.GetString(bytes, index, count);

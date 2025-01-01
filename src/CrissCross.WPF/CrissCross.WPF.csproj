@@ -12,11 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2849.39" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' Or '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48'">
-    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
   </ItemGroup>
 
   <ItemGroup>

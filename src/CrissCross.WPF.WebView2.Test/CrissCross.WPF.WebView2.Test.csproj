@@ -11,7 +11,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF.WebView2\CrissCross.WPF.WebView2.csproj" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2849.39" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
   </ItemGroup>
 
   <ItemGroup>
