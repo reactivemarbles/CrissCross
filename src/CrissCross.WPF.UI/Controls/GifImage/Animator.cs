@@ -51,7 +51,7 @@ public abstract class Animator : DependencyObject, IDisposable
         _palettes = CreatePalettes(metadata);
         _bitmap = CreateBitmap(metadata);
         var desc = metadata.Header?.LogicalScreenDescriptor;
-        _stride = 4 * (((desc.Width * 32) + 31) / 32);
+        _stride = 4 * (((desc!.Width * 32) + 31) / 32);
         _previousBackBuffer = new byte[desc.Height * _stride];
         _indexStreamBuffer = CreateIndexStreamBuffer(metadata, _sourceStream);
         _timingManager = CreateTimingManager(metadata, repeatBehavior);
@@ -60,7 +60,7 @@ public abstract class Animator : DependencyObject, IDisposable
 
         if (cacheFrameDataInMemory)
         {
-            _cachedFrameBytes = new byte[_metadata.Frames.Count][];
+            _cachedFrameBytes = new byte[_metadata.Frames!.Count][];
             _loadFramesDataTask = Task.Run(LoadFrames);
         }
     }
@@ -115,7 +115,7 @@ public abstract class Animator : DependencyObject, IDisposable
     /// <value>
     /// The frame count.
     /// </value>
-    public int FrameCount => _metadata.Frames.Count;
+    public int FrameCount => _metadata.Frames!.Count;
 
     /// <summary>
     /// Gets a value indicating whether this instance is complete.
@@ -384,21 +384,20 @@ public abstract class Animator : DependencyObject, IDisposable
 
     private static WriteableBitmap CreateBitmap(GifDataStream metadata)
     {
-        var desc = metadata.Header.LogicalScreenDescriptor;
-        var bitmap = new WriteableBitmap(desc.Width, desc.Height, 96, 96, PixelFormats.Bgra32, null);
-        return bitmap;
+        var desc = metadata.Header?.LogicalScreenDescriptor;
+        return new(desc!.Width, desc.Height, 96, 96, PixelFormats.Bgra32, null);
     }
 
     private static byte[] CreateIndexStreamBuffer(GifDataStream metadata, Stream stream)
     {
         // Find the size of the largest frame pixel data
         // (ignoring the fact that we include the next frame's header)
-        var lastSize = stream.Length - metadata.Frames.Last().ImageData.CompressedDataStartOffset;
+        var lastSize = stream.Length - metadata.Frames!.Last().ImageData!.CompressedDataStartOffset;
         var maxSize = lastSize;
         if (metadata.Frames?.Count > 1)
         {
             var sizes = metadata.Frames.Zip(metadata.Frames.Skip(1), (f1, f2) =>
-                f2.ImageData.CompressedDataStartOffset - f1.ImageData.CompressedDataStartOffset);
+                f2.ImageData!.CompressedDataStartOffset - f1.ImageData!.CompressedDataStartOffset);
             maxSize = Math.Max(sizes.Max(), lastSize);
         }
 
@@ -413,7 +412,7 @@ public abstract class Animator : DependencyObject, IDisposable
         if (metadata.Header?.LogicalScreenDescriptor?.HasGlobalColorTable == true)
         {
             globalColorTable =
-                metadata.GlobalColorTable
+                metadata.GlobalColorTable?
                     .Select(gc => Color.FromArgb(0xFF, gc.R, gc.G, gc.B))
                     .ToArray();
         }
@@ -437,7 +436,7 @@ public abstract class Animator : DependencyObject, IDisposable
                 transparencyIndex = gce.TransparencyIndex;
             }
 
-            palettes[i] = new GifPalette(transparencyIndex, colorTable);
+            palettes[i] = new GifPalette(transparencyIndex, colorTable!);
         }
 
         return palettes;
@@ -508,7 +507,7 @@ public abstract class Animator : DependencyObject, IDisposable
         lineBuffer[startIndex + 3] = color.A;
     }
 
-    private void ClearArea(IGifRect rect) => ClearArea(new Int32Rect(rect.Left, rect.Top, rect.Width, rect.Height));
+    private void ClearArea(IGifRect? rect) => ClearArea(new Int32Rect(rect!.Left, rect.Top, rect.Width, rect.Height));
 
     private void ClearArea(Int32Rect rect)
     {
@@ -528,7 +527,7 @@ public abstract class Animator : DependencyObject, IDisposable
         var actualRepeatBehavior = GetActualRepeatBehavior(metadata, repeatBehavior);
 
         var manager = new TimingManager(actualRepeatBehavior);
-        foreach (var frame in metadata.Frames)
+        foreach (var frame in metadata.Frames!)
         {
             manager.Add(GetFrameDelay(frame));
         }
@@ -553,15 +552,15 @@ public abstract class Animator : DependencyObject, IDisposable
 
                 case GifFrameDisposalMethod.RestoreBackground:
                     {
-                        ClearArea(GetFixedUpFrameRect(_previousFrame.Descriptor));
+                        ClearArea(GetFixedUpFrameRect(_previousFrame?.Descriptor));
                         break;
                     }
 
                 case GifFrameDisposalMethod.RestorePrevious:
                     {
                         CopyToBitmap(_previousBackBuffer, _bitmap, 0, _previousBackBuffer.Length);
-                        var desc = _metadata.Header.LogicalScreenDescriptor;
-                        var rect = new Int32Rect(0, 0, desc.Width, desc.Height);
+                        var desc = _metadata.Header?.LogicalScreenDescriptor;
+                        var rect = new Int32Rect(0, 0, desc!.Width, desc.Height);
                         _bitmap.AddDirtyRect(rect);
                         break;
                     }
@@ -575,16 +574,16 @@ public abstract class Animator : DependencyObject, IDisposable
         }
     }
 
-    private Int32Rect GetFixedUpFrameRect(GifImageDescriptor desc)
+    private Int32Rect GetFixedUpFrameRect(GifImageDescriptor? desc)
     {
-        var width = Math.Min(desc.Width, _bitmap.PixelWidth - desc.Left);
+        var width = Math.Min(desc!.Width, _bitmap.PixelWidth - desc.Left);
         var height = Math.Min(desc.Height, _bitmap.PixelHeight - desc.Top);
-        return new Int32Rect(desc.Left, desc.Top, width, height);
+        return new(desc.Left, desc.Top, width, height);
     }
 
     private async Task GetIndexBytesAsync(int frameIndex, byte[] buffer)
     {
-        var startPosition = _metadata.Frames[frameIndex].ImageData.CompressedDataStartOffset;
+        var startPosition = _metadata.Frames![frameIndex].ImageData!.CompressedDataStartOffset;
 
         _sourceStream.Seek(startPosition, SeekOrigin.Begin);
         using var memoryStream = new MemoryStream(buffer);
@@ -595,25 +594,24 @@ public abstract class Animator : DependencyObject, IDisposable
     {
         var data = frame.ImageData;
         cancellationToken.ThrowIfCancellationRequested();
-        _sourceStream.Seek(data.CompressedDataStartOffset, SeekOrigin.Begin);
+        _sourceStream.Seek(data!.CompressedDataStartOffset, SeekOrigin.Begin);
         using (var ms = new MemoryStream(_indexStreamBuffer))
         {
             await GifHelpers.CopyDataBlocksToStreamAsync(_sourceStream, ms, cancellationToken).ConfigureAwait(false);
         }
 
-        var lzwStream = new LzwDecompressStream(_indexStreamBuffer, data.LzwMinimumCodeSize);
-        return lzwStream;
+        return new LzwDecompressStream(_indexStreamBuffer, data.LzwMinimumCodeSize);
     }
 
     private async Task LoadFrames()
     {
         var biggestFrameSize = 0L;
-        for (var frameIndex = 0; frameIndex < _metadata.Frames.Count; frameIndex++)
+        for (var frameIndex = 0; frameIndex < _metadata.Frames!.Count; frameIndex++)
         {
-            var startPosition = _metadata.Frames[frameIndex].ImageData.CompressedDataStartOffset;
+            var startPosition = _metadata.Frames![frameIndex].ImageData!.CompressedDataStartOffset;
             var endPosition = _metadata.Frames.Count == frameIndex + 1
                 ? _sourceStream.Length
-                : _metadata.Frames[frameIndex + 1].ImageData.CompressedDataStartOffset - 1;
+                : _metadata.Frames![frameIndex + 1].ImageData!.CompressedDataStartOffset - 1;
             var size = endPosition - startPosition;
             biggestFrameSize = Math.Max(size, biggestFrameSize);
         }
@@ -624,8 +622,8 @@ public abstract class Animator : DependencyObject, IDisposable
             var frame = _metadata.Frames[frameIndex];
             var frameDesc = _metadata.Frames[frameIndex].Descriptor;
             await GetIndexBytesAsync(frameIndex, indexCompressedBytes);
-            using var indexDecompressedStream = new LzwDecompressStream(indexCompressedBytes, frame.ImageData.LzwMinimumCodeSize);
-            _cachedFrameBytes[frameIndex] = new byte[frameDesc.Width * frameDesc.Height];
+            using var indexDecompressedStream = new LzwDecompressStream(indexCompressedBytes, frame.ImageData!.LzwMinimumCodeSize);
+            _cachedFrameBytes![frameIndex] = new byte[frameDesc!.Width * frameDesc.Height];
 
             await indexDecompressedStream.ReadAllAsync(_cachedFrameBytes[frameIndex], 0, frameDesc.Width * frameDesc.Height);
         }
@@ -638,7 +636,7 @@ public abstract class Animator : DependencyObject, IDisposable
             return;
         }
 
-        var frame = _metadata.Frames[frameIndex];
+        var frame = _metadata.Frames![frameIndex];
         var desc = frame.Descriptor;
         var rect = GetFixedUpFrameRect(desc);
 
@@ -653,7 +651,7 @@ public abstract class Animator : DependencyObject, IDisposable
         {
             if (frameIndex < _previousFrameIndex)
             {
-                ClearArea(_metadata.Header.LogicalScreenDescriptor);
+                ClearArea(_metadata.Header?.LogicalScreenDescriptor);
             }
             else
             {
@@ -667,18 +665,18 @@ public abstract class Animator : DependencyObject, IDisposable
             var palette = _palettes[frameIndex];
             var transparencyIndex = palette.TransparencyIndex ?? -1;
 
-            var rows = desc.Interlace
+            var rows = desc!.Interlace
                 ? InterlacedRows(rect.Height).ToArray()
                 : NormalRows(rect.Height).ToArray();
 
             if (!_cacheFrameDataInMemory)
             {
                 indexBuffer = new byte[desc.Width * desc.Height];
-                await indexStream.ReadAllAsync(indexBuffer, 0, indexBuffer.Length, cancellationToken);
+                await indexStream!.ReadAllAsync(indexBuffer, 0, indexBuffer.Length, cancellationToken);
             }
             else
             {
-                indexBuffer = _cachedFrameBytes[frameIndex];
+                indexBuffer = _cachedFrameBytes![frameIndex];
             }
 
             for (var y = 0; y < rect.Height; y++)
@@ -734,18 +732,10 @@ public abstract class Animator : DependencyObject, IDisposable
 
     private void TimingManagerCompleted(object? sender, EventArgs e) => OnAnimationCompleted();
 
-    private class GifPalette
+    private class GifPalette(int? transparencyIndex, Color[] colors)
     {
-        private readonly Color[] _colors;
+        public int? TransparencyIndex { get; } = transparencyIndex;
 
-        public GifPalette(int? transparencyIndex, Color[] colors)
-        {
-            TransparencyIndex = transparencyIndex;
-            _colors = colors;
-        }
-
-        public int? TransparencyIndex { get; }
-
-        public Color this[int i] => _colors[i];
+        public Color this[int i] => colors[i];
     }
 }

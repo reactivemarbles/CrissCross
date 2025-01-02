@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using ReactiveMarbles.ObservableEvents;
+using static CrissCross.WPF.UI.Interop.User32;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -320,6 +321,21 @@ public partial class NumberPad : IDisposable
         {
             // Get the current screen
             WindowInteropHelper wih = new(window);
+
+            // TODO: Replace WinForms with Native calls
+            ////var monitor = MonitorFromWindow(wih.Handle, MONITOR_DEFAULTTONEAREST);
+
+            ////var monitorInfo = new NativeMonitorInfo();
+            ////if (monitor != IntPtr.Zero)
+            ////{
+            ////    GetMonitorInfo(monitor, monitorInfo);
+
+            ////    var left = monitorInfo.Monitor.Left;
+            ////    var top = monitorInfo.Monitor.Top;
+            ////    var width = monitorInfo.Monitor.Right - monitorInfo.Monitor.Left;
+            ////    var height = monitorInfo.Monitor.Bottom - monitorInfo.Monitor.Top;
+            ////}
+
             var screen = System.Windows.Forms.Screen.FromHandle(wih.Handle);
 
             // Get all the screens and identify the primary

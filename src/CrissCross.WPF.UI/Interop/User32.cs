@@ -15,6 +15,9 @@ namespace CrissCross.WPF.UI.Interop;
 /// </summary>
 internal static class User32
 {
+    public const Int32 MONITOR_DEFAULTTOPRIMERTY = 0x00000001;
+    public const Int32 MONITOR_DEFAULTTONEAREST = 0x00000002;
+
     /// <summary>
     /// SetWindowPos options
     /// </summary>
@@ -306,6 +309,39 @@ internal static class User32
         ACCENT_ENABLE_BLURBEHIND = 3,
         ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
         ACCENT_INVALID_STATE = 5
+    }
+
+    /// <summary>
+    /// NativeMonitorInfo.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    public sealed class NativeMonitorInfo
+    {
+        public Int32 Size = Marshal.SizeOf(typeof(NativeMonitorInfo));
+        public NativeRectangle Monitor;
+        public NativeRectangle Work;
+        public Int32 Flags;
+    }
+
+    /// <summary>
+    /// NativeRectangle.
+    /// </summary>
+    [Serializable, StructLayout(LayoutKind.Sequential)]
+    public struct NativeRectangle
+    {
+        public Int32 Left;
+        public Int32 Top;
+        public Int32 Right;
+        public Int32 Bottom;
+
+
+        public NativeRectangle(Int32 left, Int32 top, Int32 right, Int32 bottom)
+        {
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
+        }
     }
 
     /// <summary>
@@ -1374,6 +1410,15 @@ internal static class User32
     /// <returns>If the window intersects one or more display monitor rectangles, the return value is an HMONITOR handle to the display monitor that has the largest area of intersection with the window.</returns>
     [DllImport(Libraries.User32)]
     public static extern IntPtr MonitorFromWindow(IntPtr hWnd, uint dwFlags);
+
+    /// <summary>
+    /// Gets the monitor information.
+    /// </summary>
+    /// <param name="hMonitor">The h monitor.</param>
+    /// <param name="lpmi">The lpmi.</param>
+    /// <returns></returns>
+    [DllImport(Libraries.User32)]
+    public static extern bool GetMonitorInfo(IntPtr hMonitor, NativeMonitorInfo lpmi);
 
     /// <summary>
     /// Retrieves the specified system metric or system configuration setting.

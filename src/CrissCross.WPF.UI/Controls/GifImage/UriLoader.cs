@@ -15,7 +15,7 @@ internal static class UriLoader
 {
     public static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
 
-    public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int> progress)
+    public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int>? progress)
     {
         if (uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https"))
         {
@@ -25,7 +25,7 @@ internal static class UriLoader
         return GetStreamFromUriCoreAsync(uri);
     }
 
-    private static async Task<Stream?> GetNetworkStreamAsync(Uri uri, IProgress<int> progress)
+    private static async Task<Stream?> GetNetworkStreamAsync(Uri uri, IProgress<int>? progress)
     {
         var cacheFileName = GetCacheFileName(uri);
         var cacheStream = await OpenTempFileStreamAsync(cacheFileName);
@@ -35,11 +35,11 @@ internal static class UriLoader
             cacheStream = await OpenTempFileStreamAsync(cacheFileName);
         }
 
-        progress.Report(100);
+        progress?.Report(100);
         return cacheStream;
     }
 
-    private static async Task DownloadToCacheFileAsync(Uri uri, string fileName, IProgress<int> progress)
+    private static async Task DownloadToCacheFileAsync(Uri uri, string fileName, IProgress<int>? progress)
     {
         try
         {
