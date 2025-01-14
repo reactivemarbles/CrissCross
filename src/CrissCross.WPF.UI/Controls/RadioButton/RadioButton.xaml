@@ -6,16 +6,11 @@
 
     <system:Double x:Key="RadioButtonCheckGlyphSize">12</system:Double>
     <system:Double x:Key="RadioButtonOuterEllipseSize">20</system:Double>
-    <!--
-    <system:Double x:Key="RadioButtonCheckGlyphPointerOverSize">14</system:Double>
-    <system:Double x:Key="RadioButtonCheckGlyphPressedOverSize">10</system:Double>-->
     <system:Double x:Key="RadioButtonStrokeThickness">1</system:Double>
     <Thickness x:Key="RadioButtonPadding">8,6,0,0</Thickness>
 
     <Style x:Key="DefaultRadioButtonStyle" TargetType="{x:Type RadioButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource RadioButtonOuterEllipseCheckedStroke}" />
         <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -26,7 +21,6 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
@@ -98,51 +92,6 @@
                             TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <!-- Clunky, todo
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsMouseOver" Value="True" />
-                                <Condition Property="IsChecked" Value="True" />
-                                <Condition Property="IsEnabled" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <MultiTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="CheckGlyph"
-                                            Storyboard.TargetProperty="(Ellipse.LayoutTransform).(ScaleTransform.ScaleY)"
-                                            From="1.0"
-                                            To="1.2"
-                                            Duration="00:00:00.167" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="CheckGlyph"
-                                            Storyboard.TargetProperty="(Ellipse.LayoutTransform).(ScaleTransform.ScaleX)"
-                                            From="1.0"
-                                            To="1.2"
-                                            Duration="00:00:00.167" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiTrigger.EnterActions>
-                            <MultiTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="CheckGlyph"
-                                            Storyboard.TargetProperty="(Ellipse.LayoutTransform).(ScaleTransform.ScaleY)"
-                                            From="1.2"
-                                            To="1.0"
-                                            Duration="00:00:00.167" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="CheckGlyph"
-                                            Storyboard.TargetProperty="(Ellipse.LayoutTransform).(ScaleTransform.ScaleX)"
-                                            From="1.2"
-                                            To="1.0"
-                                            Duration="00:00:00.167" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiTrigger.ExitActions>
-                        </MultiTrigger>
-                        -->
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsPressed" Value="True" />
@@ -177,7 +126,6 @@
                                 <Condition Property="IsEnabled" Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="OuterEllipse" Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillPointerOver}" />
-                            <!--<Setter TargetName="CheckGlyph" Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseCheckedStrokePointerOver}" />-->
                             <Setter TargetName="PressedCheckGlyph" Property="Background" Value="{DynamicResource RadioButtonOuterEllipseCheckedStrokePointerOver}" />
                         </MultiTrigger>
                         <MultiTrigger>
@@ -210,9 +158,7 @@
     </Style>
 
     <Style x:Key="DefaultuiRadioButtonStyle" TargetType="{x:Type controls:RadioButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource RadioButtonOuterEllipseCheckedStroke}" />
         <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -223,7 +169,6 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
@@ -329,7 +274,6 @@
                                 <Condition Property="IsEnabled" Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="OuterEllipse" Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillPointerOver}" />
-                            <!--<Setter TargetName="CheckGlyph" Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseCheckedStrokePointerOver}" />-->
                             <Setter TargetName="PressedCheckGlyph" Property="Background" Value="{DynamicResource RadioButtonOuterEllipseCheckedStrokePointerOver}" />
                         </MultiTrigger>
                         <MultiTrigger>

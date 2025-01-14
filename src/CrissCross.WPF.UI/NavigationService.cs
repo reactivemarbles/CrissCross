@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -18,6 +18,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     /// </summary>
 #pragma warning disable SA1401 // Fields should be private
     protected INavigationView? NavigationControl;
+#pragma warning restore SA1401 // Fields should be private
 
     /// <summary>
     /// Locally attached page service.

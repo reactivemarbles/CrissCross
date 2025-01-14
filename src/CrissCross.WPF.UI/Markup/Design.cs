@@ -1,22 +1,12 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Markup;
 
 /// <summary>
-/// Custom design time attributes based on Marcin Najder implementation.
+/// Design.
 /// </summary>
-/// <example>
-/// <code lang="xml">
-/// &lt;ui:FluentWindow
-///     xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
-///     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-///     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"&gt;
-///     &lt;Button Content="Hello World" /&gt;
-/// &lt;/FluentWindow&gt;
-/// </code>
-/// </example>
 public static class Design
 {
     /// <summary>
@@ -61,8 +51,7 @@ public static class Design
 
             if (
                 !(_inDesignMode ?? false)
-                && System
-                    .Diagnostics.Process.GetCurrentProcess()
+                && Process.GetCurrentProcess()
                     .ProcessName.StartsWith(DesignProcessName, System.StringComparison.Ordinal))
             {
                 _inDesignMode = true;

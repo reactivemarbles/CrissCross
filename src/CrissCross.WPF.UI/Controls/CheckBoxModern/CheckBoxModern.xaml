@@ -9,9 +9,7 @@
     <Thickness x:Key="CheckBoxContentMargin">8,0,0,0</Thickness>
 
     <Style TargetType="{x:Type local:CheckBoxModern}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxBorderBrush}" />

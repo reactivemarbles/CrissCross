@@ -3,9 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
-
-    <!--  TODO: Increase size on mouse over  -->
-
     <system:Double x:Key="RadioButtonBorderThemeThickness">1</system:Double>
     <system:Double x:Key="ToggleButtonWidth">40</system:Double>
     <system:Double x:Key="ToggleButtonHeight">20</system:Double>
@@ -14,9 +11,7 @@
     <Thickness x:Key="ToggleSwitchContentMargin">8,0,0,0</Thickness>
 
     <Style x:Key="DefaultUiToggleSwitchStyle" TargetType="{x:Type controls:ToggleSwitch}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOn}" />
         <Setter Property="Foreground" Value="{DynamicResource ToggleSwitchContentForeground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -26,7 +21,6 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />

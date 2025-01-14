@@ -11,9 +11,7 @@
     <system:Double x:Key="CardControlIconSize">24.0</system:Double>
 
     <Style x:Key="DefaultUiCardControlStyle" TargetType="{x:Type controls:CardControl}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource CardBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource CardForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
@@ -23,7 +21,6 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />

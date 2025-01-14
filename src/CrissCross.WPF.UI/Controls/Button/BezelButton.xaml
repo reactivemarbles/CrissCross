@@ -52,7 +52,7 @@
                         VerticalAlignment="Stretch">
 
                         <controls:RaisedBorder
-                            x:Name="PART_AICSBorder"
+                            x:Name="PART_RaisedBorder"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}"
                             MinWidth="{TemplateBinding MinWidth}"
@@ -111,6 +111,12 @@
                         <Trigger Property="Button.IsPressed" Value="True">
                             <Setter TargetName="PART_On" Property="Visibility" Value="Visible" />
                             <Setter TargetName="PART_MainGrid" Property="Margin" Value="2" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="PART_RaisedBorder" Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+                            <Setter Property="MinorBorderBrush1" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+                            <Setter TargetName="Content" Property="TextElement.Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

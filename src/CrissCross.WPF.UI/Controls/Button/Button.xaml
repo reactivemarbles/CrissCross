@@ -8,9 +8,7 @@
     <Thickness x:Key="ButtonIconMargin">0,0,8,0</Thickness>
 
     <Style x:Key="DefaultButtonStyle" TargetType="{x:Type Button}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
@@ -78,9 +76,7 @@
     </Style>
 
     <Style x:Key="DefaultUiButtonStyle" TargetType="{x:Type controls:Button}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="MouseOverBackground" Value="{DynamicResource ButtonBackgroundPointerOver}" />
         <Setter Property="PressedBackground" Value="{DynamicResource ButtonBackgroundPressed}" />
@@ -95,7 +91,6 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Appearance" Value="Secondary" />

@@ -5,9 +5,7 @@
     xmlns:system="clr-namespace:System;assembly=System.Runtime">
 
     <Style x:Key="DefaultTreeViewItemStyle" TargetType="{x:Type TreeViewItem}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Foreground" Value="{DynamicResource TreeViewItemForeground}" />
         <Setter Property="Background" Value="{DynamicResource TreeViewItemBackground}" />
         <Setter Property="Padding" Value="4" />

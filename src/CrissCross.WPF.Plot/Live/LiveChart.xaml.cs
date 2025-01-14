@@ -1,9 +1,10 @@
-﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
 using CP.WPF.Controls;
 using ReactiveUI;
 
@@ -12,6 +13,7 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// Interaction logic for WPF Chart AICS.
 /// </summary>
+[SupportedOSPlatform("windows10.0.17763.0")]
 public partial class LiveChart
 {
     private bool _needLock = true;
@@ -160,7 +162,7 @@ public partial class LiveChart
     {
         if (!_locked)
         {
-            ViewModel!.WpfLivePlot?.Interaction.Disable();
+            ViewModel!.WpfLivePlot?.UserInputProcessor.Disable();
             _locked = true;
 
             // SIGNAL
@@ -184,7 +186,7 @@ public partial class LiveChart
     {
         if (_locked)
         {
-            ViewModel!.WpfLivePlot?.Interaction.Enable();
+            ViewModel!.WpfLivePlot?.UserInputProcessor.Enable();
             _locked = false;
 
             // SIGNAL

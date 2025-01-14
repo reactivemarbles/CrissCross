@@ -14,12 +14,8 @@
     <system:Double x:Key="ComboBoxPopupMinHeight">32.0</system:Double>
 
     <Style x:Key="DefaultComboBoxTextBoxStyle" TargetType="{x:Type TextBox}">
-        <!--  Focus by parent element  -->
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <!--  Focus by parent element  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="CaretBrush" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="Background" Value="Transparent" />
@@ -45,9 +41,7 @@
     </Style>
 
     <Style x:Key="DefaultComboBoxToggleButtonStyle" TargetType="{x:Type ToggleButton}">
-        <!--  Focus by parent element  -->
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <!--  Focus by parent element  -->
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -76,9 +70,7 @@
     </Style>
 
     <Style x:Key="DefaultComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="{StaticResource ComboBoxItemContentMargin}" />
@@ -134,17 +126,12 @@
     </Style>
 
     <Style x:Key="DefaultComboBoxStyle" TargetType="{x:Type ComboBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource ComboBoxBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
@@ -158,7 +145,6 @@
         <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
         <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Popup.PopupAnimation" Value="None" />
-        <!--  WPF doesn't like centering, the animation is ugly and the mouse button sometimes clicks right away.  -->
         <Setter Property="Popup.Placement" Value="Bottom" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -179,11 +165,6 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding Border.CornerRadius}">
                             <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <!--
-                                    Funky grid - because:
-                                    Chevron is over Presenter, ToggleButton is over Chevron, TextBox is over ToggleButton.
-                                    But, TextBox is not over Chevron, so ToggleButton still works.
-                                -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -370,17 +351,12 @@
     </Style>
 
     <Style x:Key="DefaultuiComboBoxStyle" TargetType="{x:Type controls:ComboBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForeground}" />
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource ComboBoxBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
@@ -394,7 +370,6 @@
         <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
         <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Popup.PopupAnimation" Value="None" />
-        <!--  WPF doesn't like centering, the animation is ugly and the mouse button sometimes clicks right away.  -->
         <Setter Property="Popup.Placement" Value="Bottom" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -415,11 +390,6 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding Border.CornerRadius}">
                             <controls:Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                                <!--
-                                    Funky grid - because:
-                                    Chevron is over Presenter, ToggleButton is over Chevron, TextBox is over ToggleButton.
-                                    But, TextBox is not over Chevron, so ToggleButton still works.
-                                -->
                                 <controls:Grid>
                                     <controls:Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />

@@ -13,8 +13,6 @@ namespace CrissCross.WPF.UI.Interop;
 /// <summary>
 /// Exposes methods that enumerate the contents of a view and receive notification from callback upon enumeration completion.
 /// </summary>
-// ReSharper disable IdentifierTypo
-// ReSharper disable InconsistentNaming
 internal static class ShObjIdl
 {
     /// <summary>
@@ -142,52 +140,106 @@ internal static class ShObjIdl
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface ITaskbarList4
     {
-        // ITaskbarList
+        /// <summary>
+        /// Hrs the initialize.
+        /// </summary>
         [PreserveSig]
         void HrInit();
 
+        /// <summary>
+        /// Adds the tab.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
         [PreserveSig]
         void AddTab(IntPtr hwnd);
 
+        /// <summary>
+        /// Deletes the tab.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
         [PreserveSig]
         void DeleteTab(IntPtr hwnd);
 
+        /// <summary>
+        /// Activates the tab.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
         [PreserveSig]
         void ActivateTab(IntPtr hwnd);
 
+        /// <summary>
+        /// Sets the active alt.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
         [PreserveSig]
         void SetActiveAlt(IntPtr hwnd);
 
-        // ITaskbarList2
+        /// <summary>
+        /// Marks the fullscreen window.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="fFullscreen">if set to <c>true</c> [f fullscreen].</param>
         [PreserveSig]
         void MarkFullscreenWindow(IntPtr hwnd, [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
 
-        // ITaskbarList3
+        /// <summary>
+        /// Sets the progress value.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="ullCompleted">The ull completed.</param>
+        /// <param name="ullTotal">The ull total.</param>
         [PreserveSig]
         void SetProgressValue(IntPtr hwnd, UInt64 ullCompleted, UInt64 ullTotal);
 
+        /// <summary>
+        /// Sets the state of the progress.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="tbpFlags">The TBP flags.</param>
         [PreserveSig]
         void SetProgressState(IntPtr hwnd, TBPFLAG tbpFlags);
 
+        /// <summary>
+        /// Registers the tab.
+        /// </summary>
+        /// <param name="hwndTab">The HWND tab.</param>
+        /// <param name="hwndMDI">The HWND MDI.</param>
         [PreserveSig]
         void RegisterTab(IntPtr hwndTab, IntPtr hwndMDI);
 
+        /// <summary>
+        /// Unregisters the tab.
+        /// </summary>
+        /// <param name="hwndTab">The HWND tab.</param>
         [PreserveSig]
         void UnregisterTab(IntPtr hwndTab);
 
+        /// <summary>
+        /// Sets the tab order.
+        /// </summary>
+        /// <param name="hwndTab">The HWND tab.</param>
+        /// <param name="hwndInsertBefore">The HWND insert before.</param>
         [PreserveSig]
         void SetTabOrder(IntPtr hwndTab, IntPtr hwndInsertBefore);
 
+        /// <summary>
+        /// Sets the tab active.
+        /// </summary>
+        /// <param name="hwndTab">The HWND tab.</param>
+        /// <param name="hwndInsertBefore">The HWND insert before.</param>
+        /// <param name="dwReserved">The dw reserved.</param>
         [PreserveSig]
         void SetTabActive(IntPtr hwndTab, IntPtr hwndInsertBefore, uint dwReserved);
 
         /// <summary>
-        ///
+        /// Thumbs the bar add buttons.
         /// </summary>
-        /// <param name="hwnd"></param>
-        /// <param name="cButtons"></param>
-        /// <param name="pButtons"></param>
-        /// <returns>HRESULT</returns>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="cButtons">The c buttons.</param>
+        /// <param name="pButtons">The p buttons.</param>
+        /// <returns>
+        /// HRESULT
+        /// </returns>
         [PreserveSig]
         int ThumbBarAddButtons(
             IntPtr hwnd,
@@ -196,12 +248,14 @@ internal static class ShObjIdl
         );
 
         /// <summary>
-        ///
+        /// Thumbs the bar update buttons.
         /// </summary>
-        /// <param name="hwnd"></param>
-        /// <param name="cButtons"></param>
-        /// <param name="pButtons"></param>
-        /// <returns>HRESULT</returns>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="cButtons">The c buttons.</param>
+        /// <param name="pButtons">The p buttons.</param>
+        /// <returns>
+        /// HRESULT
+        /// </returns>
         [PreserveSig]
         int ThumbBarUpdateButtons(
             IntPtr hwnd,
@@ -209,9 +263,20 @@ internal static class ShObjIdl
             [MarshalAs(UnmanagedType.LPArray)] THUMBBUTTON[] pButtons
         );
 
+        /// <summary>
+        /// Thumbs the bar set image list.
+        /// </summary>
+        /// <param name="hWnd">The h WND.</param>
+        /// <param name="himl">The himl.</param>
         [PreserveSig]
         void ThumbBarSetImageList(IntPtr hWnd, IntPtr himl);
 
+        /// <summary>
+        /// Sets the overlay icon.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="hIcon">The h icon.</param>
+        /// <param name="pszDescription">The PSZ description.</param>
         [PreserveSig]
         void SetOverlayIcon(
             IntPtr hwnd,
@@ -219,13 +284,27 @@ internal static class ShObjIdl
             [MarshalAs(UnmanagedType.LPWStr)] string pszDescription
         );
 
+        /// <summary>
+        /// Sets the thumbnail tooltip.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="pszTip">The PSZ tip.</param>
         [PreserveSig]
         void SetThumbnailTooltip(IntPtr hwnd, [MarshalAs(UnmanagedType.LPWStr)] string pszTip);
 
+        /// <summary>
+        /// Sets the thumbnail clip.
+        /// </summary>
+        /// <param name="hwnd">The HWND.</param>
+        /// <param name="prcClip">The PRC clip.</param>
         [PreserveSig]
         void SetThumbnailClip(IntPtr hwnd, IntPtr prcClip);
 
-        // ITaskbarList4
+        /// <summary>
+        /// Sets the tab properties.
+        /// </summary>
+        /// <param name="hwndTab">The HWND tab.</param>
+        /// <param name="stpFlags">The STP flags.</param>
         void SetTabProperties(IntPtr hwndTab, STPFLAG stpFlags);
     }
 }

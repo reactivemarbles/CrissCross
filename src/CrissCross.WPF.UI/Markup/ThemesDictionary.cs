@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -7,7 +7,7 @@ using System.Windows.Markup;
 namespace CrissCross.WPF.UI.Markup;
 
 /// <summary>
-/// Provides a dictionary implementation that contains <c>WPF UI</c> theme resources used by components and other elements of a WPF application.
+/// Provides a dictionary implementation that contains theme resources used by components and other elements of a WPF application.
 /// </summary>
 /// <example>
 /// <code lang="xml">

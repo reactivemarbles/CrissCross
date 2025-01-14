@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
 
 namespace CrissCross.WPF.UI;
 
@@ -41,7 +40,7 @@ internal partial class HueSlider : UserControl
     private void OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         ((UIElement)sender).CaptureMouse();
-        var circle = (Path)sender;
+        var circle = (System.Windows.Shapes.Path)sender;
         var mousePos = e.GetPosition(circle);
         UpdateValue(mousePos, circle.ActualWidth, circle.ActualHeight);
     }
@@ -55,7 +54,7 @@ internal partial class HueSlider : UserControl
             return;
         }
 
-        var circle = (Path)sender;
+        var circle = (System.Windows.Shapes.Path)sender;
         var mousePos = e.GetPosition(circle);
         UpdateValue(mousePos, circle.ActualWidth, circle.ActualHeight);
     }

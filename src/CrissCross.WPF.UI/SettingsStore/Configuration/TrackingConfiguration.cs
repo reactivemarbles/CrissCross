@@ -1,11 +1,7 @@
-﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Text;
-using CrissCross.WPF.UI.Configuration.Attributes;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace CrissCross.WPF.UI.Configuration;
