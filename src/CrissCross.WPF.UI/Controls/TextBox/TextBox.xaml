@@ -13,18 +13,13 @@
     <system:Double x:Key="TextBoxClearButtonHeight">24</system:Double>
 
     <Style x:Key="DefaultTextBoxStyle" TargetType="{x:Type TextBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource TextBoxBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
@@ -294,18 +289,13 @@
     </ControlTemplate>
 
     <Style x:Key="DefaultUiTextBoxStyle" TargetType="{x:Type controls:TextBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="CaretBrush" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource TextBoxBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />

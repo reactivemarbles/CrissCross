@@ -13,8 +13,6 @@ namespace CrissCross.WPF.UI.Interop;
 /// <summary>
 /// Used by multiple technologies.
 /// </summary>
-// ReSharper disable IdentifierTypo
-// ReSharper disable InconsistentNaming
 internal class Kernel32
 {
     /// <summary>

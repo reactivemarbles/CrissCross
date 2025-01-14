@@ -183,6 +183,12 @@
                             <Setter TargetName="Convex01" Property="UIElement.Visibility" Value="Visible" />
                             <Setter TargetName="Convex02" Property="UIElement.Visibility" Value="Visible" />
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Base" Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+                            <Setter Property="MinorBorderBrush1" Value="{DynamicResource ButtonBorderBrushDisabled}" />
+                            <Setter TargetName="Content" Property="TextElement.Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

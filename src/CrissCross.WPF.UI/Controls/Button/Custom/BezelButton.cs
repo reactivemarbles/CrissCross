@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -12,12 +12,22 @@ public class BezelButton : CommonButtonBase
     /// <summary>
     /// The glare opacity mask property.
     /// </summary>
-    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register("GlareOpacityMask", typeof(Brush), typeof(BezelButton), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareOpacityMaskProperty =
+        DependencyProperty.Register(
+            nameof(GlareOpacityMask),
+            typeof(Brush),
+            typeof(BezelButton),
+            new PropertyMetadata(null));
 
     /// <summary>
     /// The pressed brush property.
     /// </summary>
-    public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register("PressedBrush", typeof(Brush), typeof(BezelButton), new PropertyMetadata(null));
+    public static readonly DependencyProperty PressedBrushProperty =
+        DependencyProperty.Register(
+            nameof(PressedBrush),
+            typeof(Brush),
+            typeof(BezelButton),
+            new PropertyMetadata(null));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BezelButton"/> class.

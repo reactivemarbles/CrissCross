@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -13,17 +13,17 @@ namespace CrissCross.WPF.UI.Markup;
 /// <code lang="xml">
 /// &lt;ui:Button
 ///     Appearance="Primary"
-///     Content="WPF UI button with font icon"
+///     Content="WPF button with font icon"
 ///     Icon="{ui:ImageIcon '/my-icon.png'}" /&gt;
 /// </code>
 /// <code lang="xml">
-/// &lt;ui:Button Icon="{ui:ImageIcon 'pack://application:,,,/Assets/wpfui.png'}" /&gt;
+/// &lt;ui:Button Icon="{ui:ImageIcon 'pack://application:,,,/Assets/iconImage.png'}" /&gt;
 /// </code>
 /// <code lang="xml">
-/// &lt;ui:HyperlinkButton Icon="{ui:ImageIcon 'pack://application:,,,/Assets/wpfui.png'}" /&gt;
+/// &lt;ui:HyperlinkButton Icon="{ui:ImageIcon 'pack://application:,,,/Assets/iconImage.png'}" /&gt;
 /// </code>
 /// <code lang="xml">
-/// &lt;ui:TitleBar Icon="{ui:ImageIcon 'pack://application:,,,/Assets/wpfui.png'}" /&gt;
+/// &lt;ui:TitleBar Icon="{ui:ImageIcon 'pack://application:,,,/Assets/iconImage.png'}" /&gt;
 /// </code>
 /// </example>
 /// <remarks>

@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -20,7 +20,7 @@ public static class DesignerHelper
     /// <summary>
     /// Gets a value indicating whether the project is currently debugged.
     /// </summary>
-    public static bool IsDebugging => System.Diagnostics.Debugger.IsAttached;
+    public static bool IsDebugging => Debugger.IsAttached;
 
     private static bool IsCurrentAppInDebugMode()
     {

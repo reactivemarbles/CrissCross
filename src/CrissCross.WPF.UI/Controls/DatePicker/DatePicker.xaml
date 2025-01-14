@@ -14,9 +14,7 @@
     <system:Double x:Key="DatePickerCalendarButtonIconSize">14</system:Double>
 
     <Style x:Key="DefaultDatePickerTextBoxStyle" TargetType="{x:Type DatePickerTextBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -46,15 +44,9 @@
     </Style>
 
     <Style x:Key="DefaultDatePickerStyle" TargetType="{x:Type DatePicker}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
-        <!--  Default WPF UI Calendar style  -->
         <Setter Property="CalendarStyle" Value="{DynamicResource DefaultCalendarStyle}" />
-        <!--  Default WPF UI Calendar style  -->
         <Setter Property="Foreground">
             <Setter.Value>
                 <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
@@ -67,7 +59,6 @@
         </Setter>
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource DatePickerBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

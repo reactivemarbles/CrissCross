@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -7,7 +7,7 @@ using System.Windows.Markup;
 namespace CrissCross.WPF.UI.Markup;
 
 /// <summary>
-/// Provides a dictionary implementation that contains <c>WPF UI</c> controls resources used by components and other elements of a WPF application.
+/// Provides a dictionary implementation that contains controls resources used by components and other elements of a WPF application.
 /// </summary>
 /// <example>
 /// <code lang="xml">
@@ -32,7 +32,7 @@ public class ControlsDictionary : ResourceDictionary
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ControlsDictionary"/> class.
-    /// Default constructor defining <see cref="ResourceDictionary.Source"/> of the <c>WPF UI</c> controls dictionary.
+    /// Default constructor defining <see cref="ResourceDictionary.Source"/> of the <c>CrissCross UI</c> controls dictionary.
     /// </summary>
     public ControlsDictionary() => Source = new Uri(DictionaryUri, UriKind.Absolute);
 }

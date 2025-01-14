@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -13,7 +13,7 @@ namespace CrissCross.WPF.UI.Markup;
 /// <code lang="xml">
 /// &lt;ui:Button
 ///     Appearance="Primary"
-///     Content="WPF UI button with font icon"
+///     Content="WPF button with font icon"
 ///     Icon="{ui:SymbolIcon Symbol=Fluent24}" /&gt;
 /// </code>
 /// <code lang="xml">

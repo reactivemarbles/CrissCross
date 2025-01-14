@@ -439,10 +439,6 @@
         BasedOn="{StaticResource UiMenuItem}"
         TargetType="{x:Type MenuItem}" />
 
-    <!--
-        WPF UI MENU ITEM
-    -->
-
     <!--  TopLevelHeader  -->
     <ControlTemplate x:Key="WpfUiMenuItemTopLevelHeaderTemplateKey" TargetType="{x:Type controls:MenuItem}">
         <Border

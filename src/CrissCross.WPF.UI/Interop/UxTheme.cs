@@ -7,7 +7,6 @@
 #nullable enable
 
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace CrissCross.WPF.UI.Interop;
 

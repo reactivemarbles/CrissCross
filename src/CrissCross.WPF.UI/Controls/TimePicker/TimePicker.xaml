@@ -7,17 +7,12 @@
     <Thickness x:Key="TimePickerBorderThemeThickness">1,1,1,1</Thickness>
 
     <Style x:Key="DefaultUiTimePickerStyle" TargetType="{x:Type controls:TimePicker}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="ContextMenu" Value="{DynamicResource DefaultControlContextMenu}" />
-        <!--  Universal WPF UI ContextMenu  -->
         <Setter Property="Foreground" Value="{DynamicResource TimePickerButtonForegroundDefault}" />
         <Setter Property="Background" Value="{DynamicResource TimePickerButtonBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
         <Setter Property="BorderThickness" Value="{StaticResource TimePickerBorderThemeThickness}" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

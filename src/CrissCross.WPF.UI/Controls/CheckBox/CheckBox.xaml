@@ -4,18 +4,8 @@
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:converters="clr-namespace:CrissCross.WPF.UI.Converters"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
-
-    <!--
-        I don't see that CheckBox had combined states. Without it,
-        we cannot support both Themes and Intermediate states at the same time.
-        At the moment I think the themes are more important than IsThirdState.
-        Have to figure it out or make a new CheckBox control.
-    -->
-
     <converters:FallbackBrushConverter x:Key="FallbackBrushConverter" />
-
     <Color x:Key="FallbackColor">#FFFF0000</Color>
-
     <Thickness x:Key="CheckBoxPadding">11,5,11,6</Thickness>
     <Thickness x:Key="CheckBoxBorderThemeThickness">1</Thickness>
     <Thickness x:Key="CheckBoxContentMargin">8,0,0,0</Thickness>
@@ -24,9 +14,7 @@
     <system:Double x:Key="CheckBoxWidth">22</system:Double>
 
     <Style x:Key="DefaultCheckBoxStyle" TargetType="{x:Type CheckBox}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxBorderBrush}" />
@@ -38,7 +26,6 @@
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Cursor" Value="Hand" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
         <Setter Property="Focusable" Value="True" />

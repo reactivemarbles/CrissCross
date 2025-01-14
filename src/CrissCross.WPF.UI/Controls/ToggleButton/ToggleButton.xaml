@@ -8,9 +8,7 @@
     <Thickness x:Key="ToggleButtonIconMargin">0,0,8,0</Thickness>
 
     <Style x:Key="DefaultToggleButtonStyle" TargetType="{x:Type ToggleButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
@@ -115,9 +113,7 @@
     </Style>
 
     <Style x:Key="DefaultuiToggleButtonStyle" TargetType="{x:Type controls:ToggleButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
@@ -222,9 +218,7 @@
     </Style>
 
     <Style x:Key="ExpandCollapseToggleButtonStyle" TargetType="{x:Type controls:ToggleButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Focusable" Value="False" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />

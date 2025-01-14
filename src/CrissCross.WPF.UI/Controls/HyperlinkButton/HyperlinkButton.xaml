@@ -8,9 +8,7 @@
     <Thickness x:Key="HyperlinkButtonIconMargin">0,0,8,0</Thickness>
 
     <Style x:Key="DefaultUiHyperlinkButtonStyle" TargetType="{x:Type controls:HyperlinkButton}">
-        <!--  Universal WPF UI focus  -->
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
-        <!--  Universal WPF UI focus  -->
         <Setter Property="Background" Value="{DynamicResource HyperlinkButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource HyperlinkButtonForeground}" />
         <Setter Property="BorderThickness" Value="{StaticResource HyperlinkButtonBorderThemeThickness}" />
@@ -20,7 +18,6 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="Appearance" Value="Secondary" />
