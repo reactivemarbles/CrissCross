@@ -12,15 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.112" />
-    <PackageReference Include="Nuke.Common" Version="9.0.3" />
-    <PackageReference Include="CP.Nuke.BuildTools" Version="1.0.79" />
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115" />
+    <PackageReference Include="Nuke.Common" Version="9.0.4" />
+    <PackageReference Include="CP.Nuke.BuildTools" Version="1.0.94" />
+    <PackageReference Include="System.Text.Json" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageDownload Include="nbgv" Version="[3.7.112]" />
+    <PackageDownload Include="nbgv" Version="[3.7.115]" />
   </ItemGroup>
 
 </Project>
