@@ -390,6 +390,9 @@ public partial class LiveChartViewModel : RxObject
 
         _yAxisList[2].Label.Text = "[°C]";
         _yAxisList[2].Label.ForeColor = Color.FromHex("#984ea3");
+
+        _yAxisList[3].Label.Text = "[Amps]";
+        _yAxisList[3].Label.ForeColor = Color.FromHex("#4daf4a");
     }
 
     private void HideLeftAxis(Color color)
