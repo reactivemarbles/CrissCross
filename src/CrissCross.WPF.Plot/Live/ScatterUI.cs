@@ -4,21 +4,19 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using CrissCross;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
-using ScottPlot.AxisLimitManagers;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// EquationData.
+/// Nice for plotting XY random values.
 /// </summary>
-/// <seealso cref="StreamerUI" />
-public partial class StreamerUI : RxObject
+/// <seealso cref="ScatterUI" />
+public partial class ScatterUI : RxObject
 {
     [Reactive]
     private Settings _chartSettings = new Settings();
@@ -78,14 +76,14 @@ public partial class StreamerUI : RxObject
     private bool _zoomXY;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamerUI" /> class.
+    /// Initializes a new instance of the <see cref="ScatterUI" /> class.
     /// </summary>
     /// <param name="plot">if set to <c>true</c> [paused].</param>
     /// <param name="observable">The observable.</param>
     /// <param name="color">The color.</param>
     /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    public StreamerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false)
+    public ScatterUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false)
     {
         ChartSettings.Color = color;
         ChartSettings.ItemName = "---";
@@ -100,8 +98,38 @@ public partial class StreamerUI : RxObject
 
         Plot = plot;
         ChartSettings.DisplayedValue = 0;
-        CreateStream(color);
-        UpdateStream(observable);
+
+        CreateScatter(color);
+        UpdateScatter(observable);
+        AppearanceSubsriptions();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScatterUI" /> class.
+    /// </summary>
+    /// <param name="plot">if set to <c>true</c> [paused].</param>
+    /// <param name="data">The data.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
+    /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
+    public ScatterUI(WpfPlot plot, (string? Name, IList<double>? X, IList<double> Y, int Axis) data, string color, bool autoscale = true, bool manualscale = false)
+    {
+        ChartSettings.Color = color;
+        ChartSettings.ItemName = "---";
+        ChartSettings.ColorText = "#FFD3D3D3";
+        ChartSettings.OpacityCheckBox = "1";
+        ChartSettings.LineWidth = 3;
+        ChartSettings.IsVisible = true;
+        ManualScale = manualscale;
+        AutoScale = autoscale;
+        ZoomXY = false;
+        ChartSettings.IsChecked = true;
+
+        Plot = plot;
+        ChartSettings.DisplayedValue = 0;
+
+        CreateScatter(color);
+        InsertData(data.X, data.Y);
         AppearanceSubsriptions();
     }
 
@@ -119,79 +147,75 @@ public partial class StreamerUI : RxObject
     /// <value>
     /// The streamer.
     /// </value>
-    public DataLogger? Streamer { get; set; }
+    public Scatter? Scatter { get; set; }
 
     /// <summary>
-    /// Gets or sets the streamer.
+    /// Gets or sets the axes.
     /// </summary>
-    /// <value>
-    /// The streamer.
-    /// </value>
-    public SignalXY? SignalXY { get; set; }
+    public IAxes Axes { get; set; } = new Axes();
 
     /// <summary>
     /// Creates the stream.
     /// </summary>
     /// <param name="color">color.</param>
-    public void CreateSignal(string color)
+    public void CreateScatter(string color)
     {
         double[] y = [0];
         double[] x = [0];
-        SignalXY = Plot.Plot.Add.SignalXY(x, y);
-        SignalXY.LineStyle.Width = 3f;
-        SignalXY.Color = Color.FromHex(color);
+        Scatter = Plot.Plot.Add.Scatter(x, y);
+        Scatter.LineStyle.Width = 1f;
+        Scatter.MarkerSize = 1f;
+        Scatter.Color = Color.FromHex(color);
     }
 
     /// <summary>
-    /// Creates the stream.
+    /// Inserts data into scatter.
     /// </summary>
-    /// <param name="color">color.</param>
-    public void CreateStream(string color)
+    /// <param name="x">X array.</param>
+    /// <param name="y">Y array.</param>
+    public void InsertData(IList<double>? x, IList<double> y)
     {
-        if (Streamer == null)
-        {
-            Streamer = Plot.Plot.Add.DataLogger();
-            Streamer.AxisManager = new Slide
-            {
-                Width = 10,
-                PaddingFractionX = 0.0,
-            };
-
-            // configure line
-            Streamer.LineStyle.Width = 3f;
-            Streamer.Color = Color.FromHex(color);
-        }
+        Axes = Scatter!.Axes;
+        Plot.Plot.Remove(Scatter!);
+        var xs = x.ToArray();
+        var ys = y.ToArray();
+        Scatter = Plot.Plot.Add.Scatter(xs, ys);
+        Scatter.LineStyle.Width = 1f;
+        Scatter.LineStyle.IsVisible = false;
+        Scatter.MarkerSize = 1f;
+        Scatter!.Axes = Axes;
     }
 
     /// <summary>
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateStream(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable)
+    public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable)
     {
         observable.ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(data =>
             {
-                // CALCULATE TIMESPAN TO PLOT
-                DateTime now = new(Convert.ToInt64(data.DateTime.Last()));
-                var doublenow = now.ToOADate();
-                var limits = now.Add(TimeSpan.FromMinutes(-60));
-                var doublelimits = limits.ToOADate();
-
-                // INSERT DATA INTO STREAMER
-                if (data.Value != null && data.Value.Count == data.DateTime.Count && data.Name != null)
+                if (data.Name == null || data.X == null || data.Y == null)
                 {
-                    var values = new List<double>(data.Value);
-                    var datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new DateTime(Convert.ToInt64(x)).ToOADate()));
-                    var coord = datetime.Zip(values, (d, v) => new Coordinates(d, v)).ToArray();
+                    return;
+                }
+
+                if (data!.X!.Count == 0 || data.Y.Count == 0)
+                {
+                    return;
+                }
+
+                // INSERT DATA INTO SCATTER
+                if (data.X.Count == data.Y.Count && data.Name != null)
+                {
+                    InsertData(data.X, data.Y);
                     ChartSettings.ItemName = data.Name;
-                    Streamer!.Data.Clear();
-                    Streamer.Add(coord);
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
                     {
-                        Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, Streamer.Axes.XAxis);
+                        Plot.Plot.Axes.SetLimitsX(data.X.Min(x => x) - 1, data.X.Max(x => x) + 1, Plot!.Plot.Axes.Bottom);
+                        Plot.Plot.Axes.SetLimitsY(data.Y.Min(x => x) - 1, data.Y.Max(x => x) + 1, Plot!.Plot.Axes.Left);
                     }
                 }
 
@@ -224,10 +248,10 @@ public partial class StreamerUI : RxObject
     {
         this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
         {
-            Streamer!.LineStyle.Width = (float)x.Item1;
-            Streamer!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            Scatter!.LineStyle.Width = (float)x.Item1;
+            Scatter!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
             ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            Streamer.IsVisible = x.Item3 == "Invisible" ? false : true;
+            Scatter.IsVisible = x.Item3 == "Invisible" ? false : true;
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

@@ -28,10 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
+    <ProjectReference Include="..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\*.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Live\NewFolder\" />
   </ItemGroup>
 </Project>
