@@ -874,7 +874,14 @@ public partial class LiveChartViewModel : RxObject
             //// determine where the mouse is and send the coordinates
             Pixel mousePixel = new(position.X, position.Y);
             var mouseLocation = WpfPlot1vm.Plot.GetCoordinates(mousePixel);
-            MouseCoordinatesObservable.OnNext(mouseLocation);
+            try
+            {
+                MouseCoordinatesObservable.OnNext(mouseLocation);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
 
             ////foreach (var x in SignalCollectionUI)
             ////{

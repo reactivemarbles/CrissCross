@@ -131,6 +131,11 @@ public partial class SignalUI : RxObject
             CreateCursorValues();
             MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
                 {
+                    if (DataLogger!.Data.Coordinates.Count <= 0)
+                    {
+                        return;
+                    }
+
                     var coord = DataLogger!.GetNearestX(x, Plot.Plot.LastRender.DataRect).Coordinates;
                     Marker.Coordinates = x;
                     Crosshair.Position = coord;
@@ -165,7 +170,7 @@ public partial class SignalUI : RxObject
         Plot = plot;
         ChartSettings.DisplayedValue = 0;
         CreateSignal(color);
-        SignalXY!.Data = new SignalXYSourceDoubleArray(data.Value.ToArray(), data.DateTime.ToArray());
+        SignalXY!.Data = new SignalXYSourceDoubleArray(data.Value!.ToArray(), data.DateTime.ToArray());
         AppearanceSubsriptions();
         CreateCursorValues();
     }
@@ -231,7 +236,7 @@ public partial class SignalUI : RxObject
     /// <value>
     /// The mouse coordinates.
     /// </value>
-    public IDisposable MouseCoordinatesObs { get; set; }
+    public IDisposable? MouseCoordinatesObs { get; set; }
 
     /// <summary>
     /// Creates the cursor values.
@@ -276,6 +281,7 @@ public partial class SignalUI : RxObject
         DataLogger.ManageAxisLimits = false;
         DataLogger.LineStyle.Width = 1;
         DataLogger.Color = Color.FromHex(color);
+        DataLogger.ViewSlide(100);
     }
 
     /// <summary>
@@ -313,53 +319,61 @@ public partial class SignalUI : RxObject
                     return;
                 }
 
+                if (data.Value == null || (data.Value.Count != data.DateTime.Count) || data.Name == null)
+                {
+                    return;
+                }
+
+                var now = DateTime.Now;
+                double[] datetime = [];
+                try
+                {
+                    // option 1: with timestamp
+                    datetime = data.DateTime.ToArray();
+                    var oaDate = data.DateTime.Last();
+                    now = System.DateTime.FromOADate(oaDate);
+                }
+                catch
+                {
+                    // option 2: with ticks
+                    now = new(Convert.ToInt64(data.DateTime.Last()));
+                    datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new System.DateTime(Convert.ToInt64(x)).ToOADate())).ToArray();
+                }
+
                 // CALCULATE TIMESPAN TO PLOT
-                ////option 1: with timestamps
-                var oaDate = data.DateTime.Last();
-                var now = System.DateTime.FromOADate(oaDate);
                 var doublenow = now.ToOADate();
                 var limits = now.Add(TimeSpan.FromMinutes(-0.1));
                 var doublelimits = limits.ToOADate();
 
-                ////////// option 2: with ticks
-                ////System.DateTime now = new(Convert.ToInt64(data.DateTime.Last()));
-                ////var doublenow = now.ToOADate();
-                ////var limits = now.Add(TimeSpan.FromMinutes(-0.1));
-                ////var doublelimits = limits.ToOADate();
-
                 // INSERT DATA INTO SIGNALXY
-                if (data.Value != null && data.Value.Count == data.DateTime.Count && data.Name != null)
+                var values = new List<double>(data.Value).ToArray();
+                var combinedValues = values.Zip(datetime, (v, d) => (v, d));
+
+                var uniqueValues = combinedValues.Where(item => !_time.Contains(item.d)).OrderBy(x => x.d).ToList();
+                var uniqueDataValues = uniqueValues.Select(x => x.v).ToArray();
+                var uniqueTimeValues = uniqueValues.Select(x => x.d).ToArray();
+
+                _data.AddRange(uniqueDataValues);
+                _time.AddRange(uniqueTimeValues);
+                ////SignalXY!.Data = new SignalXYSourceDoubleArray(_time.ToArray(), _data.ToArray());
+
+                DataLogger!.Add(uniqueTimeValues, uniqueDataValues);
+
+                ////DataLogger!.Add(uniqueDataValues);
+
+                // UPDATE X AXIS
+                if (ManualScale || AutoScale)
                 {
-                    var values = new List<double>(data.Value).ToArray();
-
-                    // option 1: with timestamp
-                    var datetime = data.DateTime.ToArray();
-
-                    // option 2: with ticks
-                    ////var datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new System.DateTime(Convert.ToInt64(x)).ToOADate())).ToArray();
-
-                    var combinedValues = values.Zip(datetime, (v, d) => (v, d));
-
-                    ////var values = new List<double>(data.Value).ToArray();
-                    ////var datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new System.DateTime(Convert.ToInt64(x)).ToOADate())).ToArray();
-                    var uniqueValues = combinedValues.Where(item => !_time.Contains(item.d)).OrderBy(x => x.d).ToList();
-                    var uniqueDataValues = uniqueValues.Select(x => x.v).ToArray();
-                    var uniqueTimeValues = uniqueValues.Select(x => x.d).ToArray();
-
-                    _data.AddRange(uniqueDataValues);
-                    _time.AddRange(uniqueTimeValues);
-                    ////SignalXY!.Data = new SignalXYSourceDoubleArray(_time.ToArray(), _data.ToArray());
-
-                    DataLogger!.Add(uniqueTimeValues, uniqueDataValues);
-
-                    ////DataLogger!.Add(uniqueDataValues);
-
-                    // UPDATE X AXIS
-                    if (ManualScale || AutoScale)
-                    {
-                        ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, SignalXY.Axes.XAxis);
-                        Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, DataLogger.Axes.XAxis);
-                    }
+                    ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, SignalXY.Axes.XAxis);
+                    Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, DataLogger.Axes.XAxis);
+                    ////Plot.Plot.Axes.ContinuouslyAutoscale = true;
+                    ////Plot.Plot.RenderManager.
+                    ////Plot.UserInputProcessor.Disable();
+                }
+                else
+                {
+                    ////Plot.Plot.Axes.ContinuouslyAutoscale = false;
+                    ////Plot.UserInputProcessor.Disable();
                 }
 
                 // UPDATE IF IS NOT PAUSED
@@ -369,7 +383,7 @@ public partial class SignalUI : RxObject
                 }
 
                 // UPDATE NAME
-                ChartSettings.ItemName = Name;
+                ChartSettings.ItemName = data.Name!;
             }).DisposeWith(Disposables);
     }
 
@@ -428,7 +442,7 @@ public partial class SignalUI : RxObject
                 }
 
                 // UPDATE NAME
-                ChartSettings.ItemName = Name;
+                ChartSettings.ItemName = Name!;
             }).DisposeWith(Disposables);
     }
 
@@ -481,7 +495,7 @@ public partial class SignalUI : RxObject
         {
             ChartSettings.Dispose();
             _chartSettings.Dispose();
-            MouseCoordinatesObs.Dispose();
+            MouseCoordinatesObs?.Dispose();
         }
     }
 

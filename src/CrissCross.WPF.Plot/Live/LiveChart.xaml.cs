@@ -360,6 +360,7 @@ public partial class LiveChart
         if (!_locked)
         {
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             _locked = true;
 
             ////// STREAMER
@@ -419,6 +420,7 @@ public partial class LiveChart
         if (_locked)
         {
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Enable();
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
             _locked = false;
 
             ////// STREAMER
@@ -474,6 +476,7 @@ public partial class LiveChart
     {
         if (_autoScaled)
         {
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
             ////// STREAMER
             ////foreach (var item in ViewModel!.DataUI)
             ////{
@@ -530,6 +533,7 @@ public partial class LiveChart
     {
         if (!_autoScaled)
         {
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             ////// STREAMER
             ////foreach (var item in ViewModel!.DataUI)
             ////{
