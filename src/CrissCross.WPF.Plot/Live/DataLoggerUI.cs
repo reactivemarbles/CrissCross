@@ -4,22 +4,23 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using CrissCross;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.AxisLimitManagers;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
+using Color = ScottPlot.Color;
 
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// EquationData.
+/// Nice for continuous live data.
 /// </summary>
-/// <seealso cref="StreamerUI" />
-public partial class StreamerUI : RxObject
+/// <seealso cref="DataLoggerUI" />
+public partial class DataLoggerUI : RxObject
 {
+    private List<double> _data = [];
+    private List<double> _time = [];
+
     [Reactive]
     private Settings _chartSettings = new Settings();
 
@@ -78,14 +79,15 @@ public partial class StreamerUI : RxObject
     private bool _zoomXY;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamerUI" /> class.
+    /// Initializes a new instance of the <see cref="DataLoggerUI" /> class.
     /// </summary>
     /// <param name="plot">if set to <c>true</c> [paused].</param>
     /// <param name="observable">The observable.</param>
     /// <param name="color">The color.</param>
     /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    public StreamerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false)
+    /// <param name="points">observer with points.</param>
+    public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
     {
         ChartSettings.Color = color;
         ChartSettings.ItemName = "---";
@@ -93,15 +95,48 @@ public partial class StreamerUI : RxObject
         ChartSettings.OpacityCheckBox = "1";
         ChartSettings.LineWidth = 3;
         ChartSettings.IsVisible = true;
+        ChartSettings.IsChecked = false;
+        ChartSettings.DisplayedValue = 0;
+        ChartSettings.Visibility = "Visible";
         ManualScale = manualscale;
         AutoScale = autoscale;
         ZoomXY = false;
-        ChartSettings.IsChecked = true;
 
         Plot = plot;
+        CreateDataLogger(color);
+        AppearanceSubsriptions();
+
+        // TODO: Add with timestamp
+        ////UpdateDataLogger(observable);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataLoggerUI" /> class.
+    /// </summary>
+    /// <param name="plot">if set to <c>true</c> [paused].</param>
+    /// <param name="observable">The observable.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
+    /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
+    /// <param name="points">observer with points.</param>
+    public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, int Axis, int nPoints)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
+    {
+        ChartSettings.Color = color;
+        ChartSettings.ItemName = "---";
+        ChartSettings.ColorText = "#FFD3D3D3";
+        ChartSettings.OpacityCheckBox = "1";
+        ChartSettings.LineWidth = 3;
+        ChartSettings.IsVisible = true;
+        ChartSettings.IsChecked = false;
+        ManualScale = manualscale;
+        AutoScale = autoscale;
+        ZoomXY = false;
         ChartSettings.DisplayedValue = 0;
-        CreateStream(color);
-        UpdateStream(observable);
+        ChartSettings.Visibility = "Visible";
+
+        Plot = plot;
+        CreateDataLogger(color);
+        UpdateDataLogger(observable);
         AppearanceSubsriptions();
     }
 
@@ -119,79 +154,69 @@ public partial class StreamerUI : RxObject
     /// <value>
     /// The streamer.
     /// </value>
-    public DataLogger? Streamer { get; set; }
-
-    /// <summary>
-    /// Gets or sets the streamer.
-    /// </summary>
-    /// <value>
-    /// The streamer.
-    /// </value>
-    public SignalXY? SignalXY { get; set; }
+    public DataLogger? DataLogger { get; set; }
 
     /// <summary>
     /// Creates the stream.
     /// </summary>
     /// <param name="color">color.</param>
-    public void CreateSignal(string color)
+    public void CreateDataLogger(string color)
     {
         double[] y = [0];
         double[] x = [0];
-        SignalXY = Plot.Plot.Add.SignalXY(x, y);
-        SignalXY.LineStyle.Width = 3f;
-        SignalXY.Color = Color.FromHex(color);
-    }
 
-    /// <summary>
-    /// Creates the stream.
-    /// </summary>
-    /// <param name="color">color.</param>
-    public void CreateStream(string color)
-    {
-        if (Streamer == null)
-        {
-            Streamer = Plot.Plot.Add.DataLogger();
-            Streamer.AxisManager = new Slide
-            {
-                Width = 10,
-                PaddingFractionX = 0.0,
-            };
-
-            // configure line
-            Streamer.LineStyle.Width = 3f;
-            Streamer.Color = Color.FromHex(color);
-        }
+        DataLogger = Plot.Plot.Add.DataLogger();
+        DataLogger.ViewSlide();
+        DataLogger.ManageAxisLimits = false;
+        DataLogger.LineStyle.Width = 1;
+        DataLogger.Color = Color.FromHex(color);
     }
 
     /// <summary>
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateStream(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable)
+    public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable)
     {
-        observable.ObserveOn(RxApp.MainThreadScheduler)
+        ////observable.ObserveOn(RxApp.MainThreadScheduler)
+        ////    .Subscribe(data =>
+            observable
+            .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
+            .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
             .Subscribe(data =>
             {
-                // CALCULATE TIMESPAN TO PLOT
-                DateTime now = new(Convert.ToInt64(data.DateTime.Last()));
-                var doublenow = now.ToOADate();
-                var limits = now.Add(TimeSpan.FromMinutes(-60));
-                var doublelimits = limits.ToOADate();
-
-                // INSERT DATA INTO STREAMER
-                if (data.Value != null && data.Value.Count == data.DateTime.Count && data.Name != null)
+                // CHECKS
+                if (string.IsNullOrEmpty(data.Name) || data.Value == null || data.nPoints <= 0)
                 {
-                    var values = new List<double>(data.Value);
-                    var datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new DateTime(Convert.ToInt64(x)).ToOADate()));
-                    var coord = datetime.Zip(values, (d, v) => new Coordinates(d, v)).ToArray();
-                    ChartSettings.ItemName = data.Name;
-                    Streamer!.Data.Clear();
-                    Streamer.Add(coord);
+                    return;
+                }
+
+                if (data.Value.Count == 0)
+                {
+                    return;
+                }
+
+                var nPoints = Math.Min(data.nPoints, 100_000_000);
+
+                if (DataLogger!.Data.Coordinates.Count >= nPoints)
+                {
+                    DataLogger.Data.Coordinates.Clear();
+                    _data.Clear();
+                }
+
+                // INSERT DATA INTO SIGNALXY
+                if (data.Value != null && data.Name != null)
+                {
+                    var values = new List<double>(data.Value).ToArray();
+
+                    _data.AddRange(values);
+
+                    DataLogger!.Add(values);
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
                     {
-                        Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, Streamer.Axes.XAxis);
+                        Plot.Plot.Axes.SetLimitsX(_data.Count - 10000, _data.Count, DataLogger.Axes.XAxis);
                     }
                 }
 
@@ -202,7 +227,7 @@ public partial class StreamerUI : RxObject
                 }
 
                 // UPDATE NAME
-                ChartSettings.ItemName = Name;
+                ChartSettings.ItemName = data.Name;
             }).DisposeWith(Disposables);
     }
 
@@ -224,10 +249,10 @@ public partial class StreamerUI : RxObject
     {
         this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
         {
-            Streamer!.LineStyle.Width = (float)x.Item1;
-            Streamer!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            DataLogger!.LineStyle.Width = (float)x.Item1;
+            DataLogger!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
             ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            Streamer.IsVisible = x.Item3 == "Invisible" ? false : true;
+            DataLogger.IsVisible = x.Item3 == "Invisible" ? false : true;
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

@@ -15,58 +15,31 @@
     x:TypeArguments="local:LiveChartViewModel"
     mc:Ignorable="d">
     <Grid x:Name="LayoutRoot">
-        <DockPanel Grid.RowSpan="2">
-            <WrapPanel
-                x:Name="TrackPanelWrap"
-                HorizontalAlignment="Center"
-                DockPanel.Dock="Bottom" />
-            <Grid VerticalAlignment="Top" DockPanel.Dock="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="76" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="76" />
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <abb:AppBarButton
-                        x:Name="LiveHistory"
-                        Margin="0,0,0,-20"
-                        VerticalAlignment="Center"
-                        x:FieldModifier="public"
-                        Content="  "
-                        Icon="md_lock"
-                        ToolTip="Locked" />
-                    <abb:AppBarButton
-                        x:Name="EnableMarkerBtn"
-                        Margin="0,10,0,-20"
-                        VerticalAlignment="Center"
-                        x:FieldModifier="public"
-                        Content="  "
-                        Icon="md_crosshairs_off"
-                        ToolTip="Locked" />
-                </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <Grid x:Name="LegendGrid" Grid.Column="1">
-                        <Rectangle
-                            x:Name="LegendRectangle"
-                            RadiusX="5"
-                            RadiusY="5"
-                            Stroke="Black"
-                            StrokeThickness="3">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" EndPoint="0.5,1">
-                                    <GradientStop Color="Black" />
-                                    <GradientStop Offset="0.715" Color="#FF414141" />
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
+        <!--  TITLE  -->
+        <Grid Grid.Row="0" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions />
+            <Grid Grid.Row="0" Margin="15,5">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <WrapPanel
+                        x:Name="TitleGrid"
+                        HorizontalAlignment="Center"
+                        AllowDrop="True">
                         <StackPanel
                             Margin="5,0,5,5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Orientation="Vertical">
                             <TextBlock
-                                x:Name="LegendTitle"
+                                x:Name="Title"
                                 HorizontalAlignment="Center"
                                 x:FieldModifier="public"
                                 FontFamily="Arial"
@@ -75,102 +48,211 @@
                                 Foreground="White"
                                 Text="Title"
                                 TextWrapping="Wrap" />
-                            <WrapPanel
-                                x:Name="WarpTop"
-                                VerticalAlignment="Center"
-                                x:FieldModifier="public">
-                                <ItemsControl Name="Itemscontrol2" ItemsSource="{Binding DataSignalUI, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox
-                                                Margin="5"
-                                                Background="{Binding ColorCheckBox}"
-                                                Content="{Binding ItemName}"
-                                                IsChecked="{Binding IsChecked}"
-                                                Opacity="{Binding OpacityCheckBox}"
-                                                TextElement.Foreground="{Binding ColorText}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </WrapPanel>
+                            <CheckBox
+                                Height="5"
+                                Margin="5"
+                                Background="Blue"
+                                BorderBrush="Blue"
+                                Content="{Binding ItemName}"
+                                IsChecked="{Binding IsChecked}"
+                                Opacity="{Binding OpacityCheckBox}"
+                                TextElement.Foreground="{Binding ColorText}"
+                                Visibility="Collapsed" />
                         </StackPanel>
-                    </Grid>
-                    <Grid
-                        x:Name="LegendMenuGrid"
-                        Grid.Column="1"
-                        Visibility="Collapsed">
-                        <Rectangle
-                            x:Name="LegendMenuRectangle"
-                            RadiusX="5"
-                            RadiusY="5"
-                            Stroke="Black"
-                            StrokeThickness="3">
-                            <Rectangle.Fill>
-                                <LinearGradientBrush MappingMode="RelativeToBoundingBox" StartPoint="0.5,0" EndPoint="0.5,1">
-                                    <GradientStop Color="Black" />
-                                    <GradientStop Offset="0.715" Color="#FF414141" />
-                                </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <StackPanel
-                            Margin="5,0,5,5"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Orientation="Vertical">
-                            <TextBlock
-                                x:Name="MenuTitle"
-                                HorizontalAlignment="Center"
-                                x:FieldModifier="public"
-                                FontFamily="Arial"
-                                FontSize="20"
-                                FontWeight="Bold"
-                                Foreground="White"
-                                Text="Plot Settings"
-                                TextWrapping="Wrap" />
-                            <WrapPanel
-                                x:Name="WrapTopMenu"
-                                VerticalAlignment="Center"
-                                x:FieldModifier="public">
-                                <ItemsControl Name="MenuItemsControl" ItemsSource="{Binding ControlMenu, Mode=OneWay}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox
-                                                Margin="5"
-                                                Command="{Binding IsChecked}"
-                                                Content="{Binding ItemName}"
-                                                TextElement.Foreground="{Binding ColorText}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Grid>
+                    </WrapPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <!--  LEGEND, CHART, MENU  -->
+        <Grid Grid.Row="2" Margin="15,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" MaxHeight="50"/>
+                <RowDefinition Height="70*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="44*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            
+            <local:RightPropertiesV2View
+                x:Name="RightProperties"
+                Grid.Row="1"
+                Grid.Column="2"
+                Visibility="Collapsed" />
+
+
+            <!--  LEGEND  -->
+            <ScrollViewer
+                Name="Legend"
+                Grid.Row="1"
+                Grid.Column="1"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!--MaxHeight="50"-->
+                    <WrapPanel
+                        x:Name="WarpTop1"
+                        Visibility="Visible">
+                        <ItemsControl Name="Itemscontrol1" ItemsSource="{Binding DataLoggerCollectionUI}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                                        <!--<Rectangle
+                                            Width="20"
+                                            Height="2"
+                                            Fill="AliceBlue" />-->
+                                        <CheckBox
+                                            Name="CheckBoxDataLogger"
+                                            Margin="5"
+                                            Background="{Binding ChartSettings.Color}"
+                                            IsChecked="{Binding ChartSettings.IsChecked}"
+                                            Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                                            TextElement.Foreground="{Binding ChartSettings.ColorText}" />
+                                        <TextBlock
+                                            Name="IndexText"
+                                            VerticalAlignment="Center"
+                                            MouseUp="IndexText_MouseUp"
+                                            Text="{Binding ChartSettings.ItemName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
+                    <WrapPanel
+                        x:Name="WarpTop2"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Visibility="Visible">
+                        <ItemsControl Name="Itemscontrol2" ItemsSource="{Binding SignalCollectionUI}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                                        <!--<Rectangle
+                                            Width="20"
+                                            Height="2"
+                                            Fill="AliceBlue" />-->
+                                        <CheckBox
+                                            Name="CheckBoxDataLogger"
+                                            Margin="5"
+                                            Background="{Binding ChartSettings.Color}"
+                                            IsChecked="{Binding ChartSettings.IsChecked}"
+                                            Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                                            TextElement.Foreground="{Binding ChartSettings.ColorText}" />
+                                        <TextBlock
+                                            Name="IndexText"
+                                            VerticalAlignment="Center"
+                                            MouseUp="IndexText_MouseUp"
+                                            Text="{Binding ChartSettings.ItemName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
+                    <WrapPanel
+                        x:Name="WarpTop3"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Visibility="Visible">
+                        <ItemsControl Name="Itemscontrol3" ItemsSource="{Binding ScatterCollectionUI}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="20,0,0,0" Orientation="Horizontal">
+                                        <!--<Rectangle
+                                            Width="20"
+                                            Height="2"
+                                            Fill="AliceBlue" />-->
+                                        <CheckBox
+                                            Name="CheckBoxDataLogger"
+                                            Margin="5"
+                                            Background="{Binding ChartSettings.Color}"
+                                            IsChecked="{Binding ChartSettings.IsChecked}"
+                                            Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                                            TextElement.Foreground="{Binding ChartSettings.ColorText}" />
+                                        <TextBlock
+                                            Name="IndexText"
+                                            VerticalAlignment="Center"
+                                            MouseUp="IndexText_MouseUp"
+                                            Text="{Binding ChartSettings.ItemName}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
+
                 </StackPanel>
 
+            </ScrollViewer>
+
+            <!--  CHART  -->
+            <Grid x:Name="MainChartGrid" Grid.Row="1" />
+
+            <!--  MENU  -->
+            <StackPanel
+                Grid.Row="1"
+                Margin="80,30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+
+                <abb:AppBarButton
+                    x:Name="PlotSettings"
+                    Grid.Row="0"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Icon="md_settings_helper"
+                    ToolTip="Settings" />
                 <abb:AppBarButton
                     x:Name="AutoScale"
-                    Grid.Column="2"
                     Margin="0,0,0,-20"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     x:FieldModifier="public"
                     Content="  "
                     Icon="md_hand_back_left_off"
                     ToolTip="Auto Scale" />
-            </Grid>
-            <Grid
-                x:Name="MainChartGrid"
-                Margin="0,5"
-                DockPanel.Dock="Top" />
-        </DockPanel>
+                <abb:AppBarButton
+                    x:Name="LiveHistory"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_lock"
+                    ToolTip="Locked" />
+                <abb:AppBarButton
+                    x:Name="EnableMarkerBtn"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_crosshairs_off"
+                    ToolTip="Locked" />
+            </StackPanel>
+
+
+
+        </Grid>
+
+
+
     </Grid>
 </rxui:ReactiveUserControl>

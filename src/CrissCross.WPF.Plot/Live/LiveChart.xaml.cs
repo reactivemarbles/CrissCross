@@ -2,9 +2,12 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Runtime.Versioning;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using CP.WPF.Controls;
 using ReactiveUI;
 
@@ -13,15 +16,17 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// Interaction logic for WPF Chart AICS.
 /// </summary>
-[SupportedOSPlatform("windows10.0.17763.0")]
 public partial class LiveChart
 {
-    private bool _needLock = true;
+    private readonly CompositeDisposable _dd = [];
+    private IDisposable? _crosshairDisposable;
+    private bool _needLock;
     private bool _needAutoScale = true;
-    private bool _needMarkerOff = true;
+    private bool _needCrossHairOff = true;
     private bool _autoScaled;
-    private bool _locked;
-    private bool _markerOff;
+    private bool _locked = true;
+    private bool _crosshairOff;
+    private bool _activatedView;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LiveChart" /> class.
@@ -29,16 +34,20 @@ public partial class LiveChart
     public LiveChart()
     {
         InitializeComponent();
+        First = false;
+        ViewModel = new(MainChartGrid);
+        DataContext = ViewModel;
+        ExecuteLockUnlock();
+        ExecuteManAutoScale();
+
+        InitializeButtons();
+        _activatedView = true;
         this.WhenActivated(d =>
         {
-            ViewBindings(d);
-            First = false;
-            ViewModel = new(MainChartGrid);
-            DataContext = ViewModel;
-            ExecuteLockUnlock();
-            ExecuteManAutoScale();
-            InitializeButtons(d);
+            ElementBinding1(d);
         });
+
+        ////YAxisName.Subscribe(d => ViewModel!.YAxesSetup(d));
     }
 
     /// <summary>
@@ -49,11 +58,100 @@ public partial class LiveChart
     /// </value>
     public bool First { get; set; } = true;
 
-    private void ViewBindings(CompositeDisposable d)
+    private void ElementBinding1(CompositeDisposable d)
     {
         this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistory).DisposeWith(d);
         this.BindCommand(ViewModel, vm => vm.AutoScale, v => v.AutoScale).DisposeWith(d);
         this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
+        this.BindCommand(ViewModel, vm => vm.MakeLeftPanelVisible, v => v.PlotSettings).DisposeWith(d);
+
+        ////this.OneWayBind(ViewModel, vm => vm.DataLoggerCollectionUI, v => v.Itemscontrol1.ItemsSource).DisposeWith(d);
+        ////this.OneWayBind(ViewModel, vm => vm.SignalCollectionUI, v => v.Itemscontrol2.ItemsSource).DisposeWith(d);
+        ////this.OneWayBind(ViewModel, vm => vm.ScatterCollectionUI, v => v.Itemscontrol3.ItemsSource).DisposeWith(d);
+
+        this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility).DisposeWith(d);
+        this.OneWayBind(ViewModel, vm => vm.SelectedSetting!.ItemName, v => v.RightProperties.textbox1.Text).DisposeWith(d);
+
+        this.Bind(ViewModel, vm => vm.SelectedSetting!.LineWidth, v => v.RightProperties.LineWidth.Value).DisposeWith(d);
+        this.Bind(ViewModel, vm => vm.SelectedSetting!.Color, v => v.RightProperties.colorsComboBox.SelectedItem).DisposeWith(d);
+        this.Bind(ViewModel, vm => vm.SelectedSetting!.Visibility, v => v.RightProperties.visibilityComboBox.SelectedItem).DisposeWith(d);
+    }
+
+    private void IndexText_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        // make sure text block was clicked
+        if (sender is TextBlock textBlock)
+        {
+            // read clicked data context and current data context
+            var dataContext = textBlock.DataContext;
+            var currentDataContext = RightProperties.DataContext;
+
+            // is data context is other
+            if (dataContext != null)
+            {
+                if (dataContext is DataLoggerUI item)
+                {
+                    var setting = item.ChartSettings;
+                    if (ViewModel!.SelectedSetting == setting)
+                    {
+                        ViewModel!.SelectedSetting = null;
+                        ViewModel!.RightPropertyVisibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        ViewModel!.SelectedSetting = setting;
+                        ViewModel!.RightPropertyVisibility = Visibility.Visible;
+                    }
+                }
+
+                if (dataContext is ScatterUI item2)
+                {
+                    var setting = item2.ChartSettings;
+                    if (ViewModel!.SelectedSetting == setting)
+                    {
+                        ViewModel!.SelectedSetting = null;
+                        ViewModel!.RightPropertyVisibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        ViewModel!.SelectedSetting = setting;
+                        ViewModel!.RightPropertyVisibility = Visibility.Visible;
+                    }
+                }
+
+                if (dataContext is StreamerUI item3)
+                {
+                    var setting = item3.ChartSettings;
+                    if (ViewModel!.SelectedSetting == setting)
+                    {
+                        ViewModel!.SelectedSetting = null;
+                        ViewModel!.RightPropertyVisibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        ViewModel!.SelectedSetting = setting;
+                        ViewModel!.RightPropertyVisibility = Visibility.Visible;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ChangeScatterOberver()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel?.InitializeScatterPlotLines(ScatterObservablesWithTimeStamp);
+        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
     }
 
     private void ChangeSignalOberver()
@@ -62,9 +160,37 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needMarkerOff = true;
+        _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
+
+        _crosshairDisposable = ViewModel.WhenAnyValue(x => x.CrossHairEnabled).Subscribe(d =>
+        {
+            ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d);
+        });
+    }
+
+    private void ChangeDataLoggerOberver()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel?.InitializeDataLoggerPlotLinesWithPoints(DataLoggerObservablesWithPoints);
+        ViewModel?.InitializeControlMenu(ViewModel?.DataLoggerCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
     }
 
     private void ChangeSignalData()
@@ -73,50 +199,121 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needMarkerOff = true;
+        _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(DataWithTimeStamp);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
     }
 
-    private void InitializeButtons(CompositeDisposable d)
+    private void ChangeSignalDataWithPoints()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel?.InitializeLinesForSignalPoints(SignalWithPoints);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
+    }
+
+    private void ChangeSignalDataObserverWithPoints()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel?.InitializeLinesForSignalObservablesPoints(SignalObservablesWithPoints);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
+    }
+
+    private void ChangeScatterDataWithPoints()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
+        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeAxisLines();
+        if (_crosshairDisposable != null)
+        {
+            _crosshairDisposable.Dispose();
+        }
+    }
+
+    private void InitializeButtons()
     {
         // BY DEFAULT: LOCKED AND AUTOSCALED
         // LOCK GRAPH BUTTON
         ViewModel?.GraphLocked?
             .Subscribe(_ => ExecuteLockUnlock())
-            .DisposeWith(d);
+            .DisposeWith(_dd);
 
         // AUTO-SCALE BUTON
         ViewModel?.AutoScale?
             .Subscribe(_ => ExecuteManAutoScale())
-            .DisposeWith(d);
+            .DisposeWith(_dd);
 
         // AUTO-SCALE BUTON
         ViewModel?.EnableMarkerBtn?
             .Subscribe(_ => ExecuteMarkerOnOff())
-            .DisposeWith(d);
+            .DisposeWith(_dd);
+
+        // AUTO-SCALE BUTON
+        ViewModel?.MakeLeftPanelVisible?
+            .ObserveOn(RxApp.MainThreadScheduler).Subscribe(_ =>
+            {
+                if (ViewModel.LeftPanelVisibility == Visibility.Hidden)
+                {
+                    ViewModel.LeftPanelVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    ViewModel.LeftPanelVisibility = Visibility.Hidden;
+                }
+            }).DisposeWith(_dd);
     }
 
     private void ExecuteMarkerOnOff()
     {
-        if (_needMarkerOff)
+        if (_needCrossHairOff)
         {
-            if (!_markerOff)
+            if (!_crosshairOff)
             {
-                ViewModel!.EnableMarker = false;
-                _markerOff = true;
+                ViewModel!.CrossHairEnabled = false;
+                _crosshairOff = true;
             }
         }
-        else if (_markerOff)
+        else if (_crosshairOff)
         {
-            ViewModel!.EnableMarker = true;
-            _markerOff = false;
+            ViewModel!.CrossHairEnabled = true;
+            _crosshairOff = false;
         }
 
-        _needMarkerOff = !(_needMarkerOff && _markerOff);
-        EnableMarkerBtn.ToolTip = _markerOff ? "Marker off" : "Marker";
-        EnableMarkerBtn.Icon = _markerOff ? AppBarIcons.md_crosshairs_off : AppBarIcons.md_crosshairs;
-        ViewModel!.WpfLivePlot?.Refresh();
+        _needCrossHairOff = !(_needCrossHairOff && _crosshairOff);
+        EnableMarkerBtn.ToolTip = _crosshairOff ? "Marker off" : "Marker";
+        EnableMarkerBtn.Icon = _crosshairOff ? AppBarIcons.md_crosshairs_off : AppBarIcons.md_crosshairs;
+        ViewModel!.WpfPlot1vm?.Refresh();
     }
 
     private void ExecuteLockUnlock()
@@ -133,7 +330,7 @@ public partial class LiveChart
         _needLock = !(_needLock && _locked);
         LiveHistory.ToolTip = _locked ? "Locked" : "Interact";
         LiveHistory.Icon = _locked ? AppBarIcons.md_lock : AppBarIcons.md_lock_open;
-        ViewModel!.WpfLivePlot?.Refresh();
+        ViewModel!.WpfPlot1vm?.Refresh();
     }
 
     private void ExecuteManAutoScale()
@@ -152,7 +349,7 @@ public partial class LiveChart
         AutoScale.Icon = _autoScaled ? AppBarIcons.md_hand_back_left_off : AppBarIcons.md_hand_back_left;
         _needLock = true;
         ExecuteLockUnlock();
-        ViewModel!.WpfLivePlot?.Refresh();
+        ViewModel!.WpfPlot1vm?.Refresh();
     }
 
     /// <summary>
@@ -162,17 +359,52 @@ public partial class LiveChart
     {
         if (!_locked)
         {
-            ViewModel!.WpfLivePlot?.UserInputProcessor.Disable();
+            ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
             _locked = true;
 
+            ////// STREAMER
+            ////foreach (var item in ViewModel!.DataUI)
+            ////{
+            ////    item.Streamer!.ManageAxisLimits = _autoScaled;
+            ////    item.ManualScale = !_autoScaled;
+            ////    item.AutoScale = _autoScaled;
+            ////}
+
             // SIGNAL
-            foreach (var item in ViewModel!.DataSignalUI)
+            foreach (var item in ViewModel!.SignalCollectionUI)
             {
+                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
                 }
+                //// = _autoScaled;
+                item.ManualScale = !_autoScaled;
+                item.AutoScale = _autoScaled;
+            }
 
+            // SCATTER
+            foreach (var item in ViewModel!.ScatterCollectionUI)
+            {
+                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                //// = _autoScaled;
+                item.ManualScale = !_autoScaled;
+                item.AutoScale = _autoScaled;
+            }
+
+            // DATA LOGGER
+            foreach (var item in ViewModel!.DataLoggerCollectionUI)
+            {
+                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                //// = _autoScaled;
                 item.ManualScale = !_autoScaled;
                 item.AutoScale = _autoScaled;
             }
@@ -186,17 +418,49 @@ public partial class LiveChart
     {
         if (_locked)
         {
-            ViewModel!.WpfLivePlot?.UserInputProcessor.Enable();
+            ViewModel!.WpfPlot1vm?.UserInputProcessor.Enable();
             _locked = false;
 
+            ////// STREAMER
+            ////foreach (var item in ViewModel!.DataUI)
+            ////{
+            ////    item.Streamer!.ManageAxisLimits = false;
+            ////    item.ManualScale = false;
+            ////    item.AutoScale = false;
+            ////}
+
             // SIGNAL
-            foreach (var item in ViewModel!.DataSignalUI)
+            foreach (var item in ViewModel!.SignalCollectionUI)
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
                 }
+                ////item.Signal!.ManageAxisLimits = false;
+                item.ManualScale = false;
+                item.AutoScale = false;
+            }
 
+            // SCATTER
+            foreach (var item in ViewModel!.ScatterCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Signal!.ManageAxisLimits = false;
+                item.ManualScale = false;
+                item.AutoScale = false;
+            }
+
+            // DATA LOGGER
+            foreach (var item in ViewModel!.DataLoggerCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Signal!.ManageAxisLimits = false;
                 item.ManualScale = false;
                 item.AutoScale = false;
             }
@@ -210,14 +474,46 @@ public partial class LiveChart
     {
         if (_autoScaled)
         {
+            ////// STREAMER
+            ////foreach (var item in ViewModel!.DataUI)
+            ////{
+            ////    item.Streamer!.ManageAxisLimits = false;
+            ////    item.ManualScale = true;
+            ////    item.AutoScale = false;
+            ////}
+
             // SIGNAL
-            foreach (var item in ViewModel!.DataSignalUI)
+            foreach (var item in ViewModel!.SignalCollectionUI)
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
                 }
+                ////item.Streamer!.ManageAxisLimits = false;
+                item.ManualScale = true;
+                item.AutoScale = false;
+            }
 
+            // SCATTER
+            foreach (var item in ViewModel!.ScatterCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Streamer!.ManageAxisLimits = false;
+                item.ManualScale = true;
+                item.AutoScale = false;
+            }
+
+            // DATA LOGGER
+            foreach (var item in ViewModel!.DataLoggerCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Streamer!.ManageAxisLimits = false;
                 item.ManualScale = true;
                 item.AutoScale = false;
             }
@@ -234,20 +530,57 @@ public partial class LiveChart
     {
         if (!_autoScaled)
         {
+            ////// STREAMER
+            ////foreach (var item in ViewModel!.DataUI)
+            ////{
+            ////    item.Streamer!.ManageAxisLimits = true;
+            ////    item.ManualScale = false;
+            ////    item.AutoScale = true;
+            ////}
+
             // SIGNAL
-            foreach (var item in ViewModel!.DataSignalUI)
+            foreach (var item in ViewModel!.SignalCollectionUI)
             {
                 if (_autoScaled)
                 {
-                    ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale(false, false);
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
                 }
-
+                ////item.Streamer!.ManageAxisLimits = true;
                 item.ManualScale = false;
                 item.AutoScale = true;
             }
 
-            ViewModel!.WpfLivePlot?.Plot.Axes.AutoScale();
+            // SCATTER
+            foreach (var item in ViewModel!.ScatterCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Streamer!.ManageAxisLimits = true;
+                item.ManualScale = false;
+                item.AutoScale = true;
+            }
+
+            // DATA LOGGER
+            foreach (var item in ViewModel!.DataLoggerCollectionUI)
+            {
+                if (_autoScaled)
+                {
+                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
+                }
+                ////item.Streamer!.ManageAxisLimits = true;
+                item.ManualScale = false;
+                item.AutoScale = true;
+            }
+
+            ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
             _autoScaled = true;
         }
+    }
+
+    private void YAxisSetup()
+    {
+        ViewModel!.YAxesSetup(YAxisName);
     }
 }
