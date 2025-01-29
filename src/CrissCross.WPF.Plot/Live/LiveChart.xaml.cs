@@ -359,55 +359,9 @@ public partial class LiveChart
     {
         if (!_locked)
         {
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
             _locked = true;
-
-            ////// STREAMER
-            ////foreach (var item in ViewModel!.DataUI)
-            ////{
-            ////    item.Streamer!.ManageAxisLimits = _autoScaled;
-            ////    item.ManualScale = !_autoScaled;
-            ////    item.AutoScale = _autoScaled;
-            ////}
-
-            // SIGNAL
-            foreach (var item in ViewModel!.SignalCollectionUI)
-            {
-                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                //// = _autoScaled;
-                item.ManualScale = !_autoScaled;
-                item.AutoScale = _autoScaled;
-            }
-
-            // SCATTER
-            foreach (var item in ViewModel!.ScatterCollectionUI)
-            {
-                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                //// = _autoScaled;
-                item.ManualScale = !_autoScaled;
-                item.AutoScale = _autoScaled;
-            }
-
-            // DATA LOGGER
-            foreach (var item in ViewModel!.DataLoggerCollectionUI)
-            {
-                ////item.SignalXY!.Axes.YAxis. = _autoScaled;
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                //// = _autoScaled;
-                item.ManualScale = !_autoScaled;
-                item.AutoScale = _autoScaled;
-            }
         }
     }
 
@@ -418,52 +372,9 @@ public partial class LiveChart
     {
         if (_locked)
         {
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Enable();
             _locked = false;
-
-            ////// STREAMER
-            ////foreach (var item in ViewModel!.DataUI)
-            ////{
-            ////    item.Streamer!.ManageAxisLimits = false;
-            ////    item.ManualScale = false;
-            ////    item.AutoScale = false;
-            ////}
-
-            // SIGNAL
-            foreach (var item in ViewModel!.SignalCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Signal!.ManageAxisLimits = false;
-                item.ManualScale = false;
-                item.AutoScale = false;
-            }
-
-            // SCATTER
-            foreach (var item in ViewModel!.ScatterCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Signal!.ManageAxisLimits = false;
-                item.ManualScale = false;
-                item.AutoScale = false;
-            }
-
-            // DATA LOGGER
-            foreach (var item in ViewModel!.DataLoggerCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Signal!.ManageAxisLimits = false;
-                item.ManualScale = false;
-                item.AutoScale = false;
-            }
         }
     }
 
@@ -474,51 +385,10 @@ public partial class LiveChart
     {
         if (_autoScaled)
         {
-            ////// STREAMER
-            ////foreach (var item in ViewModel!.DataUI)
-            ////{
-            ////    item.Streamer!.ManageAxisLimits = false;
-            ////    item.ManualScale = true;
-            ////    item.AutoScale = false;
-            ////}
-
-            // SIGNAL
-            foreach (var item in ViewModel!.SignalCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = false;
-                item.ManualScale = true;
-                item.AutoScale = false;
-            }
-
-            // SCATTER
-            foreach (var item in ViewModel!.ScatterCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = false;
-                item.ManualScale = true;
-                item.AutoScale = false;
-            }
-
-            // DATA LOGGER
-            foreach (var item in ViewModel!.DataLoggerCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = false;
-                item.ManualScale = true;
-                item.AutoScale = false;
-            }
-
-            ViewModel!.ManualScaleY();
+            ////ViewModel!.ManualScaleY();
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
+            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 2);
+            ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
             _autoScaled = false;
         }
     }
@@ -530,50 +400,7 @@ public partial class LiveChart
     {
         if (!_autoScaled)
         {
-            ////// STREAMER
-            ////foreach (var item in ViewModel!.DataUI)
-            ////{
-            ////    item.Streamer!.ManageAxisLimits = true;
-            ////    item.ManualScale = false;
-            ////    item.AutoScale = true;
-            ////}
-
-            // SIGNAL
-            foreach (var item in ViewModel!.SignalCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = true;
-                item.ManualScale = false;
-                item.AutoScale = true;
-            }
-
-            // SCATTER
-            foreach (var item in ViewModel!.ScatterCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = true;
-                item.ManualScale = false;
-                item.AutoScale = true;
-            }
-
-            // DATA LOGGER
-            foreach (var item in ViewModel!.DataLoggerCollectionUI)
-            {
-                if (_autoScaled)
-                {
-                    ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale(false, false);
-                }
-                ////item.Streamer!.ManageAxisLimits = true;
-                item.ManualScale = false;
-                item.AutoScale = true;
-            }
-
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
             _autoScaled = true;
         }
