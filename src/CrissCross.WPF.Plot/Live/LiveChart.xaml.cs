@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CP.WPF.Controls;
 using ReactiveUI;
+using ScottPlot;
 
 namespace CrissCross.WPF.Plot;
 
@@ -321,6 +322,11 @@ public partial class LiveChart
         if (_needLock)
         {
             LockedPlotSetup();
+            if (!_autoScaled)
+            {
+                _needAutoScale = true;
+                ExecuteManAutoScale();
+            }
         }
         else
         {
@@ -347,8 +353,12 @@ public partial class LiveChart
         _needAutoScale = !(_needAutoScale && _autoScaled);
         AutoScale.ToolTip = _autoScaled ? "Auto Scale" : "Manual Scale";
         AutoScale.Icon = _autoScaled ? AppBarIcons.md_hand_back_left_off : AppBarIcons.md_hand_back_left;
-        _needLock = true;
-        ExecuteLockUnlock();
+        if (!_locked)
+        {
+            _needLock = true;
+            ExecuteLockUnlock();
+        }
+
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 
@@ -359,7 +369,6 @@ public partial class LiveChart
     {
         if (!_locked)
         {
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
             _locked = true;
         }
@@ -386,9 +395,14 @@ public partial class LiveChart
         if (_autoScaled)
         {
             ////ViewModel!.ManualScaleY();
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
-            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 2);
-            ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
+            foreach (var yAxe in ViewModel.YAxisList)
+            {
+                ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-50, 50, yAxe);
+            }
+
+            ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleX(ViewModel!.WpfPlot1vm!.Plot, xaxis: ViewModel!.XAxis1);
+
             _autoScaled = false;
         }
     }
@@ -401,7 +415,7 @@ public partial class LiveChart
         if (!_autoScaled)
         {
             ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
-            ViewModel!.WpfPlot1vm?.Plot.Axes.AutoScale();
+            ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleAll(ViewModel!.WpfPlot1vm!.Plot);
             _autoScaled = true;
         }
     }

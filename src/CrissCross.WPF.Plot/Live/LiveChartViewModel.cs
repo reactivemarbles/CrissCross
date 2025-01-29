@@ -23,8 +23,6 @@ namespace CrissCross.WPF.Plot;
 /// </summary>
 public partial class LiveChartViewModel : RxObject
 {
-    private readonly ReactiveList<IYAxis> _yAxisList;
-    private IXAxis _xAxis1;
     private WpfPlot? _wpfPlot1;
     [Reactive]
     private Settings? _selectedSetting;
@@ -70,8 +68,8 @@ public partial class LiveChartViewModel : RxObject
         LeftPanelVisibility = Visibility.Visible;
         MouseCoordinatesObservable = new Subject<Coordinates>();
 
-        _yAxisList = [];
-        _xAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
+        YAxisList = [];
+        XAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
         CreateAxisWithTimeStamp();
         AutoScale = ReactiveCommand.Create(() => { });
         GraphLocked = ReactiveCommand.Create(() => { });
@@ -192,13 +190,76 @@ public partial class LiveChartViewModel : RxObject
     public ReactiveCommand<Unit, Unit> LinePropCommand { get; }
 
     /// <summary>
+    /// Gets or sets the y axis list.
+    /// </summary>
+    /// <value>
+    /// The y axis list.
+    /// </value>
+    public ReactiveList<IYAxis> YAxisList { get; set; }
+
+    /// <summary>
+    /// Gets or sets the x axis1.
+    /// </summary>
+    /// <value>
+    /// The x axis1.
+    /// </value>
+    public IXAxis XAxis1 { get; set; }
+
+    /// <summary>
+    /// Manuals the scaling.
+    /// </summary>
+    /// <param name="plot">The plot.</param>
+    /// <param name="xaxis">The xaxis.</param>
+    /// <returns>
+    /// .
+    /// </returns>
+    public static Action<RenderPack> AutoScaleX(ScottPlot.Plot? plot, IXAxis xaxis)
+    {
+        return rp => plot!.Axes.AutoScaleX(xaxis);
+    }
+
+    /// <summary>
+    /// Manuals the scaling.
+    /// </summary>
+    /// <param name="plot">The plot.</param>
+    /// <returns>.</returns>
+    public static Action<RenderPack> AutoScaleY(ScottPlot.Plot? plot)
+    {
+        return rp => plot!.Axes.AutoScaleY();
+    }
+
+    /// <summary>
+    /// Manuals the scaling.
+    /// </summary>
+    /// <param name="plot">The plot.</param>
+    /// <returns>.</returns>
+    public static Action<RenderPack> AutoScaleAll(ScottPlot.Plot? plot)
+    {
+        return rp => plot!.Axes.AutoScale();
+    }
+
+    /////// <summary>
+    /////// Manuals the scaling.
+    /////// </summary>
+    /////// <param name="plot">The plot.</param>
+    ////public static void ManualScaling(ScottPlot.Plot? plot)
+    ////{
+    ////    if (plot == null)
+    ////    {
+    ////        return;
+    ////    }
+
+    ////    plot.Axes.AutoScaleX();
+    ////}
+
+    /// <summary>
     /// Creates the axis with data stamp.
     /// </summary>
     public void CreateAxisWithTimeStamp()
     {
         WpfPlot1vm?.Plot.Axes.Remove(WpfPlot1vm.Plot.Axes.Bottom);
-        _xAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
-        _xAxis1 = WpfPlot1vm!.Plot.Axes.DateTimeTicksBottom();
+        XAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
+        XAxis1 = WpfPlot1vm!.Plot.Axes.DateTimeTicksBottom();
         SetXAxisColour();
     }
 
@@ -208,7 +269,7 @@ public partial class LiveChartViewModel : RxObject
     public void CreateAxisWithPoints()
     {
         WpfPlot1vm?.Plot.Axes.Remove(WpfPlot1vm.Plot.Axes.Bottom);
-        _xAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
+        XAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
         SetXAxisColour();
     }
 
@@ -220,11 +281,11 @@ public partial class LiveChartViewModel : RxObject
         var baseColor = Color.FromHex("#D0D0D0");
 
         // colors
-        _xAxis1.Label.ForeColor = Color.FromHex("#377eb8");
-        _xAxis1.FrameLineStyle.Color = baseColor;
-        _xAxis1.TickLabelStyle.ForeColor = baseColor;
-        _xAxis1.MajorTickStyle.Color = baseColor;
-        _xAxis1.MinorTickStyle.Color = baseColor;
+        XAxis1.Label.ForeColor = Color.FromHex("#377eb8");
+        XAxis1.FrameLineStyle.Color = baseColor;
+        XAxis1.TickLabelStyle.ForeColor = baseColor;
+        XAxis1.MajorTickStyle.Color = baseColor;
+        XAxis1.MinorTickStyle.Color = baseColor;
     }
 
     /// <summary>
@@ -317,7 +378,7 @@ public partial class LiveChartViewModel : RxObject
     ////    }
 
     ////    // reset the axis
-    ////    foreach (var axis in _yAxisList)
+    ////    foreach (var axis in YAxisList)
     ////    {
     ////        axis.IsVisible = false;
     ////    }
@@ -332,12 +393,12 @@ public partial class LiveChartViewModel : RxObject
     ////                .DistinctUntilChanged()
     ////                .Subscribe(a =>
     ////                {
-    ////                    for (int i = 0; i < _yAxisList.Count; i++)
+    ////                    for (int i = 0; i < YAxisList.Count; i++)
     ////                    {
-    ////                        _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+    ////                        YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
     ////                    }
 
-    ////                    newMyItem.Streamer!.Axes.YAxis = _yAxisList[a];
+    ////                    newMyItem.Streamer!.Axes.YAxis = YAxisList[a];
     ////                })
     ////                .DisposeWith(Disposables);
     ////            newMyItem.Streamer!.Axes.XAxis = _xAxis1;
@@ -359,12 +420,12 @@ public partial class LiveChartViewModel : RxObject
         HideLeftAxis(baseColor);
 
         // remove axes from graph and from the list
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             WpfPlot1vm?.Plot.Axes.Remove(axis);
         }
 
-        _yAxisList.RemoveMany(_yAxisList.Items);
+        YAxisList.RemoveMany(YAxisList.Items);
 
         // combine yName and hexColors lists
         var combinedList = data.yNames.Zip(data.hexColors, (name, color) => (name: name, color: color));
@@ -372,13 +433,13 @@ public partial class LiveChartViewModel : RxObject
         // create the axes
         foreach (var item in combinedList)
         {
-            _yAxisList.Add(WpfPlot1vm!.Plot.Axes.AddRightAxis());
-            _yAxisList.Last().FrameLineStyle.Color = baseColor;
-            _yAxisList.Last().TickLabelStyle.ForeColor = baseColor;
-            _yAxisList.Last().MajorTickStyle.Color = baseColor;
-            _yAxisList.Last().MinorTickStyle.Color = baseColor;
-            _yAxisList.Last().Label.Text = item.name;
-            _yAxisList.Last().Label.ForeColor = Color.FromHex(item.color);
+            YAxisList.Add(WpfPlot1vm!.Plot.Axes.AddRightAxis());
+            YAxisList.Last().FrameLineStyle.Color = baseColor;
+            YAxisList.Last().TickLabelStyle.ForeColor = baseColor;
+            YAxisList.Last().MajorTickStyle.Color = baseColor;
+            YAxisList.Last().MinorTickStyle.Color = baseColor;
+            YAxisList.Last().Label.Text = item.name;
+            YAxisList.Last().Label.ForeColor = Color.FromHex(item.color);
         }
     }
 
@@ -395,7 +456,7 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
@@ -411,15 +472,15 @@ public partial class LiveChartViewModel : RxObject
                     .DistinctUntilChanged()
                     .Subscribe(a =>
                     {
-                        for (var i = 0; i < _yAxisList.Count; i++)
+                        for (var i = 0; i < YAxisList.Count; i++)
                         {
-                            _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+                            YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
                         }
 
-                        newMyItem.Scatter!.Axes.YAxis = _yAxisList[a];
+                        newMyItem.Scatter!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
-            newMyItem.Scatter!.Axes.XAxis = _xAxis1;
+            newMyItem.Scatter!.Axes.XAxis = XAxis1;
             i++;
             ScatterCollectionUI!.Add(newMyItem);
         }
@@ -438,7 +499,7 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
@@ -454,15 +515,15 @@ public partial class LiveChartViewModel : RxObject
                     .DistinctUntilChanged()
                     .Subscribe(a =>
                     {
-                        for (var i = 0; i < _yAxisList.Count; i++)
+                        for (var i = 0; i < YAxisList.Count; i++)
                         {
-                            _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+                            YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
                         }
 
-                        newMyItem.Scatter!.Axes.YAxis = _yAxisList[a];
+                        newMyItem.Scatter!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
-            newMyItem.Scatter!.Axes.XAxis = _xAxis1;
+            newMyItem.Scatter!.Axes.XAxis = XAxis1;
             i++;
             ScatterCollectionUI!.Add(newMyItem);
         }
@@ -480,7 +541,7 @@ public partial class LiveChartViewModel : RxObject
         ClearContent();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
@@ -496,16 +557,16 @@ public partial class LiveChartViewModel : RxObject
                     .DistinctUntilChanged()
                     .Subscribe(a =>
                     {
-                        for (var i = 0; i < _yAxisList.Count; i++)
+                        for (var i = 0; i < YAxisList.Count; i++)
                         {
-                            _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+                            YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
                         }
 
-                        newMyItem.DataLogger!.Axes.YAxis = _yAxisList[a];
-                        ////newMyItem.SignalXY!.Axes.YAxis = _yAxisList[a];
+                        newMyItem.DataLogger!.Axes.YAxis = YAxisList[a];
+                        ////newMyItem.SignalXY!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
-            newMyItem.DataLogger!.Axes.XAxis = _xAxis1;
+            newMyItem.DataLogger!.Axes.XAxis = XAxis1;
             ////newMyItem.SignalXY!.Axes.XAxis = _xAxis1;
             i++;
             SignalCollectionUI!.Add(newMyItem);
@@ -525,7 +586,7 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
@@ -541,16 +602,16 @@ public partial class LiveChartViewModel : RxObject
                     .DistinctUntilChanged()
                     .Subscribe(a =>
                     {
-                        for (var i = 0; i < _yAxisList.Count; i++)
+                        for (var i = 0; i < YAxisList.Count; i++)
                         {
-                            _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+                            YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
                         }
 
-                        newMyItem.DataLogger!.Axes.YAxis = _yAxisList[a];
-                        ////newMyItem.SignalXY!.Axes.YAxis = _yAxisList[a];
+                        newMyItem.DataLogger!.Axes.YAxis = YAxisList[a];
+                        ////newMyItem.SignalXY!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
-            newMyItem.DataLogger!.Axes.XAxis = _xAxis1;
+            newMyItem.DataLogger!.Axes.XAxis = XAxis1;
             ////newMyItem.SignalXY!.Axes.XAxis = _xAxis1;
             i++;
             DataLoggerCollectionUI!.Add(newMyItem);
@@ -569,17 +630,17 @@ public partial class LiveChartViewModel : RxObject
         ClearContent();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
 
         var newMyItem = new SignalUI(WpfPlot1vm!, (data.Name, data.Value, data.DateTime, data.Axis), SetColorLegend(SignalCollectionUI!));
-        newMyItem.SignalXY!.Axes.YAxis = _yAxisList[data.Axis];
+        newMyItem.SignalXY!.Axes.YAxis = YAxisList[data.Axis];
 
-        for (var j = 0; j < _yAxisList.Count; j++)
+        for (var j = 0; j < YAxisList.Count; j++)
         {
-            _yAxisList[j].IsVisible = _yAxisList[j].IsVisible || data.Axis == j;
+            YAxisList[j].IsVisible = YAxisList[j].IsVisible || data.Axis == j;
         }
 
         SignalCollectionUI!.Add(newMyItem);
@@ -598,18 +659,18 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
 
         var newMyItem = new SignalUI(WpfPlot1vm!, (data.Name, data.Value, data.DateTime, data.Axis), SetColorLegend(SignalCollectionUI!));
-        newMyItem.SignalXY!.Axes.YAxis = _yAxisList[data.Axis];
+        newMyItem.SignalXY!.Axes.YAxis = YAxisList[data.Axis];
         newMyItem.SignalXY.MarkerSize = 2;
 
-        for (var j = 0; j < _yAxisList.Count; j++)
+        for (var j = 0; j < YAxisList.Count; j++)
         {
-            _yAxisList[j].IsVisible = _yAxisList[j].IsVisible || data.Axis == j;
+            YAxisList[j].IsVisible = YAxisList[j].IsVisible || data.Axis == j;
         }
 
         SignalCollectionUI!.Add(newMyItem);
@@ -628,7 +689,7 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
@@ -644,15 +705,15 @@ public partial class LiveChartViewModel : RxObject
                     .DistinctUntilChanged()
                     .Subscribe(a =>
                     {
-                        for (var i = 0; i < _yAxisList.Count; i++)
+                        for (var i = 0; i < YAxisList.Count; i++)
                         {
-                            _yAxisList[i].IsVisible = _yAxisList[i].IsVisible || a == i;
+                            YAxisList[i].IsVisible = YAxisList[i].IsVisible || a == i;
                         }
 
-                        newMyItem.Streamer!.Axes.YAxis = _yAxisList[a];
+                        newMyItem.Streamer!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
-            newMyItem.Streamer!.Axes.XAxis = _xAxis1;
+            newMyItem.Streamer!.Axes.XAxis = XAxis1;
             i++;
             SignalCollectionUI!.Add(newMyItem);
         }
@@ -670,20 +731,20 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithPoints();
 
         // reset the axis
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             axis.IsVisible = false;
         }
 
         var newMyItem = new ScatterUI(WpfPlot1vm!, (data.Name, data.X, data.Y, data.Axis), SetColorLegend(ScatterCollectionUI!));
-        newMyItem.Scatter!.Axes.YAxis = _yAxisList[data.Axis];
+        newMyItem.Scatter!.Axes.YAxis = YAxisList[data.Axis];
         ////newMyItem.Scatter!.LineStyle.IsVisible = false;
         newMyItem.Scatter!.MarkerSize = 1f;
         newMyItem.Scatter!.LineWidth = 0.3f;
 
-        for (var j = 0; j < _yAxisList.Count; j++)
+        for (var j = 0; j < YAxisList.Count; j++)
         {
-            _yAxisList[j].IsVisible = _yAxisList[j].IsVisible || data.Axis == j;
+            YAxisList[j].IsVisible = YAxisList[j].IsVisible || data.Axis == j;
         }
 
         ScatterCollectionUI!.Add(newMyItem);
@@ -694,13 +755,13 @@ public partial class LiveChartViewModel : RxObject
     /// </summary>
     public void ManualScaleY()
     {
-        foreach (var axis in _yAxisList)
+        foreach (var axis in YAxisList)
         {
             WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 100, axis);
         }
-        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 100, _yAxisList[0]);
-        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 1000, _yAxisList[1]);
-        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 200, _yAxisList[2]);
+        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 100, YAxisList[0]);
+        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 1000, YAxisList[1]);
+        ////WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 200, YAxisList[2]);
         WpfPlot1vm?.Refresh();
     }
 
@@ -742,8 +803,8 @@ public partial class LiveChartViewModel : RxObject
         foreach (var item in AxisLinesUI)
         {
             WpfPlot1vm!.Plot.PlottableList.Add(item.AxisLine!);
-            item.AxisLine!.Axes.YAxis = _yAxisList[item.Axis];
-            item.AxisLine!.Axes.XAxis = _xAxis1;
+            item.AxisLine!.Axes.YAxis = YAxisList[item.Axis];
+            item.AxisLine!.Axes.XAxis = XAxis1;
         }
     }
 
@@ -1047,31 +1108,31 @@ public partial class LiveChartViewModel : RxObject
         HideLeftAxis(baseColor);
 
         // colors
-        _xAxis1.Label.ForeColor = Color.FromHex("#377eb8");
-        _xAxis1.FrameLineStyle.Color = baseColor;
-        _xAxis1.TickLabelStyle.ForeColor = baseColor;
-        _xAxis1.MajorTickStyle.Color = baseColor;
-        _xAxis1.MinorTickStyle.Color = baseColor;
+        XAxis1.Label.ForeColor = Color.FromHex("#377eb8");
+        XAxis1.FrameLineStyle.Color = baseColor;
+        XAxis1.TickLabelStyle.ForeColor = baseColor;
+        XAxis1.MajorTickStyle.Color = baseColor;
+        XAxis1.MinorTickStyle.Color = baseColor;
 
         // Setup Y Axis
         for (var i = 0; i < 3; i++)
         {
-            _yAxisList.Add(WpfPlot1vm!.Plot.Axes.AddRightAxis());
-            _yAxisList[i].FrameLineStyle.Color = baseColor;
-            _yAxisList[i].TickLabelStyle.ForeColor = baseColor;
-            _yAxisList[i].MajorTickStyle.Color = baseColor;
-            _yAxisList[i].MinorTickStyle.Color = baseColor;
+            YAxisList.Add(WpfPlot1vm!.Plot.Axes.AddRightAxis());
+            YAxisList[i].FrameLineStyle.Color = baseColor;
+            YAxisList[i].TickLabelStyle.ForeColor = baseColor;
+            YAxisList[i].MajorTickStyle.Color = baseColor;
+            YAxisList[i].MinorTickStyle.Color = baseColor;
         }
 
         // Configure Axis Unit and Color
-        _yAxisList[0].Label.Text = "Phase [ ° ]";
-        _yAxisList[0].Label.ForeColor = Color.FromHex("#377eb8");
+        YAxisList[0].Label.Text = "Phase [ ° ]";
+        YAxisList[0].Label.ForeColor = Color.FromHex("#377eb8");
 
-        _yAxisList[1].Label.Text = "[um]";
-        _yAxisList[1].Label.ForeColor = Color.FromHex("#4daf4a");
+        YAxisList[1].Label.Text = "[um]";
+        YAxisList[1].Label.ForeColor = Color.FromHex("#4daf4a");
 
-        _yAxisList[2].Label.Text = "[°C]";
-        _yAxisList[2].Label.ForeColor = Color.FromHex("#984ea3");
+        YAxisList[2].Label.Text = "[°C]";
+        YAxisList[2].Label.ForeColor = Color.FromHex("#984ea3");
     }
 
     private void HideLeftAxis(Color color)
@@ -1097,7 +1158,7 @@ public partial class LiveChartViewModel : RxObject
         ////DateTime limits = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute - 1, now.Second);
         var limits = now.Add(TimeSpan.FromMinutes(-60));
         var doublelimits = limits.ToOADate();
-        WpfPlot1vm?.Plot.Axes.SetLimitsX(doublelimits, doublenow, _xAxis1);
+        WpfPlot1vm?.Plot.Axes.SetLimitsX(doublelimits, doublenow, XAxis1);
         WpfPlot1vm?.Refresh();
     }
 }
