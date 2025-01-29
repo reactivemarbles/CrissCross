@@ -358,25 +358,25 @@ public partial class SignalUI : RxObject
                 ////SignalXY!.Data = new SignalXYSourceDoubleArray(_time.ToArray(), _data.ToArray());
 
                 DataLogger!.Add(uniqueTimeValues, uniqueDataValues);
-
+                DataLogger.ManageAxisLimits = false;
                 ////DataLogger!.Add(uniqueDataValues);
 
-                // UPDATE X AXIS
-                if (ManualScale || AutoScale)
-                {
-                    ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, SignalXY.Axes.XAxis);
-                    Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, DataLogger.Axes.XAxis);
-                    ////Plot.Plot.Axes.ContinuouslyAutoscale = true;
-                    ////Plot.Plot.RenderManager.
-                    ////Plot.UserInputProcessor.Disable();
-                }
-                else
-                {
-                    ////Plot.Plot.Axes.ContinuouslyAutoscale = false;
-                    ////Plot.UserInputProcessor.Disable();
-                }
+                ////// UPDATE X AXIS
+                ////if (ManualScale || AutoScale)
+                ////{
+                ////    ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, SignalXY.Axes.XAxis);
+                ////    Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, DataLogger.Axes.XAxis);
+                ////    ////Plot.Plot.Axes.ContinuouslyAutoscale = true;
+                ////    ////Plot.Plot.RenderManager.
+                ////    ////Plot.UserInputProcessor.Disable();
+                ////}
+                ////else
+                ////{
+                ////    ////Plot.Plot.Axes.ContinuouslyAutoscale = false;
+                ////    ////Plot.UserInputProcessor.Disable();
+                ////}
 
-                // UPDATE IF IS NOT PAUSED
+                //// UPDATE IF IS NOT PAUSED
                 if (!ChartSettings.IsPaused)
                 {
                     Plot.Refresh();
@@ -436,10 +436,10 @@ public partial class SignalUI : RxObject
                 }
 
                 // UPDATE IF IS NOT PAUSED
-                if (!ChartSettings.IsPaused)
-                {
-                    Plot.Refresh();
-                }
+                ////if (!ChartSettings.IsPaused)
+                ////{
+                ////    Plot.Refresh();
+                ////}
 
                 // UPDATE NAME
                 ChartSettings.ItemName = Name!;

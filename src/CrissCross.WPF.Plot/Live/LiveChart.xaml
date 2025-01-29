@@ -67,7 +67,7 @@
         <!--  LEGEND, CHART, MENU  -->
         <Grid Grid.Row="2" Margin="15,5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" MaxHeight="50"/>
+                <RowDefinition Height="auto" MaxHeight="50" />
                 <RowDefinition Height="70*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -75,7 +75,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            
+
             <local:RightPropertiesV2View
                 x:Name="RightProperties"
                 Grid.Row="1"
@@ -90,14 +90,12 @@
                 Grid.Column="1"
                 VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <!--MaxHeight="50"-->
-                    <WrapPanel
-                        x:Name="WarpTop1"
-                        Visibility="Visible">
+                    <!--  MaxHeight="50"  -->
+                    <WrapPanel x:Name="WarpTop1" Visibility="Visible">
                         <ItemsControl Name="Itemscontrol1" ItemsSource="{Binding DataLoggerCollectionUI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical"/>
+                                    <WrapPanel Orientation="Vertical" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -132,7 +130,7 @@
                         <ItemsControl Name="Itemscontrol2" ItemsSource="{Binding SignalCollectionUI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical"/>
+                                    <WrapPanel Orientation="Vertical" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -167,7 +165,7 @@
                         <ItemsControl Name="Itemscontrol3" ItemsSource="{Binding ScatterCollectionUI}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Vertical"/>
+                                    <WrapPanel Orientation="Vertical" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -218,7 +216,8 @@
                     VerticalAlignment="Center"
                     x:FieldModifier="public"
                     Icon="md_settings_helper"
-                    ToolTip="Settings" />
+                    ToolTip="Settings"
+                    Visibility="Collapsed" />
                 <abb:AppBarButton
                     x:Name="AutoScale"
                     Margin="0,0,0,-20"
@@ -227,7 +226,8 @@
                     x:FieldModifier="public"
                     Content="  "
                     Icon="md_hand_back_left_off"
-                    ToolTip="Auto Scale" />
+                    ToolTip="Auto Scale"
+                    Visibility="Collapsed" />
                 <abb:AppBarButton
                     x:Name="LiveHistory"
                     Margin="0,0,0,-20"
