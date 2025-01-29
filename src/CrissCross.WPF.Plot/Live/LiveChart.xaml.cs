@@ -369,6 +369,7 @@ public partial class LiveChart
     {
         if (!_locked)
         {
+            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
             ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
             _locked = true;
         }
