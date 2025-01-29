@@ -10,13 +10,12 @@ using ReactiveUI.SourceGenerators;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// EquationData.
+/// Settings.
 /// </summary>
 /// <seealso cref="Settings" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="Settings" /> class.
 /// </remarks>
-/// <param name="itemName">itemName.</param>
 public partial class Settings : RxObject, IAppearance
 {
     /// <summary>
@@ -41,7 +40,7 @@ public partial class Settings : RxObject, IAppearance
     /// The color CheckBox.
     /// </value>
     [Reactive]
-    private string _color;
+    private string? _color;
 
     /// <summary>
     /// Gets or sets the color text.
@@ -50,7 +49,7 @@ public partial class Settings : RxObject, IAppearance
     /// The color text.
     /// </value>
     [Reactive]
-    private string _colorText;
+    private string? _colorText;
 
     /// <summary>
     /// Gets or sets the displayed value.
@@ -95,7 +94,7 @@ public partial class Settings : RxObject, IAppearance
     ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
     /// </value>
     [Reactive]
-    private string _visibility;
+    private string? _visibility;
 
     /// <summary>
     /// Gets or sets the name of the item.
@@ -104,7 +103,7 @@ public partial class Settings : RxObject, IAppearance
     /// The name of the item.
     /// </value>
     [Reactive]
-    private string _itemName;
+    private string? _itemName;
 
     /// <summary>
     /// Gets or sets the width of the line.

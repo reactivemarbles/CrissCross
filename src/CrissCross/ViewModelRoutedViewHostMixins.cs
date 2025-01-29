@@ -486,7 +486,7 @@ public static class ViewModelRoutedViewHostMixins
 
         WhenSetupSubjects.Add(@this.Name!, new(1));
         NavigationHost.Add(@this.Name!, viewHost);
-        CurrentViewDisposable.Add(@this.Name!, new());
+        CurrentViewDisposable.Add(@this.Name!, []);
         ResultNavigating.Add(@this.Name!, new Subject<IViewModelNavigatingEventArgs>());
 
         if (viewHost.RequiresSetup)
@@ -578,6 +578,8 @@ public static class ViewModelRoutedViewHostMixins
         }).DisposeWith(@this.CleanUp);
     }
 
+#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
+
     /// <summary>
     /// Notify When the Host is setup.
     /// </summary>
@@ -600,7 +602,6 @@ public static class ViewModelRoutedViewHostMixins
                                     }
 
                                 default:
-#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
                                     if (NavigationHost.ContainsKey(@this.Name))
                                     {
                                         WhenSetupSubjects[@this.Name].Where(x => x).Subscribe(obs).DisposeWith(dis);

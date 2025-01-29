@@ -29,7 +29,10 @@ internal static class CancellationExtensions
         registration = cancellationToken.Register(
             o =>
         {
-            ((TaskCompletionSource<int>)o).TrySetCanceled();
+            if (o is TaskCompletionSource<int> tcs)
+            {
+                tcs.TrySetCanceled();
+            }
 
             // ReSharper disable once AccessToModifiedClosure
             registration.Dispose();

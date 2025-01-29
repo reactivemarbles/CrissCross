@@ -12,8 +12,8 @@ namespace CrissCross.Avalonia;
 /// NavigationUserControl.
 /// </summary>
 /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-/// <seealso cref="CrissCross.Avalonia.NavigationUserControl" />
-/// <seealso cref="ReactiveUI.IViewFor&lt;TViewModel&gt;" />
+/// <seealso cref="NavigationUserControl" />
+/// <seealso cref="IViewFor&lt;TViewModel&gt;" />
 public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor<TViewModel>
     where TViewModel : class, IRxObject, new()
 {
