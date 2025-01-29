@@ -29,25 +29,32 @@ public partial class AxisLinesUI : RxObject
     [Reactive]
     private int _axis;
 
+    [Reactive]
+    private string _labelText;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AxisLinesUI" /> class.
     /// </summary>
     /// <param name="plot">if set to <c>true</c> [paused].</param>
     /// <param name="observable">The observable.</param>
-    /// <param name="type">The type.</param>
+    /// <param name="orientation">The orientation ["Horizontal"] or ["Vertical"].</param>
     /// <param name="axis">The axis.</param>
-    public AxisLinesUI(WpfPlot plot, IObservable<(string? Name, double? Position)> observable, string type = "Horizontal", int axis = 0)
+    /// <param name="color">The color.</param>
+    /// <param name="text">The text.</param>
+    public AxisLinesUI(WpfPlot plot, IObservable<(string? Name, double? Position)> observable, string orientation = "Horizontal", int axis = 0, string color = "Blue", string text = "---")
     {
-        LineType = type;
+        LineType = orientation;
         Plot = plot;
         Axis = axis;
-        if (type == "Horizontal")
+        ChartSettings.Color = color;
+        LabelText = text;
+        if (orientation == "Horizontal")
         {
             CreateHorizontalLine();
             UpdateAxisLineSubscription(observable);
             AppearanceSubsriptions();
         }
-        else if (type == "Vertical")
+        else if (orientation == "Vertical")
         {
             CreateVerticalLine();
             UpdateAxisLineSubscription(observable);
@@ -62,11 +69,15 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The position.</param>
     /// <param name="type">The type.</param>
     /// <param name="axis">The axis.</param>
-    public AxisLinesUI(WpfPlot plot, double position, string type = "Horizontal", int axis = 0)
+    /// <param name="color">The color.</param>
+    /// <param name="text">The text.</param>
+    public AxisLinesUI(WpfPlot plot, double position, string type = "Horizontal", int axis = 0, string color = "Blue", string text = "---")
     {
         LineType = type;
         Plot = plot;
         Axis = axis;
+        ChartSettings.Color = color;
+        LabelText = text;
         if (type == "Horizontal")
         {
             CreateHorizontalLine(position);
@@ -103,6 +114,10 @@ public partial class AxisLinesUI : RxObject
     {
         var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
         AxisLine = Plot.Plot.Add.VerticalLine(x: position, width: (float)ChartSettings.LineWidth, color: color);
+        ////AxisLine.Text = LabelText;
+        AxisLine.LabelText = LabelText;
+        ////AxisLine.LabelText = LabelText;
+        ////AxisLine.LabelBackgroundColor = color;
     }
 
     /// <summary>
@@ -113,6 +128,11 @@ public partial class AxisLinesUI : RxObject
     {
         var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
         AxisLine = Plot.Plot.Add.HorizontalLine(y: position, width: (float)ChartSettings.LineWidth, color: color);
+        ////AxisLine.Text = LabelText;
+        AxisLine.LabelText = LabelText;
+        ////AxisLine.LabelText = LabelText;
+        AxisLine.LabelAlignment = Alignment.MiddleCenter;
+        ////AxisLine.LabelBackgroundColor = color;
     }
 
     /// <summary>
