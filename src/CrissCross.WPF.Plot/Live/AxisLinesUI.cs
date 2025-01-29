@@ -24,13 +24,16 @@ public partial class AxisLinesUI : RxObject
     private Settings _chartSettings = new Settings();
 
     [Reactive]
-    private string _lineType;
+    private string _lineOrientation;
 
     [Reactive]
     private int _axis;
 
     [Reactive]
     private string _labelText;
+
+    [Reactive]
+    private LinePattern _linePattern1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AxisLinesUI" /> class.
@@ -41,9 +44,18 @@ public partial class AxisLinesUI : RxObject
     /// <param name="axis">The axis.</param>
     /// <param name="color">The color.</param>
     /// <param name="text">The text.</param>
-    public AxisLinesUI(WpfPlot plot, IObservable<(string? Name, double? Position)> observable, string orientation = "Horizontal", int axis = 0, string color = "Blue", string text = "---")
+    /// <param name="linePattern">The line pattern.</param>
+    public AxisLinesUI(
+        WpfPlot plot,
+        IObservable<(string? Name, double? Position)> observable,
+        LinePattern linePattern,
+        string orientation = "Horizontal",
+        int axis = 0,
+        string color = "Blue",
+        string text = "---")
     {
-        LineType = orientation;
+        LineOrientation = orientation;
+        LinePattern1 = linePattern;
         Plot = plot;
         Axis = axis;
         ChartSettings.Color = color;
@@ -67,13 +79,22 @@ public partial class AxisLinesUI : RxObject
     /// </summary>
     /// <param name="plot">if set to <c>true</c> [paused].</param>
     /// <param name="position">The position.</param>
+    /// <param name="linePattern">The line pattern.</param>
     /// <param name="type">The type.</param>
     /// <param name="axis">The axis.</param>
     /// <param name="color">The color.</param>
     /// <param name="text">The text.</param>
-    public AxisLinesUI(WpfPlot plot, double position, string type = "Horizontal", int axis = 0, string color = "Blue", string text = "---")
+    public AxisLinesUI(
+        WpfPlot plot,
+        double position,
+        LinePattern linePattern,
+        string type = "Horizontal",
+        int axis = 0,
+        string color = "Blue",
+        string text = "---")
     {
-        LineType = type;
+        LineOrientation = type;
+        LinePattern1 = linePattern;
         Plot = plot;
         Axis = axis;
         ChartSettings.Color = color;
@@ -132,6 +153,7 @@ public partial class AxisLinesUI : RxObject
         AxisLine.LabelText = LabelText;
         ////AxisLine.LabelText = LabelText;
         AxisLine.LabelAlignment = Alignment.MiddleCenter;
+        AxisLine.LinePattern = LinePattern1;
         ////AxisLine.LabelBackgroundColor = color;
     }
 
