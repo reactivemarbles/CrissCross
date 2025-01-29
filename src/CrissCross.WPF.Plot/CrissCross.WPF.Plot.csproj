@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Live\NewFolder\" />
+    <Compile Remove="Live\NewFolder\**" />
+    <EmbeddedResource Remove="Live\NewFolder\**" />
+    <None Remove="Live\NewFolder\**" />
+    <Page Remove="Live\NewFolder\**" />
   </ItemGroup>
 </Project>

@@ -109,9 +109,9 @@ public partial class SignalUI : RxObject
         AutoScale = autoscale;
         ZoomXY = false;
         ChartSettings.IsChecked = true;
-        Crosshair = new Crosshair();
-        Marker = new Marker();
-        MarkerText = new Text();
+        ////Crosshair = new Crosshair();
+        ////Marker = new Marker();
+        ////MarkerText = new Text();
 
         NumberPointsPlotted = 1024;
         Plot = plot;
@@ -120,15 +120,15 @@ public partial class SignalUI : RxObject
         {
             CreateStreamer(color);
             UpdateStreamerFixedPoints(observable);
-            AppearanceSubsriptionsStreamer();
             CreateCursorValues();
+            AppearanceSubsriptionsStreamer();
         }
         else
         {
             CreateSignal(color);
             UpdateSignal(observable);
-            AppearanceSubsriptions();
             CreateCursorValues();
+            AppearanceSubsriptions();
             MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
                 {
                     if (DataLogger!.Data.Coordinates.Count <= 0)
@@ -136,10 +136,16 @@ public partial class SignalUI : RxObject
                         return;
                     }
 
-                    var coord = DataLogger!.GetNearestX(x, Plot.Plot.LastRender.DataRect).Coordinates;
-                    Marker.Coordinates = x;
-                    Crosshair.Position = coord;
-                    Marker.Coordinates = coord;
+                    var closestCoordinate = DataLogger!.Data.Coordinates
+                    .OrderBy(coordinate => Math.Abs(coordinate.X - x.X))
+                    .FirstOrDefault();
+
+                    Crosshair!.Position = closestCoordinate;
+                    Marker!.Position = closestCoordinate;
+                    MarkerText!.Location = closestCoordinate;
+                    MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}";
+
+                    Plot?.Refresh();
                 }).DisposeWith(Disposables);
         }
     }
@@ -244,9 +250,9 @@ public partial class SignalUI : RxObject
     public void CreateCursorValues()
     {
         // Create a crosshair to highlight the point under the cursor
-        Crosshair = Plot!.Plot.Add.Crosshair(0, 0);
-
+        Crosshair = Plot!.Plot.Add.Crosshair(10, 0);
         Crosshair.IsVisible = false;
+        Crosshair!.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings!.Color!));
 
         // Create a marker to highlight the point under the cursor
         Marker = Plot!.Plot.Add.Marker(0, 0);
@@ -254,6 +260,7 @@ public partial class SignalUI : RxObject
         Marker.Size = 17;
         Marker.LineWidth = 2;
         Marker.IsVisible = false;
+        Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings!.Color!));
 
         // Create a text label to place near the highlighted value
         MarkerText = Plot!.Plot.Add.Text(" ", 0, 0);
@@ -262,6 +269,7 @@ public partial class SignalUI : RxObject
         MarkerText.OffsetX = 7;
         MarkerText.OffsetY = -7;
         MarkerText.IsVisible = false;
+        MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings!.Color!));
     }
 
     /// <summary>
@@ -360,21 +368,6 @@ public partial class SignalUI : RxObject
                 DataLogger!.Add(uniqueTimeValues, uniqueDataValues);
                 DataLogger.ManageAxisLimits = false;
                 ////DataLogger!.Add(uniqueDataValues);
-
-                ////// UPDATE X AXIS
-                ////if (ManualScale || AutoScale)
-                ////{
-                ////    ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, SignalXY.Axes.XAxis);
-                ////    Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, DataLogger.Axes.XAxis);
-                ////    ////Plot.Plot.Axes.ContinuouslyAutoscale = true;
-                ////    ////Plot.Plot.RenderManager.
-                ////    ////Plot.UserInputProcessor.Disable();
-                ////}
-                ////else
-                ////{
-                ////    ////Plot.Plot.Axes.ContinuouslyAutoscale = false;
-                ////    ////Plot.UserInputProcessor.Disable();
-                ////}
 
                 //// UPDATE IF IS NOT PAUSED
                 if (!ChartSettings.IsPaused)
@@ -506,12 +499,22 @@ public partial class SignalUI : RxObject
             DataLogger!.LineStyle.Width = (float)x.Item1;
             DataLogger!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
             ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            DataLogger.IsVisible = x.Item3 == "Invisible" ? false : true;
+            DataLogger!.IsVisible = x.Item3 == "Invisible" ? false : true;
+            Crosshair!.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>
         {
             ChartSettings.Visibility = x == true ? "Invisible" : "Visible";
+        }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.IsCrossHairVisible, x => x.ChartSettings.Visibility).Subscribe(x =>
+        {
+            var visibility = (!x.Item1 || x.Item2 == "Invisible") ? false : true;
+            Marker.IsVisible = visibility;
+            Crosshair.IsVisible = visibility;
+            MarkerText.IsVisible = visibility;
         }).DisposeWith(Disposables);
     }
 
@@ -524,6 +527,8 @@ public partial class SignalUI : RxObject
             ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
             Streamer.IsVisible = x.Item3 == "Invisible" ? false : true;
             Crosshair.MarkerLineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -73,7 +74,14 @@ public partial class LiveChartViewModel : RxObject
         CreateAxisWithTimeStamp();
         AutoScale = ReactiveCommand.Create(() => { });
         GraphLocked = ReactiveCommand.Create(() => { });
-        EnableMarkerBtn = ReactiveCommand.Create(() => { });
+        EnableMarkerBtn = ReactiveCommand.Create(() =>
+        {
+            foreach (var p in SignalCollectionUI)
+            {
+                p.ChartSettings.IsCrossHairVisible = !p.ChartSettings.IsCrossHairVisible;
+            }
+        });
+
         MakeLeftPanelVisible = ReactiveCommand.Create(() => { });
 
         AxesSetup(); // axes colors setup
@@ -563,6 +571,9 @@ public partial class LiveChartViewModel : RxObject
                         }
 
                         newMyItem.DataLogger!.Axes.YAxis = YAxisList[a];
+                        newMyItem.Marker!.Axes.YAxis = YAxisList[a];
+                        newMyItem.MarkerText!.Axes.YAxis = YAxisList[a];
+                        newMyItem.Crosshair!.Axes.YAxis = YAxisList[a];
                         ////newMyItem.SignalXY!.Axes.YAxis = YAxisList[a];
                     })
                     .DisposeWith(Disposables);
@@ -938,164 +949,14 @@ public partial class LiveChartViewModel : RxObject
             try
             {
                 MouseCoordinatesObservable.OnNext(mouseLocation);
+
+                Trace.WriteLine("Mouse Location: { X: " + position.X + " Y: " + position.Y + " }");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("mouse location error: " + ex.ToString());
             }
-
-            ////foreach (var x in SignalCollectionUI)
-            ////{
-            ////    WpfPlot1vm!.Refresh();
-            ////    var closestCoordinate = x.MyItem.SignalXY!.Data.GetNearestX(rect, WpfPlot1vm!.Plot.LastRender).Coordinates;
-            ////    ////.OrderBy(coordinate => Math.Abs(coordinate.X - rect!.Value.X))
-            ////    ////.FirstOrDefault();
-
-            ////    // hide the crosshair, marker and text when no point is selected
-            ////    var visible = x.MyItem.IsChecked && EnableMarker;
-            ////    x.Item2.Crosshair!.IsVisible = visible;
-            ////    x.Item2.Marker!.IsVisible = visible;
-            ////    x.Item2.Text!.IsVisible = visible;
-
-            ////    if (closestCoordinate != Coordinates.NaN)
-            ////    {
-            ////        x.Item2.Crosshair!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-            ////        x.Item2.Crosshair.Position = closestCoordinate;
-            ////        x.Item2.Crosshair.LineColor = x.MyItem.SignalXY.Color;
-
-            ////        x.Item2.Marker!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-            ////        x.Item2.Marker.Location = closestCoordinate;
-            ////        x.Item2.Marker.MarkerStyle.LineColor = x.MyItem.SignalXY.Color;
-
-            ////        x.Item2.Text!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-            ////        x.Item2.Text.Location = closestCoordinate;
-            ////        try
-            ////        {
-            ////            x.Item2.Text.LabelText = $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}";
-            ////        }
-            ////        catch
-            ////        {
-            ////            x.Item2.Text.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X}";
-            ////        }
-
-            ////        x.Item2.Text.LabelFontColor = x.MyItem.SignalXY.Color;
-            ////    }
-
-            ////    WpfPlot1vm?.Refresh();
-            ////}
         };
-        ////WpfPlot1vm.Events().MouseMove.Select(e => e.GetPosition(e.Device.Target))
-        ////    .CombineLatest(
-        ////    SignalCollectionUI.CurrentItems.Select(x =>
-        ////    {
-        ////        var l = new List<(SignalUI MyItem, (Crosshair? Crosshair, Marker? Marker, Text? Text))>();
-        ////        foreach (var d in x)
-        ////        {
-        ////            l.Add((d, CreateCursorValues()));
-        ////        }
-
-        ////        return l;
-        ////    }),
-        ////    (e, x) => (e, x)).Subscribe(d =>
-        ////    {
-        ////        Point mousePosition = d.e;
-        ////        float xx = Convert.ToSingle(mousePosition.X);
-        ////        float yy = Convert.ToSingle(mousePosition.Y);
-        ////        var rect = WpfPlot1vm!.Plot.GetCoordinates(xx, yy);
-        ////        foreach (var x in d.x)
-        ////        {
-        ////            WpfPlot1vm!.Refresh();
-        ////            var closestCoordinate = x.MyItem.SignalXY!.Data.GetNearestX(rect, WpfPlot1vm!.Plot.LastRender).Coordinates;
-        ////            ////.OrderBy(coordinate => Math.Abs(coordinate.X - rect!.Value.X))
-        ////            ////.FirstOrDefault();
-
-        ////            // hide the crosshair, marker and text when no point is selected
-        ////            var visible = x.MyItem.IsChecked && EnableMarker;
-        ////            x.Item2.Crosshair!.IsVisible = visible;
-        ////            x.Item2.Marker!.IsVisible = visible;
-        ////            x.Item2.Text!.IsVisible = visible;
-
-        ////            if (closestCoordinate != Coordinates.NaN)
-        ////            {
-        ////                x.Item2.Crosshair!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-        ////                x.Item2.Crosshair.Position = closestCoordinate;
-        ////                x.Item2.Crosshair.LineColor = x.MyItem.SignalXY.Color;
-
-        ////                x.Item2.Marker!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-        ////                x.Item2.Marker.Location = closestCoordinate;
-        ////                x.Item2.Marker.MarkerStyle.LineColor = x.MyItem.SignalXY.Color;
-
-        ////                x.Item2.Text!.Axes.YAxis = x.MyItem.SignalXY.Axes.YAxis;
-        ////                x.Item2.Text.Location = closestCoordinate;
-        ////                try
-        ////                {
-        ////                    x.Item2.Text.LabelText = $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}";
-        ////                }
-        ////                catch
-        ////                {
-        ////                    x.Item2.Text.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X}";
-        ////                }
-
-        ////                x.Item2.Text.LabelFontColor = x.MyItem.SignalXY.Color;
-        ////            }
-
-        ////            WpfPlot1vm?.Refresh();
-        ////        }
-        ////    });
-
-        ////// MOUSE EVENT
-        ////WpfPlot1vm.Events().MouseMove.Select(e => e.GetPosition(e.Device.Target))
-        ////    .CombineLatest(
-        ////    ScatterCollectionUI.CurrentItems.Select(x =>
-        ////    {
-        ////        var l = new List<(ScatterUI MyItem, (Crosshair? Crosshair, Marker? Marker, Text? Text))>();
-        ////        foreach (var d in x)
-        ////        {
-        ////            l.Add((d, CreateCursorValues()));
-        ////        }
-
-        ////        return l;
-        ////    }),
-        ////    (e, x) => (e, x)).Subscribe(d =>
-        ////    {
-        ////        Point mousePosition = d.e;
-        ////        float xx = Convert.ToSingle(mousePosition.X);
-        ////        float yy = Convert.ToSingle(mousePosition.Y);
-        ////        var rect = WpfPlot1vm!.Plot.GetCoordinates(xx, yy);
-        ////        foreach (var x in d.x)
-        ////        {
-        ////            WpfPlot1vm!.Refresh();
-        ////            var closestCoordinate = x.MyItem.Scatter!.Data.GetNearestX(rect, WpfPlot1vm!.Plot.LastRender).Coordinates;
-        ////            ////.OrderBy(coordinate => Math.Abs(coordinate.X - rect!.Value.X))
-        ////            ////.FirstOrDefault();
-
-        ////            // hide the crosshair, marker and text when no point is selected
-        ////            var visible = x.MyItem.IsChecked && EnableMarker;
-        ////            x.Item2.Crosshair!.IsVisible = visible;
-        ////            x.Item2.Marker!.IsVisible = visible;
-        ////            x.Item2.Text!.IsVisible = visible;
-
-        ////            if (closestCoordinate != Coordinates.NaN)
-        ////            {
-        ////                x.Item2.Crosshair!.Axes.YAxis = x.MyItem.Scatter.Axes.YAxis;
-        ////                x.Item2.Crosshair.Position = closestCoordinate;
-        ////                x.Item2.Crosshair.LineColor = x.MyItem.Scatter.Color;
-
-        ////                x.Item2.Marker!.Axes.YAxis = x.MyItem.Scatter.Axes.YAxis;
-        ////                x.Item2.Marker.Location = closestCoordinate;
-        ////                x.Item2.Marker.MarkerStyle.LineColor = x.MyItem.Scatter.Color;
-
-        ////                x.Item2.Text!.Axes.YAxis = x.MyItem.Scatter.Axes.YAxis;
-        ////                x.Item2.Text.Location = closestCoordinate;
-
-        ////                x.Item2.Text.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X}";
-
-        ////                x.Item2.Text.LabelFontColor = x.MyItem.Scatter.Color;
-        ////            }
-
-        ////            WpfPlot1vm?.Refresh();
-        ////        }
-        ////    });
     }
 
     /// <summary>
