@@ -23,7 +23,7 @@ public class ReactiveTransitioningContentControl : ContentControl, ICancelable
 {
     private readonly Subject<double> _opacitySubject = new();
     private readonly SemaphoreSlim _animationSemaphore = new(1);
-    private CompositeDisposable _animationDisposable = new();
+    private CompositeDisposable _animationDisposable = [];
     private ContentPresenter? _contentPresenter2;
     private ContentPresenter? _contentPresenter1;
     private int _currentPresenter;
@@ -121,9 +121,9 @@ public class ReactiveTransitioningContentControl : ContentControl, ICancelable
     {
         // This should be an animation but there is currently an issue with PageTransitions in Avalonia
         _animationDisposable.Dispose();
-        _animationDisposable = new();
+        _animationDisposable = [];
         var (from, to, current) = GetPresenters();
-        to!.Bind(ContentPresenter.OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
+        to!.Bind(OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
         var opacity = 0d;
         Observable.Interval(TimeSpan.FromMilliseconds(10)).Subscribe(_ =>
         {

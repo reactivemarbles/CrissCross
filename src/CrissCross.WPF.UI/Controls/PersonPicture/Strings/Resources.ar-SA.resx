@@ -150,11 +150,11 @@
     <comment>This text is used to show the number of items in the person picture badging area, when that number is  1. {0} is the contact name and {1} is the number of items.</comment>
   </data>
   <data name="BadgeItemTextOverride" xml:space="preserve">
-    <value>{0} ، {1:d} {2}</value>
+    <value>{0}، {1:d} {2}</value>
     <comment>This format string is used for the automation name. It is 'Person Name, badgenumber badgetext', where badge text is a user specified string overriding 'item(s)'.</comment>
   </data>
   <data name="BadgeIcon" xml:space="preserve">
-    <value>رمز {0}،</value>
+    <value>{0}، رمز </value>
     <comment>This text is used with the badging glyph. {0} is the contact name.</comment>
   </data>
   <data name="BadgeIconTextOverride" xml:space="preserve">

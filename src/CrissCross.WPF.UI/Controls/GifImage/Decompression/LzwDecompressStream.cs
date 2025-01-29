@@ -21,30 +21,21 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
 
     public override bool CanWrite => true;
 
-    public override long Length
-    {
-        get { throw new NotSupportedException(); }
-    }
+    public override long Length => throw new NotSupportedException();
 
     public override long Position
     {
-        get { throw new NotSupportedException(); }
-        set { throw new NotSupportedException(); }
+        get => throw new NotSupportedException();
+        set => throw new NotSupportedException();
     }
 
     public override void Flush()
     {
     }
 
-    public override long Seek(long offset, SeekOrigin origin)
-    {
-        throw new NotSupportedException();
-    }
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
-    public override void SetLength(long value)
-    {
-        throw new NotSupportedException();
-    }
+    public override void SetLength(long value) => throw new NotSupportedException();
 
     public override int Read(byte[] buffer, int offset, int count)
     {
@@ -73,17 +64,14 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
         return read;
     }
 
-    public override void Write(byte[] buffer, int offset, int count)
-    {
-        throw new NotSupportedException();
-    }
+    public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
-    private static byte[] CopySequenceToBuffer(byte[] sequence, byte[] buffer, int offset, int count, ref int read)
+    private static byte[]? CopySequenceToBuffer(byte[]? sequence, byte[] buffer, int offset, int count, ref int read)
     {
-        var bytesToRead = Math.Min(sequence.Length, count - read);
+        var bytesToRead = Math.Min(sequence!.Length, count - read);
         Buffer.BlockCopy(sequence, 0, buffer, offset + read, bytesToRead);
         read += bytesToRead;
-        byte[] remainingBytes = null;
+        byte[]? remainingBytes = null;
         if (bytesToRead < sequence.Length)
         {
             var remainingBytesCount = sequence.Length - bytesToRead;
@@ -153,14 +141,14 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             if (_prevCode >= 0)
             {
                 var prev = _codeTable[_prevCode];
-                var newSequence = prev.Append(sequence.Bytes[0]);
+                var newSequence = prev.Append(sequence.Bytes![0]);
                 _codeTable.Add(newSequence);
             }
         }
         else
         {
             var prev = _codeTable[_prevCode];
-            var newSequence = prev.Append(prev.Bytes[0]);
+            var newSequence = prev.Append(prev.Bytes![0]);
             _codeTable.Add(newSequence);
             _remainingBytes = CopySequenceToBuffer(newSequence.Bytes, buffer, offset, count, ref read);
         }
@@ -193,7 +181,7 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
 
         public Sequence Append(byte b)
         {
-            var bytes = new byte[Bytes.Length + 1];
+            var bytes = new byte[Bytes!.Length + 1];
             Bytes.CopyTo(bytes, 0);
             bytes[Bytes.Length] = b;
             return new Sequence(bytes);
