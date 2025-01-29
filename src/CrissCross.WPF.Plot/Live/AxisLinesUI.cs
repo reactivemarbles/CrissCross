@@ -33,7 +33,7 @@ public partial class AxisLinesUI : RxObject
     private string _labelText;
 
     [Reactive]
-    private LinePattern _linePattern;
+    private LinePattern _linePattern1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AxisLinesUI" /> class.
@@ -55,7 +55,7 @@ public partial class AxisLinesUI : RxObject
         string text = "---")
     {
         LineOrientation = orientation;
-        LinePattern = linePattern;
+        LinePattern1 = linePattern;
         Plot = plot;
         Axis = axis;
         ChartSettings.Color = color;
@@ -94,7 +94,7 @@ public partial class AxisLinesUI : RxObject
         string text = "---")
     {
         LineOrientation = type;
-        LinePattern = linePattern;
+        LinePattern1 = linePattern;
         Plot = plot;
         Axis = axis;
         ChartSettings.Color = color;
@@ -153,7 +153,7 @@ public partial class AxisLinesUI : RxObject
         AxisLine.LabelText = LabelText;
         ////AxisLine.LabelText = LabelText;
         AxisLine.LabelAlignment = Alignment.MiddleCenter;
-        AxisLine.LinePattern = LinePattern.Dashed;
+        AxisLine.LinePattern = LinePattern1;
         ////AxisLine.LabelBackgroundColor = color;
     }
 
