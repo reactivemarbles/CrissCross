@@ -4,6 +4,7 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Windows.Markup;
 using CrissCross;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -312,50 +313,40 @@ public partial class SignalUI : RxObject
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable)
-    {
-        observable.ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(data =>
+    public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) => observable
+            .Select(data =>
             {
-                if (string.IsNullOrEmpty(data.Name) || data.Value == null || data.DateTime == null)
-                {
-                    return;
-                }
-
-                if (data.Value.Count == 0 || data.DateTime.Count == 0)
-                {
-                    return;
-                }
-
-                if (data.Value == null || (data.Value.Count != data.DateTime.Count) || data.Name == null)
-                {
-                    return;
-                }
-
                 var now = DateTime.Now;
                 double[] datetime = [];
                 try
                 {
+                    // option 2: with ticks
+                    now = new(Convert.ToInt64(data.DateTime.Last()));
+                    datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new DateTime(Convert.ToInt64(x)).ToOADate())).ToArray();
+                }
+                catch (ArgumentException)
+                {
                     // option 1: with timestamp
                     datetime = data.DateTime.ToArray();
                     var oaDate = data.DateTime.Last();
-                    now = System.DateTime.FromOADate(oaDate);
-                }
-                catch
-                {
-                    // option 2: with ticks
-                    now = new(Convert.ToInt64(data.DateTime.Last()));
-                    datetime = new List<double>(data.DateTime.ToList().ConvertAll(x => new System.DateTime(Convert.ToInt64(x)).ToOADate())).ToArray();
+                    now = DateTime.FromOADate(oaDate);
                 }
 
+                return (data, now, datetime);
+            })
+            .Where(d => !string.IsNullOrEmpty(d.data.Name) && d.data.Value != null && d.data.DateTime != null && d.data.Value.Count > 0 && d.data.DateTime.Count > 0 && d.data.Value.Count == d.data.DateTime.Count)
+            .Retry()
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(d =>
+            {
                 // CALCULATE TIMESPAN TO PLOT
-                var doublenow = now.ToOADate();
-                var limits = now.Add(TimeSpan.FromMinutes(-0.1));
+                var doublenow = d.now.ToOADate();
+                var limits = d.now.Add(TimeSpan.FromMinutes(-0.1));
                 var doublelimits = limits.ToOADate();
 
                 // INSERT DATA INTO SIGNALXY
-                var values = new List<double>(data.Value).ToArray();
-                var combinedValues = values.Zip(datetime, (v, d) => (v, d));
+                var values = new List<double>(d.data.Value!).ToArray();
+                var combinedValues = values.Zip(d.datetime, (v, d) => (v, d));
 
                 var uniqueValues = combinedValues.Where(item => !_time.Contains(item.d)).OrderBy(x => x.d).ToList();
                 var uniqueDataValues = uniqueValues.Select(x => x.v).ToArray();
@@ -376,9 +367,8 @@ public partial class SignalUI : RxObject
                 }
 
                 // UPDATE NAME
-                ChartSettings.ItemName = data.Name!;
+                ChartSettings.ItemName = d.data.Name!;
             }).DisposeWith(Disposables);
-    }
 
     /// <summary>
     /// Updates the stream.
