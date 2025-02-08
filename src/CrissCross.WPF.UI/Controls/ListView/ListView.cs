@@ -28,6 +28,8 @@ public class ListView : System.Windows.Controls.ListView
     /// <summary>Identifies the <see cref="ViewState"/> dependency property.</summary>
     public static readonly DependencyProperty ViewStateProperty = DependencyProperty.Register(nameof(ViewState), typeof(ListViewViewState), typeof(ListView), new FrameworkPropertyMetadata(ListViewViewState.Default, OnViewStateChanged));
 
+    private DependencyPropertyDescriptor? _descriptor;
+
     static ListView() => DefaultStyleKeyProperty.OverrideMetadata(typeof(ListView), new FrameworkPropertyMetadata(typeof(ListView)));
 
     /// <summary>
@@ -66,12 +68,23 @@ public class ListView : System.Windows.Controls.ListView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded; // prevent memory leaks
+        // prevent memory leaks
+        Loaded -= OnLoaded;
+        Unloaded += OnUnloaded;
 
         // Setup initial ViewState and hook into View property changes
-        var descriptor = DependencyPropertyDescriptor.FromProperty(System.Windows.Controls.ListView.ViewProperty, typeof(System.Windows.Controls.ListView));
-        descriptor?.AddValueChanged(this, OnViewPropertyChanged);
-        UpdateViewState(); // set the initial state
+        _descriptor = DependencyPropertyDescriptor.FromProperty(System.Windows.Controls.ListView.ViewProperty, typeof(System.Windows.Controls.ListView));
+        _descriptor?.AddValueChanged(this, OnViewPropertyChanged);
+
+        // set the initial state
+        UpdateViewState();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        Unloaded -= OnUnloaded;
+
+        _descriptor?.RemoveValueChanged(this, OnViewPropertyChanged);
     }
 
     private void OnViewPropertyChanged(object? sender, EventArgs e) => UpdateViewState();
