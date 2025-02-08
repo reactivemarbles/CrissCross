@@ -99,7 +99,6 @@ public partial class NumberPad : IDisposable
                 if (Value.Value.HasValue && Value.Value!.Value <= _owner.Maximum && Value.Value.Value >= _owner.Minimum)
                 {
                     _limitsTimer?.Stop();
-                    ////Value.Background = Brushes.White;
                 }
             },
             Dispatcher);
@@ -319,41 +318,14 @@ public partial class NumberPad : IDisposable
         {
             // Get the current screen
             WindowInteropHelper wih = new(window);
-
-            // TODO: Replace WinForms with Native calls
-            ////var monitor = MonitorFromWindow(wih.Handle, MONITOR_DEFAULTTONEAREST);
-
-            ////var monitorInfo = new NativeMonitorInfo();
-            ////if (monitor != IntPtr.Zero)
-            ////{
-            ////    GetMonitorInfo(monitor, monitorInfo);
-
-            ////    var left = monitorInfo.Monitor.Left;
-            ////    var top = monitorInfo.Monitor.Top;
-            ////    var width = monitorInfo.Monitor.Right - monitorInfo.Monitor.Left;
-            ////    var height = monitorInfo.Monitor.Bottom - monitorInfo.Monitor.Top;
-            ////}
-
-            var screen = System.Windows.Forms.Screen.FromHandle(wih.Handle);
-
-            // Get all the screens and identify the primary
-            List<System.Drawing.Rectangle> screens = [];
-            var primaryScreen = -1;
-            var scr = 0;
-            foreach (var s in System.Windows.Forms.Screen.AllScreens)
+            if (User32.MonitorFromWindow(wih.Handle, User32.MONITOR_DEFAULTTONEAREST) is IntPtr monitor && monitor != IntPtr.Zero)
             {
-                screens.Add(s.Bounds);
-                if (s.Primary)
-                {
-                    primaryScreen = scr;
-                }
+                var monitorInfo = new User32.NativeMonitorInfo();
+                User32.GetMonitorInfo(monitor, monitorInfo);
 
-                scr++;
+                Left = monitorInfo.Monitor.Left;
+                Top = monitorInfo.Monitor.Top;
             }
-
-            Top = screen.Bounds.Location.Y;
-            var curScreen = screens.FindIndex(x => x == screen.Bounds);
-            Left = curScreen <= primaryScreen ? screen.Bounds.Location.X : screen.Bounds.Width;
         }
         else
         {
@@ -369,12 +341,10 @@ public partial class NumberPad : IDisposable
         if (window != null && button != null && presentationSource != null)
         {
             var ownerPosition = button.TransformToAncestor(presentationSource.RootVisual).Transform(new Point(0, 0));
-            var windowPosition = window.PointToScreen(default);
 
             // Set the top position of the Keypad
             _margin[1] = ownerPosition.Y - 100;
 
-            // WGrid.Height = 366
             if ((_margin[1] + WGrid.Height) > window.ActualHeight)
             {
                 _margin[1] = window.ActualHeight - WGrid.Height - 10;
@@ -392,7 +362,6 @@ public partial class NumberPad : IDisposable
                 _margin[2] = ownerPosition.X + button.ActualWidth + 10;
             }
 
-            // WGrid.Width = 206
             if ((_margin[2] + WGrid.Width) > (window.ActualWidth - 10))
             {
                 // Set location to left of button if the location + with of keypad will be off

@@ -17,7 +17,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// <summary>
     /// Defaults decimal points.
     /// </summary>
-    public static readonly DependencyProperty DecimalPlaceProperty =
+    public static readonly DependencyProperty DecimalPlacesProperty =
         DependencyProperty.Register(
             nameof(DecimalPlaces),
             typeof(int),
@@ -202,9 +202,9 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     [Category("Common")]
     public int DecimalPlaces
     {
-        get => (int)GetValue(DecimalPlaceProperty);
+        get => (int)GetValue(DecimalPlacesProperty);
 
-        set => SetValue(DecimalPlaceProperty, value);
+        set => SetValue(DecimalPlacesProperty, value);
     }
 
     /// <summary>
