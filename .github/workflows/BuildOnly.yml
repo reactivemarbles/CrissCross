@@ -45,6 +45,15 @@ jobs:
             6.0.x
             8.0.x
             9.0.x
+
+      - name: Get Latest Visual Studio Version
+        shell: bash
+        run: |
+            dotnet tool update -g dotnet-vs
+            vs where release
+            vs update release Enterprise
+            vs modify release Enterprise +mobile +desktop +uwp +web
+            vs where release
       
       - name: 'Install DotNet workloads'
         shell: bash
