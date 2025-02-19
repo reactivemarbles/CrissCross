@@ -18,7 +18,6 @@
         <Setter Property="MinWidth" Value="518" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <!--<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />-->
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -48,6 +47,10 @@
                                     Title="{TemplateBinding Title}"
                                     Grid.Row="0"
                                     Header="{TemplateBinding TitleHeader}"
+                                    ShowClose="{TemplateBinding ShowClose}"
+                                    ShowHelp="{TemplateBinding ShowHelp}"
+                                    ShowMaximize="{TemplateBinding ShowMaximize}"
+                                    ShowMinimize="{TemplateBinding ShowMinimize}"
                                     TitleContent="{TemplateBinding TitleContent}">
                                     <controls:TitleBar.Icon>
                                         <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />

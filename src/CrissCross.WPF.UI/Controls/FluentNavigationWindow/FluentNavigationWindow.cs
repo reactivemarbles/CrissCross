@@ -98,6 +98,42 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         typeof(object),
         typeof(FluentNavigationWindow));
 
+    /// <summary>
+    /// Property for <see cref="ShowMaximize"/>.
+    /// </summary>
+    public static readonly DependencyProperty ShowMaximizeProperty = DependencyProperty.Register(
+        nameof(ShowMaximize),
+        typeof(bool),
+        typeof(FluentNavigationWindow),
+        new PropertyMetadata(true));
+
+    /// <summary>
+    /// Property for <see cref="ShowMinimize"/>.
+    /// </summary>
+    public static readonly DependencyProperty ShowMinimizeProperty = DependencyProperty.Register(
+        nameof(ShowMinimize),
+        typeof(bool),
+        typeof(FluentNavigationWindow),
+        new PropertyMetadata(true));
+
+    /// <summary>
+    /// Property for <see cref="ShowHelp"/>.
+    /// </summary>
+    public static readonly DependencyProperty ShowHelpProperty = DependencyProperty.Register(
+        nameof(ShowHelp),
+        typeof(bool),
+        typeof(FluentNavigationWindow),
+        new PropertyMetadata(false));
+
+    /// <summary>
+    /// Property for <see cref="ShowClose"/>.
+    /// </summary>
+    public static readonly DependencyProperty ShowCloseProperty = DependencyProperty.Register(
+        nameof(ShowClose),
+        typeof(bool),
+        typeof(FluentNavigationWindow),
+        new PropertyMetadata(true));
+
     static FluentNavigationWindow() => DefaultStyleKeyProperty.OverrideMetadata(
            typeof(FluentNavigationWindow),
            new FrameworkPropertyMetadata(typeof(FluentNavigationWindow)));
@@ -208,6 +244,42 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     {
         get => GetValue(TitleHeaderProperty);
         set => SetValue(TitleHeaderProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gets or sets information whether to show maximize button.
+    /// </summary>
+    public bool ShowMaximize
+    {
+        get => (bool)GetValue(ShowMaximizeProperty);
+        set => SetValue(ShowMaximizeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gets or sets information whether to show minimize button.
+    /// </summary>
+    public bool ShowMinimize
+    {
+        get => (bool)GetValue(ShowMinimizeProperty);
+        set => SetValue(ShowMinimizeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gets or sets information whether to show help button.
+    /// </summary>
+    public bool ShowHelp
+    {
+        get => (bool)GetValue(ShowHelpProperty);
+        set => SetValue(ShowHelpProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gets or sets information whether to show close button.
+    /// </summary>
+    public bool ShowClose
+    {
+        get => (bool)GetValue(ShowCloseProperty);
+        set => SetValue(ShowCloseProperty, value);
     }
 
     /// <summary>

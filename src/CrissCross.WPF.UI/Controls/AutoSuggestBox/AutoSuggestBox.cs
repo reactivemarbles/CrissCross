@@ -4,9 +4,11 @@
 
 using System.Collections;
 using System.Drawing;
+using System.Reactive.Disposables;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -163,6 +165,8 @@ public partial class AutoSuggestBox : ItemsControl, IIconControl
     protected ListView? SuggestionsList;
 #pragma warning restore SA1401 // Fields should be private
 
+    private readonly CompositeDisposable? _disposables = [];
+
     private bool _changingTextAfterSuggestionChosen;
 
     private bool _isChangedTextOutSideOfTextBox;
@@ -176,19 +180,19 @@ public partial class AutoSuggestBox : ItemsControl, IIconControl
     /// </summary>
     public AutoSuggestBox()
     {
-        Loaded += static (sender, _) =>
+        _disposables.Add(
+            this.Events().Loaded.Subscribe(static e =>
         {
-            var self = (AutoSuggestBox)sender;
-
+            var self = (AutoSuggestBox)e.Source;
             self.AcquireTemplateResources();
-        };
+        }));
 
-        Unloaded += static (sender, _) =>
+        _disposables.Add(
+        this.Events().Unloaded.Subscribe(static e =>
         {
-            var self = (AutoSuggestBox)sender;
-
+            var self = (AutoSuggestBox)e.Source;
             self.ReleaseTemplateResources();
-        };
+        }));
 
         SetValue(FocusCommandProperty, ReactiveCommand.Create(Focus));
     }

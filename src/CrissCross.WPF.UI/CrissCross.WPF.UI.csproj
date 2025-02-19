@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.1.6" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.1.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
