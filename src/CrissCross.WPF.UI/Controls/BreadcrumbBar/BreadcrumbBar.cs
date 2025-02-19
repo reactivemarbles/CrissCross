@@ -5,6 +5,7 @@
 using System.Collections.Specialized;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -93,13 +94,13 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
     public void SetupNavigation(string hostName)
     {
         _hostName = hostName;
-        ItemClicked += (s, e) =>
+        this.Events().ItemClicked.Subscribe(e =>
         {
-            if (e.Item is BreadcrumbBarItem item)
+            if (e.args.Item is BreadcrumbBarItem item)
             {
                 NavigateTo(item.NavigationType);
             }
-        };
+        });
     }
 
     /// <summary>

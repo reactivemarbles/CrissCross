@@ -50,6 +50,15 @@ jobs:
             6.0.x
             8.0.x
             9.0.x
+
+      - name: Get Latest Visual Studio Version
+        shell: bash
+        run: |
+            dotnet tool update -g dotnet-vs
+            vs where release
+            vs update release Enterprise
+            vs modify release Enterprise +mobile +desktop +uwp +web
+            vs where release
       
       - name: 'Install DotNet workloads'
         shell: bash
@@ -89,7 +98,7 @@ jobs:
       #   run: |
       #       $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERTIFICATE }}")
       #       [IO.File]::WriteAllBytes("GitHubActionsWorkflow.pfx", $pfx_cert_byte)
-      #       $secure_password = ConvertTo-SecureString ${{ secrets.SIGN_CERTIFICATE_PASSWORD }} –asplaintext –force
+      #       $secure_password = ConvertTo-SecureString ${{ secrets.SIGN_CERTIFICATE_PASSWORD }} ï¿½asplaintext ï¿½force
       #       Import-PfxCertificate -FilePath GitHubActionsWorkflow.pfx -Password $secure_password -CertStoreLocation Cert:\CurrentUser\My
       #       nuget sign -Timestamper http://timestamp.digicert.com -CertificateFingerprint ${{ secrets.SIGN_CERTIFICATE_HASH }} **/*.nupkg
         
