@@ -197,10 +197,7 @@ public partial class LiveChart
     public ReactiveList<Settings> ControlMenu
     {
         get => (ReactiveList<Settings>)GetValue(ControlMenuProperty);
-        set
-        {
-            SetValue(ControlMenuProperty, value);
-        }
+        set => SetValue(ControlMenuProperty, value);
     }
 
     /////// <summary>

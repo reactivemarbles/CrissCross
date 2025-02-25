@@ -2,7 +2,10 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
+using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -50,6 +53,7 @@ public class Flyout : System.Windows.Controls.ContentControl
 
     private const string ElementPopup = "PART_Popup";
     private Popup? _popup;
+    private CompositeDisposable? _disposables = [];
 
     /// <summary>
     /// Event triggered when <see cref="Flyout" /> is opened.
@@ -106,11 +110,10 @@ public class Flyout : System.Windows.Controls.ContentControl
             return;
         }
 
-        _popup.Opened -= OnPopupOpened;
-        _popup.Opened += OnPopupOpened;
-
-        _popup.Closed -= OnPopupClosed;
-        _popup.Closed += OnPopupClosed;
+        _disposables?.Dispose();
+        _disposables = [];
+        _disposables.Add(_popup.Events().Opened.Subscribe(OnPopupOpened));
+        _disposables.Add(_popup.Events().Closed.Subscribe(OnPopupClosed));
     }
 
     /// <summary>
@@ -138,17 +141,15 @@ public class Flyout : System.Windows.Controls.ContentControl
     /// <summary>
     /// Called when [popup opened].
     /// </summary>
-    /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    protected virtual void OnPopupOpened(object? sender, EventArgs e) =>
+    protected virtual void OnPopupOpened(EventArgs e) =>
         RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
 
     /// <summary>
     /// Called when [popup closed].
     /// </summary>
-    /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    protected virtual void OnPopupClosed(object? sender, EventArgs e)
+    protected virtual void OnPopupClosed(EventArgs e)
     {
         Hide();
         RaiseEvent(new RoutedEventArgs(ClosedEvent, this));

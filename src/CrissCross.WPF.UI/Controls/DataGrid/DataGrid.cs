@@ -80,22 +80,22 @@ public class DataGrid : System.Windows.Controls.DataGrid
         if (dataGridColumn is DataGridCheckBoxColumn checkBoxColumn)
         {
             if (
-                checkBoxColumn.ReadLocalValue(DataGridCheckBoxColumn.ElementStyleProperty)
+                checkBoxColumn.ReadLocalValue(DataGridBoundColumn.ElementStyleProperty)
                 == DependencyProperty.UnsetValue)
             {
                 BindingOperations.SetBinding(
                     checkBoxColumn,
-                    DataGridCheckBoxColumn.ElementStyleProperty,
+                    DataGridBoundColumn.ElementStyleProperty,
                     new Binding { Path = new PropertyPath(CheckBoxColumnElementStyleProperty), Source = this });
             }
 
             if (
-                checkBoxColumn.ReadLocalValue(DataGridCheckBoxColumn.EditingElementStyleProperty)
+                checkBoxColumn.ReadLocalValue(DataGridBoundColumn.EditingElementStyleProperty)
                 == DependencyProperty.UnsetValue)
             {
                 BindingOperations.SetBinding(
                     checkBoxColumn,
-                    DataGridCheckBoxColumn.EditingElementStyleProperty,
+                    DataGridBoundColumn.EditingElementStyleProperty,
                     new Binding
                     {
                         Path = new PropertyPath(CheckBoxColumnEditingElementStyleProperty),

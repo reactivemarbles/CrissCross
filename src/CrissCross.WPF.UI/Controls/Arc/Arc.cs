@@ -43,14 +43,15 @@ public class Arc : System.Windows.Shapes.Shape
         typeof(Arc),
         new PropertyMetadata(SweepDirection.Clockwise, PropertyChangedCallback));
 
-    /// <summary>Identifies the <see cref="StrokeStartLineCap"/> dependency property.</summary>
-    public static new readonly DependencyProperty StrokeStartLineCapProperty = DependencyProperty.Register(
-        nameof(StrokeStartLineCap),
-        typeof(PenLineCap),
-        typeof(Arc),
-        new PropertyMetadata(PenLineCap.Round, PropertyChangedCallback));
-
     private System.Windows.Controls.Viewbox? _rootLayout;
+
+    /// <summary>
+    /// Initializes static members of the <see cref="Arc"/> class.
+    /// Modify the metadata of the StrokeStartLineCap dependency property.
+    /// </summary>
+    static Arc() => StrokeStartLineCapProperty.OverrideMetadata(
+            typeof(Arc),
+            new FrameworkPropertyMetadata(PenLineCap.Round, PropertyChangedCallback));
 
     /// <summary>
     /// Gets or sets the initial angle from which the arc will be drawn.
@@ -77,15 +78,6 @@ public class Arc : System.Windows.Shapes.Shape
     {
         get => (SweepDirection)GetValue(SweepDirectionProperty);
         set => SetValue(SweepDirectionProperty, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a <see cref="T:System.Windows.Media.PenLineCap" /> enumeration value that describes the <see cref="T:System.Windows.Shapes.Shape" /> at the start of a <see cref="P:System.Windows.Shapes.Shape.Stroke" />.
-    /// </summary>
-    public new PenLineCap StrokeStartLineCap
-    {
-        get => (PenLineCap)GetValue(StrokeStartLineCapProperty);
-        set => SetValue(StrokeStartLineCapProperty, value);
     }
 
     /// <summary>

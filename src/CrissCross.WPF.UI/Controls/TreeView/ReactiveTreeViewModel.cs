@@ -18,5 +18,5 @@ public class ReactiveTreeViewModel : RxObject
     /// <value>
     /// The children.
     /// </value>
-    public ReactiveList<ReactiveTreeItem> Children { get; set; } = new();
+    public ReactiveList<ReactiveTreeItem> Children { get; set; } = [];
 }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -120,11 +121,11 @@ public partial class MessageBox : System.Windows.Window
 
         PreviewMouseDoubleClick += static (_, args) => args.Handled = true;
 
-        Loaded += static (sender, _) =>
+        this.Events().Loaded.Subscribe(static e =>
         {
-            var self = (MessageBox)sender;
+            var self = (MessageBox)e.Source;
             self.OnLoaded();
-        };
+        });
     }
 
     /// <summary>

@@ -190,9 +190,7 @@ public partial class ScatterUI : RxObject
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable)
-    {
-        observable.ObserveOn(RxApp.MainThreadScheduler)
+    public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) => observable.ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(data =>
             {
                 if (data.Name == null || data.X == null || data.Y == null)
@@ -228,7 +226,6 @@ public partial class ScatterUI : RxObject
                 // UPDATE NAME
                 ChartSettings.ItemName = Name;
             }).DisposeWith(Disposables);
-    }
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
