@@ -18,11 +18,11 @@ namespace CrissCross.WPF.Plot;
 /// <seealso cref="DataLoggerUI" />
 public partial class DataLoggerUI : RxObject
 {
-    private List<double> _data = [];
-    private List<double> _time = [];
+    private readonly List<double> _data = [];
+    private readonly List<double> _time = [];
 
     [Reactive]
-    private Settings _chartSettings = new Settings();
+    private Settings _chartSettings = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether [automatic scale].
@@ -250,9 +250,9 @@ public partial class DataLoggerUI : RxObject
         this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
         {
             DataLogger!.LineStyle.Width = (float)x.Item1;
-            DataLogger!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            DataLogger.IsVisible = x.Item3 == "Invisible" ? false : true;
+            DataLogger!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+            ChartSettings.IsChecked = x.Item3 == "Invisible";
+            DataLogger.IsVisible = x.Item3 == "Invisible";
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

@@ -2,10 +2,12 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Reactive.Disposables;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -24,6 +26,7 @@ public partial class PersonPicture : Control
     private Ellipse? _m_badgingEllipse;
     private Ellipse? _m_badgingBackgroundEllipse;
     private string? _m_displayNameInitials;
+    private CompositeDisposable? _disposables;
 
     static PersonPicture() =>
         DefaultStyleKeyProperty.OverrideMetadata(typeof(PersonPicture), new FrameworkPropertyMetadata(typeof(PersonPicture)));
@@ -35,8 +38,8 @@ public partial class PersonPicture : Control
     {
         TemplateSettings = new PersonPictureTemplateSettings();
 
-        Unloaded += OnUnloaded;
-        SizeChanged += OnSizeChanged;
+        _disposables?.Add(this.Events().Unloaded.Subscribe(OnUnloaded));
+        _disposables?.Add(this.Events().SizeChanged.Subscribe(OnSizeChanged));
     }
 
     /// <summary>
@@ -412,7 +415,7 @@ public partial class PersonPicture : Control
     }
 
     // Event handlers
-    private void OnSizeChanged(object sender, SizeChangedEventArgs args)
+    private void OnSizeChanged(SizeChangedEventArgs args)
     {
         {
             var widthChanged = args.NewSize.Width != args.PreviousSize.Width;
@@ -469,7 +472,9 @@ public partial class PersonPicture : Control
         }
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnUnloaded(RoutedEventArgs e)
     {
+        _disposables?.Dispose();
+        _disposables = null;
     }
 }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Shell;
+using ReactiveMarbles.ObservableEvents;
 using Size = System.Windows.Size;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -43,6 +44,8 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     private static Thickness? _resizeFrameBorderThickness;
 
     private static Thickness? _windowChromeNonClientFrameThickness;
+    private IDisposable? _windowStateChangedSubscription;
+    private IDisposable? _windowClosingSubscription;
 
     private bool _borderBrushApplied;
 
@@ -120,17 +123,17 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
 
         if (_oldWindow is { } oldWindow)
         {
-            oldWindow.StateChanged -= OnWindowStateChanged;
-            oldWindow.Closing -= OnWindowClosing;
+            _windowStateChangedSubscription?.Dispose();
+            _windowClosingSubscription?.Dispose();
         }
 
         var newWindow = (System.Windows.Window?)System.Windows.Window.GetWindow(this);
 
         if (newWindow is not null)
         {
-            newWindow.StateChanged -= OnWindowStateChanged; // Unsafe
-            newWindow.StateChanged += OnWindowStateChanged;
-            newWindow.Closing += OnWindowClosing;
+            _windowStateChangedSubscription?.Dispose();
+            _windowStateChangedSubscription = newWindow.Events().StateChanged.Subscribe(e => OnWindowStateChanged(newWindow, e));
+            _windowClosingSubscription = newWindow.Events().Closing.Subscribe(OnWindowClosing);
         }
 
         _oldWindow = newWindow;
@@ -150,28 +153,20 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         ApplyDefaultWindowBorder();
     }
 
-    private void OnWindowClosing(object? sender, CancelEventArgs e)
+    private void OnWindowClosing(CancelEventArgs e)
     {
         ApplicationThemeManager.Changed -= OnThemeChanged;
         if (_oldWindow != null)
         {
-            _oldWindow.Closing -= OnWindowClosing;
+            _windowClosingSubscription?.Dispose();
         }
     }
 
-    private void OnWindowStateChanged(object? sender, EventArgs e)
+    private void OnWindowStateChanged(System.Windows.Window window, EventArgs e) => Padding = window.WindowState switch
     {
-        if (sender is not System.Windows.Window window)
-        {
-            return;
-        }
-
-        Padding = window.WindowState switch
-        {
-            WindowState.Maximized => WindowChromeNonClientFrameThickness,
-            _ => default,
-        };
-    }
+        WindowState.Maximized => WindowChromeNonClientFrameThickness,
+        _ => default,
+    };
 
     private void ApplyDefaultWindowBorder()
     {

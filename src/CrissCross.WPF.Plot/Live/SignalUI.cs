@@ -4,8 +4,6 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Windows.Markup;
-using CrissCross;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -21,8 +19,8 @@ namespace CrissCross.WPF.Plot;
 /// <seealso cref="SignalUI" />
 public partial class SignalUI : RxObject
 {
-    private List<double> _data = [];
-    private List<double> _time = [];
+    private readonly List<double> _data = [];
+    private readonly List<double> _time = [];
 
     [Reactive]
     private Settings _chartSettings = new Settings();
@@ -513,12 +511,12 @@ public partial class SignalUI : RxObject
         this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
         {
             Streamer!.LineStyle.Width = (float)x.Item1;
-            Streamer!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            Streamer.IsVisible = x.Item3 == "Invisible" ? false : true;
-            Crosshair.MarkerLineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+            Streamer!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+            ChartSettings.IsChecked = x.Item3 == "Invisible";
+            Streamer.IsVisible = x.Item3 != "Invisible";
+            Crosshair.MarkerLineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+            Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+            MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

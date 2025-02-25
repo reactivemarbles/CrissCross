@@ -3,10 +3,12 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
+using System.Reactive.Disposables;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CrissCross.WPF.UI.Designer;
 using CrissCross.WPF.UI.Extensions;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -225,6 +227,7 @@ public partial class TitleBar : Control, IThemeControl
     private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
     private System.Windows.Window _currentWindow = null!;
     private ContentPresenter _icon = null!;
+    private CompositeDisposable _disposables = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TitleBar"/> class.
@@ -235,8 +238,8 @@ public partial class TitleBar : Control, IThemeControl
         SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
         dpiScale ??= VisualTreeHelper.GetDpi(this);
 
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
+        _disposables.Add(this.Events().Loaded.Subscribe(OnLoaded));
+        _disposables.Add(this.Events().Unloaded.Subscribe(OnUnloaded));
     }
 
     /// <summary>
@@ -476,10 +479,9 @@ public partial class TitleBar : Control, IThemeControl
     /// <summary>
     /// Called when [loaded].
     /// </summary>
-    /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     /// <exception cref="ArgumentNullException">Window is null.</exception>
-    protected virtual void OnLoaded(object? sender, RoutedEventArgs e)
+    protected virtual void OnLoaded(RoutedEventArgs e)
     {
         if (DesignerHelper.IsInDesignMode)
         {
@@ -515,10 +517,9 @@ public partial class TitleBar : Control, IThemeControl
         SystemCommands.ShowSystemMenu(_currentWindow, new Point(point.X / dpiScale!.Value.DpiScaleX, point.Y / dpiScale.Value.DpiScaleY));
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnUnloaded(RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
+        _disposables.Dispose();
 
         ApplicationThemeManager.Changed -= OnThemeChanged;
     }

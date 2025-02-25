@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Specialized;
+using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using ReactiveMarbles.ObservableEvents;
@@ -49,6 +50,7 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         typeof(TypedEventHandler<BreadcrumbBar, BreadcrumbBarItemClickedEventArgs>),
         typeof(BreadcrumbBar));
 
+    private readonly CompositeDisposable _disposables = [];
     private string? _hostName;
 
     /// <summary>
@@ -57,8 +59,8 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
     public BreadcrumbBar()
     {
         SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
-        Loaded += OnLoaded;
-        Unloaded += OnUnloaded;
+        this.Events().Loaded.Subscribe(OnLoaded).DisposeWith(_disposables);
+        this.Events().Unloaded.Subscribe(OnUnloaded).DisposeWith(_disposables);
     }
 
     /// <summary>
@@ -203,7 +205,7 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         }
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private void OnLoaded(RoutedEventArgs e)
     {
         ItemContainerGenerator.ItemsChanged += ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged += ItemContainerGeneratorOnStatusChanged;
@@ -211,10 +213,9 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         UpdateLastContainer();
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnUnloaded(RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
-        Unloaded -= OnUnloaded;
+        _disposables.Dispose();
 
         ItemContainerGenerator.ItemsChanged -= ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged -= ItemContainerGeneratorOnStatusChanged;

@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using CP.Reactive;
-using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -11,10 +11,26 @@ namespace CrissCross.WPF.UI.Controls;
 /// Reactive Tree Item.
 /// </summary>
 /// <seealso cref="RxObject" />
-public abstract class ReactiveTreeItem : RxObject
+public abstract partial class ReactiveTreeItem : RxObject
 {
     private ReactiveTreeItem? _parent;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is expanded.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is expanded; otherwise, <c>false</c>.
+    /// </value>
+    [Reactive]
     private bool _isExpanded;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this instance is selected.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is selected; otherwise, <c>false</c>.
+    /// </value>
+    [Reactive]
     private bool _isSelected;
 
     /// <summary>
@@ -23,7 +39,7 @@ public abstract class ReactiveTreeItem : RxObject
     /// <param name="children">The children.</param>
     protected ReactiveTreeItem(IEnumerable<ReactiveTreeItem>? children = null)
     {
-        Children = new();
+        Children = [];
         if (children == null)
         {
             return;
@@ -33,30 +49,6 @@ public abstract class ReactiveTreeItem : RxObject
         {
             AddChild(child);
         }
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is expanded.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is expanded; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsExpanded
-    {
-        get => _isExpanded;
-        set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is selected.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is selected; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsSelected
-    {
-        get => _isSelected;
-        set => this.RaiseAndSetIfChanged(ref _isSelected, value);
     }
 
     /// <summary>

@@ -2,9 +2,11 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Reactive.Disposables;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using CrissCross.WPF.UI.Extensions;
+using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -59,14 +61,15 @@ public class TitleBarButton : Button
     private readonly Brush _defaultBackgroundBrush = Brushes.Transparent; // TODO: Should it be transparent?
     private User32.WM_NCHITTEST _returnValue;
     private bool _isClickedDown;
+    private CompositeDisposable _disposables = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TitleBarButton"/> class.
     /// </summary>
     public TitleBarButton()
     {
-        Loaded += TitleBarButton_Loaded;
-        Unloaded += TitleBarButton_Unloaded;
+        _disposables.Add(this.Events().Loaded.Subscribe(TitleBarButton_Loaded));
+        _disposables.Add(this.Events().Unloaded.Subscribe(TitleBarButton_Unloaded));
     }
 
     /// <summary>
@@ -210,11 +213,11 @@ public class TitleBarButton : Button
         titleBarButton.UpdateReturnValue((TitleBarButtonType)e.NewValue);
     }
 
-    private void TitleBarButton_Unloaded(object sender, RoutedEventArgs e) =>
+    private void TitleBarButton_Unloaded(RoutedEventArgs e) =>
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .RemoveValueChanged(this, OnButtonsForegroundChanged);
 
-    private void TitleBarButton_Loaded(object sender, RoutedEventArgs e)
+    private void TitleBarButton_Loaded(RoutedEventArgs e)
     {
         RenderButtonsForeground = ButtonsForeground;
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))

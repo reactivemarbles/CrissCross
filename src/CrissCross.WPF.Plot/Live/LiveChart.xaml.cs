@@ -43,10 +43,7 @@ public partial class LiveChart
 
         InitializeButtons();
         _activatedView = true;
-        this.WhenActivated(d =>
-        {
-            ElementBinding1(d);
-        });
+        this.WhenActivated(ElementBinding1);
 
         ////YAxisName.Subscribe(d => ViewModel!.YAxesSetup(d));
     }
@@ -147,12 +144,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeScatterPlotLines(ScatterObservablesWithTimeStamp);
-        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void ChangeSignalOberver()
@@ -164,12 +158,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
-        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
 
         _crosshairDisposable = ViewModel.WhenAnyValue(x => x.CrossHairEnabled).Subscribe(d =>
         {
@@ -186,12 +177,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeDataLoggerPlotLinesWithPoints(DataLoggerObservablesWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.DataLoggerCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.DataLoggerCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void ChangeSignalData()
@@ -203,12 +191,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(DataWithTimeStamp);
-        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void ChangeSignalDataWithPoints()
@@ -220,12 +205,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForSignalPoints(SignalWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void ChangeSignalDataObserverWithPoints()
@@ -237,12 +219,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForSignalObservablesPoints(SignalObservablesWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.SignalCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void ChangeScatterDataWithPoints()
@@ -254,12 +233,9 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList()!);
+        ViewModel?.InitializeControlMenu(ViewModel?.ScatterCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
-        if (_crosshairDisposable != null)
-        {
-            _crosshairDisposable.Dispose();
-        }
+        _crosshairDisposable?.Dispose();
     }
 
     private void InitializeButtons()
@@ -421,8 +397,5 @@ public partial class LiveChart
         }
     }
 
-    private void YAxisSetup()
-    {
-        ViewModel!.YAxesSetup(YAxisName);
-    }
+    private void YAxisSetup() => ViewModel!.YAxesSetup(YAxisName);
 }

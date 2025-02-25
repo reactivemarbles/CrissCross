@@ -161,9 +161,7 @@ public partial class AxisLinesUI : RxObject
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateAxisLineSubscription(IObservable<(string? Name, double? Position)> observable)
-    {
-        observable
+    public void UpdateAxisLineSubscription(IObservable<(string? Name, double? Position)> observable) => observable
         .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
         .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
         .Subscribe(data =>
@@ -185,7 +183,6 @@ public partial class AxisLinesUI : RxObject
             // UPDATE NAME
             ChartSettings.ItemName = data.Name;
         }).DisposeWith(Disposables);
-    }
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
@@ -209,9 +206,9 @@ public partial class AxisLinesUI : RxObject
         this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
         {
             AxisLine!.LineStyle.Width = (float)x.Item1;
-            AxisLine!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            AxisLine.IsVisible = x.Item3 == "Invisible" ? false : true;
+            AxisLine!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+            ChartSettings.IsChecked = x.Item3 == "Invisible";
+            AxisLine.IsVisible = x.Item3 != "Invisible";
             Plot.Refresh();
         }).DisposeWith(Disposables);
         this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>

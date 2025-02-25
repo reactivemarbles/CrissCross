@@ -545,12 +545,9 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     {
         _startedTime = true;
         await Task.Delay(100);
-        if (_startedTime)
+        if (_startedTime && DisabledState != DisabledState.Ignore)
         {
-            if (DisabledState != DisabledState.Ignore)
-            {
-                UpdateValue(false, DisabledState == DisabledState.Checked);
-            }
+            UpdateValue(false, DisabledState == DisabledState.Checked);
         }
     }
 

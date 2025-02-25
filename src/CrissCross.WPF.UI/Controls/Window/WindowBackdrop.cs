@@ -170,13 +170,13 @@ public static class WindowBackdrop
             hWnd,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_MICA_EFFECT,
             ref pvAttribute,
-            Marshal.SizeOf(typeof(int)));
+            Marshal.SizeOf<int>());
 
         _ = Dwmapi.DwmSetWindowAttribute(
             hWnd,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
             ref backdropPvAttribute,
-            Marshal.SizeOf(typeof(int)));
+            Marshal.SizeOf<int>());
 
         return true;
     }
@@ -246,7 +246,7 @@ public static class WindowBackdrop
                 windowSource.Handle,
                 Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_CAPTION_COLOR,
                 ref titlebarPvAttribute,
-                Marshal.SizeOf(typeof(uint)));
+                Marshal.SizeOf<uint>());
         }
 
         return true;
@@ -270,7 +270,7 @@ public static class WindowBackdrop
             hWnd,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
             ref backdropPvAttribute,
-            Marshal.SizeOf(typeof(int)));
+            Marshal.SizeOf<int>());
 
         return dwmApiResult == HRESULT.S_OK;
     }
@@ -284,7 +284,7 @@ public static class WindowBackdrop
             hWnd,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_MICA_EFFECT,
             ref backdropPvAttribute,
-            Marshal.SizeOf(typeof(int)));
+            Marshal.SizeOf<int>());
 
         return dwmApiResult == HRESULT.S_OK;
     }

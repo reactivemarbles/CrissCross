@@ -354,6 +354,7 @@ public partial class NumberPad : IDisposable
             var element = this.TryFindParent<Viewbox>();
             if (element != null)
             {
+                // if the button is in a viewbox, scale the width of the keypad
                 var scaledWidth = element.ActualWidth / element.Child.DesiredSize.Width;
                 _margin[2] = ownerPosition.X + (button.ActualWidth * (scaledWidth > 1 ? scaledWidth : 1)) + 10;
             }
@@ -374,7 +375,7 @@ public partial class NumberPad : IDisposable
                 _margin[2] = window.ActualWidth - WGrid.Width - 10;
             }
 
-            WGrid.Margin = new Thickness(_margin[2], _margin[1], 0, 0);
+            WGrid.Margin = new(_margin[2], _margin[1], 0, 0);
         }
     }
 

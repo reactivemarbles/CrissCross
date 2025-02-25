@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Windows.Threading;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -118,7 +120,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     private readonly DispatcherTimer _isEnabledFalseTimer;
     private readonly ReplaySubject<(bool UserChanged, double Value)> _valueD = new(1);
     private readonly ReplaySubject<(bool UserChanged, float Value)> _valueF = new(1);
-    private readonly IDisposable _keypadDisposable;
+    private readonly CompositeDisposable _keypadDisposable = [];
     private NumberPad? _keypad;
     private bool _disposedValue;
 
@@ -129,7 +131,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     {
         DefaultStyleKey = typeof(NumericPushButton);
         ShowKeypad = ReactiveCommand.Create(() => { });
-        _keypadDisposable = ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this) { MaskColor = MaskColor });
+        _keypadDisposable.Add(ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this) { MaskColor = MaskColor }));
         _isEnabledFalseTimer = new DispatcherTimer(
             TimeSpan.FromMilliseconds(100),
             DispatcherPriority.Normal,
@@ -139,7 +141,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
                 if (_keypad != null)
                 {
                     _keypad.Visibility = Visibility.Collapsed;
-                    _keypad?.Dispose();
+                    DisposeKeypad();
                 }
             },
             Dispatcher);
@@ -154,7 +156,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             },
             Dispatcher);
 
-        Loaded += (ss, ee) =>
+        _keypadDisposable.Add(this.Events().Loaded.Subscribe(_ =>
         {
             this.UpdateSpinButtonContent();
             if (_valueD.HasObservers)
@@ -170,7 +172,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             var command = Command;
             if (command != null)
             {
-                IsEnabledChanged += (_, e) =>
+                _keypadDisposable.Add(this.Events().IsEnabledChanged.Subscribe(e =>
                 {
                     if (!(bool)e.NewValue)
                     {
@@ -180,14 +182,9 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
                     {
                         _isEnabledFalseTimer.Stop();
                     }
-                };
+                }));
             }
-        };
-
-        IsEnabledChanged += (_, e) =>
-        {
-            var enabled = (bool)e.NewValue;
-        };
+        }));
     }
 
     /// <summary>
@@ -397,15 +394,13 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// <param name="e">Dependency Property Changed Event Arguments.</param>
     private static void MaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var sb = d as NumericPushButton;
-        var max = (double)e.NewValue;
-        if (sb?._keypad != null)
+        if (d is NumericPushButton sb && sb._keypad is NumberPad keypad && e.NewValue is double max)
         {
-            sb._keypad.Value.Maximum = max;
+            keypad.Value.Maximum = max;
             if (sb.Value > max)
             {
                 sb.Value = max;
-                sb._keypad.Value.Value = sb.Value;
+                keypad.Value.Value = sb.Value;
             }
         }
     }
@@ -417,15 +412,13 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// <param name="e">Dependency Property Changed Event Arguments.</param>
     private static void MinimumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var sb = d as NumericPushButton;
-        var minVal = (double)e.NewValue;
-        if (sb?._keypad != null)
+        if (d is NumericPushButton sb && sb._keypad is NumberPad keypad && e.NewValue is double minVal)
         {
-            sb._keypad.Value.Minimum = minVal;
-            if (sb.Value < minVal)
+            keypad.Value.Minimum = minVal;
+            if (sb.Value > minVal)
             {
                 sb.Value = minVal;
-                sb._keypad.Value.Value = minVal;
+                keypad.Value.Value = minVal;
             }
         }
     }
@@ -455,9 +448,9 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// <param name="e">Dependency Property Changed Event Arguments.</param>
     private static void UpdateDecimalPlaces(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NumericPushButton sb && e.OldValue != e.NewValue && sb._keypad != null)
+        if (d is NumericPushButton sb && sb._keypad is NumberPad keypad && e.OldValue != e.NewValue)
         {
-            sb._keypad.Value.MaxDecimalPlaces = (int)e.NewValue;
+            keypad.Value.MaxDecimalPlaces = (int)e.NewValue;
             sb.UpdateSpinButtonContent();
         }
     }
@@ -471,10 +464,10 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// </param>
     private static void UpdateMask(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NumericPushButton c && c._keypad != null)
+        if (d is NumericPushButton c && c._keypad is NumberPad keypad)
         {
             c.MaskColor = (Brush)e.NewValue;
-            c._keypad.MaskColor = c.MaskColor;
+            keypad.MaskColor = c.MaskColor;
         }
     }
 

@@ -16,13 +16,12 @@ public static class NumericPushButtonExtensions
     /// <returns>A Value.</returns>
     public static NumericPushButton? UpdateSpinButtonContent(this NumericPushButton? @this)
     {
-        if (@this == null)
+        if (@this != null)
         {
-            return @this;
+            var breakLine = @this.UnitsOnNewLine ? "\r\n" : " ";
+            @this.Content = $"{Math.Round(@this.Value, @this.DecimalPlaces)}{breakLine}{@this.Units}";
         }
 
-        var breakLine = @this.UnitsOnNewLine ? "\r\n" : " ";
-        @this.Content = $"{Math.Round(@this.Value, @this.DecimalPlaces)}{breakLine}{@this.Units}";
         return @this;
     }
 }

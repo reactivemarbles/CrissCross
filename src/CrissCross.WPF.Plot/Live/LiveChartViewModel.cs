@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CP.Reactive;
 using DynamicData;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -221,30 +222,21 @@ public partial class LiveChartViewModel : RxObject
     /// <returns>
     /// .
     /// </returns>
-    public static Action<RenderPack> AutoScaleX(ScottPlot.Plot? plot, IXAxis xaxis)
-    {
-        return rp => plot!.Axes.AutoScaleX(xaxis);
-    }
+    public static Action<RenderPack> AutoScaleX(ScottPlot.Plot? plot, IXAxis xaxis) => _ => plot!.Axes.AutoScaleX(xaxis);
 
     /// <summary>
     /// Manuals the scaling.
     /// </summary>
     /// <param name="plot">The plot.</param>
     /// <returns>.</returns>
-    public static Action<RenderPack> AutoScaleY(ScottPlot.Plot? plot)
-    {
-        return rp => plot!.Axes.AutoScaleY();
-    }
+    public static Action<RenderPack> AutoScaleY(ScottPlot.Plot? plot) => _ => plot!.Axes.AutoScaleY();
 
     /// <summary>
     /// Manuals the scaling.
     /// </summary>
     /// <param name="plot">The plot.</param>
     /// <returns>.</returns>
-    public static Action<RenderPack> AutoScaleAll(ScottPlot.Plot? plot)
-    {
-        return rp => plot!.Axes.AutoScale();
-    }
+    public static Action<RenderPack> AutoScaleAll(ScottPlot.Plot? plot) => _ => plot!.Axes.AutoScale();
 
     /////// <summary>
     /////// Manuals the scaling.
@@ -707,7 +699,7 @@ public partial class LiveChartViewModel : RxObject
 
         // create new signals
         foreach (var (observable, newMyItem) in
-        from observable in observables// the lines plotted are limited to 9
+        from observable in observables // the lines plotted are limited to 9
         where i < 9
         let newMyItem = new SignalUI(WpfPlot1vm!, observable: observable, coordinatesObs: MouseCoordinatesObservable, SetColorLegend(SignalCollectionUI!), fixedPoints: true)
         select (observable, newMyItem))
@@ -936,28 +928,22 @@ public partial class LiveChartViewModel : RxObject
     ////        });
     ////}
 
-    private void InitializeMouseObservable()
-    {
-        // MOUSE EVENT
-        WpfPlot1vm!.MouseMove += (s, e) =>
-        {
-            var position = e.GetPosition(e.Device.Target);
-
-            //// determine where the mouse is and send the coordinates
-            Pixel mousePixel = new(position.X, position.Y);
-            var mouseLocation = WpfPlot1vm.Plot.GetCoordinates(mousePixel);
-            try
+    private void InitializeMouseObservable() => WpfPlot1vm.Events().MouseMove.Select(e => e.GetPosition(e.Device.Target))
+            .Subscribe(position =>
             {
-                MouseCoordinatesObservable.OnNext(mouseLocation);
+                var mousePixel = new Pixel(position.X, position.Y);
+                var mouseLocation = WpfPlot1vm!.Plot.GetCoordinates(mousePixel);
+                try
+                {
+                    MouseCoordinatesObservable.OnNext(mouseLocation);
 
-                Trace.WriteLine("Mouse Location: { X: " + position.X + " Y: " + position.Y + " }");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("mouse location error: " + ex.ToString());
-            }
-        };
-    }
+                    Trace.WriteLine("Mouse Location: { X: " + position.X + " Y: " + position.Y + " }");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("mouse location error: " + ex.ToString());
+                }
+            }).DisposeWith(Disposables);
 
     /// <summary>
     /// Setup the axes.
