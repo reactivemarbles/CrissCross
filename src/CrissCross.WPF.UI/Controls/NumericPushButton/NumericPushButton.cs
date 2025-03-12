@@ -415,7 +415,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
         if (d is NumericPushButton sb && sb._keypad is NumberPad keypad && e.NewValue is double minVal)
         {
             keypad.Value.Minimum = minVal;
-            if (sb.Value > minVal)
+            if (sb.Value < minVal)
             {
                 sb.Value = minVal;
                 keypad.Value.Value = minVal;
