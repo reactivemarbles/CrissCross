@@ -39,7 +39,7 @@
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <ui:NumberBox Margin="5" VerticalAlignment="Stretch" />
+            <ui:NumericPushButton Margin="5" UseSeperateEditValue="True" />
             <ui:NumericPushButton Grid.Column="1" Margin="5" />
 
             <ui:NumericPushButton Grid.Column="3" Margin="5" />

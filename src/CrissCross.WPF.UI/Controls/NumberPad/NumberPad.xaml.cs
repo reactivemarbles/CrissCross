@@ -267,7 +267,16 @@ public partial class NumberPad : IDisposable
                 return;
             }
 
-            _owner.Value = check;
+            if (_owner.UseSeperateEditValue)
+            {
+                _owner.EditedValue = check;
+            }
+            else
+            {
+                _owner.Value = check;
+                _owner.EditedValue = check;
+            }
+
             _owner.DisposeKeypad();
         }
 
