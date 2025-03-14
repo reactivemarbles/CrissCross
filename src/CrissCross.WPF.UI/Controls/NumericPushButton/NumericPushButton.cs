@@ -97,6 +97,16 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             new PropertyMetadata(false, UpdateNewLine));
 
     /// <summary>
+    /// The units on new line property.
+    /// </summary>
+    public static readonly DependencyProperty UseSeperateEditValueProperty =
+        DependencyProperty.Register(
+            nameof(UseSeperateEditValue),
+            typeof(bool),
+            typeof(NumericPushButton),
+            new PropertyMetadata(false, UpdateValue));
+
+    /// <summary>
     /// Units Dependency Property.
     /// </summary>
     public static readonly DependencyProperty UnitsProperty =
@@ -112,6 +122,16 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public static readonly DependencyProperty ValueProperty =
         DependencyProperty.Register(
             nameof(Value),
+            typeof(double),
+            typeof(NumericPushButton),
+            new PropertyMetadata(0d, UpdateValue));
+
+    /// <summary>
+    /// Edited Value Change.
+    /// </summary>
+    public static readonly DependencyProperty EditedValueProperty =
+        DependencyProperty.Register(
+            nameof(EditedValue),
             typeof(double),
             typeof(NumericPushButton),
             new PropertyMetadata(0d, UpdateValue));
@@ -304,6 +324,19 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether [units on new line].
+    /// </summary>
+    /// <value><c>true</c> if [units on new line]; otherwise, <c>false</c>.</value>
+    [Description("Gets or sets a value indicating whether edited value and value are stored seperately or not")]
+    [Category("Common")]
+    public bool UseSeperateEditValue
+    {
+        get => (bool)GetValue(UseSeperateEditValueProperty);
+
+        set => SetValue(UseSeperateEditValueProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the user changed.
     /// </summary>
     /// <value><c>true</c> if [user changed]; otherwise, <c>false</c>.</value>
@@ -319,6 +352,18 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
         get => (double)GetValue(ValueProperty);
 
         set => SetValue(ValueProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the Value of Button.
+    /// </summary>
+    [Description("Gets or sets the Edited Value of Button")]
+    [Category("Common")]
+    public double EditedValue
+    {
+        get => (double)GetValue(EditedValueProperty);
+
+        set => SetValue(EditedValueProperty, value);
     }
 
     /// <summary>

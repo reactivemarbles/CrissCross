@@ -63,6 +63,18 @@ public interface INumberPadButton
     double Value { get; set; }
 
     /// <summary>
+    /// Gets or sets the edited value.
+    /// </summary>
+    /// <value>The value.</value>
+    double EditedValue { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gets or sets the edited value.
+    /// </summary>
+    /// <value>The value.</value>
+    bool UseSeperateEditValue { get; set; }
+
+    /// <summary>
     /// Gets the value double observable.
     /// </summary>
     /// <value>The value double observable.</value>
