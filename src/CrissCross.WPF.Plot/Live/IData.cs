@@ -7,5 +7,5 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// Interface IData.
 /// </summary>
-/// <seealso cref="CrissCross.RxObject" />
+/// <seealso cref="RxObject" />
 public partial class IData : RxObject;

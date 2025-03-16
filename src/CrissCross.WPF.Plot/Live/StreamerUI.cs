@@ -4,7 +4,6 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using CrissCross;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -226,13 +225,12 @@ public partial class StreamerUI : RxObject
         {
             Streamer!.LineStyle.Width = (float)x.Item1;
             Streamer!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            Streamer.IsVisible = x.Item3 == "Invisible" ? false : true;
+            ChartSettings.IsChecked = x.Item3 == "Invisible";
+            Streamer.IsVisible = x.Item3 != "Invisible";
             Plot.Refresh();
         }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>
-        {
-            ChartSettings.Visibility = x == true ? "Invisible" : "Visible";
-        }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
+            .Subscribe(x => ChartSettings.Visibility = x ? "Invisible" : "Visible")
+            .DisposeWith(Disposables);
     }
 }

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive;
@@ -19,6 +20,10 @@ namespace CrissCross;
 /// <summary>
 /// RxObjectMixins.
 /// </summary>
+#if NET8_0_OR_GREATER
+[RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
+[RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+#endif
 public static class RxObjectMixins
 {
     private static readonly ReplaySubject<Unit> _buildCompleteSubject = new(1);

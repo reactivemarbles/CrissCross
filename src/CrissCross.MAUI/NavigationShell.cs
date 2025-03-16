@@ -4,6 +4,7 @@
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
@@ -21,6 +22,10 @@ namespace CrissCross.MAUI;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IViewModelRoutedViewHost" />
 /// <seealso cref="IUseNavigation" />
+#if NET8_0_OR_GREATER
+[RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
+[RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+#endif
 public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation, IDisposable
 {
     /// <summary>

@@ -24,7 +24,7 @@ public partial class RightPropertiesV2ViewModel : RxObject
     [Reactive]
     private double _lineWidth;
     [Reactive]
-    private string _lineColor;
+    private string? _lineColor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RightPropertiesV2ViewModel"/> class.
