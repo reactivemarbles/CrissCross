@@ -243,17 +243,17 @@ public partial class ScatterUI : RxObject
 
     private void AppearanceSubsriptions()
     {
-        this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
-        {
-            Scatter!.LineStyle.Width = (float)x.Item1;
-            Scatter!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-            ChartSettings.IsChecked = x.Item3 == "Invisible" ? true : false;
-            Scatter.IsVisible = x.Item3 == "Invisible" ? false : true;
-            Plot.Refresh();
-        }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>
-        {
-            ChartSettings.Visibility = x == true ? "Invisible" : "Visible";
-        }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility)
+            .Subscribe(x =>
+            {
+                Scatter!.LineStyle.Width = (float)x.Item1;
+                Scatter!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
+                ChartSettings.IsChecked = x.Item3 == "Invisible";
+                Scatter.IsVisible = x.Item3 != "Invisible";
+                Plot.Refresh();
+            }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
+            .Subscribe(x => ChartSettings.Visibility = x ? "Invisible" : "Visible")
+            .DisposeWith(Disposables);
     }
 }

@@ -2,19 +2,6 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-////using System.Reactive;
-////using System.Reactive.Disposables;
-////using System.Reactive.Linq;
-////using System.Windows;
-////using System.Windows.Controls;
-////using CP.Reactive;
-////using ReactiveMarbles.ObservableEvents;
-////using ReactiveUI;
-////using ReactiveUI.Fody.Helpers;
-////using ScottPlot;
-////using ScottPlot.Plottables;
-////using ScottPlot.WPF;
-
 namespace CrissCross.WPF.Plot;
 
 /// <summary>

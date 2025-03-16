@@ -15,6 +15,9 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CompiledBindings.MAUI" Version="1.0.18" />
     <PackageReference Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
@@ -26,8 +29,8 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.40" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.40" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.50" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.50" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrissCross\CrissCross.csproj" />

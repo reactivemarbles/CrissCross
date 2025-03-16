@@ -2,7 +2,6 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using ReactiveUI;
@@ -133,6 +132,11 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The position.</param>
     public void CreateVerticalLine(double position = 0.0)
     {
+        if (string.IsNullOrWhiteSpace(ChartSettings.Color))
+        {
+            return;
+        }
+
         var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
         AxisLine = Plot.Plot.Add.VerticalLine(x: position, width: (float)ChartSettings.LineWidth, color: color);
         ////AxisLine.Text = LabelText;
@@ -147,6 +151,11 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The position.</param>
     public void CreateHorizontalLine(double position = 0.0)
     {
+        if (string.IsNullOrWhiteSpace(ChartSettings.Color))
+        {
+            return;
+        }
+
         var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
         AxisLine = Plot.Plot.Add.HorizontalLine(y: position, width: (float)ChartSettings.LineWidth, color: color);
         ////AxisLine.Text = LabelText;
@@ -211,9 +220,8 @@ public partial class AxisLinesUI : RxObject
             AxisLine.IsVisible = x.Item3 != "Invisible";
             Plot.Refresh();
         }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>
-        {
-            ChartSettings.Visibility = x == true ? "Invisible" : "Visible";
-        }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
+            .Subscribe(x => ChartSettings.Visibility = x == true ? "Invisible" : "Visible")
+            .DisposeWith(Disposables);
     }
 }

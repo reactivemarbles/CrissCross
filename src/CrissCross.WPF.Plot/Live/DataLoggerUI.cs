@@ -255,9 +255,8 @@ public partial class DataLoggerUI : RxObject
             DataLogger.IsVisible = x.Item3 == "Invisible";
             Plot.Refresh();
         }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked).Subscribe(x =>
-        {
-            ChartSettings.Visibility = x == true ? "Invisible" : "Visible";
-        }).DisposeWith(Disposables);
+        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
+            .Subscribe(x => ChartSettings.Visibility = x == true ? "Invisible" : "Visible")
+            .DisposeWith(Disposables);
     }
 }

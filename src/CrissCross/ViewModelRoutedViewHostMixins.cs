@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -30,23 +31,27 @@ public static class ViewModelRoutedViewHostMixins
 {
     internal static ReplaySubject<Unit> ASetupCompleted { get; } = new(1);
 
-    internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = new();
+    internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = [];
 
-    internal static Dictionary<string, IViewModelRoutedViewHost> NavigationHost { get; } = new();
+    internal static Dictionary<string, IViewModelRoutedViewHost> NavigationHost { get; } = [];
 
-    internal static Dictionary<string, Subject<IViewModelNavigatingEventArgs>> ResultNavigating { get; } = new();
+    internal static Dictionary<string, Subject<IViewModelNavigatingEventArgs>> ResultNavigating { get; } = [];
 
     internal static Subject<IViewModelNavigationEventArgs> SetWhenNavigated { get; } = new();
 
     internal static Subject<IViewModelNavigatingEventArgs> SetWhenNavigating { get; } = new();
 
-    internal static Dictionary<string, ReplaySubject<bool>> WhenSetupSubjects { get; } = new();
+    internal static Dictionary<string, ReplaySubject<bool>> WhenSetupSubjects { get; } = [];
 
     /// <summary>
     /// Determines whether this instance [can navigate back] the specified this.
     /// </summary>
     /// <param name="this">The this.</param>
     /// <returns>A bool.</returns>
+#if NET8_0_OR_GREATER
+    [RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
+    [RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+#endif
     public static IObservable<bool> CanNavigateBack(this IUseNavigation @this)
     {
         if (@this == null)
@@ -538,7 +543,7 @@ public static class ViewModelRoutedViewHostMixins
             if (ea.NavigationType == NavigationType.New)
             {
                 CurrentViewDisposable[ea.HostName!]?.Dispose();
-                CurrentViewDisposable[ea.HostName!] = new();
+                CurrentViewDisposable[ea.HostName!] = [];
             }
 
             e(ea, CurrentViewDisposable[ea.HostName!]);
@@ -585,6 +590,10 @@ public static class ViewModelRoutedViewHostMixins
     /// </summary>
     /// <param name="this">The this.</param>
     /// <returns>A Bool.</returns>
+#if NET8_0_OR_GREATER
+    [RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
+    [RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+#endif
     public static IObservable<bool> WhenSetup(this IUseNavigation @this) =>
         Observable.Create<bool>(obs =>
             {

@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.1.8" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.1.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.3" />
@@ -38,7 +38,7 @@
     <PackageReference Include="CP.Xaml.Converters" Version="1.0.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="CompiledBindings.WPF" Version="1.0.18" />
-    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.1.8" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.1.27" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
