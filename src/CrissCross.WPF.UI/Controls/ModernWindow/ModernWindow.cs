@@ -469,6 +469,14 @@ public class ModernWindow
     public bool IsDisposed => _cleanUp.IsDisposed;
 
     /// <summary>
+    /// Gets the owner.
+    /// </summary>
+    /// <value>
+    /// The owner.
+    /// </value>
+    string ICanShowMessages.Owner => Name;
+
+    /// <summary>
     /// Gets the status bar status text.
     /// </summary>
     /// <value>The status bar status text.</value>

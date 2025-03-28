@@ -84,6 +84,14 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
     }
 
     /// <summary>
+    /// Gets the owner.
+    /// </summary>
+    /// <value>
+    /// The owner.
+    /// </value>
+    string ICanShowMessages.Owner => Name;
+
+    /// <summary>
     /// Gets contains helper for accessing this window handle.
     /// </summary>
     protected WindowInteropHelper InteropHelper => _interopHelper ??= new WindowInteropHelper(this);
