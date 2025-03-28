@@ -16,7 +16,7 @@ namespace CrissCross.WPF.UI;
 /// <summary>
 /// Interaction logic for MessageBox.xaml.
 /// </summary>
-public partial class MessageBoxAsync : IListenForMessages, ICanShowMessages
+public partial class MessageBoxAsync : IListenForMessages
 {
     /// <summary>
     /// Identifies the Buttons dependency property.

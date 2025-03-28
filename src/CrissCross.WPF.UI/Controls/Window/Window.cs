@@ -9,4 +9,13 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 /// <seealso cref="System.Windows.Window" />
 /// <seealso cref="ICanShowMessages" />
-public class Window : System.Windows.Window, ICanShowMessages;
+public class Window : System.Windows.Window, ICanShowMessages
+{
+    /// <summary>
+    /// Gets the owner.
+    /// </summary>
+    /// <value>
+    /// The owner.
+    /// </value>
+    string ICanShowMessages.Owner => Name;
+}

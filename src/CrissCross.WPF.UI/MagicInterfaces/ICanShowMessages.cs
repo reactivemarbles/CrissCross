@@ -7,4 +7,13 @@ namespace CrissCross.WPF.UI;
 /// <summary>
 /// Enables showing messages on ModernWindow.
 /// </summary>
-public interface ICanShowMessages;
+public interface ICanShowMessages
+{
+    /// <summary>
+    /// Gets the owner.
+    /// </summary>
+    /// <value>
+    /// The owner.
+    /// </value>
+    string Owner { get; }
+}

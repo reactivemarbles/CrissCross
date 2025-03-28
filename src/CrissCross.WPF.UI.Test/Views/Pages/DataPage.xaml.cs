@@ -31,4 +31,12 @@ public partial class DataPage : INavigableView<DataViewModel>, ICanShowMessages
     /// Optionally, it may implement <see cref="T:CrissCross.WPF.UI.Controls.INavigationAware" /> and be navigated by <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
     public DataViewModel ViewModel { get; }
+
+    /// <summary>
+    /// Gets the owner.
+    /// </summary>
+    /// <value>
+    /// The owner.
+    /// </value>
+    string ICanShowMessages.Owner => "mainWindow";
 }
