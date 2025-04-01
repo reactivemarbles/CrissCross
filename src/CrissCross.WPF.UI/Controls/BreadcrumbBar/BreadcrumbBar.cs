@@ -151,6 +151,28 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
     }
 
     /// <summary>
+    /// Navigates back and updates the Breadcrumb to remove the last item.
+    /// </summary>
+    /// <param name="parameter">The parameter.</param>
+    /// <returns>The target ViewModel.</returns>
+    /// <exception cref="System.InvalidOperationException">Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.</exception>
+    public IRxObject? NavigateBack(object? parameter = null)
+    {
+        if (string.IsNullOrEmpty(_hostName))
+        {
+            throw new InvalidOperationException("Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.");
+        }
+
+        if (Items.Count != 0)
+        {
+            Items.RemoveAt(Items.Count - 1);
+            return this.NavigateBack(_hostName, parameter);
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Called when [item clicked].
     /// </summary>
     /// <param name="item">The item.</param>

@@ -233,7 +233,9 @@ public static class ViewModelRoutedViewHostMixins
     /// <param name="dummy">The dummy.</param>
     /// <param name="hostName">Name of the host.</param>
     /// <param name="parameter">The parameter.</param>
-    public static void NavigateBack(this IUseHostedNavigation dummy, string hostName = "", object? parameter = null)
+    /// <returns>The target ViewModel.</returns>
+    /// <exception cref="System.InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
+    public static IRxObject? NavigateBack(this IUseHostedNavigation dummy, string? hostName = "", object? parameter = null)
     {
         if (NavigationHost.Count == 0)
         {
@@ -245,17 +247,18 @@ public static class ViewModelRoutedViewHostMixins
             switch (hostName.Length)
             {
                 case 0:
-                    NavigationHost.First().Value.NavigateBack(parameter);
-                    break;
+                    return NavigationHost.First().Value.NavigateBack(parameter);
                 default:
                     if (NavigationHost.TryGetValue(hostName, out var value))
                     {
-                        value.NavigateBack(parameter);
+                        return value.NavigateBack(parameter);
                     }
 
                     break;
             }
         }
+
+        return null;
     }
 
     /// <summary>

@@ -118,7 +118,8 @@ public interface IViewModelRoutedViewHost : IActivatableView, IEnableLogger
     /// Navigates the back.
     /// </summary>
     /// <param name="parameter">The parameter.</param>
-    void NavigateBack(object? parameter = null);
+    /// <returns>The target ViewModel.</returns>
+    IRxObject? NavigateBack(object? parameter = null);
 
     /// <summary>
     /// Refreshes this instance.
