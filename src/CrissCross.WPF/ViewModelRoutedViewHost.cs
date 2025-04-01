@@ -196,7 +196,8 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
     /// Navigates back.
     /// </summary>
     /// <param name="parameter">The parameter.</param>
-    public void NavigateBack(object? parameter = null)
+    /// <returns>The target ViewModel.</returns>
+    public IRxObject? NavigateBack(object? parameter = null)
     {
         if (NavigateBackIsEnabled == true && CanNavigateBack == true && NavigationStack.Count > 1)
         {
@@ -219,6 +220,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
 
         CanNavigateBack = NavigationStack.Count > 1;
         _canNavigateBackSubject.OnNext(CanNavigateBack);
+        return _toViewModel;
     }
 
     /// <inheritdoc />
