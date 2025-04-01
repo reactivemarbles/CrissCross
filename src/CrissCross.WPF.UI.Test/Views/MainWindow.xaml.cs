@@ -39,12 +39,24 @@ public partial class MainWindow : INavigationWindow
         Appearance.SystemThemeWatcher.Watch(this);
 
         InitializeComponent();
+
+        Breadcrumb.SetupNavigation("mainWindow");
+        Navigation = Breadcrumb;
+
         SetPageService(pageService);
         tracker?.Track(this);
         SetCurrentValue(TrackerProperty, tracker);
 
         navigationService?.SetNavigationControl(RootNavigation);
     }
+
+    /// <summary>
+    /// Gets the navigation.
+    /// </summary>
+    /// <value>
+    /// The navigation.
+    /// </value>
+    public static BreadcrumbBar? Navigation { get; private set; }
 
     /// <summary>
     /// Gets or sets the tracker.

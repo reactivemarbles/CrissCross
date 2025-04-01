@@ -23,10 +23,9 @@
         </StackPanel>
     </ui:FluentNavigationWindow.TitleContent>
     <ui:FluentNavigationWindow.TopContent>
-        <ui:Button
-            Height="40"
-            HorizontalAlignment="Stretch"
-            Content="TOP CONTENT" />
+        <ui:BreadcrumbBar x:Name="Breadcrumb" Margin="20,0,0,0">
+            <ui:BreadcrumbBarItem Content="Home" />
+        </ui:BreadcrumbBar>
     </ui:FluentNavigationWindow.TopContent>
     <ui:FluentNavigationWindow.BottomContent>
         <ui:Button

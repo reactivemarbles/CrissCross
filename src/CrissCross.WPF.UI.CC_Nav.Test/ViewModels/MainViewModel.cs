@@ -22,16 +22,17 @@ public class MainViewModel : RxObject
     public MainViewModel() =>
         this.BuildComplete(() =>
             {
+                DisplayName = "Main View";
                 GotoFirst = ReactiveCommand.Create(() =>
                 {
-                    this.NavigateToView<MainViewModel>("secondWindow");
-                    this.NavigateToView<FirstViewModel>("mainWindow");
+                    ////this.NavigateToView<MainViewModel>("secondWindow");
+                    MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: "First View");
                 });
 
                 GotoMain = ReactiveCommand.Create(() =>
                 {
-                    this.NavigateToView<MainViewModel>("mainWindow");
-                    this.NavigateToView<FirstViewModel>("secondWindow");
+                    MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: DisplayName);
+                    ////this.NavigateToView<FirstViewModel>("secondWindow");
                 });
             });
 

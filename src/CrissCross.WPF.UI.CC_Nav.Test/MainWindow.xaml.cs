@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables;
+using CrissCross.WPF.UI.Controls;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.CC_Nav.Test
@@ -20,11 +21,23 @@ namespace CrissCross.WPF.UI.CC_Nav.Test
             Appearance.SystemThemeWatcher.Watch(this);
 
             InitializeComponent();
+
+            Breadcrumb.SetupNavigation("mainWindow");
+            Navigation = Breadcrumb;
+
             this.WhenActivated(d =>
             {
-                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
-                this.NavigateToView(typeof(MainViewModel));
+                NavBack.Command = ReactiveCommand.Create(() => Navigation.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
+                Navigation.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main View");
             });
         }
+
+        /// <summary>
+        /// Gets the navigation.
+        /// </summary>
+        /// <value>
+        /// The navigation.
+        /// </value>
+        public static BreadcrumbBar? Navigation { get; private set; }
     }
 }
