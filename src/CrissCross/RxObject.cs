@@ -12,6 +12,8 @@ namespace CrissCross;
 /// <summary>
 /// Rx Object.
 /// </summary>
+/// <seealso cref="ReactiveUI.ReactiveObject" />
+/// <seealso cref="CrissCross.IRxObject" />
 /// <seealso cref="ReactiveObject" />
 /// <seealso cref="IRxObject" />
 #if NET8_0_OR_GREATER
@@ -34,6 +36,14 @@ public abstract class RxObject : ReactiveObject, IRxObject
     /// The URL path segment.
     /// </value>
     public string? Name => GetType().FullName;
+
+    /// <summary>
+    /// Gets or sets the display name.
+    /// </summary>
+    /// <value>
+    /// The display name.
+    /// </value>
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether this instance is disposed.

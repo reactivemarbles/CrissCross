@@ -165,8 +165,13 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
 
         if (Items.Count != 0)
         {
-            Items.RemoveAt(Items.Count - 1);
-            return this.NavigateBack(_hostName, parameter);
+            var vm = this.NavigateBack(_hostName, parameter);
+            if (vm != null)
+            {
+                UpdateItems(vm.GetType(), vm.DisplayName);
+            }
+
+            return vm;
         }
 
         return null;

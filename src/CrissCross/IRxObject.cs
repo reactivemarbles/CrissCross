@@ -11,4 +11,13 @@ namespace CrissCross;
 /// interface for RxBase.
 /// </summary>
 /// <seealso cref="System.IDisposable"/>
-public interface IRxObject : IReactiveNotifyPropertyChanged<IReactiveObject>, IHandleObservableErrors, INotifiyRoutableViewModel, ICancelable, IAmBuilt;
+public interface IRxObject : IReactiveNotifyPropertyChanged<IReactiveObject>, IHandleObservableErrors, INotifiyRoutableViewModel, ICancelable, IAmBuilt
+{
+    /// <summary>
+    /// Gets or sets the display name.
+    /// </summary>
+    /// <value>
+    /// The display name.
+    /// </value>
+    string? DisplayName { get; set; }
+}

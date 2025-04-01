@@ -26,14 +26,14 @@ public class BrowserViewModel : RxObject
         {
             GotoMain = ReactiveCommand.Create(() =>
             {
-                this.NavigateToView<MainViewModel>("mainWindow");
-                this.NavigateToView<FirstViewModel>("secondWindow");
+                MainWindow.Navigation?.NavigateToView<MainViewModel>("mainWindow");
+                ////this.NavigateToView<FirstViewModel>("secondWindow");
             });
 
             GotoFirst = ReactiveCommand.Create(() =>
             {
-                this.NavigateToView<MainViewModel>("secondWindow");
-                this.NavigateToView<FirstViewModel>("mainWindow");
+                ////this.NavigateToView<MainViewModel>("secondWindow");
+                MainWindow.Navigation?.NavigateToView<FirstViewModel>("mainWindow");
             });
             WebUrl = "https://www.aicsolutions.com";
         });
