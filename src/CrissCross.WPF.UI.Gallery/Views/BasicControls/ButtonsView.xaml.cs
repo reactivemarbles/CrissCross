@@ -2,7 +2,11 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using CrissCross.WPF.UI.Gallery.ViewModels;
+using ReactiveMarbles.ObservableEvents;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
@@ -19,5 +23,13 @@ public partial class ButtonsView
     public ButtonsView()
     {
         InitializeComponent();
+        this.WhenActivated(disposables =>
+        {
+            BezelButton1.Events()
+                .Click
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(_ => BezelToggleButton1.IsChecked = !BezelToggleButton1.IsChecked)
+                .DisposeWith(disposables);
+        });
     }
 }
