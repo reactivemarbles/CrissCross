@@ -4,6 +4,7 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -16,64 +17,19 @@ namespace CrissCross.WPF.Plot;
 /// Nice for plotting XY random values.
 /// </summary>
 /// <seealso cref="ScatterUI" />
-public partial class ScatterUI : RxObject
+[SupportedOSPlatform("windows")]
+public partial class ScatterUI : RxObject, IPlottableUI
 {
     [Reactive]
-    private Settings _chartSettings = new Settings();
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [automatic scale].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [automatic scale]; otherwise, <c>false</c>.
-    /// </value>
+    private ChartObjects _chartSettings;
     [Reactive]
     private bool _autoScale;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [manual scale].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [manual scale]; otherwise, <c>false</c>.
-    /// </value>
     [Reactive]
     private bool _manualScale;
-
-    /// <summary>
-    /// Gets or sets the mode.
-    /// </summary>
-    /// <value>
-    /// The mode.
-    /// </value>
     [Reactive]
     private int _mode;
-
-    /// <summary>
-    /// Gets or sets the number points plotted.
-    /// </summary>
-    /// <value>
-    /// The number points plotted.
-    /// </value>
     [Reactive]
     private int _numberPointsPlotted;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [select area].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [select area]; otherwise, <c>false</c>.
-    /// </value>
-    [Reactive]
-    private bool _selectArea;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [zoom xy].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [zoom xy]; otherwise, <c>false</c>.
-    /// </value>
-    [Reactive]
-    private bool _zoomXY;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ScatterUI" /> class.
@@ -85,23 +41,15 @@ public partial class ScatterUI : RxObject
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
     public ScatterUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false)
     {
-        ChartSettings.Color = color;
-        ChartSettings.ItemName = "---";
-        ChartSettings.ColorText = "#FFD3D3D3";
-        ChartSettings.OpacityCheckBox = "1";
-        ChartSettings.LineWidth = 3;
-        ChartSettings.IsVisible = true;
+        ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
-        ZoomXY = false;
-        ChartSettings.IsChecked = true;
 
         Plot = plot;
-        ChartSettings.DisplayedValue = 0;
 
         CreateScatter(color);
         UpdateScatter(observable);
-        AppearanceSubsriptions();
+        ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
     /// <summary>
@@ -112,25 +60,18 @@ public partial class ScatterUI : RxObject
     /// <param name="color">The color.</param>
     /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    public ScatterUI(WpfPlot plot, (string? Name, IList<double>? X, IList<double> Y, int Axis) data, string color, bool autoscale = true, bool manualscale = false)
+    public ScatterUI(WpfPlot plot, (string? Name, IList<double> X, IList<double> Y, int Axis) data, string color, bool autoscale = true, bool manualscale = false)
     {
-        ChartSettings.Color = color;
-        ChartSettings.ItemName = "---";
-        ChartSettings.ColorText = "#FFD3D3D3";
-        ChartSettings.OpacityCheckBox = "1";
-        ChartSettings.LineWidth = 3;
-        ChartSettings.IsVisible = true;
+        ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
-        ZoomXY = false;
-        ChartSettings.IsChecked = true;
 
         Plot = plot;
         ChartSettings.DisplayedValue = 0;
 
         CreateScatter(color);
         InsertData(data.X, data.Y);
-        AppearanceSubsriptions();
+        ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
     /// <summary>
@@ -147,7 +88,7 @@ public partial class ScatterUI : RxObject
     /// <value>
     /// The streamer.
     /// </value>
-    public Scatter? Scatter { get; set; }
+    public Scatter? PlotLine { get; set; }
 
     /// <summary>
     /// Gets or sets the axes.
@@ -162,10 +103,10 @@ public partial class ScatterUI : RxObject
     {
         double[] y = [0];
         double[] x = [0];
-        Scatter = Plot.Plot.Add.Scatter(x, y);
-        Scatter.LineStyle.Width = 1f;
-        Scatter.MarkerSize = 1f;
-        Scatter.Color = Color.FromHex(color);
+        PlotLine = Plot.Plot.Add.Scatter(x, y);
+        PlotLine.LineStyle.Width = 1f;
+        PlotLine.MarkerSize = 1f;
+        PlotLine.Color = Color.FromHex(color);
     }
 
     /// <summary>
@@ -173,24 +114,25 @@ public partial class ScatterUI : RxObject
     /// </summary>
     /// <param name="x">X array.</param>
     /// <param name="y">Y array.</param>
-    public void InsertData(IList<double>? x, IList<double> y)
+    public void InsertData(IList<double> x, IList<double> y)
     {
-        Axes = Scatter!.Axes;
-        Plot.Plot.Remove(Scatter!);
+        Axes = PlotLine!.Axes;
+        Plot.Plot.Remove(PlotLine!);
         var xs = x.ToArray();
         var ys = y.ToArray();
-        Scatter = Plot.Plot.Add.Scatter(xs, ys);
-        Scatter.LineStyle.Width = 1f;
-        Scatter.LineStyle.IsVisible = false;
-        Scatter.MarkerSize = 1f;
-        Scatter!.Axes = Axes;
+        PlotLine = Plot.Plot.Add.Scatter(xs, ys);
+        PlotLine.LineStyle.Width = 1f;
+        PlotLine.LineStyle.IsVisible = false;
+        PlotLine.MarkerSize = 1f;
+        PlotLine!.Axes = Axes;
     }
 
     /// <summary>
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) => observable.ObserveOn(RxApp.MainThreadScheduler)
+    public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) =>
+        observable.ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(data =>
             {
                 if (data.Name == null || data.X == null || data.Y == null)
@@ -236,24 +178,9 @@ public partial class ScatterUI : RxObject
     {
         if (disposing)
         {
+            ChartSettings.IsCheckedCmd?.Dispose();
             ChartSettings.Dispose();
             _chartSettings.Dispose();
         }
-    }
-
-    private void AppearanceSubsriptions()
-    {
-        this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility)
-            .Subscribe(x =>
-            {
-                Scatter!.LineStyle.Width = (float)x.Item1;
-                Scatter!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2));
-                ChartSettings.IsChecked = x.Item3 == "Invisible";
-                Scatter.IsVisible = x.Item3 != "Invisible";
-                Plot.Refresh();
-            }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
-            .Subscribe(x => ChartSettings.Visibility = x ? "Invisible" : "Visible")
-            .DisposeWith(Disposables);
     }
 }

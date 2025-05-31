@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables;
+using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -12,6 +13,7 @@ namespace CrissCross.WPF.Plot;
 /// Interaction logic for MainView.xaml.
 /// </summary>
 [IViewFor<RightPropertiesV2ViewModel>]
+[SupportedOSPlatform("windows10.0.19041")]
 public partial class RightPropertiesV2View
 {
     /// <summary>
@@ -23,15 +25,10 @@ public partial class RightPropertiesV2View
 
         this.WhenActivated(d =>
         {
-            ViewModel = new();
-            DataContext = ViewModel;
+            DataContext = ViewModel = new();
             ElementBinding1(d);
         });
     }
 
-    private void ElementBinding1(CompositeDisposable d)
-    {
-        this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(d);
-        ////this.OneWayBind(ViewModel, vm => vm.LineColors.Items, v => v.colorsComboBox.ItemsSource).DisposeWith(d);
-    }
+    private void ElementBinding1(CompositeDisposable d) => this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(d);
 }

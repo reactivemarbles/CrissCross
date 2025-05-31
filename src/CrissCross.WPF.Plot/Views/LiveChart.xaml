@@ -1,0 +1,203 @@
+﻿<rxui:ReactiveUserControl
+    x:Class="CrissCross.WPF.Plot.LiveChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+    xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CrissCross.WPF.Plot"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rxui="http://reactiveui.net"
+    x:Name="userControl"
+    d:DataContext="{d:DesignInstance Type=local:LiveChartViewModel}"
+    d:DesignHeight="600"
+    d:DesignWidth="800"
+    x:TypeArguments="local:LiveChartViewModel"
+    mc:Ignorable="d">
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--  TITLE  -->
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            VerticalAlignment="Top">
+            <TextBlock
+                x:Name="Title"
+                HorizontalAlignment="Center"
+                x:FieldModifier="public"
+                FontFamily="Arial"
+                FontSize="20"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="Title"
+                TextWrapping="Wrap" />
+        </Grid>
+
+        <!--  TOP LEGEND  -->
+        <ScrollViewer
+            Name="TopLegend"
+            Grid.Row="1"
+            Grid.Column="0"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <WrapPanel x:Name="WarpTop1" Visibility="Visible">
+                    <ItemsControl Name="Itemscontrol1" ItemsSource="{Binding PlotLinesCollectionUI}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox
+                                        Name="CheckBoxDataLogger"
+                                        Margin="5"
+                                        Background="{Binding ChartSettings.Color}"
+                                        IsChecked="{Binding ChartSettings.IsChecked}"
+                                        Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                                        TextElement.Foreground="{Binding ChartSettings.ColorText}" />
+                                    <TextBlock
+                                        Name="IndexText"
+                                        VerticalAlignment="Center"
+                                        MouseUp="IndexText_MouseUp"
+                                        Text="{Binding ChartSettings.ItemName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </WrapPanel>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+
+        <!--  RIGHT LEGEND  -->
+        <ScrollViewer
+            Name="RightLegend"
+            Grid.Row="2"
+            Grid.Column="1"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!--  MaxHeight="50"  -->
+                <WrapPanel Visibility="Visible">
+                    <ItemsControl ItemsSource="{Binding PlotLinesCollectionUI}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox
+                                        Name="CheckBoxDataLogger"
+                                        Margin="5"
+                                        Background="{Binding ChartSettings.Color}"
+                                        IsChecked="{Binding ChartSettings.IsChecked}"
+                                        Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                                        TextElement.Foreground="{Binding ChartSettings.ColorText}" />
+                                    <TextBlock
+                                        Name="IndexText"
+                                        VerticalAlignment="Center"
+                                        MouseUp="IndexText_MouseUp"
+                                        Text="{Binding ChartSettings.ItemName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!--  RIGHT LEGEND  , LEGEND BAR MENU  -->
+        <local:RightPropertiesV2View
+            x:Name="RightProperties"
+            Grid.Row="2"
+            Grid.Column="3"
+            Visibility="Collapsed" />
+
+        <!--  CHART, CHART SETTINGS  -->
+        <Grid Grid.Row="2" Margin="0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="{Binding ElementName=userControl, Path=RightWidth}" />
+            </Grid.ColumnDefinitions>
+
+            <!--  CHART  -->
+            <Grid
+                x:Name="MainChartGrid"
+                Grid.Row="1"
+                MouseMove="MainChartGrid_MouseMove"
+                MouseUp="MainChartGrid_MouseUp"
+                PreviewMouseDown="MainChartGrid_MouseDown" />
+
+            <!--  MENU  -->
+            <StackPanel
+                Grid.Row="1"
+                Margin="0,20"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+
+                <abb:AppBarButton
+                    x:Name="PlotSettings"
+                    Grid.Row="0"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Icon="md_settings_helper"
+                    ToolTip="Settings" />
+                <abb:AppBarButton
+                    x:Name="LiveHistoryBtn"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_lock"
+                    ToolTip="Locked" />
+                <abb:AppBarButton
+                    x:Name="EnableMarkerBtn"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_crosshairs_off"
+                    ToolTip="Locked" />
+                <abb:AppBarButton
+                    x:Name="AddCrosshairBtn"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_plus"
+                    ToolTip="Locked" />
+
+                <abb:AppBarButton
+                    x:Name="RemoveLabelBtn"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    x:FieldModifier="public"
+                    Content="  "
+                    Icon="md_broom"
+                    ToolTip="Locked" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</rxui:ReactiveUserControl>
