@@ -2,10 +2,9 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-namespace CrissCross.WPF.Plot;
+namespace CrissCross.WPF.Plot.Test;
 
 /// <summary>
-/// Interface IData.
+/// Interaction logic for App.xaml.
 /// </summary>
-/// <seealso cref="RxObject" />
-public partial class IData : RxObject;
+public partial class App;

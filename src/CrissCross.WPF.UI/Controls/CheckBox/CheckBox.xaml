@@ -93,7 +93,6 @@
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="ControlIcon" Property="Visibility" Value="Visible" />
-                            <Setter TargetName="ControlBorderIconPresenter" Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
                             <Setter TargetName="StrokeBorder" Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrush}" />
                         </Trigger>
                         <MultiTrigger>

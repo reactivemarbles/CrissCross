@@ -4,6 +4,7 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot.Plottables;
@@ -16,67 +17,22 @@ namespace CrissCross.WPF.Plot;
 /// Nice for continuous live data.
 /// </summary>
 /// <seealso cref="DataLoggerUI" />
-public partial class DataLoggerUI : RxObject
+[SupportedOSPlatform("windows")]
+public partial class DataLoggerUI : RxObject, IPlottableUI
 {
-    private readonly List<double> _data = [];
-    private readonly List<double> _time = [];
+    private List<double> _data = [];
+    private List<double> _time = [];
 
     [Reactive]
-    private Settings _chartSettings = new();
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [automatic scale].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [automatic scale]; otherwise, <c>false</c>.
-    /// </value>
+    private ChartObjects _chartSettings;
     [Reactive]
     private bool _autoScale;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [manual scale].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [manual scale]; otherwise, <c>false</c>.
-    /// </value>
     [Reactive]
     private bool _manualScale;
-
-    /// <summary>
-    /// Gets or sets the mode.
-    /// </summary>
-    /// <value>
-    /// The mode.
-    /// </value>
     [Reactive]
     private int _mode;
-
-    /// <summary>
-    /// Gets or sets the number points plotted.
-    /// </summary>
-    /// <value>
-    /// The number points plotted.
-    /// </value>
     [Reactive]
     private int _numberPointsPlotted;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [select area].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [select area]; otherwise, <c>false</c>.
-    /// </value>
-    [Reactive]
-    private bool _selectArea;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether [zoom xy].
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if [zoom xy]; otherwise, <c>false</c>.
-    /// </value>
-    [Reactive]
-    private bool _zoomXY;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataLoggerUI" /> class.
@@ -89,22 +45,13 @@ public partial class DataLoggerUI : RxObject
     /// <param name="points">observer with points.</param>
     public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
     {
-        ChartSettings.Color = color;
-        ChartSettings.ItemName = "---";
-        ChartSettings.ColorText = "#FFD3D3D3";
-        ChartSettings.OpacityCheckBox = "1";
-        ChartSettings.LineWidth = 3;
-        ChartSettings.IsVisible = true;
-        ChartSettings.IsChecked = false;
-        ChartSettings.DisplayedValue = 0;
-        ChartSettings.Visibility = "Visible";
+        ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
-        ZoomXY = false;
 
         Plot = plot;
         CreateDataLogger(color);
-        AppearanceSubsriptions();
+        ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
 
         // TODO: Add with timestamp
         ////UpdateDataLogger(observable);
@@ -121,23 +68,14 @@ public partial class DataLoggerUI : RxObject
     /// <param name="points">observer with points.</param>
     public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, int Axis, int nPoints)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
     {
-        ChartSettings.Color = color;
-        ChartSettings.ItemName = "---";
-        ChartSettings.ColorText = "#FFD3D3D3";
-        ChartSettings.OpacityCheckBox = "1";
-        ChartSettings.LineWidth = 3;
-        ChartSettings.IsVisible = true;
-        ChartSettings.IsChecked = false;
+        ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
-        ZoomXY = false;
-        ChartSettings.DisplayedValue = 0;
-        ChartSettings.Visibility = "Visible";
 
         Plot = plot;
         CreateDataLogger(color);
         UpdateDataLogger(observable);
-        AppearanceSubsriptions();
+        ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
     /// <summary>
@@ -154,7 +92,7 @@ public partial class DataLoggerUI : RxObject
     /// <value>
     /// The streamer.
     /// </value>
-    public DataLogger? DataLogger { get; set; }
+    public DataLogger? PlotLine { get; set; }
 
     /// <summary>
     /// Creates the stream.
@@ -165,22 +103,19 @@ public partial class DataLoggerUI : RxObject
         double[] y = [0];
         double[] x = [0];
 
-        DataLogger = Plot.Plot.Add.DataLogger();
-        DataLogger.ViewSlide();
-        DataLogger.ManageAxisLimits = false;
-        DataLogger.LineStyle.Width = 1;
-        DataLogger.Color = Color.FromHex(color);
+        PlotLine = Plot.Plot.Add.DataLogger();
+        PlotLine.ViewSlide();
+        PlotLine.ManageAxisLimits = false;
+        PlotLine.LineStyle.Width = 1;
+        PlotLine.Color = Color.FromHex(color);
     }
 
     /// <summary>
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable)
-    {
-        ////observable.ObserveOn(RxApp.MainThreadScheduler)
-        ////    .Subscribe(data =>
-            observable
+    public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) =>
+        observable
             .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
             .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
             .Subscribe(data =>
@@ -198,9 +133,9 @@ public partial class DataLoggerUI : RxObject
 
                 var nPoints = Math.Min(data.nPoints, 100_000_000);
 
-                if (DataLogger!.Data.Coordinates.Count >= nPoints)
+                if (PlotLine!.Data.Coordinates.Count >= nPoints)
                 {
-                    DataLogger.Data.Coordinates.Clear();
+                    PlotLine.Data.Coordinates.Clear();
                     _data.Clear();
                 }
 
@@ -211,12 +146,12 @@ public partial class DataLoggerUI : RxObject
 
                     _data.AddRange(values);
 
-                    DataLogger!.Add(values);
+                    PlotLine!.Add(values);
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
                     {
-                        Plot.Plot.Axes.SetLimitsX(_data.Count - 10000, _data.Count, DataLogger.Axes.XAxis);
+                        Plot.Plot.Axes.SetLimitsX(_data.Count - 10000, _data.Count, PlotLine.Axes.XAxis);
                     }
                 }
 
@@ -229,7 +164,6 @@ public partial class DataLoggerUI : RxObject
                 // UPDATE NAME
                 ChartSettings.ItemName = data.Name;
             }).DisposeWith(Disposables);
-    }
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
@@ -240,23 +174,8 @@ public partial class DataLoggerUI : RxObject
     {
         if (disposing)
         {
+            ChartSettings.IsCheckedCmd?.Dispose();
             ChartSettings.Dispose();
-            _chartSettings.Dispose();
         }
-    }
-
-    private void AppearanceSubsriptions()
-    {
-        this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
-        {
-            DataLogger!.LineStyle.Width = (float)x.Item1;
-            DataLogger!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-            ChartSettings.IsChecked = x.Item3 == "Invisible";
-            DataLogger.IsVisible = x.Item3 == "Invisible";
-            Plot.Refresh();
-        }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
-            .Subscribe(x => ChartSettings.Visibility = x == true ? "Invisible" : "Visible")
-            .DisposeWith(Disposables);
     }
 }

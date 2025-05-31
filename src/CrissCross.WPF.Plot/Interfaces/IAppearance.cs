@@ -4,6 +4,8 @@
 
 using System.Reactive;
 using ReactiveUI;
+using ScottPlot;
+using ScottPlot.WPF;
 
 namespace CrissCross.WPF.Plot;
 
@@ -95,5 +97,14 @@ public interface IAppearance
     /// <summary>
     /// Subsriptions for appearance.
     /// </summary>
-    void AppearanceSubsriptions();
+    void CrosshairSubscription();
+
+    /// <summary>
+    /// Subsriptions for appearance.
+    /// </summary>
+    /// <typeparam name="T">The type.</typeparam>
+    /// <param name="plot">The plot.</param>
+    /// <param name="plotable">The plotable.</param>
+    void AppearanceSubsriptions<T>(WpfPlot plot, T plotable)
+        where T : IHasLine, IHasMarker, ScottPlot.IPlottable;
 }

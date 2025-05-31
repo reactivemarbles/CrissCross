@@ -1,0 +1,29 @@
+﻿<ui:FluentNavigationWindow
+    x:Class="CrissCross.WPF.Plot.Test.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:CrissCross.WPF.Plot.Test.ViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+    x:Name="mainWindow"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+    x:TypeArguments="local:MainWindowViewModel"
+    mc:Ignorable="d">
+    <ui:FluentNavigationWindow.TopContent>
+        <ui:BreadcrumbBar x:Name="NavBreadcrumb" />
+    </ui:FluentNavigationWindow.TopContent>
+    <ui:FluentNavigationWindow.LeftContent>
+        <ui:StackPanel>
+            <ui:TextBox Margin="3,0,0,0" Text="{Binding Filter, ElementName=NavigationLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ui:TextBox.Icon>
+                    <ui:SymbolIcon Symbol="Search20" />
+                </ui:TextBox.Icon>
+            </ui:TextBox>
+            <ui:NavigationVMLeft x:Name="NavigationLeft" />
+        </ui:StackPanel>
+    </ui:FluentNavigationWindow.LeftContent>
+</ui:FluentNavigationWindow>

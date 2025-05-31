@@ -4,12 +4,12 @@
 
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
-using Color = ScottPlot.Color;
 
 namespace CrissCross.WPF.Plot;
 
@@ -17,10 +17,11 @@ namespace CrissCross.WPF.Plot;
 /// Nice for continuous live data.
 /// </summary>
 /// <seealso cref="AxisLinesUI" />
+[SupportedOSPlatform("windows")]
 public partial class AxisLinesUI : RxObject
 {
     [Reactive]
-    private Settings _chartSettings = new Settings();
+    private ChartObjects _chartSettings = new();
 
     [Reactive]
     private string _lineOrientation;
@@ -59,17 +60,18 @@ public partial class AxisLinesUI : RxObject
         Axis = axis;
         ChartSettings.Color = color;
         LabelText = text;
+
         if (orientation == "Horizontal")
         {
             CreateHorizontalLine();
             UpdateAxisLineSubscription(observable);
-            AppearanceSubsriptions();
+            ////ChartSettings.AppearanceSubsriptions(Plot, AxisLine!);
         }
         else if (orientation == "Vertical")
         {
             CreateVerticalLine();
             UpdateAxisLineSubscription(observable);
-            AppearanceSubsriptions();
+            ////AppearanceSubsriptions();
         }
     }
 
@@ -86,7 +88,7 @@ public partial class AxisLinesUI : RxObject
     public AxisLinesUI(
         WpfPlot plot,
         double position,
-        LinePattern linePattern,
+        in LinePattern linePattern,
         string type = "Horizontal",
         int axis = 0,
         string color = "Blue",
@@ -98,15 +100,14 @@ public partial class AxisLinesUI : RxObject
         Axis = axis;
         ChartSettings.Color = color;
         LabelText = text;
+
         if (type == "Horizontal")
         {
             CreateHorizontalLine(position);
-            AppearanceSubsriptions();
         }
         else if (type == "Vertical")
         {
             CreateVerticalLine(position);
-            AppearanceSubsriptions();
         }
     }
 
@@ -132,16 +133,10 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The position.</param>
     public void CreateVerticalLine(double position = 0.0)
     {
-        if (string.IsNullOrWhiteSpace(ChartSettings.Color))
-        {
-            return;
-        }
-
-        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
+        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
         AxisLine = Plot.Plot.Add.VerticalLine(x: position, width: (float)ChartSettings.LineWidth, color: color);
         ////AxisLine.Text = LabelText;
         AxisLine.LabelText = LabelText;
-        ////AxisLine.LabelText = LabelText;
         ////AxisLine.LabelBackgroundColor = color;
     }
 
@@ -151,16 +146,10 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The position.</param>
     public void CreateHorizontalLine(double position = 0.0)
     {
-        if (string.IsNullOrWhiteSpace(ChartSettings.Color))
-        {
-            return;
-        }
-
-        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color));
+        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
         AxisLine = Plot.Plot.Add.HorizontalLine(y: position, width: (float)ChartSettings.LineWidth, color: color);
         ////AxisLine.Text = LabelText;
         AxisLine.LabelText = LabelText;
-        ////AxisLine.LabelText = LabelText;
         AxisLine.LabelAlignment = Alignment.MiddleCenter;
         AxisLine.LinePattern = LinePattern1;
         ////AxisLine.LabelBackgroundColor = color;
@@ -170,7 +159,8 @@ public partial class AxisLinesUI : RxObject
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateAxisLineSubscription(IObservable<(string? Name, double? Position)> observable) => observable
+    public void UpdateAxisLineSubscription(IObservable<(string? Name, double? Position)> observable) =>
+        observable
         .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
         .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
         .Subscribe(data =>
@@ -205,23 +195,5 @@ public partial class AxisLinesUI : RxObject
             ChartSettings.Dispose();
             _chartSettings.Dispose();
         }
-    }
-
-    /// <summary>
-    /// Appearances the subsriptions.
-    /// </summary>
-    private void AppearanceSubsriptions()
-    {
-        this.WhenAnyValue(x => x.ChartSettings.LineWidth, x => x.ChartSettings.Color, x => x.ChartSettings.Visibility).Subscribe(x =>
-        {
-            AxisLine!.LineStyle.Width = (float)x.Item1;
-            AxisLine!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-            ChartSettings.IsChecked = x.Item3 == "Invisible";
-            AxisLine.IsVisible = x.Item3 != "Invisible";
-            Plot.Refresh();
-        }).DisposeWith(Disposables);
-        this.WhenAnyValue(x => x.ChartSettings.IsChecked)
-            .Subscribe(x => ChartSettings.Visibility = x == true ? "Invisible" : "Visible")
-            .DisposeWith(Disposables);
     }
 }

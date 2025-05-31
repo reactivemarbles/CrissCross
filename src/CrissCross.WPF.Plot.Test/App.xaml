@@ -1,0 +1,16 @@
+﻿<Application
+    x:Class="CrissCross.WPF.Plot.Test.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:CrissCross.WPF.Plot.Test"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ControlsDictionary />
+                <ui:ThemesDictionary />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

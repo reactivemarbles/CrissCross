@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="Polyfill" Version="7.31.0">
+    <PackageReference Include="Polyfill" Version="7.32.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

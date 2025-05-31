@@ -5,6 +5,6 @@
 using System.Windows;
 using System.Windows.Markup;
 
-[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.WPF.Plot")]
-[assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross", "rxNav")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.Plot")]
+[assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross.ui", "ccui")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.SourceAssembly, ResourceDictionaryLocation.SourceAssembly)]

@@ -6,6 +6,7 @@ using System.Windows;
 using CP.Reactive;
 
 namespace CrissCross.WPF.Plot;
+
 /// <summary>
 /// AICSLiveChart.
 /// </summary>
@@ -13,6 +14,40 @@ namespace CrissCross.WPF.Plot;
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
 public partial class LiveChart
 {
+    /// <summary>
+    /// The use fixed number of points property.
+    /// </summary>
+    public static readonly DependencyProperty UseFixedNumberOfPointsProperty =
+        DependencyProperty.Register(nameof(UseFixedNumberOfPoints), typeof(bool), typeof(LiveChart), new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
+
+    /// <summary>
+    /// The number points plotted property.
+    /// </summary>
+    public static readonly DependencyProperty NumberPointsPlottedProperty =
+        DependencyProperty.Register(nameof(NumberPointsPlotted), typeof(int), typeof(LiveChart), new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
+
+    /// <summary>
+    /// RightWidth after legend.
+    /// </summary>
+    public static readonly DependencyProperty RightWidthProperty =
+        DependencyProperty.Register(
+            nameof(RightWidth),
+            typeof(GridLength),
+            typeof(LiveChart),
+            new PropertyMetadata(
+            new GridLength(0),
+            new PropertyChangedCallback(RightWidthCallback)));
+
+    /// <summary>
+    /// RightWidth after legend.
+    /// </summary>
+    public static readonly DependencyProperty LegendWidthProperty =
+        DependencyProperty.Register(
+            nameof(LegendWidth),
+            typeof(double),
+            typeof(LiveChart),
+            new(new PropertyChangedCallback(LegendWidthCallback)));
+
     /// <summary>
     /// Y Axis Data 2 Property.
     /// </summary>
@@ -44,6 +79,12 @@ public partial class LiveChart
         DependencyProperty.Register(nameof(SignalWithPoints), typeof((string?, IList<double>?, IList<double>, int)), typeof(LiveChart));
 
     /// <summary>
+    /// The observables with time stamp property.
+    /// </summary>
+    public static readonly DependencyProperty SignalsWithPointsProperty =
+        DependencyProperty.Register(nameof(SignalsWithPoints), typeof(IEnumerable<(string?, IList<double>?, IList<double>, int)>), typeof(LiveChart));
+
+    /// <summary>
     /// The observables with time stamp property. // TODO: Need to be tested and finished.
     /// </summary>
     public static readonly DependencyProperty SignalObservablesWithPointsProperty =
@@ -71,5 +112,39 @@ public partial class LiveChart
     /// The axes names and colors.
     /// </summary>
     public static readonly DependencyProperty ControlMenuProperty =
-        DependencyProperty.Register(nameof(ControlMenu), typeof(ReactiveList<Settings>), typeof(LiveChart));
+        DependencyProperty.Register(nameof(ControlMenu), typeof(ReactiveList<ChartObjects>), typeof(LiveChart));
+
+    private static void RightWidthCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is GridLength gridLength)
+        {
+            livechart.RightWidth = gridLength;
+        }
+    }
+
+    private static void LegendWidthCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is double gridLength)
+        {
+            livechart.RightLegend.Width = gridLength;
+        }
+    }
+
+    private static void NumberPointsPlottedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is int numberOfSamples)
+        {
+            livechart.NumberPointsPlotted = numberOfSamples;
+            livechart.ViewModel.NumberPointsPlotted = numberOfSamples;
+        }
+    }
+
+    private static void UseFixedNumberOfPointsCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is bool fixedNumberOfSamples)
+        {
+            livechart.UseFixedNumberOfPoints = fixedNumberOfSamples;
+            livechart.ViewModel.UseFixedNumberOfPoints = fixedNumberOfSamples;
+        }
+    }
 }
