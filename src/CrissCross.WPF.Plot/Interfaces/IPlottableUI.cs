@@ -42,6 +42,14 @@ public interface IPlottableUI : IDisposable
     int NumberPointsPlotted { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether [use fixed number of points].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [use fixed number of points]; otherwise, <c>false</c>.
+    /// </value>
+    bool UseFixedNumberOfPoints { get; set; }
+
+    /// <summary>
     /// Gets or sets the chart settings.
     /// </summary>
     /// <value>

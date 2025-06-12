@@ -51,11 +51,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.60" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(CoreNetVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="$(CoreNetVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(CoreNetVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.71" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.71" />
   </ItemGroup>
 
   <ItemGroup>

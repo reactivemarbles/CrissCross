@@ -29,6 +29,8 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     private int _mode;
     [Reactive]
     private int _numberPointsPlotted;
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Crosshair_UI" /> class.
@@ -65,7 +67,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
                 ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{x.X:0.##}";
                 Plot?.Refresh();
             }).DisposeWith(Disposables);
-            CreateCrosshair();
+            CreateCrosshair(color: color);
         }
         else if (coordinatesObs != null && isXAxisDateTime)
         {
@@ -75,11 +77,11 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
                 ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{xtext}";
                 Plot?.Refresh();
             }).DisposeWith(Disposables);
-            CreateCrosshair(DateTime.Now.ToOADate());
+            CreateCrosshair(color: color, DateTime.Now.ToOADate());
         }
         else
         {
-            CreateCrosshair();
+            CreateCrosshair(color: color);
         }
     }
 
@@ -108,10 +110,11 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     public Crosshair? PlotLine { get; set; }
 
     /// <summary>
-    /// Creates the stream.
+    /// Creates the crosshair.
     /// </summary>
+    /// <param name="color">The color.</param>
     /// <param name="position">The position.</param>
-    public void CreateCrosshair(double position = 0.0)
+    public void CreateCrosshair(string color, double position = 0.0)
     {
         PlotLine = Plot.Plot.Add.Crosshair(position, 0);
         PlotLine.IsVisible = true;
@@ -127,6 +130,8 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         PlotLine.HorizontalLine.LabelStyle.OffsetY = -10;
         PlotLine.HorizontalLine.LabelStyle.OffsetX = 80;
         PlotLine.HorizontalLine.LabelStyle.Rotation = 0;
+        PlotLine.HorizontalLine.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
+        PlotLine.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
     }
 
     /// <summary>

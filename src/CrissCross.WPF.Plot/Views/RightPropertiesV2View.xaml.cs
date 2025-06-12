@@ -26,9 +26,7 @@ public partial class RightPropertiesV2View
         this.WhenActivated(d =>
         {
             DataContext = ViewModel = new();
-            ElementBinding1(d);
+            this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(d);
         });
     }
-
-    private void ElementBinding1(CompositeDisposable d) => this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(d);
 }

@@ -30,23 +30,49 @@ public partial class StreamerUI : RxObject, IPlottableUI
     private int _mode;
     [Reactive]
     private int _numberPointsPlotted;
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
+    private uint _nSamples = 1;
+    private int _fs = 1;
+    private int _numberPointsPlottedSaved;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamerUI" /> class.
+    /// Initializes a new instance of the <see cref="StreamerUI"/> class.
     /// </summary>
-    /// <param name="plot">if set to <c>true</c> [paused].</param>
+    /// <param name="plot">The plot.</param>
     /// <param name="observable">The observable.</param>
+    /// <param name="fs">The fs.</param>
+    /// <param name="nSamples">The n samples.</param>
+    /// <param name="nPointsPlotted">The n points plotted.</param>
     /// <param name="color">The color.</param>
     /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
     /// <param name="fixedPoints">if set to <c>true</c> [fixed points].</param>
-    public StreamerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false, bool fixedPoints = false)
+    /// <exception cref="System.IndexOutOfRangeException">nSamples must be greater than 0.</exception>
+    public StreamerUI(
+                        WpfPlot plot,
+                        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
+                        int fs,
+                        uint nSamples,
+                        int nPointsPlotted,
+                        string color,
+                        bool autoscale = true,
+                        bool manualscale = false,
+                        bool fixedPoints = false)
     {
         ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
 
-        NumberPointsPlotted = 1024;
+        if (nSamples <= 0)
+        {
+            throw new IndexOutOfRangeException("nSamples must be greater than 0");
+        }
+
+        _nSamples = nSamples;
+        _fs = fs;
+        _numberPointsPlottedSaved = nPointsPlotted;
+
         Plot = plot;
 
         CreateStreamer(color);
@@ -92,37 +118,33 @@ public partial class StreamerUI : RxObject, IPlottableUI
     /// </summary>
     /// <param name="observable">The observable.</param>
     public void UpdateStreamerFixedPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
-        observable.ObserveOn(RxApp.MainThreadScheduler)
-            .Subscribe(data =>
+        observable
+        .ObserveOn(RxApp.TaskpoolScheduler)
+        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Y != null && d.X != null && d.Y.Count > 0 && d.X.Count > 0 && d.Y.Count == d.X.Count)
+        .Retry()
+        .ObserveOn(RxApp.MainThreadScheduler)
+        .Subscribe(d =>
+        {
+            var values = new List<double>(d.Y!).Take(_numberPointsPlottedSaved).ToArray();
+
+            PlotLine!.AddRange(values!);
+            PlotLine!.ManageAxisLimits = false;
+
+            //// UPDATE IF IS NOT PAUSED
+            if (!ChartSettings.IsPaused)
             {
-                if (string.IsNullOrEmpty(data.Name) || data.Y == null || data.X == null)
+                try
                 {
-                    return;
+                    Plot.Refresh();
                 }
-
-                if (data.Y.Count == 0 || data.X.Count == 0)
+                catch
                 {
-                    return;
                 }
+            }
 
-                // INSERT DATA INTO STREAMER
-                if (data.Y != null && data.Y.Count == data.X.Count && data.Name != null)
-                {
-                    var values = new List<double>(data.Y).Take(NumberPointsPlotted).ToArray();
-
-                    PlotLine!.AddRange(values!);
-
-                    // UPDATE X AXIS
-                    if (ManualScale || AutoScale)
-                    {
-                        ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, PlotLine.Axes.XAxis);
-                        ////Plot.Plot.Axes.SetLimitsX(doublelimits, doublenow, PlotLine.Axes.XAxis);
-                    }
-                }
-
-                // UPDATE NAME
-                ChartSettings.ItemName = Name!;
-            }).DisposeWith(Disposables);
+            // UPDATE NAME
+            ChartSettings.ItemName = d.Name;
+        }).DisposeWith(Disposables);
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.

@@ -42,11 +42,49 @@ public partial class LiveChart
     public double LegendWidth
     {
         get => (double)GetValue(LegendWidthProperty);
-        set
-        {
-            SetValue(LegendWidthProperty, value);
-            RightLegend.Width = value;
-        }
+        set => SetValue(LegendWidthProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width ater the legend.
+    /// </summary>
+    public int NSamples
+    {
+        get => (int)GetValue(NSamplesProperty);
+        set => SetValue(NSamplesProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width ater the legend.
+    /// </summary>
+    public int Frequency
+    {
+        get => (int)GetValue(FrequencyProperty);
+        set => SetValue(FrequencyProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the observables with time stamp.
+    /// </summary>
+    /// <value>
+    /// The observables with time stamp.
+    /// </value>
+    public string TitleContent
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the observables with time stamp.
+    /// </summary>
+    /// <value>
+    /// The observables with time stamp.
+    /// </value>
+    public LegendPosition LegendPosition
+    {
+        get => (LegendPosition)GetValue(LegendPositionProperty);
+        set => SetValue(LegendPositionProperty, value);
     }
 
     /// <summary>
