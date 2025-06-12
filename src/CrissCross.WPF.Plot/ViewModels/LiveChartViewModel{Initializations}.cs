@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using CrissCross;
 using ReactiveMarbles.ObservableEvents;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 
@@ -90,8 +91,8 @@ public partial class LiveChartViewModel : RxObject
         var i = 0;
         foreach (var plotLine in data)
         {
-            // maximum ploted lines : 9
-            if (i >= 9)
+            // maximum ploted lines : 16
+            if (i >= 16)
             {
                 break;
             }
@@ -99,39 +100,17 @@ public partial class LiveChartViewModel : RxObject
             // create the plot line
             var newMyItem = createPlotUI(plotLine);
 
-            IPlottable? line = null;
-            IPlottableUI? lineUI = null;
-
             // Configure axis for each plot
-            if (newMyItem is SignalUI signal)
+            IPlottable? line = newMyItem switch
             {
-                lineUI = (IPlottableUI)newMyItem;
-                line = signal.PlotLine!;
-            }
-            else if (newMyItem is ScatterUI scatter)
-            {
-                lineUI = (IPlottableUI)newMyItem;
-                line = scatter.PlotLine!;
-            }
-            else if (newMyItem is DataLoggerUI logger)
-            {
-                lineUI = (IPlottableUI)newMyItem;
-                line = logger.PlotLine!;
-            }
-            else if (newMyItem is SignalXY_UI signalXY)
-            {
-                lineUI = (IPlottableUI)newMyItem;
-                line = signalXY.PlotLine!;
-            }
-            else if (newMyItem is StreamerUI streamer)
-            {
-                lineUI = (IPlottableUI)newMyItem;
-                line = streamer.PlotLine!;
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(newMyItem));
-            }
+                SignalUI signal => signal.PlotLine!,
+                ScatterUI scatter => scatter.PlotLine!,
+                DataLoggerUI logger => logger.PlotLine!,
+                SignalXY_UI signalXY => signalXY.PlotLine!,
+                StreamerUI streamer => streamer.PlotLine!,
+                _ => throw new ArgumentNullException(nameof(newMyItem)),
+            };
+            var lineUI = (IPlottableUI?)newMyItem;
 
             // axis visibility
             if (getYAxis(plotLine) is IObservable<int> observable)
@@ -223,7 +202,7 @@ public partial class LiveChartViewModel : RxObject
         InitializeGenericPlotLines(
         data: observables,
         getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new SignalUI(WpfPlot1vm!, observable: obs, coordinatesObs: MouseCoordinatesObservable, SetColorLegend(PlotLinesCollectionUI!), fixedPoints: UseFixedNumberOfPoints) { NumberPointsPlotted = NumberPointsPlotted },
+        createPlotUI: obs => new SignalUI(WpfPlot1vm!, observable: obs, coordinatesObs: MouseCoordinatesObservable, SetColorLegend(PlotLinesCollectionUI!), fixedPoints: this.WhenAnyValue(x => x.UseFixedNumberOfPoints), numberPointsPlotted: this.WhenAnyValue(x => x.NumberPointsPlotted)),
         isXAxisDateTime: true);
 
     /// <summary>
@@ -271,14 +250,16 @@ public partial class LiveChartViewModel : RxObject
         isXAxisDateTime: false);
 
     /// <summary>
-    /// Initializes the plot lines.
+    /// Initializes the lines for signal observables points.
     /// </summary>
-    /// <param name="observables">The data.</param>
-    public void InitializeLinesForSignalObservablesPoints(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> observables) =>
+    /// <param name="observables">The observables.</param>
+    /// <param name="fs">The fs.</param>
+    /// <param name="nSamples">The n samples.</param>
+    public void InitializeLinesForSignalObservablesPoints(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> observables, int fs, uint nSamples) =>
         InitializeGenericPlotLines(
         data: observables,
         getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new StreamerUI(plot: WpfPlot1vm!, observable: obs, color: SetColorLegend(PlotLinesCollectionUI!)),
+        createPlotUI: obs => new StreamerUI(plot: WpfPlot1vm!, fs: fs, nSamples: nSamples, nPointsPlotted: NumberPointsPlotted, observable: obs, color: SetColorLegend(PlotLinesCollectionUI!)),
         isXAxisDateTime: false);
 
     /// <summary>
@@ -345,10 +326,7 @@ public partial class LiveChartViewModel : RxObject
 
     private void Initializations2()
     {
-        ////InitializeDraggableAxisRules();
         InitializeMouseObservable();
-
-        // InitializeControlMenu();
         WpfPlot1vm?.Refresh();
     }
 

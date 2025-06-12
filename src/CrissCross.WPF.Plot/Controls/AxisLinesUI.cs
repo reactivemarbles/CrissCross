@@ -65,13 +65,11 @@ public partial class AxisLinesUI : RxObject
         {
             CreateHorizontalLine();
             UpdateAxisLineSubscription(observable);
-            ////ChartSettings.AppearanceSubsriptions(Plot, AxisLine!);
         }
         else if (orientation == "Vertical")
         {
             CreateVerticalLine();
             UpdateAxisLineSubscription(observable);
-            ////AppearanceSubsriptions();
         }
     }
 

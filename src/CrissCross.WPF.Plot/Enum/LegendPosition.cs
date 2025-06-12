@@ -16,5 +16,9 @@ public enum LegendPosition
     /// <summary>
     /// The right.
     /// </summary>
-    Right
+    Right,
+    /// <summary>
+    /// The left.
+    /// </summary>
+    Left
 }

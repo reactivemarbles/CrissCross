@@ -30,6 +30,8 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
     private int _mode;
     [Reactive]
     private int _numberPointsPlotted;
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SignalXY_UI"/> class.

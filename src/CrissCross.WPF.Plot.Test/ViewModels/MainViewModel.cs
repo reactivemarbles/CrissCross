@@ -23,8 +23,14 @@ namespace CrissCross.WPF.Plot.Test.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            LiveChartSubject = [.. Enumerable.Range(0, 4).Select(_ => new Subject<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>())];
-            YAxisNames = (new List<string> { "[Series 0]", "[Series 1]", "[Series 2]", "[Series 3]" }, new List<string> { "#377eb8", "#ff7f00", "#377eb8", "#ff7f00" });
+            YAxisNames = (new List<string> { "[Series 0]", "[Series 1]", "[Series 2]", "[Series 3]", "[Series 4]", "[Series 5]" }, new List<string> { "#377eb8", "#ff7f00", "#377eb8", "#ff7f00", "#ff7f00", "#377eb8" });
+
+            var numberAxis = YAxisNames.yNames.Count;
+            LiveChartSubject = [.. Enumerable.Range(0, numberAxis).Select(_ => new Subject<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>())];
+            if (YAxisNames.yNames.Count != YAxisNames.hexColors.Count)
+            {
+                throw new InvalidOperationException("Y Axis number should match colors number");
+            }
 
             this.WhenAnyValue(vm => vm.LiveChartViewModel)
                 .Subscribe(liveChart =>
@@ -32,8 +38,8 @@ namespace CrissCross.WPF.Plot.Test.ViewModels
                     liveChart?.ClearAxisLines();
 
                     // Generate some random data for the chart using observables
-                    Observable.Interval(TimeSpan.FromSeconds(1))
-                        .Select(_ => (Name: $"Series {_ % 4}", Value: new List<double> { new Random().NextDouble() * 100 }, DateTime: new List<double> { DateTime.Now.Ticks }, Axis: (int)(_ % 4)))
+                    Observable.Interval(TimeSpan.FromMilliseconds(1000.0 / numberAxis))
+                        .Select(_ => (Name: $"Series {_ % numberAxis}", Value: new List<double> { new Random().NextDouble() * 100 }, DateTime: new List<double> { DateTime.Now.Ticks }, Axis: (int)(_ % numberAxis)))
                         .Subscribe(data =>
                         {
                             var subject = LiveChartSubject.ElementAt(data.Axis);

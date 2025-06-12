@@ -20,9 +20,6 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class DataLoggerUI : RxObject, IPlottableUI
 {
-    private List<double> _data = [];
-    private List<double> _time = [];
-
     [Reactive]
     private ChartObjects _chartSettings;
     [Reactive]
@@ -33,6 +30,8 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
     private int _mode;
     [Reactive]
     private int _numberPointsPlotted;
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataLoggerUI" /> class.
@@ -52,9 +51,6 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         Plot = plot;
         CreateDataLogger(color);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
-
-        // TODO: Add with timestamp
-        ////UpdateDataLogger(observable);
     }
 
     /// <summary>
@@ -100,9 +96,6 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
     /// <param name="color">color.</param>
     public void CreateDataLogger(string color)
     {
-        double[] y = [0];
-        double[] x = [0];
-
         PlotLine = Plot.Plot.Add.DataLogger();
         PlotLine.ViewSlide();
         PlotLine.ManageAxisLimits = false;
@@ -114,56 +107,48 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
     /// Updates the stream.
     /// </summary>
     /// <param name="observable">The observable.</param>
-    public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) =>
-        observable
-            .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
-            .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
-            .Subscribe(data =>
+    public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) => observable
+        .ObserveOn(RxApp.TaskpoolScheduler)
+        .Select(data =>
+        {
+            var nPoints = Math.Min(data.nPoints, 100_000_000);
+            return (data, nPoints);
+        })
+        .Where(d => !string.IsNullOrEmpty(d.data.Name) && d.data.Value != null && d.data.Value.Count > 0 && d.nPoints > 0)
+        .Retry()
+        .ObserveOn(RxApp.MainThreadScheduler)
+        .Subscribe(d =>
+        {
+            if (PlotLine!.Data.Coordinates.Count >= d.nPoints)
             {
-                // CHECKS
-                if (string.IsNullOrEmpty(data.Name) || data.Value == null || data.nPoints <= 0)
-                {
-                    return;
-                }
+                PlotLine.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - d.nPoints);
+            }
 
-                if (data.Value.Count == 0)
-                {
-                    return;
-                }
+            try
+            {
+                PlotLine!.Add(d.data.Value!.ToArray());
+            }
+            catch
+            {
+            }
 
-                var nPoints = Math.Min(data.nPoints, 100_000_000);
+            PlotLine!.ManageAxisLimits = false;
 
-                if (PlotLine!.Data.Coordinates.Count >= nPoints)
-                {
-                    PlotLine.Data.Coordinates.Clear();
-                    _data.Clear();
-                }
-
-                // INSERT DATA INTO SIGNALXY
-                if (data.Value != null && data.Name != null)
-                {
-                    var values = new List<double>(data.Value).ToArray();
-
-                    _data.AddRange(values);
-
-                    PlotLine!.Add(values);
-
-                    // UPDATE X AXIS
-                    if (ManualScale || AutoScale)
-                    {
-                        Plot.Plot.Axes.SetLimitsX(_data.Count - 10000, _data.Count, PlotLine.Axes.XAxis);
-                    }
-                }
-
-                // UPDATE IF IS NOT PAUSED
-                if (!ChartSettings.IsPaused)
+            //// UPDATE IF IS NOT PAUSED
+            if (!ChartSettings.IsPaused)
+            {
+                try
                 {
                     Plot.Refresh();
                 }
+                catch
+                {
+                }
+            }
 
-                // UPDATE NAME
-                ChartSettings.ItemName = data.Name;
-            }).DisposeWith(Disposables);
+            // UPDATE NAME
+            ChartSettings.ItemName = d.data.Name;
+        }).DisposeWith(Disposables);
 
     /// <summary>
     /// Releases unmanaged and - optionally - managed resources.

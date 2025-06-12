@@ -20,26 +20,21 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class SignalUI : RxObject, IPlottableUI
 {
-    ////private List<double> _data = [];
     private readonly List<double> _time = [];
-
     private readonly bool _fixedPoints;
 
     [Reactive]
     private ChartObjects _chartSettings;
-
     [Reactive]
     private bool _autoScale;
-
     [Reactive]
     private bool _manualScale;
-
     [Reactive]
     private int _mode;
-
     [Reactive]
     private int _numberPointsPlotted;
-
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
     [Reactive]
     private bool _ticks;
 
@@ -53,6 +48,7 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
     /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
     /// <param name="fixedPoints">if set to <c>true</c> [fixed points].</param>
+    /// <param name="numberPointsPlotted">The number points plotted.</param>
     /// <param name="ticks">if set to <c>true</c> [ticks].</param>
     public SignalUI(
         WpfPlot plot,
@@ -61,13 +57,15 @@ public partial class SignalUI : RxObject, IPlottableUI
         string color,
         bool autoscale = true,
         bool manualscale = false,
-        bool fixedPoints = false,
+        IObservable<bool>? fixedPoints = null,
+        IObservable<int>? numberPointsPlotted = null,
         bool ticks = true)
     {
         ChartSettings = new(color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
-        _fixedPoints = fixedPoints;
+        fixedPoints?.Subscribe(x => UseFixedNumberOfPoints = x).DisposeWith(Disposables);
+        numberPointsPlotted?.Subscribe(x => NumberPointsPlotted = x).DisposeWith(Disposables);
 
         _ticks = ticks;
         Plot = plot;
@@ -145,6 +143,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         {
             var now = DateTime.Now;
             double[] datetime = [];
+
             if (_ticks)
             {
                 // option 2: with ticks
@@ -181,7 +180,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         .Subscribe(d =>
         {
             _time.AddRange(d.uniqueTimeValues);
-            if (_fixedPoints && PlotLine!.Data.Coordinates.Count > NumberPointsPlotted)
+            if (UseFixedNumberOfPoints && PlotLine!.Data.Coordinates.Count > NumberPointsPlotted)
             {
                 PlotLine!.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - NumberPointsPlotted);
             }

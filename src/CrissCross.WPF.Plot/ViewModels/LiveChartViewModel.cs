@@ -10,7 +10,6 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
 using CP.Reactive;
-using CrissCross;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -67,10 +66,7 @@ public partial class LiveChartViewModel : RxObject
         }
 
         // INITIALIZATION
-        ////DataUI = [];
-        ////ScatterCollectionUI = [];
         PlotLinesCollectionUI = [];
-        ////DataLoggerCollectionUI = [];
         ControlMenu = [];
         AxisLinesUI = [];
         CrosshairCollection = [];
@@ -122,6 +118,23 @@ public partial class LiveChartViewModel : RxObject
         LinePropCommand = ReactiveCommand.Create(() =>
         {
             RightPropertyVisibility = Visibility.Collapsed;
+        }).DisposeWith(Disposables);
+
+        // update plottables when this changes
+        this.WhenAnyValue(x => x.NumberPointsPlotted).Subscribe(x =>
+        {
+            foreach (var item in PlotLinesCollectionUI)
+            {
+                item.NumberPointsPlotted = x;
+            }
+        }).DisposeWith(Disposables);
+
+        this.WhenAnyValue(x => x.UseFixedNumberOfPoints).Subscribe(x =>
+        {
+            foreach (var item in PlotLinesCollectionUI)
+            {
+                item.UseFixedNumberOfPoints = x;
+            }
         }).DisposeWith(Disposables);
     }
 
@@ -434,29 +447,6 @@ public partial class LiveChartViewModel : RxObject
             PlotLinesCollectionUI.Clear();
         }
 
-        ////// SIGNAL
-        ////if (ScatterCollectionUI?.Count > 0)
-        ////{
-        ////    foreach (var element in ScatterCollectionUI)
-        ////    {
-        ////        element.Dispose();
-        ////    }
-
-        ////    ScatterCollectionUI.Clear();
-        ////}
-
-        ////// DATA LOGGER
-        ////if (DataLoggerCollectionUI?.Count > 0)
-        ////{
-        ////    foreach (var element in DataLoggerCollectionUI)
-        ////    {
-        ////        element.Dispose();
-        ////        element.ChartSettings.Dispose();
-        ////    }
-
-        ////    DataLoggerCollectionUI.Clear();
-        ////}
-
         if (ControlMenu?.Count > 0)
         {
             foreach (var element in ControlMenu)
@@ -520,22 +510,30 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm?.Refresh();
     }
 
-    private static string SetColorLegend(ReactiveList<IPlottableUI> legend)
+    private static string SetColorLegend<T>(IEnumerable<T> legend)
     {
         List<string> colors =
                     [
-                        "Blue", // "#377eb8", //// blue
-                        "Green", // "#4daf4a", //// green
-                        "Violet", // "#984ea3", //// violet
-                        "Orange", // "#ff7f00", //// orange
-                        "Yellow", // #ffff33", //// yellow
-                        "Brown", // #a65628", //// brown
-                        "Olive", // #999999", //// grey
-                        "Gold", // #377eb8" //// light blue
+                        "Green",
+                        "Blue",
+                        "Yellow",
+                        "Magenta",
+                        "Cyan",
+                        "Orange",
+                        "Purple",
+                        "White",
+                        "Gold",
+                        "Crimson",
+                        "DeepPink",
+                        "DodgerBlue",
+                        "GreenYellow",
+                        "BlueViolet",
+                        "Gray",
+                        "Red"
                     ];
 
         // add data
-        var n = legend!.Count % colors.Count;
+        var n = (int)(legend.Count() % colors.Count);
         return colors[n];
     }
 
@@ -580,8 +578,6 @@ public partial class LiveChartViewModel : RxObject
 
     private void HideLeftAxis(in Color color)
     {
-        ////WpfPlot1vm?.Plot.Axes.AddLeftAxis();
-        ////WpfPlot1vm?.Plot.Axes.Remove(WpfPlot1vm.Plot.Axes.Left);
         var l = WpfPlot1vm?.Plot.Axes.Left;
         var backColour = Color.FromHex("#252526");
         l!.Label.ForeColor = backColour;
@@ -598,7 +594,6 @@ public partial class LiveChartViewModel : RxObject
     {
         var now = DateTime.Now;
         var doublenow = now.ToOADate();
-        ////DateTime limits = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute - 1, now.Second);
         var limits = now.Add(TimeSpan.FromMinutes(-60));
         var doublelimits = limits.ToOADate();
         WpfPlot1vm?.Plot.Axes.SetLimitsX(doublelimits, doublenow, XAxis1);

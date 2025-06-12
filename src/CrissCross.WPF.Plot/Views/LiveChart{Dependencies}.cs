@@ -27,6 +27,18 @@ public partial class LiveChart
         DependencyProperty.Register(nameof(NumberPointsPlotted), typeof(int), typeof(LiveChart), new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
 
     /// <summary>
+    /// The number points plotted property.
+    /// </summary>
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(nameof(TitleContent), typeof(string), typeof(LiveChart), new PropertyMetadata(" ", new(TitleCallback)));
+
+    /// <summary>
+    /// The number points plotted property.
+    /// </summary>
+    public static readonly DependencyProperty LegendPositionProperty =
+        DependencyProperty.Register(nameof(LegendPosition), typeof(LegendPosition), typeof(LiveChart), new PropertyMetadata(LegendPosition.Top, new(LegendPositionCallback)));
+
+    /// <summary>
     /// RightWidth after legend.
     /// </summary>
     public static readonly DependencyProperty RightWidthProperty =
@@ -47,6 +59,18 @@ public partial class LiveChart
             typeof(double),
             typeof(LiveChart),
             new(new PropertyChangedCallback(LegendWidthCallback)));
+
+    /// <summary>
+    /// RightWidth after legend.
+    /// </summary>
+    public static readonly DependencyProperty NSamplesProperty =
+        DependencyProperty.Register(nameof(NSamples), typeof(int), typeof(LiveChart), new PropertyMetadata(2024, new(NSamplesCallback)));
+
+    /// <summary>
+    /// RightWidth after legend.
+    /// </summary>
+    public static readonly DependencyProperty FrequencyProperty =
+        DependencyProperty.Register(nameof(Frequency), typeof(int), typeof(LiveChart), new PropertyMetadata(32000, new(FrequencyCallback)));
 
     /// <summary>
     /// Y Axis Data 2 Property.
@@ -130,12 +154,44 @@ public partial class LiveChart
         }
     }
 
+    private static void NSamplesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is int nSamples)
+        {
+            livechart.NSamples = nSamples;
+        }
+    }
+
+    private static void FrequencyCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is int fs)
+        {
+            livechart.Frequency = fs;
+        }
+    }
+
     private static void NumberPointsPlottedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is LiveChart livechart && e.NewValue is int numberOfSamples)
         {
             livechart.NumberPointsPlotted = numberOfSamples;
             livechart.ViewModel.NumberPointsPlotted = numberOfSamples;
+        }
+    }
+
+    private static void TitleCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is string title)
+        {
+            livechart.ViewModel.Title = title;
+        }
+    }
+
+    private static void LegendPositionCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart && e.NewValue is LegendPosition position)
+        {
+            livechart.ViewModel.LegendPosition = position;
         }
     }
 
