@@ -32,9 +32,9 @@ public partial class MainWindowViewModel : RxObject
         NavigationModels = [];
         NavigationModels.AddRange(
         [
-            new NavigationModel(null, NavigationModels) { IsExpander = true, Icon = new SymbolIcon(SymbolRegular.LineHorizontal320) },
-            new NavigationModel(typeof(MainViewModel), NavigationModels) { Name = "Main", Icon = new SymbolIcon(SymbolRegular.Home20), IsSelected = true },
-            new NavigationModel(typeof(AllControlsViewModel), NavigationModels) { Name = "All Controls", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
+            new NavigationModel(null, NavigationModels, MainWindow.Navigation) { IsExpander = true, Icon = new SymbolIcon(SymbolRegular.LineHorizontal320) },
+            new NavigationModel(typeof(MainViewModel), NavigationModels, MainWindow.Navigation) { Name = "Main", Icon = new SymbolIcon(SymbolRegular.Home20), IsSelected = true },
+            new NavigationModel(typeof(AllControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "All Controls", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
         ]);
 
         // Register ViewModels and Views

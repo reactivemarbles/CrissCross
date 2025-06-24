@@ -15,6 +15,7 @@ public partial class NavigationModel : RxObject
 {
     private readonly Type? _viewModel;
     private readonly ICollection<NavigationModel> _navigationModels;
+    private readonly IUseHostedNavigation _navigationService;
 
     /// <summary>
     /// Gets or sets the name.
@@ -61,17 +62,22 @@ public partial class NavigationModel : RxObject
     [Reactive]
     private Visibility _visibility = Visibility.Visible;
 
+    [Reactive]
+    private object? _parameter;
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationModel"/> class.
+    /// Initializes a new instance of the <see cref="NavigationModel" /> class.
     /// </summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="navigationModels">The navigation models.</param>
+    /// <param name="navigationService">The navigation service.</param>
     /// <exception cref="System.ArgumentNullException">navigationModels.</exception>
-    public NavigationModel(Type? viewModel, ICollection<NavigationModel> navigationModels)
+    public NavigationModel(Type? viewModel, ICollection<NavigationModel> navigationModels, IUseHostedNavigation? navigationService = null)
     {
         InitializeOAPH();
         _viewModel = viewModel;
         _navigationModels = navigationModels ?? throw new ArgumentNullException(nameof(navigationModels));
+        _navigationService = navigationService ?? this;
     }
 
     /// <summary>
@@ -113,7 +119,15 @@ public partial class NavigationModel : RxObject
             item.IsSelected = false;
         }
 
-        this.NavigateToView(_viewModel, NavigationHost);
+        if (_navigationService is BreadcrumbBar breadcrumbBar)
+        {
+            breadcrumbBar.NavigateTo(_viewModel, parameter: Parameter, breadcrumbItemContent: Name);
+        }
+        else
+        {
+            _navigationService.NavigateToView(_viewModel, hostName: NavigationHost, parameter: Parameter);
+        }
+
         IsSelected = true;
     }
 }
