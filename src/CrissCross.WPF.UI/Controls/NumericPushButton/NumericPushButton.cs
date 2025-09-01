@@ -136,6 +136,16 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             typeof(NumericPushButton),
             new PropertyMetadata(0d, UpdateValue));
 
+    /// <summary>
+    /// The use criss cross theme manager property.
+    /// </summary>
+    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
+        DependencyProperty.Register(
+            nameof(UseCrissCrossThemeManager),
+            typeof(bool),
+            typeof(NumericPushButton),
+            new PropertyMetadata(true, UpdateUseCrissCross));
+
     private readonly DispatcherTimer _errrorTimer;
     private readonly DispatcherTimer _isEnabledFalseTimer;
     private readonly ReplaySubject<(bool UserChanged, double Value)> _valueD = new(1);
@@ -213,6 +223,20 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public event EventHandler<(bool, double)>? ValueChanged;
 
     /// <summary>
+    /// Gets or sets a value indicating whether [use criss cross theme manager].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [use criss cross theme manager]; otherwise, <c>false</c>.
+    /// </value>
+    [Description("Gets or sets a value indicating whether to use CrissCross Theme Manager or not")]
+    [Category("Common")]
+    public bool UseCrissCrossThemeManager
+    {
+        get => (bool)GetValue(UseCrissCrossThemeManagerProperty);
+        set => SetValue(UseCrissCrossThemeManagerProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets how many decimal places to visualize.
     /// </summary>
     [Description("Gets or sets how many decimal places to visualize")]
@@ -220,7 +244,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public int DecimalPlaces
     {
         get => (int)GetValue(DecimalPlacesProperty);
-
         set => SetValue(DecimalPlacesProperty, value);
     }
 
@@ -233,7 +256,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public string ErrorText
     {
         get => (string)GetValue(ErrorTextProperty);
-
         set => SetValue(ErrorTextProperty, value);
     }
 
@@ -246,7 +268,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public Visibility ErrorVisible
     {
         get => (Visibility)GetValue(ErrorVisibleProperty);
-
         set => SetValue(ErrorVisibleProperty, value);
     }
 
@@ -259,7 +280,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public Brush MaskColor
     {
         get => (Brush)GetValue(MaskColorProperty);
-
         set => SetValue(MaskColorProperty, value);
     }
 
@@ -271,7 +291,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public double? Maximum
     {
         get => (double?)GetValue(MaximumProperty);
-
         set => SetValue(MaximumProperty, value);
     }
 
@@ -283,7 +302,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public double? Minimum
     {
         get => (double?)GetValue(MinimumProperty);
-
         set => SetValue(MinimumProperty, value);
     }
 
@@ -294,7 +312,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public ReactiveCommand<Unit, Unit> ShowKeypad
     {
         get => (ReactiveCommand<Unit, Unit>)GetValue(ShowKeypadProperty);
-
         set => SetValue(ShowKeypadProperty, value);
     }
 
@@ -306,7 +323,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public string Units
     {
         get => (string)GetValue(UnitsProperty);
-
         set => SetValue(UnitsProperty, value);
     }
 
@@ -319,7 +335,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public bool UnitsOnNewLine
     {
         get => (bool)GetValue(UnitsOnNewLineProperty);
-
         set => SetValue(UnitsOnNewLineProperty, value);
     }
 
@@ -332,7 +347,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public bool UseSeperateEditValue
     {
         get => (bool)GetValue(UseSeperateEditValueProperty);
-
         set => SetValue(UseSeperateEditValueProperty, value);
     }
 
@@ -350,7 +364,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public double Value
     {
         get => (double)GetValue(ValueProperty);
-
         set => SetValue(ValueProperty, value);
     }
 
@@ -362,7 +375,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public double EditedValue
     {
         get => (double)GetValue(EditedValueProperty);
-
         set => SetValue(EditedValueProperty, value);
     }
 
@@ -528,6 +540,20 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
         if (d is NumericPushButton sb && e.OldValue != e.NewValue)
         {
             sb.UpdateSpinButtonContent();
+        }
+    }
+
+    /// <summary>
+    /// Updates the use criss cross.
+    /// </summary>
+    /// <param name="d">The d.</param>
+    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+    private static void UpdateUseCrissCross(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NumericPushButton c && c._keypad is NumberPad keypad)
+        {
+            c.UseCrissCrossThemeManager = (bool)e.NewValue;
+            keypad.UseCrissCrossThemeManager = c.UseCrissCrossThemeManager;
         }
     }
 

@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:NumericPushButton}">
-                    <Grid
+                    <controls:Grid
                         Width="{TemplateBinding ActualWidth}"
                         Height="{TemplateBinding ActualHeight}"
                         HorizontalAlignment="Center"
@@ -18,7 +18,7 @@
                             RadiusX="{DynamicResource ControlCornerRadiusSize}"
                             RadiusY="{DynamicResource ControlCornerRadiusSize}"
                             StrokeThickness="{TemplateBinding BorderThickness}" />
-                        <Grid Margin="{TemplateBinding BorderThickness}">
+                        <controls:Grid Margin="{TemplateBinding BorderThickness}">
                             <controls:Button
                                 x:Name="btn"
                                 HorizontalAlignment="Stretch"
@@ -43,8 +43,8 @@
                                 TextAlignment="Center"
                                 TextWrapping="Wrap"
                                 Visibility="{TemplateBinding ErrorVisible}" />
-                        </Grid>
-                    </Grid>
+                        </controls:Grid>
+                    </controls:Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="btn" Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />

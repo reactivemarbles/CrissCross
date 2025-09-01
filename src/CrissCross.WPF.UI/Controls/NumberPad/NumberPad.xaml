@@ -17,12 +17,9 @@
     <Window.Background>
         <SolidColorBrush Opacity="0" Color="#00000000" />
     </Window.Background>
-    <Grid>
-        <Grid
-            x:Name="Mask"
-            Background="{Binding MaskColor}"
-            Opacity="0.1" />
-        <Grid
+    <controls:Grid>
+        <controls:Grid x:Name="Mask" Opacity="0.1" />
+        <controls:Grid
             x:Name="WGrid"
             Width="206"
             Height="366"
@@ -31,16 +28,16 @@
             VerticalAlignment="Top"
             Background="{DynamicResource ApplicationBackgroundBrush}"
             Opacity="1">
-            <StackPanel
+            <controls:StackPanel
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-                <Border
+                <controls:Border
                     Width="184"
                     Height="40"
                     BorderBrush="Black"
                     BorderThickness="1">
-                    <StackPanel
+                    <controls:StackPanel
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
@@ -55,7 +52,7 @@
                             SpinButtonPlacementMode="Hidden"
                             Text="0"
                             TextAlignment="Right" />
-                        <Label
+                        <controls:Label
                             x:Name="Unit"
                             Width="55"
                             VerticalAlignment="Center"
@@ -63,9 +60,9 @@
                             Content="Unit"
                             FontFamily="Tahoma"
                             FontSize="19" />
-                    </StackPanel>
-                </Border>
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                    </controls:StackPanel>
+                </controls:Border>
+                <controls:StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <controls:Button
                         Width="56"
                         Height="48"
@@ -101,8 +98,8 @@
                             Text="9"
                             TextDecorations="Underline" />
                     </controls:Button>
-                </StackPanel>
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                </controls:StackPanel>
+                <controls:StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <controls:Button
                         Width="56"
                         Height="48"
@@ -138,8 +135,8 @@
                             Text="6"
                             TextDecorations="Underline" />
                     </controls:Button>
-                </StackPanel>
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                </controls:StackPanel>
+                <controls:StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <controls:Button
                         Width="56"
                         Height="48"
@@ -175,8 +172,8 @@
                             Text="3"
                             TextDecorations="Underline" />
                     </controls:Button>
-                </StackPanel>
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                </controls:StackPanel>
+                <controls:StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <controls:Button
                         Width="56"
                         Height="48"
@@ -210,8 +207,8 @@
                             FontSize="19"
                             Text="-" />
                     </controls:Button>
-                </StackPanel>
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                </controls:StackPanel>
+                <controls:StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <controls:Button
                         x:Name="CancelBtn"
                         Width="56"
@@ -241,8 +238,8 @@
                         FontSize="48"
                         FontWeight="Bold"
                         Foreground="White" />
-                </StackPanel>
-            </StackPanel>
-        </Grid>
-    </Grid>
+                </controls:StackPanel>
+            </controls:StackPanel>
+        </controls:Grid>
+    </controls:Grid>
 </Window>
