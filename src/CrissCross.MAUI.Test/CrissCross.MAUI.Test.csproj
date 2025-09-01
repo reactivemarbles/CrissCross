@@ -54,8 +54,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(CoreNetVersion)" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.80" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.100" />
   </ItemGroup>
 
   <ItemGroup>

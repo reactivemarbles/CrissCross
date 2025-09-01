@@ -40,7 +40,10 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <ui:NumericPushButton Margin="5" UseSeperateEditValue="True" />
-            <ui:NumericPushButton Grid.Column="1" Margin="5" />
+            <ui:NumericPushButton
+                Grid.Column="1"
+                Margin="5"
+                UseCrissCrossThemeManager="False" />
 
             <ui:NumericPushButton Grid.Column="3" Margin="5" />
             <ui:NumericPushButton Grid.Row="1" Margin="5" />

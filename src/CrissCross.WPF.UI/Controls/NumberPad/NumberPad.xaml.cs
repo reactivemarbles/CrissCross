@@ -36,6 +36,16 @@ public partial class NumberPad : IDisposable
             typeof(NumberPad),
             new PropertyMetadata(Brushes.Black, UpdateMask));
 
+    /// <summary>
+    /// The use criss cross theme manager property.
+    /// </summary>
+    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
+        DependencyProperty.Register(
+            nameof(UseCrissCrossThemeManager),
+            typeof(bool),
+            typeof(NumberPad),
+            new PropertyMetadata(true));
+
     private readonly CompositeDisposable _disposables = [];
     private readonly DispatcherTimer _limitsTimer;
     private readonly double[] _margin = new double[4];
@@ -59,7 +69,11 @@ public partial class NumberPad : IDisposable
         }
 
         DataContext = this;
-        SystemThemeWatcher.Watch(this);
+        if (UseCrissCrossThemeManager)
+        {
+            SystemThemeWatcher.Watch(this);
+        }
+
         InitializeComponent();
         Unit.Content = _owner.Units;
         _owner.IsEnabled = false;
@@ -118,9 +132,25 @@ public partial class NumberPad : IDisposable
     /// Gets or sets the color of the mask.
     /// </summary>
     /// <value>The color of the mask.</value>
+    [Description("Sets MaskColor of the Keypad")]
+    [Category("Brush")]
     public Brush MaskColor
     {
         get => (Brush)GetValue(MaskColorProperty); set => SetValue(MaskColorProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether [use criss cross theme manager].
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if [use criss cross theme manager]; otherwise, <c>false</c>.
+    /// </value>
+    [Description("Gets or sets a value indicating whether to use CrissCross Theme Manager or not")]
+    [Category("Common")]
+    public bool UseCrissCrossThemeManager
+    {
+        get => (bool)GetValue(UseCrissCrossThemeManagerProperty);
+        set => SetValue(UseCrissCrossThemeManagerProperty, value);
     }
 
     /// <summary>
@@ -213,7 +243,6 @@ public partial class NumberPad : IDisposable
         if (value > _owner.Maximum || value < _owner.Minimum)
         {
             _limitsTimer.Start();
-            ////Value.Background = Brushes.Orange;
             Accept.IsEnabled = false;
         }
 
