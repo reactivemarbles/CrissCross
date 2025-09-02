@@ -42,9 +42,9 @@ public partial class NumberPad : IDisposable
     public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
         DependencyProperty.Register(
             nameof(UseCrissCrossThemeManager),
-            typeof(bool),
+            typeof(bool?),
             typeof(NumberPad),
-            new PropertyMetadata(true));
+            new PropertyMetadata(null, UpdateTheme));
 
     private readonly CompositeDisposable _disposables = [];
     private readonly DispatcherTimer _limitsTimer;
@@ -69,10 +69,6 @@ public partial class NumberPad : IDisposable
         }
 
         DataContext = this;
-        if (UseCrissCrossThemeManager)
-        {
-            SystemThemeWatcher.Watch(this);
-        }
 
         InitializeComponent();
         Unit.Content = _owner.Units;
@@ -147,9 +143,9 @@ public partial class NumberPad : IDisposable
     /// </value>
     [Description("Gets or sets a value indicating whether to use CrissCross Theme Manager or not")]
     [Category("Common")]
-    public bool UseCrissCrossThemeManager
+    public bool? UseCrissCrossThemeManager
     {
-        get => (bool)GetValue(UseCrissCrossThemeManagerProperty);
+        get => (bool?)GetValue(UseCrissCrossThemeManagerProperty);
         set => SetValue(UseCrissCrossThemeManagerProperty, value);
     }
 
@@ -191,6 +187,21 @@ public partial class NumberPad : IDisposable
         {
             c.MaskColor = (Brush)e.NewValue;
             c.Mask.Background = (Brush)e.NewValue;
+        }
+    }
+
+    private static void UpdateTheme(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NumberPad c && e.NewValue is bool useTheme)
+        {
+            if (useTheme)
+            {
+                SystemThemeWatcher.Watch(c);
+            }
+            else
+            {
+                c.Events().Loaded.Take(1).Subscribe(_ => SystemThemeWatcher.UnWatch(c)).DisposeWith(c._disposables);
+            }
         }
     }
 

@@ -7,6 +7,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// <summary>
 /// DatePickerViewModel.
 /// </summary>
-public partial class DatePickerViewModel : RxObject
-{
-}
+public partial class DatePickerViewModel : RxObject;

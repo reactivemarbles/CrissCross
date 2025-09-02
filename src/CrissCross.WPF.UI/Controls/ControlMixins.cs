@@ -11,6 +11,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>
 /// ControlMixins.
 /// </summary>
+#if NET6_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("windows10.0.17763.0")]
+#endif
 public static class ControlMixins
 {
     /// <summary>

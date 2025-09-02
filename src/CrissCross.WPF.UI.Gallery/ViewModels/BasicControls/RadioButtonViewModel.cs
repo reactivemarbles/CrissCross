@@ -7,6 +7,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// <summary>
 /// RadioButtonViewModel.
 /// </summary>
-public partial class RadioButtonViewModel : RxObject
-{
-}
+public partial class RadioButtonViewModel : RxObject;

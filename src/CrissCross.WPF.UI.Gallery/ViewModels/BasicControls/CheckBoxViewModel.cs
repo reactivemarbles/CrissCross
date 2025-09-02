@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// CheckBoxViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class CheckBoxViewModel : RxObject
-{
-}
+public partial class CheckBoxViewModel : RxObject;

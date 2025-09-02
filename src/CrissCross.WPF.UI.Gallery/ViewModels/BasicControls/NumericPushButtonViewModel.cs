@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// NumericPushButtonViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class NumericPushButtonViewModel : RxObject
-{
-}
+public partial class NumericPushButtonViewModel : RxObject;

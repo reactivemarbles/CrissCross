@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// TextBlockViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class TextBlockViewModel : RxObject
-{
-}
+public partial class TextBlockViewModel : RxObject;

@@ -161,7 +161,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     {
         DefaultStyleKey = typeof(NumericPushButton);
         ShowKeypad = ReactiveCommand.Create(() => { });
-        _keypadDisposable.Add(ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this) { MaskColor = MaskColor }));
+        _keypadDisposable.Add(ShowKeypad.Subscribe(_ => _keypad = new NumberPad(this) { MaskColor = MaskColor, UseCrissCrossThemeManager = UseCrissCrossThemeManager }));
         _isEnabledFalseTimer = new DispatcherTimer(
             TimeSpan.FromMilliseconds(100),
             DispatcherPriority.Normal,

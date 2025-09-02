@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// ToggleButtonViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class ToggleButtonViewModel : RxObject
-{
-}
+public partial class ToggleButtonViewModel : RxObject;

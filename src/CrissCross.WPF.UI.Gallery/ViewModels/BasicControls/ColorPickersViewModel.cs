@@ -4,8 +4,8 @@
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
-/// <summary>
-/// ButtonsViewModel.
-/// </summary>
-/// <seealso cref="CrissCross.RxObject" />
-public partial class ButtonsViewModel : RxObject;
+    /// <summary>
+    /// ColorPickersViewModel.
+    /// </summary>
+    /// <seealso cref="CrissCross.RxObject" />
+    public class ColorPickersViewModel : RxObject;

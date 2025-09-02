@@ -83,4 +83,10 @@ public partial class AllControlsViewModel : RxObject
     {
         MainWindow.Navigation?.NavigateTo<ToggleButtonViewModel>(breadcrumbItemContent: "ToggleButton");
     }
+
+    [ReactiveCommand]
+    private void ColorPicker()
+    {
+        MainWindow.Navigation?.NavigateTo<ColorPickersViewModel>(breadcrumbItemContent: "ColorPicker");
+    }
 }

@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// ImageViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class ImageViewModel : RxObject
-{
-}
+public partial class ImageViewModel : RxObject;
