@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionSettings", "Solutio
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
 		..\stylecop.json = ..\stylecop.json
-		..\Version.json = ..\Version.json
+		..\version.json = ..\version.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.MAUI", "CrissCross.MAUI\CrissCross.MAUI.csproj", "{2F15A5EB-738B-49D2-9ECF-283D560C69C4}"

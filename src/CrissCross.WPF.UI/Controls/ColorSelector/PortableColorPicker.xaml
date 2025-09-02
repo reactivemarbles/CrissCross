@@ -15,7 +15,6 @@
             <converters:BoolToInvertedBoolConverter x:Key="BoolToInvertedBoolConverter" />
             <converters:ColorToBrushConverter x:Key="ColorToBrushConverter" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Colors.xaml" />
                 <ResourceDictionary Source="Styles/ColorToggleButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -25,7 +24,6 @@
             Margin="0"
             Padding="0"
             Panel.ZIndex="0"
-            BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="2.5"
             RenderOptions.BitmapScalingMode="NearestNeighbor">
@@ -44,28 +42,21 @@
                 Background="{Binding Path=SelectedColor, ElementName=uc, Converter={StaticResource ColorToBrushConverter}}"
                 BorderThickness="0"
                 IsEnabled="{Binding Path=IsOpen, ElementName=popup, Converter={StaticResource BoolToInvertedBoolConverter}}"
-                Style="{StaticResource ColorToggleButtonStyle}" />
+                Style="{DynamicResource ColorToggleButtonStyle}" />
         </Border>
         <Popup
             Name="popup"
             IsOpen="{Binding Path=IsChecked, ElementName=toggleButton, Mode=TwoWay}"
             StaysOpen="False">
-            <Border
-                Background="White"
-                BorderBrush="Black"
-                BorderThickness="1">
-                <ui:StandardColorPicker
-                    x:Name="test"
-                    Width="200"
-                    Height="380"
-                    ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
-                    HintColorState="{Binding ElementName=uc, Path=HintColorState, Mode=TwoWay}"
-                    PickerType="{Binding ElementName=uc, Path=PickerType}"
-                    SecondColorState="{Binding ElementName=uc, Path=SecondColorState, Mode=TwoWay}"
-                    ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}"
-                    SmallChange="{Binding ElementName=uc, Path=SmallChange}"
-                    UseHintColor="{Binding ElementName=uc, Path=UseHintColor, Mode=TwoWay}" />
-            </Border>
+            <ui:StandardColorPicker
+                x:Name="test"
+                ColorState="{Binding ElementName=uc, Path=ColorState, Mode=TwoWay}"
+                HintColorState="{Binding ElementName=uc, Path=HintColorState, Mode=TwoWay}"
+                PickerType="{Binding ElementName=uc, Path=PickerType}"
+                SecondColorState="{Binding ElementName=uc, Path=SecondColorState, Mode=TwoWay}"
+                ShowAlpha="{Binding ElementName=uc, Path=ShowAlpha}"
+                SmallChange="{Binding ElementName=uc, Path=SmallChange}"
+                UseHintColor="{Binding ElementName=uc, Path=UseHintColor, Mode=TwoWay}" />
         </Popup>
     </Grid>
 </ui:DualPickerControlBase>

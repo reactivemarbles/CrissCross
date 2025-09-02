@@ -30,6 +30,7 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
     <AvaloniaVersion>11.3.4</AvaloniaVersion>
+    <SplatVersion>16.1.1</SplatVersion>
     <ReactiveUIVersion>20.4.1</ReactiveUIVersion>
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
     <WebViewVersion>1.0.3405.78</WebViewVersion>

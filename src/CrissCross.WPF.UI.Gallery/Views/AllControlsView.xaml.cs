@@ -37,6 +37,7 @@ public partial class AllControlsView
             this.BindCommand(ViewModel, vm => vm!.TextBlockCommand, v => v.TextBlock).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm!.TextBoxCommand, v => v.TextBox).DisposeWith(disposables);
             this.BindCommand(ViewModel, vm => vm!.ToggleButtonCommand, v => v.ToggleButton).DisposeWith(disposables);
+            this.BindCommand(ViewModel, vm => vm!.ColorPickerCommand, v => v.ColorPicker).DisposeWith(disposables);
         });
     }
 }

@@ -52,6 +52,7 @@ public partial class MainWindowViewModel : RxObject
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new TextBlockViewModel()).Register<IViewFor<TextBlockViewModel>>(static () => new TextBlockView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new TextBoxViewModel()).Register<IViewFor<TextBoxViewModel>>(static () => new TextBoxView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ToggleButtonViewModel()).Register<IViewFor<ToggleButtonViewModel>>(static () => new ToggleButtonView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorPickersViewModel()).Register<IViewFor<ColorPickersViewModel>>(static () => new ColorPickersView());
 
         Locator.CurrentMutable.SetupComplete();
     }

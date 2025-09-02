@@ -1,330 +1,383 @@
 # CrissCross
-A Navigation Framework for ReactiveUI based projects
+A navigation framework and set of UI components for ReactiveUI-based applications across WPF, Avalonia, MAUI, and WinForms.
 
-![CrissCross](https://github.com/reactivemarbles/CrissCross/blob/master/Images/CrissCrossIcon_256.png)
+![CrissCross](Images/CrissCrossIcon_256.png)
 
-[![CrissCross CI-Build](https://github.com/reactivemarbles/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml) 
+[![CrissCross CI-Build](https://github.com/reactivemarbles/CrissCross/actions/workflows/BuildOnly.yml/badge.svg)](https://github.com/ChrisPulman/CrissCross/actions/workflows/BuildOnly.yml)
 
-## What is CrissCross?
+## Overview
 
-CrissCross is a navigation framework for ReactiveUI based projects. It is designed to be used with ReactiveUI, but could be adapted to be used with any MVVM framework.
+CrissCross provides ViewModel-first navigation, hostable navigation surfaces, and a comprehensive WPF UI control set with a strong ReactiveUI focus. It promotes:
 
-## Why CrissCross?
+- ViewModel-first navigation using ReactiveUI’s IViewFor and WhenActivated
+- Host-based navigation via named ViewModelRoutedViewHost containers
+- Consistent navigation lifecycle notifications (WhenNavigating/WhenNavigatedTo/From)
+- Easy DI/IoC integration via Splat and Microsoft.Extensions.Hosting
+- A large library of fluent WPF UI controls and services (dialogs, snackbars, themes)
 
-CrissCross is designed to be a simple, lightweight, and easy to use navigation framework. It is designed to be used with ReactiveUI.   
+Supported platforms and packages:
 
-## How do I use CrissCross?
+- Core: CrissCross (ReactiveUI helpers and navigation abstractions)
+- WPF navigation host: CrissCross.WPF
+- WPF UI control library: CrissCross.WPF.UI
+- Avalonia host: CrissCross.Avalonia
+- .NET MAUI helpers: CrissCross.MAUI
+- WinForms host: CrissCross.WinForms
+- WPF WebView2 overlay host: CrissCross.WPF.WebView2
+- WPF Plot control suite: CrissCross.WPF.Plot
 
-### Step 1: Install CrissCross
+NuGet packages:
 
-CrissCross is available on NuGet. You can install it using the NuGet Package Manager:
+- CrissCross: ![Nuget](https://img.shields.io/nuget/v/CrissCross) ![Nuget](https://img.shields.io/nuget/dt/CrissCross)
+- WPF: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF)
+- WPF UI: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.UI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.UI)
+- Avalonia: ![Nuget](https://img.shields.io/nuget/v/CrissCross.Avalonia) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.Avalonia)
+- MAUI: ![Nuget](https://img.shields.io/nuget/v/CrissCross.MAUI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.MAUI)
+- WinForms: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WinForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WinForms)
+- WPF WebView2: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.WebView2) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.WebView2)
+- WPF Plot: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.Plot) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.Plot)
 
-![Nuget](https://img.shields.io/nuget/v/CrissCross) ![Nuget](https://img.shields.io/nuget/dt/CrissCross)
+Note: Xamarin.Forms support exists in separate projects but for new apps prefer .NET MAUI.
 
-    Install-Package CrissCross
+---
 
-or ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF)
+## Core Concepts
 
-    Install-Package CrissCross.WPF
+CrissCross builds on ReactiveUI to provide ViewModel-first navigation:
 
-or ![Nuget](https://img.shields.io/nuget/v/CrissCross.XamForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.XamForms)
+- IRxObject: Base ViewModel type used throughout CrissCross
+- IViewFor<TViewModel>: ReactiveUI contract mapping VMs to Views
+- WhenActivated: ReactiveUI activation lifecycle for Views
+- ViewModelRoutedViewHost: Navigation host control that manages a navigation stack and view transitions
+- HostName: A host identifier (string) that allows targeting navigation to a specific host
+- Navigation lifecycle: WhenNavigating, WhenNavigatedTo, WhenNavigatedFrom via mixins/events
 
-    Install-Package CrissCross.XamForms
+Register your ViewModels and Views with Splat’s Locator or Microsoft.Extensions.DependencyInjection. CrissCross uses the locator to resolve Views for navigation targets.
 
-or ![Nuget](https://img.shields.io/nuget/v/CrissCross.MAUI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.MAUI)
+---
 
-    Install-Package CrissCross.MAUI
+## Quick Start (WPF)
 
-or ![Nuget](https://img.shields.io/nuget/v/CrissCross.Avalonia) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.Avalonia)
+1) Install packages
 
+- CrissCross
+- CrissCross.WPF
+- CrissCross.WPF.UI (for controls/themes)
 
-    Install-Package CrissCross.Avalonia
+2) Register ViewModels and Views
 
-or ![Nuget](https://img.shields.io/nuget/v/CrissCross.WinForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WinForms)
-
-    Install-Package CrissCross.WinForms
-
-
-### Step 2: Create a ViewModel
-
-Create a ViewModel that inherits from `RxObject`. This is the ViewModel that will be used for the MainWindow.
-
-```c#
-    public class MainWindowViewModel : RxObject
+```csharp
+public class AppBootstrapper : RxObject
+{
+    public AppBootstrapper()
     {
-        public MainWindowViewModel()
+        this.BuildComplete(() =>
         {
-            this.BuildComplete(() =>
-            {
-                // Do something when the IOC Container is built
-            });
-
-            // Setup the IOC Container
-            Locator.CurrentMutable.RegisterConstant<MainViewModel>(new());
+            // Example VM/View registrations using Splat
+            Locator.CurrentMutable.RegisterConstant(new MainViewModel());
             Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 
-            Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
+            Locator.CurrentMutable.RegisterConstant(new FirstViewModel());
             Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
-            
-            // Notify the application that the IOC Container that it is complete and ready to use.
+
             Locator.CurrentMutable.SetupComplete();
-        }
+        });
     }
+}
 ```
 
-### Step 3: Create a View
+3) Create a navigation host (NavigationWindow)
 
-Create a View that inherits from `NavigationWindow`. This is the View that will be used for the MainWindow.
-add xmlns:rxNav="https://github.com/reactivemarbles/CrissCross" to the Window inherits in XAML.
-Change Window to rxNav:NavigationWindow in XAML.
-Add x:TypeArguments="local:MainWindowViewModel"
-
-```c#
-    public partial class MainWindow : NavigationWindow<MainWindowViewModel>
+```csharp
+public partial class MainWindow : NavigationWindow<MainWindowViewModel>
+{
+    public MainWindow()
     {
-        public MainWindow()
+        InitializeComponent(); // Ensure x:Name is set on the Window (e.g., "mainWindow")
+
+        this.WhenActivated(d =>
         {
-            // Remember to set x:Name in XAML to "mainWindow"
-            InitializeComponent();
-            
-            this.WhenActivated(disposables =>
-            {
-                // Do something when the View is activated
+            // Bind back command, etc
+            NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack).DisposeWith(d);
 
-                // Configure the Navigation for the MainWindow
-                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack).DisposeWith(d);
-                
-                // Navigate to the MainViewModel
-                this.NavigateToView<MainViewModel>();
-            });
-        }
+            // Navigate to a start VM
+            this.NavigateToView<MainViewModel>();
+        });
     }
+}
 ```
 
-### Step 4: Create a ViewModel
+4) Navigate from a ViewModel
 
-Create a ViewModel that inherits from `RxObject`. This is the ViewModel that will be used for the MainView.
-
-```c#
-    public class MainViewModel : RxObject
+```csharp
+public class MainViewModel : RxObject
+{
+    public MainViewModel()
     {
-        public MainViewModel()
+        this.BuildComplete(() =>
         {
-            this.BuildComplete(() =>
-            {
-                // Do something when the IOC Container is built
-
-                // Configure the Navigation for the MainViewModel using, you will pass the name of the Navigation Host Window that you want to navigate with.
-                this.NavigateBack("mainWindow")
-                this.CanNavigateBack("mainWindow")
-                this.NavigateToView<FirstViewModel>("mainWindow")
-            });
-        }
+            // Target a specific host by name (Window x:Name)
+            this.NavigateToView<FirstViewModel>("mainWindow");
+        });
     }
+}
 ```
 
-### Step 5: Create a View
+5) Create a View
 
-Create a View that inherits from `ReactiveUserControl`. This is the View that will be used for the MainView.
-
-```c#
-    public partial class MainView : ReactiveUserControl<MainViewModel>
+```csharp
+public partial class MainView : ReactiveUserControl<MainViewModel>
+{
+    public MainView()
     {
-        public MainView()
-        {
-            InitializeComponent();
-
-            this.WhenActivated(disposables =>
-            {
-                // Do something when the View is activated
-            });
-        }
+        InitializeComponent();
+        this.WhenActivated(_ => { /* bindings, commands */ });
     }
+}
 ```
 
-### Step 6: For WPF Applications Configure Single Instance Application if required
+---
 
-If you want to prevent multiple instances of the application from running at the same time, you can use the `Make.SingleInstance` method.
+## Hosts and Navigation APIs
 
-```c#
-    protected override void OnStartup(StartupEventArgs e)
+- NavigationWindow (WPF): A Window that exposes a ViewModelRoutedViewHost and transition support
+  - Properties: Transition, NavigateBackIsEnabled
+  - Exposes CanNavigateBack observable and NavigateBack() helper
+
+- FluentNavigationWindow (WPF UI): A fluent-styled NavigationWindow with additional title content areas and Transition
+
+- NavigationUserControl (WPF UI, Avalonia): A hostable control version of the navigation container (for regions/panels)
+
+- ViewModelRoutedViewHost (WPF): Core host implementation
+  - Navigate<TViewModel>(contract, parameter)
+  - Navigate(IRxObject vm, contract, parameter)
+  - NavigateAndReset variants
+  - NavigateBack(parameter)
+  - CanNavigateBackObservable, NavigationStack
+  - Lifecycle events routed via ViewModelRoutedViewHostMixins:
+    - WhenNavigating: preview/cancel navigation
+    - WhenNavigatedTo/From: after navigation completes
+
+- HostName: Set on NavigationWindow/NavigationUserControl (typically from x:Name) to route cross-host navigation
+
+### Navigation from Views and ViewModels
+
+- From code-behind: this.NavigateToView<TViewModel>(hostName?, parameter?)
+- From ViewModel: this.NavigateToView<TViewModel>(hostName, parameter?)
+- NavigateBack(hostName?, parameter?) and CanNavigateBack(hostName?) helpers
+
+---
+
+## WPF UI Library (CrissCross.WPF.UI)
+
+A comprehensive set of fluent controls and services designed for ReactiveUI apps. Highlights include:
+
+- NavigationView, BreadcrumbBar and navigation controls/models
+- Dialogs: ContentDialog, MessageBox, async variants
+- Notifications: Snackbar, InfoBar, InfoBadge
+- Input: AutoSuggestBox, NumberBox, PasswordBox, ToggleSwitch, TimePicker, DatePicker
+- Lists and virtualization: ListView, VirtualizingGridView, VirtualizingWrapPanel
+- Layout/containers: Card, CardExpander, GroupBox, Grid, StackPanel
+- Media: GifImage (animation), Image
+- PersonPicture, RatingControl, ProgressRing, AppBar, TitleBar, Window enhancements
+- Color controls: ColorSelector suite (sliders, dual pickers), HexColorTextBox, and ColorPicker
+- Typography and iconography: FontIcon, SymbolIcon, IconSource
+- Themes and appearance utilities
+
+Include the control resources by merging the ControlsDictionary:
+
+```xaml
+<Application.Resources>
+  <ResourceDictionary>
+    <ResourceDictionary.MergedDictionaries>
+      <ui:ControlsDictionary />
+    </ResourceDictionary.MergedDictionaries>
+  </ResourceDictionary>
+</Application.Resources>
+```
+
+### Theming and Appearance
+
+- ApplicationThemeManager and SystemThemeWatcher for light/dark and system theme integration
+- Resource dictionaries for typography, colors, focus, default styles
+- ThemeService and IThemeService for programmatic control
+
+### Services
+
+- ContentDialogService: Show dialogs and await results
+- SnackbarService: Host snackbars with extension helpers
+- PageService (WPF UI): Resolve pages by type for embedded/hosted scenarios
+
+---
+
+## WPF Page Navigation (Host Builder)
+
+For page-based apps using WPF UI, use the host builder extensions:
+
+```csharp
+private static readonly IHost _host = Host.CreateDefaultBuilder()
+    .ConfigureCrissCrossForPageNavigation<MainWindow, DashboardPage>()
+    .ConfigureServices((context, services) =>
     {
-        // This will prevent multiple instances of the application from running at the same time.
-        Make.SingleInstance("MyUniqueAppName ddd81fc8-9107-4e33-b848-cac4c3ec3d2a");
-        base.OnStartup(e);
-    }
+        services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<DashboardPage>().AddSingleton<DashboardViewModel>();
+        services.AddSingleton<DataPage>().AddSingleton<DataViewModel>();
+        services.AddSingleton<SettingsPage>().AddSingleton<SettingsViewModel>();
+        services.AddSingleton<LoginPage>().AddSingleton<LoginViewModel>();
+    })
+    .Build();
 ```
 
-### Step 7: Run the application
+Wire up and start in App.xaml.cs, then navigate using IPageService or NavigationView.
 
-Run the application and you should see the MainView.
+---
+
+## NavigationView (WPF UI)
+
+A powerful navigation control that manages a journal and hierarchical navigation stack:
+
+- Navigate(Type pageType, object? dataContext)
+- Navigate(string pageIdOrTargetTag, object? dataContext)
+- NavigateWithHierarchy(Type pageType, object? dataContext)
+- ReplaceContent(Type pageType) / ReplaceContent(UIElement)
+- GoBack(), GoForward() (where implemented), ClearJournal()
+- Events: Navigating (cancelable), Navigated, BackRequested, SelectionChanged, PaneOpened/Closed
+
+The control maintains a NavigationStack and history so you can build rich shell navigation experiences.
+
+---
 
 ## Avalonia
 
-### Step 1: Install CrissCross
+- NavigationUserControl (host)
+- ViewModelRoutedViewHost equivalent with CanNavigateBack observable and HostName
+- Use ReactiveUI’s WhenActivated and Splat for registration as in WPF
 
-
-CrissCross is available on NuGet. You can install it using the NuGet Package Manager:
-
-    Install-Package CrissCross.Avalonia
-
-### Step 2: Create a ViewModel
-
-Create a ViewModel that inherits from `RxObject`. This is the ViewModel that will be used for the MainWindow.
-
-```c#
-    public class MainWindowViewModel : RxObject
+```csharp
+public partial class MainUserControl : NavigationUserControl<MainWindowViewModel>
+{
+    public MainUserControl()
     {
-        public MainWindowViewModel()
+        InitializeComponent();
+        this.WhenActivated(d =>
         {
-            this.BuildComplete(() =>
-            {
-                // Do something when the IOC Container is built
-            });
-
-            // Setup the IOC Container
-            Locator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-            Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
-
-            Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-            Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
-            
-            // Notify the application that the IOC Container that it is complete and ready to use.
-            Locator.CurrentMutable.SetupComplete();
-        }
+            this.NavigateToView<MainViewModel>();
+            _NavBack!.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
+        });
     }
+}
 ```
 
-### Step 3: Create a NavigationView
+---
 
+## .NET MAUI
 
-Create a View that inherits from `NavigationWindow` OR `NavigationUserControl`. This is the View that will be used for the MainWindow.
-add xmlns:rxNav="https://github.com/reactivemarbles/CrissCross"
-Change Window to rxNav:NavigationWindow in XAML.
-OR Change UserControl to rxNav:NavigationUserControl in XAML.
+MAUI helpers integrate with ReactiveUI.Maui. Register your VMs/Views with DI and navigate using the same NavigateToView/Back helpers where applicable. Prefer this approach over Xamarin.Forms for new apps.
 
-As Avalonia has two modes of operation you will need to select the correct mode for your application.
+Packages:
 
-```c#
-    public partial class MainWindow : NavigationWindow<MainWindowViewModel>
-    {
-        public MainWindow()
-        {
-            // Remember to set x:Name in XAML to "mainWindow"
-            InitializeComponent();
-            
-            this.WhenActivated(disposables =>
-            {
-                // Do something when the View is activated
+- CrissCross.MAUI
+- ReactiveUI.Maui
 
-                // Configure the Navigation for the MainWindow
-                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack).DisposeWith(d);
-                
-                // Navigate to the MainViewModel
-                this.NavigateToView<MainViewModel>();
-            });
-        }
-    }
-```
+---
 
-### Step 4: Create a ViewModel
+## WinForms
 
-Create a ViewModel that inherits from `RxObject`. This is the ViewModel that will be used for the MainView.
+- ViewModelRoutedViewHost for WinForms
+- ReactiveUserControl<TViewModel> usage with WhenActivated
+- Navigate using the same helper mixins
 
-```c#
-    public class MainViewModel : RxObject
-    {
-        public MainViewModel()
-        {
-            this.BuildComplete(() =>
-            {
-                // Do something when the IOC Container is built
+---
 
-                // Configure the Navigation for the MainViewModel using, you will pass the name of the Navigation Host Window that you want to navigate with.
-                this.NavigateBack("mainWindow")
-                this.CanNavigateBack("mainWindow")
-                this.NavigateToView<FirstViewModel>("mainWindow")
-            });
-        }
-    }
-```
+## WPF WebView2 Overlay Host
 
-### Step 5: Create a View
+CrissCross.WPF.WebView2 provides a NavigationWebView that hosts WebView2 while allowing WPF content overlays:
 
-Create a View that inherits from `ReactiveUserControl`. This is the View that will be used for the MainView.
-
-```c#
-    public partial class MainView : ReactiveUserControl<MainViewModel>
-    {
-        public MainView()
-        {
-            InitializeComponent();
-
-            this.WhenActivated(disposables =>
-            {
-                // Do something when the View is activated
-            });
-        }
-    }
-```
-
-
-### CrissCross.WPF.Plot
-
-CrissCross.WPF.Plot is a library that provides a simple way to plot data in WPF applications. It is designed to be used with CrissCross.
-
-Adriana Segher came up with the initial concept of creating a Plot that could accept a Reactive data source.
-This was then developed into a library that could be used with CrissCross Wpf.
-
-The library is built on top of ScottPlot and provides a simple way to plot Reactive data in WPF applications.
-
-The library is available on NuGet. You can install it using the NuGet Package Manager:
-
-![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.Plot) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.Plot)
-
-    Install-Package CrissCross.WPF.Plot
-
-### Current Features
-
-- Plot data from a Reactive data source
-- Plot data from a array of Reactive data source with multiple series (limited to 9 currently)
-- Cursor tracking via a CrossHair
-- Zooming and Panning
-- Dragging a zoom area
-- Visibility of plots
-- Auto Scale / Manual Scale
-- Enable / Disable interaction with the plot
-- Multiple Y Axis
-
-### Future Features
-
-- More than 9 series
-- Configuration of the Chart through a property dialog
-- Axis configuration, Color Configuration, Scale Configuration, Line Configuration
-- Multiple CrossHairs with differential analytics
-- Multiple X Axis for XY Plots
-- Select a plotalbe data from a large data source such as a Dynamic Data Source
-
-### CrissCross.WPF.WebView2
-
-CrissCross.WPF.Webview2 is a control for Wpf allowing the placement of other wpf controls on top of the WebView2.
-The base Microsoft.Web.WebView2 library has a WebView2CompositionControl but this is only targeting net46 and does not work for net core.
-
-In CrissCross.WPF.Webview2 we have created a WebView2Wpf control that has the majority of the features that the WebView2CompositionControl has working, however some use an underlying private layer which we don't have access to.
-Further Documentation can be found here [microsoft.web.webview2.wpf](https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.wpf.webview2?view=webview2-dotnet-1.0.2646-prerelease)
-
-The library is available on NuGet. You can install it using the NuGet Package Manager:
-
-![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.WebView2) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.WebView2)
-
-```c#
+```xaml
 xmlns:webv="https://github.com/reactivemarbles/CrissCross"
-<webv:WebView2Wpf
-            x:Name="WebView2Wpf"
-            AutoDispose="True">
-<--! Add your Xaml here -->
+<webv:WebView2Wpf x:Name="WebView2Wpf" AutoDispose="True">
+    <!-- overlay WPF content here -->
 </webv:WebView2Wpf>
-
-// In Code behind set the Source to the Uri you wish to navigate to, this can be set in the Xaml too.
-WebView2Wpf.Source = new System.Uri("https://www.reactiveui.net/");
 ```
+
+```csharp
+WebView2Wpf.Source = new Uri("https://www.reactiveui.net/");
+```
+
+---
+
+## WPF Plot (ScottPlot-based)
+
+CrissCross.WPF.Plot adds Reactive plotting components:
+
+- Bind reactive sequences
+- Multiple series, Y-axes, crosshairs
+- Zoom/pan, drag zoom selection
+- Visibility toggles, auto/manual scale
+
+Install: `Install-Package CrissCross.WPF.Plot`
+
+---
+
+## Settings and Tracking (WPF UI)
+
+Persist and track control/window state:
+
+- Tracker service with attributes (Trackable, PersistOn, StopTrackingOn)
+- Example usage in App.xaml.cs wiring window size/position persistence
+
+```csharp
+_tracker?.Configure<MainWindow>()
+    .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
+    .Properties(w => new { w.Height, w.Width, w.Left, w.Top, w.WindowState })
+    .PersistOn(w => nameof(w.Closing))
+    .StopTrackingOn(w => nameof(w.Closing));
+```
+
+---
+
+## Color and Media Controls (WPF UI)
+
+- ColorSelector suite (HSV/HSL/RGB sliders, square pickers, hex entry, dual color with hints)
+- ColorPicker control: A simple RGBA + Hex picker with a live preview
+- GifImage with animation control and performance-oriented decoding/animation components
+
+---
+
+## Samples
+
+- CrissCross.WPF.UI.Test: WPF UI test app with page navigation
+- CrissCross.WPF.Test: WPF navigation sample
+- CrissCross.Avalonia.Test.*: Avalonia samples (desktop, mobile)
+- CrissCross.MAUI.Test: MAUI sample
+- CrissCross.WPF.Plot.Test: Plot samples
+- CrissCross.WPF.WebView2.Test: WebView2 overlay usage
+- CrissCross.WPF.UI.Gallery: Control gallery showcasing WPF UI controls
+
+Browse these projects to see real-world usage patterns, navigation setup, and control bindings.
+
+---
+
+## Single Instance (WPF)
+
+Prevent multiple instances using Make.SingleInstance in App:
+
+```csharp
+protected override void OnStartup(StartupEventArgs e)
+{
+    Make.SingleInstance("MyUniqueAppName ddd81fc8-9107-4e33-b848-cac4c3ec3d2a");
+    base.OnStartup(e);
+}
+```
+
+---
+
+## Contributing
+
+Issues and PRs are welcome. Please include platform, .NET version, and a minimal repro where applicable.
+
+---
+
+## License
+
+MIT © ReactiveUI Association Incorporated

@@ -8,6 +8,4 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// ComboBoxViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public partial class ComboBoxViewModel : RxObject
-{
-}
+public partial class ComboBoxViewModel : RxObject;

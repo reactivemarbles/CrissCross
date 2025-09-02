@@ -155,6 +155,17 @@
                         <ui:ImageIcon Source="/Assets/ControlImages/ToggleButton.png" />
                     </ui:Button.Icon>
                 </ui:Button>
+                <ui:Button
+                    x:Name="ColorPicker"
+                    Width="200"
+                    Height="60"
+                    Margin="5"
+                    HorizontalContentAlignment="Left"
+                    Content="ColorPicker">
+                    <ui:Button.Icon>
+                        <ui:ImageIcon Source="/Assets/ControlImages/ColorPicker.png" />
+                    </ui:Button.Icon>
+                </ui:Button>
             </WrapPanel>
         </ui:DynamicScrollViewer>
     </Grid>

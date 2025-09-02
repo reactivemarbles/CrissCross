@@ -38,7 +38,7 @@ public partial class NavigationView
     private int _currentIndexInJournal;
 
     /// <inheritdoc />
-    public bool CanGoBack => Journal.Count > 1 && _currentIndexInJournal >= 0;
+    public bool CanGoBack => Journal.Count > 1;
 
     /// <inheritdoc />
     public void SetPageService(IPageService pageService) => _pageService = pageService;
@@ -205,7 +205,7 @@ public partial class NavigationView
         AddToNavigationStack(viewItem, addToNavigationStack, isBackwardsNavigated);
         AddToJournal(viewItem, isBackwardsNavigated);
 
-        if (SelectedItem != NavigationStack[0] && NavigationStack[0].IsMenuElement)
+        if (NavigationStack.Count > 0 && SelectedItem != NavigationStack[0] && NavigationStack[0].IsMenuElement)
         {
             SelectedItem = NavigationStack[0];
             OnSelectionChanged();
@@ -249,13 +249,13 @@ public partial class NavigationView
         if (_serviceProvider is not null)
         {
             return _serviceProvider.GetService(viewItem.TargetPageType)
-                ?? new ArgumentNullException($"{nameof(_serviceProvider.GetService)} returned null");
+                ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
         }
 
         if (_pageService is not null)
         {
             return _pageService.GetPage(viewItem.TargetPageType)
-                ?? throw new ArgumentNullException($"{nameof(_pageService.GetPage)} returned null");
+                ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null");
         }
 
         return _cache.Remember(
@@ -283,7 +283,7 @@ public partial class NavigationView
 #endif
 
             return _serviceProvider.GetService(targetPageType)
-                ?? new ArgumentNullException($"{nameof(_serviceProvider.GetService)} returned null");
+                ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
         }
 
         if (_pageService is not null)
@@ -293,7 +293,7 @@ public partial class NavigationView
 #endif
 
             return _pageService.GetPage(targetPageType)
-                ?? throw new ArgumentNullException($"{nameof(_pageService.GetPage)} returned null");
+                ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null");
         }
 
 #if DEBUG
@@ -369,7 +369,7 @@ public partial class NavigationView
         }
         else
         {
-            ReplaceThirstElementInNavigationStack(viewItem);
+            ReplaceFirstElementInNavigationStack(viewItem);
         }
 
         ClearNavigationStack(1);
@@ -388,7 +388,7 @@ public partial class NavigationView
         if (latestHistory[0]!.IsMenuElement)
         {
             startIndex = 1;
-            ReplaceThirstElementInNavigationStack(latestHistory[0]!);
+            ReplaceFirstElementInNavigationStack(latestHistory[0]!);
         }
 
         for (var i = startIndex; i < latestHistory.Length; i++)
@@ -450,6 +450,12 @@ public partial class NavigationView
             latestHistory[i] = NavigationStack[j];
             i++;
         }
+
+        // Ensure unused slots are null when using pooled arrays to avoid stale references
+        if (i < latestHistory.Length)
+        {
+            System.Array.Clear(latestHistory, i, latestHistory.Length - i);
+        }
     }
 
     private void ClearNavigationStack(int navigationStackItemIndex)
@@ -486,7 +492,7 @@ public partial class NavigationView
         ClearNavigationStack(++index);
     }
 
-    private void ReplaceThirstElementInNavigationStack(INavigationViewItem newItem)
+    private void ReplaceFirstElementInNavigationStack(INavigationViewItem newItem)
     {
         NavigationStack[0].Deactivate(this);
         NavigationStack[0] = newItem;
