@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.Versioning;
-using CrissCross;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;

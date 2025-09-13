@@ -411,7 +411,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     {
         _keypad?.Dispose();
         _keypad = null;
-        GC.Collect();
     }
 
     /// <summary>
@@ -434,6 +433,8 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
         {
             if (disposing)
             {
+                _errrorTimer?.Stop();
+                _isEnabledFalseTimer?.Stop();
                 _valueD.Dispose();
                 _valueF.Dispose();
                 _keypad?.Dispose();

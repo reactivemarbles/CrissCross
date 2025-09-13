@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) or $(TargetFramework.StartsWith('net4'))">
     <PackageReference Include="System.Text.Json" Version="$(CoreNetVersion)" />
   </ItemGroup>
 

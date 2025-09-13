@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UseMaui>true</UseMaui>
+    <OutputType>Exe</OutputType>
+    <WindowsPackageType>None</WindowsPackageType>
+    <EnablePreviewMsixTooling>false</EnablePreviewMsixTooling>
+    <SelfContained>false</SelfContained>
+    <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+    <Platforms>x64;arm64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
+    <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
+  </ItemGroup>
+</Project>

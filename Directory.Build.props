@@ -10,7 +10,7 @@
     <LangVersion>preview</LangVersion>
     <Configuration>$(TargetFramework)</Configuration>
     <Company>ChrisPulman</Company>
-    <NoWarn>CS1591;CS1701;IDE0190;IDE1006</NoWarn>
+    <NoWarn>CS1591;CS1701;IDE0190;IDE1006;CA1510</NoWarn>
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -29,15 +29,15 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.3.4</AvaloniaVersion>
-    <SplatVersion>16.1.1</SplatVersion>
-    <ReactiveUIVersion>20.4.1</ReactiveUIVersion>
+    <AvaloniaVersion>11.3.6</AvaloniaVersion>
+    <SplatVersion>16.2.1</SplatVersion>
+    <ReactiveUIVersion>21.0.1</ReactiveUIVersion>
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
-    <WebViewVersion>1.0.3405.78</WebViewVersion>
-    <CoreNetVersion>9.0.8</CoreNetVersion>
+    <WebViewVersion>1.0.3485.44</WebViewVersion>
+    <CoreNetVersion>9.0.9</CoreNetVersion>
     <CrissCrossCoreTargetFrameworks>netstandard2.0;net8.0;net9.0</CrissCrossCoreTargetFrameworks>
-    <CrissCrossWinTargetFrameworks>net462;net472;net48;net8.0-windows10.0.17763.0;net9.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
-    <CrissCrossWebviewTargetFrameworks>net462;net472;net48;net8.0-windows;net9.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>net472;net48;net8.0-windows10.0.17763.0;net9.0-windows10.0.17763.0</CrissCrossWinTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net472;net48;net8.0-windows;net9.0-windows</CrissCrossWebviewTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

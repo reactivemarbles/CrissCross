@@ -4,43 +4,38 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+
 /// <summary>
-/// Extends <see cref="System.Windows.Controls.ListView"/>, and adds customized support <see cref="ListViewViewState.GridView"/> or <see cref="ListViewViewState.Default"/>.
+/// Extends <see cref="System.Windows.Controls.ListView"/> adding customized support for GridView vs Default view states.
 /// </summary>
-/// <example>
-/// <code lang="xml">
-/// &lt;ui:ListView ItemsSource="{Binding ...}" &gt;
-///     &lt;ui:ListView.View&gt;
-///         &lt;GridView&gt;
-///             &lt;GridViewColumn
-///                 DisplayMemberBinding="{Binding FirstName}"
-///                 Header="First Name" /&gt;
-///             &lt;GridViewColumn
-///                 DisplayMemberBinding="{Binding LastName}"
-///                 Header="Last Name" /&gt;
-///         &lt;/GridView&gt;
-///     &lt;/ui:ListView.View&gt;
-/// &lt;/ui:ListView&gt;
-/// </code>
-/// </example>
-public class ListView : System.Windows.Controls.ListView
+public class ListView : System.Windows.Controls.ListView, IDisposable
 {
-    /// <summary>Identifies the <see cref="ViewState"/> dependency property.</summary>
+    /// <summary>
+    /// Dependency property backing <see cref="ViewState"/>.
+    /// </summary>
     public static readonly DependencyProperty ViewStateProperty = DependencyProperty.Register(nameof(ViewState), typeof(ListViewViewState), typeof(ListView), new FrameworkPropertyMetadata(ListViewViewState.Default, OnViewStateChanged));
 
+    private readonly SerialDisposable _unloadedDisposable = new();
     private DependencyPropertyDescriptor? _descriptor;
+    private bool _disposed;
 
     static ListView() => DefaultStyleKeyProperty.OverrideMetadata(typeof(ListView), new FrameworkPropertyMetadata(typeof(ListView)));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ListView"/> class.
     /// </summary>
-    public ListView() => Loaded += OnLoaded;
+    public ListView()
+    {
+        Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
+            .Take(1)
+            .Subscribe(_ => OnLoadedReactive());
+    }
 
     /// <summary>
-    /// Gets or sets the view state of the <see cref="ListView"/>, enabling custom logic based on the current view.
+    /// Gets or sets the current visual state of the list (Default or GridView).
     /// </summary>
-    /// <value>The current view state of the <see cref="ListView"/>.</value>
     public ListViewViewState ViewState
     {
         get => (ListViewViewState)GetValue(ViewStateProperty);
@@ -48,56 +43,75 @@ public class ListView : System.Windows.Controls.ListView
     }
 
     /// <summary>
-    /// Raises the <see cref="E:ViewStateChanged" /> event.
+    /// Disposes managed / unmanaged resources.
     /// </summary>
-    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-    protected virtual void OnViewStateChanged(DependencyPropertyChangedEventArgs e)
+    public void Dispose()
     {
-        // Hook for derived classes to react to ViewState property changes
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
-    private static void OnViewStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>
+    /// Called when <see cref="ViewState"/> changes. Override to react to changes.
+    /// </summary>
+    /// <param name="e">Property changed arguments.</param>
+    protected virtual void OnViewStateChanged(DependencyPropertyChangedEventArgs e)
     {
-        if (d is not ListView self)
+    }
+
+    /// <summary>
+    /// Protected dispose pattern implementation.
+    /// </summary>
+    /// <param name="disposing">If true, dispose managed resources.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
         {
             return;
         }
 
-        self.OnViewStateChanged(e);
+        if (disposing)
+        {
+            _unloadedDisposable.Dispose();
+            _descriptor?.RemoveValueChanged(this, OnViewPropertyChanged);
+            _descriptor = null;
+        }
+
+        _disposed = true;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private static void OnViewStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        // prevent memory leaks
-        Loaded -= OnLoaded;
-        Unloaded += OnUnloaded;
+        if (d is ListView lv)
+        {
+            lv.OnViewStateChanged(e);
+        }
+    }
 
-        // Setup initial ViewState and hook into View property changes
+    private void OnLoadedReactive()
+    {
         _descriptor = DependencyPropertyDescriptor.FromProperty(System.Windows.Controls.ListView.ViewProperty, typeof(System.Windows.Controls.ListView));
         _descriptor?.AddValueChanged(this, OnViewPropertyChanged);
 
-        // set the initial state
+        _unloadedDisposable.Disposable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
+            .Take(1)
+            .Subscribe(_ => OnUnloadedReactive());
+
         UpdateViewState();
     }
 
-    private void OnUnloaded(object sender, RoutedEventArgs e)
+    private void OnUnloadedReactive()
     {
-        Unloaded -= OnUnloaded;
-
         _descriptor?.RemoveValueChanged(this, OnViewPropertyChanged);
+        _descriptor = null;
+        _unloadedDisposable.Disposable = null;
     }
 
     private void OnViewPropertyChanged(object? sender, EventArgs e) => UpdateViewState();
 
     private void UpdateViewState()
     {
-        var viewState = View switch
-        {
-            System.Windows.Controls.GridView => ListViewViewState.GridView,
-            null => ListViewViewState.Default,
-            _ => ListViewViewState.Default
-        };
-
+        var viewState = View is System.Windows.Controls.GridView ? ListViewViewState.GridView : ListViewViewState.Default;
         SetCurrentValue(ViewStateProperty, viewState);
     }
 }

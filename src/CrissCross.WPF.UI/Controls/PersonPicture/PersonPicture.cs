@@ -15,10 +15,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// PersonPicture.
 /// </summary>
 /// <seealso cref="Control" />
-public partial class PersonPicture : Control
+public partial class PersonPicture : Control, IDisposable
 {
     private static readonly ResourceAccessor ResourceAccessor = new(typeof(PersonPicture));
-
     private TextBlock? _m_initialsTextBlock;
     private TextBlock? _m_badgeNumberTextBlock;
     private FontIcon? _m_badgeGlyphIcon;
@@ -27,9 +26,7 @@ public partial class PersonPicture : Control
     private Ellipse? _m_badgingBackgroundEllipse;
     private string? _m_displayNameInitials;
     private CompositeDisposable? _disposables;
-
-    static PersonPicture() =>
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(PersonPicture), new FrameworkPropertyMetadata(typeof(PersonPicture)));
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PersonPicture"/> class.
@@ -38,19 +35,28 @@ public partial class PersonPicture : Control
     {
         TemplateSettings = new PersonPictureTemplateSettings();
 
-        _disposables?.Add(this.Events().Unloaded.Subscribe(OnUnloaded));
-        _disposables?.Add(this.Events().SizeChanged.Subscribe(OnSizeChanged));
+        _disposables = new CompositeDisposable();
+        this.Events().Unloaded.Subscribe(OnUnloaded).DisposeWith(_disposables);
+        this.Events().SizeChanged.Subscribe(OnSizeChanged).DisposeWith(_disposables);
     }
 
     /// <summary>
-    /// When overridden in a derived class, is invoked whenever application code or internal processes call <see cref="M:System.Windows.FrameworkElement.ApplyTemplate" />.
+    /// Disposes resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// When template applied.
     /// </summary>
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
 
         _m_initialsTextBlock = GetTemplateChild("InitialsTextBlock") as TextBlock;
-
         _m_badgeNumberTextBlock = GetTemplateChild("BadgeNumberTextBlock") as TextBlock;
         _m_badgeGlyphIcon = GetTemplateChild("BadgeGlyphIcon") as FontIcon;
         _m_badgingEllipse = GetTemplateChild("BadgingEllipse") as Ellipse;
@@ -61,55 +67,65 @@ public partial class PersonPicture : Control
     }
 
     /// <summary>
-    /// Returns class-specific <see cref="T:System.Windows.Automation.Peers.AutomationPeer" /> implementations for the Windows Presentation Foundation (WPF) infrastructure.
+    /// Returns class-specific automation peer.
     /// </summary>
-    /// <returns>
-    /// The type-specific <see cref="T:System.Windows.Automation.Peers.AutomationPeer" /> implementation.
-    /// </returns>
+    /// <returns>The automation peer.</returns>
     protected override AutomationPeer OnCreateAutomationPeer() => new PersonPictureAutomationPeer(this);
 
+    /// <summary>
+    /// Core dispose logic.
+    /// </summary>
+    /// <param name="disposing">True when called from Dispose.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _disposables?.Dispose();
+            _disposables = null;
+        }
+
+        _disposed = true;
+    }
+
+    // static helper after fields / ctor per SA12 series preference for fields, ctors, methods
     private static string? GetLocalizedPluralBadgeItemStringResource(int numericValue)
     {
         var valueMod10 = numericValue % 10;
-
         if (numericValue == 1)
         {
-            // Singular
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemSingular);
         }
         else if (numericValue == 2)
         {
-            // 2
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural7);
         }
         else if (numericValue == 3 || numericValue == 4)
         {
-            // 3,4
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural2);
         }
         else if (numericValue >= 5 && numericValue <= 10)
         {
-            // 5-10
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural5);
         }
         else if (numericValue >= 11 && numericValue <= 19)
         {
-            // 11-19
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural6);
         }
         else if (valueMod10 == 1)
         {
-            // 21, 31, 41, etc.
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural1);
         }
         else if (valueMod10 >= 2 && valueMod10 <= 4)
         {
-            // 22-24, 32-34, 42-44, etc.
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural3);
         }
         else
         {
-            // Everything else... 0, 20, 25-30, 35-40, etc.
             return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural4);
         }
     }
@@ -474,7 +490,6 @@ public partial class PersonPicture : Control
 
     private void OnUnloaded(RoutedEventArgs e)
     {
-        _disposables?.Dispose();
-        _disposables = null;
+        Dispose();
     }
 }
