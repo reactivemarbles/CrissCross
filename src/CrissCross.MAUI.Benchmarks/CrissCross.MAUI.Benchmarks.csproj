@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UseMaui>true</UseMaui>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
+    <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
+  </ItemGroup>
+</Project>

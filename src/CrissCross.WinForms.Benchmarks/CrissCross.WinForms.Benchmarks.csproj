@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.WinForms\CrissCross.WinForms.csproj" />
+    <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
+  </ItemGroup>
+</Project>
