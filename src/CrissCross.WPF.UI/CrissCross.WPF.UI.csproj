@@ -40,8 +40,7 @@
 
   <ItemGroup>
     <Resource Include="Images\*.png" />
-    <Resource Include="Resources\Fonts\FluentSystemIcons-Filled.ttf" />
-    <Resource Include="Resources\Fonts\FluentSystemIcons-Regular.ttf" />
+    <Resource Include="Resources\Fonts\*.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +50,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(CoreNetVersion)" />
     <PackageReference Include="ReactiveList" Version="2.2.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageReference Include="BBCode.WPF" Version="0.2.0" />
     <PackageReference Include="CP.Xaml.Converters" Version="1.1.3" />

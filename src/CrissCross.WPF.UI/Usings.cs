@@ -27,5 +27,3 @@ global using CrissCross.WPF.UI.Hardware;
 global using CrissCross.WPF.UI.Interop;
 global using CrissCross.WPF.UI.Storage;
 global using CrissCross.WPF.UI.TaskBar;
-global using Newtonsoft.Json;
-global using Newtonsoft.Json.Linq;

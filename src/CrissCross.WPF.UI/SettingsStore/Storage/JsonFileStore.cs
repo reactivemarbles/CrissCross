@@ -2,6 +2,9 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace CrissCross.WPF.UI.Storage;
 
 /// <summary>
@@ -14,6 +17,8 @@ namespace CrissCross.WPF.UI.Storage;
 /// <param name="storeFolderPath">The folder inside which the json files for tracked objects will be stored.</param>
 public class JsonFileStore(string storeFolderPath) : IStore
 {
+    private static readonly JsonSerializerOptions SerializerOptions = CreateOptions();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonFileStore"/> class.
     /// Creates a JsonFileStore that will store files in a per-user folder (%appdata%\[companyname]\[productname]).
@@ -64,22 +69,88 @@ public class JsonFileStore(string storeFolderPath) : IStore
     public IDictionary<string, object?> GetData(string id)
     {
         var filePath = GetfilePath(id);
-        List<StoreItem>? storeItems = null;
-        if (File.Exists(filePath))
+        Dictionary<string, object?> result = new(StringComparer.OrdinalIgnoreCase);
+
+        if (!File.Exists(filePath))
         {
-            try
-            {
-                var fileContents = File.ReadAllText(filePath);
-                storeItems = JsonConvert.DeserializeObject<List<StoreItem>>(fileContents, new StoreItemConverter(), new IPAddressConverter());
-            }
-            catch
-            {
-            }
+            return result;
         }
 
-        storeItems ??= [];
+        try
+        {
+            using var fs = File.OpenRead(filePath);
+            using var doc = JsonDocument.Parse(fs);
+            if (doc.RootElement.ValueKind != JsonValueKind.Array)
+            {
+                return result;
+            }
 
-        return storeItems.ToDictionary(item => item.Name!, item => item.Value);
+            foreach (var element in doc.RootElement.EnumerateArray())
+            {
+                if (element.ValueKind != JsonValueKind.Object)
+                {
+                    continue;
+                }
+
+                if (!element.TryGetProperty("Name", out var nameProp) || nameProp.ValueKind != JsonValueKind.String)
+                {
+                    continue;
+                }
+
+                var name = nameProp.GetString();
+                if (string.IsNullOrEmpty(name))
+                {
+                    continue;
+                }
+
+                Type? valueType = null;
+                if (element.TryGetProperty("Type", out var typeProp) && typeProp.ValueKind == JsonValueKind.String)
+                {
+                    var typeName = typeProp.GetString();
+                    if (!string.IsNullOrWhiteSpace(typeName))
+                    {
+                        try
+                        {
+                            valueType = Type.GetType(typeName!, throwOnError: false, ignoreCase: false);
+                        }
+                        catch
+                        {
+                            // ignore resolution errors
+                        }
+                    }
+                }
+
+                object? value = null;
+                if (element.TryGetProperty("Value", out var valueProp))
+                {
+                    try
+                    {
+                        if (valueType == null)
+                        {
+                            // Fallback: try primitive kinds
+                            value = DeserializeUnknown(valueProp);
+                        }
+                        else
+                        {
+                            var raw = valueProp.GetRawText();
+                            value = JsonSerializer.Deserialize(raw, valueType, SerializerOptions);
+                        }
+                    }
+                    catch
+                    {
+                        value = null;
+                    }
+                }
+
+                result[name] = value;
+            }
+        }
+        catch
+        {
+            // swallow errors to keep previous behaviour (ignore corrupted file)
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -89,17 +160,57 @@ public class JsonFileStore(string storeFolderPath) : IStore
     /// <param name="values">The values.</param>
     public void SetData(string id, IDictionary<string, object?> values)
     {
-        var filePath = GetfilePath(id);
-        var list = values.Select(kvp => new StoreItem() { Name = kvp.Key, Value = kvp.Value, Type = kvp.Value?.GetType() });
-        var serialized = JsonConvert.SerializeObject(list, new JsonSerializerSettings() { Formatting = Formatting.Indented, TypeNameHandling = TypeNameHandling.None, Converters = new JsonConverter[] { new IPAddressConverter() } });
+        if (id == null)
+        {
+            throw new ArgumentNullException(nameof(id));
+        }
 
+        if (values == null)
+        {
+            throw new ArgumentNullException(nameof(values));
+        }
+
+        var filePath = GetfilePath(id);
         var directory = Path.GetDirectoryName(filePath);
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory!);
         }
 
-        File.WriteAllText(filePath, serialized);
+        using var ms = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true }))
+        {
+            writer.WriteStartArray();
+            foreach (var kvp in values)
+            {
+                writer.WriteStartObject();
+                if (kvp.Value != null)
+                {
+                    writer.WriteString("Type", kvp.Value.GetType().AssemblyQualifiedName);
+                }
+                else
+                {
+                    writer.WriteString("Type", string.Empty);
+                }
+
+                writer.WriteString("Name", kvp.Key);
+                writer.WritePropertyName("Value");
+                if (kvp.Value == null)
+                {
+                    writer.WriteNullValue();
+                }
+                else
+                {
+                    JsonSerializer.Serialize(writer, kvp.Value, kvp.Value.GetType(), SerializerOptions);
+                }
+
+                writer.WriteEndObject();
+            }
+
+            writer.WriteEndArray();
+        }
+
+        File.WriteAllBytes(filePath, ms.ToArray());
     }
 
     /// <summary>
@@ -123,6 +234,30 @@ public class JsonFileStore(string storeFolderPath) : IStore
         {
             ClearData(id);
         }
+    }
+
+    private static object? DeserializeUnknown(JsonElement element) => element.ValueKind switch
+    {
+        JsonValueKind.String => element.GetString(),
+        JsonValueKind.Number => element.TryGetInt64(out var l) ? l : element.TryGetDouble(out var d) ? d : null,
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        JsonValueKind.Null => null,
+        JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
+        JsonValueKind.Object => element.EnumerateObject().ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
+        _ => null
+    };
+
+    private static JsonSerializerOptions CreateOptions()
+    {
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNameCaseInsensitive = false,
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+        };
+        options.Converters.Add(new IPAddressJsonConverter());
+        return options;
     }
 
     private static string ConstructPath(Environment.SpecialFolder baseFolder)
@@ -151,64 +286,23 @@ public class JsonFileStore(string storeFolderPath) : IStore
 
     private string GetfilePath(string id) => Path.Combine(FolderPath, $"{id}.json");
 
-    private class IPAddressConverter : JsonConverter
+    private sealed class IPAddressJsonConverter : JsonConverter<IPAddress>
     {
-        public override bool CanConvert(Type objectType) => objectType == typeof(IPAddress);
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        public override IPAddress? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var value = reader.Value;
-            if (value != null)
+            if (reader.TokenType == JsonTokenType.String)
             {
-                return IPAddress.Parse((string?)reader.Value!);
+                var s = reader.GetString();
+                if (!string.IsNullOrEmpty(s) && IPAddress.TryParse(s, out var ip))
+                {
+                    return ip;
+                }
             }
 
             return null;
         }
 
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) => writer.WriteValue(value?.ToString());
-    }
-
-    private class StoreItemConverter : JsonConverter
-    {
-        public override bool CanRead => true;
-
-        public override bool CanConvert(Type objectType) => objectType == typeof(StoreItem);
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            reader.Read();
-            reader.Read();
-            var t = serializer.Deserialize<Type>(reader);
-            _ = reader.Read();
-            var name = reader.ReadAsString();
-
-            reader.Read();
-            reader.Read();
-            var res = serializer.Deserialize(reader, t);
-
-            reader.Read();
-
-            return new StoreItem() { Name = name, Type = t, Value = res };
-        }
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            var converters = serializer.Converters.ToArray();
-            var jObject = JObject.FromObject(value!);
-            jObject.WriteTo(writer, converters);
-        }
-    }
-
-    private class StoreItem
-    {
-        [JsonProperty(Order = 1)]
-        public Type? Type { get; set; }
-
-        [JsonProperty(Order = 2)]
-        public string? Name { get; set; }
-
-        [JsonProperty(Order = 3)]
-        public object? Value { get; set; }
+        public override void Write(Utf8JsonWriter writer, IPAddress value, JsonSerializerOptions options) =>
+            writer.WriteStringValue(value?.ToString());
     }
 }
