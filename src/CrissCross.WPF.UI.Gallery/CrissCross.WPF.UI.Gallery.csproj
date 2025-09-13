@@ -16,7 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.3.1" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.4.1" PrivateAssets="all" />
     <PackageReference Include="CompiledBindings.WPF" Version="1.0.19" />
   </ItemGroup>
 
