@@ -4,7 +4,6 @@
 
 global using System.Windows;
 global using System.Windows.Threading;
-global using CrissCross.WPF.UI;
 global using CrissCross.WPF.UI.Controls;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;

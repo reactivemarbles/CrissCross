@@ -4,7 +4,6 @@
 
 using CrissCross.WPF.UI.Test.ViewModels;
 using ReactiveMarbles.ObservableEvents;
-using MessageBoxButton = System.Windows.MessageBoxButton;
 
 namespace CrissCross.WPF.UI.Test.Views.Pages;
 

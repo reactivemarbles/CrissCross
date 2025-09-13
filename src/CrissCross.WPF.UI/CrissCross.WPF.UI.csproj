@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.1.13" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(CoreNetVersion)" />
@@ -37,9 +37,9 @@
     <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
     <PackageReference Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageReference Include="BBCode.WPF" Version="0.2.0" />
-    <PackageReference Include="CP.Xaml.Converters" Version="1.0.2" />
+    <PackageReference Include="CP.Xaml.Converters" Version="1.1.3" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.3.1" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.4.1" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
