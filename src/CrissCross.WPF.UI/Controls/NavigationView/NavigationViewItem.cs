@@ -5,6 +5,8 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using CrissCross.WPF.UI.Converters;
 
@@ -20,7 +22,8 @@ namespace CrissCross.WPF.UI.Controls;
 public class NavigationViewItem
     : System.Windows.Controls.Primitives.ButtonBase,
         INavigationViewItem,
-        IIconControl
+        IIconControl,
+        IDisposable
 {
     internal static readonly DependencyPropertyKey HasMenuItemsPropertyKey =
         DependencyProperty.RegisterReadOnly(
@@ -131,11 +134,15 @@ public class NavigationViewItem
     protected const string TemplateElementChevronGrid = "PART_ChevronGrid";
 
     /// <summary>
-    /// The chevron grid.
+    /// The chevron grid element from template.
     /// </summary>
 #pragma warning disable SA1401 // Fields should be private
     protected Grid? ChevronGrid;
 #pragma warning restore SA1401 // Fields should be private
+
+    private CompositeDisposable? _subscriptions; // reactive subscriptions per instance
+    private NavigationView? _navigationViewHost;
+    private bool _disposed;
 
     static NavigationViewItem() => DefaultStyleKeyProperty.OverrideMetadata(
             typeof(NavigationViewItem),
@@ -148,9 +155,12 @@ public class NavigationViewItem
     {
         Id = Guid.NewGuid().ToString("n");
 
-        Unloaded += static (sender, _) => ((NavigationViewItem)sender).NavigationViewItemParent = null;
-
-        Loaded += (_, _) => InitializeNavigationViewEvents();
+        // Reactive lifecycle handling (avoid .Events() to keep compatibility)
+        Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
+            .Take(1)
+            .Subscribe(_ => InitializeNavigationViewEvents());
+        Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
+            .Subscribe(_ => OnReactiveUnloaded());
 
         // Initialize the `Items` collection
         var menuItems = new ObservableCollection<object>();
@@ -159,26 +169,26 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
+    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class with target page type.
     /// </summary>
-    /// <param name="targetPageType">Type of the target page.</param>
+    /// <param name="targetPageType">Target page type.</param>
     public NavigationViewItem(Type targetPageType)
         : this() => SetValue(TargetPageTypeProperty, targetPageType);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
+    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class with a name and target page type.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="targetPageType">Type of the target page.</param>
+    /// <param name="name">Display name.</param>
+    /// <param name="targetPageType">Target page type.</param>
     public NavigationViewItem(string name, Type targetPageType)
         : this(targetPageType) => SetValue(ContentProperty, name);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
+    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class with name, icon and target page type.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="icon">The icon.</param>
-    /// <param name="targetPageType">Type of the target page.</param>
+    /// <param name="name">Display name.</param>
+    /// <param name="icon">Symbol icon.</param>
+    /// <param name="targetPageType">Target page type.</param>
     public NavigationViewItem(string name, SymbolRegular icon, Type targetPageType)
         : this(targetPageType)
     {
@@ -187,19 +197,29 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
+    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class with name, icon, target page type and menu items.
     /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="icon">The icon.</param>
-    /// <param name="targetPageType">Type of the target page.</param>
-    /// <param name="menuItems">The menu items.</param>
+    /// <param name="name">Display name.</param>
+    /// <param name="icon">Symbol icon.</param>
+    /// <param name="targetPageType">Target page type.</param>
+    /// <param name="menuItems">Child menu items.</param>
     public NavigationViewItem(string name, SymbolRegular icon, Type targetPageType, IList menuItems)
         : this(name, icon, targetPageType) => SetValue(MenuItemsProperty, menuItems);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
+    /// </summary>
+    internal NavigationViewItem(string name, string targetPageTag, Type targetPageType)
+        : this(name, targetPageType) => TargetPageTag = targetPageTag;
+
+    /// <summary>
+    /// Gets the menu items.
+    /// </summary>
     public IList MenuItems => (ObservableCollection<object>)GetValue(MenuItemsProperty);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets or sets a source for menu items.
+    /// </summary>
     [Bindable(true)]
     public object? MenuItemsSource
     {
@@ -218,7 +238,7 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Gets a value indicating whether the <see cref="NavigationViewItem"/> has <see cref="MenuItems"/>.
+    /// Gets a value indicating whether this item has menu items.
     /// </summary>
     [Browsable(false)]
     [ReadOnly(true)]
@@ -228,7 +248,9 @@ public class NavigationViewItem
         private set => SetValue(HasMenuItemsProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets a value indicating whether this item is active.
+    /// </summary>
     [Browsable(false)]
     [ReadOnly(true)]
     public bool IsActive
@@ -237,7 +259,9 @@ public class NavigationViewItem
         set => SetValue(IsActiveProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets a value indicating whether this item is expanded.
+    /// </summary>
     [Browsable(false)]
     [ReadOnly(true)]
     public bool IsExpanded
@@ -247,11 +271,8 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is pane open.
+    /// Gets or sets a value indicating whether the parent pane is open.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is pane open; otherwise, <c>false</c>.
-    /// </value>
     [Browsable(false)]
     [ReadOnly(true)]
     public bool IsPaneOpen
@@ -260,7 +281,9 @@ public class NavigationViewItem
         set => SetValue(IsPaneOpenProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the icon.
+    /// </summary>
     [Bindable(true)]
     [Category("Appearance")]
     public IconElement? Icon
@@ -269,14 +292,18 @@ public class NavigationViewItem
         set => SetValue(IconProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the target page tag.
+    /// </summary>
     public string TargetPageTag
     {
         get => (string)GetValue(TargetPageTagProperty);
         set => SetValue(TargetPageTagProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the target page type.
+    /// </summary>
     public Type? TargetPageType
     {
         get => (Type)GetValue(TargetPageTypeProperty);
@@ -284,35 +311,40 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Gets or sets the information badge.
+    /// Gets or sets an info badge.
     /// </summary>
-    /// <value>
-    /// The information badge.
-    /// </value>
     public InfoBadge? InfoBadge
     {
         get => (InfoBadge)GetValue(InfoBadgeProperty);
         set => SetValue(InfoBadgeProperty, value);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets or sets the navigation cache mode.
+    /// </summary>
     public NavigationCacheMode NavigationCacheMode
     {
         get => (NavigationCacheMode)GetValue(NavigationCacheModeProperty);
         set => SetValue(NavigationCacheModeProperty, value);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the parent navigation view item.
+    /// </summary>
     public INavigationViewItem? NavigationViewItemParent { get; set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets a value indicating whether this item is a menu element.
+    /// </summary>
     public bool IsMenuElement { get; set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the identifier.
+    /// </summary>
     public string Id { get; }
 
     /// <summary>
-    /// Correctly activates.
+    /// Activates this item.
     /// </summary>
     /// <param name="navigationView">The navigation view.</param>
     public virtual void Activate(INavigationView navigationView)
@@ -341,7 +373,7 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Correctly deactivates.
+    /// Deactivates this item.
     /// </summary>
     /// <param name="navigationView">The navigation view.</param>
     public virtual void Deactivate(INavigationView navigationView)
@@ -376,7 +408,39 @@ public class NavigationViewItem
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Core dispose.
+    /// </summary>
+    /// <param name="disposing">Disposing flag.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (disposing)
+        {
+            _subscriptions?.Dispose();
+            _subscriptions = null;
+        }
+
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Called when the control is initialized.
+    /// </summary>
+    /// <param name="e">Event args.</param>
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
@@ -387,7 +451,9 @@ public class NavigationViewItem
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Click handler.
+    /// </summary>
     protected override void OnClick()
     {
         if (NavigationView.GetNavigationParent(this) is not { } navigationView)
@@ -409,9 +475,9 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Is called when mouse is clicked down.
+    /// Mouse down logic to manage expansion region.
     /// </summary>
-    /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
+    /// <param name="e">Mouse args.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         if (!HasMenuItems || e?.LeftButton != MouseButtonState.Pressed)
@@ -501,12 +567,35 @@ public class NavigationViewItem
 
     private void InitializeNavigationViewEvents()
     {
-        if (NavigationView.GetNavigationParent(this) is { } navigationView)
-        {
-            IsPaneOpen = navigationView.IsPaneOpen;
+        _subscriptions?.Dispose();
+        _subscriptions = new CompositeDisposable();
 
-            navigationView.PaneOpened += (_, _) => IsPaneOpen = true;
-            navigationView.PaneClosed += (_, _) => IsPaneOpen = false;
+        _navigationViewHost = NavigationView.GetNavigationParent(this);
+        if (_navigationViewHost is null)
+        {
+            return;
         }
+
+        IsPaneOpen = _navigationViewHost.IsPaneOpen;
+
+        Observable.FromEventPattern<TypedEventHandler<NavigationView, RoutedEventArgs>, RoutedEventArgs>(
+                h => _navigationViewHost.PaneOpened += h,
+                h => _navigationViewHost.PaneOpened -= h)
+            .Subscribe(_ => IsPaneOpen = true)
+            .DisposeWith(_subscriptions);
+
+        Observable.FromEventPattern<TypedEventHandler<NavigationView, RoutedEventArgs>, RoutedEventArgs>(
+                h => _navigationViewHost.PaneClosed += h,
+                h => _navigationViewHost.PaneClosed -= h)
+            .Subscribe(_ => IsPaneOpen = false)
+            .DisposeWith(_subscriptions);
+    }
+
+    private void OnReactiveUnloaded()
+    {
+        NavigationViewItemParent = null;
+        _subscriptions?.Dispose();
+        _subscriptions = null;
+        _navigationViewHost = null;
     }
 }

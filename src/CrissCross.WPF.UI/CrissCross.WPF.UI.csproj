@@ -6,11 +6,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateLibraryLayout>true</GenerateLibraryLayout>
-    <NoWarn>$(NoWarn);CA1812</NoWarn>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <LangVersion>preview</LangVersion>
+    <!-- Build quality / reproducibility -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)'=='true' Or '$(BUILD_BUILDID)'!=''">true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RepositoryUrl>https://github.com/reactivemarbles/CrissCross</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/reactivemarbles/CrissCross</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <NoWarn>$(NoWarn);CA1812</NoWarn>
+  </PropertyGroup>
+
+  <!-- Release specific optimizations -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
@@ -28,17 +45,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Core dependencies -->
     <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(CoreNetVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(CoreNetVersion)" />
     <PackageReference Include="ReactiveList" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
     <PackageReference Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageReference Include="BBCode.WPF" Version="0.2.0" />
     <PackageReference Include="CP.Xaml.Converters" Version="1.1.3" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <!-- Source generators / analyzers isolated from consumers -->
+    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.4.1" PrivateAssets="all" />
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
@@ -62,9 +81,6 @@
 
   <ItemGroup>
     <None Remove="Controls\ColorSelector\icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Controls\ColorSelector\icon.png" />
   </ItemGroup>
 
