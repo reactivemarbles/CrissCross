@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 #if !DESIGN
-using System.Reactive;
 using System.Runtime.Versioning;
 using CrissCross.WinForms.Test.Views;
 using ReactiveUI;
