@@ -16,8 +16,5 @@ public partial class TextBoxView
     /// <summary>
     /// Initializes a new instance of the <see cref="TextBoxView"/> class.
     /// </summary>
-    public TextBoxView()
-    {
-        InitializeComponent();
-    }
+    public TextBoxView() => InitializeComponent();
 }

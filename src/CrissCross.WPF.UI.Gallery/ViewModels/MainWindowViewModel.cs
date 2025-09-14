@@ -35,9 +35,16 @@ public partial class MainWindowViewModel : RxObject
             new NavigationModel(null, NavigationModels, MainWindow.Navigation) { IsExpander = true, Icon = new SymbolIcon(SymbolRegular.LineHorizontal320) },
             new NavigationModel(typeof(MainViewModel), NavigationModels, MainWindow.Navigation) { Name = "Main", Icon = new SymbolIcon(SymbolRegular.Home20), IsSelected = true },
             new NavigationModel(typeof(AllControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "All Controls", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
+            new NavigationModel(typeof(InputControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Input", Icon = new SymbolIcon(SymbolRegular.Keyboard20) },
+            new NavigationModel(typeof(DateTimeControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Date / Time", Icon = new SymbolIcon(SymbolRegular.CalendarLtr20) },
+            new NavigationModel(typeof(MediaControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Media", Icon = new SymbolIcon(SymbolRegular.Image20) },
+            new NavigationModel(typeof(ColorControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Color", Icon = new SymbolIcon(SymbolRegular.Color24) },
+            new NavigationModel(typeof(IndicatorsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Indicators", Icon = new SymbolIcon(SymbolRegular.Gauge20) },
+            new NavigationModel(typeof(NavigationControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Navigation", Icon = new SymbolIcon(SymbolRegular.Navigation20) },
+            new NavigationModel(typeof(ContainerControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Containers", Icon = new SymbolIcon(SymbolRegular.AppFolder20) },
         ]);
 
-        // Register ViewModels and Views
+        // Register ViewModels and Views (basic demos)
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new AllControlsViewModel()).Register<IViewFor<AllControlsViewModel>>(static () => new AllControlsView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ButtonsViewModel()).Register<IViewFor<ButtonsViewModel>>(static () => new ButtonsView());
@@ -53,6 +60,15 @@ public partial class MainWindowViewModel : RxObject
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new TextBoxViewModel()).Register<IViewFor<TextBoxViewModel>>(static () => new TextBoxView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ToggleButtonViewModel()).Register<IViewFor<ToggleButtonViewModel>>(static () => new ToggleButtonView());
         Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorPickersViewModel()).Register<IViewFor<ColorPickersViewModel>>(static () => new ColorPickersView());
+
+        // Group/category views
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new InputControlsViewModel()).Register<IViewFor<InputControlsViewModel>>(static () => new InputControlsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new DateTimeControlsViewModel()).Register<IViewFor<DateTimeControlsViewModel>>(static () => new DateTimeControlsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new MediaControlsViewModel()).Register<IViewFor<MediaControlsViewModel>>(static () => new MediaControlsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new IndicatorsViewModel()).Register<IViewFor<IndicatorsViewModel>>(static () => new IndicatorsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new NavigationControlsViewModel()).Register<IViewFor<NavigationControlsViewModel>>(static () => new NavigationControlsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ContainerControlsViewModel()).Register<IViewFor<ContainerControlsViewModel>>(static () => new ContainerControlsView());
+        Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorControlsViewModel()).Register<IViewFor<ColorControlsViewModel>>(static () => new ColorControlsView());
 
         Locator.CurrentMutable.SetupComplete();
     }

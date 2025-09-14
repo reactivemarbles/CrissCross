@@ -16,8 +16,5 @@ public partial class SliderView
     /// <summary>
     /// Initializes a new instance of the <see cref="SliderView"/> class.
     /// </summary>
-    public SliderView()
-    {
-        InitializeComponent();
-    }
+    public SliderView() => InitializeComponent();
 }

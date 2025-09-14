@@ -16,8 +16,5 @@ public partial class ComboBoxView
     /// <summary>
     /// Initializes a new instance of the <see cref="ComboBoxView"/> class.
     /// </summary>
-    public ComboBoxView()
-    {
-        InitializeComponent();
-    }
+    public ComboBoxView() => InitializeComponent();
 }

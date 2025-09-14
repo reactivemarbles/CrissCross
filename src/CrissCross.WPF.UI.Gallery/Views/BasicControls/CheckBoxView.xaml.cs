@@ -16,8 +16,5 @@ public partial class CheckBoxView
     /// <summary>
     /// Initializes a new instance of the <see cref="CheckBoxView"/> class.
     /// </summary>
-    public CheckBoxView()
-    {
-        InitializeComponent();
-    }
+    public CheckBoxView() => InitializeComponent();
 }

@@ -16,8 +16,5 @@ public partial class DatePickerView
     /// <summary>
     /// Initializes a new instance of the <see cref="DatePickerView"/> class.
     /// </summary>
-    public DatePickerView()
-    {
-        InitializeComponent();
-    }
+    public DatePickerView() => InitializeComponent();
 }

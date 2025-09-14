@@ -16,8 +16,5 @@ public partial class RadioButtonView
     /// <summary>
     /// Initializes a new instance of the <see cref="RadioButtonView"/> class.
     /// </summary>
-    public RadioButtonView()
-    {
-        InitializeComponent();
-    }
+    public RadioButtonView() => InitializeComponent();
 }

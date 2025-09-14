@@ -9,6 +9,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using CrissCross.WPF.UI.Converters;
+using Splat; // for Locator
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -129,6 +130,24 @@ public class NavigationViewItem
         new FrameworkPropertyMetadata(NavigationCacheMode.Disabled));
 
     /// <summary>
+    /// Target ViewModel type (ViewModel-first navigation).
+    /// </summary>
+    public static readonly DependencyProperty TargetViewModelTypeProperty = DependencyProperty.Register(
+        nameof(TargetViewModelType),
+        typeof(Type),
+        typeof(NavigationViewItem),
+        new PropertyMetadata(null));
+
+    /// <summary>
+    /// Target host name for ViewModel-first navigation.
+    /// </summary>
+    public static readonly DependencyProperty TargetHostNameProperty = DependencyProperty.Register(
+        nameof(TargetHostName),
+        typeof(string),
+        typeof(NavigationViewItem),
+        new PropertyMetadata(string.Empty));
+
+    /// <summary>
     /// The template element chevron grid.
     /// </summary>
     protected const string TemplateElementChevronGrid = "PART_ChevronGrid";
@@ -141,7 +160,7 @@ public class NavigationViewItem
 #pragma warning restore SA1401 // Fields should be private
 
     private CompositeDisposable? _subscriptions; // reactive subscriptions per instance
-    private NavigationView? _navigationViewHost;
+    private WeakReference<NavigationView>? _navigationViewHostRef;
     private bool _disposed;
 
     static NavigationViewItem() => DefaultStyleKeyProperty.OverrideMetadata(
@@ -311,21 +330,21 @@ public class NavigationViewItem
     }
 
     /// <summary>
-    /// Gets or sets an info badge.
+    /// Gets or sets the target ViewModel type (ViewModel-first navigation). When set it overrides page navigation.
     /// </summary>
-    public InfoBadge? InfoBadge
+    public Type? TargetViewModelType
     {
-        get => (InfoBadge)GetValue(InfoBadgeProperty);
-        set => SetValue(InfoBadgeProperty, value);
+        get => (Type?)GetValue(TargetViewModelTypeProperty);
+        set => SetValue(TargetViewModelTypeProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets the navigation cache mode.
+    /// Gets or sets the target host name for ViewModel-first navigation. Empty uses default host.
     /// </summary>
-    public NavigationCacheMode NavigationCacheMode
+    public string? TargetHostName
     {
-        get => (NavigationCacheMode)GetValue(NavigationCacheModeProperty);
-        set => SetValue(NavigationCacheModeProperty, value);
+        get => (string?)GetValue(TargetHostNameProperty);
+        set => SetValue(TargetHostNameProperty, value);
     }
 
     /// <summary>
@@ -342,6 +361,24 @@ public class NavigationViewItem
     /// Gets the identifier.
     /// </summary>
     public string Id { get; }
+
+    /// <summary>
+    /// Gets or sets an info badge.
+    /// </summary>
+    public InfoBadge? InfoBadge
+    {
+        get => (InfoBadge?)GetValue(InfoBadgeProperty);
+        set => SetValue(InfoBadgeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the navigation cache mode.
+    /// </summary>
+    public NavigationCacheMode NavigationCacheMode
+    {
+        get => (NavigationCacheMode)GetValue(NavigationCacheModeProperty);
+        set => SetValue(NavigationCacheModeProperty, value);
+    }
 
     /// <summary>
     /// Activates this item.
@@ -361,10 +398,7 @@ public class NavigationViewItem
             NavigationViewItemParent.Activate(navigationView);
         }
 
-        if (NavigationViewItemParent is not null)
-        {
-            NavigationViewItemParent.IsExpanded = navigationView.IsPaneOpen && navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
-        }
+        NavigationViewItemParent?.IsExpanded = navigationView.IsPaneOpen && navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
 
         if (Icon is SymbolIcon symbolIcon && navigationView.PaneDisplayMode == NavigationViewPaneDisplayMode.LeftFluent)
         {
@@ -466,7 +500,27 @@ public class NavigationViewItem
             IsExpanded = !IsExpanded;
         }
 
-        if (TargetPageType is not null)
+        var handledVmFirst = false;
+        if (TargetViewModelType != null)
+        {
+            try
+            {
+                if (Locator.Current.GetService(TargetViewModelType) is IRxObject)
+                {
+                    // Use mixin NavigateToView via lightweight adapter implementing IUseNavigation
+                    var adapter = new NavAdapter(TargetHostName);
+                    adapter.NavigateToView(TargetViewModelType);
+                    handledVmFirst = true;
+                    IsActive = true;
+                }
+            }
+            catch
+            {
+                // ignore and fallback
+            }
+        }
+
+        if (!handledVmFirst && TargetPageType is not null)
         {
             navigationView.OnNavigationViewItemClick(this);
         }
@@ -568,25 +622,26 @@ public class NavigationViewItem
     private void InitializeNavigationViewEvents()
     {
         _subscriptions?.Dispose();
-        _subscriptions = new CompositeDisposable();
+        _subscriptions = [];
 
-        _navigationViewHost = NavigationView.GetNavigationParent(this);
-        if (_navigationViewHost is null)
+        var nav = NavigationView.GetNavigationParent(this);
+        if (nav is null)
         {
             return;
         }
 
-        IsPaneOpen = _navigationViewHost.IsPaneOpen;
+        _navigationViewHostRef = new WeakReference<NavigationView>(nav);
+        IsPaneOpen = nav.IsPaneOpen;
 
         Observable.FromEventPattern<TypedEventHandler<NavigationView, RoutedEventArgs>, RoutedEventArgs>(
-                h => _navigationViewHost.PaneOpened += h,
-                h => _navigationViewHost.PaneOpened -= h)
+                h => nav.PaneOpened += h,
+                h => nav.PaneOpened -= h)
             .Subscribe(_ => IsPaneOpen = true)
             .DisposeWith(_subscriptions);
 
         Observable.FromEventPattern<TypedEventHandler<NavigationView, RoutedEventArgs>, RoutedEventArgs>(
-                h => _navigationViewHost.PaneClosed += h,
-                h => _navigationViewHost.PaneClosed -= h)
+                h => nav.PaneClosed += h,
+                h => nav.PaneClosed -= h)
             .Subscribe(_ => IsPaneOpen = false)
             .DisposeWith(_subscriptions);
     }
@@ -596,6 +651,11 @@ public class NavigationViewItem
         NavigationViewItemParent = null;
         _subscriptions?.Dispose();
         _subscriptions = null;
-        _navigationViewHost = null;
+        _navigationViewHostRef = null;
+    }
+
+    private sealed class NavAdapter(string? name) : IUseNavigation
+    {
+        public string? Name { get; } = name ?? string.Empty;
     }
 }

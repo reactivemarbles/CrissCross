@@ -1,0 +1,16 @@
+<UserControl x:Class="CrissCross.WPF.UI.Gallery.Views.MediaControlsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui">
+  <Grid Margin="12">
+    <StackPanel>
+      <ui:TextBlock FontSize="24" FontWeight="Bold" Text="Media" />
+      <ui:TextBlock Margin="0,6,0,12" Text="Image and person visuals." />
+      <WrapPanel>
+        <ui:Image Width="140" Height="140" Margin="4" Source="/Assets/ControlImages/Image.png" />
+        <ui:GifImage Width="140" Height="140" Margin="4" Source="https://media.giphy.com/media/ICOgUNjpvO0PC/giphy.gif" />
+        <ui:PersonPicture Width="140" Height="140" Margin="4" DisplayName="Ada Lovelace" />
+      </WrapPanel>
+    </StackPanel>
+  </Grid>
+</UserControl>

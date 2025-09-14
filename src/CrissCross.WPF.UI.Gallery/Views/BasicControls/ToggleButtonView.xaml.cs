@@ -16,8 +16,5 @@ public partial class ToggleButtonView
     /// <summary>
     /// Initializes a new instance of the <see cref="ToggleButtonView"/> class.
     /// </summary>
-    public ToggleButtonView()
-    {
-        InitializeComponent();
-    }
+    public ToggleButtonView() => InitializeComponent();
 }
