@@ -16,8 +16,5 @@ public partial class NumericPushButtonView
     /// <summary>
     /// Initializes a new instance of the <see cref="NumericPushButtonView"/> class.
     /// </summary>
-    public NumericPushButtonView()
-    {
-        InitializeComponent();
-    }
+    public NumericPushButtonView() => InitializeComponent();
 }

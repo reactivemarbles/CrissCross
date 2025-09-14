@@ -16,8 +16,5 @@ public partial class ImageView
     /// <summary>
     /// Initializes a new instance of the <see cref="ImageView"/> class.
     /// </summary>
-    public ImageView()
-    {
-        InitializeComponent();
-    }
+    public ImageView() => InitializeComponent();
 }

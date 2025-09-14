@@ -5,7 +5,7 @@
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
 /// <summary>
-/// ColorPickersViewModel.
+/// InputControlsViewModel.
 /// </summary>
 /// <seealso cref="CrissCross.RxObject" />
-public class ColorPickersViewModel : RxObject;
+public partial class InputControlsViewModel : RxObject;

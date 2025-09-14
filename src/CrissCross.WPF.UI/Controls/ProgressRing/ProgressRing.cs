@@ -31,7 +31,30 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(IsIndeterminate),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(false));
+        new PropertyMetadata(false, static (d, e) =>
+        {
+            if (d is ProgressRing pr && e.NewValue is bool b)
+            {
+                // keep IsActive in sync
+                pr.SetCurrentValue(IsActiveProperty, b);
+            }
+        }));
+
+    /// <summary>
+    /// Property for backward compatibility with common ProgressRing templates expecting IsActive.
+    /// Maps to <see cref="IsIndeterminate"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
+        nameof(IsActive),
+        typeof(bool),
+        typeof(ProgressRing),
+        new PropertyMetadata(false, static (d, e) =>
+        {
+            if (d is ProgressRing pr && e.NewValue is bool b)
+            {
+                pr.SetCurrentValue(IsIndeterminateProperty, b);
+            }
+        }));
 
     /// <summary>
     /// Property for <see cref="EngAngle"/>.
@@ -81,8 +104,7 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether determines if <see cref="ProgressRing"/> shows actual values (<see langword="false"/>)
-    /// or generic, continuous progress feedback (<see langword="true"/>).
+    /// Gets or sets a value indicating whether the ring shows generic animation.
     /// </summary>
     public bool IsIndeterminate
     {
@@ -91,7 +113,16 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="Arc.EndAngle"/>.
+    /// Gets or sets a value indicating whether the ring is active (alias of <see cref="IsIndeterminate"/>).
+    /// </summary>
+    public bool IsActive
+    {
+        get => (bool)GetValue(IsActiveProperty);
+        set => SetValue(IsActiveProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the arc end angle.
     /// </summary>
     public double EngAngle
     {
@@ -100,7 +131,7 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Gets the <see cref="Arc.EndAngle"/> when <see cref="IsIndeterminate"/> is <see langword="true"/>.
+    /// Gets the arc end angle when indeterminate.
     /// </summary>
     public double IndeterminateAngle
     {
@@ -127,7 +158,7 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Validates the entered <see cref="Progress" /> and redraws the <see cref="Arc" />.
+    /// Validates the entered <see cref="Progress" /> and redraws the arc.
     /// </summary>
     /// <param name="d">The d.</param>
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
@@ -142,12 +173,11 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Re-draws <see cref="Arc.EndAngle"/> depending on <see cref="Progress"/>.
+    /// Re-draws end angle depending on <see cref="Progress"/>.
     /// </summary>
     protected void UpdateProgressAngle()
     {
         var percentage = Progress;
-
         if (percentage > 100)
         {
             percentage = 100;
@@ -158,9 +188,7 @@ public class ProgressRing : System.Windows.Controls.Control
             percentage = 0;
         }
 
-        // (360 / 100) * percentage
         var endAngle = 3.6d * percentage;
-
         if (endAngle >= 360)
         {
             endAngle = 359;

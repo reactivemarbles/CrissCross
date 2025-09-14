@@ -199,6 +199,8 @@ public partial class NavigationView
 
         OnNavigated(pageInstance);
 
+        EnsureViewModelFirstWiring();
+
         ApplyAttachedProperties(viewItem, pageInstance);
         UpdateContent(pageInstance, dataContext);
 

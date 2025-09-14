@@ -32,6 +32,24 @@ public class Card : System.Windows.Controls.ContentControl
         new PropertyMetadata(false));
 
     /// <summary>
+    /// Property for <see cref="Header"/>.
+    /// </summary>
+    public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
+        nameof(Header),
+        typeof(object),
+        typeof(Card),
+        new PropertyMetadata(null, HeaderChangedCallback));
+
+    /// <summary>
+    /// Property for <see cref="HasHeader"/>.
+    /// </summary>
+    public static readonly DependencyProperty HasHeaderProperty = DependencyProperty.Register(
+        nameof(HasHeader),
+        typeof(bool),
+        typeof(Card),
+        new PropertyMetadata(false));
+
+    /// <summary>
     /// Gets or sets additional content displayed at the bottom.
     /// </summary>
     public object Footer
@@ -49,6 +67,24 @@ public class Card : System.Windows.Controls.ContentControl
         internal set => SetValue(HasFooterProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets additional content displayed at the top.
+    /// </summary>
+    public object? Header
+    {
+        get => GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the card has a header.
+    /// </summary>
+    public bool HasHeader
+    {
+        get => (bool)GetValue(HasHeaderProperty);
+        internal set => SetValue(HasHeaderProperty, value);
+    }
+
     private static void FooterChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not Card control)
@@ -57,5 +93,13 @@ public class Card : System.Windows.Controls.ContentControl
         }
 
         control.SetValue(HasFooterProperty, control.Footer != null);
+    }
+
+    private static void HeaderChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is Card c)
+        {
+            c.SetValue(HasHeaderProperty, c.Header != null);
+        }
     }
 }

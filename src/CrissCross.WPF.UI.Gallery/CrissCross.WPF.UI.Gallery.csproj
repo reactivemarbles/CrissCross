@@ -35,4 +35,6 @@
     <Resource Include="Assets\working.gif" />
   </ItemGroup>
 
+  <!-- Grouped views rely on implicit Page includes (EnableDefaultPageItems). No explicit inclusion needed. -->
+
 </Project>

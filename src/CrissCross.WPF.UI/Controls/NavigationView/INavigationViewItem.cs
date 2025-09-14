@@ -64,6 +64,17 @@ public interface INavigationViewItem
     Type? TargetPageType { get; set; }
 
     /// <summary>
+    /// Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.
+    /// </summary>
+    Type? TargetViewModelType { get; set; }
+
+    /// <summary>
+    /// Gets or sets an optional host name (navigation host) to target when using ViewModel-first navigation.
+    /// Leave empty to use the first registered host.
+    /// </summary>
+    string? TargetHostName { get; set; }
+
+    /// <summary>
     /// Gets or sets the information badge.
     /// </summary>
     /// <value>

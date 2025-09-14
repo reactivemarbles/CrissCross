@@ -47,7 +47,7 @@
                 <ComboBoxItem Content="Item 3" />
                 <ComboBoxItem Content="Item 4" />
             </ComboBox>
-            <!--<ui:ComboBox
+            <ui:ComboBox
                 Grid.Column="1"
                 IsEditable="True"
                 IsTextSearchEnabled="True"
@@ -56,7 +56,7 @@
                 <ComboBoxItem Content="Item 2" />
                 <ComboBoxItem Content="Item 3" />
                 <ComboBoxItem Content="Item 4" />
-            </ui:ComboBox>-->
+            </ui:ComboBox>
         </Grid>
     </Grid>
 </UserControl>

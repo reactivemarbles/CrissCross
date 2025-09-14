@@ -23,21 +23,5 @@ public partial class AllControlsView
     {
         InitializeComponent();
         DataContext = ViewModel = Locator.Current.GetService<AllControlsViewModel>()!;
-        this.WhenActivated(disposables =>
-        {
-            this.BindCommand(ViewModel, vm => vm!.ButtonsCommand, v => v.Buttons).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.CheckBoxCommand, v => v.CheckBox).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.ComboBoxCommand, v => v.ComboBox).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.DatePickerCommand, v => v.DatePicker).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.ImageCommand, v => v.Image).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.NumericPushButtonCommand, v => v.NumericPushButton).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.PasswordBoxCommand, v => v.PasswordBox).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.RadioButtonCommand, v => v.RadioButton).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.SliderCommand, v => v.Slider).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.TextBlockCommand, v => v.TextBlock).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.TextBoxCommand, v => v.TextBox).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.ToggleButtonCommand, v => v.ToggleButton).DisposeWith(disposables);
-            this.BindCommand(ViewModel, vm => vm!.ColorPickerCommand, v => v.ColorPicker).DisposeWith(disposables);
-        });
     }
 }

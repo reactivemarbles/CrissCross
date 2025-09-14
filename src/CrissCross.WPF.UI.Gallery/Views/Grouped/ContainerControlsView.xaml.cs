@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -8,13 +8,13 @@ using ReactiveUI.SourceGenerators;
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>
-/// Interaction logic for PasswordBoxView.xaml.
+/// Container controls grouped page.
 /// </summary>
-[IViewFor<PasswordBoxViewModel>]
-public partial class PasswordBoxView
+[IViewFor<ContainerControlsViewModel>]
+public partial class ContainerControlsView
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PasswordBoxView"/> class.
+    /// Initializes a new instance of the <see cref="ContainerControlsView"/> class.
     /// </summary>
-    public PasswordBoxView() => InitializeComponent();
+    public ContainerControlsView() => InitializeComponent();
 }

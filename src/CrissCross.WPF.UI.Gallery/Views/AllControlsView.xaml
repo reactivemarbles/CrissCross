@@ -3,170 +3,67 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrissCross.WPF.UI.Gallery.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="900"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:TextBlock
+            Grid.Row="0"
+            Margin="0,0,0,4"
             FontSize="20"
             FontWeight="Medium"
             Text="All Controls" />
+        <DockPanel Grid.Row="1" Margin="0,0,0,8">
+            <ui:TextBox
+                Width="260"
+                Margin="0,0,8,0"
+                Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <ui:InfoBadge VerticalAlignment="Center" Value="{Binding Path=FilteredControls.Count}" />
+        </DockPanel>
         <ui:DynamicScrollViewer
-            Grid.Row="1"
+            Grid.Row="2"
             CanContentScroll="True"
             VerticalScrollBarVisibility="Auto">
-            <WrapPanel>
-                <ui:Button
-                    x:Name="Buttons"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="Buttons">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/Button.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="CheckBox"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="CheckBox">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/CheckBox.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="ComboBox"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="ComboBox">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/ComboBox.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="DatePicker"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="DatePicker">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/DatePicker.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="Image"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="Image">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/Image.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="NumericPushButton"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="NumericPushButton">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/NumberBox.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="PasswordBox"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="PasswordBox">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/PasswordBox.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="RadioButton"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="RadioButton">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/RadioButton.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="Slider"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="Slider">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/Slider.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="TextBlock"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="TextBlock">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/TextBlock.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="TextBox"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="TextBox">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/TextBox.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="ToggleButton"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="ToggleButton">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/ToggleButton.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-                <ui:Button
-                    x:Name="ColorPicker"
-                    Width="200"
-                    Height="60"
-                    Margin="5"
-                    HorizontalContentAlignment="Left"
-                    Content="ColorPicker">
-                    <ui:Button.Icon>
-                        <ui:ImageIcon Source="/Assets/ControlImages/ColorPicker.png" />
-                    </ui:Button.Icon>
-                </ui:Button>
-            </WrapPanel>
+            <ItemsControl ItemsSource="{Binding FilteredControls}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ui:Button
+                            Width="210"
+                            Height="68"
+                            Margin="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding Command}">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <ui:ImageIcon
+                                    Width="32"
+                                    Height="32"
+                                    Margin="0,0,8,0"
+                                    Source="{Binding Icon}" />
+                                <StackPanel>
+                                    <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                                    <TextBlock
+                                        FontSize="11"
+                                        Foreground="Gray"
+                                        Text="{Binding Description}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ui:Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ui:DynamicScrollViewer>
     </Grid>
 </UserControl>

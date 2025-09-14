@@ -16,8 +16,5 @@ public partial class TextBlockView
     /// <summary>
     /// Initializes a new instance of the <see cref="TextBlockView"/> class.
     /// </summary>
-    public TextBlockView()
-    {
-        InitializeComponent();
-    }
+    public TextBlockView() => InitializeComponent();
 }
