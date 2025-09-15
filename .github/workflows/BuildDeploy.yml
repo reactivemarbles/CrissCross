@@ -63,7 +63,7 @@ jobs:
       - name: 'Install DotNet workloads'
         shell: bash
         run: |
-          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools wasm-tools-net9
+          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools wasm-tools-net8
 
       - name: NBGV
         id: nbgv
