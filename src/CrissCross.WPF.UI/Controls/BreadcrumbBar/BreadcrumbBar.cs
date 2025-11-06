@@ -4,6 +4,7 @@
 
 using System.Collections.Specialized;
 using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using ReactiveMarbles.ObservableEvents;
