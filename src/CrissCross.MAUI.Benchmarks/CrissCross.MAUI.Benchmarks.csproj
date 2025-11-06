@@ -14,8 +14,8 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.100" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.6" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />

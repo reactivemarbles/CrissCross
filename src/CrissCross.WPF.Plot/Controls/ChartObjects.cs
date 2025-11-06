@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive;
-using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
