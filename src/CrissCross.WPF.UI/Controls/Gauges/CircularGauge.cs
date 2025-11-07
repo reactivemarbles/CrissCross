@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Path = System.Windows.Shapes.Path;
@@ -14,6 +15,10 @@ namespace CrissCross.WPF.UI.Controls;
 /// CircularGauge displays a value within a specified range using a radial scale and a needle.
 /// It supports theming via dynamic resources present in CrissCross (accent, stroke and text brushes).
 /// </summary>
+[TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
+[TemplatePart(Name = "Pointer", Type = typeof(Path))]
+[TemplatePart(Name = "PointerCap", Type = typeof(Ellipse))]
+[TemplatePart(Name = "RangeIndicatorLight", Type = typeof(Ellipse))]
 public sealed class CircularGauge : Control
 {
     /// <summary>
@@ -51,6 +56,12 @@ public sealed class CircularGauge : Control
     /// </summary>
     public static readonly DependencyProperty DialTextFontSizeProperty =
         DependencyProperty.Register(nameof(DialTextFontSize), typeof(double), typeof(CircularGauge), new PropertyMetadata(14d));
+
+    /// <summary>
+    /// The value text font size property.
+    /// </summary>
+    public static readonly DependencyProperty ValueTextFontSizeProperty =
+        DependencyProperty.Register(nameof(ValueTextFontSize), typeof(double), typeof(CircularGauge), new PropertyMetadata(14d));
 
     /// <summary>
     /// Dependency property to Get/Set the Dial Text Offset.
@@ -385,6 +396,16 @@ public sealed class CircularGauge : Control
     public double DialTextFontSize
     {
         get => (double)GetValue(DialTextFontSizeProperty); set => SetValue(DialTextFontSizeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets /Sets Dial Text Font Size.
+    /// </summary>
+    [Description("Gets/Sets Value Text Font Size")]
+    [Category("CrissCross Dial Text")]
+    public double ValueTextFontSize
+    {
+        get => (double)GetValue(ValueTextFontSizeProperty); set => SetValue(ValueTextFontSizeProperty, value);
     }
 
     /// <summary>
@@ -1005,7 +1026,7 @@ public sealed class CircularGauge : Control
 
     private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        // Get access to the instance of CircularGaugeConrol whose property value changed
+        // Get access to the instance of CircularGauge whose property value changed
         if (d is CircularGauge gauge)
         {
             lock (gauge._lockObject)
@@ -1026,7 +1047,6 @@ public sealed class CircularGauge : Control
 
     private void AnimatePointer(double oldValueAngle, double newValueAngle)
     {
-        // ReSharper disable once CompareOfFloatsByEqualityOperator
         if (_pointer != null && newValueAngle != oldValueAngle)
         {
             var da = new DoubleAnimation
@@ -1159,9 +1179,6 @@ public sealed class CircularGauge : Control
 
         // Calculate one major tick angle
         var majorTickUnitAngle = ScaleSweepAngle / MajorDivisionsCount;
-
-        // Obtaining One minor tick angle
-        ////var minorTickUnitAngle = this.ScaleSweepAngle / this.MinorDivisionsCount;
 
         // Obtaining One major ticks value
         var majorTicksUnitValue = (MaxValue - MinValue) / MajorDivisionsCount;
@@ -1307,13 +1324,9 @@ public sealed class CircularGauge : Control
             };
 
         // First line segment from pt p1 - pt p2
-
         // Arc drawn from pt p2 - pt p3 with the RangeIndicatorRadius
-
         // Second line segment from pt p3 - pt p4
-
         // Arc drawn from pt p4 - pt p1 with the Radius of arcradius1
-
         // Defining the segment path properties
         var rangestrokecolor = clr == Brushes.Transparent ? clr : Brushes.White;
         var range = new Path
