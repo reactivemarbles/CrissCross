@@ -38,6 +38,16 @@
                     </StackPanel>
                 </ui:GroupBox>
             </WrapPanel>
+            <ui:AlarmBanner
+                Margin="6"
+                IsActive="True"
+                Message="This is a warning alarm banner."
+                Severity="Warning" />
+            <ui:CircularGauge
+                Width="200"
+                Height="200"
+                Margin="6"
+                Value="0" />
         </StackPanel>
     </Grid>
 </UserControl>

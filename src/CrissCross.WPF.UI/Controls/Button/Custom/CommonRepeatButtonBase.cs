@@ -243,17 +243,7 @@ public abstract class CommonRepeatButtonBase : RepeatButton
     {
         var border = UserHintBorder();
 
-        if (border != null)
-        {
-            if (IsEnabled)
-            {
-                border.Background = null;
-            }
-            else
-            {
-                border.Background = new SolidColorBrush(Color.FromArgb(0x55, 0, 0, 0));
-            }
-        }
+        border?.Background = IsEnabled ? null : new SolidColorBrush(Color.FromArgb(0x55, 0, 0, 0));
     }
 
     private void CommonRepeatButtonBase_Loaded(object sender, RoutedEventArgs e) => SetIndicatorBorderSize(0);
