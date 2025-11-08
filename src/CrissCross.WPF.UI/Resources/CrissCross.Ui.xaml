@@ -107,5 +107,7 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/IconElement/FontIconFallback.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NumericPushButton/NumericPushButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CheckBoxModern/CheckBoxModern.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AlarmBanner/AlarmBanner.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Gauges/CircularGauge.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

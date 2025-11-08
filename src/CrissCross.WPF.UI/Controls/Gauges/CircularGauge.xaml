@@ -1,0 +1,217 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:CrissCross.WPF.UI.Controls.Gauges.Converters"
+    xmlns:ui="clr-namespace:CrissCross.WPF.UI.Controls">
+    <!--  Type converters  -->
+    <converters:ImageOffsetConverter x:Key="ImageOffsetConverter" />
+    <converters:RadiusToDiameterConverter x:Key="RadiusToDiameterConverter" />
+    <converters:PointerCenterConverter x:Key="PointerCenterConverter" />
+    <converters:RangeIndicatorLightPositionConverter x:Key="RangeIndicatorLightPositionConverter" />
+    <converters:SizeConverter x:Key="SizeConverter" />
+    <converters:BackgroundColorConverter x:Key="BackgroundColorConverter" />
+    <converters:GlassEffectWidthConverter x:Key="GlassEffectWidthConverter" />
+    <converters:ColorToSolidColorBrushConverter x:Key="ColorToSolidColorBrushConverter" />
+    <converters:DecimalConverter x:Key="DecimalConverter" />
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+    <Style x:Key="DefaultCircularGaugeStyle" TargetType="ui:CircularGauge">
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.321" Color="#FFA3AFD6" />
+                    <GradientStop Offset="0.674" Color="#FF8399A9" />
+                    <GradientStop Offset="0.375" Color="#FF718597" />
+                    <GradientStop Offset="1" Color="#FF617584" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontFamily" Value="Arial" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ui:CircularGauge">
+                    <!--  Root Grid  -->
+                    <Viewbox>
+                        <ui:Grid
+                            x:Name="LayoutRoot"
+                            Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Radius, Converter={StaticResource RadiusToDiameterConverter}}"
+                            Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Radius, Converter={StaticResource RadiusToDiameterConverter}}">
+
+                            <Ellipse
+                                x:Name="OuterFrame"
+                                Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Radius, Converter={StaticResource RadiusToDiameterConverter}}"
+                                Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Radius, Converter={StaticResource RadiusToDiameterConverter}}"
+                                Fill="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background, Converter={StaticResource BackgroundColorConverter}}"
+                                StrokeThickness="16">
+
+                                <Ellipse.Stroke>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Offset="1" Color="#FF636060" />
+                                        <GradientStop Offset="0" Color="#FF5F5C5C" />
+                                        <GradientStop Offset="0.35" Color="#FFEEDEDE" />
+                                        <GradientStop Offset="0.705" Color="#FFA09595" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Stroke>
+                            </Ellipse>
+
+                            <!--  Gauge Image  -->
+                            <ui:Image
+                                x:Name="DialImage"
+                                Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ImageSize, Converter={StaticResource SizeConverter}, ConverterParameter=Width}"
+                                Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ImageSize, Converter={StaticResource SizeConverter}, ConverterParameter=Height}"
+                                RenderTransform="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ImageOffset, Converter={StaticResource ImageOffsetConverter}}"
+                                Source="{TemplateBinding ImageSource}" />
+
+                            <ui:StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <!--  Dial Text  -->
+                                <ui:TextBlock
+                                    x:Name="DialText"
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="{TemplateBinding DialTextFontSize}"
+                                    FontWeight="Bold"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    RenderTransform="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DialTextOffset, Converter={StaticResource RangeIndicatorLightPositionConverter}}"
+                                    Text="{TemplateBinding DialText}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                                <!--  Unit  -->
+                                <ui:TextBlock
+                                    x:Name="Unit"
+                                    Width="150"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="{TemplateBinding DialTextFontSize}"
+                                    FontWeight="Bold"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    RenderTransform="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DialTextOffset, Converter={StaticResource RangeIndicatorLightPositionConverter}}"
+                                    Text="{TemplateBinding Unit}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </ui:StackPanel>
+
+                            <!--  Display the value in a border  -->
+                            <ui:Border
+                                MinWidth="90"
+                                Margin="0,0,0,23"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Background="{TemplateBinding ValueBackground}"
+                                BorderBrush="{TemplateBinding DisplayBorderColour}"
+                                BorderThickness="2"
+                                CornerRadius="2"
+                                Visibility="{TemplateBinding DisplayValue}">
+                                <ui:TextBlock
+                                    Margin="0,-3,0,0"
+                                    FontSize="{TemplateBinding ValueTextFontSize}"
+                                    Foreground="{TemplateBinding ScaleForeground}"
+                                    TextAlignment="{TemplateBinding DisplayAlignment}">
+                                    <ui:TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource DecimalConverter}">
+                                            <Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            <Binding Path="Decimals" RelativeSource="{RelativeSource TemplatedParent}" />
+                                        </MultiBinding>
+                                    </ui:TextBlock.Text>
+                                </ui:TextBlock>
+                            </ui:Border>
+
+                            <!--  Red Cross for no reading  -->
+                            <ui:Image
+                                Width="50"
+                                Height="50"
+                                Margin="0,0,0,13"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Source="/CrissCross.WPF.UI;component/Controls/Gauges/RedCross.png"
+                                Visibility="{TemplateBinding ShowError}" />
+
+                            <!--  Pointer  -->
+                            <Path
+                                x:Name="Pointer"
+                                Width="{TemplateBinding PointerLength}"
+                                Height="{TemplateBinding PointerThickness}"
+                                HorizontalAlignment="Center"
+                                Data="M1,1 L1,10 L156,6 z"
+                                RenderTransform="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=PointerLength, Converter={StaticResource PointerCenterConverter}}"
+                                RenderTransformOrigin="0,0.5"
+                                Stretch="Fill"
+                                Stroke="#FFE91C1C"
+                                StrokeThickness="2">
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Offset="0.197" Color="#FF890A0A" />
+                                        <GradientStop Offset="1" Color="#FFC40808" />
+                                        <GradientStop Offset="0.61" Color="#FFE32323" />
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+
+                            <!--  Pointer Cap  -->
+                            <Ellipse
+                                x:Name="PointerCap"
+                                Width="{TemplateBinding PointerCapRadius}"
+                                Height="{TemplateBinding PointerCapRadius}"
+                                Opacity="1"
+                                StrokeThickness="4">
+                                <Ellipse.Stroke>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Offset="0.675" Color="#FF000000" />
+                                        <GradientStop Offset="0.031" Color="#FFC1B5B5" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Stroke>
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Offset="0.846" Color="#FF152029" />
+                                        <GradientStop Offset="0.342" Color="#FF140204" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+
+                            <!--  Range indicator light  -->
+                            <Ellipse
+                                x:Name="RangeIndicatorLight"
+                                Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=RangeIndicatorLightRadius, Converter={StaticResource RadiusToDiameterConverter}}"
+                                Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=RangeIndicatorLightRadius, Converter={StaticResource RadiusToDiameterConverter}}"
+                                RenderTransform="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=RangeIndicatorLightOffset, Converter={StaticResource RangeIndicatorLightPositionConverter}}"
+                                Visibility="{TemplateBinding RangeIndicatorLightVisible}">
+                                <!--  Range indicator light off position effect  -->
+                                <Ellipse.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Offset="0.2" Color="LightGray" />
+                                        <GradientStop Offset="0.5" Color="Gray" />
+                                        <GradientStop Offset="0.8" Color="Black" />
+                                    </LinearGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+
+                            <!--  Glass effect ellipse  -->
+                            <Path
+                                x:Name="GlassEffect"
+                                Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Radius, Converter={StaticResource GlassEffectWidthConverter}}"
+                                Height="{TemplateBinding Radius}"
+                                VerticalAlignment="Bottom"
+                                Data="M265.99997,151.00005 C263.99994,194.00003 209.55908,259 135.00064,259 C60.442207,259 11,200.00003 5.9999995,157.00005 C5.0181994,148.55656 73.000877,112.00006 137.00053,112.00007 C199.00887,112.00008 266.72015,135.5164 265.99997,151.00005 z"
+                                Opacity="0.18"
+                                Stretch="Fill"
+                                StrokeThickness="1">
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                        <GradientStop Color="#68FCFCFC" />
+                                        <GradientStop Offset="1" Color="#FFF8FCF8" />
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+
+                            <!--  Error Status  -->
+                            <Image Source="/CrissCross.WPF.UI;component/Controls/Gauges/RedCross.png" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Error, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </ui:Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultCircularGaugeStyle}" TargetType="{x:Type ui:CircularGauge}" />
+</ResourceDictionary>

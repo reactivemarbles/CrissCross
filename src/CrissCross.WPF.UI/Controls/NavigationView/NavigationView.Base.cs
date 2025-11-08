@@ -125,11 +125,21 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
+        // Do not remove Loaded handler so re-load works after reattachment
         Unloaded -= OnUnloaded;
         SizeChanged -= OnSizeChanged;
 
         NavigationStack.CollectionChanged -= NavigationStackOnCollectionChanged;
+
+        if (MenuItems is ObservableCollection<object> mi)
+        {
+            mi.CollectionChanged -= OnMenuItems_CollectionChanged;
+        }
+
+        if (FooterMenuItems is ObservableCollection<object> fmi)
+        {
+            fmi.CollectionChanged -= OnMenuItems_CollectionChanged;
+        }
 
         PageIdOrTargetTagNavigationViewsDictionary.Clear();
         PageTypeNavigationViewsDictionary.Clear();
@@ -455,7 +465,27 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e) => UpdateVisualState((NavigationView)sender);
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        // ensure handlers are attached when reloaded
+        Unloaded -= OnUnloaded;
+        Unloaded += OnUnloaded;
+        SizeChanged -= OnSizeChanged;
+        SizeChanged += OnSizeChanged;
+        if (MenuItems is ObservableCollection<object> mi)
+        {
+            mi.CollectionChanged -= OnMenuItems_CollectionChanged;
+            mi.CollectionChanged += OnMenuItems_CollectionChanged;
+        }
+
+        if (FooterMenuItems is ObservableCollection<object> fmi)
+        {
+            fmi.CollectionChanged -= OnMenuItems_CollectionChanged;
+            fmi.CollectionChanged += OnMenuItems_CollectionChanged;
+        }
+
+        UpdateVisualState((NavigationView)sender);
+    }
 
     private void UpdateAutoSuggestBoxSuggestions()
     {

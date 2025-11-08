@@ -555,14 +555,12 @@ public static class AnimationBehavior
         var image = (System.Windows.Controls.Image)sender;
         image.Unloaded -= Image_Unloaded;
         image.Loaded += Image_Loaded;
-
         var seqNum = GetSeqNum(image) + 1;
         SetSeqNum(image, seqNum);
-
         image.Source = null!;
         ClearAnimatorCore(image);
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
+
+        // Removed forced GC.Collect and GC.WaitForPendingFinalizers for performance reasons.
     }
 
     private static void InitAnimation(System.Windows.Controls.Image image)

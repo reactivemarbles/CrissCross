@@ -14,7 +14,7 @@
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Compatability with Net 8/9 and netstandard2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatability with Net 8/9/10 and netstandard2.0</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -35,9 +35,9 @@
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
     <WebViewVersion>1.0.3595.46</WebViewVersion>
     <CoreNetVersion>9.0.10</CoreNetVersion>
-    <CrissCrossCoreTargetFrameworks>netstandard2.0;net8.0;net9.0</CrissCrossCoreTargetFrameworks>
-    <CrissCrossWinTargetFrameworks>net472;net48;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
-    <CrissCrossWebviewTargetFrameworks>net472;net48;net8.0-windows;net9.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossCoreTargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>net472;net48;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net472;net48;net8.0-windows;net9.0-windows;net10.0-windows</CrissCrossWebviewTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

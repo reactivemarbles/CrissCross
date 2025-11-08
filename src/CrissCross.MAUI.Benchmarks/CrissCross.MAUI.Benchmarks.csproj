@@ -8,11 +8,22 @@
     <EnablePreviewMsixTooling>false</EnablePreviewMsixTooling>
     <SelfContained>false</SelfContained>
     <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
-    <Platforms>x64;arm64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
+    <!-- Added AnyCPU so solution configs like Debug|Any CPU / Release|Any CPU become valid -->
+    <Platforms>x64;arm64;AnyCPU</Platforms>
+    <!-- Keep default target when not explicitly selecting platform -->
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
+
+  <!-- Explicit property groups for AnyCPU to satisfy solution configuration entries -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.6" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />

@@ -18,9 +18,9 @@ namespace CrissCross;
 /// <param name="navType">Type of the nav.</param>
 /// <param name="view">The view.</param>
 /// <param name="hostName">The hostName.</param>
-/// <param name="parmeter">The parmeter.</param>
+/// <param name="parameter">The parameter.</param>
 [DataContract]
-public class ViewModelNavigatingEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string? hostName, object? parmeter = null) : ViewModelNavigationEventArgs(from, to, navType, view, hostName, parmeter), IViewModelNavigatingEventArgs
+public class ViewModelNavigatingEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string? hostName, object? parameter = null) : ViewModelNavigationEventArgs(from, to, navType, view, hostName, parameter), IViewModelNavigatingEventArgs
 {
     /// <summary>
     /// Gets or sets a value indicating whether this <see cref="ViewModelNavigatingEventArgs"/>

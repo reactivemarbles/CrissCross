@@ -38,6 +38,24 @@
                     </StackPanel>
                 </ui:GroupBox>
             </WrapPanel>
+            <ui:AlarmBanner
+                Margin="6"
+                IsActive="True"
+                Message="This is a warning alarm banner."
+                Severity="Warning" />
+            <ui:CircularGauge
+                Width="200"
+                Height="200"
+                Margin="6"
+                AboveOptimalRangeColor="Red"
+                BelowOptimalRangeColor="Yellow"
+                DialTextOffset="-39"
+                OptimalRangeColor="Green"
+                OptimalRangeEndValue="600"
+                OptimalRangeStartValue="200"
+                RangeIndicatorLightVisible="Visible"
+                ValueTextFontSize="30"
+                Value="10" />
         </StackPanel>
     </Grid>
 </UserControl>

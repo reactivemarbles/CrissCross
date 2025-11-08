@@ -75,14 +75,7 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
         {
             if (sender is CommonToggleButtonBase button && button.IsChecked is bool isChecked)
             {
-                    if (isChecked)
-                    {
-                        button.Content = "Checked";
-                    }
-                    else
-                    {
-                        button.Content = "Unchecked";
-                    }
+                button.Content = isChecked ? "Checked" : "Unchecked";
             }
         };
     }
@@ -224,14 +217,7 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
     protected override void OnMouseLeave(MouseEventArgs e)
     {
         base.OnMouseLeave(e);
-        if (IsFocused)
-        {
-            SetIndicatorBorderSize(1.0);
-        }
-        else
-        {
-            SetIndicatorBorderSize(0.0);
-        }
+        SetIndicatorBorderSize(IsFocused ? 1.0 : 0.0);
     }
 
     /// <summary>
@@ -257,14 +243,7 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
 
         if (border != null)
         {
-            if (IsEnabled)
-            {
-                border.Background = null;
-            }
-            else
-            {
-                border.Background = new SolidColorBrush(Color.FromArgb(0x55, 0, 0, 0));
-            }
+            border.Background = IsEnabled ? null : new SolidColorBrush(Color.FromArgb(0x55, 0, 0, 0));
         }
     }
 

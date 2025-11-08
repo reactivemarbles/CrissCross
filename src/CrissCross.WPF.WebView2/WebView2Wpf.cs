@@ -122,6 +122,7 @@ public class WebView2Wpf : ContentControl, IWebView2
 #pragma warning restore SA1202 // Elements should be ordered by access
 
     private readonly WebView2 _WebBrowser;
+    private readonly RoutedEventHandler _unloadedHandler; // Added handler field
     private WindowHost<Window>? _windowHost;
     private bool _disposedValue;
     private Window? _parentWindow;
@@ -129,11 +130,21 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>
     /// Initializes a new instance of the <see cref="WebView2Wpf"/> class.
     /// </summary>
-    public WebView2Wpf() => _WebBrowser = new()
+    public WebView2Wpf()
     {
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        VerticalAlignment = VerticalAlignment.Stretch,
-    };
+        _WebBrowser = new()
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
+        _unloadedHandler = (s, e) =>
+        {
+            if (AutoDispose)
+            {
+                Dispose();
+            }
+        };
+    }
 
     /// <summary>
     /// Occurs when [content loading].
@@ -582,18 +593,16 @@ public class WebView2Wpf : ContentControl, IWebView2
     {
         if (d is WebView2Wpf browser)
         {
+            // Always ensure previous subscription is removed before (re)adding
+            browser._WebBrowser.Unloaded -= browser._unloadedHandler;
             if (browser.AutoDispose)
             {
-                browser._WebBrowser.Unloaded += (s, e) => browser.Dispose();
-            }
-            else
-            {
-                browser._WebBrowser.Unloaded -= (s, e) => browser.Dispose();
+                browser._WebBrowser.Unloaded += browser._unloadedHandler;
             }
         }
     }
 
-    private void ParentWindow_Loaded(object sender, RoutedEventArgs e)
+    private void ParentWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         _parentWindow!.Loaded -= ParentWindow_Loaded;
         _windowHost = new(Name);

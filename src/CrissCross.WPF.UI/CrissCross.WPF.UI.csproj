@@ -30,12 +30,14 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+  <!-- .NET Framework specific constants -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48'">
     <DefineConstants>$(DefineConstants);LACKS_STREAM_MEMORY_OVERLOADS</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  <!-- .NET Framework specific references -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,7 +81,16 @@
 
   <ItemGroup>
     <None Remove="Controls\ColorSelector\icon.png" />
+    <None Remove="Controls\Gauges\RedCross.png" />
     <EmbeddedResource Include="Controls\ColorSelector\icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controls\Alarms\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Controls\Gauges\RedCross.png" />
   </ItemGroup>
 
 </Project>

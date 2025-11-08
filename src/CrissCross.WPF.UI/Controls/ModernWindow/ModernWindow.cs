@@ -275,7 +275,7 @@ public class ModernWindow
     /// Gets or sets a value indicating whether the window title is visible in the UI.
     /// </summary>
     [Description("Gets or sets if the Title is visible.")]
-    [Category("AICS MVVM")]
+    [Category("CrissCross MVVM")]
     public bool IsTitleVisible
     {
         get => (bool)GetValue(IsTitleVisibleProperty);
@@ -345,7 +345,7 @@ public class ModernWindow
     /// </summary>
     /// <value>The menu link groups.</value>
     [Description("Gets or sets the collection of link groups shown in the window's menu.")]
-    [Category("AICS MVVM")]
+    [Category("CrissCross MVVM")]
     public ObservableCollection<FrameworkElement> MainMenu
     {
         get => (ObservableCollection<FrameworkElement>)GetValue(MainMenuProperty);
@@ -441,7 +441,7 @@ public class ModernWindow
     /// </summary>
     /// <value>The title logo data.</value>
     [Description("Gets or sets the Title logo.")]
-    [Category("AICS MVVM")]
+    [Category("CrissCross MVVM")]
     public Geometry? TitleLogoData
     {
         get => (Geometry?)GetValue(TitleLogoDataProperty);
