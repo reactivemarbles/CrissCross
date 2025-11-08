@@ -87,8 +87,6 @@
 
   <ItemGroup>
     <Folder Include="Controls\Alarms\" />
-    <Folder Include="Controls\Indicators\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
 
   <ItemGroup>

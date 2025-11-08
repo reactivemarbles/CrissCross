@@ -44,6 +44,14 @@ public static class RxObjectMixins
     public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
 
     /// <summary>
+    /// Gets the build complete and returns IDisposable to unsubscribe.
+    /// </summary>
+    /// <param name="dummy">The dummy.</param>
+    /// <param name="action">The action.</param>
+    /// <returns>IDisposable subscription.</returns>
+    public static IDisposable BuildCompleteDisposable(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
+
+    /// <summary>
     /// Converts to listofobservable.
     /// </summary>
     /// <typeparam name="T">The Type.</typeparam>
