@@ -54,6 +54,9 @@ jobs:
            **/global.json
            **/nuget.config
 
+      - name: Restore workloads (auto)
+        run: dotnet workload restore
+
       - name: Get Latest Visual Studio Version
         shell: bash
         run: |
@@ -63,10 +66,10 @@ jobs:
             vs modify release Enterprise +mobile +desktop +uwp +web
             vs where release
       
-      - name: 'Install DotNet workloads'
+      - name: 'Install DotNet workloads (explicit)'
         shell: bash
         run: |
-          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools wasm-tools-net8
+          dotnet workload install android ios tvos macos maui maccatalyst wasm-tools wasm-tools-net8 wasm-tools-net9 || true
 
       - name: NBGV
         id: nbgv

@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CP.WPF.Controls;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Plottables;
 
@@ -22,9 +21,8 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// Interaction logic for WPF Chart AICS.
 /// </summary>
-[IViewFor<LiveChartViewModel>]
 [SupportedOSPlatform("windows10.0.19041")]
-public partial class LiveChart
+public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewModel>
 {
     private readonly CompositeDisposable _dd = [];
     private IDisposable? _crosshairDisposable;
@@ -37,17 +35,17 @@ public partial class LiveChart
     private AxisLine? _plottableBeingDragged;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LiveChart" /> class.
+    /// Initializes a new instance of the <see cref="LiveChart"/> class.
     /// </summary>
     public LiveChart()
     {
         InitializeComponent();
         First = false;
-        DataContext = ViewModel = new(MainChartGrid) { UseFixedNumberOfPoints = UseFixedNumberOfPoints, NumberPointsPlotted = NumberPointsPlotted };
+        ViewModel = new(MainChartGrid) { UseFixedNumberOfPoints = UseFixedNumberOfPoints, NumberPointsPlotted = NumberPointsPlotted };
+        DataContext = ViewModel;
         ViewModel.ThrownExceptions.Subscribe(ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}")).DisposeWith(_dd);
         ExecuteLockUnlock();
         ExecuteManAutoScale();
-
         InitializeButtons();
         this.WhenActivated(ElementBinding1);
     }
@@ -580,46 +578,29 @@ public partial class LiveChart
 
     private void MainChartGrid_MouseMove(object sender, MouseEventArgs e)
     {
-        ////this rectangle is the area around the mouse in coordinate units
-        // MOUSE EVENT
         var position = e.GetPosition(MainChartGrid);
-
-        // Obtener el DPI Scaling del Grid actual
         var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
-        var dpiScaleX = dpiInfo.DpiScaleX;
-        var dpiScaleY = dpiInfo.DpiScaleY;
-
-        // Ajustar las coordenadas para que sean precisas
-        var adjustedX = position.X * dpiScaleX;
-        var adjustedY = position.Y * dpiScaleY;
-
-        //// determine where the mouse is and send the coordinates
-        ////Pixel mousePixel = new(adjustedX, adjustedY);
-        ////var mouseLocation = ViewModel.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
-        ////var xAxe = mouseLocation.X;
-        ////var yAxe = mouseLocation.Y;
+        var adjustedX = position.X * dpiInfo.DpiScaleX;
+        var adjustedY = position.Y * dpiInfo.DpiScaleY;
         var rect = ViewModel!.WpfPlot1vm!.Plot.GetCoordinateRect((float)adjustedX, (float)adjustedY, radius: 5, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
-
         if (_plottableBeingDragged is null)
         {
-            ////set cursor based on what's beneath the plottable
             var lineUnderMouse = ViewModel.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
             if (lineUnderMouse is null)
             {
-                Cursor = Cursors.Arrow;
+                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
             }
             else if (lineUnderMouse.IsDraggable && lineUnderMouse is VerticalLine)
             {
-                Cursor = Cursors.SizeWE;
+                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.SizeWE;
             }
             else if (lineUnderMouse.IsDraggable && lineUnderMouse is HorizontalLine)
             {
-                Cursor = Cursors.SizeNS;
+                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.SizeNS;
             }
         }
         else
         {
-            // update the position of the plottable being dragged
             if (_plottableBeingDragged is HorizontalLine hl)
             {
                 hl.Y = rect.VerticalCenter;
