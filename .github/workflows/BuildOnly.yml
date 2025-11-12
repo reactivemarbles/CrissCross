@@ -54,9 +54,6 @@ jobs:
            **/global.json
            **/nuget.config
 
-      - name: Restore workloads (auto)
-        run: dotnet workload restore
-
       - name: Get Latest Visual Studio Version
         shell: bash
         run: |
