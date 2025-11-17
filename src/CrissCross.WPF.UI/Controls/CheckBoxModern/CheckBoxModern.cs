@@ -36,6 +36,12 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         DependencyProperty.Register(nameof(CheckBackground), typeof(Brush), typeof(CheckBoxModern), new PropertyMetadata(Brushes.White));
 
     /// <summary>
+    /// The is checked background property.
+    /// </summary>
+    public static readonly DependencyProperty IsCheckedBackgroundProperty =
+        DependencyProperty.Register(nameof(IsCheckedBackground), typeof(Brush), typeof(CheckBoxModern), new PropertyMetadata(Brushes.LightGray));
+
+    /// <summary>
     /// Value Change.
     /// </summary>
     public static readonly DependencyProperty CheckBoxTickFontSizeProperty =
@@ -227,6 +233,15 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     public Brush CheckBackground
     {
         get => (Brush)GetValue(CheckBackgroundProperty); set => SetValue(CheckBackgroundProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the checked background.
+    /// </summary>
+    /// <value>The check background.</value>
+    public Brush IsCheckedBackground
+    {
+        get => (Brush)GetValue(IsCheckedBackgroundProperty); set => SetValue(IsCheckedBackgroundProperty, value);
     }
 
     /// <summary>
