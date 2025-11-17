@@ -39,7 +39,10 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <CheckBox Content="WPF CheckBox" />
-            <ui:CheckBoxModern Grid.Column="1" Text="CrissCross Modern CheckBox" />
+            <ui:CheckBoxModern
+                Grid.Column="1"
+                Checked="True"
+                Text="CrissCross Modern CheckBox" />
         </Grid>
     </Grid>
 </UserControl>

@@ -513,7 +513,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
 
             //// determine where the mouse is and send the coordinates
             Pixel mousePixel = new(adjustedX, adjustedY);
-            var mouseLocation = ViewModel.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
+            var mouseLocation = ViewModel!.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
             var xAxe = mouseLocation.X;
             var yAxe = mouseLocation.Y;
 
@@ -559,7 +559,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             ////var xAxe = mouseLocation.X;
             ////var yAxe = mouseLocation.Y;
 
-            var lineUnderMouse = ViewModel.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
+            var lineUnderMouse = ViewModel?.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
             if (lineUnderMouse is not null)
             {
                 _plottableBeingDragged = lineUnderMouse;

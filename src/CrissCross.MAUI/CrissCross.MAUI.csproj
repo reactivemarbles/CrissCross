@@ -22,10 +22,10 @@
     <PackageReference Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net10'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0-rc.2.25504.7" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.0-rc.2.25504.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-rc.2.25502.107" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0-rc.2.25502.107" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.10" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />

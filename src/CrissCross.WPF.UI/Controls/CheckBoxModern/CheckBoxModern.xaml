@@ -11,6 +11,7 @@
     <Style TargetType="{x:Type local:CheckBoxModern}">
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackground}" />
+        <Setter Property="CheckBackground" Value="{DynamicResource CheckBoxBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxBorderBrush}" />
         <Setter Property="Padding" Value="{StaticResource CheckBoxPadding}" />
@@ -20,6 +21,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
+        <Setter Property="IsCheckedBackground" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
         <Setter Property="Focusable" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
@@ -40,7 +42,7 @@
                                     DockPanel.Dock="{TemplateBinding DockSide}">
                                     <Rectangle
                                         x:Name="CheckIconPresenter"
-                                        Fill="{TemplateBinding Background}"
+                                        Fill="{TemplateBinding CheckBackground}"
                                         RadiusX="4"
                                         RadiusY="4"
                                         Stroke="{DynamicResource CheckBoxBorderBrush}"
@@ -49,6 +51,7 @@
                                                                      Converter={StaticResource BoolToVisibilityConverter},
                                                                      ConverterParameter=reverse}" />
                                     <Ellipse
+                                        x:Name="RadioIconPresenter"
                                         Width="{TemplateBinding BoxSize}"
                                         Height="{TemplateBinding BoxSize}"
                                         Fill="{TemplateBinding CheckBackground}"
@@ -91,7 +94,16 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Checked" Value="True">
-                            <Setter TargetName="CheckIconPresenter" Property="Fill" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
+                            <Setter TargetName="CheckIconPresenter" Property="Fill">
+                                <Setter.Value>
+                                    <Binding Path="IsCheckedBackground" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="RadioIconPresenter" Property="Fill">
+                                <Setter.Value>
+                                    <Binding Path="IsCheckedBackground" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
