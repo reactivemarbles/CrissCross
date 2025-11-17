@@ -48,9 +48,9 @@
   <ItemGroup>
     <!-- Core dependencies -->
     <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.3.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.*" />
     <PackageReference Include="ReactiveList" Version="2.3.2" />
     <PackageReference Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageReference Include="BBCode.WPF" Version="1.0.2" />
