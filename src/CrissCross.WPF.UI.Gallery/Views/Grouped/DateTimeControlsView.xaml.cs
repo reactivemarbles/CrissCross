@@ -8,7 +8,7 @@ using ReactiveUI.SourceGenerators;
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>
-/// Date & Time grouped page.
+/// Date and Time grouped page.
 /// </summary>
 [IViewFor<DateTimeControlsViewModel>]
 public partial class DateTimeControlsView

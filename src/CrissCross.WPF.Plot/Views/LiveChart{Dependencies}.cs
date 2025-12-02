@@ -175,7 +175,7 @@ public partial class LiveChart
         if (d is LiveChart livechart && e.NewValue is int numberOfSamples)
         {
             livechart.NumberPointsPlotted = numberOfSamples;
-            livechart.ViewModel.NumberPointsPlotted = numberOfSamples;
+            livechart.ViewModel?.NumberPointsPlotted = numberOfSamples;
         }
     }
 
@@ -183,7 +183,7 @@ public partial class LiveChart
     {
         if (d is LiveChart livechart && e.NewValue is string title)
         {
-            livechart.ViewModel.Title = title;
+            livechart.ViewModel?.Title = title;
         }
     }
 
@@ -191,7 +191,7 @@ public partial class LiveChart
     {
         if (d is LiveChart livechart && e.NewValue is LegendPosition position)
         {
-            livechart.ViewModel.LegendPosition = position;
+            livechart.ViewModel?.LegendPosition = position;
         }
     }
 
@@ -200,7 +200,7 @@ public partial class LiveChart
         if (d is LiveChart livechart && e.NewValue is bool fixedNumberOfSamples)
         {
             livechart.UseFixedNumberOfPoints = fixedNumberOfSamples;
-            livechart.ViewModel.UseFixedNumberOfPoints = fixedNumberOfSamples;
+            livechart.ViewModel?.UseFixedNumberOfPoints = fixedNumberOfSamples;
         }
     }
 }

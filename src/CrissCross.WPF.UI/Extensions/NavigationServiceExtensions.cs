@@ -21,10 +21,7 @@ public static class NavigationServiceExtensions
     {
         var navigationControl = navigationService?.GetNavigationControl();
 
-        if (navigationControl is not null)
-        {
-            navigationControl.PaneDisplayMode = paneDisplayMode;
-        }
+        navigationControl?.PaneDisplayMode = paneDisplayMode;
 
         return navigationService;
     }

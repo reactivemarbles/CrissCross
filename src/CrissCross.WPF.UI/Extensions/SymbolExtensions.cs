@@ -15,7 +15,6 @@ public static class SymbolExtensions
     /// <param name="icon">The icon.</param>
     /// <returns>SymbolFilled.</returns>
     public static SymbolFilled Swap(this SymbolRegular icon) =>
-        //// It is possible that the alternative icon does not exist
         SymbolGlyph.ParseFilled(icon.ToString());
 
     /// <summary>
@@ -24,7 +23,6 @@ public static class SymbolExtensions
     /// <param name="icon">The icon.</param>
     /// <returns>SymbolRegular.</returns>
     public static SymbolRegular Swap(this SymbolFilled icon) =>
-        //// It is possible that the alternative icon does not exist
         SymbolGlyph.Parse(icon.ToString());
 
     /// <summary>

@@ -155,7 +155,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// </example>
     public TrackingConfiguration<T> PersistOn(params Func<T, string>[] eventNames)
     {
-        _inner.PersistOn(eventNames.Select(x => x(default!)).ToArray());
+        _inner.PersistOn([.. eventNames.Select(x => x(default!))]);
         return this;
     }
 

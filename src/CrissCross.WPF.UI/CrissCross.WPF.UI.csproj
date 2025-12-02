@@ -47,7 +47,7 @@
 
   <ItemGroup>
     <!-- Core dependencies -->
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.3.4" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.3.15" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.*" />

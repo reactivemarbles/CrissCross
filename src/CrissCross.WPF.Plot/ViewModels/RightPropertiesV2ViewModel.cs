@@ -4,7 +4,6 @@
 
 using System.Reactive;
 using System.Runtime.Versioning;
-using System.Windows;
 using CP.Reactive;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -18,7 +17,6 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows10.0.19041")]
 public partial class RightPropertiesV2ViewModel : RxObject
 {
-    private Visibility _isVisible = Visibility.Visible;
     [Reactive]
     private ChartObjects? _selectedSetting;
     [Reactive]
