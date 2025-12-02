@@ -21,7 +21,6 @@ namespace CrissCross.WPF.Plot;
 public partial class SignalUI : RxObject, IPlottableUI
 {
     private readonly List<double> _time = [];
-    private readonly bool _fixedPoints;
 
     [Reactive]
     private ChartObjects _chartSettings;

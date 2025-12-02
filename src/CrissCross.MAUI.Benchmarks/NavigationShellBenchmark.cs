@@ -14,10 +14,11 @@ namespace CrissCross.MAUI.Benchmarks
     /// <summary>
     /// NavigationShellBenchmark.
     /// </summary>
-    public sealed class NavigationShellBenchmark : IDisposable
+    public partial class NavigationShellBenchmark : IDisposable
     {
-        private NavigationShell _host;
-        private IRxObject _dummyViewModel;
+        private NavigationShell? _host;
+        private IRxObject? _dummyViewModel;
+        private bool _disposedValue;
 
         /// <summary>
         /// Setups this instance.
@@ -25,8 +26,10 @@ namespace CrissCross.MAUI.Benchmarks
         [GlobalSetup]
         public void Setup()
         {
-            _host = new NavigationShell();
-            _host.Name = "BenchmarkHost";
+            _host = new NavigationShell
+            {
+                Name = "BenchmarkHost"
+            };
             _host.Setup();
             _dummyViewModel = new DummyRxObject();
         }
@@ -35,57 +38,61 @@ namespace CrissCross.MAUI.Benchmarks
         /// Navigates this instance.
         /// </summary>
         [Benchmark]
-        public void Navigate()
-        {
-            _host.Navigate<DummyRxObject>();
-        }
+        public void Navigate() => _host?.Navigate<DummyRxObject>();
 
         /// <summary>
         /// Navigates the with instance.
         /// </summary>
         [Benchmark]
-        public void NavigateWithInstance()
-        {
-            _host.Navigate(_dummyViewModel);
-        }
+        public void NavigateWithInstance() => _host?.Navigate(_dummyViewModel!);
 
         /// <summary>
         /// Navigates the and reset.
         /// </summary>
         [Benchmark]
-        public void NavigateAndReset()
-        {
-            _host.NavigateAndReset<DummyRxObject>();
-        }
+        public void NavigateAndReset() => _host?.NavigateAndReset<DummyRxObject>();
 
         /// <summary>
         /// Navigates the back.
         /// </summary>
         [Benchmark]
-        public void NavigateBack()
-        {
-            _host.NavigateBack();
-        }
+        public void NavigateBack() => _host?.NavigateBack();
 
         /// <summary>
         /// Clears the history.
         /// </summary>
         [Benchmark]
-        public void ClearHistory()
-        {
-            _host.ClearHistory();
-        }
+        public void ClearHistory() => _host?.ClearHistory();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            _host?.Dispose();
-            (_dummyViewModel as IDisposable)?.Dispose();
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
 
-        private class DummyRxObject : IRxObject
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _host?.Dispose();
+                    (_dummyViewModel as IDisposable)?.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        private partial class DummyRxObject : IRxObject
         {
             public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -107,10 +114,7 @@ namespace CrissCross.MAUI.Benchmarks
             {
             }
 
-            public IDisposable SuppressChangeNotifications()
-            {
-                return Disposable.Empty;
-            }
+            public IDisposable SuppressChangeNotifications() => Disposable.Empty;
 
             public void RaisePropertyChanging(PropertyChangingEventArgs args)
             {

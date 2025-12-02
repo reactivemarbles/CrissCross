@@ -68,10 +68,7 @@ public class UiApplication
         get => _application?.MainWindow ?? _mainWindow;
         set
         {
-            if (_application != null)
-            {
-                _application.MainWindow = value;
-            }
+            _application?.MainWindow = value;
 
             _mainWindow = value;
         }
@@ -106,10 +103,7 @@ public class UiApplication
 
         set
         {
-            if (_application is not null)
-            {
-                _application.Resources = value;
-            }
+            _application?.Resources = value;
 
             _resources = value;
         }

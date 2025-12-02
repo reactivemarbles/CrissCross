@@ -142,7 +142,7 @@ public class JsonFileStore(string storeFolderPath) : IStore
                     }
                 }
 
-                result[name] = value;
+                result[name!] = value;
             }
         }
         catch

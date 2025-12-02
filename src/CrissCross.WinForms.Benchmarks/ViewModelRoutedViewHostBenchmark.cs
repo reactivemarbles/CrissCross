@@ -14,10 +14,11 @@ namespace CrissCross.WinForms.Benchmarks
     /// <summary>
     /// Benchmarks for ViewModelRoutedViewHost navigation and history operations.
     /// </summary>
-    public sealed class ViewModelRoutedViewHostBenchmark : IDisposable
+    public partial class ViewModelRoutedViewHostBenchmark : IDisposable
     {
-        private ViewModelRoutedViewHost _host;
-        private IRxObject _dummyViewModel;
+        private ViewModelRoutedViewHost? _host;
+        private IRxObject? _dummyViewModel;
+        private bool _disposedValue;
 
         /// <summary>
         /// Initializes the benchmark host and dummy view model.
@@ -25,8 +26,10 @@ namespace CrissCross.WinForms.Benchmarks
         [GlobalSetup]
         public void Setup()
         {
-            _host = new ViewModelRoutedViewHost();
-            _host.HostName = "BenchmarkHost";
+            _host = new ViewModelRoutedViewHost
+            {
+                HostName = "BenchmarkHost"
+            };
             _host.Setup();
             _dummyViewModel = new DummyRxObject();
         }
@@ -35,54 +38,58 @@ namespace CrissCross.WinForms.Benchmarks
         /// Benchmarks navigation to a new view model type.
         /// </summary>
         [Benchmark]
-        public void Navigate()
-        {
-            _host.Navigate<DummyRxObject>();
-        }
+        public void Navigate() => _host?.Navigate<DummyRxObject>();
 
         /// <summary>
         /// Benchmarks navigation with a view model instance.
         /// </summary>
         [Benchmark]
-        public void NavigateWithInstance()
-        {
-            _host.Navigate(_dummyViewModel);
-        }
+        public void NavigateWithInstance() => _host?.Navigate(_dummyViewModel!);
 
         /// <summary>
         /// Benchmarks navigation and reset to a new view model type.
         /// </summary>
         [Benchmark]
-        public void NavigateAndReset()
-        {
-            _host.NavigateAndReset<DummyRxObject>();
-        }
+        public void NavigateAndReset() => _host?.NavigateAndReset<DummyRxObject>();
 
         /// <summary>
         /// Benchmarks navigating back in the navigation stack.
         /// </summary>
         [Benchmark]
-        public void NavigateBack()
-        {
-            _host.NavigateBack();
-        }
+        public void NavigateBack() => _host?.NavigateBack();
 
         /// <summary>
         /// Benchmarks clearing the navigation history.
         /// </summary>
         [Benchmark]
-        public void ClearHistory()
-        {
-            _host.ClearHistory();
-        }
+        public void ClearHistory() => _host?.ClearHistory();
 
         /// <summary>
-        /// Disposes the benchmark host and dummy view model.
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            _host?.Dispose();
-            (_dummyViewModel as IDisposable)?.Dispose();
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _host?.Dispose();
+                    (_dummyViewModel as IDisposable)?.Dispose();
+                }
+
+                _disposedValue = true;
+            }
         }
 
         /// <summary>
@@ -110,10 +117,7 @@ namespace CrissCross.WinForms.Benchmarks
             {
             }
 
-            public IDisposable SuppressChangeNotifications()
-            {
-                return Disposable.Empty;
-            }
+            public IDisposable SuppressChangeNotifications() => Disposable.Empty;
 
             public void RaisePropertyChanging(PropertyChangingEventArgs args)
             {

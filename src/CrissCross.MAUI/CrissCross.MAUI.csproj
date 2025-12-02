@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net10.0;net9.0-ios;net9.0-tvos;net9.0-macos;net9.0-maccatalyst;net10.0-ios;net10.0-tvos;net10.0-macos;net10.0-maccatalyst;net9.0-android;net10.0-android</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
@@ -22,8 +22,8 @@
     <PackageReference Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net10'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.*" />
   </ItemGroup>

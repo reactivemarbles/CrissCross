@@ -125,23 +125,21 @@ public static class SystemThemeWatcher
         Window window,
         WindowBackdropType backdrop,
         bool updateAccents,
-        bool forceBackgroundReplace)
-    {
-        window.Events().Loaded.Subscribe(_ =>
-        {
-            IntPtr hWnd = default;
-            hWnd = (hWnd = new WindowInteropHelper(window).Handle) == IntPtr.Zero
-                    ? throw new InvalidOperationException("Could not get window handle.")
-                    : hWnd;
-
-            if (hWnd == IntPtr.Zero)
+        bool forceBackgroundReplace) =>
+            window.Events().Loaded.Subscribe(_ =>
             {
-                throw new InvalidOperationException("Window handle cannot be empty");
-            }
+                IntPtr hWnd = default;
+                hWnd = (hWnd = new WindowInteropHelper(window).Handle) == IntPtr.Zero
+                        ? throw new InvalidOperationException("Could not get window handle.")
+                        : hWnd;
 
-            ObserveLoadedHandle(new ObservedWindow(hWnd, backdrop, forceBackgroundReplace, updateAccents));
-        });
-    }
+                if (hWnd == IntPtr.Zero)
+                {
+                    throw new InvalidOperationException("Window handle cannot be empty");
+                }
+
+                ObserveLoadedHandle(new ObservedWindow(hWnd, backdrop, forceBackgroundReplace, updateAccents));
+            });
 
     private static void ObserveLoadedHandle(ObservedWindow observedWindow)
     {
