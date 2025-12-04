@@ -63,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controls\AppBar\" />
     <Folder Include="Controls\Arc\" />
     <Folder Include="Controls\ScrollViewer\" />
   </ItemGroup>
