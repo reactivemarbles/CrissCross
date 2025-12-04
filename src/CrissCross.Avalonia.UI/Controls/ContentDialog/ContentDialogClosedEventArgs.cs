@@ -7,22 +7,21 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// ContentDialogClosedEventArgs.
+/// Provides data for the <see cref="ContentDialog.Closed"/> event.
 /// </summary>
 public class ContentDialogClosedEventArgs : RoutedEventArgs
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ContentDialogClosedEventArgs"/> class.
     /// </summary>
-    /// <param name="routedEvent">The routed event.</param>
-    /// <param name="source">The source.</param>
-    public ContentDialogClosedEventArgs(RoutedEvent routedEvent, object source)
-        : base(routedEvent, source)
+    /// <param name="result">The dialog result.</param>
+    public ContentDialogClosedEventArgs(ContentDialogResult result)
     {
+        Result = result;
     }
 
     /// <summary>
-    /// Gets the result.
+    /// Gets the dialog result.
     /// </summary>
-    public ContentDialogResult Result { get; init; }
+    public ContentDialogResult Result { get; }
 }

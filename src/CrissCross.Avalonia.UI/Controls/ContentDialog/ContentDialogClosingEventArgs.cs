@@ -7,27 +7,26 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// ContentDialogClosingEventArgs.
+/// Provides data for the <see cref="ContentDialog.Closing"/> event.
 /// </summary>
 public class ContentDialogClosingEventArgs : RoutedEventArgs
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ContentDialogClosingEventArgs"/> class.
     /// </summary>
-    /// <param name="routedEvent">The routed event.</param>
-    /// <param name="source">The source.</param>
-    public ContentDialogClosingEventArgs(RoutedEvent routedEvent, object source)
-        : base(routedEvent, source)
+    /// <param name="result">The dialog result.</param>
+    public ContentDialogClosingEventArgs(ContentDialogResult result)
     {
+        Result = result;
     }
 
     /// <summary>
-    /// Gets the result.
+    /// Gets or sets the dialog result.
     /// </summary>
-    public ContentDialogResult Result { get; init; }
+    public ContentDialogResult Result { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this <see cref="ContentDialogClosingEventArgs"/> is cancel.
+    /// Gets or sets a value indicating whether the dialog closing should be cancelled.
     /// </summary>
     public bool Cancel { get; set; }
 }
