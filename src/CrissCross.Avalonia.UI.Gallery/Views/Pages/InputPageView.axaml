@@ -1,0 +1,126 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.InputPageView"
+             x:DataType="vm:InputPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="Input Controls"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="Input controls allow users to enter and edit data. CrissCross provides enhanced input controls with validation, formatting, and rich styling."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- TextBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="TextBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Text boxes allow users to enter text." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:TextBox Watermark="Enter text here..." />
+                        <controls:TextBox Text="Pre-filled text" />
+                        <controls:TextBox Watermark="Disabled" IsEnabled="False" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- PasswordBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="PasswordBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Password boxes hide the entered characters for security." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:PasswordBox Watermark="Enter password..." />
+                        <controls:PasswordBox Watermark="Reveal password" RevealPassword="True" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- NumberBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="NumberBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Number boxes allow numeric input with increment/decrement buttons." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:NumberBox Value="42" />
+                        <controls:NumberBox Value="3.14" FormatString="F2" />
+                        <controls:NumberBox Value="100" Minimum="0" Maximum="200" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- DatePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="DatePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Date pickers allow users to select a date." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:DatePicker />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- TimePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="TimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Time pickers allow users to select a time." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:TimePicker />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- DateTimePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="DateTimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Date time pickers combine date and time selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <controls:DateTimePicker />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Slider -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Sliders allow selection of a value from a range." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:Slider Value="50" Maximum="100" />
+                        <controls:Slider Value="75" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="25" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ComboBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="ComboBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Combo boxes allow selection from a dropdown list." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:ComboBox PlaceholderText="Select an option">
+                            <ComboBoxItem Content="Option 1" />
+                            <ComboBoxItem Content="Option 2" />
+                            <ComboBoxItem Content="Option 3" />
+                        </controls:ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ColorPicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="ColorPicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Color pickers allow selection of colors." Opacity="0.7" Margin="0,0,0,8" />
+                    <controls:ColorPicker />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

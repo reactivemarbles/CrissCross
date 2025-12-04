@@ -1,0 +1,131 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.HomePageView"
+             x:DataType="vm:HomePageViewModel">
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="CrissCross Avalonia UI Controls"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="White" />
+
+            <TextBlock Text="100% Feature Parity Achieved!"
+                       FontSize="20"
+                       Foreground="#4EC9B0" />
+
+            <TextBlock TextWrapping="Wrap"
+                       Foreground="#D4D4D4"
+                       Margin="0,0,0,24">
+                This gallery demonstrates all 98 controls from CrissCross.WPF.UI that have been
+                successfully migrated to Avalonia UI. Select a control category from the navigation
+                menu to explore interactive examples.
+            </TextBlock>
+
+            <!-- Feature Highlights -->
+            <Border Background="#252526"
+                    BorderBrush="#3F3F46"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20"
+                    Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="? Key Features"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Margin="0,0,0,12" />
+
+                    <TextBlock Margin="0,4" Foreground="#D4D4D4" Text="• All 98 WPF.UI controls available" />
+                    <TextBlock Margin="0,4" Foreground="#D4D4D4" Text="• Cross-platform: Windows, macOS, Linux" />
+                    <TextBlock Margin="0,4" Foreground="#D4D4D4" Text="• Modern Fluent Design styling" />
+                    <TextBlock Margin="0,4" Foreground="#D4D4D4" Text="• Full ReactiveUI integration" />
+                    <TextBlock Margin="0,4" Foreground="#D4D4D4" Text="• .NET 8, 9, and 10 support" />
+                </StackPanel>
+            </Border>
+
+            <!-- Control Statistics -->
+            <Grid Margin="0,0,0,16" ColumnDefinitions="*,*,*">
+                <Border Grid.Column="0"
+                        Background="#252526"
+                        BorderBrush="#3F3F46"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16"
+                        Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="98"
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="#4EC9B0" />
+                        <TextBlock Text="Total Controls"
+                                   HorizontalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#D4D4D4" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Background="#252526"
+                        BorderBrush="#3F3F46"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16"
+                        Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="100%"
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="#4EC9B0" />
+                        <TextBlock Text="Coverage"
+                                   HorizontalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#D4D4D4" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2"
+                        Background="#252526"
+                        BorderBrush="#3F3F46"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="3"
+                                   HorizontalAlignment="Center"
+                                   FontSize="36"
+                                   FontWeight="Bold"
+                                   Foreground="#4EC9B0" />
+                        <TextBlock Text="Platforms"
+                                   HorizontalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#D4D4D4" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Getting Started -->
+            <Border Background="#252526"
+                    BorderBrush="#3F3F46"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="20">
+                <StackPanel>
+                    <TextBlock Text="?? Getting Started"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Margin="0,0,0,12" />
+
+                    <TextBlock TextWrapping="Wrap" Foreground="#D4D4D4">
+                        Select a control category from the left navigation panel to explore
+                        interactive examples of CrissCross Avalonia UI controls. Each page
+                        demonstrates the control's appearance, states, and usage patterns.
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

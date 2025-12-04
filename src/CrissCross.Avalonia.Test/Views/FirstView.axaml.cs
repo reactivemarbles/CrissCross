@@ -4,8 +4,8 @@
 
 using System.Reactive.Disposables.Fluent;
 using Avalonia.Controls;
-using Avalonia.ReactiveUI;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using Splat;
 
 namespace CrissCross.Avalonia.Test.Views;
@@ -24,7 +24,7 @@ public partial class FirstView : ReactiveUserControl<FirstViewModel>
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            ViewModel ??= Locator.Current.GetService<FirstViewModel>();
+            ViewModel ??= AppLocator.Current.GetService<FirstViewModel>();
             this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoSecond).DisposeWith(d);
             this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
         });
