@@ -1,0 +1,216 @@
+﻿<nav:NavigationWindow
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:nav="https://github.com/reactivemarbles/CrissCross"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    Name="mainNavHost"
+    Title="CrissCross Avalonia UI Gallery"
+    Width="1200"
+    Height="800"
+    x:DataType="vm:MainViewModel">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Title Bar  -->
+        <Border
+            Grid.Row="0"
+            Padding="16,12"
+            Background="#2D2D30">
+            <TextBlock
+                FontSize="24"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="CrissCross Avalonia UI Gallery" />
+        </Border>
+
+        <!--  Content Area with Navigation  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Navigation Menu  -->
+            <Border
+                Grid.Column="0"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,0,1,0">
+                <ScrollViewer>
+                    <StackPanel Margin="8">
+                        <TextBlock
+                            Margin="8,8,8,16"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="Control Categories" />
+
+                        <!--  Home  -->
+                        <Button
+                            Margin="0,4"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding GotoHome}"
+                            Content="🏠 Home" />
+
+                        <!--  Category: Basic Controls  -->
+                        <Expander
+                            Margin="0,8,0,8"
+                            Header="Basic Controls"
+                            IsExpanded="True">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding GotoButtons}"
+                                    Content="Button" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="ToggleButton"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="CheckBox"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="RadioButton"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="ToggleSwitch"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!--  Category: Input Controls  -->
+                        <Expander Margin="0,0,0,8" Header="Input Controls">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding GotoInput}"
+                                    Content="TextBox" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="PasswordBox"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="NumberBox"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="DatePicker"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="TimePicker"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="Slider"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!--  Category: Progress  -->
+                        <Expander Margin="0,0,0,8" Header="Progress">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    HorizontalAlignment="Stretch"
+                                    Command="{Binding GotoProgress}"
+                                    Content="ProgressBar" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="ProgressRing"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="LoadingScreen"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!--  Category: Navigation  -->
+                        <Expander Margin="0,0,0,8" Header="Navigation">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    Content="NavigationView"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="TabControl"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="BreadcrumbBar"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!--  Category: Data Display  -->
+                        <Expander Margin="0,0,0,8" Header="Data Display">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    Content="DataGrid"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="ListView"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="TreeView"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!--  Category: Dialogs  -->
+                        <Expander Margin="0,0,0,8" Header="Dialogs">
+                            <StackPanel Margin="16,8,0,8">
+                                <Button
+                                    Margin="0,4"
+                                    Content="ContentDialog"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="MessageBox"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="Flyout"
+                                    IsEnabled="False" />
+                                <Button
+                                    Margin="0,4"
+                                    Content="InfoBar"
+                                    IsEnabled="False" />
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!--  Content Display Area - Navigation Host  -->
+            <Border
+                Grid.Column="1"
+                Padding="0"
+                Background="#1E1E1E">
+                <nav:ViewModelRoutedViewHost
+                    x:Name="NavigationHost"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    VerticalContentAlignment="Stretch" />
+            </Border>
+        </Grid>
+    </Grid>
+</nav:NavigationWindow>

@@ -19,12 +19,12 @@ public class MainWindowViewModel : RxObject
     /// </summary>
     public MainWindowViewModel()
     {
-        Locator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-        Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+        AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
+        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 
-        Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-        Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
-        Locator.CurrentMutable.SetupComplete();
+        AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
+        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        AppLocator.CurrentMutable.SetupComplete();
         ////var s = new SecondWindow();
         ////s.Show();
     }

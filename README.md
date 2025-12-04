@@ -74,13 +74,13 @@ public class AppBootstrapper : RxObject
         this.BuildComplete(() =>
         {
             // Example VM/View registrations using Splat
-            Locator.CurrentMutable.RegisterConstant(new MainViewModel());
-            Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+             AppLocator.CurrentMutable.RegisterConstant(new MainViewModel());
+             AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 
-            Locator.CurrentMutable.RegisterConstant(new FirstViewModel());
-            Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+             AppLocator.CurrentMutable.RegisterConstant(new FirstViewModel());
+             AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
 
-            Locator.CurrentMutable.SetupComplete();
+             AppLocator.CurrentMutable.SetupComplete();
         });
     }
 }

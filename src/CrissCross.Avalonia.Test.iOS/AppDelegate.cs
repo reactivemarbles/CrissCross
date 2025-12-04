@@ -4,9 +4,8 @@
 
 using Avalonia;
 using Avalonia.iOS;
-using Avalonia.ReactiveUI;
-
 using Foundation;
+using ReactiveUI.Avalonia;
 
 namespace CrissCross.Avalonia.Test.IOS;
 
