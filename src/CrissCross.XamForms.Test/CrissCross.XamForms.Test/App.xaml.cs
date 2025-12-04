@@ -25,17 +25,17 @@ public partial class App : Application
         InitializeComponent();
 
         DependencyService.Register<MockDataStore>();
-        Locator.CurrentMutable.RegisterConstant<AboutViewModel>(new());
-        Locator.CurrentMutable.RegisterConstant<ItemDetailViewModel>(new());
-        Locator.CurrentMutable.RegisterConstant<ItemsViewModel>(new());
-        Locator.CurrentMutable.Register<LoginViewModel>(() => new());
-        Locator.CurrentMutable.Register<NewItemViewModel>(() => new());
+        AppLocator.CurrentMutable.RegisterConstant<AboutViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<ItemDetailViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<ItemsViewModel>(new());
+        AppLocator.CurrentMutable.Register<LoginViewModel>(() => new());
+        AppLocator.CurrentMutable.Register<NewItemViewModel>(() => new());
 
-        Locator.CurrentMutable.Register<IViewFor<AboutViewModel>>(() => new AboutPage());
-        Locator.CurrentMutable.Register<IViewFor<ItemDetailViewModel>>(() => new ItemDetailPage());
-        Locator.CurrentMutable.Register<IViewFor<ItemsViewModel>>(() => new ItemsPage());
-        Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginPage());
-        Locator.CurrentMutable.Register<IViewFor<NewItemViewModel>>(() => new NewItemPage());
+        AppLocator.CurrentMutable.Register<IViewFor<AboutViewModel>>(() => new AboutPage());
+        AppLocator.CurrentMutable.Register<IViewFor<ItemDetailViewModel>>(() => new ItemDetailPage());
+        AppLocator.CurrentMutable.Register<IViewFor<ItemsViewModel>>(() => new ItemsPage());
+        AppLocator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginPage());
+        AppLocator.CurrentMutable.Register<IViewFor<NewItemViewModel>>(() => new NewItemPage());
 
         MainPage = new AppShell();
     }

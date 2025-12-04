@@ -20,7 +20,7 @@ public partial class ItemsPage
     {
         InitializeComponent();
 
-        BindingContext = ViewModel = Locator.Current.GetService<ItemsViewModel>();
+        BindingContext = ViewModel = AppLocator.Current.GetService<ItemsViewModel>();
         this.WhenActivated(_ => ViewModel?.OnAppearing());
     }
 }

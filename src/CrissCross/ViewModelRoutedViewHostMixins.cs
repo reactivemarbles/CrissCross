@@ -317,7 +317,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && Locator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
+        if (NavigationHost.Count > 0 && @this.Name != null && AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
         {
             switch (@this.Name.Length)
             {
@@ -381,7 +381,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null && Locator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
+        if (NavigationHost.Count > 0 && hostName != null && AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
         {
             switch (hostName.Length)
             {

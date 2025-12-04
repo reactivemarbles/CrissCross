@@ -356,7 +356,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
 
         // AUTO-SCALE BUTON
         ViewModel?.ExpandMenuBtn?
-            .ObserveOn(RxApp.MainThreadScheduler).Subscribe(_ =>
+            .ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(_ =>
             {
                 if (ViewModel.LeftPanelVisibility == Visibility.Hidden)
                 {

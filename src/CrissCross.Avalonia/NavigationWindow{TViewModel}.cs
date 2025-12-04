@@ -28,7 +28,7 @@ public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewMode
     /// Initializes a new instance of the <see cref="NavigationWindow{TViewModel}"/> class.
     /// </summary>
     public NavigationWindow() =>
-        this.WhenActivated(_ => ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new());
+        this.WhenActivated(_ => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>
     /// Gets the binding root view model.

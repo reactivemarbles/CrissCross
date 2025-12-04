@@ -119,10 +119,10 @@ public partial class StreamerUI : RxObject, IPlottableUI
     /// <param name="observable">The observable.</param>
     public void UpdateStreamerFixedPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
         observable
-        .ObserveOn(RxApp.TaskpoolScheduler)
+        .ObserveOn(RxSchedulers.TaskpoolScheduler)
         .Where(d => !string.IsNullOrEmpty(d.Name) && d.Y != null && d.X != null && d.Y.Count > 0 && d.X.Count > 0 && d.Y.Count == d.X.Count)
         .Retry()
-        .ObserveOn(RxApp.MainThreadScheduler)
+        .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
             var values = new List<double>(d.Y!).Take(_numberPointsPlottedSaved).ToArray();

@@ -21,7 +21,7 @@ public partial class FirstView
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            ViewModel ??= Locator.Current.GetService<FirstViewModel>();
+            ViewModel ??= AppLocator.Current.GetService<FirstViewModel>();
             this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
             this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
         });

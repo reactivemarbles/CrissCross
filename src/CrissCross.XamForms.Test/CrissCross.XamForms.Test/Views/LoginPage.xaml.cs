@@ -20,6 +20,6 @@ public partial class LoginPage
     public LoginPage()
     {
         InitializeComponent();
-        BindingContext = ViewModel = Locator.Current.GetService<LoginViewModel>();
+        BindingContext = ViewModel = AppLocator.Current.GetService<LoginViewModel>();
     }
 }

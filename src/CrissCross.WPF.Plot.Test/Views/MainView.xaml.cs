@@ -22,7 +22,7 @@ namespace CrissCross.WPF.Plot.Test.Views
         public MainView()
         {
             InitializeComponent();
-            ViewModel = Locator.Current.GetService<MainViewModel>()!;
+            ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
             this.WhenActivated(d =>
             {
                 // OneWay bind ViewModel to View

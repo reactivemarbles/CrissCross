@@ -19,14 +19,14 @@ public class MainWindowViewModel : RxObject
     /// </summary>
     public MainWindowViewModel()
     {
-        Locator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-        Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+        AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
+        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 
-        Locator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-        Locator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
+        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
 
         ////Locator.CurrentMutable.RegisterConstant<BrowserViewModel>(new());
         ////Locator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(() => new BrowserView());
-        Locator.CurrentMutable.SetupComplete();
+        AppLocator.CurrentMutable.SetupComplete();
     }
 }

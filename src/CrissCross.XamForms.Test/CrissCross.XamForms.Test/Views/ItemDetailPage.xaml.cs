@@ -18,6 +18,6 @@ public partial class ItemDetailPage
     public ItemDetailPage()
     {
         InitializeComponent();
-        BindingContext = ViewModel = Locator.Current.GetService<ItemDetailViewModel>();
+        BindingContext = ViewModel = AppLocator.Current.GetService<ItemDetailViewModel>();
     }
 }

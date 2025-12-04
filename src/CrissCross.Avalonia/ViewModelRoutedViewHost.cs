@@ -52,7 +52,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     {
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
         VerticalContentAlignment = VerticalAlignment.Stretch;
-        ViewLocator = Locator.Current.GetService<IViewLocator>();
+        ViewLocator = AppLocator.Current.GetService<IViewLocator>();
         CurrentViewModel.Subscribe(vm =>
         {
             if (vm is IRxObject && !_navigateBack)
@@ -72,10 +72,10 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     }
 
     /// <summary>
-    /// Gets or sets the view locator.
+    /// Gets or sets the view  AppLocator.
     /// </summary>
     /// <value>
-    /// The view locator.
+    /// The view  AppLocator.
     /// </value>
     public IViewLocator? ViewLocator { get; set; }
 
@@ -231,7 +231,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
 
             // Get the previous View
             var count = NavigationStack.Count - 2;
-            _toViewModel = Locator.Current.GetService(NavigationStack[count]) as IRxObject;
+            _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
             var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
             if (_currentView is INotifiyNavigation { ISetupNavigating: true })
@@ -282,7 +282,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         }
 
         // requested should return result here
-        ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].DistinctUntilChanged().ObserveOn(RxApp.MainThreadScheduler).Subscribe(e =>
+        ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
             if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
@@ -365,7 +365,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     private void InternalNavigate<T>(string? contract, object? parameter)
         where T : class, IRxObject
     {
-        _toViewModel = Locator.Current.GetService<T>(contract);
+        _toViewModel = AppLocator.Current.GetService<T>(contract);
         _lastView = _currentView;
 
         // NOTE: This gets a new instance of the View

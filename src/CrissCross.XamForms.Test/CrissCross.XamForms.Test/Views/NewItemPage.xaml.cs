@@ -19,7 +19,7 @@ public partial class NewItemPage
     public NewItemPage()
     {
         InitializeComponent();
-        BindingContext = ViewModel = Locator.Current.GetService<NewItemViewModel>();
+        BindingContext = ViewModel = AppLocator.Current.GetService<NewItemViewModel>();
     }
 
     /// <summary>

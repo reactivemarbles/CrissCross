@@ -137,7 +137,7 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// </summary>
     /// <param name="observable">The observable.</param>
     public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) => observable
-        .ObserveOn(RxApp.TaskpoolScheduler)
+        .ObserveOn(RxSchedulers.TaskpoolScheduler)
         .Select(data =>
         {
             var now = DateTime.Now;
@@ -175,7 +175,7 @@ public partial class SignalUI : RxObject, IPlottableUI
             return (uniqueDataValues, uniqueTimeValues, d.data.Name);
         })
         .Retry()
-        .ObserveOn(RxApp.MainThreadScheduler)
+        .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
             _time.AddRange(d.uniqueTimeValues);

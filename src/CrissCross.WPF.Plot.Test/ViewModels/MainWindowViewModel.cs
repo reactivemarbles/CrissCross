@@ -38,8 +38,8 @@ namespace CrissCross.WPF.Plot.Test.ViewModels
             ]);
 
             // Register ViewModels and Views
-            Locator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
-            Locator.CurrentMutable.SetupComplete();
+            AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
+            AppLocator.CurrentMutable.SetupComplete();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CrissCross.WPF.Plot.Test.ViewModels
 
         private void SetupTracker()
         {
-            Locator.CurrentMutable.RegisterConstant(_tracker);
+            AppLocator.CurrentMutable.RegisterConstant(_tracker);
             _tracker?.Configure<MainWindow>()
                 .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
                 .Properties(w => new { w.Height, w.Width, w.Left, w.Top, w.WindowState })

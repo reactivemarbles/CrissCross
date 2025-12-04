@@ -106,13 +106,13 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
     private void EnsureHost()
     {
         NavigationFrame ??= new ViewModelRoutedViewHost
-            {
-                HorizontalContentAlignment = HorizontalAlignment.Stretch,
-                VerticalContentAlignment = VerticalAlignment.Stretch,
-                HostName = Name,
-                NavigateBackIsEnabled = NavigateBackIsEnabled,
-                Transition = Transition
-            };
+        {
+            HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            VerticalContentAlignment = VerticalAlignment.Stretch,
+            HostName = Name,
+            NavigateBackIsEnabled = NavigateBackIsEnabled,
+            Transition = Transition
+        };
 
         // Adopt as content if none set by the consumer
         Content ??= NavigationFrame;

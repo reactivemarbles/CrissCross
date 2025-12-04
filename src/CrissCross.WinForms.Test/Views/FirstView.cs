@@ -29,7 +29,7 @@ public partial class FirstView : ReactiveUserControl<FirstViewModel>
 #if !DESIGN
         this.WhenActivated(d =>
         {
-            ViewModel ??= Locator.Current.GetService<FirstViewModel>();
+            ViewModel ??= AppLocator.Current.GetService<FirstViewModel>();
             this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
             this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
         });

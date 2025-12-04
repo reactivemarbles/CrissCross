@@ -22,7 +22,7 @@ public partial class MainView
     public MainView()
     {
         InitializeComponent();
-        ViewModel = Locator.Current.GetService<MainViewModel>()!;
+        ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
         this.WhenActivated(d =>
         {
             // Bind the view model

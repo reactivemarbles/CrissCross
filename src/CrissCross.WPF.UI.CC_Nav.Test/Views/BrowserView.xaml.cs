@@ -22,13 +22,13 @@ public partial class BrowserView : IUseHostedNavigation
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            ViewModel ??= Locator.Current.GetService<BrowserViewModel>();
+            ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
             this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
             this.WhenAnyValue(x => x.ViewModel!.WebUrl)
-                .Throttle(TimeSpan.FromSeconds(0.8), RxApp.TaskpoolScheduler)
+                .Throttle(TimeSpan.FromSeconds(0.8), RxSchedulers.TaskpoolScheduler)
                 .DistinctUntilChanged()
                 .Where(query => !string.IsNullOrWhiteSpace(query))
-                .ObserveOn(RxApp.MainThreadScheduler)
+                .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .BindTo(this, vm => vm.browserView.Source)
                 .DisposeWith(d);
             this.NavigateToView<MainViewModel>(browserView.Name);
