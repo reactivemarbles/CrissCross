@@ -35,7 +35,7 @@ public partial class AllControlsViewModel : RxObject
 
         this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(150))
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => FilteredControls.Refresh());
     }
 

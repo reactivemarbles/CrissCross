@@ -72,8 +72,8 @@ public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, IS
     /// </summary>
     public ReactiveNavigationShell()
     {
-        ViewLocator = Locator.Current.GetService<IViewLocator>();
-        CurrentViewModel.ObserveOn(RxApp.MainThreadScheduler).Subscribe(vm =>
+        ViewLocator = AppLocator.Current.GetService<IViewLocator>();
+        CurrentViewModel.ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(vm =>
         {
             if (vm is IRxObject && !_navigateBack)
             {
@@ -158,10 +158,10 @@ public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, IS
     public bool RequiresSetup => true;
 
     /// <summary>
-    /// Gets or sets the view locator.
+    /// Gets or sets the view  AppLocator.
     /// </summary>
     /// <value>
-    /// The view locator.
+    /// The view  AppLocator.
     /// </value>
     public IViewLocator? ViewLocator { get; set; }
 
@@ -227,7 +227,7 @@ public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, IS
 
             // Get the previous View
             var count = NavigationStack.Count;
-            var vm = Locator.Current.GetService(NavigationStack[count - 2]);
+            var vm = AppLocator.Current.GetService(NavigationStack[count - 2]);
             _toViewModel = vm as IRxObject;
 
             var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, Name, parameter);
@@ -361,7 +361,7 @@ public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, IS
 
         // requested should return result here
         ViewModelRoutedViewHostMixins.ResultNavigating[Name].DistinctUntilChanged()
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
@@ -474,7 +474,7 @@ public class ReactiveNavigationShell<TViewModel> : ReactiveShell<TViewModel>, IS
         where T : class, IRxObject
     {
         _userInstigated = true;
-        _toViewModel = Locator.Current.GetService<T>(contract);
+        _toViewModel = AppLocator.Current.GetService<T>(contract);
         _lastView = _currentView;
 
         // NOTE: This gets a new instance of the View

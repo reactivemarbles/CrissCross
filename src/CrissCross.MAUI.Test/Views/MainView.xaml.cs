@@ -22,7 +22,7 @@ public partial class MainView
         InitializeComponent();
         this.WhenActivated(d =>
         {
-            ViewModel ??= Locator.Current.GetService<MainViewModel>();
+            ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
             this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
             this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
         });

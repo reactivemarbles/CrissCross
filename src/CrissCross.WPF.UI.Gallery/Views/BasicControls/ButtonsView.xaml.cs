@@ -27,7 +27,7 @@ public partial class ButtonsView
         {
             BezelButton1.Events()
                 .Click
-                .ObserveOn(RxApp.MainThreadScheduler)
+                .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .Subscribe(_ => BezelToggleButton1.IsChecked = !BezelToggleButton1.IsChecked)
                 .DisposeWith(disposables);
         });

@@ -21,6 +21,6 @@ public partial class AllControlsView
     public AllControlsView()
     {
         InitializeComponent();
-        DataContext = ViewModel = Locator.Current.GetService<AllControlsViewModel>()!;
+        DataContext = ViewModel = AppLocator.Current.GetService<AllControlsViewModel>()!;
     }
 }

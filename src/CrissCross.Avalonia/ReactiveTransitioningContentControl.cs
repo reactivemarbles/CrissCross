@@ -136,7 +136,7 @@ public class ReactiveTransitioningContentControl : ContentControl, ICancelable
 
             _opacitySubject.OnNext(opacity);
         }).DisposeWith(_animationDisposable);
-        Disposable.Create(() => RxApp.MainThreadScheduler.Schedule(() =>
+        Disposable.Create(() => RxSchedulers.MainThreadScheduler.Schedule(() =>
             {
                 to!.Opacity = 1d;
                 from!.Opacity = 1d;
@@ -148,7 +148,7 @@ public class ReactiveTransitioningContentControl : ContentControl, ICancelable
             })).DisposeWith(_animationDisposable);
         _opacitySubject
             .Where(x => x >= 1d)
-            .ObserveOn(RxApp.MainThreadScheduler)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
                 if (!_animationDisposable.IsDisposed)

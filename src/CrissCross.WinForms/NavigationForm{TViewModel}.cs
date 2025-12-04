@@ -23,7 +23,7 @@ where TViewModel : class, IRxObject, new()
     public NavigationForm()
     {
         InitializeComponent();
-        this.WhenActivated(_ => ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new());
+        this.WhenActivated(_ => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
     }
 
     /// <inheritdoc/>

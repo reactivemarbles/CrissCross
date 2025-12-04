@@ -30,7 +30,7 @@ public class ModernWindow<TViewModel> : ModernWindow, IViewFor<TViewModel>
     /// Initializes a new instance of the <see cref="ModernWindow{TViewModel}"/> class.
     /// </summary>
     public ModernWindow() =>
-        this.WhenActivated(_ => ViewModel ??= Locator.Current.GetService<TViewModel>() ?? new());
+        this.WhenActivated(_ => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>
     /// Gets the binding root view model.

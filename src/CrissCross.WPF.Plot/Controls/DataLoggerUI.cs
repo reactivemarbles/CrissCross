@@ -108,7 +108,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
     /// </summary>
     /// <param name="observable">The observable.</param>
     public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) => observable
-        .ObserveOn(RxApp.TaskpoolScheduler)
+        .ObserveOn(RxSchedulers.TaskpoolScheduler)
         .Select(data =>
         {
             var nPoints = Math.Min(data.nPoints, 100_000_000);
@@ -116,7 +116,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         })
         .Where(d => !string.IsNullOrEmpty(d.data.Name) && d.data.Value != null && d.data.Value.Count > 0 && d.nPoints > 0)
         .Retry()
-        .ObserveOn(RxApp.MainThreadScheduler)
+        .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
             if (PlotLine!.Data.Coordinates.Count >= d.nPoints)

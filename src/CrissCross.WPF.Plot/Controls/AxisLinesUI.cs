@@ -159,8 +159,8 @@ public partial class AxisLinesUI : RxObject
     /// <param name="observable">The observable.</param>
     public void UpdateAxisLineSubscription(IObservable<(string? Name, double? Position)> observable) =>
         observable
-        .SubscribeOn(RxApp.TaskpoolScheduler) // Procesa en un hilo de fondo
-        .ObserveOn(RxApp.MainThreadScheduler) // Actualiza la UI en el hilo principal
+        .SubscribeOn(RxSchedulers.TaskpoolScheduler) // Procesa en un hilo de fondo
+        .ObserveOn(RxSchedulers.MainThreadScheduler) // Actualiza la UI en el hilo principal
         .Subscribe(data =>
         {
             // CHECKS

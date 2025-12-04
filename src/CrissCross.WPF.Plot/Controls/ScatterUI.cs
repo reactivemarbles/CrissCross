@@ -134,7 +134,7 @@ public partial class ScatterUI : RxObject, IPlottableUI
     /// </summary>
     /// <param name="observable">The observable.</param>
     public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) =>
-        observable.ObserveOn(RxApp.MainThreadScheduler)
+        observable.ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(data =>
             {
                 if (data.Name == null || data.X == null || data.Y == null)

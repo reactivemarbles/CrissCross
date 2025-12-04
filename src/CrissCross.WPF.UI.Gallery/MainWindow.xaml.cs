@@ -41,7 +41,7 @@ public partial class MainWindow : IAmBuilt
         this.WhenActivated(d =>
         {
             // Set the tracker
-            var tracker = Locator.Current.GetService<Tracker>();
+            var tracker = AppLocator.Current.GetService<Tracker>();
             tracker?.Track(this);
             SetCurrentValue(TrackerProperty, tracker);
 
