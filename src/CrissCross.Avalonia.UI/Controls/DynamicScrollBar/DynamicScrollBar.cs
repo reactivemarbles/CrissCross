@@ -1,0 +1,15 @@
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using Avalonia.Controls;
+
+namespace CrissCross.Avalonia.UI.Controls;
+
+/// <summary>
+/// Represents a dynamic scrollbar control with custom styling.
+/// </summary>
+public class DynamicScrollBar : global::Avalonia.Controls.Primitives.ScrollBar
+{
+    // Inherits from Avalonia ScrollBar with dynamic features
+}
