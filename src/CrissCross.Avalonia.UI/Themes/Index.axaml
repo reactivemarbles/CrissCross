@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- CrissCross.Avalonia.UI Control Themes -->
+    <!-- Include this in your App.axaml to use CrissCross.Avalonia.UI controls with proper styling -->
+    
+    <!-- Button Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Button.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleSwitch.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/SplitButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DropDownButton.axaml" />
+    
+    <!-- Selection Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CheckBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/RadioButton.axaml" />
+    
+    <!-- Input Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TextBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/PasswordBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/RichTextBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/NumberBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ComboBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Slider.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ColorPicker.axaml" />
+    
+    <!-- Date/Time Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DatePicker.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TimePicker.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CalendarDatePicker.axaml" />
+    
+    <!-- Progress Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressBar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressRing.axaml" />
+    
+    <!-- Container Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Card.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Expander.axaml" />
+    
+</Styles>

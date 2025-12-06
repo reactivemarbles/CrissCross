@@ -20,11 +20,38 @@ public class DropDownButton : Button
         AvaloniaProperty.Register<DropDownButton, FlyoutBase?>(nameof(Flyout));
 
     /// <summary>
+    /// Property for <see cref="IsDropDownOpen"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsDropDownOpenProperty =
+        AvaloniaProperty.Register<DropDownButton, bool>(nameof(IsDropDownOpen));
+
+    /// <summary>
     /// Gets or sets the flyout associated with this button.
     /// </summary>
     public new FlyoutBase? Flyout
     {
         get => GetValue(FlyoutProperty);
         set => SetValue(FlyoutProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the dropdown is open.
+    /// </summary>
+    public bool IsDropDownOpen
+    {
+        get => GetValue(IsDropDownOpenProperty);
+        set => SetValue(IsDropDownOpenProperty, value);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnClick()
+    {
+        base.OnClick();
+
+        if (Flyout != null)
+        {
+            Flyout.ShowAt(this);
+            SetCurrentValue(IsDropDownOpenProperty, true);
+        }
     }
 }

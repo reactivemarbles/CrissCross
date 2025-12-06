@@ -1,0 +1,106 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross DatePicker Style -->
+    <!-- Inherits from Avalonia DatePicker, apply minimal styling -->
+    <Style Selector="controls|DatePicker">
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#5D5D5D" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:DatePicker">
+                <Border Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="12,6">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <!-- Date Display -->
+                        <Grid Grid.Column="0" ColumnDefinitions="*,Auto,*,Auto,*">
+                            <TextBlock Name="PART_DayTextBlock"
+                                       Grid.Column="0"
+                                       Text="{Binding SelectedDate.Day, RelativeSource={RelativeSource TemplatedParent}, FallbackValue='Day'}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="1"
+                                       Text="/"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       Margin="4,0" />
+                            <TextBlock Name="PART_MonthTextBlock"
+                                       Grid.Column="2"
+                                       Text="{Binding SelectedDate.Month, RelativeSource={RelativeSource TemplatedParent}, FallbackValue='Month'}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="3"
+                                       Text="/"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       Margin="4,0" />
+                            <TextBlock Name="PART_YearTextBlock"
+                                       Grid.Column="4"
+                                       Text="{Binding SelectedDate.Year, RelativeSource={RelativeSource TemplatedParent}, FallbackValue='Year'}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                        </Grid>
+                        
+                        <!-- Calendar Icon -->
+                        <Button Name="PART_FlyoutButton"
+                                Grid.Column="1"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="4"
+                                VerticalAlignment="Center">
+                            <Path Data="M19,4H18V2H16V4H8V2H6V4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8M12,13H17V18H12V13Z"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Width="16"
+                                  Height="16"
+                                  Stretch="Uniform" />
+                        </Button>
+                        
+                        <!-- Popup -->
+                        <Popup Name="PART_Popup"
+                               PlacementTarget="{TemplateBinding}"
+                               Placement="Bottom"
+                               IsLightDismissEnabled="True">
+                            <Border Background="#2D2D2D"
+                                    BorderBrush="#5D5D5D"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="8">
+                                <Calendar Name="PART_Calendar"
+                                          SelectedDate="{Binding SelectedDate, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|DatePicker:pointerover /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#7D7D7D" />
+    </Style>
+    
+    <!-- Pressed State -->
+    <Style Selector="controls|DatePicker:pressed /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|DatePicker:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

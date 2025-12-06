@@ -1,0 +1,119 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- Custom ToggleSwitch style that includes PART_MovingKnobs to fix Avalonia 11.3.9 FluentTheme issue -->
+    <Style Selector="controls|ToggleSwitch">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Grid Grid.Column="0"
+                          RowDefinitions="Auto,*,Auto"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          MinWidth="40"
+                          MinHeight="20">
+                        
+                        <!-- Track Background -->
+                        <Border x:Name="SwitchAreaGrid"
+                                Grid.Row="1"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Width="40"
+                                Height="20">
+                            
+                            <!-- PART_MovingKnobs - Required template part for Avalonia 11.3.9 FluentTheme -->
+                            <Canvas x:Name="PART_MovingKnobs">
+                                <Grid x:Name="SwitchKnob"
+                                      Width="12"
+                                      Height="12"
+                                      Canvas.Top="3"
+                                      Canvas.Left="4">
+                                    <Ellipse x:Name="SwitchKnobBounds"
+                                             Fill="{DynamicResource ToggleSwitchKnobFillOff}"
+                                             Width="12"
+                                             Height="12" />
+                                    <Ellipse x:Name="SwitchKnobOn"
+                                             Fill="{DynamicResource ToggleSwitchKnobFillOn}"
+                                             Width="12"
+                                             Height="12"
+                                             Opacity="0" />
+                                </Grid>
+                            </Canvas>
+                        </Border>
+                        
+                        <!-- Off Content -->
+                        <ContentPresenter x:Name="PART_OffContentPresenter"
+                                          Grid.Row="0"
+                                          Content="{TemplateBinding OffContent}"
+                                          ContentTemplate="{TemplateBinding OffContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          IsVisible="{Binding !IsChecked, RelativeSource={RelativeSource TemplatedParent}}" />
+                        
+                        <!-- On Content -->
+                        <ContentPresenter x:Name="PART_OnContentPresenter"
+                                          Grid.Row="2"
+                                          Content="{TemplateBinding OnContent}"
+                                          ContentTemplate="{TemplateBinding OnContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          IsVisible="{TemplateBinding IsChecked}" />
+                    </Grid>
+                    
+                    <!-- Header Content -->
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                      Grid.Column="1"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Margin="8,0,0,0"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        
+        <!-- Default styling -->
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOff}" />
+        <Setter Property="Foreground" Value="{DynamicResource ToggleSwitchContentForeground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    
+    <!-- Checked state -->
+    <Style Selector="controls|ToggleSwitch:checked /template/ Border#SwitchAreaGrid">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOn}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOn}" />
+    </Style>
+    
+    <Style Selector="controls|ToggleSwitch:checked /template/ Grid#SwitchKnob">
+        <Setter Property="Canvas.Left" Value="22" />
+    </Style>
+    
+    <Style Selector="controls|ToggleSwitch:checked /template/ Ellipse#SwitchKnobOn">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    
+    <Style Selector="controls|ToggleSwitch:checked /template/ Ellipse#SwitchKnobBounds">
+        <Setter Property="Opacity" Value="0" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|ToggleSwitch:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+    <!-- PointerOver state (unchecked) -->
+    <Style Selector="controls|ToggleSwitch:pointerover:not(:checked) /template/ Border#SwitchAreaGrid">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackgroundPointerOver}" />
+    </Style>
+    
+    <!-- PointerOver state (checked) -->
+    <Style Selector="controls|ToggleSwitch:pointerover:checked /template/ Border#SwitchAreaGrid">
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPointerOver}" />
+    </Style>
+    
+</Styles>

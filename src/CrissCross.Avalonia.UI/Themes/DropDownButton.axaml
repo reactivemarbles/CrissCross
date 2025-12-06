@@ -1,0 +1,73 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross DropDownButton Style -->
+    <Style Selector="controls|DropDownButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <!-- Dropdown Arrow -->
+                        <Path Name="DropdownArrow"
+                              Grid.Column="1"
+                              Data="M0,0 L4,4 L8,0"
+                              Stroke="{TemplateBinding Foreground}"
+                              StrokeThickness="1.5"
+                              Width="8"
+                              Height="4"
+                              Stretch="Uniform"
+                              Margin="8,0,0,0"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <!-- Bind the Flyout property to base class Flyout -->
+        <Setter Property="Flyout" Value="{Binding Flyout, RelativeSource={RelativeSource Self}}" />
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|DropDownButton:pointerover /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
+    </Style>
+    
+    <!-- Pressed State -->
+    <Style Selector="controls|DropDownButton:pressed /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
+    </Style>
+    
+    <!-- FlyoutOpen State - rotate arrow -->
+    <Style Selector="controls|DropDownButton:flyout-open /template/ Path#DropdownArrow">
+        <Setter Property="RenderTransform">
+            <RotateTransform Angle="180" />
+        </Setter>
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|DropDownButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

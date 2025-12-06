@@ -1,0 +1,83 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ProgressBar Style -->
+    <Style Selector="controls|ProgressBar">
+        <Setter Property="Foreground" Value="#0078D4" />
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="MinHeight" Value="4" />
+        <Setter Property="Height" Value="4" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:ProgressBar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Panel>
+                        <!-- Track -->
+                        <Panel Name="PART_Track" />
+                        
+                        <!-- Progress Indicator - Required part -->
+                        <Border Name="PART_Indicator"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                HorizontalAlignment="Left" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Indeterminate state -->
+    <Style Selector="controls|ProgressBar:indeterminate">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:ProgressBar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <!-- Required PART_Indicator for indeterminate too -->
+                        <Border Name="PART_Indicator"
+                                Width="100"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                HorizontalAlignment="Left"
+                                RenderTransformOrigin="0,0.5">
+                            <Border.RenderTransform>
+                                <TranslateTransform />
+                            </Border.RenderTransform>
+                        </Border>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Indeterminate animation -->
+    <Style Selector="controls|ProgressBar:indeterminate /template/ Border#PART_Indicator">
+        <Style.Animations>
+            <Animation Duration="0:0:2" IterationCount="Infinite">
+                <KeyFrame Cue="0%">
+                    <Setter Property="TranslateTransform.X" Value="-100" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="TranslateTransform.X" Value="200" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="TranslateTransform.X" Value="-100" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|ProgressBar:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

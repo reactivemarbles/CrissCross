@@ -1,0 +1,136 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ColorPicker Style -->
+    <Style Selector="controls|ColorPicker">
+        <Setter Property="MinWidth" Value="300" />
+        <Setter Property="MinHeight" Value="200" />
+        <Setter Property="Background" Value="#2D2D2D" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:ColorPicker">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        Padding="12">
+                    <StackPanel Spacing="12">
+                        <!-- Color Preview -->
+                        <Border Name="PART_ColorPreview"
+                                Height="50"
+                                CornerRadius="4"
+                                BorderBrush="#5D5D5D"
+                                BorderThickness="1">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding Color, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Border.Background>
+                        </Border>
+                        
+                        <!-- Hex Value Display -->
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0"
+                                       Text="Hex:"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       Margin="0,0,8,0" />
+                            <TextBox Grid.Column="1"
+                                     Name="PART_HexTextBox"
+                                     IsReadOnly="True"
+                                     Background="#3D3D3D"
+                                     Foreground="#FFFFFF"
+                                     BorderBrush="#5D5D5D" />
+                        </Grid>
+                        
+                        <!-- Red Slider -->
+                        <Grid ColumnDefinitions="24,*,40">
+                            <TextBlock Grid.Column="0"
+                                       Text="R"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FF6B6B"
+                                       FontWeight="Bold" />
+                            <Slider Name="PART_RedSlider"
+                                    Grid.Column="1"
+                                    Minimum="0"
+                                    Maximum="255"
+                                    Value="{Binding Red, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                    Margin="8,0" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Red, RelativeSource={RelativeSource TemplatedParent}}"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
+                        
+                        <!-- Green Slider -->
+                        <Grid ColumnDefinitions="24,*,40">
+                            <TextBlock Grid.Column="0"
+                                       Text="G"
+                                       VerticalAlignment="Center"
+                                       Foreground="#6BCB77"
+                                       FontWeight="Bold" />
+                            <Slider Name="PART_GreenSlider"
+                                    Grid.Column="1"
+                                    Minimum="0"
+                                    Maximum="255"
+                                    Value="{Binding Green, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                    Margin="8,0" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Green, RelativeSource={RelativeSource TemplatedParent}}"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
+                        
+                        <!-- Blue Slider -->
+                        <Grid ColumnDefinitions="24,*,40">
+                            <TextBlock Grid.Column="0"
+                                       Text="B"
+                                       VerticalAlignment="Center"
+                                       Foreground="#4D96FF"
+                                       FontWeight="Bold" />
+                            <Slider Name="PART_BlueSlider"
+                                    Grid.Column="1"
+                                    Minimum="0"
+                                    Maximum="255"
+                                    Value="{Binding Blue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                    Margin="8,0" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Blue, RelativeSource={RelativeSource TemplatedParent}}"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
+                        
+                        <!-- Alpha Slider (conditional) -->
+                        <Grid Name="PART_AlphaPanel"
+                              ColumnDefinitions="24,*,40"
+                              IsVisible="{Binding IsAlphaEnabled, RelativeSource={RelativeSource TemplatedParent}}">
+                            <TextBlock Grid.Column="0"
+                                       Text="A"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       FontWeight="Bold" />
+                            <Slider Name="PART_AlphaSlider"
+                                    Grid.Column="1"
+                                    Minimum="0"
+                                    Maximum="255"
+                                    Value="{Binding Alpha, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                    Margin="8,0" />
+                            <TextBlock Grid.Column="2"
+                                       Text="{Binding Alpha, RelativeSource={RelativeSource TemplatedParent}}"
+                                       VerticalAlignment="Center"
+                                       Foreground="#FFFFFF"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|ColorPicker:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

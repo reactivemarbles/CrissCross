@@ -6,7 +6,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -25,7 +26,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
     /// Property for <see cref="IsTodayHighlighted"/>.
     /// </summary>
     public static readonly StyledProperty<bool> IsTodayHighlightedProperty = AvaloniaProperty.Register<CalendarDatePicker, bool>(
-        nameof(IsTodayHighlighted), false);
+        nameof(IsTodayHighlighted), true);
 
     /// <summary>
     /// Property for <see cref="Date"/>.
@@ -40,6 +41,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         nameof(FirstDayOfWeek), DayOfWeek.Sunday);
 
     private Popup? _popup;
+    private global::Avalonia.Controls.Calendar? _calendar;
 
     /// <summary>
     /// Gets or sets a value indicating whether the current date is highlighted.
@@ -87,24 +89,13 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         SetCurrentValue(IsCalendarOpenProperty, !IsCalendarOpen);
     }
 
-    /// <summary>
-    /// Called when [popup opened].
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    protected virtual void OnPopupOpened(object? sender, EventArgs e)
+    /// <inheritdoc />
+    protected override void OnLoaded(RoutedEventArgs e)
     {
-        if (sender is not Popup popup)
-        {
-            return;
-        }
+        base.OnLoaded(e);
 
-        if (popup.Child is null)
-        {
-            return;
-        }
-
-        _ = popup.Child?.Focus();
+        // Initialize popup after the control is loaded to ensure visual tree is ready
+        InitializePopup();
     }
 
     /// <summary>
@@ -114,6 +105,11 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
     /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnSelectedDatesChanged(object? sender, SelectionChangedEventArgs e)
     {
+        if (_calendar?.SelectedDate != null)
+        {
+            SetCurrentValue(DateProperty, _calendar.SelectedDate);
+        }
+
         if (IsCalendarOpen)
         {
             SetCurrentValue(IsCalendarOpenProperty, false);
@@ -127,22 +123,28 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
             return;
         }
 
-        var calendar = new global::Avalonia.Controls.Calendar();
-        calendar.Bind(
+        _calendar = new global::Avalonia.Controls.Calendar
+        {
+            IsTodayHighlighted = IsTodayHighlighted,
+            FirstDayOfWeek = FirstDayOfWeek,
+            SelectedDate = Date
+        };
+
+        _calendar.Bind(
             global::Avalonia.Controls.Calendar.SelectedDateProperty,
             new Binding(nameof(Date))
             {
                 Source = this,
                 Mode = BindingMode.TwoWay
             });
-        calendar.Bind(
+        _calendar.Bind(
             global::Avalonia.Controls.Calendar.IsTodayHighlightedProperty,
             new Binding(nameof(IsTodayHighlighted))
             {
                 Source = this,
                 Mode = BindingMode.TwoWay
             });
-        calendar.Bind(
+        _calendar.Bind(
             global::Avalonia.Controls.Calendar.FirstDayOfWeekProperty,
             new Binding(nameof(FirstDayOfWeek))
             {
@@ -150,14 +152,14 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
                 Mode = BindingMode.TwoWay
             });
 
-        calendar.SelectedDatesChanged += OnSelectedDatesChanged;
+        _calendar.SelectedDatesChanged += OnSelectedDatesChanged;
 
         _popup = new Popup
         {
             PlacementTarget = this,
             Placement = PlacementMode.Bottom,
-            Child = calendar,
-            Focusable = false,
+            Child = _calendar,
+            IsLightDismissEnabled = true,
             IsOpen = false,
             VerticalOffset = 1D,
         };
@@ -169,5 +171,20 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
                 Source = this,
                 Mode = BindingMode.TwoWay
             });
+
+        // Add popup to visual tree
+        var adornerLayer = AdornerLayer.GetAdornerLayer(this);
+        if (adornerLayer != null)
+        {
+            adornerLayer.Children.Add(_popup);
+        }
+        else
+        {
+            // Fallback: add to parent panel
+            if (this.GetVisualParent() is Panel parent)
+            {
+                parent.Children.Add(_popup);
+            }
+        }
     }
 }

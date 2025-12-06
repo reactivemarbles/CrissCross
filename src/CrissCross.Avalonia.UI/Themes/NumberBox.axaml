@@ -1,0 +1,92 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross NumberBox Style -->
+    <Style Selector="controls|NumberBox">
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#5D5D5D" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinWidth" Value="150" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="ShowButtonSpinner" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:NumberBox">
+                <Border Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <!-- Text input -->
+                        <TextBox Name="PART_TextBox"
+                                 Grid.Column="0"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="{TemplateBinding Foreground}"
+                                 Text="{TemplateBinding Text}"
+                                 Watermark="{TemplateBinding Watermark}"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"
+                                 VerticalContentAlignment="Center"
+                                 Padding="{TemplateBinding Padding}" />
+                        
+                        <!-- Spinner buttons -->
+                        <StackPanel Name="PART_SpinnerPanel"
+                                    Grid.Column="1"
+                                    IsVisible="{TemplateBinding ShowButtonSpinner}">
+                            <RepeatButton Name="PART_IncreaseButton"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Padding="4,2"
+                                          VerticalAlignment="Center">
+                                <Path Data="M0,4 L4,0 L8,4"
+                                      Stroke="{TemplateBinding Foreground}"
+                                      StrokeThickness="1.5"
+                                      Width="8"
+                                      Height="4"
+                                      Stretch="Uniform" />
+                            </RepeatButton>
+                            <RepeatButton Name="PART_DecreaseButton"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          Padding="4,2"
+                                          VerticalAlignment="Center">
+                                <Path Data="M0,0 L4,4 L8,0"
+                                      Stroke="{TemplateBinding Foreground}"
+                                      StrokeThickness="1.5"
+                                      Width="8"
+                                      Height="4"
+                                      Stretch="Uniform" />
+                            </RepeatButton>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|NumberBox:pointerover /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#7D7D7D" />
+    </Style>
+    
+    <!-- Focus State -->
+    <Style Selector="controls|NumberBox:focus-within /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- Button hover states -->
+    <Style Selector="controls|NumberBox /template/ RepeatButton:pointerover">
+        <Setter Property="Background" Value="#4D4D4D" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|NumberBox:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>
