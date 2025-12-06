@@ -1,0 +1,106 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross InfoBar Style -->
+    <Style Selector="controls|InfoBar">
+        <Setter Property="Background" Value="#19000000" />
+        <Setter Property="BorderBrush" Value="#19000000" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        IsVisible="{TemplateBinding IsOpen}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <!-- Icon -->
+                        <PathIcon x:Name="PART_Icon"
+                                  Grid.Column="0"
+                                  Width="20"
+                                  Height="20"
+                                  Margin="0,0,12,0"
+                                  IsVisible="{TemplateBinding IsIconVisible}"
+                                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                        
+                        <!-- Content -->
+                        <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                            <TextBlock x:Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       FontWeight="SemiBold"
+                                       FontSize="14"
+                                       IsVisible="{Binding Title, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <TextBlock x:Name="PART_Message"
+                                       Text="{TemplateBinding Message}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Opacity="0.9"
+                                       IsVisible="{Binding Message, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                        
+                        <!-- Close button -->
+                        <Button x:Name="PART_CloseButton"
+                                Grid.Column="2"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="8"
+                                IsVisible="{TemplateBinding IsClosable}"
+                                Command="{Binding Close, RelativeSource={RelativeSource TemplatedParent}}">
+                            <PathIcon Width="12"
+                                      Height="12"
+                                      Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                        </Button>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Informational severity (default) -->
+    <Style Selector="controls|InfoBar[Severity=Informational]">
+        <Setter Property="Background" Value="#1A0078D4" />
+    </Style>
+    <Style Selector="controls|InfoBar[Severity=Informational] /template/ PathIcon#PART_Icon">
+        <Setter Property="Foreground" Value="#0078D4" />
+        <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+    </Style>
+    
+    <!-- Success severity -->
+    <Style Selector="controls|InfoBar[Severity=Success]">
+        <Setter Property="Background" Value="#1A107C10" />
+    </Style>
+    <Style Selector="controls|InfoBar[Severity=Success] /template/ PathIcon#PART_Icon">
+        <Setter Property="Foreground" Value="#107C10" />
+        <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+    </Style>
+    
+    <!-- Warning severity -->
+    <Style Selector="controls|InfoBar[Severity=Warning]">
+        <Setter Property="Background" Value="#1ACA5010" />
+    </Style>
+    <Style Selector="controls|InfoBar[Severity=Warning] /template/ PathIcon#PART_Icon">
+        <Setter Property="Foreground" Value="#CA5010" />
+        <Setter Property="Data" Value="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+    </Style>
+    
+    <!-- Error severity -->
+    <Style Selector="controls|InfoBar[Severity=Error]">
+        <Setter Property="Background" Value="#1AC42B1C" />
+    </Style>
+    <Style Selector="controls|InfoBar[Severity=Error] /template/ PathIcon#PART_Icon">
+        <Setter Property="Foreground" Value="#C42B1C" />
+        <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+    </Style>
+    
+    <!-- Closed state -->
+    <Style Selector="controls|InfoBar[IsOpen=False]">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+</Styles>

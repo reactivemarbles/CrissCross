@@ -1,0 +1,55 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross NumberPad Style -->
+    <Style Selector="controls|NumberPad">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ButtonSize" Value="48" />
+        <Setter Property="Spacing" Value="4" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,*,*">
+                        <Grid.Styles>
+                            <Style Selector="Button">
+                                <Setter Property="Width" Value="{Binding $parent[controls:NumberPad].ButtonSize}" />
+                                <Setter Property="Height" Value="{Binding $parent[controls:NumberPad].ButtonSize}" />
+                                <Setter Property="Margin" Value="2" />
+                                <Setter Property="FontSize" Value="20" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                            </Style>
+                        </Grid.Styles>
+                        
+                        <!-- Row 1: 1 2 3 -->
+                        <Button x:Name="PART_Button1" Grid.Row="0" Grid.Column="0" Content="1" />
+                        <Button x:Name="PART_Button2" Grid.Row="0" Grid.Column="1" Content="2" />
+                        <Button x:Name="PART_Button3" Grid.Row="0" Grid.Column="2" Content="3" />
+                        
+                        <!-- Row 2: 4 5 6 -->
+                        <Button x:Name="PART_Button4" Grid.Row="1" Grid.Column="0" Content="4" />
+                        <Button x:Name="PART_Button5" Grid.Row="1" Grid.Column="1" Content="5" />
+                        <Button x:Name="PART_Button6" Grid.Row="1" Grid.Column="2" Content="6" />
+                        
+                        <!-- Row 3: 7 8 9 -->
+                        <Button x:Name="PART_Button7" Grid.Row="2" Grid.Column="0" Content="7" />
+                        <Button x:Name="PART_Button8" Grid.Row="2" Grid.Column="1" Content="8" />
+                        <Button x:Name="PART_Button9" Grid.Row="2" Grid.Column="2" Content="9" />
+                        
+                        <!-- Row 4: . 0 Backspace -->
+                        <Button x:Name="PART_ButtonDecimal" Grid.Row="3" Grid.Column="0" Content="."
+                                IsVisible="{TemplateBinding ShowDecimal}" />
+                        <Button x:Name="PART_Button0" Grid.Row="3" Grid.Column="1" Content="0" />
+                        <Button x:Name="PART_ButtonBackspace" Grid.Row="3" Grid.Column="2" Content="?" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

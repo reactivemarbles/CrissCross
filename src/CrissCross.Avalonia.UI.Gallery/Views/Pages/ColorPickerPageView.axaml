@@ -6,32 +6,72 @@
              x:DataType="vm:ColorPickerPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="Color Picker"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="Color Picker"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="ColorPicker controls allow users to select colors using various color models and representations."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="ColorPicker controls allow users to select colors using various color models and representations."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- Standard ColorPicker -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="Standard ColorPicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Full color picker with spectrum and sliders." Opacity="0.7" Margin="0,0,0,8" />
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Standard ColorPicker" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Full color picker with spectrum and sliders." Opacity="0.7" />
                     <controls:ColorPicker HorizontalAlignment="Left" />
-                </StackPanel>
-            </Border>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ColorSelector -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="ColorSelector" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Compact color selector for quick color selection." Opacity="0.7" Margin="0,0,0,8" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ColorSelector" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Compact color selector for quick color selection." Opacity="0.7" />
                     <controls:ColorSelector HorizontalAlignment="Left" />
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Color Display -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Color Display" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Shows a color preview with optional secondary color." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="16">
+                        <controls:ColorDisplay Width="60" Height="60" Color="CornflowerBlue" />
+                        <controls:ColorDisplay Width="60" Height="60" Color="Coral" />
+                        <controls:ColorDisplay Width="60" Height="60" Color="SeaGreen" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Alpha Slider -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Alpha Slider" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Control for adjusting the alpha (transparency) of a color." Opacity="0.7" />
+                    <controls:AlphaSlider Width="200" HorizontalAlignment="Left" Color="CornflowerBlue" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Hex Color TextBox -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Hex Color TextBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Enter colors using hex notation." Opacity="0.7" />
+                    <controls:HexColorTextBox Width="150" HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Hue Slider -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Hue Slider" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Slider for selecting hue value across the color spectrum." Opacity="0.7" />
+                    <controls:HueSlider Width="300" HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

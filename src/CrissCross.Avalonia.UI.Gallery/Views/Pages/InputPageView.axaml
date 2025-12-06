@@ -6,192 +6,160 @@
              x:DataType="vm:InputPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="Input Controls"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="Input Controls"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="Input controls allow users to enter and edit data. CrissCross provides enhanced input controls with validation, formatting, and rich styling."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="Input controls allow users to enter and edit data. CrissCross provides enhanced input controls with validation, formatting, and rich styling."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- TextBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="TextBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Text boxes allow users to enter text." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross TextBox:" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="TextBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Text boxes allow users to enter text." Opacity="0.7" />
+                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Standard TextBox:" FontSize="12" Margin="0,0,0,4" />
                             <controls:TextBox Watermark="Enter text here..." />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia TextBox:" FontSize="12" Margin="0,0,0,4" />
-                            <TextBox Watermark="Enter text here..." />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Disabled TextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBox Watermark="Disabled" IsEnabled="False" />
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- RichTextBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="RichTextBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Rich text boxes provide multi-line text editing with visual formatting:" Opacity="0.7" Margin="0,0,0,4" />
-                    <TextBlock Opacity="0.6" Margin="16,0,0,12" FontSize="12">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="RichTextBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Rich text boxes provide multi-line text editing with visual formatting:" Opacity="0.7" />
+                    <controls:TextBlock Opacity="0.6" FontSize="12" Margin="16,0,0,0">
                         <Run Text="• Select text and press "/><Run Text="Ctrl+B" FontWeight="Bold"/><Run Text=" for "/><Run Text="Bold" FontWeight="Bold"/>
                         <LineBreak/>
                         <Run Text="• Select text and press "/><Run Text="Ctrl+I" FontWeight="Bold"/><Run Text=" for "/><Run Text="Italic" FontStyle="Italic"/>
                         <LineBreak/>
                         <Run Text="• Select text and press "/><Run Text="Ctrl+U" FontWeight="Bold"/><Run Text=" for "/><Run Text="Underline" TextDecorations="Underline"/>
-                        <LineBreak/>
-                        <Run Text="• Right-click for context menu with formatting options"/>
-                        <LineBreak/>
-                        <Run Text="• Formatting is preserved when editing"/>
-                    </TextBlock>
+                    </controls:TextBlock>
                     
-                    <StackPanel Spacing="16" MaxWidth="500" HorizontalAlignment="Left">
-                        <!-- RichTextBox with formatting -->
-                        <StackPanel>
-                            <TextBlock Text="RichTextBox with Visual Formatting:" FontSize="12" Margin="0,0,0,4" />
-                            <TextBlock Text="Select any text below, then press Ctrl+B, Ctrl+I, or Ctrl+U to apply formatting." 
-                                       FontSize="11" Opacity="0.6" Margin="0,0,0,4" />
+                    <controls:StackPanel Spacing="16" MaxWidth="500" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="RichTextBox with Visual Formatting:" FontSize="12" Margin="0,0,0,4" />
                             <controls:RichTextBox 
                                 Name="FormattingRichTextBox"
-                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold.&#x0a;Or try Ctrl+I for italic text.&#x0a;Use Ctrl+U for underlined text.&#x0a;&#x0a;Right-click for more formatting options!"
-                                Height="160"
+                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold."
+                                Height="120"
                                 Width="450"
                                 AcceptsReturn="True"
                                 AcceptsTab="True"
                                 IsFormattingEnabled="True" />
-                        </StackPanel>
-                        
-                        <!-- Basic RichTextBox -->
-                        <StackPanel>
-                            <TextBlock Text="Basic RichTextBox:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:RichTextBox 
-                                Name="BasicRichTextBox"
-                                Watermark="Type here... Press Enter for new lines, Tab for tabs."
-                                Height="120"
-                                Width="450"
-                                AcceptsReturn="True"
-                                AcceptsTab="True" />
-                        </StackPanel>
-                        
-                        <!-- Read-Only RichTextBox -->
-                        <StackPanel>
-                            <TextBlock Text="Read-Only RichTextBox:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:RichTextBox 
-                                Text="This is a read-only rich text box.&#x0a;&#x0a;It displays content but cannot be edited.&#x0a;Formatting shortcuts are disabled in read-only mode."
-                                Height="100"
-                                Width="450"
-                                IsReadOnly="True" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- PasswordBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="PasswordBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Password boxes hide the entered characters for security." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross PasswordBox:" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="PasswordBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Password boxes hide the entered characters for security." Opacity="0.7" />
+                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Standard PasswordBox:" FontSize="12" Margin="0,0,0,4" />
                             <controls:PasswordBox Watermark="Enter password..." />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia TextBox (PasswordChar):" FontSize="12" Margin="0,0,0,4" />
-                            <TextBox Watermark="Enter password..." PasswordChar="•" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- NumberBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="NumberBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Number boxes allow numeric input with increment/decrement buttons." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross NumberBox:" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="NumberBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Number boxes allow numeric input with increment/decrement buttons." Opacity="0.7" />
+                    <controls:StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Standard NumberBox:" FontSize="12" Margin="0,0,0,4" />
                             <controls:NumberBox Value="42" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia NumericUpDown:" FontSize="12" Margin="0,0,0,4" />
-                            <NumericUpDown Value="42" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- NumberPad -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="NumberPad" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="NumberPad provides a touch-friendly numeric keypad." Opacity="0.7" />
+                    <controls:NumberPad HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- Slider -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Sliders allow selection of a value from a range." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross Slider (Basic):" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Slider" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Sliders allow selection of a value from a range." Opacity="0.7" />
+                    <controls:StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Basic Slider:" FontSize="12" Margin="0,0,0,4" />
                             <controls:Slider Value="50" Maximum="100" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="CrissCross Slider (With Ticks):" FontSize="12" Margin="0,0,0,4" />
+                        </controls:StackPanel>
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Slider with Ticks:" FontSize="12" Margin="0,0,0,4" />
                             <controls:Slider Value="75" Maximum="100" TickFrequency="25" TickPlacement="BottomRight" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia Slider:" FontSize="12" Margin="0,0,0,4" />
-                            <Slider Value="50" Maximum="100" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
-            <!-- ComboBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="ComboBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Combo boxes allow selection from a dropdown list." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross ComboBox:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:ComboBox PlaceholderText="Select an option">
-                                <ComboBoxItem Content="Option 1" />
-                                <ComboBoxItem Content="Option 2" />
-                                <ComboBoxItem Content="Option 3" />
-                            </controls:ComboBox>
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia ComboBox:" FontSize="12" Margin="0,0,0,4" />
-                            <ComboBox PlaceholderText="Select an option">
-                                <ComboBoxItem Content="Option 1" />
-                                <ComboBoxItem Content="Option 2" />
-                                <ComboBoxItem Content="Option 3" />
-                            </ComboBox>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+            <!-- SquareSlider -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="SquareSlider" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="SquareSlider allows 2D value selection in a square area." Opacity="0.7" />
+                    <controls:SquareSlider Width="200" Height="200" HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- RatingControl -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="RatingControl" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="RatingControl allows users to provide a star rating." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
+                        <controls:RatingControl Value="3" />
+                        <controls:RatingControl Value="4.5" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- ThumbRate -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ThumbRate" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="ThumbRate provides thumbs up/down feedback." Opacity="0.7" />
+                    <controls:ThumbRate HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ColorPicker -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="ColorPicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Color pickers allow selection of colors using RGB sliders with optional alpha channel." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="16">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross ColorPicker (with Alpha):" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ColorPicker" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Color pickers allow selection of colors using RGB sliders." Opacity="0.7" />
+                    <controls:StackPanel Spacing="16">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="ColorPicker (with Alpha):" FontSize="12" Margin="0,0,0,4" />
                             <controls:ColorPicker HorizontalAlignment="Left" IsAlphaEnabled="True" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="CrissCross ColorPicker (RGB only):" FontSize="12" Margin="0,0,0,4" />
-                            <controls:ColorPicker HorizontalAlignment="Left" IsAlphaEnabled="False" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

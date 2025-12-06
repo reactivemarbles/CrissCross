@@ -3,13 +3,10 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using Avalonia.Styling;
-using AvPath = Avalonia.Controls.Shapes.Path;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -46,13 +43,13 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="ScaleStartAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> ScaleStartAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleStartAngle), 120.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleStartAngle), 135.0);
 
     /// <summary>
     /// Property for <see cref="ScaleSweepAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> ScaleSweepAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleSweepAngle), 300.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleSweepAngle), 270.0);
 
     /// <summary>
     /// Property for <see cref="MajorDivisionsCount"/>.
@@ -142,28 +139,27 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="Decimals"/>.
     /// </summary>
     public static readonly StyledProperty<int> DecimalsProperty =
-        AvaloniaProperty.Register<CircularGauge, int>(nameof(Decimals), 1);
+        AvaloniaProperty.Register<CircularGauge, int>(nameof(Decimals), 0);
 
     /// <summary>
     /// Property for <see cref="PointerAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> PointerAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerAngle), 120.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerAngle), 135.0);
 
     private Canvas? _scaleCanvas;
-    private AvPath? _pointer;
-    private Ellipse? _pointerCap;
-    private double _oldAngle;
 
     static CircularGauge()
     {
-        ValueProperty.Changed.AddClassHandler<CircularGauge>((x, e) => x.OnValueChanged(e));
+        ValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.UpdatePointerAngle());
         MinValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         MaxValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         MajorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         MinorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         ScaleStartAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         ScaleSweepAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        RadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        BoundsProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
     }
 
     /// <summary>
@@ -203,7 +199,7 @@ public class CircularGauge : TemplatedControl
     }
 
     /// <summary>
-    /// Gets or sets the start angle of the scale in degrees.
+    /// Gets or sets the start angle of the scale in degrees (0 = right, 90 = bottom, 180 = left, 270 = top).
     /// </summary>
     public double ScaleStartAngle
     {
@@ -372,21 +368,8 @@ public class CircularGauge : TemplatedControl
         base.OnApplyTemplate(e);
 
         _scaleCanvas = e.NameScope.Find<Canvas>("PART_ScaleCanvas");
-        _pointer = e.NameScope.Find<AvPath>("PART_Pointer");
-        _pointerCap = e.NameScope.Find<Ellipse>("PART_PointerCap");
 
-        _oldAngle = ScaleStartAngle;
         DrawScale();
-        UpdatePointerAngle();
-    }
-
-    private void OnValueChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        if (e is null)
-        {
-            return;
-        }
-
         UpdatePointerAngle();
     }
 
@@ -400,10 +383,11 @@ public class CircularGauge : TemplatedControl
         }
 
         var normalizedValue = (clampedValue - MinValue) / range;
-        var newAngle = ScaleStartAngle + (normalizedValue * ScaleSweepAngle);
+
+        // Subtract 90 to convert from standard math angles (0=right) to screen angles (0=up)
+        var newAngle = ScaleStartAngle + (normalizedValue * ScaleSweepAngle) - 90;
 
         PointerAngle = newAngle;
-        _oldAngle = newAngle;
     }
 
     private void RedrawScale()
@@ -414,17 +398,21 @@ public class CircularGauge : TemplatedControl
 
     private void DrawScale()
     {
-        if (_scaleCanvas == null)
+        if (_scaleCanvas == null || Bounds.Width == 0 || Bounds.Height == 0)
         {
             return;
         }
 
         _scaleCanvas.Children.Clear();
 
-        var center = Radius;
-        var scaleRadius = Radius * 0.8;
-        var majorTickLength = 15.0;
-        var minorTickLength = 8.0;
+        // Use the actual bounds of the control for centering
+        var centerX = Bounds.Width / 2;
+        var centerY = Bounds.Height / 2;
+        var actualRadius = Math.Min(centerX, centerY) - 10; // Leave margin for labels
+
+        var scaleRadius = actualRadius * 0.85;
+        var majorTickLength = actualRadius * 0.12;
+        var minorTickLength = actualRadius * 0.06;
 
         var majorTickUnitAngle = ScaleSweepAngle / MajorDivisionsCount;
         var majorTicksUnitValue = (MaxValue - MinValue) / MajorDivisionsCount;
@@ -436,10 +424,10 @@ public class CircularGauge : TemplatedControl
             var angleRadian = angle * Math.PI / 180;
 
             // Major tick
-            var startX = center + (scaleRadius * Math.Cos(angleRadian));
-            var startY = center + (scaleRadius * Math.Sin(angleRadian));
-            var endX = center + ((scaleRadius - majorTickLength) * Math.Cos(angleRadian));
-            var endY = center + ((scaleRadius - majorTickLength) * Math.Sin(angleRadian));
+            var startX = centerX + (scaleRadius * Math.Cos(angleRadian));
+            var startY = centerY + (scaleRadius * Math.Sin(angleRadian));
+            var endX = centerX + ((scaleRadius - majorTickLength) * Math.Cos(angleRadian));
+            var endY = centerY + ((scaleRadius - majorTickLength) * Math.Sin(angleRadian));
 
             var majorTick = new Line
             {
@@ -451,20 +439,21 @@ public class CircularGauge : TemplatedControl
             _scaleCanvas.Children.Add(majorTick);
 
             // Scale label
-            var labelRadius = scaleRadius - majorTickLength - 15;
-            var labelX = center + (labelRadius * Math.Cos(angleRadian));
-            var labelY = center + (labelRadius * Math.Sin(angleRadian));
+            var labelRadius = scaleRadius - majorTickLength - 12;
+            var labelX = centerX + (labelRadius * Math.Cos(angleRadian));
+            var labelY = centerY + (labelRadius * Math.Sin(angleRadian));
 
             var labelValue = MinValue + (i * majorTicksUnitValue);
             var label = new TextBlock
             {
                 Text = labelValue.ToString($"F{Decimals}"),
-                FontSize = 10,
+                FontSize = 9,
                 Foreground = ScaleColor,
             };
 
-            Canvas.SetLeft(label, labelX - 15);
-            Canvas.SetTop(label, labelY - 7);
+            // Offset label to center it on the position
+            Canvas.SetLeft(label, labelX - 12);
+            Canvas.SetTop(label, labelY - 6);
             _scaleCanvas.Children.Add(label);
 
             // Minor ticks (except after last major tick)
@@ -476,10 +465,10 @@ public class CircularGauge : TemplatedControl
                     var minorAngle = angle + (j * minorTickUnitAngle);
                     var minorAngleRadian = minorAngle * Math.PI / 180;
 
-                    var minorStartX = center + (scaleRadius * Math.Cos(minorAngleRadian));
-                    var minorStartY = center + (scaleRadius * Math.Sin(minorAngleRadian));
-                    var minorEndX = center + ((scaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
-                    var minorEndY = center + ((scaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
+                    var minorStartX = centerX + (scaleRadius * Math.Cos(minorAngleRadian));
+                    var minorStartY = centerY + (scaleRadius * Math.Sin(minorAngleRadian));
+                    var minorEndX = centerX + ((scaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
+                    var minorEndY = centerY + ((scaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
 
                     var minorTick = new Line
                     {

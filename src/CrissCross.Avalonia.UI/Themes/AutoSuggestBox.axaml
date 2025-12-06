@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross AutoSuggestBox Style -->
+    <!-- Inherits from AutoCompleteBox, use its base styling with customizations -->
+    <Style Selector="controls|AutoSuggestBox">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="MinimumPrefixLength" Value="1" />
+        <Setter Property="IsTextCompletionEnabled" Value="True" />
+        <Setter Property="FilterMode" Value="Contains" />
+        <Setter Property="Watermark" Value="{Binding PlaceholderText, RelativeSource={RelativeSource Self}}" />
+    </Style>
+    
+    <!-- Focus state -->
+    <Style Selector="controls|AutoSuggestBox:focus-within">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|AutoSuggestBox:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|AutoSuggestBox:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
+    </Style>
+    
+</Styles>

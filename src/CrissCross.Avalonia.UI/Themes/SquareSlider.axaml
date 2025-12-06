@@ -1,0 +1,61 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross SquareSlider Style -->
+    <Style Selector="controls|SquareSlider">
+        <Setter Property="Width" Value="200" />
+        <Setter Property="Height" Value="200" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="ThumbSize" Value="16" />
+        <Setter Property="ThumbBrush" Value="White" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4">
+                    <Grid>
+                        <!-- Gradient Background for Saturation/Value picker -->
+                        <Border CornerRadius="3">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="1" Color="Red" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <Border CornerRadius="3">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0" Color="Transparent" />
+                                    <GradientStop Offset="1" Color="Black" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        
+                        <!-- Canvas for thumb positioning -->
+                        <Canvas x:Name="PART_Canvas" ClipToBounds="True">
+                            <!-- Thumb indicator -->
+                            <Border x:Name="PART_Thumb"
+                                    Width="{TemplateBinding ThumbSize}"
+                                    Height="{TemplateBinding ThumbSize}"
+                                    Background="Transparent"
+                                    BorderBrush="{TemplateBinding ThumbBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="100">
+                                <Border Background="{TemplateBinding ThumbBrush}"
+                                        CornerRadius="100"
+                                        Margin="3"
+                                        BoxShadow="0 0 3 0 #80000000" />
+                            </Border>
+                        </Canvas>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

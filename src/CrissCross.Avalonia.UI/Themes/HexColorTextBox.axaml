@@ -1,0 +1,84 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross HexColorTextBox Style -->
+    <!-- Inherits from TextBox, so use standard TextBox styling with additional properties -->
+    <Style Selector="controls|HexColorTextBox">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontFamily" Value="Consolas, Monaco, monospace" />
+        <Setter Property="MaxLength" Value="9" />
+        <Setter Property="Watermark" Value="#RRGGBB" />
+        <Setter Property="InnerLeftContent">
+            <Template>
+                <Border Width="20"
+                        Height="20"
+                        Margin="4,0"
+                        CornerRadius="3"
+                        BorderBrush="{DynamicResource TextControlBorderBrush}"
+                        BorderThickness="1"
+                        ClipToBounds="True">
+                    <Grid>
+                        <!-- Checkerboard for alpha -->
+                        <Border>
+                            <Border.Background>
+                                <DrawingBrush TileMode="Tile"
+                                              DestinationRect="0,0,5,5"
+                                              SourceRect="0,0,5,5">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <GeometryDrawing Brush="#FFFFFF">
+                                                <GeometryDrawing.Geometry>
+                                                    <RectangleGeometry Rect="0,0,5,5" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                            <GeometryDrawing Brush="#CCCCCC">
+                                                <GeometryDrawing.Geometry>
+                                                    <GeometryGroup>
+                                                        <RectangleGeometry Rect="0,0,2.5,2.5" />
+                                                        <RectangleGeometry Rect="2.5,2.5,2.5,2.5" />
+                                                    </GeometryGroup>
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </Border.Background>
+                        </Border>
+                        <!-- Color fill -->
+                        <Border CornerRadius="2">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding Color, RelativeSource={RelativeSource AncestorType=controls:HexColorTextBox}}" />
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Template>
+        </Setter>
+    </Style>
+    
+    <!-- Focus state -->
+    <Style Selector="controls|HexColorTextBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|HexColorTextBox:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|HexColorTextBox:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushDisabled}" />
+    </Style>
+    
+</Styles>

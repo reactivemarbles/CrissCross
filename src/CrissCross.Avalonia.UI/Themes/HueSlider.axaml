@@ -1,0 +1,64 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross HueSlider Style -->
+    <Style Selector="controls|HueSlider">
+        <Setter Property="Height" Value="24" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="360" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!-- Hue gradient background -->
+                    <Border Height="16"
+                            CornerRadius="8"
+                            VerticalAlignment="Center"
+                            ClipToBounds="True">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,50%" EndPoint="100%,50%">
+                                <GradientStop Offset="0" Color="#FFFF0000" />
+                                <GradientStop Offset="0.167" Color="#FFFFFF00" />
+                                <GradientStop Offset="0.333" Color="#FF00FF00" />
+                                <GradientStop Offset="0.5" Color="#FF00FFFF" />
+                                <GradientStop Offset="0.667" Color="#FF0000FF" />
+                                <GradientStop Offset="0.833" Color="#FFFF00FF" />
+                                <GradientStop Offset="1" Color="#FFFF0000" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!-- Slider track -->
+                    <Track x:Name="PART_Track"
+                           Minimum="{TemplateBinding Minimum}"
+                           Maximum="{TemplateBinding Maximum}"
+                           Value="{TemplateBinding Value, Mode=TwoWay}"
+                           Orientation="Horizontal">
+                        <Track.Thumb>
+                            <Thumb>
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <Border Width="8"
+                                                Height="20"
+                                                Background="White"
+                                                BorderBrush="#404040"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                BoxShadow="0 1 3 0 #40000000" />
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Track.Thumb>
+                    </Track>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|HueSlider:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

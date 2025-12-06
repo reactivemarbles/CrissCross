@@ -1,0 +1,69 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ColorDisplay Style -->
+    <Style Selector="controls|ColorDisplay">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <Grid>
+                        <!-- Checkerboard background for alpha visualization -->
+                        <Border CornerRadius="{TemplateBinding CornerRadius}">
+                            <Border.Background>
+                                <DrawingBrush TileMode="Tile"
+                                              DestinationRect="0,0,8,8"
+                                              SourceRect="0,0,8,8">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <GeometryDrawing Brush="#FFFFFF">
+                                                <GeometryDrawing.Geometry>
+                                                    <RectangleGeometry Rect="0,0,8,8" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                            <GeometryDrawing Brush="#CCCCCC">
+                                                <GeometryDrawing.Geometry>
+                                                    <GeometryGroup>
+                                                        <RectangleGeometry Rect="0,0,4,4" />
+                                                        <RectangleGeometry Rect="4,4,4,4" />
+                                                    </GeometryGroup>
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </Border.Background>
+                        </Border>
+                        
+                        <!-- Primary color display -->
+                        <Border x:Name="PART_PrimaryColor"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding Color, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </Border.Background>
+                        </Border>
+                        
+                        <!-- Secondary color display (diagonal split) -->
+                        <Border x:Name="PART_SecondaryColor"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                IsVisible="{TemplateBinding ShowSecondColor}">
+                            <Border.Clip>
+                                <StreamGeometry>M 0,0 L 48,0 L 48,48 Z</StreamGeometry>
+                            </Border.Clip>
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding SecondColor, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Transparent}" />
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>
