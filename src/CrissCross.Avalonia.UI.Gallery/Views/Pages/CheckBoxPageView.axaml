@@ -6,53 +6,65 @@
              x:DataType="vm:CheckBoxPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="CheckBox"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="CheckBox"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="CheckBox controls allow users to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked)."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="CheckBox controls allow users to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked)."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- Standard CheckBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="Standard CheckBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Basic checkbox with different states." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Standard CheckBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Basic checkbox with different states." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
                         <controls:CheckBox Content="Unchecked" />
                         <controls:CheckBox Content="Checked" IsChecked="True" />
                         <controls:CheckBox Content="Disabled Unchecked" IsEnabled="False" />
                         <controls:CheckBox Content="Disabled Checked" IsEnabled="False" IsChecked="True" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- Three-State CheckBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Three-State CheckBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="CheckBox with indeterminate state for partial selection." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Three-State CheckBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="CheckBox with indeterminate state for partial selection." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
                         <controls:CheckBox Content="Unchecked" IsThreeState="True" />
                         <controls:CheckBox Content="Checked" IsThreeState="True" IsChecked="True" />
                         <controls:CheckBox Content="Indeterminate" IsThreeState="True" IsChecked="{x:Null}" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- CheckBox with Long Content -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="CheckBox with Long Content" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="CheckBox can contain longer text content that wraps." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="400">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="CheckBox with Long Content" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="CheckBox can contain longer text content that wraps." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8" MaxWidth="400">
                         <controls:CheckBox Content="I accept the terms and conditions of use for this application and agree to the privacy policy." />
                         <controls:CheckBox Content="Subscribe to newsletter and promotional emails" IsChecked="True" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Modern CheckBox -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Modern CheckBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="CheckBoxModern provides an alternative styling." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
+                        <controls:CheckBoxModern Content="Modern Style Unchecked" />
+                        <controls:CheckBoxModern Content="Modern Style Checked" IsChecked="True" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

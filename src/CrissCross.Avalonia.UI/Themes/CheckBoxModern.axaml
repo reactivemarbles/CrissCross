@@ -1,0 +1,111 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CheckBoxModern Style -->
+    <Style Selector="controls|CheckBoxModern">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Padding" Value="8,0,0,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BoxSize" Value="20" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- Check Box -->
+                        <Border x:Name="PART_CheckBox"
+                                Grid.Column="0"
+                                Width="{TemplateBinding BoxSize}"
+                                Height="{TemplateBinding BoxSize}"
+                                Background="{TemplateBinding CheckBackground}"
+                                BorderBrush="{TemplateBinding Stroke}"
+                                BorderThickness="{TemplateBinding StrokeThickness}"
+                                CornerRadius="4">
+                            <Panel>
+                                <!-- Checkmark -->
+                                <PathIcon x:Name="CheckGlyph"
+                                          Width="12"
+                                          Height="12"
+                                          Foreground="White"
+                                          Data="M 1,5 L 4,8 L 9,2"
+                                          IsVisible="False" />
+                                <!-- Indeterminate mark -->
+                                <Border x:Name="IndeterminateGlyph"
+                                        Width="10"
+                                        Height="10"
+                                        Background="White"
+                                        CornerRadius="2"
+                                        IsVisible="False" />
+                            </Panel>
+                        </Border>
+                        
+                        <!-- Content -->
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="8,0,0,0"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                                          RecognizesAccessKey="True" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Checked state -->
+    <Style Selector="controls|CheckBoxModern:checked /template/ Border#PART_CheckBox">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+    </Style>
+    
+    <Style Selector="controls|CheckBoxModern:checked /template/ PathIcon#CheckGlyph">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Indeterminate state -->
+    <Style Selector="controls|CheckBoxModern:indeterminate /template/ Border#PART_CheckBox">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+    </Style>
+    
+    <Style Selector="controls|CheckBoxModern:indeterminate /template/ Border#IndeterminateGlyph">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|CheckBoxModern:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|CheckBoxModern:pointerover /template/ Border#PART_CheckBox">
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+    </Style>
+
+    <!-- RadioButton style variant -->
+    <Style Selector="controls|CheckBoxModern[RadioButtonStyle=True] /template/ Border#PART_CheckBox">
+        <Setter Property="CornerRadius" Value="100" />
+    </Style>
+    
+    <Style Selector="controls|CheckBoxModern[RadioButtonStyle=True]:checked /template/ PathIcon#CheckGlyph">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+    <Style Selector="controls|CheckBoxModern[RadioButtonStyle=True]:checked /template/ Border#IndeterminateGlyph">
+        <Setter Property="IsVisible" Value="True" />
+        <Setter Property="CornerRadius" Value="100" />
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+    </Style>
+    
+</Styles>

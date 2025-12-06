@@ -6,126 +6,162 @@
              x:DataType="vm:ButtonsPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="Button Controls"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="Button Controls"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="Buttons are used to trigger actions. CrissCross provides enhanced buttons with icon support, appearance modes, and state styling."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="Buttons are used to trigger actions. CrissCross provides enhanced buttons with icon support, appearance modes, and state styling."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- Standard Buttons -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="Standard Buttons" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <controls:Button Content="Primary" />
-                        <controls:Button Content="Secondary" />
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Standard Buttons" FontSize="18" FontWeight="Bold" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
+                        <controls:Button Content="Primary" Appearance="Primary" />
+                        <controls:Button Content="Secondary" Appearance="Secondary" />
                         <controls:Button Content="Disabled" IsEnabled="False" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- Button with Icons -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Buttons with Icons" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Buttons can display icons alongside text content." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <controls:Button Content="Save" />
-                        <controls:Button Content="Delete" />
-                        <controls:Button Content="Settings" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Buttons with Icons" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Buttons can display icons alongside text content." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
+                        <controls:Button Content="Save">
+                            <controls:Button.Icon>
+                                <controls:SymbolIcon Symbol="Save" />
+                            </controls:Button.Icon>
+                        </controls:Button>
+                        <controls:Button Content="Delete">
+                            <controls:Button.Icon>
+                                <controls:SymbolIcon Symbol="Delete" />
+                            </controls:Button.Icon>
+                        </controls:Button>
+                        <controls:Button Content="Settings">
+                            <controls:Button.Icon>
+                                <controls:SymbolIcon Symbol="Settings" />
+                            </controls:Button.Icon>
+                        </controls:Button>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- Bezel and Gel Buttons -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Specialty Buttons" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="BezelButton and GelButton provide unique visual styles." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
+                        <controls:BezelButton Content="Bezel Button" />
+                        <controls:GelButton Content="Gel Button" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ToggleButton -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Toggle Button" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Toggle buttons maintain an on/off state." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Toggle Button" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Toggle buttons maintain an on/off state." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
                         <controls:ToggleButton Content="Toggle Me" />
                         <controls:ToggleButton Content="Checked" IsChecked="True" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ToggleSwitch -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Toggle Switch" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Toggle switches are used for binary on/off settings." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Toggle Switch" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Toggle switches are used for binary on/off settings." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
                         <controls:ToggleSwitch OnContent="On" OffContent="Off" />
                         <controls:ToggleSwitch OnContent="Enabled" OffContent="Disabled" IsChecked="True" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- SplitButton -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Split Button" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Split buttons combine a button with a dropdown menu." Opacity="0.7" Margin="0,0,0,8" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Split Button" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Split buttons combine a button with a dropdown menu." Opacity="0.7" />
                     <controls:SplitButton Content="Split Button">
                         <controls:SplitButton.Flyout>
                             <MenuFlyout>
-                                <MenuItem Header="Option 1" />
-                                <MenuItem Header="Option 2" />
-                                <MenuItem Header="Option 3" />
+                                <controls:MenuItem Header="Option 1" />
+                                <controls:MenuItem Header="Option 2" />
+                                <controls:MenuItem Header="Option 3" />
                             </MenuFlyout>
                         </controls:SplitButton.Flyout>
                     </controls:SplitButton>
-                </StackPanel>
-            </Border>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- DropDownButton -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="DropDown Button" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Dropdown buttons open a menu when clicked." Opacity="0.7" Margin="0,0,0,8" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="DropDown Button" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Dropdown buttons open a menu when clicked." Opacity="0.7" />
                     <controls:DropDownButton Content="Dropdown">
                         <controls:DropDownButton.Flyout>
                             <MenuFlyout>
-                                <MenuItem Header="Action 1" />
-                                <MenuItem Header="Action 2" />
-                                <Separator />
-                                <MenuItem Header="Action 3" />
+                                <controls:MenuItem Header="Action 1" />
+                                <controls:MenuItem Header="Action 2" />
+                                <controls:Separator />
+                                <controls:MenuItem Header="Action 3" />
                             </MenuFlyout>
                         </controls:DropDownButton.Flyout>
                     </controls:DropDownButton>
-                </StackPanel>
-            </Border>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- CheckBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="CheckBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Checkboxes allow selection of one or more options." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="CheckBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Checkboxes allow selection of one or more options." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
                         <controls:CheckBox Content="Unchecked" />
                         <controls:CheckBox Content="Checked" IsChecked="True" />
                         <controls:CheckBox Content="Indeterminate" IsChecked="{x:Null}" IsThreeState="True" />
                         <controls:CheckBox Content="Disabled" IsEnabled="False" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- RadioButton -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="RadioButton" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Radio buttons allow selection of one option from a group." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="RadioButton" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Radio buttons allow selection of one option from a group." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
                         <controls:RadioButton Content="Option 1" GroupName="Group1" IsChecked="True" />
                         <controls:RadioButton Content="Option 2" GroupName="Group1" />
                         <controls:RadioButton Content="Option 3" GroupName="Group1" />
                         <controls:RadioButton Content="Disabled" GroupName="Group1" IsEnabled="False" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- HyperlinkButton -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Hyperlink Button" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Hyperlink buttons navigate to URLs or trigger actions." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
+                        <controls:HyperlinkButton Content="Visit Documentation" NavigateUri="https://github.com/reactivemarbles/CrissCross" />
+                        <controls:HyperlinkButton Content="Click Me" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

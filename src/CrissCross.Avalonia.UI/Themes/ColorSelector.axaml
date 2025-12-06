@@ -1,0 +1,105 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ColorSelector Style -->
+    <Style Selector="controls|ColorSelector">
+        <Setter Property="Width" Value="280" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="12">
+                        <!-- Saturation/Brightness picker -->
+                        <controls:SquareSlider x:Name="PART_SaturationBrightness"
+                                               Width="256"
+                                               Height="150"
+                                               ValueX="{Binding Saturation, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                               ValueY="{Binding Brightness, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                            <controls:SquareSlider.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="4" ClipToBounds="True">
+                                        <Grid>
+                                            <!-- Hue base color -->
+                                            <Border>
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="{Binding HueColor, RelativeSource={RelativeSource AncestorType=controls:ColorSelector}}" />
+                                                </Border.Background>
+                                            </Border>
+                                            <!-- White to transparent gradient (saturation) -->
+                                            <Border>
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                                        <GradientStop Offset="0" Color="White" />
+                                                        <GradientStop Offset="1" Color="Transparent" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                            <!-- Black to transparent gradient (brightness) -->
+                                            <Border>
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                                        <GradientStop Offset="0" Color="Transparent" />
+                                                        <GradientStop Offset="1" Color="Black" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+                                            <!-- Canvas for thumb -->
+                                            <Canvas x:Name="PART_Canvas" ClipToBounds="True">
+                                                <Border x:Name="PART_Thumb"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Background="Transparent"
+                                                        BorderBrush="White"
+                                                        BorderThickness="2"
+                                                        CornerRadius="8">
+                                                    <Border Background="Transparent"
+                                                            CornerRadius="6"
+                                                            BorderBrush="Black"
+                                                            BorderThickness="1"
+                                                            Margin="1" />
+                                                </Border>
+                                            </Canvas>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </controls:SquareSlider.Template>
+                        </controls:SquareSlider>
+                        
+                        <!-- Hue slider -->
+                        <controls:HueSlider x:Name="PART_HueSlider"
+                                            Value="{Binding Hue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        
+                        <!-- Alpha slider -->
+                        <controls:AlphaSlider x:Name="PART_AlphaSlider"
+                                              Color="{Binding SelectedColor, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Value="{Binding Alpha, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        
+                        <!-- Color preview and hex input -->
+                        <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,0">
+                            <controls:ColorDisplay Grid.Column="0"
+                                                   Width="48"
+                                                   Height="48"
+                                                   Color="{Binding SelectedColor, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   CornerRadius="4" />
+                            
+                            <controls:HexColorTextBox Grid.Column="1"
+                                                      Margin="12,0,0,0"
+                                                      VerticalAlignment="Center"
+                                                      Color="{Binding SelectedColor, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

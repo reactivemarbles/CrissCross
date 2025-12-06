@@ -57,7 +57,8 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Grid>
                 </Border>
             </ControlTemplate>

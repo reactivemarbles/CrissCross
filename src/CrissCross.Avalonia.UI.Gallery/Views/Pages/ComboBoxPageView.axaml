@@ -6,87 +6,98 @@
              x:DataType="vm:ComboBoxPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="ComboBox"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="ComboBox"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="ComboBox presents a drop-down list of items. Users can select an item from the list, which then displays as the selected value."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="ComboBox presents a drop-down list of items. Users can select an item from the list, which then displays as the selected value."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- Standard ComboBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="Standard ComboBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Select an option from the dropdown list." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Standard ComboBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Select an option from the dropdown list." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
                         <controls:ComboBox PlaceholderText="Select an option">
                             <ComboBoxItem Content="Option 1" />
                             <ComboBoxItem Content="Option 2" />
                             <ComboBoxItem Content="Option 3" />
                             <ComboBoxItem Content="Option 4" />
                         </controls:ComboBox>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ComboBox with Selection -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="ComboBox with Pre-selected Item" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="ComboBox can have a default selected item." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ComboBox with Pre-selected Item" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="ComboBox can have a default selected item." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
                         <controls:ComboBox SelectedIndex="1">
                             <ComboBoxItem Content="Small" />
                             <ComboBoxItem Content="Medium" />
                             <ComboBoxItem Content="Large" />
                             <ComboBoxItem Content="Extra Large" />
                         </controls:ComboBox>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- Disabled ComboBox -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Disabled ComboBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="ComboBox can be disabled to prevent interaction." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Disabled ComboBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="ComboBox can be disabled to prevent interaction." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
                         <controls:ComboBox IsEnabled="False" SelectedIndex="0">
                             <ComboBoxItem Content="Disabled Option" />
                         </controls:ComboBox>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- AutoSuggestBox -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="AutoSuggestBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="AutoSuggestBox provides suggestions as you type." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
+                        <controls:AutoSuggestBox PlaceholderText="Start typing..." />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- Multiple ComboBoxes -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Category Selection" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Multiple ComboBoxes for filtering." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="Category" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="Category Selection" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Multiple ComboBoxes for filtering." Opacity="0.7" />
+                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Category" FontSize="12" Margin="0,0,0,4" />
                             <controls:ComboBox PlaceholderText="Select category">
                                 <ComboBoxItem Content="Electronics" />
                                 <ComboBoxItem Content="Clothing" />
                                 <ComboBoxItem Content="Books" />
                                 <ComboBoxItem Content="Home &amp; Garden" />
                             </controls:ComboBox>
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Sort By" FontSize="12" Margin="0,0,0,4" />
+                        </controls:StackPanel>
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Sort By" FontSize="12" Margin="0,0,0,4" />
                             <controls:ComboBox SelectedIndex="0">
                                 <ComboBoxItem Content="Relevance" />
                                 <ComboBoxItem Content="Price: Low to High" />
                                 <ComboBoxItem Content="Price: High to Low" />
                                 <ComboBoxItem Content="Newest First" />
                             </controls:ComboBox>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

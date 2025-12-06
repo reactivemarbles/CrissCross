@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ThumbRate Style -->
+    <Style Selector="controls|ThumbRate">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ThumbSize" Value="24" />
+        <Setter Property="SelectedBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="UnselectedBrush" Value="{DynamicResource TextFillColorSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <!-- Thumb Up Button -->
+                        <Button x:Name="PART_ThumbUp"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="8"
+                                Command="{Binding $parent[controls:ThumbRate].ThumbUp}">
+                            <PathIcon x:Name="ThumbUpIcon"
+                                      Width="{Binding $parent[controls:ThumbRate].ThumbSize}"
+                                      Height="{Binding $parent[controls:ThumbRate].ThumbSize}"
+                                      Foreground="{Binding $parent[controls:ThumbRate].UnselectedBrush}"
+                                      Data="M2 20h2c.55 0 1-.45 1-1v-9c0-.55-.45-1-1-1H2v11zm19.83-7.12c.11-.25.17-.52.17-.8V11c0-1.1-.9-2-2-2h-5.5l.92-4.65c.05-.22.02-.46-.08-.66-.23-.45-.52-.86-.88-1.22L14 2 7.59 8.41C7.21 8.79 7 9.3 7 9.83v7.84C7 18.95 8.05 20 9.34 20h8.11c.7 0 1.36-.37 1.72-.97l2.66-6.15z" />
+                        </Button>
+                        
+                        <!-- Thumb Down Button -->
+                        <Button x:Name="PART_ThumbDown"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="8"
+                                Command="{Binding $parent[controls:ThumbRate].ThumbDown}">
+                            <PathIcon x:Name="ThumbDownIcon"
+                                      Width="{Binding $parent[controls:ThumbRate].ThumbSize}"
+                                      Height="{Binding $parent[controls:ThumbRate].ThumbSize}"
+                                      Foreground="{Binding $parent[controls:ThumbRate].UnselectedBrush}"
+                                      Data="M22 4h-2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h2V4zM2.17 11.12c-.11.25-.17.52-.17.8V13c0 1.1.9 2 2 2h5.5l-.92 4.65c-.05.22-.02.46.08.66.23.45.52.86.88 1.22L10 22l6.41-6.41c.38-.38.59-.89.59-1.42V6.34C17 5.05 15.95 4 14.66 4h-8.1c-.71 0-1.36.37-1.72.97l-2.67 6.15z" />
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Liked state - Thumb Up selected -->
+    <Style Selector="controls|ThumbRate[State=Liked] /template/ PathIcon#ThumbUpIcon">
+        <Setter Property="Foreground" Value="{Binding $parent[controls:ThumbRate].SelectedBrush}" />
+    </Style>
+    
+    <!-- Disliked state - Thumb Down selected -->
+    <Style Selector="controls|ThumbRate[State=Disliked] /template/ PathIcon#ThumbDownIcon">
+        <Setter Property="Foreground" Value="#FF6B6B" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|ThumbRate:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

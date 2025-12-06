@@ -2,162 +2,141 @@
     x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.HomePageView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
     xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
     x:DataType="vm:HomePageViewModel">
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock
                 FontSize="32"
                 FontWeight="Bold"
-                Foreground="White"
                 Text="CrissCross Avalonia UI Controls" />
 
-            <TextBlock
+            <controls:TextBlock
                 FontSize="20"
                 Foreground="#4EC9B0"
                 Text="100% Feature Parity Achieved!" />
 
-            <TextBlock
+            <controls:TextBlock
                 Margin="0,0,0,24"
-                Foreground="#D4D4D4"
-                TextWrapping="Wrap">
-                This gallery demonstrates all 98 controls from CrissCross.WPF.UI that have been
-                successfully migrated to Avalonia UI. Select a control category from the navigation
-                menu to explore interactive examples.
-            </TextBlock>
+                Opacity="0.7"
+                TextWrapping="Wrap"
+                Text="This gallery demonstrates all 98 controls from CrissCross.WPF.UI that have been successfully migrated to Avalonia UI. Select a control category from the navigation menu to explore interactive examples." />
 
             <!--  Feature Highlights  -->
-            <Border
-                Margin="0,0,0,16"
-                Padding="20"
-                Background="#252526"
-                BorderBrush="#3F3F46"
-                BorderThickness="1"
-                CornerRadius="8">
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,12"
+            <controls:Card Margin="0,0,0,16">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock
                         FontSize="18"
                         FontWeight="Bold"
-                        Foreground="White"
                         Text="Key Features" />
 
-                    <TextBlock
-                        Margin="0,4"
-                        Foreground="#D4D4D4"
-                        Text="• All 98 CrissCross.WPF.UI controls available" />
-                    <TextBlock
-                        Margin="0,4"
-                        Foreground="#D4D4D4"
-                        Text="• Cross-platform: Windows, macOS, Linux" />
-                    <TextBlock
-                        Margin="0,4"
-                        Foreground="#D4D4D4"
-                        Text="• Modern Fluent Design styling" />
-                    <TextBlock
-                        Margin="0,4"
-                        Foreground="#D4D4D4"
-                        Text="• Full ReactiveUI integration" />
-                    <TextBlock
-                        Margin="0,4"
-                        Foreground="#D4D4D4"
-                        Text="• .NET 8, 9, and 10 support" />
-                </StackPanel>
-            </Border>
+                    <controls:StackPanel Spacing="4">
+                        <controls:TextBlock Opacity="0.7" Text="• All 98 CrissCross.WPF.UI controls available" />
+                        <controls:TextBlock Opacity="0.7" Text="• Cross-platform: Windows, macOS, Linux" />
+                        <controls:TextBlock Opacity="0.7" Text="• Modern Fluent Design styling" />
+                        <controls:TextBlock Opacity="0.7" Text="• Full ReactiveUI integration" />
+                        <controls:TextBlock Opacity="0.7" Text="• .NET 8, 9, and 10 support" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!--  Control Statistics  -->
-            <Grid Margin="0,0,0,16" ColumnDefinitions="*,*,*">
-                <Border
-                    Grid.Column="0"
-                    Margin="0,0,8,0"
-                    Padding="16"
-                    Background="#252526"
-                    BorderBrush="#3F3F46"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <StackPanel>
-                        <TextBlock
+            <controls:Grid Margin="0,0,0,16" ColumnDefinitions="*,*,*">
+                <controls:Card Grid.Column="0" Margin="0,0,8,0">
+                    <controls:StackPanel>
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="#4EC9B0"
                             Text="98" />
-                        <TextBlock
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
-                            Foreground="#D4D4D4"
+                            Opacity="0.7"
                             Text="Total Controls" />
-                    </StackPanel>
-                </Border>
+                    </controls:StackPanel>
+                </controls:Card>
 
-                <Border
-                    Grid.Column="1"
-                    Margin="0,0,8,0"
-                    Padding="16"
-                    Background="#252526"
-                    BorderBrush="#3F3F46"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <StackPanel>
-                        <TextBlock
+                <controls:Card Grid.Column="1" Margin="0,0,8,0">
+                    <controls:StackPanel>
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="#4EC9B0"
                             Text="100%" />
-                        <TextBlock
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
-                            Foreground="#D4D4D4"
+                            Opacity="0.7"
                             Text="Coverage" />
-                    </StackPanel>
-                </Border>
+                    </controls:StackPanel>
+                </controls:Card>
 
-                <Border
-                    Grid.Column="2"
-                    Padding="16"
-                    Background="#252526"
-                    BorderBrush="#3F3F46"
-                    BorderThickness="1"
-                    CornerRadius="8">
-                    <StackPanel>
-                        <TextBlock
+                <controls:Card Grid.Column="2">
+                    <controls:StackPanel>
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="#4EC9B0"
                             Text="3" />
-                        <TextBlock
+                        <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
-                            Foreground="#D4D4D4"
+                            Opacity="0.7"
                             Text="Platforms" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+                    </controls:StackPanel>
+                </controls:Card>
+            </controls:Grid>
 
             <!--  Getting Started  -->
-            <Border
-                Padding="20"
-                Background="#252526"
-                BorderBrush="#3F3F46"
-                BorderThickness="1"
-                CornerRadius="8">
-                <StackPanel>
-                    <TextBlock
-                        Margin="0,0,0,12"
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock
                         FontSize="18"
                         FontWeight="Bold"
-                        Foreground="White"
                         Text="Getting Started" />
 
-                    <TextBlock Foreground="#D4D4D4" TextWrapping="Wrap">
-                        Select a control category from the left navigation panel to explore
-                        interactive examples of CrissCross Avalonia UI controls. Each page
-                        demonstrates the control's appearance, states, and usage patterns.
-                    </TextBlock>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                    <controls:TextBlock Opacity="0.7" TextWrapping="Wrap"
+                        Text="Select a control category from the left navigation panel to explore interactive examples of CrissCross Avalonia UI controls. Each page demonstrates the control's appearance, states, and usage patterns." />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!--  InfoBar Examples  -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="InfoBar Examples" />
+                    <controls:StackPanel Spacing="8">
+                        <controls:InfoBar Title="Information" Message="This is an informational message." Severity="Informational" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Success" Message="Operation completed successfully." Severity="Success" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Warning" Message="Please review before continuing." Severity="Warning" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Error" Message="An error has occurred." Severity="Error" IsOpen="True" IsClosable="False" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!--  Badge Examples  -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="Badge &amp; InfoBadge" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="16">
+                        <controls:Badge Content="New" />
+                        <controls:Badge Content="5" />
+                        <controls:InfoBadge Value="99" Severity="Attention" />
+                        <controls:InfoBadge Value="3" Severity="Success" />
+                        <controls:InfoBadge Value="!" Severity="Critical" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

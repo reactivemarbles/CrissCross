@@ -1,0 +1,44 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross Calendar Style -->
+    <Style Selector="controls|Calendar">
+        <Setter Property="Background" Value="{DynamicResource CalendarBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CalendarBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    
+    <!-- Apply foreground to text elements inside Calendar -->
+    <Style Selector="controls|Calendar TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+    </Style>
+    
+    <!-- CalendarDayButton styling -->
+    <Style Selector="controls|Calendar CalendarDayButton">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:selected">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonSelectedForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:inactive">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonInactiveForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:blackout">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonBlackoutForeground}" />
+    </Style>
+    
+    <!-- CalendarButton (month/year buttons) styling -->
+    <Style Selector="controls|Calendar CalendarButton">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton:selected">
+        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonSelectedForeground}" />
+    </Style>
+    
+</Styles>

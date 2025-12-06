@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross RatingControl Style -->
+    <Style Selector="controls|RatingControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="StarSize" Value="24" />
+        <Setter Property="StarSpacing" Value="4" />
+        <Setter Property="FilledBrush" Value="#FFD700" />
+        <Setter Property="UnfilledBrush" Value="#808080" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel x:Name="PART_StarsPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Left" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Read-only state -->
+    <Style Selector="controls|RatingControl[IsReadOnly=True]">
+        <Setter Property="Cursor" Value="Arrow" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|RatingControl:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

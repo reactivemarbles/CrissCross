@@ -6,105 +6,102 @@
              x:DataType="vm:ProgressPageViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="24" Spacing="16">
-            <TextBlock Text="Progress Controls"
-                       FontSize="32"
-                       FontWeight="Bold" />
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="Progress Controls"
+                                FontSize="32"
+                                FontWeight="Bold" />
 
-            <TextBlock Text="Progress controls indicate the status of ongoing operations to users."
-                       TextWrapping="Wrap"
-                       Opacity="0.7" />
+            <controls:TextBlock Text="Progress controls indicate the status of ongoing operations to users."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
 
             <!-- ProgressBar -->
-            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
-                <StackPanel>
-                    <TextBlock Text="ProgressBar" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Progress bars show determinate or indeterminate progress." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
-                        <StackPanel>
-                            <TextBlock Text="CrissCross ProgressBar (65%):" FontSize="12" Margin="0,0,0,4" />
+            <controls:Card Margin="0,16,0,0">
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ProgressBar" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Progress bars show determinate or indeterminate progress." Opacity="0.7" />
+                    <controls:StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Determinate (65%):" FontSize="12" Margin="0,0,0,4" />
                             <controls:ProgressBar Value="65" Maximum="100" Height="8" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="CrissCross ProgressBar (Indeterminate):" FontSize="12" Margin="0,0,0,4" />
+                        </controls:StackPanel>
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Indeterminate:" FontSize="12" Margin="0,0,0,4" />
                             <controls:ProgressBar IsIndeterminate="True" Height="8" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia ProgressBar (65%):" FontSize="12" Margin="0,0,0,4" />
-                            <ProgressBar Value="65" Maximum="100" Height="8" />
-                        </StackPanel>
-                        <StackPanel>
-                            <TextBlock Text="Native Avalonia ProgressBar (Indeterminate):" FontSize="12" Margin="0,0,0,4" />
-                            <ProgressBar IsIndeterminate="True" Height="8" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- ProgressRing -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="ProgressRing" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Progress rings show circular progress indication." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="16">
-                        <TextBlock Text="CrissCross ProgressRing:" FontSize="12" />
-                        <StackPanel Orientation="Horizontal" Spacing="24">
-                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="ProgressRing" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Progress rings show circular progress indication." Opacity="0.7" />
+                    <controls:StackPanel Spacing="16">
+                        <controls:TextBlock Text="Indeterminate ProgressRing (various sizes):" FontSize="12" />
+                        <controls:StackPanel Orientation="Horizontal" Spacing="24">
+                            <controls:StackPanel Spacing="8" HorizontalAlignment="Center">
                                 <controls:ProgressRing IsIndeterminate="True" Width="32" Height="32" />
-                                <TextBlock Text="Small" HorizontalAlignment="Center" Opacity="0.7" />
-                            </StackPanel>
-                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <controls:TextBlock Text="Small" HorizontalAlignment="Center" Opacity="0.7" />
+                            </controls:StackPanel>
+                            <controls:StackPanel Spacing="8" HorizontalAlignment="Center">
                                 <controls:ProgressRing IsIndeterminate="True" Width="48" Height="48" />
-                                <TextBlock Text="Medium" HorizontalAlignment="Center" Opacity="0.7" />
-                            </StackPanel>
-                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <controls:TextBlock Text="Medium" HorizontalAlignment="Center" Opacity="0.7" />
+                            </controls:StackPanel>
+                            <controls:StackPanel Spacing="8" HorizontalAlignment="Center">
                                 <controls:ProgressRing IsIndeterminate="True" Width="64" Height="64" />
-                                <TextBlock Text="Large" HorizontalAlignment="Center" Opacity="0.7" />
-                            </StackPanel>
-                        </StackPanel>
-                        <TextBlock Text="CrissCross ProgressRing (Determinate 75%):" FontSize="12" Margin="0,8,0,0" />
+                                <controls:TextBlock Text="Large" HorizontalAlignment="Center" Opacity="0.7" />
+                            </controls:StackPanel>
+                        </controls:StackPanel>
+                        <controls:TextBlock Text="Determinate ProgressRing (75%):" FontSize="12" Margin="0,8,0,0" />
                         <controls:ProgressRing Progress="75" Width="48" Height="48" HorizontalAlignment="Left" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <!-- CircularGauge -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="CircularGauge" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Circular gauges display values on a radial scale." Opacity="0.7" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="24">
+                        <controls:CircularGauge Value="35" MinValue="0" MaxValue="100" Width="120" Height="120" />
+                        <controls:CircularGauge Value="72" MinValue="0" MaxValue="100" Width="120" Height="120" />
+                        <controls:CircularGauge Value="90" MinValue="0" MaxValue="100" Width="120" Height="120" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
 
             <!-- LoadingScreen -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="LoadingScreen" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Loading screens overlay content to indicate background activity." Opacity="0.7" Margin="0,0,0,8" />
-                    <Border Background="#1E1E1E" CornerRadius="4" Height="200" Margin="0,8,0,0">
-                        <Grid>
-                            <TextBlock Text="Content behind loading screen"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       Opacity="0.5" />
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </Border>
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="LoadingScreen" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Loading screens overlay content to indicate background activity." Opacity="0.7" />
+                    <controls:Border Background="#1E1E1E" CornerRadius="4" Height="200" Margin="0,8,0,0">
+                        <controls:Grid>
+                            <controls:TextBlock Text="Content behind loading screen"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Opacity="0.5" />
+                        </controls:Grid>
+                    </controls:Border>
+                </controls:StackPanel>
+            </controls:Card>
 
-            <!-- InfoBar Preview -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="InfoBar" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Info bars display important messages to users." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8">
-                        <Border Background="#08FFFFFF" BorderBrush="#19000000" BorderThickness="1" CornerRadius="4" Padding="12">
-                            <TextBlock Text="Information: This is an informational message." />
-                        </Border>
-                        <Border Background="#393D1B" BorderBrush="#19000000" BorderThickness="1" CornerRadius="4" Padding="12">
-                            <TextBlock Text="Success: Operation completed successfully." />
-                        </Border>
-                        <Border Background="#433519" BorderBrush="#19000000" BorderThickness="1" CornerRadius="4" Padding="12">
-                            <TextBlock Text="Warning: Please review before continuing." />
-                        </Border>
-                        <Border Background="#442726" BorderBrush="#19000000" BorderThickness="1" CornerRadius="4" Padding="12">
-                            <TextBlock Text="Error: An error has occurred." />
-                        </Border>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+            <!-- InfoBar -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="InfoBar" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Info bars display important messages to users." Opacity="0.7" />
+                    <controls:StackPanel Spacing="8">
+                        <controls:InfoBar Title="Information" Message="This is an informational message." Severity="Informational" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Success" Message="Operation completed successfully." Severity="Success" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Warning" Message="Please review before continuing." Severity="Warning" IsOpen="True" IsClosable="False" />
+                        <controls:InfoBar Title="Error" Message="An error has occurred." Severity="Error" IsOpen="True" IsClosable="False" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -1,0 +1,86 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CircularGauge Style -->
+    <Style Selector="controls|CircularGauge">
+        <Setter Property="Width" Value="200" />
+        <Setter Property="Height" Value="200" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="ScaleColor" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="PointerColor" Value="#FF4444" />
+        <Setter Property="Radius" Value="100" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}">
+                    <Grid>
+                        <!-- Outer ring background -->
+                        <Ellipse Stroke="{DynamicResource TextControlBorderBrush}"
+                                 StrokeThickness="2"
+                                 Fill="{DynamicResource TextControlBackground}" />
+                        
+                        <!-- Scale canvas - full size, draws content based on control bounds -->
+                        <Canvas x:Name="PART_ScaleCanvas"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ClipToBounds="False" />
+                        
+                        <!-- Pointer container - centered -->
+                        <Panel HorizontalAlignment="Center"
+                               VerticalAlignment="Center">
+                            <!-- Pointer needle -->
+                            <Path x:Name="PART_Pointer"
+                                  Fill="{TemplateBinding PointerColor}"
+                                  Data="M -4,0 L 0,-65 L 4,0 Z"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform Angle="{Binding PointerAngle, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Path.RenderTransform>
+                            </Path>
+                            
+                            <!-- Pointer center cap -->
+                            <Ellipse x:Name="PART_PointerCap"
+                                     Width="16"
+                                     Height="16"
+                                     Fill="{TemplateBinding PointerColor}"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+                        </Panel>
+                        
+                        <!-- Value display - centered, offset down -->
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0,45,0,0"
+                                    IsVisible="{TemplateBinding ShowValue}">
+                            <TextBlock Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0:F0}}"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Unit}"
+                                       FontSize="10"
+                                       Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                        
+                        <!-- Dial text at bottom -->
+                        <TextBlock Text="{TemplateBinding DialText}"
+                                   FontSize="10"
+                                   Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Bottom"
+                                   Margin="0,0,0,12" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>
