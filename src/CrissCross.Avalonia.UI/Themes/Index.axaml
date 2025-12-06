@@ -6,6 +6,8 @@
     
     <!-- Button Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Button.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GelButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleSwitch.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/SplitButton.axaml" />

@@ -3,35 +3,101 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross AutoSuggestBox Style -->
-    <!-- Inherits from AutoCompleteBox, use its base styling with customizations -->
+    <!-- Inherits from AutoCompleteBox - use standard AutoCompleteBox template parts -->
     <Style Selector="controls|AutoSuggestBox">
         <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Padding" Value="10,5,6,7" />
         <Setter Property="MinHeight" Value="32" />
-        <Setter Property="CornerRadius" Value="4" />
         <Setter Property="MinimumPrefixLength" Value="1" />
+        <Setter Property="MinimumPopulateDelay" Value="0:0:0.1" />
         <Setter Property="IsTextCompletionEnabled" Value="True" />
         <Setter Property="FilterMode" Value="Contains" />
-        <Setter Property="Watermark" Value="{Binding PlaceholderText, RelativeSource={RelativeSource Self}}" />
+        <Setter Property="MaxDropDownHeight" Value="300" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Name="PART_LayoutRoot">
+                    <TextBox Name="PART_TextBox"
+                             Foreground="{TemplateBinding Foreground}"
+                             Background="{TemplateBinding Background}"
+                             BorderBrush="{TemplateBinding BorderBrush}"
+                             BorderThickness="{TemplateBinding BorderThickness}"
+                             FontSize="{TemplateBinding FontSize}"
+                             FontFamily="{TemplateBinding FontFamily}"
+                             FontWeight="{TemplateBinding FontWeight}"
+                             Padding="{TemplateBinding Padding}"
+                             Margin="0"
+                             Watermark="{Binding PlaceholderText, RelativeSource={RelativeSource TemplatedParent}}"
+                             CornerRadius="4"
+                             AcceptsReturn="False"
+                             AcceptsTab="False" />
+                    <Popup Name="PART_Popup"
+                           WindowManagerAddShadowHint="False"
+                           MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                           IsLightDismissEnabled="True"
+                           PlacementTarget="PART_TextBox"
+                           Placement="BottomEdgeAlignedLeft"
+                           OverlayInputPassThroughElement="{Binding ElementName=PART_TextBox}">
+                        <Border Name="PopupBorder"
+                                Background="{DynamicResource FlyoutPresenterBackground}"
+                                BorderBrush="{DynamicResource FlyoutBorderThemeBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                HorizontalAlignment="Stretch"
+                                MinWidth="{Binding Bounds.Width, ElementName=PART_TextBox}"
+                                BoxShadow="0 4 12 0 #40000000">
+                            <ListBox Name="PART_SelectingItemsControl"
+                                     Foreground="{DynamicResource TextControlForeground}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     ItemTemplate="{TemplateBinding ItemTemplate}"
+                                     Margin="0"
+                                     Padding="4"
+                                     MaxHeight="280"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                        </Border>
+                    </Popup>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
     </Style>
     
     <!-- Focus state -->
-    <Style Selector="controls|AutoSuggestBox:focus-within">
+    <Style Selector="controls|AutoSuggestBox:focus-within /template/ TextBox#PART_TextBox">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
     </Style>
     
     <!-- Pointer over state -->
-    <Style Selector="controls|AutoSuggestBox:pointerover">
+    <Style Selector="controls|AutoSuggestBox:pointerover /template/ TextBox#PART_TextBox">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+    </Style>
+    
+    <!-- Style ListBoxItems in popup -->
+    <Style Selector="controls|AutoSuggestBox /template/ ListBox#PART_SelectingItemsControl ListBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+    
+    <Style Selector="controls|AutoSuggestBox /template/ ListBox#PART_SelectingItemsControl ListBoxItem:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+    </Style>
+    
+    <Style Selector="controls|AutoSuggestBox /template/ ListBox#PART_SelectingItemsControl ListBoxItem:selected">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|AutoSuggestBox /template/ ListBox#PART_SelectingItemsControl ListBoxItem:selected:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
     </Style>
     
     <!-- Disabled state -->
     <Style Selector="controls|AutoSuggestBox:disabled">
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
-        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
+        <Setter Property="Opacity" Value="0.5" />
     </Style>
     
 </Styles>

@@ -3,42 +3,169 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Calendar Style -->
+    <!-- Inherits from Avalonia.Controls.Calendar, provide template for the derived control -->
     <Style Selector="controls|Calendar">
-        <Setter Property="Background" Value="{DynamicResource CalendarBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CalendarBorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource FlyoutPresenterBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderThemeBrush}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Name="PART_Root" HorizontalAlignment="Center">
+                    <CalendarItem Name="PART_CalendarItem"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
     </Style>
     
-    <!-- Apply foreground to text elements inside Calendar -->
-    <Style Selector="controls|Calendar TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+    <!-- CalendarItem styling - ensure text colors work in dark mode -->
+    <Style Selector="controls|Calendar CalendarItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="{DynamicResource FlyoutPresenterBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderThemeBrush}" />
+    </Style>
+    
+    <!-- Style all TextBlocks inside CalendarItem -->
+    <Style Selector="controls|Calendar CalendarItem TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <!-- Style header button (month/year title) -->
+    <Style Selector="controls|Calendar CalendarItem Button#PART_HeaderButton">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarItem Button#PART_HeaderButton TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
     </Style>
     
     <!-- CalendarDayButton styling -->
     <Style Selector="controls|Calendar CalendarDayButton">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="40" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="CornerRadius" Value="20" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton ContentControl">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:pressed">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:selected">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonSelectedForeground}" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:selected TextBlock">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:selected ContentControl">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:selected:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:today">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight2}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:inactive">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonInactiveForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarDayButton:inactive TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:blackout">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonBlackoutForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
     </Style>
     
-    <!-- CalendarButton (month/year buttons) styling -->
+    <Style Selector="controls|Calendar CalendarDayButton:blackout TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
+    </Style>
+    
+    <!-- CalendarButton (month/year grid) styling -->
     <Style Selector="controls|Calendar CalendarButton">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton ContentControl">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton:pressed">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarButton:selected">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarDayButtonSelectedForeground}" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarButton:selected TextBlock">
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    
+    <!-- Navigation buttons (prev/next month) -->
+    <Style Selector="controls|Calendar CalendarItem Button">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarItem Button PathIcon">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarItem Button:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+    </Style>
+    
+    <Style Selector="controls|Calendar CalendarItem Button:pressed">
+        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
+    </Style>
+    
+    <!-- Day name headers (Mon, Tue, etc.) -->
+    <Style Selector="controls|Calendar CalendarItem Grid TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
     </Style>
     
 </Styles>

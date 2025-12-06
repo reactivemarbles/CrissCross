@@ -3,82 +3,117 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross HexColorTextBox Style -->
-    <!-- Inherits from TextBox, so use standard TextBox styling with additional properties -->
     <Style Selector="controls|HexColorTextBox">
-        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
-        <Setter Property="SelectionBrush" Value="{DynamicResource TextControlSelectionHighlightColor}" />
+        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource SystemAccentColor}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Padding" Value="8,6" />
         <Setter Property="MinHeight" Value="32" />
+        <Setter Property="MinWidth" Value="120" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="FontFamily" Value="Consolas, Monaco, monospace" />
         <Setter Property="MaxLength" Value="9" />
         <Setter Property="Watermark" Value="#RRGGBB" />
-        <Setter Property="InnerLeftContent">
-            <Template>
-                <Border Width="20"
-                        Height="20"
-                        Margin="4,0"
-                        CornerRadius="3"
-                        BorderBrush="{DynamicResource TextControlBorderBrush}"
-                        BorderThickness="1"
-                        ClipToBounds="True">
-                    <Grid>
-                        <!-- Checkerboard for alpha -->
-                        <Border>
-                            <Border.Background>
-                                <DrawingBrush TileMode="Tile"
-                                              DestinationRect="0,0,5,5"
-                                              SourceRect="0,0,5,5">
-                                    <DrawingBrush.Drawing>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="#FFFFFF">
-                                                <GeometryDrawing.Geometry>
-                                                    <RectangleGeometry Rect="0,0,5,5" />
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                            <GeometryDrawing Brush="#CCCCCC">
-                                                <GeometryDrawing.Geometry>
-                                                    <GeometryGroup>
-                                                        <RectangleGeometry Rect="0,0,2.5,2.5" />
-                                                        <RectangleGeometry Rect="2.5,2.5,2.5,2.5" />
-                                                    </GeometryGroup>
-                                                </GeometryDrawing.Geometry>
-                                            </GeometryDrawing>
-                                        </DrawingGroup>
-                                    </DrawingBrush.Drawing>
-                                </DrawingBrush>
-                            </Border.Background>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        MinWidth="{TemplateBinding MinWidth}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- Color preview swatch -->
+                        <Border Grid.Column="0"
+                                Width="24"
+                                Height="24"
+                                Margin="6,0,0,0"
+                                CornerRadius="4"
+                                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                BorderThickness="1"
+                                ClipToBounds="True"
+                                VerticalAlignment="Center">
+                            <Grid>
+                                <!-- Checkerboard for alpha -->
+                                <Border>
+                                    <Border.Background>
+                                        <DrawingBrush TileMode="Tile"
+                                                      DestinationRect="0,0,6,6"
+                                                      SourceRect="0,0,6,6">
+                                            <DrawingBrush.Drawing>
+                                                <DrawingGroup>
+                                                    <GeometryDrawing Brush="#FFFFFF">
+                                                        <GeometryDrawing.Geometry>
+                                                            <RectangleGeometry Rect="0,0,6,6" />
+                                                        </GeometryDrawing.Geometry>
+                                                    </GeometryDrawing>
+                                                    <GeometryDrawing Brush="#CCCCCC">
+                                                        <GeometryDrawing.Geometry>
+                                                            <GeometryGroup>
+                                                                <RectangleGeometry Rect="0,0,3,3" />
+                                                                <RectangleGeometry Rect="3,3,3,3" />
+                                                            </GeometryGroup>
+                                                        </GeometryDrawing.Geometry>
+                                                    </GeometryDrawing>
+                                                </DrawingGroup>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Border.Background>
+                                </Border>
+                                <!-- Color fill -->
+                                <Border CornerRadius="3">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="{Binding Color, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    </Border.Background>
+                                </Border>
+                            </Grid>
                         </Border>
-                        <!-- Color fill -->
-                        <Border CornerRadius="2">
-                            <Border.Background>
-                                <SolidColorBrush Color="{Binding Color, RelativeSource={RelativeSource AncestorType=controls:HexColorTextBox}}" />
-                            </Border.Background>
-                        </Border>
+                        
+                        <!-- Text input area -->
+                        <Panel Grid.Column="1" Margin="8,0,8,0">
+                            <TextBlock Name="PART_Watermark"
+                                       Text="{TemplateBinding Watermark}"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                       VerticalAlignment="Center"
+                                       IsVisible="False" />
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBrush="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
                     </Grid>
                 </Border>
-            </Template>
+            </ControlTemplate>
         </Setter>
+    </Style>
+    
+    <!-- Show watermark when text is empty -->
+    <Style Selector="controls|HexColorTextBox:empty /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="True" />
     </Style>
     
     <!-- Focus state -->
     <Style Selector="controls|HexColorTextBox:focus">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
     </Style>
     
     <!-- Pointer over state -->
     <Style Selector="controls|HexColorTextBox:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
     </Style>
     
     <!-- Disabled state -->
     <Style Selector="controls|HexColorTextBox:disabled">
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForegroundDisabled}" />
-        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundDisabled}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushDisabled}" />
+        <Setter Property="Opacity" Value="0.5" />
     </Style>
     
 </Styles>
