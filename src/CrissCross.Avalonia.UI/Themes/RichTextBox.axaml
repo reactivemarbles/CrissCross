@@ -1,0 +1,105 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross RichTextBox Style -->
+    <Style Selector="controls|RichTextBox">
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#5D5D5D" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="MinHeight" Value="100" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="AcceptsTab" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:RichTextBox">
+                <Border Name="PART_BorderElement"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Panel>
+                        <!-- Watermark/Placeholder -->
+                        <TextBlock Name="PART_Watermark"
+                                   Text="{TemplateBinding Watermark}"
+                                   Foreground="#808080"
+                                   IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Margin="{TemplateBinding Padding}"
+                                   IsHitTestVisible="False" />
+                        
+                        <!-- Formatted text presenter (shows when not editing) -->
+                        <controls:FormattedTextPresenter Name="PART_FormattedPresenter"
+                                                         IsVisible="False"
+                                                         Margin="{TemplateBinding Padding}"
+                                                         Foreground="{TemplateBinding Foreground}"
+                                                         DefaultForeground="{TemplateBinding Foreground}"
+                                                         FontSize="{TemplateBinding FontSize}"
+                                                         FontFamily="{TemplateBinding FontFamily}"
+                                                         TextWrapping="Wrap"
+                                                         VerticalAlignment="Top"
+                                                         HorizontalAlignment="Stretch" />
+                        
+                        <!-- Editing TextBox -->
+                        <TextBox Name="PART_TextBox"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Foreground="{TemplateBinding Foreground}"
+                                 FontSize="{TemplateBinding FontSize}"
+                                 FontFamily="{TemplateBinding FontFamily}"
+                                 Padding="{TemplateBinding Padding}"
+                                 CaretBrush="#FFFFFF"
+                                 SelectionBrush="#400078D4"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="{TemplateBinding AcceptsReturn}"
+                                 AcceptsTab="{TemplateBinding AcceptsTab}"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"
+                                 VerticalAlignment="Stretch"
+                                 HorizontalAlignment="Stretch" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Focused State - accent border -->
+    <Style Selector="controls|RichTextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- Focused State (within) - accent border -->
+    <Style Selector="controls|RichTextBox:focus-within /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|RichTextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#7D7D7D" />
+    </Style>
+    
+    <!-- PointerOver + Focused should keep accent color -->
+    <Style Selector="controls|RichTextBox:focus:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|RichTextBox:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+    <!-- ReadOnly State - darker background -->
+    <Style Selector="controls|RichTextBox[IsReadOnly=True]">
+        <Setter Property="Background" Value="#2D2D2D" />
+        <Setter Property="Cursor" Value="Arrow" />
+    </Style>
+    
+    <!-- Error State (for validation) -->
+    <Style Selector="controls|RichTextBox:error /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#E81123" />
+    </Style>
+    
+</Styles>
