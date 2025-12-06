@@ -2,83 +2,148 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
-    <!-- CrissCross CircularGauge Style -->
+    <!-- CrissCross CircularGauge Style - Replicates WPF styling -->
     <Style Selector="controls|CircularGauge">
         <Setter Property="Width" Value="200" />
         <Setter Property="Height" Value="200" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="ScaleColor" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="PointerColor" Value="#FF4444" />
+        <Setter Property="Background" Value="#FF1E1E1E" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="ScaleColor" Value="White" />
+        <Setter Property="PointerColor" Value="#FFE91C1C" />
         <Setter Property="Radius" Value="100" />
+        <Setter Property="PointerCapRadius" Value="16" />
+        <Setter Property="OptimalRangeColor" Value="Transparent" />
+        <Setter Property="BelowOptimalRangeColor" Value="Transparent" />
+        <Setter Property="AboveOptimalRangeColor" Value="Transparent" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="{TemplateBinding Background}"
-                        Padding="{TemplateBinding Padding}"
-                        Width="{TemplateBinding Width}"
-                        Height="{TemplateBinding Height}">
-                    <Grid>
-                        <!-- Outer ring background -->
-                        <Ellipse Stroke="{DynamicResource TextControlBorderBrush}"
-                                 StrokeThickness="2"
-                                 Fill="{DynamicResource TextControlBackground}" />
+                <Viewbox Stretch="Uniform">
+                    <Grid Width="200" Height="200">
+                        <!-- Outer metallic frame ring -->
+                        <Ellipse Width="200" Height="200"
+                                 StrokeThickness="16">
+                            <Ellipse.Stroke>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0" Color="#FF5F5C5C" />
+                                    <GradientStop Offset="0.35" Color="#FFEEDEDE" />
+                                    <GradientStop Offset="0.705" Color="#FFA09595" />
+                                    <GradientStop Offset="1" Color="#FF636060" />
+                                </LinearGradientBrush>
+                            </Ellipse.Stroke>
+                            <Ellipse.Fill>
+                                <SolidColorBrush Color="#FF1E1E1E" />
+                            </Ellipse.Fill>
+                        </Ellipse>
                         
-                        <!-- Scale canvas - full size, draws content based on control bounds -->
+                        <!-- Inner dark background -->
+                        <Ellipse Width="168" Height="168"
+                                 Fill="#FF1E1E1E" />
+                        
+                        <!-- Scale canvas - draws tick marks and labels -->
                         <Canvas x:Name="PART_ScaleCanvas"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
+                                Width="200" Height="200"
                                 ClipToBounds="False" />
                         
-                        <!-- Pointer container - centered -->
-                        <Panel HorizontalAlignment="Center"
-                               VerticalAlignment="Center">
-                            <!-- Pointer needle -->
+                        <!-- Dial text in center -->
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Margin="0,-10,0,0">
+                            <TextBlock x:Name="DialTextBlock"
+                                       Text="{TemplateBinding DialText}"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Unit}"
+                                       FontSize="10"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       Margin="0,2,0,0"
+                                       Opacity="0.8" />
+                        </StackPanel>
+                        
+                        <!-- Pointer - positioned at center, rotates from base -->
+                        <Canvas Width="200" Height="200">
+                            <!-- Pointer needle: base at center (100,100), points right, rotates around base -->
                             <Path x:Name="PART_Pointer"
-                                  Fill="{TemplateBinding PointerColor}"
-                                  Data="M -4,0 L 0,-65 L 4,0 Z"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"
-                                  RenderTransformOrigin="0.5,0.5">
+                                  Data="M 0,-5 L 65,0 L 0,5 Z"
+                                  Stretch="None"
+                                  Stroke="#FFE91C1C"
+                                  StrokeThickness="1"
+                                  Canvas.Left="100"
+                                  Canvas.Top="100"
+                                  RenderTransformOrigin="0,0">
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                        <GradientStop Offset="0.197" Color="#FF890A0A" />
+                                        <GradientStop Offset="0.61" Color="#FFE32323" />
+                                        <GradientStop Offset="1" Color="#FFC40808" />
+                                    </LinearGradientBrush>
+                                </Path.Fill>
                                 <Path.RenderTransform>
                                     <RotateTransform Angle="{Binding PointerAngle, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Path.RenderTransform>
                             </Path>
-                            
-                            <!-- Pointer center cap -->
-                            <Ellipse x:Name="PART_PointerCap"
-                                     Width="16"
-                                     Height="16"
-                                     Fill="{TemplateBinding PointerColor}"
-                                     HorizontalAlignment="Center"
-                                     VerticalAlignment="Center" />
-                        </Panel>
+                        </Canvas>
                         
-                        <!-- Value display - centered, offset down -->
-                        <StackPanel HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Margin="0,45,0,0"
-                                    IsVisible="{TemplateBinding ShowValue}">
-                            <TextBlock Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0:F0}}"
-                                       FontSize="18"
+                        <!-- Pointer center cap with 3D gradient effect - centered -->
+                        <Ellipse x:Name="PART_PointerCap"
+                                 Width="{TemplateBinding PointerCapRadius}"
+                                 Height="{TemplateBinding PointerCapRadius}"
+                                 StrokeThickness="3"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center">
+                            <Ellipse.Stroke>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0.031" Color="#FFC1B5B5" />
+                                    <GradientStop Offset="0.675" Color="#FF000000" />
+                                </LinearGradientBrush>
+                            </Ellipse.Stroke>
+                            <Ellipse.Fill>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0.342" Color="#FF140204" />
+                                    <GradientStop Offset="0.846" Color="#FF152029" />
+                                </LinearGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        
+                        <!-- Value display at bottom -->
+                        <Border HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,0,23"
+                                MinWidth="50"
+                                Background="#FF1E1E1E"
+                                BorderBrush="#FF555555"
+                                BorderThickness="1"
+                                CornerRadius="2"
+                                Padding="6,2"
+                                IsVisible="{TemplateBinding ShowValue}">
+                            <TextBlock FontSize="14"
                                        FontWeight="Bold"
-                                       Foreground="{TemplateBinding Foreground}"
-                                       HorizontalAlignment="Center" />
-                            <TextBlock Text="{TemplateBinding Unit}"
-                                       FontSize="10"
-                                       Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                                       Foreground="{TemplateBinding ScaleColor}"
                                        HorizontalAlignment="Center"
-                                       Margin="0,2,0,0" />
-                        </StackPanel>
+                                       Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0:F2}}" />
+                        </Border>
                         
-                        <!-- Dial text at bottom -->
-                        <TextBlock Text="{TemplateBinding DialText}"
-                                   FontSize="10"
-                                   Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom"
-                                   Margin="0,0,0,12" />
+                        <!-- Glass effect overlay -->
+                        <Path Width="160" Height="80"
+                              VerticalAlignment="Bottom"
+                              Margin="0,0,0,20"
+                              Data="M 80,0 C 120,0 155,30 155,50 C 155,55 120,75 80,75 C 40,75 5,55 5,50 C 5,30 40,0 80,0 Z"
+                              Stretch="Fill"
+                              Opacity="0.12"
+                              IsHitTestVisible="False">
+                            <Path.Fill>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                    <GradientStop Offset="0" Color="#68FCFCFC" />
+                                    <GradientStop Offset="1" Color="#FFF8FCF8" />
+                                </LinearGradientBrush>
+                            </Path.Fill>
+                        </Path>
                     </Grid>
-                </Border>
+                </Viewbox>
             </ControlTemplate>
         </Setter>
     </Style>

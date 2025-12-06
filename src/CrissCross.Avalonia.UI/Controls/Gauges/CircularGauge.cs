@@ -43,13 +43,13 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="ScaleStartAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> ScaleStartAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleStartAngle), 135.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleStartAngle), 120.0);
 
     /// <summary>
     /// Property for <see cref="ScaleSweepAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> ScaleSweepAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleSweepAngle), 270.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleSweepAngle), 300.0);
 
     /// <summary>
     /// Property for <see cref="MajorDivisionsCount"/>.
@@ -73,7 +73,7 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="PointerCapRadius"/>.
     /// </summary>
     public static readonly StyledProperty<double> PointerCapRadiusProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerCapRadius), 10.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerCapRadius), 16.0);
 
     /// <summary>
     /// Property for <see cref="PointerColor"/>.
@@ -85,25 +85,25 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="ScaleColor"/>.
     /// </summary>
     public static readonly StyledProperty<IBrush> ScaleColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(ScaleColor), Brushes.Gray);
+        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(ScaleColor), Brushes.White);
 
     /// <summary>
     /// Property for <see cref="OptimalRangeColor"/>.
     /// </summary>
     public static readonly StyledProperty<IBrush> OptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(OptimalRangeColor), Brushes.Green);
+        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(OptimalRangeColor), Brushes.Transparent);
 
     /// <summary>
     /// Property for <see cref="BelowOptimalRangeColor"/>.
     /// </summary>
     public static readonly StyledProperty<IBrush> BelowOptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(BelowOptimalRangeColor), Brushes.Yellow);
+        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(BelowOptimalRangeColor), Brushes.Transparent);
 
     /// <summary>
     /// Property for <see cref="AboveOptimalRangeColor"/>.
     /// </summary>
     public static readonly StyledProperty<IBrush> AboveOptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(AboveOptimalRangeColor), Brushes.Red);
+        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(AboveOptimalRangeColor), Brushes.Transparent);
 
     /// <summary>
     /// Property for <see cref="OptimalRangeStartValue"/>.
@@ -145,9 +145,22 @@ public class CircularGauge : TemplatedControl
     /// Property for <see cref="PointerAngle"/>.
     /// </summary>
     public static readonly StyledProperty<double> PointerAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerAngle), 135.0);
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerAngle), 120.0);
+
+    /// <summary>
+    /// Property for <see cref="ScaleRadius"/>.
+    /// </summary>
+    public static readonly StyledProperty<double> ScaleRadiusProperty =
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleRadius), 75.0);
+
+    /// <summary>
+    /// Property for <see cref="ScaleLabelRadius"/>.
+    /// </summary>
+    public static readonly StyledProperty<double> ScaleLabelRadiusProperty =
+        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleLabelRadius), 60.0);
 
     private Canvas? _scaleCanvas;
+    private double _oldValueAngle;
 
     static CircularGauge()
     {
@@ -158,8 +171,9 @@ public class CircularGauge : TemplatedControl
         MinorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         ScaleStartAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
         ScaleSweepAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        RadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        BoundsProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        ScaleRadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        ScaleLabelRadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        ScaleColorProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
     }
 
     /// <summary>
@@ -360,6 +374,24 @@ public class CircularGauge : TemplatedControl
         set => SetValue(PointerAngleProperty, value);
     }
 
+    /// <summary>
+    /// Gets or sets the scale radius.
+    /// </summary>
+    public double ScaleRadius
+    {
+        get => GetValue(ScaleRadiusProperty);
+        set => SetValue(ScaleRadiusProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the scale label radius.
+    /// </summary>
+    public double ScaleLabelRadius
+    {
+        get => GetValue(ScaleLabelRadiusProperty);
+        set => SetValue(ScaleLabelRadiusProperty, value);
+    }
+
     /// <inheritdoc/>
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -383,10 +415,9 @@ public class CircularGauge : TemplatedControl
         }
 
         var normalizedValue = (clampedValue - MinValue) / range;
+        var newAngle = ScaleStartAngle + (normalizedValue * ScaleSweepAngle);
 
-        // Subtract 90 to convert from standard math angles (0=right) to screen angles (0=up)
-        var newAngle = ScaleStartAngle + (normalizedValue * ScaleSweepAngle) - 90;
-
+        _oldValueAngle = PointerAngle;
         PointerAngle = newAngle;
     }
 
@@ -398,24 +429,22 @@ public class CircularGauge : TemplatedControl
 
     private void DrawScale()
     {
-        if (_scaleCanvas == null || Bounds.Width == 0 || Bounds.Height == 0)
+        if (_scaleCanvas == null)
         {
             return;
         }
 
         _scaleCanvas.Children.Clear();
 
-        // Use the actual bounds of the control for centering
-        var centerX = Bounds.Width / 2;
-        var centerY = Bounds.Height / 2;
-        var actualRadius = Math.Min(centerX, centerY) - 10; // Leave margin for labels
-
-        var scaleRadius = actualRadius * 0.85;
-        var majorTickLength = actualRadius * 0.12;
-        var minorTickLength = actualRadius * 0.06;
+        // Fixed center for the 200x200 canvas in the Viewbox
+        const double centerX = 100;
+        const double centerY = 100;
 
         var majorTickUnitAngle = ScaleSweepAngle / MajorDivisionsCount;
         var majorTicksUnitValue = (MaxValue - MinValue) / MajorDivisionsCount;
+
+        var majorTickLength = 10.0;
+        var minorTickLength = 5.0;
 
         // Draw major and minor ticks
         for (var i = 0; i <= MajorDivisionsCount; i++)
@@ -423,11 +452,11 @@ public class CircularGauge : TemplatedControl
             var angle = ScaleStartAngle + (i * majorTickUnitAngle);
             var angleRadian = angle * Math.PI / 180;
 
-            // Major tick
-            var startX = centerX + (scaleRadius * Math.Cos(angleRadian));
-            var startY = centerY + (scaleRadius * Math.Sin(angleRadian));
-            var endX = centerX + ((scaleRadius - majorTickLength) * Math.Cos(angleRadian));
-            var endY = centerY + ((scaleRadius - majorTickLength) * Math.Sin(angleRadian));
+            // Major tick - drawn as rotated rectangle centered at the tick position
+            var startX = centerX + (ScaleRadius * Math.Cos(angleRadian));
+            var startY = centerY + (ScaleRadius * Math.Sin(angleRadian));
+            var endX = centerX + ((ScaleRadius - majorTickLength) * Math.Cos(angleRadian));
+            var endY = centerY + ((ScaleRadius - majorTickLength) * Math.Sin(angleRadian));
 
             var majorTick = new Line
             {
@@ -439,7 +468,7 @@ public class CircularGauge : TemplatedControl
             _scaleCanvas.Children.Add(majorTick);
 
             // Scale label
-            var labelRadius = scaleRadius - majorTickLength - 12;
+            var labelRadius = ScaleLabelRadius;
             var labelX = centerX + (labelRadius * Math.Cos(angleRadian));
             var labelY = centerY + (labelRadius * Math.Sin(angleRadian));
 
@@ -447,8 +476,9 @@ public class CircularGauge : TemplatedControl
             var label = new TextBlock
             {
                 Text = labelValue.ToString($"F{Decimals}"),
-                FontSize = 9,
+                FontSize = 10,
                 Foreground = ScaleColor,
+                TextAlignment = TextAlignment.Center,
             };
 
             // Offset label to center it on the position
@@ -465,10 +495,10 @@ public class CircularGauge : TemplatedControl
                     var minorAngle = angle + (j * minorTickUnitAngle);
                     var minorAngleRadian = minorAngle * Math.PI / 180;
 
-                    var minorStartX = centerX + (scaleRadius * Math.Cos(minorAngleRadian));
-                    var minorStartY = centerY + (scaleRadius * Math.Sin(minorAngleRadian));
-                    var minorEndX = centerX + ((scaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
-                    var minorEndY = centerY + ((scaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
+                    var minorStartX = centerX + (ScaleRadius * Math.Cos(minorAngleRadian));
+                    var minorStartY = centerY + (ScaleRadius * Math.Sin(minorAngleRadian));
+                    var minorEndX = centerX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
+                    var minorEndY = centerY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
 
                     var minorTick = new Line
                     {
