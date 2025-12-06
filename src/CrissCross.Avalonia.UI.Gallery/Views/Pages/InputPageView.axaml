@@ -20,10 +20,73 @@
                 <StackPanel>
                     <TextBlock Text="TextBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Text boxes allow users to enter text." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="400" HorizontalAlignment="Left">
-                        <controls:TextBox Watermark="Enter text here..." />
-                        <controls:TextBox Text="Pre-filled text" />
-                        <controls:TextBox Watermark="Disabled" IsEnabled="False" />
+                    <StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross TextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBox Watermark="Enter text here..." />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia TextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <TextBox Watermark="Enter text here..." />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- RichTextBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="RichTextBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Rich text boxes provide multi-line text editing with visual formatting:" Opacity="0.7" Margin="0,0,0,4" />
+                    <TextBlock Opacity="0.6" Margin="16,0,0,12" FontSize="12">
+                        <Run Text="• Select text and press "/><Run Text="Ctrl+B" FontWeight="Bold"/><Run Text=" for "/><Run Text="Bold" FontWeight="Bold"/>
+                        <LineBreak/>
+                        <Run Text="• Select text and press "/><Run Text="Ctrl+I" FontWeight="Bold"/><Run Text=" for "/><Run Text="Italic" FontStyle="Italic"/>
+                        <LineBreak/>
+                        <Run Text="• Select text and press "/><Run Text="Ctrl+U" FontWeight="Bold"/><Run Text=" for "/><Run Text="Underline" TextDecorations="Underline"/>
+                        <LineBreak/>
+                        <Run Text="• Right-click for context menu with formatting options"/>
+                        <LineBreak/>
+                        <Run Text="• Formatting is preserved when editing"/>
+                    </TextBlock>
+                    
+                    <StackPanel Spacing="16" MaxWidth="500" HorizontalAlignment="Left">
+                        <!-- RichTextBox with formatting -->
+                        <StackPanel>
+                            <TextBlock Text="RichTextBox with Visual Formatting:" FontSize="12" Margin="0,0,0,4" />
+                            <TextBlock Text="Select any text below, then press Ctrl+B, Ctrl+I, or Ctrl+U to apply formatting." 
+                                       FontSize="11" Opacity="0.6" Margin="0,0,0,4" />
+                            <controls:RichTextBox 
+                                Name="FormattingRichTextBox"
+                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold.&#x0a;Or try Ctrl+I for italic text.&#x0a;Use Ctrl+U for underlined text.&#x0a;&#x0a;Right-click for more formatting options!"
+                                Height="160"
+                                Width="450"
+                                AcceptsReturn="True"
+                                AcceptsTab="True"
+                                IsFormattingEnabled="True" />
+                        </StackPanel>
+                        
+                        <!-- Basic RichTextBox -->
+                        <StackPanel>
+                            <TextBlock Text="Basic RichTextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:RichTextBox 
+                                Name="BasicRichTextBox"
+                                Watermark="Type here... Press Enter for new lines, Tab for tabs."
+                                Height="120"
+                                Width="450"
+                                AcceptsReturn="True"
+                                AcceptsTab="True" />
+                        </StackPanel>
+                        
+                        <!-- Read-Only RichTextBox -->
+                        <StackPanel>
+                            <TextBlock Text="Read-Only RichTextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:RichTextBox 
+                                Text="This is a read-only rich text box.&#x0a;&#x0a;It displays content but cannot be edited.&#x0a;Formatting shortcuts are disabled in read-only mode."
+                                Height="100"
+                                Width="450"
+                                IsReadOnly="True" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -33,9 +96,15 @@
                 <StackPanel>
                     <TextBlock Text="PasswordBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Password boxes hide the entered characters for security." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="400" HorizontalAlignment="Left">
-                        <controls:PasswordBox Watermark="Enter password..." />
-                        <controls:PasswordBox Watermark="Reveal password" RevealPassword="True" />
+                    <StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross PasswordBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:PasswordBox Watermark="Enter password..." />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia TextBox (PasswordChar):" FontSize="12" Margin="0,0,0,4" />
+                            <TextBox Watermark="Enter password..." PasswordChar="•" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -45,43 +114,15 @@
                 <StackPanel>
                     <TextBlock Text="NumberBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Number boxes allow numeric input with increment/decrement buttons." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
-                        <controls:NumberBox Value="42" />
-                        <controls:NumberBox Value="3.14" FormatString="F2" />
-                        <controls:NumberBox Value="100" Minimum="0" Maximum="200" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!-- DatePicker -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="DatePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Date pickers allow users to select a date." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
-                        <controls:DatePicker />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!-- TimePicker -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="TimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Time pickers allow users to select a time." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
-                        <controls:TimePicker />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!-- DateTimePicker -->
-            <Border Background="#252526" CornerRadius="8" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="DateTimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Date time pickers combine date and time selection." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" HorizontalAlignment="Left">
-                        <controls:DateTimePicker />
+                    <StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross NumberBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:NumberBox Value="42" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia NumericUpDown:" FontSize="12" Margin="0,0,0,4" />
+                            <NumericUpDown Value="42" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -92,8 +133,18 @@
                     <TextBlock Text="Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Sliders allow selection of a value from a range." Opacity="0.7" Margin="0,0,0,8" />
                     <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
-                        <controls:Slider Value="50" Maximum="100" />
-                        <controls:Slider Value="75" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="25" />
+                        <StackPanel>
+                            <TextBlock Text="CrissCross Slider (Basic):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:Slider Value="50" Maximum="100" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="CrissCross Slider (With Ticks):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:Slider Value="75" Maximum="100" TickFrequency="25" TickPlacement="BottomRight" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia Slider:" FontSize="12" Margin="0,0,0,4" />
+                            <Slider Value="50" Maximum="100" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -103,12 +154,23 @@
                 <StackPanel>
                     <TextBlock Text="ComboBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Combo boxes allow selection from a dropdown list." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
-                        <controls:ComboBox PlaceholderText="Select an option">
-                            <ComboBoxItem Content="Option 1" />
-                            <ComboBoxItem Content="Option 2" />
-                            <ComboBoxItem Content="Option 3" />
-                        </controls:ComboBox>
+                    <StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross ComboBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:ComboBox PlaceholderText="Select an option">
+                                <ComboBoxItem Content="Option 1" />
+                                <ComboBoxItem Content="Option 2" />
+                                <ComboBoxItem Content="Option 3" />
+                            </controls:ComboBox>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia ComboBox:" FontSize="12" Margin="0,0,0,4" />
+                            <ComboBox PlaceholderText="Select an option">
+                                <ComboBoxItem Content="Option 1" />
+                                <ComboBoxItem Content="Option 2" />
+                                <ComboBoxItem Content="Option 3" />
+                            </ComboBox>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -117,8 +179,17 @@
             <Border Background="#252526" CornerRadius="8" Padding="20">
                 <StackPanel>
                     <TextBlock Text="ColorPicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Color pickers allow selection of colors." Opacity="0.7" Margin="0,0,0,8" />
-                    <controls:ColorPicker />
+                    <TextBlock Text="Color pickers allow selection of colors using RGB sliders with optional alpha channel." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross ColorPicker (with Alpha):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:ColorPicker HorizontalAlignment="Left" IsAlphaEnabled="True" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="CrissCross ColorPicker (RGB only):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:ColorPicker HorizontalAlignment="Left" IsAlphaEnabled="False" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </StackPanel>

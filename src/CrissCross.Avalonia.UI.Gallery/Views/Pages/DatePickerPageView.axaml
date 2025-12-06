@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.DatePickerPageView"
+             x:DataType="vm:DatePickerPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="Date &amp; Time Pickers"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="Date and Time picker controls allow users to select dates and times from a calendar or clock interface."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- DatePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="DatePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Select a date from a calendar dropdown." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross DatePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:DatePicker />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia DatePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <DatePicker />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- TimePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="TimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Select a time value." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross TimePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TimePicker />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia TimePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <TimePicker />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- DateTimePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="DateTimePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Combined date and time selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" HorizontalAlignment="Left">
+                        <controls:DateTimePicker />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Calendar -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Calendar" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Full calendar view for date selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross Calendar:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:Calendar HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia Calendar:" FontSize="12" Margin="0,0,0,4" />
+                            <Calendar HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- CalendarDatePicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="CalendarDatePicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Compact date picker with calendar flyout." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="12">
+                        <StackPanel>
+                            <TextBlock Text="CrissCross CalendarDatePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:CalendarDatePicker Content="Select a date..." />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia CalendarDatePicker:" FontSize="12" Margin="0,0,0,4" />
+                            <CalendarDatePicker />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

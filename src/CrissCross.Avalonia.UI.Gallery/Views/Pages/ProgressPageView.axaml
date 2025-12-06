@@ -21,14 +21,22 @@
                     <TextBlock Text="ProgressBar" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <TextBlock Text="Progress bars show determinate or indeterminate progress." Opacity="0.7" Margin="0,0,0,8" />
                     <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
-                        <TextBlock Text="Determinate (65%)" Opacity="0.7" />
-                        <controls:ProgressBar Value="65" Maximum="100" Height="8" />
-                        
-                        <TextBlock Text="Determinate (30%)" Opacity="0.7" />
-                        <controls:ProgressBar Value="30" Maximum="100" Height="8" />
-                        
-                        <TextBlock Text="Indeterminate" Opacity="0.7" />
-                        <controls:ProgressBar IsIndeterminate="True" Height="8" />
+                        <StackPanel>
+                            <TextBlock Text="CrissCross ProgressBar (65%):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:ProgressBar Value="65" Maximum="100" Height="8" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="CrissCross ProgressBar (Indeterminate):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:ProgressBar IsIndeterminate="True" Height="8" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia ProgressBar (65%):" FontSize="12" Margin="0,0,0,4" />
+                            <ProgressBar Value="65" Maximum="100" Height="8" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Native Avalonia ProgressBar (Indeterminate):" FontSize="12" Margin="0,0,0,4" />
+                            <ProgressBar IsIndeterminate="True" Height="8" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -37,20 +45,25 @@
             <Border Background="#252526" CornerRadius="8" Padding="20">
                 <StackPanel>
                     <TextBlock Text="ProgressRing" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
-                    <TextBlock Text="Progress rings show circular indeterminate progress." Opacity="0.7" Margin="0,0,0,8" />
-                    <StackPanel Orientation="Horizontal" Spacing="24">
-                        <StackPanel Spacing="8" HorizontalAlignment="Center">
-                            <controls:ProgressRing IsIndeterminate="True" Width="32" Height="32" />
-                            <TextBlock Text="Small" HorizontalAlignment="Center" Opacity="0.7" />
+                    <TextBlock Text="Progress rings show circular progress indication." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="CrissCross ProgressRing:" FontSize="12" />
+                        <StackPanel Orientation="Horizontal" Spacing="24">
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <controls:ProgressRing IsIndeterminate="True" Width="32" Height="32" />
+                                <TextBlock Text="Small" HorizontalAlignment="Center" Opacity="0.7" />
+                            </StackPanel>
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <controls:ProgressRing IsIndeterminate="True" Width="48" Height="48" />
+                                <TextBlock Text="Medium" HorizontalAlignment="Center" Opacity="0.7" />
+                            </StackPanel>
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <controls:ProgressRing IsIndeterminate="True" Width="64" Height="64" />
+                                <TextBlock Text="Large" HorizontalAlignment="Center" Opacity="0.7" />
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Spacing="8" HorizontalAlignment="Center">
-                            <controls:ProgressRing IsIndeterminate="True" Width="48" Height="48" />
-                            <TextBlock Text="Medium" HorizontalAlignment="Center" Opacity="0.7" />
-                        </StackPanel>
-                        <StackPanel Spacing="8" HorizontalAlignment="Center">
-                            <controls:ProgressRing IsIndeterminate="True" Width="64" Height="64" />
-                            <TextBlock Text="Large" HorizontalAlignment="Center" Opacity="0.7" />
-                        </StackPanel>
+                        <TextBlock Text="CrissCross ProgressRing (Determinate 75%):" FontSize="12" Margin="0,8,0,0" />
+                        <controls:ProgressRing Progress="75" Width="48" Height="48" HorizontalAlignment="Left" />
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -71,7 +84,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- InfoBar Preview (placeholder) -->
+            <!-- InfoBar Preview -->
             <Border Background="#252526" CornerRadius="8" Padding="20">
                 <StackPanel>
                     <TextBlock Text="InfoBar" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />

@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.SliderPageView"
+             x:DataType="vm:SliderPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="Slider"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="Slider controls let users select a value from a continuous range by moving a thumb along a track."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- Basic Slider -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Basic Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="A simple horizontal slider with default range (0-100)." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:Slider Value="50" Maximum="100" />
+                        <controls:Slider Value="25" Maximum="100" />
+                        <controls:Slider Value="75" Maximum="100" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Slider with Ticks -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Slider with Tick Marks" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Sliders can show tick marks and snap to specific values." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:Slider Value="50" Maximum="100" TickFrequency="10" IsSnapToTickEnabled="True" TickPlacement="BottomRight" />
+                        <controls:Slider Value="25" Maximum="100" TickFrequency="25" IsSnapToTickEnabled="True" TickPlacement="TopLeft" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Slider with Custom Range -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Custom Range Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Sliders can have custom minimum and maximum values." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <TextBlock Text="Temperature (0°C to 40°C)" FontSize="12" Margin="0,0,0,4" />
+                            <controls:Slider Value="22" Minimum="0" Maximum="40" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Volume (-60dB to 0dB)" FontSize="12" Margin="0,0,0,4" />
+                            <controls:Slider Value="-20" Minimum="-60" Maximum="0" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Disabled Slider -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Disabled Slider" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Sliders can be disabled to prevent interaction." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:Slider Value="60" Maximum="100" IsEnabled="False" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
