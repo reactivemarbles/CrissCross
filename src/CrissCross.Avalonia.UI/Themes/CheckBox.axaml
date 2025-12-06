@@ -4,9 +4,9 @@
     
     <!-- CrissCross CheckBox Style -->
     <Style Selector="controls|CheckBox">
-        <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUnchecked}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUnchecked}" />
+        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
         <Setter Property="Padding" Value="8,0,0,0" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -35,7 +35,7 @@
                                       Height="12"
                                       Data="M1.5,5.5 L4.5,8.5 L10.5,2.5"
                                       Fill="Transparent"
-                                      Stroke="{DynamicResource CheckBoxCheckGlyphForeground}"
+                                      Stroke="White"
                                       StrokeThickness="2"
                                       Stretch="Uniform"
                                       HorizontalAlignment="Center"
@@ -45,7 +45,7 @@
                                 <Rectangle Name="IndeterminateMark"
                                            Width="8"
                                            Height="8"
-                                           Fill="{DynamicResource CheckBoxCheckGlyphForeground}"
+                                           Fill="White"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            IsVisible="False" />
@@ -58,23 +58,28 @@
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                                          TextElement.Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
                     </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
     </Style>
     
-    <!-- Unchecked state - ensure background is visible for clicking -->
+    <!-- Set foreground for content text -->
+    <Style Selector="controls|CheckBox /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+    </Style>
+    
+    <!-- Unchecked state -->
     <Style Selector="controls|CheckBox:unchecked /template/ Border#CheckBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUnchecked}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUnchecked}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
     </Style>
     
     <!-- Checked State -->
     <Style Selector="controls|CheckBox:checked /template/ Border#CheckBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeChecked}" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
     </Style>
     
     <Style Selector="controls|CheckBox:checked /template/ Path#CheckGlyph">
@@ -83,8 +88,8 @@
     
     <!-- Indeterminate State -->
     <Style Selector="controls|CheckBox:indeterminate /template/ Border#CheckBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeChecked}" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
     </Style>
     
     <Style Selector="controls|CheckBox:indeterminate /template/ Rectangle#IndeterminateMark">
@@ -93,13 +98,12 @@
     
     <!-- PointerOver State - Unchecked -->
     <Style Selector="controls|CheckBox:pointerover:unchecked /template/ Border#CheckBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUncheckedPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUncheckedPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
     </Style>
     
     <!-- PointerOver State - Checked -->
     <Style Selector="controls|CheckBox:pointerover:checked /template/ Border#CheckBorder">
-        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}" />
+        <Setter Property="Opacity" Value="0.9" />
     </Style>
     
     <!-- Disabled State -->

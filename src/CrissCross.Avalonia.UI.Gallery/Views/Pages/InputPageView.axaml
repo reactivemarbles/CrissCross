@@ -33,6 +33,24 @@
                 </controls:StackPanel>
             </controls:Card>
 
+            <!-- AutoSuggestBox -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="AutoSuggestBox" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="AutoSuggestBox provides suggestions as users type. Start typing a fruit name to see suggestions." Opacity="0.7" />
+                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                        <controls:StackPanel>
+                            <controls:TextBlock Text="Search for fruits:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:AutoSuggestBox 
+                                PlaceholderText="Type to search fruits..."
+                                ItemsSource="{Binding SampleSuggestions}"
+                                FilterMode="Contains"
+                                MinimumPrefixLength="1" />
+                        </controls:StackPanel>
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
             <!-- RichTextBox -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">

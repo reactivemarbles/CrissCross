@@ -5,7 +5,6 @@
     <!-- CrissCross CheckBoxModern Style -->
     <Style Selector="controls|CheckBoxModern">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="Padding" Value="8,0,0,0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -54,12 +53,16 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          TextElement.Foreground="{TemplateBinding Foreground}"
                                           RecognizesAccessKey="True" />
                     </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
+    </Style>
+    
+    <!-- Set foreground for content text -->
+    <Style Selector="controls|CheckBoxModern /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
     </Style>
     
     <!-- Checked state -->

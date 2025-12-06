@@ -1,0 +1,159 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross GelButton Style - A button with a gel/glass-like appearance -->
+    <Style Selector="controls|GelButton">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="OuterCornerRadius" Value="50" />
+        <Setter Property="InnerCornerRadius" Value="48" />
+        <Setter Property="FocusBrush" Value="{DynamicResource SystemAccentColorLight1}" />
+        <Setter Property="FocusBorderThickness" Value="2" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!-- Base color layer -->
+                    <Border Name="Base"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}" />
+                    
+                    <!-- Convex highlight (top) - visible when not pressed -->
+                    <Border Name="ConvexHighlight"
+                            Margin="5"
+                            CornerRadius="{TemplateBinding InnerCornerRadius}"
+                            IsHitTestVisible="False">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                <GradientStop Offset="0" Color="#80FFFFFF" />
+                                <GradientStop Offset="0.5" Color="Transparent" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!-- Convex radial glow (bottom) - visible when not pressed -->
+                    <Border Name="ConvexGlow"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}"
+                            Opacity="0.5"
+                            IsHitTestVisible="False">
+                        <Border.Background>
+                            <RadialGradientBrush Center="0.5,0.65" GradientOrigin="0.5,1" RadiusX="0.5" RadiusY="0.43">
+                                <GradientStop Offset="0" Color="#FFFFFFFF" />
+                                <GradientStop Offset="1" Color="#00000000" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!-- Concave highlight (bottom) - visible when pressed -->
+                    <Border Name="ConcaveHighlight"
+                            Margin="5"
+                            CornerRadius="{TemplateBinding InnerCornerRadius}"
+                            Opacity="0.5"
+                            IsHitTestVisible="False"
+                            IsVisible="False">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                <GradientStop Offset="0" Color="Transparent" />
+                                <GradientStop Offset="0.51" Color="#80FFFFFF" />
+                                <GradientStop Offset="1" Color="Transparent" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!-- Concave radial shadow (top) - visible when pressed -->
+                    <Border Name="ConcaveShadow"
+                            Margin="0,-1,0,1"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}"
+                            Opacity="0.5"
+                            IsHitTestVisible="False"
+                            IsVisible="False">
+                        <Border.Background>
+                            <RadialGradientBrush Center="0.5,0.17" GradientOrigin="0.5,0" RadiusX="0.5" RadiusY="0.43">
+                                <GradientStop Offset="0" Color="#FFFFFFFF" />
+                                <GradientStop Offset="1" Color="#00000000" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!-- Content -->
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      TextBlock.Foreground="{TemplateBinding Foreground}" />
+                    
+                    <!-- Focus border -->
+                    <Border Name="FocusBorder"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}"
+                            BorderBrush="{TemplateBinding FocusBrush}"
+                            BorderThickness="0"
+                            IsHitTestVisible="False" />
+                    
+                    <!-- Glare overlay (edge darkening for glass effect) -->
+                    <Border Name="GlareOverlay"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}"
+                            IsHitTestVisible="False">
+                        <Border.Background>
+                            <RadialGradientBrush Center="0.5,0.49" GradientOrigin="0.5,0.5" RadiusX="0.85" RadiusY="0.84">
+                                <GradientStop Offset="0.68" Color="#40000000" />
+                                <GradientStop Offset="0.54" Color="Transparent" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Pressed state - swap convex for concave effects -->
+    <Style Selector="controls|GelButton:pressed /template/ Border#ConvexHighlight">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:pressed /template/ Border#ConvexGlow">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:pressed /template/ Border#ConcaveHighlight">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:pressed /template/ Border#ConcaveShadow">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|GelButton:pointerover /template/ Border#Base">
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:pointerover /template/ Border#ConvexHighlight">
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+    
+    <!-- Focus state -->
+    <Style Selector="controls|GelButton:focus-visible /template/ Border#FocusBorder">
+        <Setter Property="BorderThickness" Value="{Binding FocusBorderThickness, RelativeSource={RelativeSource TemplatedParent}}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|GelButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:disabled /template/ Border#Base">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+    </Style>
+    
+    <Style Selector="controls|GelButton:disabled /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+    </Style>
+    
+</Styles>
