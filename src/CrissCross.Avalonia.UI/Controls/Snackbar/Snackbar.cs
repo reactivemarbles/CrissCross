@@ -33,13 +33,13 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Property for <see cref="Title"/>.
     /// </summary>
-    public static readonly StyledProperty<object> TitleProperty = AvaloniaProperty.Register<Snackbar, object>(
+    public static readonly StyledProperty<object?> TitleProperty = AvaloniaProperty.Register<Snackbar, object?>(
         nameof(Title), null);
 
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<Snackbar, object>(
+    public static readonly StyledProperty<IconElement?> IconProperty = AvaloniaProperty.Register<Snackbar, IconElement?>(
         nameof(Icon), null);
 
     /// <summary>
@@ -51,8 +51,23 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Property for <see cref="ContentForeground"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> ContentForegroundProperty = AvaloniaProperty.Register<Snackbar, IBrush>(
+    public static readonly StyledProperty<IBrush?> ContentForegroundProperty = AvaloniaProperty.Register<Snackbar, IBrush?>(
         nameof(ContentForeground), Brushes.Black);
+
+    private SnackbarPresenter? _presenter;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Snackbar"/> class.
+    /// </summary>
+    public Snackbar()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Snackbar"/> class.
+    /// </summary>
+    /// <param name="presenter">The presenter.</param>
+    public Snackbar(SnackbarPresenter presenter) => _presenter = presenter;
 
     /// <summary>
     /// Gets or sets a value indicating whether the close button is enabled.
@@ -84,7 +99,7 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Gets or sets the title.
     /// </summary>
-    public object Title
+    public object? Title
     {
         get => GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
@@ -93,7 +108,7 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Gets or sets the icon.
     /// </summary>
-    public object? Icon
+    public IconElement? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
@@ -111,9 +126,49 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Gets or sets the content foreground.
     /// </summary>
-    public IBrush ContentForeground
+    public IBrush? ContentForeground
     {
         get => GetValue(ContentForegroundProperty);
         set => SetValue(ContentForegroundProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the snackbar presenter.
+    /// </summary>
+    protected SnackbarPresenter? Presenter { get; set; }
+
+    /// <summary>
+    /// Shows the snackbar.
+    /// </summary>
+    /// <param name="immediately">if set to <c>true</c> shows immediately.</param>
+    public virtual void Show(bool immediately = false)
+    {
+        if (_presenter is null)
+        {
+            throw new InvalidOperationException("SnackbarPresenter is not set.");
+        }
+
+        if (immediately)
+        {
+            _ = _presenter.ImmediatelyDisplayAsync(this);
+        }
+        else
+        {
+            _presenter.AddToQueue(this);
+        }
+    }
+
+    /// <summary>
+    /// Hides the snackbar asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public virtual async Task HideAsync()
+    {
+        if (_presenter is null)
+        {
+            return;
+        }
+
+        await _presenter.HideCurrentAsync();
     }
 }

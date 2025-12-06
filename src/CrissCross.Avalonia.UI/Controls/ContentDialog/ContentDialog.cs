@@ -384,7 +384,17 @@ public class ContentDialog : ContentControl
     /// <summary>
     /// Gets or sets the content presenter for displaying the dialog.
     /// </summary>
-    public ContentPresenter? DialogPresenter { get; set; }
+    public ContentPresenter? ContentPresenter { get; set; }
+
+    /// <summary>
+    /// Gets or sets the content presenter for displaying the dialog.
+    /// </summary>
+    [Obsolete("Use ContentPresenter instead.")]
+    public ContentPresenter? DialogPresenter
+    {
+        get => ContentPresenter;
+        set => ContentPresenter = value;
+    }
 
     /// <summary>
     /// Shows the dialog asynchronously.
@@ -393,9 +403,9 @@ public class ContentDialog : ContentControl
     /// <returns>A ContentDialogResult.</returns>
     public async Task<ContentDialogResult> ShowAsync(CancellationToken cancellationToken = default)
     {
-        if (DialogPresenter == null)
+        if (ContentPresenter == null)
         {
-            throw new InvalidOperationException("DialogPresenter is not set");
+            throw new InvalidOperationException("ContentPresenter is not set");
         }
 
         _tcs = new TaskCompletionSource<ContentDialogResult>();
@@ -407,7 +417,7 @@ public class ContentDialog : ContentControl
 
         try
         {
-            DialogPresenter.Content = this;
+            ContentPresenter.Content = this;
             RaiseEvent(new RoutedEventArgs(OpenedEvent));
             result = await _tcs.Task;
             return result;
@@ -415,7 +425,7 @@ public class ContentDialog : ContentControl
         finally
         {
             await tokenRegistration.DisposeAsync();
-            DialogPresenter.Content = null;
+            ContentPresenter.Content = null;
             OnClosed(result);
         }
     }
