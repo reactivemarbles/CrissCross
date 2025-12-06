@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ProgressRing Style -->
+    <Style Selector="controls|ProgressRing">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Foreground" Value="#0078D4" />
+        <Setter Property="Background" Value="#808080" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <!-- Background Ring -->
+                    <Ellipse Name="BackgroundRing"
+                             Width="{TemplateBinding Width}"
+                             Height="{TemplateBinding Height}"
+                             Stroke="{TemplateBinding Background}"
+                             StrokeThickness="3"
+                             Fill="Transparent"
+                             Opacity="0.3"
+                             IsVisible="{TemplateBinding CoverRingVisibility}" />
+                    
+                    <!-- Progress Arc (for determinate mode) -->
+                    <Arc Name="ProgressArc"
+                         Width="{TemplateBinding Width}"
+                         Height="{TemplateBinding Height}"
+                         Stroke="{TemplateBinding Foreground}"
+                         StrokeThickness="3"
+                         StartAngle="0"
+                         SweepAngle="{Binding EngAngle, RelativeSource={RelativeSource TemplatedParent}}"
+                         IsVisible="{Binding !IsIndeterminate, RelativeSource={RelativeSource TemplatedParent}}" />
+                    
+                    <!-- Indeterminate Arc with StartAngle animation -->
+                    <Arc Name="IndeterminateArc"
+                         Width="{TemplateBinding Width}"
+                         Height="{TemplateBinding Height}"
+                         Stroke="{TemplateBinding Foreground}"
+                         StrokeThickness="3"
+                         StartAngle="0"
+                         SweepAngle="90"
+                         IsVisible="{Binding IsIndeterminate, RelativeSource={RelativeSource TemplatedParent}}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Animation for indeterminate state - animate the StartAngle property -->
+    <Style Selector="controls|ProgressRing[IsIndeterminate=True] /template/ Arc#IndeterminateArc">
+        <Style.Animations>
+            <Animation Duration="0:0:1" IterationCount="Infinite">
+                <KeyFrame Cue="0%">
+                    <Setter Property="StartAngle" Value="0" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="StartAngle" Value="360" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    
+</Styles>

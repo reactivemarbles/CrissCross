@@ -1,0 +1,108 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ComboBox Style -->
+    <!-- Inherits from Avalonia ComboBox - use native styling with minimal overrides -->
+    <Style Selector="controls|ComboBox">
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#5D5D5D" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinWidth" Value="150" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:ComboBox">
+                <Border Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Selected Content -->
+                        <ContentPresenter Name="ContentPresenter"
+                                          Grid.Column="0"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding ItemTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}" />
+                        
+                        <!-- Placeholder text -->
+                        <TextBlock Name="PlaceholderText"
+                                   Grid.Column="0"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   Foreground="#808080"
+                                   VerticalAlignment="Center"
+                                   Margin="{TemplateBinding Padding}"
+                                   IsVisible="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNull}}" />
+                        
+                        <!-- Dropdown Arrow -->
+                        <Path Name="DropdownArrow"
+                              Grid.Column="1"
+                              Data="M0,0 L4,4 L8,0"
+                              Stroke="{TemplateBinding Foreground}"
+                              StrokeThickness="1.5"
+                              Width="8"
+                              Height="4"
+                              Stretch="Uniform"
+                              Margin="8,0,12,0"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center" />
+                        
+                        <!-- Popup for dropdown -->
+                        <Popup Name="PART_Popup"
+                               PlacementTarget="{TemplateBinding}"
+                               Placement="Bottom"
+                               IsLightDismissEnabled="True"
+                               IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}">
+                            <Border Background="#2D2D2D"
+                                    BorderBrush="#5D5D5D"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                    Margin="4" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|ComboBox:pointerover /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#7D7D7D" />
+    </Style>
+    
+    <!-- Pressed/Focused State -->
+    <Style Selector="controls|ComboBox:focus /template/ Border#Border">
+        <Setter Property="BorderBrush" Value="#0078D4" />
+    </Style>
+    
+    <!-- DropDown Open - rotate arrow -->
+    <Style Selector="controls|ComboBox:pressed /template/ Path#DropdownArrow">
+        <Setter Property="RenderTransform">
+            <RotateTransform Angle="180" />
+        </Setter>
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|ComboBox:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

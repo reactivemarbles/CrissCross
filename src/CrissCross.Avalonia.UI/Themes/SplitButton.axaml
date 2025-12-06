@@ -1,0 +1,27 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross SplitButton Style -->
+    <Style Selector="controls|SplitButton">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource SplitButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SplitButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|SplitButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SplitButtonBackgroundPointerOver}" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|SplitButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

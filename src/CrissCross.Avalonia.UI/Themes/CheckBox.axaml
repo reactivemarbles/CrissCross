@@ -1,0 +1,109 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CheckBox Style -->
+    <Style Selector="controls|CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUnchecked}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUnchecked}" />
+        <Setter Property="Padding" Value="8,0,0,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="0">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- Clickable checkbox area with minimum size -->
+                        <Border Name="CheckBorder"
+                                Width="20"
+                                Height="20"
+                                MinWidth="20"
+                                MinHeight="20"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Cursor="Hand">
+                            <Panel>
+                                <!-- Checkmark -->
+                                <Path Name="CheckGlyph"
+                                      Width="12"
+                                      Height="12"
+                                      Data="M1.5,5.5 L4.5,8.5 L10.5,2.5"
+                                      Fill="Transparent"
+                                      Stroke="{DynamicResource CheckBoxCheckGlyphForeground}"
+                                      StrokeThickness="2"
+                                      Stretch="Uniform"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      IsVisible="False" />
+                                <!-- Indeterminate Mark -->
+                                <Rectangle Name="IndeterminateMark"
+                                           Width="8"
+                                           Height="8"
+                                           Fill="{DynamicResource CheckBoxCheckGlyphForeground}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           IsVisible="False" />
+                            </Panel>
+                        </Border>
+                        <ContentPresenter Name="ContentPresenter"
+                                          Grid.Column="1"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Unchecked state - ensure background is visible for clicking -->
+    <Style Selector="controls|CheckBox:unchecked /template/ Border#CheckBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUnchecked}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUnchecked}" />
+    </Style>
+    
+    <!-- Checked State -->
+    <Style Selector="controls|CheckBox:checked /template/ Border#CheckBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeChecked}" />
+    </Style>
+    
+    <Style Selector="controls|CheckBox:checked /template/ Path#CheckGlyph">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Indeterminate State -->
+    <Style Selector="controls|CheckBox:indeterminate /template/ Border#CheckBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillChecked}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBackgroundStrokeChecked}" />
+    </Style>
+    
+    <Style Selector="controls|CheckBox:indeterminate /template/ Rectangle#IndeterminateMark">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- PointerOver State - Unchecked -->
+    <Style Selector="controls|CheckBox:pointerover:unchecked /template/ Border#CheckBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundUncheckedPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckBorderBrushUncheckedPointerOver}" />
+    </Style>
+    
+    <!-- PointerOver State - Checked -->
+    <Style Selector="controls|CheckBox:pointerover:checked /template/ Border#CheckBorder">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckBackgroundFillCheckedPointerOver}" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|CheckBox:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

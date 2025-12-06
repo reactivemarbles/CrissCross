@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -10,7 +11,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// Rotating loading ring.
 /// </summary>
-public class ProgressRing : global::Avalonia.Controls.Control
+public class ProgressRing : TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Progress"/>.
@@ -99,30 +100,30 @@ public class ProgressRing : global::Avalonia.Controls.Control
     }
 
     /// <summary>
-    /// Gets the arc end angle when indeterminate.
+    /// Gets or sets the arc end angle when indeterminate.
     /// </summary>
     public double IndeterminateAngle
     {
         get => GetValue(IndeterminateAngleProperty);
-        private set => SetValue(IndeterminateAngleProperty, value);
+        set => SetValue(IndeterminateAngleProperty, value);
     }
 
     /// <summary>
-    /// Gets background ring fill.
+    /// Gets or sets background ring fill.
     /// </summary>
     public IBrush CoverRingStroke
     {
         get => GetValue(CoverRingStrokeProperty);
-        private set => SetValue(CoverRingStrokeProperty, value);
+        set => SetValue(CoverRingStrokeProperty, value);
     }
 
     /// <summary>
-    /// Gets a value indicating whether gets background ring visibility.
+    /// Gets or sets a value indicating whether background ring is visible.
     /// </summary>
     public bool CoverRingVisibility
     {
         get => GetValue(CoverRingVisibilityProperty);
-        private set => SetValue(CoverRingVisibilityProperty, value);
+        set => SetValue(CoverRingVisibilityProperty, value);
     }
 
     /// <summary>

@@ -1,0 +1,58 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CalendarDatePicker Style -->
+    <Style Selector="controls|CalendarDatePicker">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <!-- Date Display -->
+                        <TextBlock Name="DateText"
+                                   Text="{Binding Date, RelativeSource={RelativeSource TemplatedParent}, StringFormat='{}{0:d}', FallbackValue='Select a date'}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        <!-- Calendar Icon -->
+                        <Path Name="CalendarIcon"
+                              Grid.Column="1"
+                              Data="M19,4H18V2H16V4H8V2H6V4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M19,20H5V10H19V20M19,8H5V6H19V8M12,13H17V18H12V13Z"
+                              Fill="{TemplateBinding Foreground}"
+                              Width="16"
+                              Height="16"
+                              Stretch="Uniform"
+                              Margin="8,0,0,0"
+                              VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|CalendarDatePicker:pointerover /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
+    </Style>
+    
+    <!-- Pressed State -->
+    <Style Selector="controls|CalendarDatePicker:pressed /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+    </Style>
+    
+</Styles>

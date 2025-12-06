@@ -4,5 +4,7 @@
              RequestedThemeVariant="Default">
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://CrissCross.Avalonia/Themes/Index.axaml" />
+        <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Index.axaml" />
     </Application.Styles>
 </Application>

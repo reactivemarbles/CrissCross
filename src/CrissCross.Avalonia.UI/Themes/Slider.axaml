@@ -1,0 +1,191 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross Slider Style -->
+    <!-- Inherits from Avalonia Slider - use native styling with minimal overrides -->
+    <Style Selector="controls|Slider">
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Orientation" Value="Horizontal" />
+    </Style>
+    
+    <!-- Horizontal Orientation -->
+    <Style Selector="controls|Slider:horizontal">
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+    
+    <!-- Vertical Orientation -->
+    <Style Selector="controls|Slider:vertical">
+        <Setter Property="MinWidth" Value="24" />
+        <Setter Property="Width" Value="24" />
+    </Style>
+    
+    <!-- CrissCross Slider Template -->
+    <Style Selector="controls|Slider">
+        <Setter Property="Background" Value="#3D3D3D" />
+        <Setter Property="Foreground" Value="#0078D4" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:Slider">
+                <Border Background="Transparent"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Horizontal Track -->
+                        <Grid Name="HorizontalTemplate"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              MinHeight="24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Track Background -->
+                            <Border Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    Height="4"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="2"
+                                    VerticalAlignment="Center" />
+                            
+                            <!-- Track with Decrease/Increase areas -->
+                            <Track Name="PART_Track"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="3"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   Value="{TemplateBinding Value, Mode=TwoWay}"
+                                   Orientation="Horizontal">
+                                <Track.DecreaseButton>
+                                    <RepeatButton Name="PART_DecreaseButton"
+                                                  Background="{TemplateBinding Foreground}"
+                                                  Height="4"
+                                                  CornerRadius="2"
+                                                  BorderThickness="0"
+                                                  Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate>
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="2"
+                                                        Height="4" />
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseButton>
+                                <Track.IncreaseButton>
+                                    <RepeatButton Name="PART_IncreaseButton"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Focusable="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate>
+                                                <Border Background="Transparent" />
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseButton>
+                                <Track.Thumb>
+                                    <Thumb Name="SliderThumb"
+                                           Width="20"
+                                           Height="20"
+                                           Background="#FFFFFF"
+                                           BorderBrush="#808080"
+                                           BorderThickness="1"
+                                           CornerRadius="10">
+                                        <Thumb.Template>
+                                            <ControlTemplate>
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="10"
+                                                        Width="20"
+                                                        Height="20">
+                                                    <Border.Effect>
+                                                        <DropShadowEffect BlurRadius="4" Opacity="0.3" OffsetY="1" />
+                                                    </Border.Effect>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        
+                        <!-- Tick marks -->
+                        <TickBar Name="TopTick"
+                                 Grid.Row="0"
+                                 Grid.Column="1"
+                                 Placement="Top"
+                                 Fill="#808080"
+                                 Height="4"
+                                 Minimum="{TemplateBinding Minimum}"
+                                 Maximum="{TemplateBinding Maximum}"
+                                 TickFrequency="{TemplateBinding TickFrequency}"
+                                 IsVisible="False" />
+                        <TickBar Name="BottomTick"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Placement="Bottom"
+                                 Fill="#808080"
+                                 Height="4"
+                                 Minimum="{TemplateBinding Minimum}"
+                                 Maximum="{TemplateBinding Maximum}"
+                                 TickFrequency="{TemplateBinding TickFrequency}"
+                                 IsVisible="False" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Show top ticks -->
+    <Style Selector="controls|Slider[TickPlacement=TopLeft] /template/ TickBar#TopTick">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Show bottom ticks -->
+    <Style Selector="controls|Slider[TickPlacement=BottomRight] /template/ TickBar#BottomTick">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Show both ticks -->
+    <Style Selector="controls|Slider[TickPlacement=Outside] /template/ TickBar#TopTick">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="controls|Slider[TickPlacement=Outside] /template/ TickBar#BottomTick">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- Thumb hover state -->
+    <Style Selector="controls|Slider /template/ Thumb#SliderThumb:pointerover">
+        <Setter Property="Background" Value="#E5E5E5" />
+    </Style>
+    
+    <!-- Thumb pressed state -->
+    <Style Selector="controls|Slider /template/ Thumb#SliderThumb:pressed">
+        <Setter Property="Background" Value="#CCCCCC" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|Slider:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

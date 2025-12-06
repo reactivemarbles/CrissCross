@@ -1,0 +1,63 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross RadioButton Style -->
+    <Style Selector="controls|RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
+        <Setter Property="Background" Value="{DynamicResource RadioButtonOuterEllipseFill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonOuterEllipseStroke}" />
+        <Setter Property="Padding" Value="8,0,0,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <Grid Width="20" Height="20">
+                        <!-- Outer Circle -->
+                        <Ellipse Name="OuterEllipse"
+                                 Width="20"
+                                 Height="20"
+                                 Fill="{TemplateBinding Background}"
+                                 Stroke="{TemplateBinding BorderBrush}"
+                                 StrokeThickness="1" />
+                        <!-- Inner Circle (Checked indicator) -->
+                        <Ellipse Name="CheckGlyph"
+                                 Width="10"
+                                 Height="10"
+                                 Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                                 IsVisible="False" />
+                    </Grid>
+                    <ContentPresenter Name="ContentPresenter"
+                                      Grid.Column="1"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Checked State -->
+    <Style Selector="controls|RadioButton:checked /template/ Ellipse#OuterEllipse">
+        <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillChecked}" />
+        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokeChecked}" />
+    </Style>
+    
+    <Style Selector="controls|RadioButton:checked /template/ Ellipse#CheckGlyph">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <!-- PointerOver State -->
+    <Style Selector="controls|RadioButton:pointerover /template/ Ellipse#OuterEllipse">
+        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokePointerOver}" />
+    </Style>
+    
+    <!-- Disabled State -->
+    <Style Selector="controls|RadioButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>
