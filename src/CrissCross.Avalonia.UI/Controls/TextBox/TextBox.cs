@@ -2,20 +2,43 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using ReactiveUI;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Represents a control that can be used to display and edit plain text.
+/// Extended <see cref="Avalonia.Controls.TextBox"/> with additional parameters like <see cref="PlaceholderText"/>.
 /// </summary>
 public class TextBox : global::Avalonia.Controls.TextBox
 {
+    /// <summary>
+    /// Property for <see cref="Icon"/>.
+    /// </summary>
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<TextBox, object?>(
+        nameof(Icon));
+
+    /// <summary>
+    /// Property for <see cref="IconPlacement"/>.
+    /// </summary>
+    public static readonly StyledProperty<ElementPlacement> IconPlacementProperty = AvaloniaProperty.Register<TextBox, ElementPlacement>(
+        nameof(IconPlacement), ElementPlacement.Left);
+
     /// <summary>
     /// Property for <see cref="PlaceholderText"/>.
     /// </summary>
     public static readonly StyledProperty<string> PlaceholderTextProperty = AvaloniaProperty.Register<TextBox, string>(
         nameof(PlaceholderText), string.Empty);
+
+    /// <summary>
+    /// Property for <see cref="PlaceholderEnabled"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> PlaceholderEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
+        nameof(PlaceholderEnabled), true);
 
     /// <summary>
     /// Property for <see cref="CurrentPlaceholderEnabled"/>.
@@ -33,22 +56,49 @@ public class TextBox : global::Avalonia.Controls.TextBox
     /// Property for <see cref="ShowClearButton"/>.
     /// </summary>
     public static readonly StyledProperty<bool> ShowClearButtonProperty = AvaloniaProperty.Register<TextBox, bool>(
-        nameof(ShowClearButton), true);
+        nameof(ShowClearButton), false);
 
     /// <summary>
-    /// Property for <see cref="IconPlacement"/>.
+    /// Property for <see cref="IsTextSelectionEnabled"/>.
     /// </summary>
-    public static readonly StyledProperty<string> IconPlacementProperty = AvaloniaProperty.Register<TextBox, string>(
-        nameof(IconPlacement), "Left");
+    public static readonly StyledProperty<bool> IsTextSelectionEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
+        nameof(IsTextSelectionEnabled), false);
 
     /// <summary>
-    /// Property for <see cref="Icon"/>.
+    /// Property for <see cref="TemplateButtonCommand"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<TextBox, object>(
-        nameof(Icon), null);
+    public static readonly StyledProperty<ICommand?> TemplateButtonCommandProperty = AvaloniaProperty.Register<TextBox, ICommand?>(
+        nameof(TemplateButtonCommand));
 
     /// <summary>
-    /// Gets or sets the placeholder text.
+    /// Initializes a new instance of the <see cref="TextBox"/> class.
+    /// </summary>
+    public TextBox()
+    {
+        TemplateButtonCommand = ReactiveCommand.Create<string?>(OnTemplateButtonClick);
+        CurrentPlaceholderEnabled = PlaceholderEnabled;
+    }
+
+    /// <summary>
+    /// Gets or sets displayed icon.
+    /// </summary>
+    public object? Icon
+    {
+        get => GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets which side the icon should be placed on.
+    /// </summary>
+    public ElementPlacement IconPlacement
+    {
+        get => GetValue(IconPlacementProperty);
+        set => SetValue(IconPlacementProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets placeholder text.
     /// </summary>
     public string PlaceholderText
     {
@@ -57,16 +107,25 @@ public class TextBox : global::Avalonia.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the placeholder is enabled.
+    /// Gets or sets a value indicating whether to enable the placeholder text.
+    /// </summary>
+    public bool PlaceholderEnabled
+    {
+        get => GetValue(PlaceholderEnabledProperty);
+        set => SetValue(PlaceholderEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to display the placeholder text.
     /// </summary>
     public bool CurrentPlaceholderEnabled
     {
         get => GetValue(CurrentPlaceholderEnabledProperty);
-        set => SetValue(CurrentPlaceholderEnabledProperty, value);
+        protected set => SetValue(CurrentPlaceholderEnabledProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the clear button is enabled.
+    /// Gets or sets a value indicating whether to enable the clear button.
     /// </summary>
     public bool ClearButtonEnabled
     {
@@ -75,29 +134,147 @@ public class TextBox : global::Avalonia.Controls.TextBox
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether to show the clear button.
+    /// Gets or sets a value indicating whether to show the clear button when <see cref="TextBox"/> is focused.
     /// </summary>
     public bool ShowClearButton
     {
         get => GetValue(ShowClearButtonProperty);
-        set => SetValue(ShowClearButtonProperty, value);
+        protected set => SetValue(ShowClearButtonProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets the icon placement.
+    /// Gets or sets a value indicating whether text selection is enabled.
     /// </summary>
-    public string IconPlacement
+    public bool IsTextSelectionEnabled
     {
-        get => GetValue(IconPlacementProperty);
-        set => SetValue(IconPlacementProperty, value);
+        get => GetValue(IsTextSelectionEnabledProperty);
+        set => SetValue(IsTextSelectionEnabledProperty, value);
     }
 
     /// <summary>
-    /// Gets or sets the icon.
+    /// Gets the command triggered when clicking the button.
     /// </summary>
-    public object? Icon
+    public ICommand? TemplateButtonCommand
     {
-        get => GetValue(IconProperty);
-        set => SetValue(IconProperty, value);
+        get => GetValue(TemplateButtonCommandProperty);
+        private set => SetValue(TemplateButtonCommandProperty, value);
     }
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        if (change is null)
+        {
+            return;
+        }
+
+        if (change.Property == TextProperty)
+        {
+            OnTextChanged();
+        }
+        else if (change.Property == PlaceholderEnabledProperty)
+        {
+            OnPlaceholderEnabledChanged();
+        }
+    }
+
+    /// <summary>
+    /// Called when text changes.
+    /// </summary>
+    protected virtual void OnTextChanged()
+    {
+        SetPlaceholderTextVisibility();
+        RevealClearButton();
+    }
+
+    /// <summary>
+    /// Sets the placeholder text visibility.
+    /// </summary>
+    protected void SetPlaceholderTextVisibility()
+    {
+        var text = Text ?? string.Empty;
+
+        if (PlaceholderEnabled)
+        {
+            if (CurrentPlaceholderEnabled && text.Length > 0)
+            {
+                SetValue(CurrentPlaceholderEnabledProperty, false);
+            }
+
+            if (!CurrentPlaceholderEnabled && text.Length < 1)
+            {
+                SetValue(CurrentPlaceholderEnabledProperty, true);
+            }
+        }
+        else if (CurrentPlaceholderEnabled)
+        {
+            SetValue(CurrentPlaceholderEnabledProperty, false);
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnGotFocus(GotFocusEventArgs e)
+    {
+        base.OnGotFocus(e);
+
+        CaretIndex = (Text ?? string.Empty).Length;
+        RevealClearButton();
+    }
+
+    /// <inheritdoc />
+    protected override void OnLostFocus(RoutedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        HideClearButton();
+    }
+
+    /// <summary>
+    /// Reveals the clear button by <see cref="ShowClearButton"/> property.
+    /// </summary>
+    protected void RevealClearButton()
+    {
+        if (ClearButtonEnabled && IsFocused)
+        {
+            SetValue(ShowClearButtonProperty, (Text ?? string.Empty).Length > 0);
+        }
+    }
+
+    /// <summary>
+    /// Hides the clear button by <see cref="ShowClearButton"/> property.
+    /// </summary>
+    protected void HideClearButton()
+    {
+        if (ClearButtonEnabled && !IsFocused && ShowClearButton)
+        {
+            SetValue(ShowClearButtonProperty, false);
+        }
+    }
+
+    /// <summary>
+    /// Triggered when the user clicks the clear text button.
+    /// </summary>
+    protected virtual void OnClearButtonClick()
+    {
+        if ((Text ?? string.Empty).Length > 0)
+        {
+            Text = string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Triggered by clicking a button in the control template.
+    /// </summary>
+    /// <param name="parameter">The parameter.</param>
+    protected virtual void OnTemplateButtonClick(string? parameter)
+    {
+        Debug.WriteLine($"INFO: {typeof(TextBox)} button clicked", "CrissCross.Avalonia.UI.TextBox");
+        OnClearButtonClick();
+    }
+
+    /// <summary>
+    /// Called when placeholder enabled property changes.
+    /// </summary>
+    protected virtual void OnPlaceholderEnabledChanged() => SetPlaceholderTextVisibility();
 }

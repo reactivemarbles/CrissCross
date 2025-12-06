@@ -168,7 +168,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// Button. Override this property to change the style for a control class, returning the
     /// type that you wish the elements to be styled as.
     /// </remarks>
-    protected override Type StyleKeyOverride => typeof(TransitioningContentControl);
+    protected override Type StyleKeyOverride => typeof(ReactiveTransitioningContentControl);
 
     /// <summary>
     /// Clears the history.

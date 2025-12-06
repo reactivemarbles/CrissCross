@@ -10,13 +10,21 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// Inherited from the <see cref="Avalonia.Controls.Button"/>, adding icon support.
 /// </summary>
+/// <example>
+/// <code lang="xml">
+/// &lt;ui:Button
+///     Appearance="Primary"
+///     Content="Avalonia button with icon"
+///     Icon="{ui:SymbolIcon Symbol=Fluent24}" /&gt;
+/// </code>
+/// </example>
 public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIconControl
 {
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<Button, object>(
-        nameof(Icon));
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<Button, object?>(
+        nameof(Icon), coerce: IconElement.Coerce);
 
     /// <summary>
     /// Property for <see cref="Appearance"/>.
@@ -27,31 +35,37 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     /// <summary>
     /// Property for <see cref="MouseOverBackground"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> MouseOverBackgroundProperty = AvaloniaProperty.Register<Button, IBrush>(
+    public static readonly StyledProperty<IBrush?> MouseOverBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(MouseOverBackground));
 
     /// <summary>
     /// Property for <see cref="MouseOverBorderBrush"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> MouseOverBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush>(
+    public static readonly StyledProperty<IBrush?> MouseOverBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(MouseOverBorderBrush));
+
+    /// <summary>
+    /// Property for <see cref="MouseOverForeground"/>.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> MouseOverForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
+        nameof(MouseOverForeground));
 
     /// <summary>
     /// Property for <see cref="PressedForeground"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> PressedForegroundProperty = AvaloniaProperty.Register<Button, IBrush>(
+    public static readonly StyledProperty<IBrush?> PressedForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedForeground));
 
     /// <summary>
     /// Property for <see cref="PressedBackground"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> PressedBackgroundProperty = AvaloniaProperty.Register<Button, IBrush>(
+    public static readonly StyledProperty<IBrush?> PressedBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedBackground));
 
     /// <summary>
     /// Property for <see cref="PressedBorderBrush"/>.
     /// </summary>
-    public static readonly StyledProperty<IBrush> PressedBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush>(
+    public static readonly StyledProperty<IBrush?> PressedBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedBorderBrush));
 
     /// <summary>
@@ -61,7 +75,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
         nameof(CornerRadius));
 
     /// <summary>
-    /// Gets or sets displayed icon.
+    /// Gets or sets displayed <see cref="IconElement"/>.
     /// </summary>
     public object? Icon
     {
@@ -79,7 +93,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     /// <summary>
     /// Gets or sets background brush when the user interacts with an element with a pointing device.
     /// </summary>
-    public IBrush MouseOverBackground
+    public IBrush? MouseOverBackground
     {
         get => GetValue(MouseOverBackgroundProperty);
         set => SetValue(MouseOverBackgroundProperty, value);
@@ -88,16 +102,25 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     /// <summary>
     /// Gets or sets border brush when the user interacts with an element with a pointing device.
     /// </summary>
-    public IBrush MouseOverBorderBrush
+    public IBrush? MouseOverBorderBrush
     {
         get => GetValue(MouseOverBorderBrushProperty);
         set => SetValue(MouseOverBorderBrushProperty, value);
     }
 
     /// <summary>
+    /// Gets or sets foreground brush when the user interacts with an element with a pointing device.
+    /// </summary>
+    public IBrush? MouseOverForeground
+    {
+        get => GetValue(MouseOverForegroundProperty);
+        set => SetValue(MouseOverForegroundProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets foreground when pressed.
     /// </summary>
-    public IBrush PressedForeground
+    public IBrush? PressedForeground
     {
         get => GetValue(PressedForegroundProperty);
         set => SetValue(PressedForegroundProperty, value);
@@ -106,7 +129,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     /// <summary>
     /// Gets or sets background brush when the user clicks the button.
     /// </summary>
-    public IBrush PressedBackground
+    public IBrush? PressedBackground
     {
         get => GetValue(PressedBackgroundProperty);
         set => SetValue(PressedBackgroundProperty, value);
@@ -115,7 +138,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     /// <summary>
     /// Gets or sets border brush when the user clicks the button.
     /// </summary>
-    public IBrush PressedBorderBrush
+    public IBrush? PressedBorderBrush
     {
         get => GetValue(PressedBorderBrushProperty);
         set => SetValue(PressedBorderBrushProperty, value);

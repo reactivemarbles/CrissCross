@@ -17,4 +17,8 @@
     <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AvaloniaResource Include="Themes\**\*.axaml" />
+  </ItemGroup>
+
 </Project>
