@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.CheckBoxPageView"
+             x:DataType="vm:CheckBoxPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="CheckBox"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="CheckBox controls allow users to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked)."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- Standard CheckBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Standard CheckBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Basic checkbox with different states." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8">
+                        <controls:CheckBox Content="Unchecked" />
+                        <controls:CheckBox Content="Checked" IsChecked="True" />
+                        <controls:CheckBox Content="Disabled Unchecked" IsEnabled="False" />
+                        <controls:CheckBox Content="Disabled Checked" IsEnabled="False" IsChecked="True" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Three-State CheckBox -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Three-State CheckBox" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="CheckBox with indeterminate state for partial selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8">
+                        <controls:CheckBox Content="Unchecked" IsThreeState="True" />
+                        <controls:CheckBox Content="Checked" IsThreeState="True" IsChecked="True" />
+                        <controls:CheckBox Content="Indeterminate" IsThreeState="True" IsChecked="{x:Null}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- CheckBox with Long Content -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="CheckBox with Long Content" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="CheckBox can contain longer text content that wraps." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8" MaxWidth="400">
+                        <controls:CheckBox Content="I accept the terms and conditions of use for this application and agree to the privacy policy." />
+                        <controls:CheckBox Content="Subscribe to newsletter and promotional emails" IsChecked="True" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

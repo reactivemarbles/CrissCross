@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.RadioButtonPageView"
+             x:DataType="vm:RadioButtonPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="RadioButton"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="RadioButton controls allow users to select one option from a set of mutually exclusive choices. When one radio button in a group is selected, all others become deselected."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- Standard RadioButton Group -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Standard RadioButton Group" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Select one option from the group." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8">
+                        <controls:RadioButton Content="Option 1" GroupName="Group1" IsChecked="True" />
+                        <controls:RadioButton Content="Option 2" GroupName="Group1" />
+                        <controls:RadioButton Content="Option 3" GroupName="Group1" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Disabled RadioButtons -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Disabled RadioButtons" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="RadioButtons can be disabled." Opacity="0.7" Margin="0,0,0,8" />
+                    <StackPanel Spacing="8">
+                        <controls:RadioButton Content="Enabled" GroupName="Group2" IsChecked="True" />
+                        <controls:RadioButton Content="Disabled Unchecked" GroupName="Group2" IsEnabled="False" />
+                        <controls:RadioButton Content="Disabled Checked" GroupName="Group3" IsEnabled="False" IsChecked="True" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Multiple Groups -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Multiple RadioButton Groups" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Different groups allow independent selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto">
+                        <TextBlock Text="Group A" FontWeight="SemiBold" Margin="0,0,0,8" />
+                        <TextBlock Grid.Column="1" Text="Group B" FontWeight="SemiBold" Margin="0,0,0,8" />
+                        
+                        <controls:RadioButton Grid.Row="1" Content="Choice A1" GroupName="GroupA" IsChecked="True" />
+                        <controls:RadioButton Grid.Row="1" Grid.Column="1" Content="Choice B1" GroupName="GroupB" />
+                        
+                        <controls:RadioButton Grid.Row="2" Content="Choice A2" GroupName="GroupA" />
+                        <controls:RadioButton Grid.Row="2" Grid.Column="1" Content="Choice B2" GroupName="GroupB" IsChecked="True" />
+                        
+                        <controls:RadioButton Grid.Row="3" Content="Choice A3" GroupName="GroupA" />
+                        <controls:RadioButton Grid.Row="3" Grid.Column="1" Content="Choice B3" GroupName="GroupB" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

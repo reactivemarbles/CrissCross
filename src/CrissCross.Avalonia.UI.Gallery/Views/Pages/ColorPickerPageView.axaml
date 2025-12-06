@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.ColorPickerPageView"
+             x:DataType="vm:ColorPickerPageViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="16">
+            <TextBlock Text="Color Picker"
+                       FontSize="32"
+                       FontWeight="Bold" />
+
+            <TextBlock Text="ColorPicker controls allow users to select colors using various color models and representations."
+                       TextWrapping="Wrap"
+                       Opacity="0.7" />
+
+            <!-- Standard ColorPicker -->
+            <Border Background="#252526" CornerRadius="8" Padding="20" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Standard ColorPicker" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Full color picker with spectrum and sliders." Opacity="0.7" Margin="0,0,0,8" />
+                    <controls:ColorPicker HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+
+            <!-- ColorSelector -->
+            <Border Background="#252526" CornerRadius="8" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="ColorSelector" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Text="Compact color selector for quick color selection." Opacity="0.7" Margin="0,0,0,8" />
+                    <controls:ColorSelector HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

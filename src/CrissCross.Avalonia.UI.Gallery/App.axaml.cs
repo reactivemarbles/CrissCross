@@ -28,6 +28,12 @@ public partial class App : Application
         AppLocator.CurrentMutable.RegisterConstant<ButtonsPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<InputPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<ProgressPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<CheckBoxPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<RadioButtonPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<ComboBoxPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<SliderPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<DatePickerPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<ColorPickerPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
 
         // Register Views for ViewModels - these registrations are used by the default ReactiveUI ViewLocator
@@ -36,6 +42,12 @@ public partial class App : Application
         AppLocator.CurrentMutable.Register<IViewFor<ButtonsPageViewModel>>(() => new ButtonsPageView());
         AppLocator.CurrentMutable.Register<IViewFor<InputPageViewModel>>(() => new InputPageView());
         AppLocator.CurrentMutable.Register<IViewFor<ProgressPageViewModel>>(() => new ProgressPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<CheckBoxPageViewModel>>(() => new CheckBoxPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<RadioButtonPageViewModel>>(() => new RadioButtonPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ComboBoxPageViewModel>>(() => new ComboBoxPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<SliderPageViewModel>>(() => new SliderPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<DatePickerPageViewModel>>(() => new DatePickerPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ColorPickerPageViewModel>>(() => new ColorPickerPageView());
 
         // NOTE: SetupComplete is called in OnFrameworkInitializationCompleted() to ensure
         // the MainWindow and navigation host are created before BuildComplete callbacks fire
