@@ -595,10 +595,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
     {
         var position = e.GetPosition(MainChartGrid);
         var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
-        var dpiScaleX = dpiInfo.DpiScaleX;
-        var dpiScaleY = dpiInfo.DpiScaleY;
-        var adjustedX = position.X * dpiScaleX;
-        var adjustedY = position.Y * dpiScaleY;
+        var adjustedX = position.X * dpiInfo.DpiScaleX;
+        var adjustedY = position.Y * dpiInfo.DpiScaleY;
         var rect = ViewModel!.WpfPlot1vm!.Plot.GetCoordinateRect((float)adjustedX, (float)adjustedY, radius: 5, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
         if (_plottableBeingDragged is null)
         {

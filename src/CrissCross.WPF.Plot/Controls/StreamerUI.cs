@@ -76,6 +76,15 @@ public partial class StreamerUI : RxObject, IPlottableUI
         Plot = plot;
 
         CreateStreamer(color);
+
+        // Set name from first emission of the observable
+        observable
+            .Take(1)
+            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => ChartSettings.ItemName = data.Name!)
+            .DisposeWith(Disposables);
+
         UpdateStreamerFixedPoints(observable);
         ChartSettings.CreateCursorValues(Plot, color);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
@@ -142,11 +151,7 @@ public partial class StreamerUI : RxObject, IPlottableUI
                 }
             }
 
-            // UPDATE NAME - only if not set by user
-            if (string.IsNullOrEmpty(ChartSettings.ItemName) || ChartSettings.ItemName == "---")
-            {
-                ChartSettings.ItemName = d.Name;
-            }
+            // Name is set once in constructor - no updates here
         }).DisposeWith(Disposables);
 
     /// <summary>

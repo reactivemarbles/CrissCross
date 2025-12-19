@@ -50,6 +50,15 @@ public partial class ScatterUI : RxObject, IPlottableUI
         Plot = plot;
 
         CreateScatter(color);
+
+        // Set name from first emission of the observable
+        observable
+            .Take(1)
+            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => ChartSettings.ItemName = data.Name!)
+            .DisposeWith(Disposables);
+
         UpdateScatter(observable);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
@@ -70,6 +79,13 @@ public partial class ScatterUI : RxObject, IPlottableUI
 
         Plot = plot;
         ChartSettings.DisplayedValue = 0;
+
+        observable
+            .Take(1)
+            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => ChartSettings.ItemName = data.Name!)
+            .DisposeWith(Disposables);
 
         CreateScatter(color);
         InsertData(data.X, data.Y);
@@ -151,12 +167,6 @@ public partial class ScatterUI : RxObject, IPlottableUI
                 if (data.X.Count == data.Y.Count && data.Name != null)
                 {
                     InsertData(data.X, data.Y);
-
-                    // UPDATE NAME - only if not set by user
-                    if (string.IsNullOrEmpty(ChartSettings.ItemName) || ChartSettings.ItemName == "---")
-                    {
-                        ChartSettings.ItemName = data.Name;
-                    }
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
