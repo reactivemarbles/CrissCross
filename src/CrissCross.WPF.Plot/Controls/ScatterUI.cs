@@ -151,7 +151,12 @@ public partial class ScatterUI : RxObject, IPlottableUI
                 if (data.X.Count == data.Y.Count && data.Name != null)
                 {
                     InsertData(data.X, data.Y);
-                    ChartSettings.ItemName = data.Name;
+
+                    // UPDATE NAME - only if not set by user
+                    if (string.IsNullOrEmpty(ChartSettings.ItemName) || ChartSettings.ItemName == "---")
+                    {
+                        ChartSettings.ItemName = data.Name;
+                    }
 
                     // UPDATE X AXIS
                     if (ManualScale || AutoScale)
@@ -166,9 +171,6 @@ public partial class ScatterUI : RxObject, IPlottableUI
                 {
                     Plot.Refresh();
                 }
-
-                // UPDATE NAME
-                ChartSettings.ItemName = Name;
             }).DisposeWith(Disposables);
 
     /// <summary>

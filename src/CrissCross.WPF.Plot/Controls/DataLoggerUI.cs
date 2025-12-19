@@ -146,8 +146,11 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                 }
             }
 
-            // UPDATE NAME
-            ChartSettings.ItemName = d.data.Name;
+            // UPDATE NAME - only if not set by user
+            if (string.IsNullOrEmpty(ChartSettings.ItemName) || ChartSettings.ItemName == "---")
+            {
+                ChartSettings.ItemName = d.data.Name;
+            }
         }).DisposeWith(Disposables);
 
     /// <summary>

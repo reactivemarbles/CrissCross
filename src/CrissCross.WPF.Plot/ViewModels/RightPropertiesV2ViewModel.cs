@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using CP.Reactive;
 using ReactiveUI;
@@ -23,6 +24,10 @@ public partial class RightPropertiesV2ViewModel : RxObject
     private double _lineWidth;
     [Reactive]
     private string? _lineColor;
+    [Reactive]
+    private string? _itemName;
+    [Reactive]
+    private string? _itemVisibility;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RightPropertiesV2ViewModel"/> class.
@@ -44,6 +49,33 @@ public partial class RightPropertiesV2ViewModel : RxObject
             ];
 
         Visibilities = ["Visible", "Invisible"];
+
+        SaveConfiguration = ReactiveCommand.Create(() =>
+        {
+            if (SelectedSetting != null)
+            {
+                // Apply all pending changes to the selected setting
+                if (!string.IsNullOrEmpty(ItemName))
+                {
+                    SelectedSetting.ItemName = ItemName;
+                }
+
+                if (LineWidth > 0)
+                {
+                    SelectedSetting.LineWidth = LineWidth;
+                }
+
+                if (!string.IsNullOrEmpty(LineColor))
+                {
+                    SelectedSetting.Color = LineColor;
+                }
+
+                if (!string.IsNullOrEmpty(ItemVisibility))
+                {
+                    SelectedSetting.Visibility = ItemVisibility;
+                }
+            }
+        });
     }
 
     /// <summary>

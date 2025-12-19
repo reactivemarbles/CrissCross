@@ -77,7 +77,7 @@ public class ProgressRing : System.Windows.Controls.Control
     /// <summary>
     /// Property for <see cref="CoverRingStroke"/>.
     /// </summary>
-    public static readonly DependencyProperty CoverRingStrokeProperty = DependencyProperty.RegisterAttached(
+    public static readonly DependencyProperty CoverRingStrokeProperty = DependencyProperty.Register(
         nameof(CoverRingStroke),
         typeof(Brush),
         typeof(ProgressRing),
@@ -140,21 +140,21 @@ public class ProgressRing : System.Windows.Controls.Control
     }
 
     /// <summary>
-    /// Gets background ring fill.
+    /// Gets or sets background ring fill.
     /// </summary>
     public Brush CoverRingStroke
     {
         get => (Brush)GetValue(CoverRingStrokeProperty);
-        internal set => SetValue(CoverRingStrokeProperty, value);
+        set => SetValue(CoverRingStrokeProperty, value);
     }
 
     /// <summary>
-    /// Gets background ring visibility.
+    /// Gets or sets background ring visibility.
     /// </summary>
     public Visibility CoverRingVisibility
     {
         get => (Visibility)GetValue(CoverRingVisibilityProperty);
-        internal set => SetValue(CoverRingVisibilityProperty, value);
+        set => SetValue(CoverRingVisibilityProperty, value);
     }
 
     /// <summary>

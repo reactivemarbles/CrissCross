@@ -206,8 +206,11 @@ public partial class SignalUI : RxObject, IPlottableUI
                 }
             }
 
-            // UPDATE NAME
-            ChartSettings.ItemName = d.Name;
+            // UPDATE NAME - only if not set by user
+            if (string.IsNullOrEmpty(ChartSettings.ItemName) || ChartSettings.ItemName == "---")
+            {
+                ChartSettings.ItemName = d.Name;
+            }
         }).DisposeWith(Disposables);
 
     /// <summary>
