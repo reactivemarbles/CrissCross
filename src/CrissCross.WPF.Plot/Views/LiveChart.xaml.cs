@@ -76,12 +76,27 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings).DisposeWith(d);
 
         this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.SelectedSetting!.ItemName, v => v.RightProperties.textbox1.Text).DisposeWith(d);
+
+        // Populate form when selection changes (one-way to avoid conflicts)
+        this.WhenAnyValue(x => x.ViewModel!.SelectedSetting)
+            .WhereNotNull()
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(settings =>
+            {
+                // Populate form fields for editing
+                RightProperties.ViewModel!.ItemName = settings.ItemName;
+                RightProperties.ViewModel!.LineWidth = settings.LineWidth;
+                RightProperties.ViewModel!.LineColor = settings.Color;
+                RightProperties.ViewModel!.ItemVisibility = settings.Visibility;
+                RightProperties.ViewModel!.SelectedSetting = settings;
+            }).DisposeWith(d);
+
         this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text).DisposeWith(d);
         this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Visibility, x => x == " " ? Visibility.Collapsed : Visibility.Visible).DisposeWith(d);
         this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.RightLegend.Visibility, x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
         this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.TopLegend.Visibility, x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
 
+        // Live bindings for immediate visual feedback (NOT for ItemName)
         this.Bind(ViewModel, vm => vm.SelectedSetting!.LineWidth, v => v.RightProperties.LineWidth.Value).DisposeWith(d);
         this.Bind(ViewModel, vm => vm.SelectedSetting!.Color, v => v.RightProperties.colorsComboBox.SelectedItem).DisposeWith(d);
         this.Bind(ViewModel, vm => vm.SelectedSetting!.Visibility, v => v.RightProperties.visibilityComboBox.SelectedItem).DisposeWith(d);

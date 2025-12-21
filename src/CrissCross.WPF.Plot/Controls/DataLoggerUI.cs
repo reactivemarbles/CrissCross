@@ -50,6 +50,15 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
 
         Plot = plot;
         CreateDataLogger(color);
+
+        // Set name from first emission of the observable
+        observable
+            .Take(1)
+            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => ChartSettings.ItemName = data.Name!)
+            .DisposeWith(Disposables);
+
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
@@ -70,6 +79,15 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
 
         Plot = plot;
         CreateDataLogger(color);
+
+        // Set name from first emission of the observable
+        observable
+            .Take(1)
+            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => ChartSettings.ItemName = data.Name!)
+            .DisposeWith(Disposables);
+
         UpdateDataLogger(observable);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
@@ -146,8 +164,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                 }
             }
 
-            // UPDATE NAME
-            ChartSettings.ItemName = d.data.Name;
+            // Name is set once in constructor - no updates here
         }).DisposeWith(Disposables);
 
     /// <summary>
