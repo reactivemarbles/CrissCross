@@ -96,10 +96,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.RightLegend.Visibility, x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
         this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.TopLegend.Visibility, x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
 
-        // Live bindings for immediate visual feedback (NOT for ItemName)
-        this.Bind(ViewModel, vm => vm.SelectedSetting!.LineWidth, v => v.RightProperties.LineWidth.Value).DisposeWith(d);
-        this.Bind(ViewModel, vm => vm.SelectedSetting!.Color, v => v.RightProperties.colorsComboBox.SelectedItem).DisposeWith(d);
-        this.Bind(ViewModel, vm => vm.SelectedSetting!.Visibility, v => v.RightProperties.visibilityComboBox.SelectedItem).DisposeWith(d);
+        // Bind other scalar settings directly
         this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.UseFixedNumberOfPoints).DisposeWith(d);
         this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted).DisposeWith(d);
     }

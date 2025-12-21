@@ -60,10 +60,7 @@ public partial class RightPropertiesV2ViewModel : RxObject
                     SelectedSetting.ItemName = ItemName;
                 }
 
-                if (LineWidth > 0)
-                {
-                    SelectedSetting.LineWidth = LineWidth;
-                }
+                SelectedSetting.LineWidth = LineWidth;
 
                 if (!string.IsNullOrEmpty(LineColor))
                 {
