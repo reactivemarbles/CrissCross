@@ -2,6 +2,9 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
+using System.Collections.Generic;
+
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
@@ -10,20 +13,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class RichTextDocument
 {
     private readonly List<TextSegment> _segments = [];
-    private string _plainText = string.Empty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RichTextDocument"/> class.
-    /// </summary>
-    public RichTextDocument()
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RichTextDocument"/> class with initial text.
-    /// </summary>
-    /// <param name="text">The initial plain text.</param>
-    public RichTextDocument(string text) => SetText(text);
+    private string _rawText = string.Empty;
 
     /// <summary>
     /// Gets the segments in the document.
@@ -31,364 +21,128 @@ public class RichTextDocument
     public IReadOnlyList<TextSegment> Segments => _segments;
 
     /// <summary>
-    /// Gets the plain text content of the document.
+    /// Gets the raw HTML content of the document.
     /// </summary>
-    public string PlainText => _plainText;
+    public string PlainText => _rawText;
 
     /// <summary>
-    /// Gets the total length of the document.
+    /// Gets the total length of the underlying HTML string.
     /// </summary>
-    public int Length => _plainText.Length;
+    public int Length => _rawText.Length;
 
     /// <summary>
-    /// Sets the document text, clearing all formatting.
+    /// Sets the document text, replacing existing content.
     /// </summary>
-    /// <param name="text">The plain text to set.</param>
+    /// <param name="text">The HTML or markdown text to set.</param>
     public void SetText(string? text)
     {
-        _plainText = text ?? string.Empty;
-        _segments.Clear();
-
-        if (!string.IsNullOrEmpty(_plainText))
-        {
-            _segments.Add(new TextSegment(_plainText, 0));
-        }
+        _rawText = text ?? string.Empty;
+        RebuildSegments();
     }
 
     /// <summary>
-    /// Inserts text at the specified position.
+    /// Appends text to the end of the document.
     /// </summary>
-    /// <param name="index">The position to insert at.</param>
-    /// <param name="text">The text to insert.</param>
-    public void Insert(int index, string text)
+    /// <param name="text">The HTML fragment to append.</param>
+    public void AppendText(string text)
     {
         if (string.IsNullOrEmpty(text))
         {
             return;
         }
 
-        index = Math.Clamp(index, 0, _plainText.Length);
-
-        // Update plain text
-        _plainText = _plainText.Insert(index, text);
-
-        // Find and split the segment at the insertion point
-        var segmentIndex = FindSegmentIndex(index);
-
-        if (segmentIndex < 0 || _segments.Count == 0)
-        {
-            // No segments or insertion at the very end
-            if (_segments.Count == 0)
-            {
-                _segments.Add(new TextSegment(text, 0));
-            }
-            else
-            {
-                var lastSegment = _segments[^1];
-                lastSegment.Text += text;
-            }
-        }
-        else
-        {
-            var segment = _segments[segmentIndex];
-            var localIndex = index - segment.StartIndex;
-
-            // Insert into the existing segment, inheriting its formatting
-            segment.Text = segment.Text.Insert(localIndex, text);
-
-            // Update start indices for subsequent segments
-            for (var i = segmentIndex + 1; i < _segments.Count; i++)
-            {
-                _segments[i].StartIndex += text.Length;
-            }
-        }
+        _rawText += text;
+        RebuildSegments();
     }
 
     /// <summary>
-    /// Deletes text from the specified range.
+    /// Inserts text at the specified offset.
     /// </summary>
-    /// <param name="startIndex">The start index.</param>
-    /// <param name="length">The length to delete.</param>
-    public void Delete(int startIndex, int length)
+    /// <param name="offset">The insertion offset.</param>
+    /// <param name="text">The HTML fragment to insert.</param>
+    public void Insert(int offset, string text)
     {
-        if (length <= 0 || startIndex < 0 || startIndex >= _plainText.Length)
+        if (string.IsNullOrEmpty(text))
         {
             return;
         }
 
-        length = Math.Min(length, _plainText.Length - startIndex);
-
-        // Update plain text
-        _plainText = _plainText.Remove(startIndex, length);
-
-        // Update segments
-        var endIndex = startIndex + length;
-        var segmentsToRemove = new List<int>();
-
-        for (var i = 0; i < _segments.Count; i++)
-        {
-            var segment = _segments[i];
-
-            if (segment.EndIndex <= startIndex)
-            {
-                // Segment is before the deletion range, no change
-                continue;
-            }
-
-            if (segment.StartIndex >= endIndex)
-            {
-                // Segment is after the deletion range, just update index
-                segment.StartIndex -= length;
-            }
-            else if (segment.StartIndex >= startIndex && segment.EndIndex <= endIndex)
-            {
-                // Segment is completely within the deletion range
-                segmentsToRemove.Add(i);
-            }
-            else if (segment.StartIndex < startIndex && segment.EndIndex > endIndex)
-            {
-                // Deletion is completely within this segment
-                var localStart = startIndex - segment.StartIndex;
-                segment.Text = segment.Text.Remove(localStart, length);
-            }
-            else if (segment.StartIndex < startIndex)
-            {
-                // Segment overlaps the start of the deletion
-                var localStart = startIndex - segment.StartIndex;
-                segment.Text = segment.Text[..localStart];
-            }
-            else
-            {
-                // Segment overlaps the end of the deletion
-                var localEnd = endIndex - segment.StartIndex;
-                segment.Text = segment.Text[localEnd..];
-                segment.StartIndex = startIndex;
-            }
-        }
-
-        // Remove empty segments in reverse order
-        for (var i = segmentsToRemove.Count - 1; i >= 0; i--)
-        {
-            _segments.RemoveAt(segmentsToRemove[i]);
-        }
-
-        // Remove segments with empty text
-        _segments.RemoveAll(s => string.IsNullOrEmpty(s.Text));
-
-        // Recalculate start indices
-        RecalculateIndices();
+        var index = Math.Clamp(offset, 0, _rawText.Length);
+        _rawText = _rawText.Insert(index, text);
+        RebuildSegments();
     }
 
     /// <summary>
-    /// Applies formatting to a range of text.
+    /// Deletes text in the provided range.
     /// </summary>
-    /// <param name="startIndex">The start index.</param>
-    /// <param name="length">The length of the range.</param>
-    /// <param name="formatType">The type of formatting to apply.</param>
-    /// <param name="value">True to apply, false to remove the formatting.</param>
-    public void ApplyFormatting(int startIndex, int length, TextFormatType formatType, bool value)
+    /// <param name="offset">The start offset.</param>
+    /// <param name="length">The number of characters to delete.</param>
+    public void Delete(int offset, int length)
     {
-        if (length <= 0 || startIndex < 0 || startIndex >= _plainText.Length)
+        if (length <= 0 || offset < 0 || offset >= _rawText.Length)
         {
             return;
         }
 
-        length = Math.Min(length, _plainText.Length - startIndex);
-        var endIndex = startIndex + length;
-
-        // Split segments at the boundaries
-        SplitSegmentAt(startIndex);
-        SplitSegmentAt(endIndex);
-
-        // Apply formatting to affected segments
-        foreach (var segment in _segments)
-        {
-            if (segment.StartIndex >= startIndex && segment.EndIndex <= endIndex)
-            {
-                switch (formatType)
-                {
-                    case TextFormatType.Bold:
-                        segment.IsBold = value;
-                        break;
-                    case TextFormatType.Italic:
-                        segment.IsItalic = value;
-                        break;
-                    case TextFormatType.Underline:
-                        segment.IsUnderline = value;
-                        break;
-                    case TextFormatType.Strikethrough:
-                        segment.IsStrikethrough = value;
-                        break;
-                }
-            }
-        }
-
-        // Merge adjacent segments with the same formatting
-        MergeAdjacentSegments();
+        var boundedLength = Math.Min(length, _rawText.Length - offset);
+        _rawText = _rawText.Remove(offset, boundedLength);
+        RebuildSegments();
     }
 
     /// <summary>
-    /// Toggles formatting for a range of text.
+    /// Replaces a range with new text.
     /// </summary>
-    /// <param name="startIndex">The start index.</param>
-    /// <param name="length">The length of the range.</param>
-    /// <param name="formatType">The type of formatting to toggle.</param>
-    /// <returns>True if formatting was applied, false if removed.</returns>
-    public bool ToggleFormatting(int startIndex, int length, TextFormatType formatType)
+    /// <param name="offset">The start offset.</param>
+    /// <param name="length">The length of the range to replace.</param>
+    /// <param name="text">The replacement HTML.</param>
+    public void Replace(int offset, int length, string? text)
     {
-        if (length <= 0 || startIndex < 0 || startIndex >= _plainText.Length)
+        Delete(offset, length);
+        if (!string.IsNullOrEmpty(text))
+        {
+            Insert(offset, text);
+        }
+    }
+
+    /// <summary>
+    /// Toggles formatting for a range of text by wrapping the HTML selection with tags.
+    /// </summary>
+    /// <param name="start">The start offset.</param>
+    /// <param name="length">The length of the range.</param>
+    /// <param name="formatType">The formatting to toggle.</param>
+    /// <returns>True when formatting ends up applied for the whole range.</returns>
+    public bool ToggleFormatting(int start, int length, TextFormatType formatType)
+    {
+        var (content, applied) = HtmlFormattingHelper.Toggle(_rawText, start, length, formatType);
+        if (content is null)
         {
             return false;
         }
 
-        // Check if the entire range already has the formatting
-        var hasFormatting = HasFormatting(startIndex, length, formatType);
-
-        // Toggle - apply if not present, remove if present
-        ApplyFormatting(startIndex, length, formatType, !hasFormatting);
-
-        return !hasFormatting;
+        _rawText = content;
+        RebuildSegments();
+        return applied;
     }
 
     /// <summary>
-    /// Checks if a range has a specific formatting.
-    /// </summary>
-    /// <param name="startIndex">The start index.</param>
-    /// <param name="length">The length of the range.</param>
-    /// <param name="formatType">The type of formatting to check.</param>
-    /// <returns>True if the entire range has the formatting.</returns>
-    public bool HasFormatting(int startIndex, int length, TextFormatType formatType)
-    {
-        if (length <= 0 || startIndex < 0 || startIndex >= _plainText.Length)
-        {
-            return false;
-        }
-
-        length = Math.Min(length, _plainText.Length - startIndex);
-        var endIndex = startIndex + length;
-
-        foreach (var segment in _segments)
-        {
-            // Check if segment overlaps with the range
-            if (segment.StartIndex < endIndex && segment.EndIndex > startIndex)
-            {
-                var hasFormat = formatType switch
-                {
-                    TextFormatType.Bold => segment.IsBold,
-                    TextFormatType.Italic => segment.IsItalic,
-                    TextFormatType.Underline => segment.IsUnderline,
-                    TextFormatType.Strikethrough => segment.IsStrikethrough,
-                    _ => false
-                };
-
-                if (!hasFormat)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Gets the formatting at a specific index.
-    /// </summary>
-    /// <param name="index">The index to check.</param>
-    /// <returns>The text segment at that position, or null if not found.</returns>
-    public TextSegment? GetFormattingAt(int index)
-    {
-        var segmentIndex = FindSegmentIndex(index);
-        return segmentIndex >= 0 ? _segments[segmentIndex] : null;
-    }
-
-    /// <summary>
-    /// Clears all formatting, keeping the plain text.
+    /// Clears all formatting information, keeping the textual content.
     /// </summary>
     public void ClearFormatting()
     {
-        var text = _plainText;
-        SetText(text);
+        var plain = HtmlContentParser.ToPlainText(_rawText);
+        _rawText = HtmlClipboardUtilities.EncodePlainText(plain);
+        RebuildSegments();
     }
 
-    private int FindSegmentIndex(int charIndex)
+    private void RebuildSegments()
     {
-        for (var i = 0; i < _segments.Count; i++)
-        {
-            var segment = _segments[i];
-            if (charIndex >= segment.StartIndex && charIndex < segment.EndIndex)
-            {
-                return i;
-            }
-        }
-
-        // If at the very end, return last segment
-        if (charIndex == _plainText.Length && _segments.Count > 0)
-        {
-            return _segments.Count - 1;
-        }
-
-        return -1;
-    }
-
-    private void SplitSegmentAt(int index)
-    {
-        if (index <= 0 || index >= _plainText.Length)
+        _segments.Clear();
+        var parsed = HtmlContentParser.Parse(_rawText);
+        if (parsed.Count == 0)
         {
             return;
         }
 
-        var segmentIndex = FindSegmentIndex(index);
-        if (segmentIndex < 0)
-        {
-            return;
-        }
-
-        var segment = _segments[segmentIndex];
-
-        // Only split if the index is in the middle of the segment
-        if (index <= segment.StartIndex || index >= segment.EndIndex)
-        {
-            return;
-        }
-
-        var localIndex = index - segment.StartIndex;
-        var firstPart = segment.Text[..localIndex];
-        var secondPart = segment.Text[localIndex..];
-
-        // Update the existing segment
-        segment.Text = firstPart;
-
-        // Create a new segment for the second part
-        var newSegment = segment.Clone();
-        newSegment.Text = secondPart;
-        newSegment.StartIndex = index;
-
-        _segments.Insert(segmentIndex + 1, newSegment);
-    }
-
-    private void MergeAdjacentSegments()
-    {
-        for (var i = _segments.Count - 1; i > 0; i--)
-        {
-            var current = _segments[i];
-            var previous = _segments[i - 1];
-
-            if (previous.HasSameFormatting(current))
-            {
-                previous.Text += current.Text;
-                _segments.RemoveAt(i);
-            }
-        }
-    }
-
-    private void RecalculateIndices()
-    {
-        var index = 0;
-        foreach (var segment in _segments)
-        {
-            segment.StartIndex = index;
-            index += segment.Text.Length;
-        }
+        _segments.AddRange(parsed);
     }
 }
