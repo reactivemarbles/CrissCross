@@ -101,6 +101,7 @@ public class RichTextBox : TemplatedControl
     public static readonly RoutedEvent<FormattingEventArgs> FormattingAppliedEvent =
         RoutedEvent.Register<RichTextBox, FormattingEventArgs>(nameof(FormattingApplied), RoutingStrategies.Bubble);
 
+    private readonly FlowDocument _viewDocument;
     private global::Avalonia.Controls.TextBox? _editingTextBox;
     private FormattedTextPresenter? _formattedPresenter;
     private ContextMenu? _contextMenu;
@@ -112,6 +113,7 @@ public class RichTextBox : TemplatedControl
     /// </summary>
     public RichTextBox()
     {
+        _viewDocument = new FlowDocument(Document);
         CreateContextMenu();
         Focusable = true;
     }
@@ -592,7 +594,8 @@ public class RichTextBox : TemplatedControl
     {
         if (_formattedPresenter is not null)
         {
-            _formattedPresenter.Document = Document;
+            _viewDocument.Refresh();
+            _formattedPresenter.Document = _viewDocument;
             _formattedPresenter.UpdateInlines();
         }
     }

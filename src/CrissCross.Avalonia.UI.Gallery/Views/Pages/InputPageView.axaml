@@ -1,154 +1,231 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
-             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
-             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.InputPageView"
-             x:DataType="vm:InputPageViewModel">
+<UserControl
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.InputPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    x:DataType="vm:InputPageViewModel">
 
     <ScrollViewer>
         <controls:StackPanel Margin="24" Spacing="16">
-            <controls:TextBlock Text="Input Controls"
-                                FontSize="32"
-                                FontWeight="Bold" />
+            <controls:TextBlock
+                FontSize="32"
+                FontWeight="Bold"
+                Text="Input Controls" />
 
-            <controls:TextBlock Text="Input controls allow users to enter and edit data. CrissCross provides enhanced input controls with validation, formatting, and rich styling."
-                                TextWrapping="Wrap"
-                                Opacity="0.7" />
+            <controls:TextBlock
+                Opacity="0.7"
+                Text="Input controls allow users to enter and edit data. CrissCross provides enhanced input controls with validation, formatting, and rich styling."
+                TextWrapping="Wrap" />
 
-            <!-- TextBox -->
+            <!--  TextBox  -->
             <controls:Card Margin="0,16,0,0">
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="TextBox" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Text boxes allow users to enter text." Opacity="0.7" />
-                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="TextBox" />
+                    <controls:TextBlock Opacity="0.7" Text="Text boxes allow users to enter text." />
+                    <controls:StackPanel
+                        MaxWidth="400"
+                        HorizontalAlignment="Left"
+                        Spacing="12">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Standard TextBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Standard TextBox:" />
                             <controls:TextBox Watermark="Enter text here..." />
                         </controls:StackPanel>
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Disabled TextBox:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:TextBox Watermark="Disabled" IsEnabled="False" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Disabled TextBox:" />
+                            <controls:TextBox IsEnabled="False" Watermark="Disabled" />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- AutoSuggestBox -->
+            <!--  AutoSuggestBox  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="AutoSuggestBox" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="AutoSuggestBox provides suggestions as users type. Start typing a fruit name to see suggestions." Opacity="0.7" />
-                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="AutoSuggestBox" />
+                    <controls:TextBlock Opacity="0.7" Text="AutoSuggestBox provides suggestions as users type. Start typing a fruit name to see suggestions." />
+                    <controls:StackPanel
+                        MaxWidth="400"
+                        HorizontalAlignment="Left"
+                        Spacing="12">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Search for fruits:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:AutoSuggestBox 
-                                PlaceholderText="Type to search fruits..."
-                                ItemsSource="{Binding SampleSuggestions}"
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Search for fruits:" />
+                            <controls:AutoSuggestBox
                                 FilterMode="Contains"
-                                MinimumPrefixLength="1" />
+                                ItemsSource="{Binding SampleSuggestions}"
+                                MinimumPrefixLength="1"
+                                PlaceholderText="Type to search fruits..." />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- RichTextBox -->
+            <!--  RichTextBox  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="RichTextBox" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Rich text boxes provide multi-line text editing with visual formatting:" Opacity="0.7" />
-                    <controls:TextBlock Opacity="0.6" FontSize="12" Margin="16,0,0,0">
-                        <Run Text="• Select text and press "/><Run Text="Ctrl+B" FontWeight="Bold"/><Run Text=" for "/><Run Text="Bold" FontWeight="Bold"/>
-                        <LineBreak/>
-                        <Run Text="• Select text and press "/><Run Text="Ctrl+I" FontWeight="Bold"/><Run Text=" for "/><Run Text="Italic" FontStyle="Italic"/>
-                        <LineBreak/>
-                        <Run Text="• Select text and press "/><Run Text="Ctrl+U" FontWeight="Bold"/><Run Text=" for "/><Run Text="Underline" TextDecorations="Underline"/>
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="RichTextBox" />
+                    <controls:TextBlock Opacity="0.7" Text="Rich text boxes provide multi-line text editing with visual formatting:" />
+                    <controls:TextBlock
+                        Margin="16,0,0,0"
+                        FontSize="12"
+                        Opacity="0.6">
+                        <Run Text="â€¢ Select text and press " /><Run FontWeight="Bold" Text="Ctrl+B" /><Run Text=" for " /><Run FontWeight="Bold" Text="Bold" />
+                        <LineBreak />
+                        <Run Text="â€¢ Select text and press " /><Run FontWeight="Bold" Text="Ctrl+I" /><Run Text=" for " /><Run FontStyle="Italic" Text="Italic" />
+                        <LineBreak />
+                        <Run Text="â€¢ Select text and press " /><Run FontWeight="Bold" Text="Ctrl+U" /><Run Text=" for " /><Run Text="Underline" TextDecorations="Underline" />
                     </controls:TextBlock>
-                    
-                    <controls:StackPanel Spacing="16" MaxWidth="500" HorizontalAlignment="Left">
+
+                    <controls:StackPanel HorizontalAlignment="Left" Spacing="16">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="RichTextBox with Visual Formatting:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:RichTextBox 
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="RichTextBox with Visual Formatting:" />
+                            <controls:RichTextBox
                                 Name="FormattingRichTextBox"
-                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold."
-                                Height="120"
-                                Width="450"
                                 AcceptsReturn="True"
                                 AcceptsTab="True"
-                                IsFormattingEnabled="True" />
+                                IsFormattingEnabled="True"
+                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold." />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- PasswordBox -->
+            <!--  PasswordBox  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="PasswordBox" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Password boxes hide the entered characters for security." Opacity="0.7" />
-                    <controls:StackPanel Spacing="12" MaxWidth="400" HorizontalAlignment="Left">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="PasswordBox" />
+                    <controls:TextBlock Opacity="0.7" Text="Password boxes hide the entered characters for security." />
+                    <controls:StackPanel
+                        MaxWidth="400"
+                        HorizontalAlignment="Left"
+                        Spacing="12">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Standard PasswordBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Standard PasswordBox:" />
                             <controls:PasswordBox Watermark="Enter password..." />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- NumberBox -->
+            <!--  NumberBox  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="NumberBox" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Number boxes allow numeric input with increment/decrement buttons." Opacity="0.7" />
-                    <controls:StackPanel Spacing="12" MaxWidth="300" HorizontalAlignment="Left">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="NumberBox" />
+                    <controls:TextBlock Opacity="0.7" Text="Number boxes allow numeric input with increment/decrement buttons." />
+                    <controls:StackPanel
+                        MaxWidth="300"
+                        HorizontalAlignment="Left"
+                        Spacing="12">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Standard NumberBox:" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Standard NumberBox:" />
                             <controls:NumberBox Value="42" />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- NumberPad -->
+            <!--  NumberPad  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="NumberPad" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="NumberPad provides a touch-friendly numeric keypad." Opacity="0.7" />
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="NumberPad" />
+                    <controls:TextBlock Opacity="0.7" Text="NumberPad provides a touch-friendly numeric keypad." />
                     <controls:NumberPad HorizontalAlignment="Left" />
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- Slider -->
+            <!--  Slider  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="Slider" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Sliders allow selection of a value from a range." Opacity="0.7" />
-                    <controls:StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="Slider" />
+                    <controls:TextBlock Opacity="0.7" Text="Sliders allow selection of a value from a range." />
+                    <controls:StackPanel
+                        MaxWidth="400"
+                        HorizontalAlignment="Left"
+                        Spacing="16">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Basic Slider:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:Slider Value="50" Maximum="100" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Basic Slider:" />
+                            <controls:Slider Maximum="100" Value="50" />
                         </controls:StackPanel>
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Slider with Ticks:" FontSize="12" Margin="0,0,0,4" />
-                            <controls:Slider Value="75" Maximum="100" TickFrequency="25" TickPlacement="BottomRight" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Slider with Ticks:" />
+                            <controls:Slider
+                                Maximum="100"
+                                TickFrequency="25"
+                                TickPlacement="BottomRight"
+                                Value="75" />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- SquareSlider -->
+            <!--  SquareSlider  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="SquareSlider" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="SquareSlider allows 2D value selection in a square area." Opacity="0.7" />
-                    <controls:SquareSlider Width="200" Height="200" HorizontalAlignment="Left" />
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="SquareSlider" />
+                    <controls:TextBlock Opacity="0.7" Text="SquareSlider allows 2D value selection in a square area." />
+                    <controls:SquareSlider
+                        Width="200"
+                        Height="200"
+                        HorizontalAlignment="Left" />
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- RatingControl -->
+            <!--  RatingControl  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="RatingControl" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="RatingControl allows users to provide a star rating." Opacity="0.7" />
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="RatingControl" />
+                    <controls:TextBlock Opacity="0.7" Text="RatingControl allows users to provide a star rating." />
                     <controls:StackPanel Spacing="8">
                         <controls:RatingControl Value="3" />
                         <controls:RatingControl Value="4.5" />
@@ -156,23 +233,32 @@
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- ThumbRate -->
+            <!--  ThumbRate  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="ThumbRate" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="ThumbRate provides thumbs up/down feedback." Opacity="0.7" />
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="ThumbRate" />
+                    <controls:TextBlock Opacity="0.7" Text="ThumbRate provides thumbs up/down feedback." />
                     <controls:ThumbRate HorizontalAlignment="Left" />
                 </controls:StackPanel>
             </controls:Card>
 
-            <!-- ColorPicker -->
+            <!--  ColorPicker  -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">
-                    <controls:TextBlock Text="ColorPicker" FontSize="18" FontWeight="Bold" />
-                    <controls:TextBlock Text="Color pickers allow selection of colors using RGB sliders." Opacity="0.7" />
+                    <controls:TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Text="ColorPicker" />
+                    <controls:TextBlock Opacity="0.7" Text="Color pickers allow selection of colors using RGB sliders." />
                     <controls:StackPanel Spacing="16">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="ColorPicker (with Alpha):" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="ColorPicker (with Alpha):" />
                             <controls:ColorPicker HorizontalAlignment="Left" IsAlphaEnabled="True" />
                         </controls:StackPanel>
                     </controls:StackPanel>
