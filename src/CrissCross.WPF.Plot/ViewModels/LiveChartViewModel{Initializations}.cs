@@ -169,6 +169,9 @@ public partial class LiveChartViewModel : RxObject
             PlotLinesCollectionUI!.Add(newMyItem);
             i++;
         }
+
+        // UPDATE ChartObjects COLLECTION for external access
+        UpdateChartObjectsCollection();
     }
 
     /// <summary>
@@ -278,6 +281,9 @@ public partial class LiveChartViewModel : RxObject
         }
 
         PlotLinesCollectionUI!.Add(newMyItem);
+
+        // UPDATE ChartObjects COLLECTION for external access
+        UpdateChartObjectsCollection();
     }
 
     /// <summary>
