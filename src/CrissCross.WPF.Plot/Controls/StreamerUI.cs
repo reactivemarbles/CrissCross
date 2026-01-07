@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -115,7 +115,9 @@ public partial class StreamerUI : RxObject, IPlottableUI
         double[] y = [0];
         double[] x = [0];
 
-        PlotLine = Plot.Plot.Add.DataStreamer(NumberPointsPlotted);
+        PlotLine = Plot.Plot.Add.DataStreamer(_numberPointsPlottedSaved);
+        var darray = new double[_numberPointsPlottedSaved];
+        PlotLine.Data = new(darray);
         PlotLine.ViewScrollLeft();
         PlotLine.Period = 32000 / 2048;
         PlotLine.LineStyle.Width = 1f;
