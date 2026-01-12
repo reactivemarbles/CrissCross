@@ -5,8 +5,11 @@
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// LegendPosition.
+/// Specifies the position of a legend within a chart or graphical component.
 /// </summary>
+/// <remarks>Use this enumeration to control where the legend is displayed relative to the chart area. The
+/// available positions are Top, Right, and Left. The choice of position may affect the layout and readability of the
+/// chart, especially when space is limited.</remarks>
 public enum LegendPosition
 {
     /// <summary>

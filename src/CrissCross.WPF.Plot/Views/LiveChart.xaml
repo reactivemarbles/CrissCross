@@ -122,7 +122,7 @@
         </ScrollViewer>
 
         <!--  RIGHT LEGEND  , LEGEND BAR MENU  -->
-        <local:RightPropertiesV2View
+        <local:RightPropertiesView
             x:Name="RightProperties"
             Grid.Row="2"
             Grid.Column="3"

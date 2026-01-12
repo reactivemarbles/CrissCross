@@ -5,8 +5,13 @@
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// Interface IAppearence.
+/// Defines the contract for a user interface component that supports plotting data with configurable scaling, point
+/// selection, and chart settings.
 /// </summary>
+/// <remarks>Implementations of this interface allow users to control how data is visualized, including automatic
+/// or manual scaling, the number of points displayed, and chart configuration. The interface extends <see
+/// cref="IDisposable"/>, so resources associated with the plotting UI should be released when no longer
+/// needed.</remarks>
 public interface IPlottableUI : IDisposable
 {
     /// <summary>
