@@ -8,9 +8,14 @@ using CP.Reactive;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// LiveChartViewModel - Chart Objects Access.
-/// Provides external access to chart line settings.
+/// Represents the view model for a live chart, providing access to chart object settings and managing their lifecycle
+/// within the chart UI.
 /// </summary>
+/// <remarks>This class is intended for use with live chart controls on Windows 10 version 19041 or later. It
+/// exposes a collection of chart objects that reflect the current line settings and supports updating and
+/// reinitializing these objects in response to changes in the chart's data or configuration. Access to chart object
+/// collections and related members must occur on the UI thread, as thread safety is not guaranteed. For details on
+/// collection behavior and usage patterns, see the documentation for the ChartObjectsCollection property.</remarks>
 [SupportedOSPlatform("windows10.0.19041")]
 public partial class LiveChartViewModel
 {
@@ -82,7 +87,7 @@ public partial class LiveChartViewModel
         // Populate from current plot lines (snapshot to avoid concurrent modification)
         if (PlotLinesCollectionUI != null)
         {
-            foreach (var plotLine in PlotLinesCollectionUI.Items.ToList())
+            foreach (var plotLine in PlotLinesCollectionUI)
             {
                 if (plotLine?.ChartSettings != null)
                 {

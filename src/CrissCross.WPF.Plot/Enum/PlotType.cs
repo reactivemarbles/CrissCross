@@ -5,8 +5,11 @@
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// PlotType.
+/// Specifies the available plot types for visualizing data in the plotting library.
 /// </summary>
+/// <remarks>Use this enumeration to select the style of plot to render, such as signal, scatter, data logger,
+/// streamer, or signal XY. The choice of plot type determines how data points are displayed and which features are
+/// available for interaction and analysis.</remarks>
 public enum PlotType
 {
     /// <summary>

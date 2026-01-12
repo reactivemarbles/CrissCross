@@ -13,9 +13,13 @@ using ScottPlot.WPF;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// Nice for historical data (performance).
+/// Provides a user interface component for displaying and interacting with a crosshair overlay on a plot, supporting
+/// features such as autoscaling, manual scaling, and dynamic coordinate tracking.
 /// </summary>
-/// <seealso cref="Crosshair_UI" />
+/// <remarks>This class is intended for use with Windows platforms and integrates with WpfPlot to visualize
+/// crosshair markers and coordinate information. It supports both numeric and date/time axes, and can subscribe to
+/// coordinate updates for interactive crosshair movement. Thread safety is not guaranteed; ensure that interactions
+/// with UI elements occur on the appropriate thread.</remarks>
 [SupportedOSPlatform("windows")]
 public partial class Crosshair_UI : RxObject, IPlottableUI
 {
@@ -33,15 +37,24 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     private bool _useFixedNumberOfPoints;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Crosshair_UI" /> class.
+    /// Initializes a new instance of the <see cref="Crosshair_UI"/> class, configuring crosshair display and marker behavior for the.
+    /// specified plot with customizable appearance and scaling options.
     /// </summary>
-    /// <param name="plot">if set to <c>true</c> [paused].</param>
-    /// <param name="data">The data.</param>
-    /// <param name="color">The color.</param>
-    /// <param name="isXAxisDateTime">if set to <c>true</c> [is x axis date time].</param>
-    /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
-    /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    /// <param name="coordinatesObs">The coordinates obs.</param>
+    /// <remarks>If coordinatesObs is provided, the crosshair and marker label will update dynamically as new
+    /// coordinates are received. When isXAxisDateTime is <see langword="true"/>, X axis values are displayed as
+    /// formatted time strings. Autoscale and manualscale options control how the plot view responds to crosshair
+    /// changes.</remarks>
+    /// <param name="plot">The WpfPlot instance to which the crosshair and marker will be attached.</param>
+    /// <param name="data">A tuple containing the name and axis index for the data series associated with the crosshair.</param>
+    /// <param name="color">The color used for the crosshair and marker appearance.</param>
+    /// <param name="isXAxisDateTime">Indicates whether the X axis represents DateTime values. If <see langword="true"/>, X axis values will be
+    /// formatted as time strings.</param>
+    /// <param name="autoscale">Specifies whether the plot should automatically scale to fit the crosshair and marker. Set to <see
+    /// langword="true"/> to enable autoscaling.</param>
+    /// <param name="manualscale">Specifies whether manual scaling is enabled for the crosshair and marker. Set to <see langword="true"/> to allow
+    /// manual adjustment.</param>
+    /// <param name="coordinatesObs">An optional observable sequence of Coordinates used to update the crosshair position and marker label in
+    /// response to mouse movement. If null, the crosshair is initialized without dynamic updates.</param>
     public Crosshair_UI(
         WpfPlot plot,
         (string? Name, int Axis) data,
@@ -86,34 +99,30 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     }
 
     /// <summary>
-    /// Gets or sets the plot.
+    /// Gets or sets the WpfPlot control used for rendering interactive plots within the application.
     /// </summary>
-    /// <value>
-    /// The plot.
-    /// </value>
     public WpfPlot Plot { get; set; }
 
     /// <summary>
-    /// Gets or sets the mouse coordinates.
+    /// Gets or sets the subscription used to observe mouse coordinate changes.
     /// </summary>
-    /// <value>
-    /// The mouse coordinates.
-    /// </value>
+    /// <remarks>Dispose the returned object to stop receiving mouse coordinate updates and release resources
+    /// associated with the observation.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
     /// <summary>
-    /// Gets or sets the streamer.
+    /// Gets or sets the crosshair line to display on the plot, if any.
     /// </summary>
-    /// <value>
-    /// The streamer.
-    /// </value>
     public Crosshair? PlotLine { get; set; }
 
     /// <summary>
-    /// Creates the crosshair.
+    /// Adds a draggable crosshair to the plot at the specified position and color.
     /// </summary>
-    /// <param name="color">The color.</param>
-    /// <param name="position">The position.</param>
+    /// <remarks>The crosshair consists of horizontal and vertical lines that can be dragged by the user. Both
+    /// lines display a label with a customizable background color. If an invalid color name is provided, the crosshair
+    /// may not display as intended.</remarks>
+    /// <param name="color">The name of the color to use for the crosshair lines and labels. Must be a valid system color name.</param>
+    /// <param name="position">The horizontal position, in plot coordinates, where the crosshair is initially placed. Defaults to 0.0.</param>
     public void CreateCrosshair(string color, double position = 0.0)
     {
         PlotLine = Plot.Plot.Add.Crosshair(position, 0);

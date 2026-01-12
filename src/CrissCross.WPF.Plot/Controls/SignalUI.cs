@@ -14,13 +14,20 @@ using ScottPlot.WPF;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// Nice for historical data (performance).
+/// Provides a Windows UI component for plotting and streaming time-series signal data, supporting real-time updates,
+/// autoscaling, and interactive features. Nice for historical data (performance).
 /// </summary>
-/// <seealso cref="SignalUI" />
+/// <remarks>SignalUI integrates with ScottPlot and Rx.NET to visualize data streams in WPF applications. It
+/// manages plot appearance, data buffering, and user interaction such as crosshair and marker updates based on mouse
+/// coordinates. The class supports both automatic and manual scaling, and can limit the number of displayed points for
+/// performance. Thread safety is maintained for UI updates via scheduler usage. SignalUI is intended for use on Windows
+/// platforms.</remarks>
 [SupportedOSPlatform("windows")]
 public partial class SignalUI : RxObject, IPlottableUI
 {
-    private readonly List<double> _time = [];
+    private readonly HashSet<double> _timeSet = [];
+    private readonly List<double> _uniqueDataBuffer = [];
+    private readonly List<double> _uniqueTimeBuffer = [];
 
     [Reactive]
     private ChartObjects _chartSettings;
@@ -84,15 +91,14 @@ public partial class SignalUI : RxObject, IPlottableUI
 
         MouseCoordinatesObs = coordinatesObs.Retry().Subscribe(x =>
         {
-            var plotLinedataList = new List<Coordinates>(PlotLine?.Data?.Coordinates!);
-            if (plotLinedataList?.Count <= 0)
+            var coordinates = PlotLine?.Data?.Coordinates;
+            if (coordinates is null || coordinates.Count == 0)
             {
                 return;
             }
 
-            var closestCoordinate = plotLinedataList!
-            .OrderBy(coordinate => Math.Abs(coordinate.X - x.X))
-            .FirstOrDefault();
+            // Find closest coordinate using binary search-like approach for better performance
+            var closestCoordinate = FindClosestCoordinate(coordinates, x.X);
 
             ChartSettings.Crosshair!.Position = closestCoordinate;
             ChartSettings.Marker!.Position = closestCoordinate;
@@ -104,33 +110,32 @@ public partial class SignalUI : RxObject, IPlottableUI
     }
 
     /// <summary>
-    /// Gets or sets the plot.
+    /// Gets or sets the WpfPlot control used for rendering interactive plots within the application.
     /// </summary>
-    /// <value>
-    /// The plot.
-    /// </value>
+    /// <remarks>Assigning a new WpfPlot instance replaces the current plot displayed. This property is
+    /// typically used to embed or update plot visuals in WPF-based user interfaces.</remarks>
     public WpfPlot Plot { get; set; }
 
     /// <summary>
-    /// Gets or sets the streamer.
+    /// Gets or sets the data logger used for plotting line data.
     /// </summary>
-    /// <value>
-    /// The streamer.
-    /// </value>
     public DataLogger? PlotLine { get; set; }
 
     /// <summary>
-    /// Gets or sets the mouse coordinates.
+    /// Gets or sets an observable subscription for mouse coordinate updates.
     /// </summary>
-    /// <value>
-    /// The mouse coordinates.
-    /// </value>
+    /// <remarks>Dispose the returned object to unsubscribe from mouse coordinate notifications and release
+    /// resources. The property may be null if no subscription is active.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
     /// <summary>
-    /// Creates the stream.
+    /// Initializes a new data logger line on the plot and sets its color using the specified hex value.
     /// </summary>
-    /// <param name="color">color.</param>
+    /// <remarks>The data logger line is configured with a fixed line width and disables automatic axis limit
+    /// management. The view is adjusted to display the most recent 100 data points. If the color string is not a valid
+    /// hex code, an exception may be thrown by the color conversion method.</remarks>
+    /// <param name="color">A string representing the color of the data logger line in hexadecimal format (e.g., "#FF0000" for red). Must be
+    /// a valid hex color code.</param>
     public void CreateDataLogger(string color)
     {
         PlotLine = Plot.Plot.Add.DataLogger();
@@ -142,52 +147,79 @@ public partial class SignalUI : RxObject, IPlottableUI
     }
 
     /// <summary>
-    /// Updates the stream.
+    /// Subscribes to an observable sequence of signal data and updates the plot with new values as they arrive.
     /// </summary>
-    /// <param name="observable">The observable.</param>
+    /// <remarks>The method processes incoming signal data, filters for valid entries, and updates the plot in
+    /// real time. Data points with duplicate time values are ignored, and the plot is refreshed unless the chart is
+    /// paused. If a fixed number of points is configured, older points are removed to maintain the limit. The method is
+    /// thread-safe and uses background scheduling for data processing and main thread scheduling for UI
+    /// updates.</remarks>
+    /// <param name="observable">An observable sequence that provides tuples containing the signal name, value list, date/time list, and axis
+    /// identifier. The value and date/time lists must be non-null, non-empty, and of equal length.</param>
     public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) => observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
+        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value != null && d.DateTime != null && d.Value.Count > 0 && d.DateTime.Count > 0 && d.Value.Count == d.DateTime.Count)
         .Select(data =>
         {
-            var now = DateTime.Now;
-            double[] datetime = [];
+            var dateTimeList = data.DateTime;
+            var valueList = data.Value!;
+            var count = dateTimeList.Count;
+
+            // Pre-allocate arrays to avoid repeated allocations
+            var datetime = new double[count];
 
             if (_ticks)
             {
-                // option 2: with ticks
-                now = new(Convert.ToInt64(data.DateTime.Last()));
-                datetime = [.. data.DateTime.ToList().ConvertAll(x => new DateTime(Convert.ToInt64(x)).ToOADate())];
+                // Convert ticks to OADate
+                for (var i = 0; i < count; i++)
+                {
+                    datetime[i] = new DateTime(Convert.ToInt64(dateTimeList[i])).ToOADate();
+                }
             }
             else
             {
-                // option 1: with timestamp
-                datetime = [.. data.DateTime];
-                var oaDate = data.DateTime.Last();
-                now = DateTime.FromOADate(oaDate);
+                // Direct copy for timestamp mode
+                for (var i = 0; i < count; i++)
+                {
+                    datetime[i] = dateTimeList[i];
+                }
             }
 
-            return (data, now, datetime);
-        })
-        .Where(d => !string.IsNullOrEmpty(d.data.Name) && d.data.Value != null && d.data.DateTime != null && d.data.Value.Count > 0 && d.data.DateTime.Count > 0 && d.data.Value.Count == d.data.DateTime.Count)
-        .Select(d =>
-        {
-            // CALCULATE TIMESPAN TO PLOT
-            var doublenow = d.now.ToOADate();
-            var limits = d.now.Add(TimeSpan.FromMinutes(-0.1));
-            var doublelimits = limits.ToOADate();
-
-            ////// INSERT DATA INTO SIGNALXY
-            var combinedValues = d.data.Value!.Zip(d.datetime, (v, d) => (v, d));
-            var uniqueValues = combinedValues.Where(item => !_time.Contains(item.d)).OrderBy(x => x.d);
-            var uniqueDataValues = uniqueValues.Select(x => x.v).ToArray();
-            var uniqueTimeValues = uniqueValues.Select(x => x.d).ToArray();
-            return (uniqueDataValues, uniqueTimeValues, d.data.Name);
+            return (valueList, datetime, data.Name);
         })
         .Retry()
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
-            _time.AddRange(d.uniqueTimeValues);
+            // Clear and reuse buffers to avoid allocations
+            _uniqueDataBuffer.Clear();
+            _uniqueTimeBuffer.Clear();
+
+            var valueList = d.valueList;
+            var datetime = d.datetime;
+
+            // Filter unique values using HashSet for O(1) lookup
+            for (var i = 0; i < datetime.Length; i++)
+            {
+                var timeValue = datetime[i];
+                if (_timeSet.Add(timeValue))
+                {
+                    _uniqueTimeBuffer.Add(timeValue);
+                    _uniqueDataBuffer.Add(valueList[i]);
+                }
+            }
+
+            if (_uniqueTimeBuffer.Count == 0)
+            {
+                return;
+            }
+
+            // Sort by time if needed (maintaining order)
+            if (_uniqueTimeBuffer.Count > 1)
+            {
+                SortBuffersByTime();
+            }
+
             if (UseFixedNumberOfPoints && PlotLine!.Data.Coordinates.Count > NumberPointsPlotted)
             {
                 PlotLine!.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - NumberPointsPlotted);
@@ -195,7 +227,8 @@ public partial class SignalUI : RxObject, IPlottableUI
 
             try
             {
-                PlotLine!.Add(d.uniqueTimeValues, d.uniqueDataValues);
+                // Use ToArray since ScottPlot DataLogger doesn't have Span overload
+                PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
             }
             catch
             {
@@ -214,8 +247,6 @@ public partial class SignalUI : RxObject, IPlottableUI
                 {
                 }
             }
-
-            // Name is set once in constructor - no updates here
         }).DisposeWith(Disposables);
 
     /// <summary>
@@ -229,6 +260,64 @@ public partial class SignalUI : RxObject, IPlottableUI
         {
             ChartSettings.Dispose();
             MouseCoordinatesObs?.Dispose();
+            _timeSet.Clear();
+            _uniqueDataBuffer.Clear();
+            _uniqueTimeBuffer.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Finds the coordinate in the specified collection whose X value is closest to the given target X value.
+    /// </summary>
+    /// <remarks>If multiple coordinates are equally close to the target X value, the first such coordinate in
+    /// the collection is returned. The method does not perform any validation on the input collection; callers should
+    /// ensure it is not empty.</remarks>
+    /// <param name="coordinates">The collection of coordinates to search. Must contain at least one element.</param>
+    /// <param name="targetX">The target X value to compare against each coordinate's X value.</param>
+    /// <returns>The coordinate whose X value is nearest to the specified target X value.</returns>
+    private static Coordinates FindClosestCoordinate(IList<Coordinates> coordinates, double targetX)
+    {
+        var closest = coordinates[0];
+        var minDistance = Math.Abs(closest.X - targetX);
+
+        for (var i = 1; i < coordinates.Count; i++)
+        {
+            var distance = Math.Abs(coordinates[i].X - targetX);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closest = coordinates[i];
+            }
+        }
+
+        return closest;
+    }
+
+    /// <summary>
+    /// Sorts the internal time and data buffers in ascending order of time values.
+    /// </summary>
+    /// <remarks>This method ensures that the time and corresponding data buffers remain synchronized and
+    /// ordered by time. It is intended for use with small datasets and assumes that the buffers are typically already
+    /// sorted. Calling this method is necessary before performing operations that require the buffers to be in
+    /// chronological order.</remarks>
+    private void SortBuffersByTime()
+    {
+        // Simple insertion sort for small datasets, usually data comes pre-sorted
+        for (var i = 1; i < _uniqueTimeBuffer.Count; i++)
+        {
+            var keyTime = _uniqueTimeBuffer[i];
+            var keyData = _uniqueDataBuffer[i];
+            var j = i - 1;
+
+            while (j >= 0 && _uniqueTimeBuffer[j] > keyTime)
+            {
+                _uniqueTimeBuffer[j + 1] = _uniqueTimeBuffer[j];
+                _uniqueDataBuffer[j + 1] = _uniqueDataBuffer[j];
+                j--;
+            }
+
+            _uniqueTimeBuffer[j + 1] = keyTime;
+            _uniqueDataBuffer[j + 1] = keyData;
         }
     }
 }

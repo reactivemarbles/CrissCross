@@ -14,12 +14,14 @@ using ScottPlot.WPF;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// Settings.
+/// Represents a collection of chart-related objects and appearance settings for managing visual elements such as
+/// crosshairs, markers, and labels within a plot. Provides properties and methods to control the visibility, styling,
+/// and interaction of these elements in a Windows environment.
 /// </summary>
-/// <seealso cref="ChartObjects" />
-/// <remarks>
-/// Initializes a new instance of the <see cref="ChartObjects" /> class.
-/// </remarks>
+/// <remarks>This class is intended for use with WPF plots and supports reactive updates to appearance and
+/// visibility properties. It enables dynamic control of chart elements, including crosshair and marker display, color
+/// customization, and visibility toggling. Thread safety is not guaranteed; access from multiple threads should be
+/// synchronized. The class is supported only on Windows platforms.</remarks>
 [SupportedOSPlatform("windows")]
 public partial class ChartObjects : RxObject, IAppearance
 {
@@ -51,10 +53,10 @@ public partial class ChartObjects : RxObject, IAppearance
     private string? _opacityCheckBox;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ChartObjects" /> class.
+    /// Initializes a new instance of the <see cref="ChartObjects"/> class with the specified item name and color.
     /// </summary>
-    /// <param name="itemName">Name of the item.</param>
-    /// <param name="color">The color.</param>
+    /// <param name="itemName">The name of the chart item to be displayed. If not specified, defaults to "---".</param>
+    /// <param name="color">The color used to represent the chart item. If not specified, defaults to "Green".</param>
     public ChartObjects(string itemName = "---", string color = "Green")
     {
         Color = color;
@@ -75,42 +77,36 @@ public partial class ChartObjects : RxObject, IAppearance
     }
 
     /// <summary>
-    /// Gets or sets the marker.
+    /// Gets or sets the crosshair configuration used for rendering or interaction purposes.
     /// </summary>
-    /// <value>
-    /// The marker.
-    /// </value>
     public Crosshair Crosshair { get; set; }
 
     /// <summary>
-    /// Gets or sets the marker.
+    /// Gets or sets the marker associated with the current instance.
     /// </summary>
-    /// <value>
-    /// The marker.
-    /// </value>
     public Marker Marker { get; set; }
 
     /// <summary>
-    /// Gets or sets the marker text.
+    /// Gets or sets the text displayed by the marker.
     /// </summary>
-    /// <value>
-    /// The marker text.
-    /// </value>
     public Text MarkerText { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether this instance is checked.
+    /// Gets or sets the command that is executed when the checked state changes.
     /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is checked; otherwise, <c>false</c>.
-    /// </value> //// = ReactiveCommand.Create(() => { });
+    /// <remarks>This command can be bound to UI elements to handle changes in checked or selected state, such
+    /// as toggling a checkbox. The command executes with no parameters and does not return a value.</remarks>
     public ReactiveCommand<Unit, Unit>? IsCheckedCmd { get; set; }
 
     /// <summary>
-    /// Creates the cursor values.
+    /// Initializes visual elements on the specified plot to highlight cursor positions, including a crosshair, marker,
+    /// and text label using the provided color.
     /// </summary>
-    /// <param name="wpfPlot">The plot.</param>
-    /// <param name="colorName">Name of the color.</param>
+    /// <remarks>The created visual elements are initially hidden and can be shown or updated to reflect
+    /// cursor interactions. This method does not modify the plot if the provided control is null.</remarks>
+    /// <param name="wpfPlot">The plot control on which cursor-related visual elements will be created. If null, no elements are created.</param>
+    /// <param name="colorName">The name of the color to apply to the crosshair, marker, and text label. Must correspond to a valid system color
+    /// name.</param>
     public void CreateCursorValues(WpfPlot wpfPlot, string colorName)
     {
         if (wpfPlot == null)
@@ -143,11 +139,17 @@ public partial class ChartObjects : RxObject, IAppearance
     }
 
     /// <summary>
-    /// Subsriptions for appearance.
+    /// Synchronizes the appearance and visibility properties of the specified plotable object with the current view
+    /// model state and updates the provided WpfPlot accordingly.
     /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <param name="wpfPlot">The plot.</param>
-    /// <param name="plotable">The plotable.</param>
+    /// <remarks>This method establishes reactive subscriptions that automatically update the plotable
+    /// object's appearance and visibility based on changes to the view model's properties. The WpfPlot is refreshed
+    /// whenever relevant properties change to ensure the display remains current. The method disposes subscriptions
+    /// with the view model's disposables to manage resources effectively.</remarks>
+    /// <typeparam name="T">The type of the plotable object to synchronize. Must implement IHasLine, IHasMarker, and ScottPlot.IPlottable.</typeparam>
+    /// <param name="wpfPlot">The WpfPlot instance to refresh when appearance or visibility changes occur.</param>
+    /// <param name="plotable">The plotable object whose line, marker, and visibility properties will be updated in response to view model
+    /// changes.</param>
     public void AppearanceSubsriptions<T>(WpfPlot wpfPlot, T plotable)
         where T : IHasLine, IHasMarker, ScottPlot.IPlottable
     {
@@ -179,9 +181,12 @@ public partial class ChartObjects : RxObject, IAppearance
     }
 
     /// <summary>
-    /// Appearances the subsriptions.
+    /// Subscribes to property changes related to appearance and updates the specified plot control accordingly.
     /// </summary>
-    /// <param name="wpfPlot">The WPF plot.</param>
+    /// <remarks>This method establishes reactive subscriptions to properties such as line width, color,
+    /// visibility, and crosshair state. When these properties change, the plot control is refreshed to reflect the
+    /// updated appearance. This ensures that UI elements remain synchronized with the underlying data model.</remarks>
+    /// <param name="wpfPlot">The plot control to refresh when appearance-related properties change.</param>
     public void AppearanceSubsriptions(WpfPlot wpfPlot)
     {
         this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)

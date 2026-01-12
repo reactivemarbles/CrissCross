@@ -35,9 +35,13 @@
     <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
     <WebViewVersion>1.0.3650.58</WebViewVersion>
     <CoreNetVersion>9.0.11</CoreNetVersion>
-    <CrissCrossCoreTargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossCoreTargetFrameworks>net8.0;net9.0;net10.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossAvaloniaTargetFrameworks>net8.0;net9.0;net10.0</CrissCrossAvaloniaTargetFrameworks>
     <CrissCrossWinTargetFrameworks>net472;net48;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
     <CrissCrossWebviewTargetFrameworks>net472;net48;net8.0-windows;net9.0-windows;net10.0-windows</CrissCrossWebviewTargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows'))">
+    <CrissCrossCoreTargetFrameworks>$(CrissCrossCoreTargetFrameworks);net472;net48</CrissCrossCoreTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

@@ -88,6 +88,7 @@ public static class SystemThemeManager
 
     private static SystemTheme DetectWindowsTheme()
     {
+#if WINDOWS
         try
         {
             using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
@@ -100,7 +101,7 @@ public static class SystemThemeManager
         {
             // Registry access might fail on some systems
         }
-
+#endif
         return SystemTheme.Light;
     }
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>$(CrissCrossAvaloniaTargetFrameworks);</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -44,16 +44,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.*" />
-    <PackageReference Include="ReactiveList" Version="2.4.5" />
+    <PackageReference Include="ReactiveList" Version="3.0.2" />
     <PackageReference Include="AngleSharp" Version="1.4.0" />
     <PackageReference Include="Markdig" Version="0.44.0" />
     <!-- Source generators / analyzers isolated from consumers -->
     <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
-    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.5.1" PrivateAssets="all" />
-    <PackageReference Include="PolySharp" Version="1.15.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.6.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

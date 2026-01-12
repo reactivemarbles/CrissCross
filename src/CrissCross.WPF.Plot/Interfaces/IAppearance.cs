@@ -10,8 +10,13 @@ using ScottPlot.WPF;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// Interface IAppearence.
+/// Defines the contract for configuring and managing the appearance-related properties and commands of a UI element,
+/// including color, visibility, state, and subscriptions for interactive features.
 /// </summary>
+/// <remarks>Implementations of this interface provide access to appearance settings such as color, opacity,
+/// visibility, and state, as well as commands and subscription methods for handling UI interactions. This interface is
+/// typically used to abstract the appearance logic for controls or visual elements in applications that support dynamic
+/// or interactive visualization. Thread safety and specific behavior depend on the implementing class.</remarks>
 public interface IAppearance
 {
     /// <summary>
@@ -95,16 +100,17 @@ public interface IAppearance
     ReactiveCommand<Unit, Unit>? IsCheckedCmd { get; set; }
 
     /// <summary>
-    /// Subsriptions for appearance.
+    /// Subscribes to crosshair events, enabling the receiver to respond to crosshair interactions.
     /// </summary>
     void CrosshairSubscription();
 
     /// <summary>
-    /// Subsriptions for appearance.
+    /// Configures appearance-related subscriptions for the specified plottable on the given plot.
     /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <param name="plot">The plot.</param>
-    /// <param name="plotable">The plotable.</param>
+    /// <typeparam name="T">The type of the plottable to configure. Must implement <see cref="IHasLine"/>, <see cref="IHasMarker"/>, and
+    /// <see cref="ScottPlot.IPlottable"/>.</typeparam>
+    /// <param name="plot">The plot on which the appearance subscriptions will be configured.</param>
+    /// <param name="plotable">The plottable object whose appearance subscriptions are to be set up.</param>
     void AppearanceSubsriptions<T>(WpfPlot plot, T plotable)
         where T : IHasLine, IHasMarker, ScottPlot.IPlottable;
 }

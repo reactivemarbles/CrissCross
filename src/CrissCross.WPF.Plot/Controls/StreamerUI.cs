@@ -14,12 +14,21 @@ using ScottPlot.WPF;
 namespace CrissCross.WPF.Plot;
 
 /// <summary>
-/// EquationData.
+/// Provides a user interface component for streaming and visualizing real-time data on a plot, supporting dynamic
+/// scaling and configurable display options.
 /// </summary>
-/// <seealso cref="StreamerUI" />
+/// <remarks>This class is intended for use on Windows platforms and integrates with reactive data sources to
+/// update plots in real time. It supports automatic and manual scaling, fixed or variable point display, and
+/// customizable appearance through chart settings. Thread safety is managed internally for UI updates. Dispose of
+/// instances when no longer needed to release resources associated with chart settings and subscriptions.</remarks>
 [SupportedOSPlatform("windows")]
 public partial class StreamerUI : RxObject, IPlottableUI
 {
+    private readonly double[] _valueBuffer;
+    private readonly uint _nSamples = 1;
+    private readonly int _fs = 1;
+    private readonly int _numberPointsPlottedSaved;
+
     [Reactive]
     private ChartObjects _chartSettings = new();
     [Reactive]
@@ -32,23 +41,25 @@ public partial class StreamerUI : RxObject, IPlottableUI
     private int _numberPointsPlotted;
     [Reactive]
     private bool _useFixedNumberOfPoints;
-    private uint _nSamples = 1;
-    private int _fs = 1;
-    private int _numberPointsPlottedSaved;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StreamerUI"/> class.
+    /// Initializes a new instance of the <see cref="StreamerUI"/> class to display and update a streaming plot based on observable.
+    /// data.
     /// </summary>
-    /// <param name="plot">The plot.</param>
-    /// <param name="observable">The observable.</param>
-    /// <param name="fs">The fs.</param>
-    /// <param name="nSamples">The n samples.</param>
-    /// <param name="nPointsPlotted">The n points plotted.</param>
-    /// <param name="color">The color.</param>
-    /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
-    /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    /// <param name="fixedPoints">if set to <c>true</c> [fixed points].</param>
-    /// <exception cref="System.IndexOutOfRangeException">nSamples must be greater than 0.</exception>
+    /// <remarks>The chart's item name is set from the first emission of the observable sequence. Chart
+    /// appearance and cursor values are initialized using the provided color and plot control. The autoscale,
+    /// manualscale, and fixedPoints parameters control axis scaling and point display behavior.</remarks>
+    /// <param name="plot">The WpfPlot control used to render the streaming chart.</param>
+    /// <param name="observable">An observable sequence providing tuples containing the item name, value data, date/time data, and axis index for
+    /// plotting.</param>
+    /// <param name="fs">The sampling frequency, in Hz, used for interpreting the data stream.</param>
+    /// <param name="nSamples">The number of samples to buffer for the streaming plot. Must be greater than 0.</param>
+    /// <param name="nPointsPlotted">The initial number of data points to display on the plot.</param>
+    /// <param name="color">The color used for the plot line and chart appearance.</param>
+    /// <param name="autoscale">true to enable automatic scaling of the plot axes; otherwise, false.</param>
+    /// <param name="manualscale">true to enable manual scaling of the plot axes; otherwise, false.</param>
+    /// <param name="fixedPoints">true to fix the number of points displayed on the plot; otherwise, false.</param>
+    /// <exception cref="IndexOutOfRangeException">Thrown when nSamples is less than or equal to 0.</exception>
     public StreamerUI(
                         WpfPlot plot,
                         IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
@@ -72,6 +83,7 @@ public partial class StreamerUI : RxObject, IPlottableUI
         _nSamples = nSamples;
         _fs = fs;
         _numberPointsPlottedSaved = nPointsPlotted;
+        _valueBuffer = new double[nPointsPlotted];
 
         Plot = plot;
 
@@ -91,30 +103,26 @@ public partial class StreamerUI : RxObject, IPlottableUI
     }
 
     /// <summary>
-    /// Gets or sets the plot.
+    /// Gets or sets the WPF plot control used to display graphical data within the application.
     /// </summary>
-    /// <value>
-    /// The plot.
-    /// </value>
+    /// <remarks>Assign this property to embed or update the plot visualization in a WPF user interface. The
+    /// property should be set before interacting with plot-specific features or rendering data.</remarks>
     public WpfPlot Plot { get; set; }
 
     /// <summary>
-    /// Gets or sets the streamer.
+    /// Gets or sets the data streamer used to plot line data in the visualization.
     /// </summary>
-    /// <value>
-    /// The streamer.
-    /// </value>
     public DataStreamer? PlotLine { get; set; }
 
     /// <summary>
-    /// Creates the stream.
+    /// Initializes a new data streamer line on the plot using the specified color.
     /// </summary>
-    /// <param name="color">color.</param>
+    /// <remarks>The method configures the streamer line with default width and period settings, and scrolls
+    /// the view to the left to display the most recent data points. The color parameter must be a valid hexadecimal
+    /// color code; otherwise, an exception may be thrown by the color parsing logic.</remarks>
+    /// <param name="color">A string representing the color of the streamer line, specified in hexadecimal format (e.g., "#FF0000" for red).</param>
     public void CreateStreamer(string color)
     {
-        double[] y = [0];
-        double[] x = [0];
-
         PlotLine = Plot.Plot.Add.DataStreamer(_numberPointsPlottedSaved);
         var darray = new double[_numberPointsPlottedSaved];
         PlotLine.Data = new(darray);
@@ -125,9 +133,14 @@ public partial class StreamerUI : RxObject, IPlottableUI
     }
 
     /// <summary>
-    /// Updates the stream.
+    /// Subscribes to an observable sequence of fixed-point data and updates the streamer plot with new values as they
+    /// arrive.
     /// </summary>
-    /// <param name="observable">The observable.</param>
+    /// <remarks>The method processes incoming data on a background thread and updates the plot on the main
+    /// thread. Data is only plotted if the chart is not paused. The observable sequence is retried on error, ensuring
+    /// continuous updates unless disposed.</remarks>
+    /// <param name="observable">An observable sequence that provides tuples containing the series name, Y-values, X-values, and axis index. Each
+    /// tuple must have a non-empty name, non-null and non-empty Y and X lists of equal length.</param>
     public void UpdateStreamerFixedPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
         observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
@@ -136,9 +149,19 @@ public partial class StreamerUI : RxObject, IPlottableUI
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
-            var values = new List<double>(d.Y!).Take(_numberPointsPlottedSaved).ToArray();
+            var sourceList = d.Y!;
+            var count = Math.Min(sourceList.Count, _numberPointsPlottedSaved);
 
-            PlotLine!.AddRange(values!);
+            // Copy to pre-allocated buffer to avoid allocations
+            for (var i = 0; i < count; i++)
+            {
+                _valueBuffer[i] = sourceList[i];
+            }
+
+            // For DataStreamer, we need to provide an IEnumerable<double>
+            // Use ArraySegment which implements IEnumerable without allocation
+            var segment = new ArraySegment<double>(_valueBuffer, 0, count);
+            PlotLine!.AddRange(segment);
             PlotLine!.ManageAxisLimits = false;
 
             //// UPDATE IF IS NOT PAUSED
@@ -152,8 +175,6 @@ public partial class StreamerUI : RxObject, IPlottableUI
                 {
                 }
             }
-
-            // Name is set once in constructor - no updates here
         }).DisposeWith(Disposables);
 
     /// <summary>
