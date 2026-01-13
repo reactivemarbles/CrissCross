@@ -7,26 +7,25 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Inherited from the <see cref="Avalonia.Controls.Primitives.ButtonBase"/> control which displays an additional control on the right side of the card.
+/// Represents a button control that displays a header, an optional icon, and supports customizable corner radius.
 /// </summary>
 public class CardControl : global::Avalonia.Controls.Button, IIconControl
 {
     /// <summary>
     /// Property for <see cref="Header"/>.
     /// </summary>
-    public static readonly StyledProperty<object> HeaderProperty = AvaloniaProperty.Register<CardControl, object>(
-        nameof(Header), null);
+    public static readonly StyledProperty<object> HeaderProperty = AvaloniaProperty.Register<CardControl, object>(nameof(Header));
 
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<CardControl, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardControl, object?>(
         nameof(Icon), null);
 
     /// <summary>
     /// Property for <see cref="CornerRadius"/>.
     /// </summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardControl, CornerRadius>(
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardControl, CornerRadius>(
         nameof(CornerRadius), new CornerRadius(0));
 
     /// <summary>
@@ -50,7 +49,7 @@ public class CardControl : global::Avalonia.Controls.Button, IIconControl
     /// <summary>
     /// Gets or sets the corner radius of the control.
     /// </summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

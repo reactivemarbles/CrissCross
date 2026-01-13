@@ -16,7 +16,7 @@ public abstract class IconElement : Control
     /// <summary>
     /// Property for <see cref="Foreground"/>.
     /// </summary>
-    public static new readonly StyledProperty<IBrush?> ForegroundProperty = AvaloniaProperty.Register<IconElement, IBrush?>(
+    public static readonly StyledProperty<IBrush?> ForegroundProperty = AvaloniaProperty.Register<IconElement, IBrush?>(
         nameof(Foreground), defaultValue: Brushes.Black);
 
     static IconElement()
@@ -27,7 +27,7 @@ public abstract class IconElement : Control
     /// <summary>
     /// Gets or sets the foreground brush.
     /// </summary>
-    public new IBrush? Foreground
+    public IBrush? Foreground
     {
         get => GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);

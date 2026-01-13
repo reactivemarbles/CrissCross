@@ -176,7 +176,7 @@ public partial class LiveChartViewModel : RxObject
                 line!.Axes.YAxis = yaxisListItem;
             }
 
-            PlotLinesCollectionUI!.Add(lineUI!);
+            PlotLinesCollectionUI.Add(lineUI!);
             i++;
         }
 
