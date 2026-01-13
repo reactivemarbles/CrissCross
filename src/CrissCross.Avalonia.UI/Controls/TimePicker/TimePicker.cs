@@ -27,7 +27,7 @@ public class TimePicker : global::Avalonia.Controls.TimePicker
     /// <summary>
     /// Property for <see cref="ClockIdentifier"/>.
     /// </summary>
-    public static readonly StyledProperty<ClockIdentifier> ClockIdentifierProperty = AvaloniaProperty.Register<TimePicker, ClockIdentifier>(
+    public static new readonly StyledProperty<ClockIdentifier> ClockIdentifierProperty = AvaloniaProperty.Register<TimePicker, ClockIdentifier>(
         nameof(ClockIdentifier), ClockIdentifier.Clock24Hour);
 
     /// <summary>
@@ -74,7 +74,7 @@ public class TimePicker : global::Avalonia.Controls.TimePicker
     /// <summary>
     /// Gets or sets the clock system to use (12-hour or 24-hour).
     /// </summary>
-    public ClockIdentifier ClockIdentifier
+    public new ClockIdentifier ClockIdentifier
     {
         get => GetValue(ClockIdentifierProperty);
         set => SetValue(ClockIdentifierProperty, value);

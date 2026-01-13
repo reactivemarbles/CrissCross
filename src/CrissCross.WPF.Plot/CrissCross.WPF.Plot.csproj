@@ -8,7 +8,6 @@
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <NoWarn>$(NoWarn);CA1812</NoWarn>
     <Authors>Chris Pulman; Adriana Segher</Authors>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
