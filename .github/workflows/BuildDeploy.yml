@@ -59,14 +59,14 @@ jobs:
            **/global.json
            **/nuget.config
 
-      - name: Get Latest Visual Studio Version
-        shell: bash
-        run: |
-            dotnet tool update -g dotnet-vs
-            vs where release
-            vs update release Enterprise
-            vs modify release Enterprise +mobile +desktop +uwp +web
-            vs where release
+      # - name: Get Latest Visual Studio Version
+      #   shell: bash
+      #   run: |
+      #       dotnet tool update -g dotnet-vs
+      #       vs where release
+      #       vs update release Enterprise
+      #       vs modify release Enterprise +mobile +desktop +uwp +web
+      #       vs where release
 
       - name: 'Install DotNet workloads (explicit)'
         shell: bash
