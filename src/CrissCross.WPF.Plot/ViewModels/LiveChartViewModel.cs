@@ -166,11 +166,7 @@ public partial class LiveChartViewModel : RxObject
     /// <remarks>Each axis in the collection defines a coordinate system for the chart. Modifying this
     /// collection allows customization of axis types, scales, and appearance. Changes to the collection may affect how
     /// data is rendered and interpreted.</remarks>
-#if NET6_0_OR_GREATER
-    public QuaternaryList<IPlottableUI> PlotLinesCollectionUI { get; }
-#else
     public ReactiveList<IPlottableUI> PlotLinesCollectionUI { get; }
-#endif
 
     /// <summary>
     /// Gets the collection of plot line UI elements displayed in the chart.
@@ -316,12 +312,13 @@ public partial class LiveChartViewModel : RxObject
         rp => rp.Plot.Axes.AutoScaleX(xaxis);
 
     /// <summary>
-    /// Creates an action that automatically adjusts the Y-axis range of a plot to fit its data.
+    /// Creates an action that automatically adjusts the Y-axis range of a plot to fit its data within the specified
+    /// <see cref="RenderPack"/>.
     /// </summary>
     /// <remarks>This method is useful for ensuring that all data points are visible along the Y-axis after
     /// data changes or updates. The X-axis range is not affected by this action.</remarks>
-    /// <returns>An <see cref="Action{RenderPack}"/> that, when invoked, rescales the Y-axis of the plot within the specified
-    /// <paramref name="RenderPack"/> to encompass all visible data.</returns>
+    /// <returns>An <see cref="Action{RenderPack}"/> that, when invoked, rescales the Y-axis of the plot contained in the
+    /// provided <see cref="RenderPack"/> to encompass all visible data.</returns>
     public static Action<RenderPack> AutoScaleY() =>
         rp => rp.Plot.Axes.AutoScaleY();
 
@@ -515,7 +512,7 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm?.Plot.Clear();
 
         // SIGNAL
-        if (PlotLinesCollectionUI?.Count > 0)
+        if (PlotLinesCollectionUI.Count > 0)
         {
             foreach (var element in PlotLinesCollectionUI)
             {

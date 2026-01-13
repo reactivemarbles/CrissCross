@@ -29,10 +29,9 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <AvaloniaVersion>11.3.10</AvaloniaVersion>
+    <AvaloniaVersion>11.3.11</AvaloniaVersion>
     <SplatVersion>17.1.1</SplatVersion>
     <ReactiveUIVersion>22.3.1</ReactiveUIVersion>
-    <XamarinReactiveUIVersion>19.6.12</XamarinReactiveUIVersion>
     <WebViewVersion>1.0.3650.58</WebViewVersion>
     <CoreNetVersion>9.0.11</CoreNetVersion>
     <CrissCrossCoreTargetFrameworks>net8.0;net9.0;net10.0</CrissCrossCoreTargetFrameworks>
