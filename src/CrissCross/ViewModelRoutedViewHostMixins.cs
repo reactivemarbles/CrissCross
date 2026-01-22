@@ -15,11 +15,12 @@ using System.Runtime.CompilerServices;
 using ReactiveUI;
 using Splat;
 
-[assembly: InternalsVisibleTo(" CrissCross.Avalonia")]
-[assembly: InternalsVisibleTo(" CrissCross.MAUI")]
-[assembly: InternalsVisibleTo(" CrissCross.WinForms")]
-[assembly: InternalsVisibleTo(" CrissCross.WPF")]
-[assembly: InternalsVisibleTo(" CrissCross.XamForms")]
+[assembly: InternalsVisibleTo("CrissCross.Avalonia")]
+[assembly: InternalsVisibleTo("CrissCross.MAUI")]
+[assembly: InternalsVisibleTo("CrissCross.WinForms")]
+[assembly: InternalsVisibleTo("CrissCross.WPF")]
+[assembly: InternalsVisibleTo("CrissCross.XamForms")]
+[assembly: InternalsVisibleTo("CrissCross.Tests")]
 
 namespace CrissCross;
 
@@ -30,6 +31,8 @@ namespace CrissCross;
 /// </summary>
 public static class ViewModelRoutedViewHostMixins
 {
+    private static readonly object _lockObject = new();
+
     internal static ReplaySubject<Unit> ASetupCompleted { get; } = new(1);
 
     internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = [];
@@ -488,15 +491,18 @@ public static class ViewModelRoutedViewHostMixins
             throw new ArgumentNullException(nameof(viewHost));
         }
 
-        if (NavigationHost.ContainsKey(@this.Name!))
+        lock (_lockObject)
         {
-            return;
-        }
+            if (NavigationHost.ContainsKey(@this.Name!))
+            {
+                return;
+            }
 
-        WhenSetupSubjects.Add(@this.Name!, new(1));
-        NavigationHost.Add(@this.Name!, viewHost);
-        CurrentViewDisposable.Add(@this.Name!, []);
-        ResultNavigating.Add(@this.Name!, new Subject<IViewModelNavigatingEventArgs>());
+            WhenSetupSubjects.Add(@this.Name!, new(1));
+            NavigationHost.Add(@this.Name!, viewHost);
+            CurrentViewDisposable.Add(@this.Name!, []);
+            ResultNavigating.Add(@this.Name!, new Subject<IViewModelNavigatingEventArgs>());
+        }
 
         if (viewHost.RequiresSetup)
         {
@@ -504,7 +510,11 @@ public static class ViewModelRoutedViewHostMixins
         }
 
         ASetupCompleted.OnNext(Unit.Default);
-        WhenSetupSubjects[@this.Name!].OnNext(true);
+
+        lock (_lockObject)
+        {
+            WhenSetupSubjects[@this.Name!].OnNext(true);
+        }
     }
 
     /// <summary>
