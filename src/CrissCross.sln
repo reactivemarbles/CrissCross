@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.Avalonia.Example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{5EE82A1C-BA2C-4C1D-9437-07E02E1E5770}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApps", "TestApps", "{515C2FFD-32C9-4521-9671-A50B922CE976}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{515C2FFD-32C9-4521-9671-A50B922CE976}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrissCross.WPF.WebView2", "CrissCross.WPF.WebView2\CrissCross.WPF.WebView2.csproj", "{F4CC4138-0B98-49AA-80B3-3D790A619CBC}"
 EndProject
