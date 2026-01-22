@@ -4,6 +4,7 @@
 
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Security.Cryptography;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -39,7 +40,14 @@ namespace CrissCross.WPF.Plot.Test.ViewModels
 
                     // Generate some random data for the chart using observables
                     Observable.Interval(TimeSpan.FromMilliseconds(1000.0 / numberAxis))
-                        .Select(_ => (Name: $"Series {_ % numberAxis}", Value: new List<double> { new Random().NextDouble() * 100 }, DateTime: new List<double> { DateTime.Now.Ticks }, Axis: (int)(_ % numberAxis)))
+                        .Select(_ =>
+                        {
+                            // Use RandomNumberGenerator for cryptographically secure random numbers
+                            var bytes = new byte[8];
+                            RandomNumberGenerator.Fill(bytes);
+                            double randomValue = BitConverter.ToUInt64(bytes, 0) / (double)ulong.MaxValue * 100;
+                            return (Name: $"Series {_ % numberAxis}", Value: new List<double> { randomValue }, DateTime: new List<double> { DateTime.Now.Ticks }, Axis: (int)(_ % numberAxis));
+                        })
                         .Subscribe(data =>
                         {
                             var subject = LiveChartSubject.ElementAt(data.Axis);

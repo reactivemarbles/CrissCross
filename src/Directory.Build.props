@@ -5,7 +5,7 @@
     <Authors>Chris Pulman</Authors>
     <Description>A Reactive Navigation Framework for ReactiveUI</Description>
     <Copyright>Copyright © https://github.com/ChrisPulman $([System.DateTime]::Now.ToString(yyyy))</Copyright>
-    <IsTestProject>$(MSBuildProjectName.Contains('Test'))</IsTestProject>
+    <IsTestProject>$(MSBuildProjectName.EndsWith('.Tests'))</IsTestProject>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>preview</LangVersion>
     <Configuration>$(TargetFramework)</Configuration>

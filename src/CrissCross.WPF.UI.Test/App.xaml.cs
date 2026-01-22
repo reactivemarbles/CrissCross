@@ -51,6 +51,16 @@ public partial class App
         where T : class => _host.Services.GetService(typeof(T)) as T;
 
     /// <summary>
+    /// Occurs when the application is closing.
+    /// </summary>
+    private async void OnExit(object sender, ExitEventArgs e)
+    {
+        await _host.StopAsync();
+
+        _host.Dispose();
+    }
+
+    /// <summary>
     /// Occurs when the application is loading.
     /// </summary>
     private async void OnStartup(object sender, StartupEventArgs e)
@@ -62,16 +72,6 @@ public partial class App
                 .StopTrackingOn(w => nameof(w.Closing));
 
         await _host.StartAsync();
-    }
-
-    /// <summary>
-    /// Occurs when the application is closing.
-    /// </summary>
-    private async void OnExit(object sender, ExitEventArgs e)
-    {
-        await _host.StopAsync();
-
-        _host.Dispose();
     }
 
     /// <summary>

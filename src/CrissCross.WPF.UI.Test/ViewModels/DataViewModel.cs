@@ -50,8 +50,17 @@ public class DataViewModel : RxObject, INavigationAware
 
     private void InitializeViewModel()
     {
-        var random = new Random();
+        using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
         var colorCollection = new List<DataColor>();
+
+        byte GetRandomByte(int min, int max)
+        {
+            // Generate a random byte in [min, max)
+            var buffer = new byte[4];
+            rng.GetBytes(buffer);
+            int value = BitConverter.ToInt32(buffer, 0) & int.MaxValue;
+            return (byte)(min + (value % (max - min)));
+        }
 
         for (var i = 0; i < 8192; i++)
         {
@@ -61,9 +70,9 @@ public class DataViewModel : RxObject, INavigationAware
                     Color = new SolidColorBrush(
                         Color.FromArgb(
                             (byte)200,
-                            (byte)random.Next(0, 250),
-                            (byte)random.Next(0, 250),
-                            (byte)random.Next(0, 250)))
+                            GetRandomByte(0, 250),
+                            GetRandomByte(0, 250),
+                            GetRandomByte(0, 250)))
                 });
         }
 
