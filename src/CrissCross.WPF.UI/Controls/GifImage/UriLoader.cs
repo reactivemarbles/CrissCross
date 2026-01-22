@@ -137,9 +137,10 @@ internal static class UriLoader
 
     private static string GetCacheFileName(Uri uri)
     {
-        using var sha1 = SHA1.Create();
+        // Use SHA256 instead of SHA1 to address CA5350
+        using var sha256 = SHA256.Create();
         var bytes = Encoding.UTF8.GetBytes(uri.AbsoluteUri);
-        var hash = sha1.ComputeHash(bytes);
+        var hash = sha256.ComputeHash(bytes);
         return ToHex(hash);
     }
 

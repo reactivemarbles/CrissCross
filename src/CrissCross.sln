@@ -11,11 +11,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionSettings", "SolutionSettings", "{9E46C77C-6C76-4485-A868-1EAE571C68E7}"
 	ProjectSection(SolutionItems) = preProject
 		..\.editorconfig = ..\.editorconfig
-		..\Directory.Build.props = ..\Directory.Build.props
-		..\global.json = ..\global.json
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
 		..\LICENSE = ..\LICENSE
 		..\README.md = ..\README.md
-		..\stylecop.json = ..\stylecop.json
+		stylecop.json = stylecop.json
+		testconfig.json = testconfig.json
 		..\version.json = ..\version.json
 	EndProjectSection
 EndProject

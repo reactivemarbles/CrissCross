@@ -25,8 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="Microsoft.Maui.Controls" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
