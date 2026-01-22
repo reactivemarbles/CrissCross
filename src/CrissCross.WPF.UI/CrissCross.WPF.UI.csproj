@@ -31,12 +31,12 @@
   </PropertyGroup>
 
   <!-- .NET Framework specific constants -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net481'">
     <DefineConstants>$(DefineConstants);LACKS_STREAM_MEMORY_OVERLOADS</DefineConstants>
   </PropertyGroup>
 
   <!-- .NET Framework specific references -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net48'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net481'">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
@@ -47,22 +47,22 @@
 
   <ItemGroup>
     <!-- Core dependencies -->
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="2.3.15" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.*" />
-    <PackageReference Include="ReactiveList" Version="3.0.5" />
-    <PackageReference Include="AppBarButton.WPF" Version="1.0.2" />
-    <PackageReference Include="BBCode.WPF" Version="1.0.2" />
-    <PackageReference Include="CP.Xaml.Converters" Version="1.1.3" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Wpf" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="ReactiveList" />
+    <PackageReference Include="AppBarButton.WPF" />
+    <PackageReference Include="BBCode.WPF" />
+    <PackageReference Include="CP.Xaml.Converters" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
     <!-- Source generators / analyzers isolated from consumers -->
-    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
-    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.6.1" PrivateAssets="all" />
+    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="Polyfill" Version="9.7.2">
+    <PackageReference Include="Polyfill">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

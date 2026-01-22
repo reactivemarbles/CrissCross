@@ -12,10 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Browser" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Browser" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrissCross.Avalonia.Test\CrissCross.Avalonia.Test.csproj" />
+    <ProjectReference Include="..\CrissCross.Avalonia.Test\CrissCross.Avalonia.Example.csproj" />
   </ItemGroup>
 </Project>

@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
+    <PackageReference Include="ReactiveUI.WPF" />
+    <PackageReference Include="Microsoft.Web.WebView2" />
   </ItemGroup>
 
   <ItemGroup>

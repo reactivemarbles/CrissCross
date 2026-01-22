@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrissCross.Avalonia.Test\CrissCross.Avalonia.Test.csproj" />
+    <ProjectReference Include="..\CrissCross.Avalonia.Test\CrissCross.Avalonia.Example.csproj" />
   </ItemGroup>
 </Project>
