@@ -7,14 +7,17 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.ComboBox"/> with additional properties.
+/// Represents a combo box control that allows users to select an item from a drop-down list, with support for
+/// customizing the corner radius of the control.
 /// </summary>
-/// <seealso cref="Avalonia.Controls.ComboBox" />
 public class ComboBox : global::Avalonia.Controls.ComboBox
 {
     /// <summary>
-    /// Property for <see cref="CornerRadius"/>.
+    /// Identifies the CornerRadius styled property, which determines the degree to which the corners of the ComboBox
+    /// are rounded.
     /// </summary>
+    /// <remarks>This property can be used in styles and templates to customize the appearance of the
+    /// ComboBox's border. The default value is typically zero, resulting in square corners.</remarks>
     public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
         AvaloniaProperty.Register<ComboBox, CornerRadius>(nameof(CornerRadius));
 

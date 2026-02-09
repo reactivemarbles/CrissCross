@@ -506,7 +506,7 @@ public class NavigationViewItem
         {
             try
             {
-                if (Locator.Current.GetService(TargetViewModelType) is IRxObject)
+                if (AppLocator.Current.GetService(TargetViewModelType) is IRxObject)
                 {
                     // Use mixin NavigateToView via lightweight adapter implementing IUseNavigation
                     var adapter = new NavAdapter(TargetHostName);

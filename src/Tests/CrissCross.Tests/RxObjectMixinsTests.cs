@@ -31,7 +31,7 @@ public class RxObjectMixinsTests
     public async Task SetupComplete_RaisesBuildCompleteSignal()
     {
         // Arrange
-        var resolver = Locator.CurrentMutable;
+        var resolver = AppLocator.CurrentMutable;
         var signalReceived = false;
         var testObject = new TestRxObject();
 
@@ -53,7 +53,7 @@ public class RxObjectMixinsTests
     public async Task BuildComplete_ExecutesActionWhenSetupComplete()
     {
         // Arrange
-        var resolver = Locator.CurrentMutable;
+        var resolver = AppLocator.CurrentMutable;
         var actionExecuted = false;
         var testObject = new TestRxObject();
 
@@ -90,7 +90,7 @@ public class RxObjectMixinsTests
     public async Task BuildCompleteDisposable_CanBeDisposed()
     {
         // Arrange
-        var resolver = Locator.CurrentMutable;
+        var resolver = AppLocator.CurrentMutable;
         var testObject = new TestRxObject();
         var actionExecuted = false;
 

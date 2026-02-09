@@ -7,8 +7,11 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.TextBlock"/> with additional parameters like <see cref="FontTypography"/>.
+/// Represents a control that displays a block of text with support for customizable typography and appearance settings.
 /// </summary>
+/// <remarks>The TextBlock control extends the base Avalonia TextBlock by providing additional properties for font
+/// typography and appearance. It is typically used to display read-only text in user interfaces, with options to adjust
+/// visual style according to application design requirements.</remarks>
 public class TextBlock : global::Avalonia.Controls.TextBlock
 {
     /// <summary>

@@ -25,8 +25,8 @@ public class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
         AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
 
-        ////Locator.CurrentMutable.RegisterConstant<BrowserViewModel>(new());
-        ////Locator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(() => new BrowserView());
+        ////AppLocator.CurrentMutable.RegisterConstant<BrowserViewModel>(new());
+        ////AppLocator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(() => new BrowserView());
         AppLocator.CurrentMutable.SetupComplete();
     }
 }

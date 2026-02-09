@@ -7,8 +7,12 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extends <see cref="Avalonia.Controls.ListBox"/>.
+/// Represents a list control that displays items in different visual states, such as a default list or a grid view.
 /// </summary>
+/// <remarks>ListView extends ListBox to provide additional functionality for switching between visual
+/// representations of its items. The visual state can be controlled using the ViewState property. This control is
+/// commonly used to present collections of data in either a standard list or a grid layout, depending on the
+/// application's requirements.</remarks>
 public class ListView : global::Avalonia.Controls.ListBox
 {
     /// <summary>

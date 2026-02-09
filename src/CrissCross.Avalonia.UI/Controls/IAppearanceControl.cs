@@ -5,7 +5,7 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// UI <see cref="Avalonia.Controls.Control"/> with <see cref="ControlAppearance"/> attributes.
+/// Defines a contract for controls that support customizable appearance settings.
 /// </summary>
 public interface IAppearanceControl
 {

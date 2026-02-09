@@ -21,7 +21,7 @@ namespace CrissCross.WPF.Plot;
 /// <summary>
 /// Interaction logic for WPF Chart AICS.
 /// </summary>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewModel>
 {
     private readonly CompositeDisposable _dd = [];

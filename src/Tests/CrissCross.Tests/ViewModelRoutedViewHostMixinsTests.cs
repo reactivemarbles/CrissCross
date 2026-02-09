@@ -610,7 +610,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestViewModel(hostName);
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        var resolver = Locator.CurrentMutable;
+        var resolver = AppLocator.CurrentMutable;
         resolver.SetupComplete();
 
         // Act
@@ -662,7 +662,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestViewModel(hostName);
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        var resolver = Locator.CurrentMutable;
+        var resolver = AppLocator.CurrentMutable;
         resolver.SetupComplete();
         setNav.SetMainNavigationHost(viewHost);
 

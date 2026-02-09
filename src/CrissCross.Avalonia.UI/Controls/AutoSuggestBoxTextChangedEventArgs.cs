@@ -7,8 +7,11 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Provides data for the <see cref="AutoSuggestBox.TextChanged"/> event.
+/// Provides data for the TextChanged event of an AutoSuggestBox control.
 /// </summary>
+/// <remarks>Use this class to obtain information about the text change event, including the current text and the
+/// reason for the change. This event data is typically used in event handlers to determine how to update suggestions or
+/// respond to user input in the AutoSuggestBox.</remarks>
 public sealed class AutoSuggestBoxTextChangedEventArgs : RoutedEventArgs
 {
     /// <summary>

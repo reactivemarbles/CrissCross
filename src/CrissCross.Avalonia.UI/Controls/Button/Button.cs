@@ -8,16 +8,13 @@ using Avalonia.Media;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Inherited from the <see cref="Avalonia.Controls.Button"/>, adding icon support.
+/// Represents a button control that can display an icon and supports customizable appearance, including visual states
+/// for mouse over and pressed interactions.
 /// </summary>
-/// <example>
-/// <code lang="xml">
-/// &lt;ui:Button
-///     Appearance="Primary"
-///     Content="Avalonia button with icon"
-///     Icon="{ui:SymbolIcon Symbol=Fluent24}" /&gt;
-/// </code>
-/// </example>
+/// <remarks>The Button control extends the standard Avalonia button by providing additional properties for
+/// appearance customization, such as icon support, corner radius, and brushes for different visual states. It
+/// implements IAppearanceControl and IIconControl, allowing integration with appearance and icon-related features in
+/// Avalonia applications.</remarks>
 public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIconControl
 {
     /// <summary>

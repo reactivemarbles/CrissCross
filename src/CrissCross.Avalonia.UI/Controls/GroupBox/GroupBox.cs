@@ -5,7 +5,9 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.GroupBox"/>.
+/// Represents a container control that displays a labeled border and can contain a single child element.
 /// </summary>
-/// <seealso cref="Avalonia.Controls.GroupBox" />
+/// <remarks>Use a GroupBox to visually group related controls with a header. The header typically describes the
+/// contents or purpose of the group. Only one child element can be added to the GroupBox; to contain multiple elements,
+/// use a layout panel such as StackPanel or Grid as the child.</remarks>
 public class GroupBox : global::Avalonia.Controls.Primitives.HeaderedContentControl;

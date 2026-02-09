@@ -51,28 +51,36 @@ public class FontIcon : IconElement
         AffectsRender<FontIcon>(FontFamilyProperty, FontSizeProperty, FontStyleProperty, FontWeightProperty, GlyphProperty);
     }
 
-    /// <inheritdoc cref="Control.FontFamily"/>
+    /// <summary>
+    /// Gets or sets the font family used to display text.
+    /// </summary>
     public FontFamily FontFamily
     {
         get => GetValue(FontFamilyProperty);
         set => SetValue(FontFamilyProperty, value);
     }
 
-    /// <inheritdoc cref="Control.FontSize"/>
+    /// <summary>
+    /// Gets or sets the font size used to display text.
+    /// </summary>
     public double FontSize
     {
         get => GetValue(FontSizeProperty);
         set => SetValue(FontSizeProperty, value);
     }
 
-    /// <inheritdoc cref="Control.FontStyle"/>
+    /// <summary>
+    /// Gets or sets the font style to apply to the text content.
+    /// </summary>
     public FontStyle FontStyle
     {
         get => GetValue(FontStyleProperty);
         set => SetValue(FontStyleProperty, value);
     }
 
-    /// <inheritdoc cref="Control.FontWeight"/>
+    /// <summary>
+    /// Gets or sets the weight of the font used to display the control's text.
+    /// </summary>
     public FontWeight FontWeight
     {
         get => GetValue(FontWeightProperty);

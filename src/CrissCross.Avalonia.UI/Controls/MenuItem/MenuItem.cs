@@ -7,20 +7,20 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.MenuItem"/> with icon properties.
+/// Represents a menu item that can display an icon in addition to its content.
 /// </summary>
 public class MenuItem : global::Avalonia.Controls.MenuItem
 {
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<MenuItem, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<MenuItem, object?>(
         nameof(Icon), null);
 
     /// <summary>
     /// Gets or sets the icon.
     /// </summary>
-    public new object Icon
+    public new object? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);

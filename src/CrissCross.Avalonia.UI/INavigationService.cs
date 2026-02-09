@@ -5,9 +5,15 @@
 namespace CrissCross.Avalonia.UI;
 
 /// <summary>
-/// Represents a contract with a <see cref="Avalonia.Controls.Control"/> that contains <see cref="Controls.INavigationView"/>.
-/// Through defined <see cref="IPageService"/> service allows you to use the Dependency Injection pattern in navigation.
+/// Defines a contract for navigation services that manage navigation between pages or views within an application.
+/// Provides methods to navigate to pages by type or tag, manage the navigation stack, and interact with the navigation
+/// control and page service.
 /// </summary>
+/// <remarks>Implementations of this interface enable decoupled navigation logic, allowing view models or other
+/// components to initiate navigation without direct references to UI elements. The interface supports navigation with
+/// or without associated data contexts and provides methods for hierarchical navigation scenarios. It is typically used
+/// in conjunction with an IPageService to resolve page instances and an INavigationView control to present navigation
+/// UI.</remarks>
 public interface INavigationService
 {
     /// <summary>

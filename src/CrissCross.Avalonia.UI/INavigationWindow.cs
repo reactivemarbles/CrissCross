@@ -7,9 +7,12 @@ using CrissCross.Avalonia.UI.Controls;
 namespace CrissCross.Avalonia.UI;
 
 /// <summary>
-/// Represents a contract with a <see cref="Avalonia.Controls.Window"/> that contains <see cref="INavigationView"/>.
-/// Through defined <see cref="IPageService"/> service allows you to use the MVVM model in navigation.
+/// Defines a contract for a window that supports navigation between pages using a navigation control and associated
+/// services.
 /// </summary>
+/// <remarks>Implementations of this interface provide mechanisms to navigate between pages, manage navigation
+/// services, and control the window's visibility. The interface is typically used in applications that require dynamic
+/// page navigation, such as multi-page desktop or UI applications.</remarks>
 public interface INavigationWindow
 {
     /// <summary>

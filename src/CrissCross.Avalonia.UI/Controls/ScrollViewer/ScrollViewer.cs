@@ -5,7 +5,10 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.ScrollViewer"/>.
+/// Provides a control that displays content with scrollable horizontal and vertical viewports.
 /// </summary>
-/// <seealso cref="Avalonia.Controls.ScrollViewer" />
+/// <remarks>The ScrollViewer enables users to scroll its content when it is larger than the available display
+/// area. It supports both horizontal and vertical scrolling, and can be used to wrap content that may exceed the
+/// visible bounds of the control. ScrollViewer is commonly used in user interfaces to provide access to content that
+/// would otherwise be clipped or hidden.</remarks>
 public class ScrollViewer : global::Avalonia.Controls.ScrollViewer;
