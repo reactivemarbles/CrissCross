@@ -24,7 +24,7 @@ public partial class ReactiveTreeView : IViewFor<ReactiveTreeViewModel>
         new PropertyMetadata(default(ReactiveTreeViewModel)));
 
     static ReactiveTreeView() =>
-        Splat.Locator.CurrentMutable.Register(() => new ReactiveTreeView(), typeof(IViewFor<ReactiveTreeViewModel>));
+        Splat.AppLocator.CurrentMutable.Register(static () => new ReactiveTreeView(), typeof(IViewFor<ReactiveTreeViewModel>));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReactiveTreeView"/> class.

@@ -5,7 +5,10 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.TextBlock"/>.
+/// Represents a lightweight text control for displaying non-editable text within a user interface.
 /// </summary>
-/// <seealso cref="Avalonia.Controls.TextBlock" />
+/// <remarks>Label is typically used to display static text or captions for other controls, such as input fields.
+/// Unlike editable text controls, Label does not support user interaction or text editing. It inherits all text
+/// formatting and layout capabilities from TextBlock, allowing customization of font, alignment, and other text
+/// properties.</remarks>
 public class Label : global::Avalonia.Controls.TextBlock;

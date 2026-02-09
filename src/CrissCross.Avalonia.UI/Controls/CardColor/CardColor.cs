@@ -101,7 +101,7 @@ public class CardColor : global::Avalonia.Controls.Control
     }
 
     /// <summary>
-    /// Gets the <see cref="Avalonia.Media.IBrush"/> displayed in <see cref="CardColor"/>.
+    /// Gets the brush used to render the background of the card.
     /// </summary>
     public IBrush CardBrush
     {

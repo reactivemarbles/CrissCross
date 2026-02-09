@@ -14,7 +14,7 @@ public class BreadcrumbBarItem : global::Avalonia.Controls.ContentControl
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<BreadcrumbBarItem, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<BreadcrumbBarItem, object?>(
         nameof(Icon));
 
     /// <summary>

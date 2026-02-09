@@ -7,7 +7,7 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.Primitives.ToggleButton"/>.
+/// Represents a toggle button control with a customizable chevron size for use in TreeView items.
 /// </summary>
 public class ToggleButton : global::Avalonia.Controls.Primitives.ToggleButton
 {

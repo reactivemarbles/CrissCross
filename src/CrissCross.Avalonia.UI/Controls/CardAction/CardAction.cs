@@ -7,8 +7,13 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Inherited from the <see cref="Avalonia.Controls.Button"/> interactive card styled according to Fluent Design.
+/// Represents a button control designed for use within a card layout, supporting an optional icon and chevron
+/// indicator.
 /// </summary>
+/// <remarks>CardAction extends the standard button functionality to provide a consistent action element for
+/// card-based user interfaces. It allows developers to display an icon and an optional chevron, commonly used to
+/// indicate navigation or additional actions. This control is typically used within card containers to present
+/// interactive options to users.</remarks>
 public class CardAction : global::Avalonia.Controls.Button
 {
     /// <summary>
@@ -20,7 +25,7 @@ public class CardAction : global::Avalonia.Controls.Button
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<CardAction, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardAction, object?>(
         nameof(Icon), null);
 
     /// <summary>

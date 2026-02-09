@@ -32,7 +32,7 @@ public class InfoBadge : global::Avalonia.Controls.Control
     /// <summary>
     /// Property for <see cref="Icon"/>.
     /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<InfoBadge, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<InfoBadge, object?>(
         nameof(Icon), null);
 
     /// <summary>

@@ -2,18 +2,23 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using ReactiveUI;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.TextBox"/> with additional parameters like <see cref="PlaceholderText"/>.
+/// Represents a text input control that supports placeholder text, an optional icon, and a clear button, with
+/// additional customization options for user interaction.
 /// </summary>
+/// <remarks>The TextBox control extends the standard Avalonia TextBox by providing features such as configurable
+/// placeholder text, an optional icon with customizable placement, and a clear button that can be enabled or disabled.
+/// The clear button appears when the control is focused and contains text, allowing users to quickly clear the input.
+/// The control also exposes commands for template button interactions and supports enabling or disabling text
+/// selection. These features make it suitable for scenarios where enhanced user experience and input customization are
+/// required.</remarks>
 public class TextBox : global::Avalonia.Controls.TextBox
 {
     /// <summary>

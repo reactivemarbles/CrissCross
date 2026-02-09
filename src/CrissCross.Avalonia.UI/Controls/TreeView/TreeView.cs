@@ -5,6 +5,9 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Extended <see cref="Avalonia.Controls.TreeView"/>.
+/// Represents a control that displays a hierarchical collection of items in a tree structure.
 /// </summary>
+/// <remarks>Use the TreeView control to present data that has a parent-child relationship, such as file systems
+/// or organizational charts. Items can be expanded or collapsed to show or hide their child elements. This control
+/// supports data binding and selection of items.</remarks>
 public class TreeView : global::Avalonia.Controls.TreeView;

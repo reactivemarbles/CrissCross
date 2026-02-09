@@ -5,7 +5,10 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// RadioButton.
+/// Represents a selectable button that allows the user to choose a single option from a group of choices.
 /// </summary>
-/// <seealso cref="Avalonia.Controls.RadioButton" />
+/// <remarks>Radio buttons are typically used in groups, where only one button in the group can be selected at a
+/// time. Selecting a different radio button in the same group will automatically clear the selection from the
+/// previously selected button. Use radio buttons when you want users to select one option from a set of mutually
+/// exclusive choices.</remarks>
 public class RadioButton : global::Avalonia.Controls.RadioButton;

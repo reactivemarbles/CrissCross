@@ -7,8 +7,13 @@ using Avalonia;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Virtualized <see cref="Avalonia.Controls.ItemsControl"/>.
+/// Represents an items control that supports virtualization of its item containers to improve performance when
+/// displaying large collections.
 /// </summary>
+/// <remarks>VirtualizingItemsControl creates and manages item containers only for items that are visible in the
+/// viewport, reducing memory usage and layout overhead. This control is useful when working with large data sets where
+/// rendering all items at once would be inefficient. Virtualization behavior may depend on the panel used for layout
+/// and the configuration of related properties.</remarks>
 public class VirtualizingItemsControl : global::Avalonia.Controls.ItemsControl
 {
     /// <summary>

@@ -5,8 +5,11 @@
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Provides data for the <see cref="AutoSuggestBox.TextChanged"/> event.
+/// Specifies the reason for a text change event in an auto-suggestion box.
 /// </summary>
+/// <remarks>Use this enumeration to determine whether a text change was triggered by user input, programmatic
+/// modification, or by the user selecting a suggestion. This information can be used to adjust application behavior,
+/// such as filtering suggestions or handling selection events appropriately.</remarks>
 public enum AutoSuggestionBoxTextChangeReason
 {
     /// <summary>

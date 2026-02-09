@@ -18,7 +18,7 @@ namespace CrissCross.WPF.Plot;
 /// visibility. The view automatically initializes its data context and binds UI controls to corresponding view model
 /// properties when activated.</remarks>
 [IViewFor<RightPropertiesViewModel>]
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class RightPropertiesView
 {
     /// <summary>

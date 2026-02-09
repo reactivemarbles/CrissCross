@@ -7,8 +7,11 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Provides data for the <see cref="AutoSuggestBox.SuggestionChosen"/> event.
+/// Provides data for the event that is raised when a user selects a suggestion in an AutoSuggestBox control.
 /// </summary>
+/// <remarks>Use this class to access the item that was chosen by the user from the suggestion list. This event
+/// data is typically used in an event handler for the AutoSuggestBox.SuggestionChosen event to retrieve the selected
+/// item and perform additional actions, such as updating the UI or processing the selection.</remarks>
 public sealed class AutoSuggestBoxSuggestionChosenEventArgs : RoutedEventArgs
 {
     /// <summary>

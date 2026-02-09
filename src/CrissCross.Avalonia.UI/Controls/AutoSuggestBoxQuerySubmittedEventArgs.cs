@@ -7,7 +7,7 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
-/// Provides event data for the <see cref="AutoSuggestBox.QuerySubmitted"/> event.
+/// Provides data for the event that is raised when a user submits a query in an AutoSuggestBox control.
 /// </summary>
 public sealed class AutoSuggestBoxQuerySubmittedEventArgs : RoutedEventArgs
 {
