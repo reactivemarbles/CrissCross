@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
-using CP.Reactive;
+using CP.Reactive.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -216,8 +216,13 @@ public partial class LiveChart
     /// <remarks>This field is typically used when interacting with the property system, such as for data
     /// binding, styling, or animation in XAML. To get or set the value of the ControlMenu property, use the
     /// corresponding CLR property on the LiveChart class.</remarks>
+    #if NET8_0_OR_GREATER
+    public static readonly DependencyProperty ControlMenuProperty =
+        DependencyProperty.Register(nameof(ControlMenu), typeof(QuaternaryList<ChartObjects>), typeof(LiveChart));
+#else
     public static readonly DependencyProperty ControlMenuProperty =
         DependencyProperty.Register(nameof(ControlMenu), typeof(ReactiveList<ChartObjects>), typeof(LiveChart));
+#endif
 
     /// <summary>
     /// Handles changes to the right width property of a LiveChart control.

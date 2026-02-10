@@ -6,6 +6,7 @@
 using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI;
+using ReactiveUI.Builder;
 #endif
 
 namespace CrissCross.WinForms.Test;

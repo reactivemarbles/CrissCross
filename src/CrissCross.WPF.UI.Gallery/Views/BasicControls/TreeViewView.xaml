@@ -1,0 +1,63 @@
+﻿<UserControl
+    x:Class="CrissCross.WPF.UI.Gallery.Views.TreeViewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ui:Grid>
+        <ui:Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </ui:Grid.ColumnDefinitions>
+        <ui:StackPanel>
+            <ui:StackPanel Orientation="Horizontal">
+                <ui:Button
+                    Name="AddPerson"
+                    Width="80"
+                    Content="Add Person" />
+                <ui:TextBox Name="NewName" Width="200" />
+            </ui:StackPanel>
+            <ui:StackPanel Orientation="Horizontal">
+                <ui:Button
+                    Name="AddPet"
+                    Width="80"
+                    Content="Add Pet" />
+                <ui:TextBox Name="PetName" Width="200" />
+            </ui:StackPanel>
+            <ui:Button
+                Name="Remove"
+                Width="80"
+                HorizontalAlignment="Left"
+                Content="Remove" />
+            <ui:Button
+                Name="Collapse"
+                Width="80"
+                HorizontalAlignment="Left"
+                Content="Collapse" />
+            <ui:Button
+                Name="Expand"
+                Width="80"
+                HorizontalAlignment="Left"
+                Content="Expand" />
+            <ui:StackPanel Orientation="Horizontal">
+                <ui:TextBlock Width="110" Text="SelectedName" />
+                <ui:TextBlock
+                    Name="Selected"
+                    Width="200"
+                    Margin="10,0,0,0" />
+            </ui:StackPanel>
+            <ui:StackPanel Orientation="Horizontal">
+                <ui:TextBlock Width="110" Text="LastSelectedName" />
+                <ui:TextBlock
+                    Name="LastSelected"
+                    Width="200"
+                    Margin="10,0,0,0" />
+            </ui:StackPanel>
+        </ui:StackPanel>
+        <ui:ReactiveTreeView x:Name="FamilyTree" Grid.Column="1" />
+    </ui:Grid>
+</UserControl>

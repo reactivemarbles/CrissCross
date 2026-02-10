@@ -24,5 +24,5 @@ internal static class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI();
+            .UseReactiveUI(b => { });
 }

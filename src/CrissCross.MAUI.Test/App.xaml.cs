@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
+using ReactiveUI.Builder;
 using Splat;
 
 namespace CrissCross.MAUI.Test;
@@ -22,6 +23,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
         AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 

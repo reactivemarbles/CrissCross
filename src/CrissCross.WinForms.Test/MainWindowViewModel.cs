@@ -6,6 +6,7 @@
 using System.Runtime.Versioning;
 using CrissCross.WinForms.Test.Views;
 using ReactiveUI;
+using ReactiveUI.Builder;
 using Splat;
 #endif
 

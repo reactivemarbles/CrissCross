@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
+using ReactiveUI.Builder;
 
 namespace CrissCross.WPF.Test;
 
@@ -26,6 +27,7 @@ public partial class App : Application
     {
         // This will prevent multiple instances of the application from running at the same time.
         Make.SingleInstance("MyUniqueAppName ddd81fc8-9107-4e33-b848-cac4c3ec3d2a");
+        RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
         base.OnStartup(e);
     }
 }

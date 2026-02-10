@@ -30,14 +30,15 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
 
-  <!-- .NET Framework specific constants -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net481'">
-    <DefineConstants>$(DefineConstants);LACKS_STREAM_MEMORY_OVERLOADS</DefineConstants>
-  </PropertyGroup>
-
   <!-- .NET Framework specific references -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'net481'">
     <Reference Include="System.Net.Http" />
+    <PackageReference Include="Polyfill">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,13 +60,6 @@
     <!-- Source generators / analyzers isolated from consumers -->
     <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <PackageReference Include="Polyfill">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   
   <ItemGroup>

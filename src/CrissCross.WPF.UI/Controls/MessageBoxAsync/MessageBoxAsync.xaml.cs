@@ -2,10 +2,10 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Windows.Input;
 using CP.BBCode.WPF;
-using CP.Reactive;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -23,7 +23,7 @@ public partial class MessageBoxAsync : IListenForMessages
     /// </summary>
     public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
         nameof(Buttons),
-        typeof(ReactiveList<Button>),
+        typeof(ObservableCollection<Button>),
         typeof(MessageBoxAsync));
 
     private readonly ReactiveCommand<Unit, MessageBoxResult>? _closeOkCommand;
@@ -67,8 +67,8 @@ public partial class MessageBoxAsync : IListenForMessages
         _custom8Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom8);
         _custom9Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom9);
 
-        Buttons = new(CloseButton);
-        ButtonsSource.ItemsSource = Buttons.Items;
+        Buttons = new([CloseButton]);
+        ButtonsSource.ItemsSource = Buttons;
         this.Events().Loaded.Subscribe(_ =>
         {
             // Set up magic functions
@@ -93,9 +93,9 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <summary>
     /// Gets or sets the dialog buttons.
     /// </summary>
-    public ReactiveList<Button> Buttons
+    public ObservableCollection<Button> Buttons
     {
-        get => (ReactiveList<Button>)GetValue(ButtonsProperty);
+        get => (ObservableCollection<Button>)GetValue(ButtonsProperty);
         set => SetValue(ButtonsProperty, value);
     }
 
@@ -252,7 +252,11 @@ public partial class MessageBoxAsync : IListenForMessages
             MessageTitle.Text = title;
             MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
             Buttons.Clear();
-            Buttons.AddRange(GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9));
+            foreach (var button in GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9))
+            {
+                Buttons.Add(button);
+            }
+
             Visibility = Visibility.Visible;
         });
 
@@ -292,7 +296,11 @@ public partial class MessageBoxAsync : IListenForMessages
             MessageTitle.Text = title;
             MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
             Buttons.Clear();
-            Buttons.AddRange(GetButtons(button));
+            foreach (var button in GetButtons(button))
+            {
+                Buttons.Add(button);
+            }
+
             Visibility = Visibility.Visible;
         });
 
