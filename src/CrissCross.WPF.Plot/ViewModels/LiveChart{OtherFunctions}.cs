@@ -16,7 +16,7 @@ namespace CrissCross.WPF.Plot;
 /// properties to support interactive chart features, such as detecting axis lines under the mouse cursor and managing
 /// crosshair collections. Thread safety and platform compatibility should be considered when integrating with UI
 /// components.</remarks>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
     /// <summary>
@@ -32,18 +32,18 @@ public partial class LiveChartViewModel : RxObject
     public AxisLine? GetLineUnderMouse(float x, float y)
     {
         var rect = WpfPlot1vm!.Plot.GetCoordinateRect(x, y, radius: 5, XAxis1, YAxisList[0]);
-        Trace.WriteLine($"rect : Right {rect.Right:0.00} - Left {rect.Left:0.00}");
 
         foreach (var axLine in CrosshairCollection)
         {
-            Trace.WriteLine($"cross : X {axLine!.PlotLine!.HorizontalLine.Position:0.00} - Y {axLine!.PlotLine!.VerticalLine.Position:0.00}");
-            if (axLine.PlotLine!.HorizontalLine.IsUnderMouse(rect))
+            var plotLine = axLine.PlotLine;
+            if (plotLine?.HorizontalLine.IsUnderMouse(rect) == true)
             {
-                return axLine.PlotLine.HorizontalLine;
+                return plotLine.HorizontalLine;
             }
-            else if (axLine.PlotLine!.VerticalLine.IsUnderMouse(rect))
+
+            if (plotLine?.VerticalLine.IsUnderMouse(rect) == true)
             {
-                return axLine.PlotLine.VerticalLine;
+                return plotLine.VerticalLine;
             }
         }
 

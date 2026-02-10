@@ -4,7 +4,7 @@
 
 using System.Reactive;
 using System.Runtime.Versioning;
-using CP.Reactive;
+using CP.Reactive.Collections;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -18,7 +18,7 @@ namespace CrissCross.WPF.Plot;
 /// The view model exposes collections of available line colors and visibility options, and provides a command to save
 /// changes to the selected chart object. Thread safety and reactive property change notifications are handled via the
 /// base class and reactive extensions.</remarks>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class RightPropertiesViewModel : RxObject
 {
     [Reactive]

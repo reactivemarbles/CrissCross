@@ -6,6 +6,7 @@ using CrissCross.WPF.UI.Test.Models;
 using CrissCross.WPF.UI.Test.ViewModels;
 using CrissCross.WPF.UI.Test.Views;
 using CrissCross.WPF.UI.Test.Views.Pages;
+using ReactiveUI.Builder;
 
 namespace CrissCross.WPF.UI.Test;
 
@@ -40,7 +41,11 @@ public partial class App
     /// <summary>
     /// Initializes a new instance of the <see cref="App"/> class.
     /// </summary>
-    public App() => _tracker = GetService<Tracker>();
+    public App()
+    {
+        RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
+        _tracker = GetService<Tracker>();
+    }
 
     /// <summary>
     /// Gets registered service.

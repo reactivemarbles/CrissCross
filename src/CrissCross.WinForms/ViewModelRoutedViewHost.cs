@@ -29,7 +29,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IViewModelRoutedView
     private IRxObject? _toViewModel;
     private Control? _content;
 
-    static ViewModelRoutedViewHost() => _ = RxApp.DefaultExceptionHandler;
+    static ViewModelRoutedViewHost() => _ = RxState.DefaultExceptionHandler;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.

@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
-using CP.Reactive;
+using CP.Reactive.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -16,7 +16,7 @@ namespace CrissCross.WPF.Plot;
 /// reinitializing these objects in response to changes in the chart's data or configuration. Access to chart object
 /// collections and related members must occur on the UI thread, as thread safety is not guaranteed. For details on
 /// collection behavior and usage patterns, see the documentation for the ChartObjectsCollection property.</remarks>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel
 {
     /// <summary>
@@ -69,7 +69,11 @@ public partial class LiveChartViewModel
     /// }
     /// </code>
     /// </example>
+    #if NET8_0_OR_GREATER
+    public QuaternaryList<ChartObjects> ChartObjectsCollection { get; private set; } = [];
+#else
     public ReactiveList<ChartObjects> ChartObjectsCollection { get; private set; } = [];
+#endif
 
     /// <summary>
     /// Updates the ChartObjectsCollection from current plot lines.
@@ -81,19 +85,10 @@ public partial class LiveChartViewModel
     /// </remarks>
     private void UpdateChartObjectsCollection()
     {
-        // Clear existing collection (items remain alive, owned by PlotLinesCollectionUI)
-        ChartObjectsCollection.Clear();
+        // Get existing collection (items remain alive, owned by PlotLinesCollectionUI)
+        var chartSettings = PlotLinesCollectionUI.Select(pl => pl.ChartSettings).Where(cs => cs != null);
 
         // Populate from current plot lines (snapshot to avoid concurrent modification)
-        if (PlotLinesCollectionUI != null)
-        {
-            foreach (var plotLine in PlotLinesCollectionUI)
-            {
-                if (plotLine?.ChartSettings != null)
-                {
-                    ChartObjectsCollection.Add(plotLine.ChartSettings);
-                }
-            }
-        }
+        ChartObjectsCollection.ReplaceAll(chartSettings);
     }
 }

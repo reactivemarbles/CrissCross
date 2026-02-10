@@ -11,11 +11,7 @@ internal static class StreamExtensions
         var totalRead = 0;
         while (totalRead < count)
         {
-#if LACKS_STREAM_MEMORY_OVERLOADS
-            var n = await stream.ReadAsync(buffer, offset + totalRead, count - totalRead, cancellationToken);
-#else
             var n = await stream.ReadAsync(buffer.AsMemory(offset + totalRead, count - totalRead), cancellationToken);
-#endif
             if (n == 0)
             {
                 throw new EndOfStreamException();
@@ -43,11 +39,7 @@ internal static class StreamExtensions
     public static async Task<int> ReadByteAsync(this Stream stream, CancellationToken cancellationToken = default)
     {
         var buffer = new byte[1];
-#if LACKS_STREAM_MEMORY_OVERLOADS
-        var n = await stream.ReadAsync(buffer, 0, 1, cancellationToken);
-#else
         var n = await stream.ReadAsync(buffer.AsMemory(0, 1), cancellationToken);
-#endif
         return n switch
         {
             0 => -1,
@@ -70,17 +62,9 @@ internal static class StreamExtensions
         var buffer = new byte[bufferSize];
         int bytesRead;
         long bytesCopied = 0;
-#if LACKS_STREAM_MEMORY_OVERLOADS
-        while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
-#else
         while ((bytesRead = await source.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false)) != 0)
-#endif
         {
-#if LACKS_STREAM_MEMORY_OVERLOADS
-            await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
-#else
             await destination.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
-#endif
             bytesCopied += bytesRead;
             progress?.Report(bytesCopied);
         }

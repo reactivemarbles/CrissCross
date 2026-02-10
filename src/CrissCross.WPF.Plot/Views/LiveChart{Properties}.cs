@@ -5,7 +5,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using CP.Reactive;
+using CP.Reactive.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -239,6 +239,16 @@ public partial class LiveChart
         }
     }
 
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Gets or sets the collection of chart objects displayed in the control menu.
+    /// </summary>
+    public QuaternaryList<ChartObjects> ControlMenu
+    {
+        get => (QuaternaryList<ChartObjects>)GetValue(ControlMenuProperty);
+        set => SetValue(ControlMenuProperty, value);
+    }
+#else
     /// <summary>
     /// Gets or sets the collection of chart objects displayed in the control menu.
     /// </summary>
@@ -247,6 +257,7 @@ public partial class LiveChart
         get => (ReactiveList<ChartObjects>)GetValue(ControlMenuProperty);
         set => SetValue(ControlMenuProperty, value);
     }
+#endif
 
     /// <summary>
     /// Gets or sets the number of data points that have been plotted on the chart.

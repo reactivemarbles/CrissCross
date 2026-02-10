@@ -9,8 +9,7 @@ using System.Reactive.Subjects;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
-using CP.Reactive;
-using DynamicData;
+using CP.Reactive.Collections;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -28,7 +27,7 @@ namespace CrissCross.WPF.Plot;
 /// chart elements, axis management, and commands for interactive features such as crosshairs, labels, and menu
 /// expansion. The view model supports dynamic updates to chart visuals and user-driven configuration. Thread safety is
 /// not guaranteed; interactions should occur on the UI thread.</remarks>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
     private WpfPlot? _wpfPlot1;
@@ -166,7 +165,11 @@ public partial class LiveChartViewModel : RxObject
     /// <remarks>Each axis in the collection defines a coordinate system for the chart. Modifying this
     /// collection allows customization of axis types, scales, and appearance. Changes to the collection may affect how
     /// data is rendered and interpreted.</remarks>
+    #if NET8_0_OR_GREATER
+    public QuaternaryList<IPlottableUI> PlotLinesCollectionUI { get; }
+#else
     public ReactiveList<IPlottableUI> PlotLinesCollectionUI { get; }
+#endif
 
     /// <summary>
     /// Gets the collection of plot line UI elements displayed in the chart.
@@ -559,11 +562,7 @@ public partial class LiveChartViewModel : RxObject
             WpfPlot1vm?.Plot.Axes.Remove(axis);
         }
 
-#if NET6_0_OR_GREATER
-        YAxisList.RemoveRange([.. YAxisList]);
-#else
-        YAxisList.RemoveMany(YAxisList.Items);
-#endif
+        YAxisList.Clear();
 
         // combine yName and hexColors lists
         var combinedList = data.yNames.Zip(data.hexColors, (name, color) => (name, color));

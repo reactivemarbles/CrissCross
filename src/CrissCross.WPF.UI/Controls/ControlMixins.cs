@@ -6,15 +6,15 @@ using System.Reactive.Disposables;
 using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using CP.Reactive.Collections;
+using CP.Reactive.Core;
 
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// ControlMixins.
 /// </summary>
-#if NET6_0_OR_GREATER
-[System.Runtime.Versioning.SupportedOSPlatform("windows10.0.17763.0")]
-#endif
+[System.Runtime.Versioning.SupportedOSPlatform("windows")]
 public static class ControlMixins
 {
     /// <summary>
@@ -123,7 +123,6 @@ public static class ControlMixins
                 listRTI.Clear();
                 dis?.Dispose();
                 dis = [];
-
                 foreach (var rti in l)
                 {
                     listRTI.Add(Observable.Return(rti));

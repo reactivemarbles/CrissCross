@@ -6,6 +6,7 @@ using System.Windows;
 using CrissCross.WPF.UI.Controls;
 using CrissCross.WPF.UI.Gallery.Views;
 using ReactiveUI;
+using ReactiveUI.Builder;
 using ReactiveUI.SourceGenerators;
 using Splat;
 
@@ -42,6 +43,7 @@ public partial class MainWindowViewModel : RxObject
             new NavigationModel(typeof(IndicatorsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Indicators", Icon = new SymbolIcon(SymbolRegular.Gauge20) },
             new NavigationModel(typeof(NavigationControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Navigation", Icon = new SymbolIcon(SymbolRegular.Navigation20) },
             new NavigationModel(typeof(ContainerControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Containers", Icon = new SymbolIcon(SymbolRegular.AppFolder20) },
+            new NavigationModel(typeof(TreeViewViewModel), NavigationModels, MainWindow.Navigation) { Name = "TreeViews", Icon = new SymbolIcon(SymbolRegular.DataTreemap20), },
         ]);
 
         // Register ViewModels and Views (basic demos)
@@ -69,6 +71,7 @@ public partial class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new NavigationControlsViewModel()).Register<IViewFor<NavigationControlsViewModel>>(static () => new NavigationControlsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ContainerControlsViewModel()).Register<IViewFor<ContainerControlsViewModel>>(static () => new ContainerControlsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorControlsViewModel()).Register<IViewFor<ColorControlsViewModel>>(static () => new ColorControlsView());
+        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new TreeViewViewModel()).Register<IViewFor<TreeViewViewModel>>(static () => new TreeViewView());
 
         AppLocator.CurrentMutable.SetupComplete();
     }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+using ReactiveUI.Builder;
 
 namespace CrissCross.WinForms.Test;
 

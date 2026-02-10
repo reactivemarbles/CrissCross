@@ -21,7 +21,7 @@ namespace CrissCross.WPF.Plot;
 /// scatter, and data logger plots, with flexible axis assignment and control menu management. It is intended for use on
 /// Windows 10 version 19041 or later, as indicated by the platform requirement. Thread safety and UI update
 /// considerations depend on the underlying RxObject and charting components.</remarks>
-[SupportedOSPlatform("windows10.0.19041")]
+[SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
     [Reactive]
@@ -311,7 +311,7 @@ public partial class LiveChartViewModel : RxObject
         InitializeGenericPlotLines(
         data: observables,
         getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new StreamerUI(plot: WpfPlot1vm!, fs: fs, nSamples: nSamples, nPointsPlotted: NumberPointsPlotted, observable: obs, color: SetColorLegend(PlotLinesCollectionUI!)),
+        createPlotUI: obs => new StreamerUI(plot: WpfPlot1vm!, observable: obs, fs: fs, nSamples: nSamples, nPointsPlotted: NumberPointsPlotted, color: SetColorLegend(PlotLinesCollectionUI!)),
         isXAxisDateTime: false);
 
     /// <summary>
@@ -334,7 +334,7 @@ public partial class LiveChartViewModel : RxObject
             YAxisList[j].IsVisible = YAxisList[j].IsVisible || data.Axis == j;
         }
 
-        PlotLinesCollectionUI!.Add(newMyItem);
+        PlotLinesCollectionUI.Add(newMyItem);
 
         // UPDATE ChartObjects COLLECTION for external access
         UpdateChartObjectsCollection();
@@ -359,8 +359,7 @@ public partial class LiveChartViewModel : RxObject
             item.Dispose();
         }
 
-        ControlMenu!.Clear();
-        ControlMenu!.AddRange(settings);
+        ControlMenu.ReplaceAll(settings);
     }
 
     /// <summary>
@@ -418,8 +417,6 @@ public partial class LiveChartViewModel : RxObject
             try
             {
                 MouseCoordinatesObservable.OnNext(mouseLocation);
-
-                Trace.WriteLine("Mouse Location: { X: " + position.X + " Y: " + position.Y + " }");
             }
             catch (Exception ex)
             {
