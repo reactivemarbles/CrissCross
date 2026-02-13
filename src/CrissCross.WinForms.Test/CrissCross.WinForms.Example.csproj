@@ -11,10 +11,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Design'">
-    <DefineConstants>$(DefineConstants);DESIGN</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WinForms\CrissCross.WinForms.csproj" />
   </ItemGroup>

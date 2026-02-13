@@ -41,6 +41,12 @@ Note: Xamarin.Forms support exists in separate projects but for new apps prefer 
 
 ---
 
+## Breaking Changes in Version 3.2.0 +
+
+- Using a new version of ReactiveUI (v23.1+) with some API changes, the main change is the registration of ReactiveUI components which now uses an AppBuilder fluent API instead of Splat’s locator directly. This is a breaking change but allows for better integration with AoT builds and more flexible registration patterns.
+- Add `RxAppBuilder.CreateReactiveUIBuilder().With**Platform**().BuildApp();` as early as possible in your app startup (e.g., App.xaml.cs) to register ReactiveUI services. Then register your VMs/Views as usual with Splat or Microsoft.Extensions.DependencyInjection.
+- RxApp has been completely removed, so any direct references to RxApp.Current or RxApp.MainThreadScheduler should be updated to use the new builder pattern and new service resolution.
+
 ## Core Concepts
 
 CrissCross builds on ReactiveUI to provide ViewModel-first navigation:

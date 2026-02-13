@@ -2,13 +2,10 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-#if !DESIGN
 using System.Runtime.Versioning;
 using CrissCross.WinForms.Test.Views;
 using ReactiveUI;
-using ReactiveUI.Builder;
 using Splat;
-#endif
 
 namespace CrissCross.WinForms.Test;
 
@@ -17,7 +14,6 @@ namespace CrissCross.WinForms.Test;
 /// </summary>
 public class MainWindowViewModel : RxObject
 {
-#if !DESIGN
     /// <summary>
     /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
     /// </summary>
@@ -34,5 +30,4 @@ public class MainWindowViewModel : RxObject
         var s = new SecondForm();
         s.Show();
     }
-#endif
 }
