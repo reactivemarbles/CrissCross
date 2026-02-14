@@ -33,18 +33,18 @@ jobs:
     outputs:
       nbgv: ${{ steps.nbgv.outputs.SemVer2 }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: 'Setup Java JDK 11'
-        uses: actions/setup-java@v4.2.1
+        uses: actions/setup-java@v5
         with:
           distribution: 'microsoft'
           java-version: '11'
 
       - name: Setup .NET (With cache)
-        uses: actions/setup-dotnet@v5.0.0
+        uses: actions/setup-dotnet@v5.0.1
         with:
          dotnet-version: |
             8.0.x
