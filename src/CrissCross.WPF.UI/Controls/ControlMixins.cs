@@ -2,12 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using CP.Reactive.Collections;
-using CP.Reactive.Core;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -18,139 +13,60 @@ namespace CrissCross.WPF.UI.Controls;
 public static class ControlMixins
 {
     /// <summary>
-    /// Flattens the and select.
+    /// Flattens a reactive tree and projects each item to an observable sequence.
     /// </summary>
-    /// <typeparam name="T">The type of the select.</typeparam>
-    /// <param name="list">The list.</param>
-    /// <param name="selector">The selector.</param>
-    /// <returns>An IObservable of T.</returns>
-    public static IObservable<T> FlattenAndSelect<T>(this IObservable<IEnumerable<ReactiveTreeItem>> list, Func<ReactiveTreeItem, IObservable<T>> selector) =>
-        Observable.Create<T>(o =>
+    /// <typeparam name="T">The projected value type.</typeparam>
+    /// <param name="list">Root items observable.</param>
+    /// <param name="selector">Projection from each tree item to an observable.</param>
+    /// <returns>An observable of projected values.</returns>
+    public static IObservable<T> FlattenAndSelect<T>(this IObservable<IEnumerable<ReactiveTreeItem>> list, Func<ReactiveTreeItem, IObservable<T>> selector)
+    {
+#if NET8_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(selector);
+#else
+        if (list is null)
         {
-            var disposable = new CompositeDisposable();
-            var dis = new CompositeDisposable();
-            disposable.Add(list.Flatten()
-                .Do(_ =>
-                {
-                    dis?.Dispose();
-                    dis = [];
-                })
-                .SelectMany(y => y.Select(z => z))
-                .Subscribe(sub => sub.SelectMany(selector).Skip(1).Subscribe(o.OnNext).DisposeWith(dis)));
-            disposable.Add(dis);
-            return disposable;
-        });
+            throw new ArgumentNullException(nameof(list));
+        }
+
+        if (selector is null)
+        {
+            throw new ArgumentNullException(nameof(selector));
+        }
+#endif
+
+        return list
+            .Flatten()
+            .SelectMany(item => selector(item)?.Skip(1) ?? Observable.Empty<T>());
+    }
 
     /// <summary>
-    /// Flattens the specified list.
+    /// Flattens the specified list of reactive tree roots.
     /// </summary>
-    /// <param name="list">The list.</param>
-    /// <returns>
-    /// An IObservable of IEnumerable of ReactiveTreeItem.
-    /// </returns>
-    public static IObservable<IEnumerable<IObservable<ReactiveTreeItem>>> Flatten(this IObservable<IEnumerable<ReactiveTreeItem>> list) =>
-        Observable.Create<IEnumerable<IObservable<ReactiveTreeItem>>>(o =>
-        {
-            var disposable = new CompositeDisposable();
-            var dis = new CompositeDisposable();
-            var listRTI = new List<IObservable<ReactiveTreeItem>>();
-            var isSetup = new ReplaySubject<bool>(1);
-            isSetup.OnNext(false);
-            disposable.Add(list.Subscribe(l =>
-            {
-                if (l == null)
-                {
-                    return;
-                }
+    /// <param name="list">The root list observable.</param>
+    /// <returns>An observable sequence of flattened tree items.</returns>
+    private static IObservable<ReactiveTreeItem> Flatten(this IObservable<IEnumerable<ReactiveTreeItem>> list) =>
+        list
+            .Select(items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>()))
+            .Switch();
 
-                listRTI.Clear();
-                dis?.Dispose();
-                dis = [];
+    private static IObservable<ReactiveTreeItem> FlattenItems(IEnumerable<ReactiveTreeItem> items)
+    {
+        var streams = items
+            .Where(static item => item is not null)
+            .Select(FlattenItem)
+            .ToArray();
 
-                foreach (var rti in l)
-                {
-                    listRTI.Add(Observable.Return(rti));
-                    rti.Children.CurrentItems.Flatten(isSetup).CombineLatest(isSetup, (x, s) => (x, s)).Subscribe(x =>
-                    {
-                        if (x.x?.Any() != true)
-                        {
-                            return;
-                        }
+        return streams.Length == 0
+            ? Observable.Empty<ReactiveTreeItem>()
+            : streams.Merge();
+    }
 
-                        foreach (var y in x.x)
-                        {
-                            if (!listRTI.Contains(y))
-                            {
-                                listRTI.Add(y);
-                            }
-                        }
-
-                        if (x.s)
-                        {
-                            o.OnNext(listRTI);
-                        }
-                    }).DisposeWith(dis);
-                }
-
-                o.OnNext(listRTI);
-                isSetup.OnNext(true);
-            }));
-            disposable.Add(dis);
-            return disposable;
-        });
-
-    /// <summary>
-    /// Flattens the specified list.
-    /// </summary>
-    /// <param name="list">The list.</param>
-    /// <param name="isSetup">The is setup.</param>
-    /// <returns>
-    /// An IObservable of IEnumerable of ReactiveTreeItem.
-    /// </returns>
-    private static IObservable<IEnumerable<IObservable<ReactiveTreeItem>>> Flatten(this IObservable<IEnumerable<ReactiveTreeItem>> list, IObservable<bool> isSetup) =>
-        Observable.Create<IEnumerable<IObservable<ReactiveTreeItem>>>(o =>
-        {
-            var disposable = new CompositeDisposable();
-            var dis = new CompositeDisposable();
-            var listRTI = new List<IObservable<ReactiveTreeItem>>();
-            disposable.Add(list.Subscribe(l =>
-            {
-                if (l == null)
-                {
-                    return;
-                }
-
-                listRTI.Clear();
-                dis?.Dispose();
-                dis = [];
-                foreach (var rti in l)
-                {
-                    listRTI.Add(Observable.Return(rti));
-                    rti.Children.CurrentItems.Flatten(isSetup).CombineLatest(isSetup, (x, s) => (x, s)).Subscribe(x =>
-                    {
-                        if (x.x?.Any() != true)
-                        {
-                            return;
-                        }
-
-                        foreach (var y in x.x)
-                        {
-                            if (!listRTI.Contains(y))
-                            {
-                                listRTI.Add(y);
-                            }
-                        }
-
-                        if (x.s)
-                        {
-                            o.OnNext(listRTI);
-                        }
-                    }).DisposeWith(dis);
-                }
-
-                o.OnNext(listRTI);
-            }));
-            disposable.Add(dis);
-            return disposable;
-        });
+    private static IObservable<ReactiveTreeItem> FlattenItem(ReactiveTreeItem item) =>
+        Observable.Return(item)
+            .Concat(
+                item.Children.CurrentItems
+                    .Select(children => FlattenItems(children ?? Enumerable.Empty<ReactiveTreeItem>()))
+                    .Switch());
 }

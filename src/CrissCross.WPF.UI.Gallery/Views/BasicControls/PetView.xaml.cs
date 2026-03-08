@@ -21,6 +21,6 @@ public partial class PetView
     public PetView()
     {
         InitializeComponent();
-        this.WhenActivated(d => this.OneWayBind(ViewModel, vm => vm.Name, v => v.PetName.Text).DisposeWith(d));
+        this.WhenActivated(d => this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PetName.Text).DisposeWith(d));
     }
 }

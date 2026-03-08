@@ -28,4 +28,22 @@ public class TreeView : System.Windows.Controls.TreeView
         get => (ReactiveTreeItem?)GetValue(SelectedItemProperty);
         set => SetValue(SelectedItemProperty, value);
     }
+
+    /// <inheritdoc/>
+    protected override DependencyObject GetContainerForItemOverride() => new TreeViewItem();
+
+    /// <inheritdoc/>
+    protected override bool IsItemItsOwnContainerOverride(object item) => item is TreeViewItem;
+
+    /// <inheritdoc/>
+    protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (e == null)
+        {
+            throw new ArgumentNullException(nameof(e));
+        }
+
+        base.OnSelectedItemChanged(e);
+        SetCurrentValue(SelectedItemProperty, e.NewValue as ReactiveTreeItem);
+    }
 }
