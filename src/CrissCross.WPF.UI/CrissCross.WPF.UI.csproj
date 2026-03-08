@@ -52,7 +52,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-    <!--<PackageReference Include="ReactiveList" />-->
+    <PackageReference Include="ReactiveList" />
     <PackageReference Include="AppBarButton.WPF" />
     <PackageReference Include="BBCode.WPF" />
     <PackageReference Include="CP.Xaml.Converters" />
@@ -63,7 +63,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\chrispulman\ReactiveList\src\ReactiveList\ReactiveList.csproj" />
     <ProjectReference Include="..\CrissCross.WPF\CrissCross.WPF.csproj" />
   </ItemGroup>
 
