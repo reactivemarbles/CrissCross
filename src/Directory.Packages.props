@@ -3,9 +3,9 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <AvaloniaVersion>11.3.11</AvaloniaVersion>
+    <AvaloniaVersion>11.3.12</AvaloniaVersion>
     <SplatVersion>19.2.1</SplatVersion>
-    <ReactiveUIVersion>23.1.0-beta.8</ReactiveUIVersion>
+    <ReactiveUIVersion>23.1.8</ReactiveUIVersion>
     <WebViewVersion>1.0.3719.77</WebViewVersion>
   </PropertyGroup>
 
@@ -22,22 +22,22 @@
     
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.0-beta.1" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.7" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WinForms" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
     
     <!-- Microsoft Packages -->
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.31" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.31" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
-    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageVersion Include="Polyfill" Version="9.8.1" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.141" />
+    <PackageVersion Include="Polyfill" Version="9.13.0" />
     <PackageVersion Include="System.Buffers" Version="4.6.1" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     
@@ -64,7 +64,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.4.1" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.102" Condition="!$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.103" Condition="!$(IsTestProject)" />
 
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.9.50" Condition="!Exists('packages.config')" />
     <PackageVersion Include="stylecop.analyzers" Version="1.2.0-beta.556" />

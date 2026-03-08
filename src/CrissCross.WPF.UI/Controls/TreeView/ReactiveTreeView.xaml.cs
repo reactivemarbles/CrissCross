@@ -3,28 +3,22 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables.Fluent;
+using System.Reactive.Linq;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Interaction logic for ReactiveTreeView.xaml.
 /// </summary>
-public partial class ReactiveTreeView : IViewFor<ReactiveTreeViewModel>
+[IViewFor<ReactiveTreeViewModel>]
+public partial class ReactiveTreeView
 {
     ////https://stackoverflow.com/questions/459375/customizing-the-treeview-to-allow-multi-select
 
-    /// <summary>
-    /// The view model property.
-    /// </summary>
-    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
-        nameof(ViewModel),
-        typeof(ReactiveTreeViewModel),
-        typeof(ReactiveTreeView),
-        new PropertyMetadata(default(ReactiveTreeViewModel)));
-
     static ReactiveTreeView() =>
-        Splat.AppLocator.CurrentMutable.Register(static () => new ReactiveTreeView(), typeof(IViewFor<ReactiveTreeViewModel>));
+        Splat.AppLocator.CurrentMutable.Register<IViewFor<ReactiveTreeViewModel>>(static () => new ReactiveTreeView());
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReactiveTreeView"/> class.
@@ -34,26 +28,13 @@ public partial class ReactiveTreeView : IViewFor<ReactiveTreeViewModel>
         InitializeComponent();
         ViewModel = new();
         BorderThickness = new Thickness(0);
-        this.WhenActivated(d => ViewModel?.Children.CurrentItems.Subscribe(x => ItemsSource = x).DisposeWith(d));
-    }
-
-    /// <summary>
-    /// Gets or sets the ViewModel corresponding to this specific View. This should be
-    /// a DependencyProperty if you're using XAML.
-    /// </summary>
-    object? IViewFor.ViewModel
-    {
-        get => ViewModel;
-        set => ViewModel = (ReactiveTreeViewModel?)value;
-    }
-
-    /// <summary>
-    /// Gets or sets the ViewModel corresponding to this specific View. This should be
-    /// a DependencyProperty if you're using XAML.
-    /// </summary>
-    public ReactiveTreeViewModel? ViewModel
-    {
-        get => (ReactiveTreeViewModel?)GetValue(ViewModelProperty);
-        set => SetValue(ViewModelProperty, value);
+        this.WhenActivated(d =>
+            this.WhenAnyValue(v => v.ViewModel)
+                .Where(vm => vm != null)
+                .Select(vm => vm!.WhenAnyValue(x => x.Children))
+                .Switch()
+                .SelectMany(children => children.CurrentItems)
+                .Subscribe(items => ItemsSource = items)
+                .DisposeWith(d));
     }
 }

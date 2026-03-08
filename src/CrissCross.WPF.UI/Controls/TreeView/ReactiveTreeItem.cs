@@ -45,10 +45,14 @@ public abstract partial class ReactiveTreeItem : RxObject
             return;
         }
 
-        foreach (var child in children)
+        Children.Edit(a =>
         {
-            AddChild(child);
-        }
+            foreach (var child in children)
+            {
+                child._parent = this;
+                a.Add(child);
+            }
+        });
     }
 
     /// <summary>
@@ -103,5 +107,23 @@ public abstract partial class ReactiveTreeItem : RxObject
     {
         IsExpanded = false;
         _parent?.CollapsePath();
+    }
+
+    /// <summary>
+    /// Releases the resources used by the current instance of the class.
+    /// </summary>
+    /// <remarks>This method is called when disposing the object or during finalization. When <paramref
+    /// name="disposing"/> is <see langword="true"/>, managed resources are disposed in addition to unmanaged
+    /// resources.</remarks>
+    /// <param name="disposing">A value indicating whether to release both managed and unmanaged resources. Specify <see langword="true"/> to
+    /// release managed resources; <see langword="false"/> to release only unmanaged resources.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Children.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 }

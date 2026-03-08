@@ -21,6 +21,6 @@ public partial class PersonView
     public PersonView()
     {
         InitializeComponent();
-        this.WhenActivated(d => this.OneWayBind(ViewModel, vm => vm.Name, v => v.PersonName.Text).DisposeWith(d));
+        this.WhenActivated(d => this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PersonName.Text).DisposeWith(d));
     }
 }
