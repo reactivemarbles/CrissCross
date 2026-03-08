@@ -33,10 +33,8 @@
                                 </Grid.ColumnDefinitions>
                                 <Rectangle
                                     x:Name="ActiveRectangle"
-                                    Grid.Column="0"
                                     Width="3"
                                     Height="16"
-                                    Margin="0,0,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Fill="{DynamicResource TreeViewItemSelectionIndicatorForeground}"
@@ -45,7 +43,6 @@
                                     Visibility="Collapsed" />
                                 <controls:ToggleButton
                                     x:Name="Expander"
-                                    Grid.Column="0"
                                     Margin="8,0"
                                     ClickMode="Press"
                                     IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
@@ -120,7 +117,7 @@
         <Setter Property="Foreground" Value="{DynamicResource TreeViewItemForeground}" />
         <Setter Property="Background" Value="{DynamicResource TreeViewItemBackground}" />
         <Setter Property="Padding" Value="4" />
-        <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
@@ -138,13 +135,10 @@
                         </Grid.RowDefinitions>
                         <controls:ToggleButton
                             x:Name="Expander"
-                            Grid.Row="0"
-                            Grid.Column="0"
                             ClickMode="Press"
                             IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" />
                         <Border
                             x:Name="Bd"
-                            Grid.Row="0"
                             Grid.Column="1"
                             Padding="{TemplateBinding Padding}"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -154,16 +148,14 @@
                             </Border.Background>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" MinWidth="19" />
+                                    <ColumnDefinition Width="Auto" MinWidth="10" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Rectangle
                                     x:Name="ActiveRectangle"
-                                    Grid.Column="0"
                                     Width="3"
                                     Height="16"
-                                    Margin="0,0,0,0"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Fill="{DynamicResource TreeViewItemSelectionIndicatorForeground}"
@@ -176,7 +168,8 @@
                                     Grid.Column="1"
                                     Margin="0,0,8,0"
                                     Content="{TemplateBinding Icon}"
-                                    TextElement.Foreground="{TemplateBinding Foreground}" />
+                                    TextElement.Foreground="{TemplateBinding Foreground}"
+                                    Visibility="{TemplateBinding IconVisibility}" />
 
                                 <ContentPresenter
                                     x:Name="PART_Header"

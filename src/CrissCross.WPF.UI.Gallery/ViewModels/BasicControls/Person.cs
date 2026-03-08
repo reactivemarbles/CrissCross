@@ -4,6 +4,7 @@
 
 using System;
 using System.Reactive;
+using System.Windows.Media.Imaging;
 using CP.Reactive.Collections;
 using CrissCross.WPF.UI.Controls;
 using ReactiveUI;
@@ -23,7 +24,11 @@ public class Person
     /// <param name="name">The name.</param>
     /// <param name="children">The children.</param>
     public Person(string? name, IEnumerable<ReactiveTreeItem>? children = null)
-        : base(children) => DisplayName = name;
+        : base(children)
+    {
+        DisplayName = name;
+        Icon = new ImageIcon() { Height = 20, Width = 20, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
+    }
 
     /// <summary>
     /// Gets the view model.

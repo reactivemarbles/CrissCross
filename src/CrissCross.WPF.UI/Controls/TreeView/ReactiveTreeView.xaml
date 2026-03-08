@@ -9,11 +9,16 @@
     d:DataContext="{d:DesignInstance Type=ui:ReactiveTreeViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    ItemContainerStyle="{DynamicResource ReactiveTreeViewItemContainerStyle}"
     mc:Ignorable="d">
     <ui:TreeView.Resources>
-        <Style TargetType="{x:Type ui:TreeViewItem}">
+        <Style
+            x:Key="ReactiveTreeViewItemContainerStyle"
+            BasedOn="{StaticResource {x:Type ui:TreeViewItem}}"
+            TargetType="{x:Type ui:TreeViewItem}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+            <Setter Property="Icon" Value="{Binding Icon, Mode=TwoWay}" />
         </Style>
         <HierarchicalDataTemplate DataType="{x:Type ui:ReactiveTreeItem}" ItemsSource="{Binding Children.Items}">
             <reactiveUi:ViewModelViewHost ViewModel="{Binding ViewModel}" />

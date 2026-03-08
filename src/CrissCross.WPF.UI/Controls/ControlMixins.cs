@@ -6,8 +6,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using CP.Reactive.Collections;
-using CP.Reactive.Core;
 
 namespace CrissCross.WPF.UI.Controls;
 

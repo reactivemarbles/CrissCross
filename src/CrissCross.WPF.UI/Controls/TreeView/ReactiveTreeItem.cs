@@ -34,6 +34,12 @@ public abstract partial class ReactiveTreeItem : RxObject
     private bool _isSelected;
 
     /// <summary>
+    /// Gets or sets displayed <see cref="IconElement"/>.
+    /// </summary>
+    [Reactive]
+    private IconElement? _icon;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ReactiveTreeItem"/> class.
     /// </summary>
     /// <param name="children">The children.</param>
