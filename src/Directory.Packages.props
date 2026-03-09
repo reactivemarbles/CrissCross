@@ -6,7 +6,7 @@
     <AvaloniaVersion>11.3.12</AvaloniaVersion>
     <SplatVersion>19.2.1</SplatVersion>
     <ReactiveUIVersion>23.1.8</ReactiveUIVersion>
-    <WebViewVersion>1.0.3719.77</WebViewVersion>
+    <WebViewVersion>1.0.3800.47</WebViewVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,9 +31,9 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.31" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.41" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.31" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.41" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
@@ -49,20 +49,20 @@
     <PackageVersion Include="AngleSharp" Version="1.4.0" />
     <PackageVersion Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageVersion Include="BBCode.WPF" Version="1.0.2" />
-    <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="3.0.0-beta.10" />
+    <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="3.0.4" />
     <PackageVersion Include="CP.Xaml.Converters" Version="1.1.3" />
-    <PackageVersion Include="Markdig" Version="0.44.0" />
-    <PackageVersion Include="ReactiveList" Version="4.0.4" />
+    <PackageVersion Include="Markdig" Version="1.1.1" />
+    <PackageVersion Include="ReactiveList" Version="4.0.16" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.57" />
     
     <!-- Polyfill for .NET Framework -->
     <PackageVersion Include="Polyfill" Version="9.8.1" />
 
     <!-- Testing Packages -->
-    <PackageVersion Include="TUnit" Version="1.13.11" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Verify.TUnit" Version="31.11.0" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.4.1" Condition="$(IsTestProject)" />
+    <PackageVersion Include="TUnit" Version="1.19.11" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Verify.TUnit" Version="31.13.2" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.5.2" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.103" Condition="!$(IsTestProject)" />
 
@@ -76,7 +76,7 @@
     <!-- Android Specific -->
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation" Version="1.10.0.1" />
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="1.10.0.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.10.0.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.10.4.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
   </ItemGroup>
 </Project>

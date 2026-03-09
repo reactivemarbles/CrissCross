@@ -20,7 +20,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// A control that displays formatted text using Inlines.
 /// </summary>
-public class FormattedTextPresenter : SelectableTextBlock
+public class FormattedTextPresenter : TextBlock
 {
     /// <summary>
     /// Property for <see cref="Document"/>.
@@ -47,8 +47,6 @@ public class FormattedTextPresenter : SelectableTextBlock
     /// </summary>
     public FormattedTextPresenter()
     {
-        // Enable text selection
-        SelectionBrush = new SolidColorBrush(Color.FromArgb(100, 0, 120, 212));
     }
 
     /// <summary>
@@ -283,7 +281,13 @@ public class FormattedTextPresenter : SelectableTextBlock
 
         try
         {
-            var bytes = Convert.FromBase64String(payload);
+            var normalizedPayload = Uri.UnescapeDataString(payload).Replace(" ", "+", StringComparison.Ordinal);
+            var bytes = Convert.FromBase64String(normalizedPayload);
+            if (bytes.Length == 0)
+            {
+                return false;
+            }
+
             using var memory = new MemoryStream(bytes);
             bitmap = new Bitmap(memory);
             return true;
