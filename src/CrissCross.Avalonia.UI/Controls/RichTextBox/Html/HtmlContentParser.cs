@@ -67,8 +67,9 @@ internal static class HtmlContentParser
                 return;
             case IHtmlImageElement imageElement:
                 var imageAlignmentContext = context.WithImageAlignment(ParseAlignment(imageElement));
+                var imageSource = imageElement.GetAttribute("src") ?? imageElement.Source ?? string.Empty;
                 writer.AppendImage(
-                    imageElement.Source ?? string.Empty,
+                    imageSource,
                     imageAlignmentContext.ImageAlignment,
                     ParseLengthAttribute(imageElement, "width"),
                     ParseLengthAttribute(imageElement, "height"));

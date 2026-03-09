@@ -23,7 +23,6 @@
     <EnablePackageValidation>true</EnablePackageValidation>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <NoWarn>$(NoWarn);CA1812</NoWarn>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <!-- Release specific optimizations -->

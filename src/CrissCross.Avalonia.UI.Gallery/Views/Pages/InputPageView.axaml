@@ -92,6 +92,10 @@
                         <Run Text="• Select text and press " /><Run FontWeight="Bold" Text="Ctrl+I" /><Run Text=" for " /><Run FontStyle="Italic" Text="Italic" />
                         <LineBreak />
                         <Run Text="• Select text and press " /><Run FontWeight="Bold" Text="Ctrl+U" /><Run Text=" for " /><Run Text="Underline" TextDecorations="Underline" />
+                        <LineBreak />
+                        <Run Text="• Right-click for the formatting popup (font, size, colors, decorations)" />
+                        <LineBreak />
+                        <Run Text="• Drag text or image files onto the RichTextBox to insert content" />
                     </controls:TextBlock>
 
                     <controls:StackPanel HorizontalAlignment="Left" Spacing="16">
@@ -106,6 +110,27 @@
                                 AcceptsTab="True"
                                 IsFormattingEnabled="True"
                                 Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold." />
+                        </controls:StackPanel>
+
+                        <controls:StackPanel Spacing="8">
+                            <controls:TextBlock
+                                FontSize="12"
+                                Opacity="0.7"
+                                Text="WPF parity demo actions (auto-insert content):" />
+                            <WrapPanel ItemHeight="32" ItemWidth="160" Orientation="Horizontal">
+                                <controls:Button Click="OnRichTextResetClick" Content="Reset Content" />
+                                <controls:Button Click="OnRichTextAppendPlainClick" Content="Append Plain Text" />
+                                <controls:Button Click="OnRichTextAppendHtmlClick" Content="Append HTML" />
+                                <controls:Button Click="OnRichTextMarkdownClick" Content="Load Markdown" />
+                                <controls:Button Click="OnRichTextInsertImageClick" Content="Insert Image" />
+                                <controls:Button Click="OnRichTextReplaceSelectionClick" Content="Replace Selection" />
+                                <controls:Button Click="OnRichTextSelectAllClick" Content="Select All" />
+                                <controls:Button Click="OnRichTextBoldClick" Content="Toggle Bold" />
+                                <controls:Button Click="OnRichTextItalicClick" Content="Toggle Italic" />
+                                <controls:Button Click="OnRichTextUnderlineClick" Content="Toggle Underline" />
+                                <controls:Button Click="OnRichTextStrikeClick" Content="Toggle Strikethrough" />
+                                <controls:Button Click="OnRichTextClearFormattingClick" Content="Clear Formatting" />
+                            </WrapPanel>
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
