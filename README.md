@@ -9,7 +9,7 @@ A navigation framework and set of UI components for ReactiveUI-based application
 
 CrissCross provides ViewModel-first navigation, hostable navigation surfaces, and a comprehensive WPF UI control set with a strong ReactiveUI focus. It promotes:
 
-- ViewModel-first navigation using ReactiveUI’s IViewFor and WhenActivated
+- ViewModel-first navigation using ReactiveUIâ€™s IViewFor and WhenActivated
 - Host-based navigation via named ViewModelRoutedViewHost containers
 - Consistent navigation lifecycle notifications (WhenNavigating/WhenNavigatedTo/From)
 - Easy DI/IoC integration via Splat and Microsoft.Extensions.Hosting
@@ -32,6 +32,7 @@ NuGet packages:
 - WPF: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF)
 - WPF UI: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.UI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.UI)
 - Avalonia: ![Nuget](https://img.shields.io/nuget/v/CrissCross.Avalonia) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.Avalonia)
+- Avalonia UI: ![Nuget](https://img.shields.io/nuget/v/CrissCross.Avalonia.UI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.Avalonia.UI)
 - MAUI: ![Nuget](https://img.shields.io/nuget/v/CrissCross.MAUI) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.MAUI)
 - WinForms: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WinForms) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WinForms)
 - WPF WebView2: ![Nuget](https://img.shields.io/nuget/v/CrissCross.WPF.WebView2) ![Nuget](https://img.shields.io/nuget/dt/CrissCross.WPF.WebView2)
@@ -43,7 +44,7 @@ Note: Xamarin.Forms support exists in separate projects but for new apps prefer 
 
 ## Breaking Changes in Version 3.2.0 +
 
-- Using a new version of ReactiveUI (v23.1+) with some API changes, the main change is the registration of ReactiveUI components which now uses an AppBuilder fluent API instead of Splat’s locator directly. This is a breaking change but allows for better integration with AoT builds and more flexible registration patterns.
+- Using a new version of ReactiveUI (v23.1+) with some API changes, the main change is the registration of ReactiveUI components which now uses an AppBuilder fluent API instead of Splatâ€™s locator directly. This is a breaking change but allows for better integration with AoT builds and more flexible registration patterns.
 - Add `RxAppBuilder.CreateReactiveUIBuilder().With**Platform**().BuildApp();` as early as possible in your app startup (e.g., App.xaml.cs) to register ReactiveUI services. Then register your VMs/Views as usual with Splat or Microsoft.Extensions.DependencyInjection.
 - RxApp has been completely removed, so any direct references to RxApp.Current or RxApp.MainThreadScheduler should be updated to use the new builder pattern and new service resolution.
 
@@ -58,7 +59,7 @@ CrissCross builds on ReactiveUI to provide ViewModel-first navigation:
 - HostName: A host identifier (string) that allows targeting navigation to a specific host
 - Navigation lifecycle: WhenNavigating, WhenNavigatedTo, WhenNavigatedFrom via mixins/events
 
-Register your ViewModels and Views with Splat’s Locator or Microsoft.Extensions.DependencyInjection. CrissCross uses the locator to resolve Views for navigation targets.
+Register your ViewModels and Views with Splatâ€™s Locator or Microsoft.Extensions.DependencyInjection. CrissCross uses the locator to resolve Views for navigation targets.
 
 ---
 
@@ -257,7 +258,7 @@ The control maintains a NavigationStack and history so you can build rich shell 
 
 - NavigationUserControl (host)
 - ViewModelRoutedViewHost equivalent with CanNavigateBack observable and HostName
-- Use ReactiveUI’s WhenActivated and Splat for registration as in WPF
+- Use ReactiveUIâ€™s WhenActivated and Splat for registration as in WPF
 
 ```csharp
 public partial class MainUserControl : NavigationUserControl<MainWindowViewModel>
@@ -386,4 +387,4 @@ Issues and PRs are welcome. Please include platform, .NET version, and a minimal
 
 ## License
 
-MIT © ReactiveUI Association Incorporated
+MIT Â© ReactiveUI Association Incorporated
