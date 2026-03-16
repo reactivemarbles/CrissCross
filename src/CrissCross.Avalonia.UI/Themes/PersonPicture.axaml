@@ -1,0 +1,47 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross PersonPicture Style -->
+    <Style Selector="controls|PersonPicture">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!-- Circle background -->
+                    <Ellipse Name="PersonEllipse"
+                             Fill="{DynamicResource SystemAccentColor}"
+                             Width="{TemplateBinding Width}"
+                             Height="{TemplateBinding Height}" />
+                    <!-- Initials -->
+                    <TextBlock Name="InitialsText"
+                               Text="{TemplateBinding Initials}"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                    <!-- Badge -->
+                    <Border Name="BadgeBorder"
+                            Background="{DynamicResource SystemAccentColorDark1}"
+                            CornerRadius="8"
+                            MinWidth="16"
+                            MinHeight="16"
+                            Padding="4,2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            IsVisible="False">
+                        <TextBlock Name="BadgeText"
+                                   Text="{TemplateBinding BadgeText}"
+                                   FontSize="10"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

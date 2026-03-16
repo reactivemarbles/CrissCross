@@ -1,23 +1,29 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <!-- CrissCross.Avalonia.UI Control Themes -->
     <!-- Include this in your App.axaml to use CrissCross.Avalonia.UI controls with proper styling -->
-    
+
     <!-- Button Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Button.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelRepeatButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelToggleButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GelButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GelRepeatButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GelToggleButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToggleSwitch.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/SplitButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DropDownButton.axaml" />
-    
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/HyperlinkButton.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/NumericPushButton.axaml" />
+
     <!-- Selection Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CheckBox.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CheckBoxModern.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/RadioButton.axaml" />
-    
+
     <!-- Input Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TextBox.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/PasswordBox.axaml" />
@@ -28,7 +34,7 @@
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AutoSuggestBox.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Slider.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/SquareSlider.axaml" />
-    
+
     <!-- Color Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ColorPicker.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ColorSelector.axaml" />
@@ -36,27 +42,100 @@
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/HueSlider.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AlphaSlider.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/HexColorTextBox.axaml" />
-    
+
     <!-- Date/Time Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Calendar.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DatePicker.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TimePicker.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CalendarDatePicker.axaml" />
-    
+
     <!-- Progress Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressBar.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressRing.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CircularGauge.axaml" />
-    
+
     <!-- Rating Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/RatingControl.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ThumbRate.axaml" />
-    
+
     <!-- Container Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Card.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CardAction.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CardColor.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CardControl.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CardExpander.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Expander.axaml" />
-    
+
     <!-- Information Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/InfoBar.axaml" />
-    
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/InfoBadge.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Badge.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Snackbar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AlarmBanner.axaml" />
+
+    <!-- Text Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TextBlock.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Label.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Anchor.axaml" />
+
+    <!-- Navigation Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/NavigationView.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/NavigationControls.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BreadcrumbBar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Frame.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Page.axaml" />
+
+    <!-- List/Data Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ListBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ListView.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DataGrid.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GridView.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TreeView.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TreeGrid.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ItemsControl.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/VirtualizingGridView.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/VirtualizingItemsControl.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/VirtualizingWrapPanel.axaml" />
+
+    <!-- Dialog/Overlay Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ContentDialog.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/MessageBox.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Flyout.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/LoadingScreen.axaml" />
+
+    <!-- Menu Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Menu.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/MenuItem.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ContextMenu.axaml" />
+
+    <!-- Scroll Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ScrollBar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ScrollViewer.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DynamicScrollBar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/DynamicScrollViewer.axaml" />
+
+    <!-- Layout Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Separator.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TabControl.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToolBar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ToolTip.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/StatusBar.axaml" />
+
+    <!-- Image Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Image.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/GifImage.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/PersonPicture.axaml" />
+
+    <!-- Window Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Window.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/FluentWindow.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/FluentNavigationWindow.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/TitleBar.axaml" />
+
+    <!-- Shape Controls -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Arc.axaml" />
+
+    <!-- Application Bar -->
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AppBar.axaml" />
+
 </Styles>

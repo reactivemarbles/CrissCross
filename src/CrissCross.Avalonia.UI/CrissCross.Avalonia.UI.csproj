@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <!-- Core dependencies -->
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="ReactiveUI" />
@@ -55,11 +56,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Controls\**\*.bmp" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controls\AppBar\" />
-    <Folder Include="Controls\Arc\" />
   </ItemGroup>
 
 </Project>

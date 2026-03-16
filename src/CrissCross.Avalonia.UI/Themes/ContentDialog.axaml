@@ -1,0 +1,88 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross ContentDialog Style -->
+    <Style Selector="controls|ContentDialog">
+        <Setter Property="Background" Value="{DynamicResource ContentDialogBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ContentDialogBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Name="LayoutRoot">
+                    <!-- Smoke layer / overlay -->
+                    <Border Name="SmokeFill"
+                            Background="#80000000"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch" />
+                    
+                    <!-- Dialog container -->
+                    <Border Name="DialogBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MinWidth="320"
+                            MaxWidth="{TemplateBinding DialogMaxWidth}"
+                            MaxHeight="{TemplateBinding DialogMaxHeight}"
+                            Margin="{TemplateBinding DialogMargin}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <!-- Title -->
+                            <ContentPresenter Name="TitlePresenter"
+                                              Content="{TemplateBinding Title}"
+                                              ContentTemplate="{TemplateBinding TitleTemplate}"
+                                              Margin="24,18,24,0"
+                                              TextBlock.FontSize="20"
+                                              TextBlock.FontWeight="SemiBold" />
+                            
+                            <!-- Content -->
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Grid.Row="1"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Margin="24,12"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                            
+                            <!-- Footer buttons -->
+                            <Border Name="FooterBorder"
+                                    Grid.Row="2"
+                                    Background="{DynamicResource ContentDialogBackground}"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefault}"
+                                    BorderThickness="0,1,0,0"
+                                    Padding="24,16"
+                                    IsVisible="{TemplateBinding IsFooterVisible}">
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            Spacing="8">
+                                    <Button Name="PART_PrimaryButton"
+                                            Content="{TemplateBinding PrimaryButtonText}"
+                                            Command="{TemplateBinding PrimaryButtonCommand}"
+                                            IsEnabled="{TemplateBinding IsPrimaryButtonEnabled}"
+                                            IsVisible="{Binding PrimaryButtonText, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            MinWidth="120" />
+                                    <Button Name="PART_SecondaryButton"
+                                            Content="{TemplateBinding SecondaryButtonText}"
+                                            Command="{TemplateBinding SecondaryButtonCommand}"
+                                            IsEnabled="{TemplateBinding IsSecondaryButtonEnabled}"
+                                            IsVisible="{Binding SecondaryButtonText, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            MinWidth="120" />
+                                    <Button Name="PART_CloseButton"
+                                            Content="{TemplateBinding CloseButtonText}"
+                                            Command="{TemplateBinding CloseButtonCommand}"
+                                            IsVisible="{Binding CloseButtonText, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                            MinWidth="120" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

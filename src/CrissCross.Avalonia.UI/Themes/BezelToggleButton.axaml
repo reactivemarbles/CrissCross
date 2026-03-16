@@ -1,0 +1,140 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross BezelToggleButton Style - A toggle button with a beveled/raised 3D appearance -->
+    <Style Selector="controls|BezelToggleButton">
+        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="OuterCornerRadius" Value="6" />
+        <Setter Property="InnerCornerRadius" Value="4" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!-- Outer bezel -->
+                    <Border Name="OuterBezel"
+                            CornerRadius="{TemplateBinding OuterCornerRadius}"
+                            Padding="3">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Offset="0" Color="#FFDDDDDD" />
+                                <GradientStop Offset="0.5" Color="#FF888888" />
+                                <GradientStop Offset="1" Color="#FF333333" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        
+                        <!-- Inner bezel -->
+                        <Border Name="InnerBezel"
+                                CornerRadius="{TemplateBinding InnerCornerRadius}"
+                                Padding="2">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#FF222222" />
+                                    <GradientStop Offset="0.5" Color="#FF666666" />
+                                    <GradientStop Offset="1" Color="#FFAAAAAA" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            
+                            <!-- Main button surface -->
+                            <Border Name="ButtonSurface"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="{TemplateBinding InnerCornerRadius}">
+                                <Grid>
+                                    <!-- Glare overlay -->
+                                    <Border Name="GlareOverlay"
+                                            CornerRadius="{TemplateBinding InnerCornerRadius}"
+                                            IsHitTestVisible="False">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                                <GradientStop Offset="0" Color="#40FFFFFF" />
+                                                <GradientStop Offset="0.5" Color="#10FFFFFF" />
+                                                <GradientStop Offset="0.5" Color="Transparent" />
+                                                <GradientStop Offset="1" Color="Transparent" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    
+                                    <!-- Pressed overlay -->
+                                    <Border Name="PressedOverlay"
+                                            CornerRadius="{TemplateBinding InnerCornerRadius}"
+                                            IsHitTestVisible="False"
+                                            IsVisible="False">
+                                        <Border.Background>
+                                            <RadialGradientBrush>
+                                                <GradientStop Offset="0" Color="Transparent" />
+                                                <GradientStop Offset="1" Color="#30000000" />
+                                            </RadialGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+                                    
+                                    <!-- Content -->
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      Padding="{TemplateBinding Padding}"
+                                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      TextBlock.Foreground="{TemplateBinding Foreground}" />
+                                </Grid>
+                            </Border>
+                        </Border>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Checked state -->
+    <Style Selector="controls|BezelToggleButton:checked /template/ Border#ButtonSurface">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+    </Style>
+    
+    <Style Selector="controls|BezelToggleButton:checked">
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+    </Style>
+    
+    <!-- Pressed state -->
+    <Style Selector="controls|BezelToggleButton:pressed /template/ Border#PressedOverlay">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <Style Selector="controls|BezelToggleButton:pressed /template/ Border#GlareOverlay">
+        <Setter Property="Opacity" Value="0.3" />
+    </Style>
+    
+    <Style Selector="controls|BezelToggleButton:pressed /template/ Border#OuterBezel">
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#FF333333" />
+                <GradientStop Offset="0.5" Color="#FF666666" />
+                <GradientStop Offset="1" Color="#FFAAAAAA" />
+            </LinearGradientBrush>
+        </Setter>
+    </Style>
+    
+    <Style Selector="controls|BezelToggleButton:pressed /template/ Border#InnerBezel">
+        <Setter Property="Background">
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#FFAAAAAA" />
+                <GradientStop Offset="0.5" Color="#FF888888" />
+                <GradientStop Offset="1" Color="#FF444444" />
+            </LinearGradientBrush>
+        </Setter>
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|BezelToggleButton:pointerover /template/ Border#ButtonSurface">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|BezelToggleButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

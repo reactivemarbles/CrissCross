@@ -1,0 +1,54 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross BreadcrumbBar Style -->
+    <Style Selector="controls|BreadcrumbBar">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="0" />
+            </ItemsPanelTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- BreadcrumbBarItem Style -->
+    <Style Selector="controls|BreadcrumbBarItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondary}" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}" />
+                    <TextBlock Name="Separator"
+                               Text="&#xE76C;"
+                               FontFamily="{StaticResource SymbolThemeFontFamily}"
+                               FontSize="10"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextFillColorTertiary}"
+                               Margin="4,0" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Last BreadcrumbBarItem (active) -->
+    <Style Selector="controls|BreadcrumbBarItem:last-child">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <Style Selector="controls|BreadcrumbBarItem:last-child /template/ TextBlock#Separator">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|BreadcrumbBarItem:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+    </Style>
+    
+</Styles>

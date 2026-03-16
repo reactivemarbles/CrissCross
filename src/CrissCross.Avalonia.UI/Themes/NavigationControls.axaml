@@ -1,0 +1,42 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross NavigationControls Style -->
+    <Style Selector="controls|NavigationControls">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <!-- Back button -->
+                    <Button Name="PART_BackButton"
+                            IsEnabled="{TemplateBinding CanGoBack}"
+                            Padding="8"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            CornerRadius="4">
+                        <TextBlock Text="&#xE72B;"
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   FontSize="14" />
+                    </Button>
+                    <!-- Forward button -->
+                    <Button Name="PART_ForwardButton"
+                            IsEnabled="{TemplateBinding CanGoForward}"
+                            Padding="8"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            CornerRadius="4">
+                        <TextBlock Text="&#xE72A;"
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   FontSize="14" />
+                    </Button>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Disabled buttons -->
+    <Style Selector="controls|NavigationControls Button:disabled">
+        <Setter Property="Opacity" Value="0.4" />
+    </Style>
+    
+</Styles>

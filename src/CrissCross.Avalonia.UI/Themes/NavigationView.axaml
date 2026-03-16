@@ -1,0 +1,67 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross NavigationView Style -->
+    <Style Selector="controls|NavigationView">
+        <Setter Property="Background" Value="{DynamicResource NavigationViewDefaultPaneBackground}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="Auto,*">
+                    <!-- Pane -->
+                    <Border Name="PaneBorder"
+                            Grid.Column="0"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource NavigationViewItemSeparatorForeground}"
+                            BorderThickness="0,0,1,0"
+                            Width="280"
+                            IsVisible="{TemplateBinding IsPaneVisible}">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <!-- Pane toggle button -->
+                            <Button Name="PART_PaneToggleButton"
+                                    IsVisible="{TemplateBinding IsPaneToggleVisible}"
+                                    Margin="4"
+                                    Padding="8"
+                                    Background="Transparent"
+                                    BorderThickness="0">
+                                <TextBlock Text="&#xE700;"
+                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                           FontSize="16" />
+                            </Button>
+                            
+                            <!-- Menu items -->
+                            <ItemsPresenter Name="PART_MenuItemsPresenter"
+                                            Grid.Row="1"
+                                            Margin="0,4" />
+                            
+                            <!-- Footer menu items -->
+                            <ItemsPresenter Name="PART_FooterMenuItemsPresenter"
+                                            Grid.Row="2"
+                                            Margin="0,4" />
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Content area -->
+                    <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                        <!-- Header -->
+                        <ContentPresenter Name="PART_HeaderPresenter"
+                                          Content="{TemplateBinding Header}"
+                                          IsVisible="{TemplateBinding HeaderVisibility}"
+                                          Margin="16,8" />
+                        <!-- Main content -->
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Row="1"
+                                          Content="{TemplateBinding Content}" />
+                        <!-- Content overlay -->
+                        <ContentPresenter Name="PART_ContentOverlay"
+                                          Grid.Row="0"
+                                          Grid.RowSpan="2"
+                                          Content="{TemplateBinding ContentOverlay}"
+                                          IsVisible="{Binding ContentOverlay, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

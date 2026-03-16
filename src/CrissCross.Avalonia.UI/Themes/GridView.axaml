@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross GridView Style -->
+    <Style Selector="controls|GridView">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- GridView Item Style -->
+    <Style Selector="controls|GridView ListBoxItem">
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+    
+    <Style Selector="controls|GridView ListBoxItem:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
+    </Style>
+    
+    <Style Selector="controls|GridView ListBoxItem:selected">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
+    </Style>
+    
+</Styles>

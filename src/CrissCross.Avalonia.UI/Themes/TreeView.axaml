@@ -1,0 +1,28 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross TreeView Style -->
+    <Style Selector="controls|TreeView">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="2" />
+    </Style>
+    
+    <!-- TreeView Item Style -->
+    <Style Selector="controls|TreeView TreeViewItem">
+        <Setter Property="Padding" Value="8,4" />
+    </Style>
+    
+    <Style Selector="controls|TreeView TreeViewItem:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
+    </Style>
+    
+    <Style Selector="controls|TreeView TreeViewItem:selected">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
+    </Style>
+    
+</Styles>

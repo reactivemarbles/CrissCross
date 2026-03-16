@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross TabControl Style -->
+    <Style Selector="controls|TabControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    
+    <!-- Tab item styling within CrissCross TabControl -->
+    <Style Selector="controls|TabControl TabItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondary}" />
+        <Setter Property="Padding" Value="12,8" />
+    </Style>
+    
+    <Style Selector="controls|TabControl TabItem:selected">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+    </Style>
+    
+    <Style Selector="controls|TabControl TabItem:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+    </Style>
+    
+</Styles>
