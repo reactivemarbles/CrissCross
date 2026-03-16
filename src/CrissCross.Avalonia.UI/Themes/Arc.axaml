@@ -1,0 +1,13 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross Arc Style -->
+    <Style Selector="controls|Arc">
+        <Setter Property="Stroke" Value="{DynamicResource SystemAccentColorPrimary}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="StrokeLineCap" Value="Round" />
+        <Setter Property="Fill" Value="{x:Null}" />
+    </Style>
+    
+</Styles>

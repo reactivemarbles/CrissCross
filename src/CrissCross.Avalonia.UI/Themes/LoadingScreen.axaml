@@ -1,0 +1,31 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross LoadingScreen Style -->
+    <Style Selector="controls|LoadingScreen">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="#80000000"
+                        IsVisible="{TemplateBinding IsLoading}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch">
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="16">
+                        <controls:ProgressRing IsIndeterminate="True"
+                                               Width="48"
+                                               Height="48"
+                                               HorizontalAlignment="Center" />
+                        <TextBlock Text="Loading..."
+                                   Foreground="White"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

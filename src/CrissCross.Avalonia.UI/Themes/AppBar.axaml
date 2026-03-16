@@ -1,0 +1,45 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross AppBar Style -->
+    <Style Selector="controls|AppBar">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorPrimary}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="PART_RootBorder"
+                        Background="{TemplateBinding Background}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        IsVisible="{TemplateBinding IsOpen}"
+                        MinHeight="88">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- Left content -->
+                        <ItemsControl Grid.Column="0"
+                                      ItemsSource="{TemplateBinding AppBarLeft}"
+                                      HorizontalAlignment="Left">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="5" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <!-- Right content -->
+                        <ItemsControl Grid.Column="1"
+                                      ItemsSource="{TemplateBinding AppBarRight}"
+                                      HorizontalAlignment="Right">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="5" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

@@ -1,0 +1,66 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross NumericPushButton Style -->
+    <Style Selector="controls|NumericPushButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <!-- Decrement button area -->
+                        <TextBlock Name="DecrementIcon"
+                                   Text="&#xE738;"
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   FontSize="10"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0" />
+                        <!-- Value display -->
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding NumericValue}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold" />
+                        <!-- Increment button area -->
+                        <TextBlock Name="IncrementIcon"
+                                   Grid.Column="2"
+                                   Text="&#xE710;"
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   FontSize="10"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0,0,0" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|NumericPushButton:pointerover /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+    </Style>
+    
+    <!-- Pressed state -->
+    <Style Selector="controls|NumericPushButton:pressed /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|NumericPushButton:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

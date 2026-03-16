@@ -1,0 +1,90 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CardExpander Style -->
+    <Style Selector="controls|CardExpander">
+        <Setter Property="Background" Value="{DynamicResource CardBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="ContentPadding" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <!-- Header area with toggle -->
+                        <Border Name="HeaderBorder"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Icon -->
+                                <ContentPresenter Name="IconPresenter"
+                                                  Content="{TemplateBinding Icon}"
+                                                  IsVisible="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                  Margin="0,0,12,0"
+                                                  VerticalAlignment="Center" />
+                                <!-- Header content -->
+                                <ContentPresenter Name="PART_HeaderPresenter"
+                                                  Grid.Column="1"
+                                                  Content="{TemplateBinding Header}"
+                                                  VerticalAlignment="Center" />
+                                <!-- Expand chevron -->
+                                <TextBlock Name="ExpandChevron"
+                                           Grid.Column="2"
+                                           Text="&#xE70D;"
+                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           RenderTransformOrigin="50%,50%">
+                                    <TextBlock.RenderTransform>
+                                        <RotateTransform Angle="0" />
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                        <!-- Expandable content -->
+                        <Border Name="ContentBorder"
+                                IsVisible="False"
+                                Padding="{TemplateBinding ContentPadding}"
+                                BorderBrush="{DynamicResource CardStrokeColorDefault}"
+                                BorderThickness="0,1,0,0">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Expanded state -->
+    <Style Selector="controls|CardExpander:expanded /template/ Border#ContentBorder">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    
+    <Style Selector="controls|CardExpander:expanded /template/ TextBlock#ExpandChevron">
+        <Setter Property="RenderTransform">
+            <RotateTransform Angle="180" />
+        </Setter>
+    </Style>
+    
+    <!-- Pointer over state -->
+    <Style Selector="controls|CardExpander:pointerover /template/ Border#HeaderBorder">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
+    </Style>
+    
+    <!-- Disabled state -->
+    <Style Selector="controls|CardExpander:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

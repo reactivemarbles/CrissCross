@@ -1,0 +1,24 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross MenuItem Style -->
+    <Style Selector="controls|MenuItem">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+    
+    <Style Selector="controls|MenuItem:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
+    </Style>
+    
+    <Style Selector="controls|MenuItem:pressed">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
+    </Style>
+    
+    <Style Selector="controls|MenuItem:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    
+</Styles>

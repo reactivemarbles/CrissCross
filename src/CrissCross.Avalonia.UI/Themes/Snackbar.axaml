@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross Snackbar Style -->
+    <Style Selector="controls|Snackbar">
+        <Setter Property="Background" Value="{DynamicResource CardBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
+                        Padding="{TemplateBinding Padding}"
+                        IsVisible="{TemplateBinding IsShown}">
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                        <!-- Icon -->
+                        <ContentPresenter Name="IconPresenter"
+                                          Content="{TemplateBinding Icon}"
+                                          IsVisible="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Margin="0,0,12,0"
+                                          VerticalAlignment="Center" />
+                        <!-- Title -->
+                        <ContentPresenter Name="TitlePresenter"
+                                          Grid.Column="1"
+                                          Content="{TemplateBinding Title}"
+                                          IsVisible="{Binding Title, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          TextElement.FontWeight="SemiBold"
+                                          Margin="0,0,12,0"
+                                          VerticalAlignment="Center" />
+                        <!-- Content -->
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Column="2"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          VerticalAlignment="Center"
+                                          Foreground="{TemplateBinding ContentForeground}" />
+                        <!-- Close button -->
+                        <Button Name="PART_CloseButton"
+                                Grid.Column="3"
+                                IsVisible="{TemplateBinding IsCloseButtonEnabled}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="4"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="&#xE711;"
+                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       FontSize="12" />
+                        </Button>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

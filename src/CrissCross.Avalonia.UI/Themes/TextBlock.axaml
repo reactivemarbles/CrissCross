@@ -1,0 +1,62 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross TextBlock Style -->
+    <Style Selector="controls|TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    
+    <!-- Typography variants -->
+    <Style Selector="controls|TextBlock[FontTypography=Caption]">
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=Body]">
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=BodyStrong]">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=Subtitle]">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=Title]">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=TitleLarge]">
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[FontTypography=Display]">
+        <Setter Property="FontSize" Value="68" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    
+    <!-- Appearance variants -->
+    <Style Selector="controls|TextBlock[Appearance=Primary]">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[Appearance=Secondary]">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondary}" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[Appearance=Tertiary]">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiary}" />
+    </Style>
+    
+    <Style Selector="controls|TextBlock[Appearance=Disabled]">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabled}" />
+    </Style>
+    
+</Styles>

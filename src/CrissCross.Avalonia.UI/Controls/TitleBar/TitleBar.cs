@@ -10,7 +10,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// Custom navigation buttons for the window.
 /// </summary>
-public class TitleBar : global::Avalonia.Controls.Control
+public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Title"/>.

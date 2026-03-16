@@ -1,0 +1,42 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross CardColor Style -->
+    <Style Selector="controls|CardColor">
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Height" Value="160" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border CornerRadius="4"
+                        ClipToBounds="True"
+                        BorderBrush="{DynamicResource CardStrokeColorDefault}"
+                        BorderThickness="1">
+                    <Grid RowDefinitions="*,Auto">
+                        <!-- Color swatch area -->
+                        <Border Name="ColorSwatch"
+                                Background="{TemplateBinding CardBrush}" />
+                        <!-- Text area -->
+                        <Border Grid.Row="1"
+                                Background="{DynamicResource CardBackground}"
+                                Padding="8,6">
+                            <StackPanel>
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextFillColorPrimary}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{TemplateBinding Subtitle}"
+                                           FontSize="{TemplateBinding SubtitleFontSize}"
+                                           Foreground="{DynamicResource TextFillColorSecondary}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="0,2,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

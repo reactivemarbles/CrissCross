@@ -1,0 +1,97 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross TitleBar Style -->
+    <Style Selector="controls|TitleBar">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Name="RootGrid"
+                      Background="Transparent"
+                      ColumnDefinitions="Auto,Auto,*,Auto">
+                    <!-- Icon -->
+                    <ContentPresenter Name="IconPresenter"
+                                      Content="{TemplateBinding Icon}"
+                                      IsVisible="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Margin="12,0,8,0"
+                                      VerticalAlignment="Center"
+                                      Width="16"
+                                      Height="16" />
+                    <!-- Title -->
+                    <TextBlock Name="TitleText"
+                               Grid.Column="1"
+                               Text="{TemplateBinding Title}"
+                               FontSize="12"
+                               Foreground="{TemplateBinding ButtonsForeground}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,12,0" />
+                    <!-- Header content -->
+                    <ContentPresenter Name="HeaderPresenter"
+                                      Grid.Column="2"
+                                      Content="{TemplateBinding Header}"
+                                      VerticalAlignment="Center" />
+                    <!-- Window buttons -->
+                    <StackPanel Grid.Column="3"
+                                Orientation="Horizontal">
+                        <!-- Minimize -->
+                        <Button Name="PART_MinimizeButton"
+                                IsVisible="{TemplateBinding ShowMinimize}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="46"
+                                Height="32"
+                                Padding="0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                            <TextBlock Text="&#xE921;"
+                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       FontSize="10"
+                                       Foreground="{TemplateBinding ButtonsForeground}" />
+                        </Button>
+                        <!-- Maximize/Restore -->
+                        <Button Name="PART_MaximizeButton"
+                                IsVisible="{TemplateBinding ShowMaximize}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="46"
+                                Height="32"
+                                Padding="0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                            <TextBlock Text="&#xE922;"
+                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       FontSize="10"
+                                       Foreground="{TemplateBinding ButtonsForeground}" />
+                        </Button>
+                        <!-- Close -->
+                        <Button Name="PART_CloseButton"
+                                IsVisible="{TemplateBinding ShowClose}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Width="46"
+                                Height="32"
+                                Padding="0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                            <TextBlock Text="&#xE8BB;"
+                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                       FontSize="10"
+                                       Foreground="{TemplateBinding ButtonsForeground}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Close button hover -->
+    <Style Selector="controls|TitleBar /template/ Button#PART_CloseButton:pointerover">
+        <Setter Property="Background" Value="#E81123" />
+    </Style>
+    
+    <!-- Window button hover -->
+    <Style Selector="controls|TitleBar /template/ Button#PART_MinimizeButton:pointerover, controls|TitleBar /template/ Button#PART_MaximizeButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
+    </Style>
+    
+</Styles>

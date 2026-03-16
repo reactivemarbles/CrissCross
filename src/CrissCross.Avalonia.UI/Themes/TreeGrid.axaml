@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross TreeGrid Style -->
+    <Style Selector="controls|TreeGrid">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefault}"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Padding="2">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Column headers -->
+                        <ItemsControl Name="PART_HeadersPresenter"
+                                      ItemsSource="{TemplateBinding Headers}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <!-- Content area -->
+                        <Border Grid.Row="1"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefault}"
+                                BorderThickness="0,1,0,0" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+</Styles>

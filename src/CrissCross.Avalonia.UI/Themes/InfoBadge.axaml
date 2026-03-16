@@ -1,0 +1,54 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    
+    <!-- CrissCross InfoBadge Style -->
+    <Style Selector="controls|InfoBadge">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{DynamicResource SystemAccentColor}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        MinWidth="16"
+                        MinHeight="16"
+                        Padding="4,2">
+                    <Grid>
+                        <!-- Value text -->
+                        <TextBlock Name="ValueText"
+                                   Text="{TemplateBinding Value}"
+                                   FontSize="10"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <!-- Icon -->
+                        <ContentPresenter Name="IconPresenter"
+                                          Content="{TemplateBinding Icon}"
+                                          IsVisible="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <!-- Severity-based colors -->
+    <Style Selector="controls|InfoBadge[Severity=Informational] /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+    </Style>
+    
+    <Style Selector="controls|InfoBadge[Severity=Success] /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackground}" />
+    </Style>
+    
+    <Style Selector="controls|InfoBadge[Severity=Caution] /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource InfoBarCautionSeverityBackground}" />
+    </Style>
+    
+    <Style Selector="controls|InfoBadge[Severity=Critical] /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackground}" />
+    </Style>
+    
+</Styles>
