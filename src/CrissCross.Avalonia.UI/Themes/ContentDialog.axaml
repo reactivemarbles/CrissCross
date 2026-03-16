@@ -36,8 +36,8 @@
                                               Content="{TemplateBinding Title}"
                                               ContentTemplate="{TemplateBinding TitleTemplate}"
                                               Margin="24,18,24,0"
-                                              TextBlock.FontSize="20"
-                                              TextBlock.FontWeight="SemiBold" />
+                                              TextElement.FontSize="20"
+                                              TextElement.FontWeight="SemiBold" />
                             
                             <!-- Content -->
                             <ContentPresenter Name="PART_ContentPresenter"

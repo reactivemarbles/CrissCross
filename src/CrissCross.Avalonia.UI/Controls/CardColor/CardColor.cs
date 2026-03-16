@@ -10,7 +10,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// Ala Pa**one color card.
 /// </summary>
-public class CardColor : global::Avalonia.Controls.Control
+public class CardColor : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Title"/>.

@@ -30,7 +30,7 @@
                                           Grid.Column="1"
                                           Content="{TemplateBinding Title}"
                                           IsVisible="{Binding Title, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                          TextBlock.FontWeight="SemiBold"
+                                          TextElement.FontWeight="SemiBold"
                                           Margin="0,0,12,0"
                                           VerticalAlignment="Center" />
                         <!-- Content -->

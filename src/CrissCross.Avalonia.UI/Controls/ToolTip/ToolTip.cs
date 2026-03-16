@@ -4,13 +4,14 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
 /// Represents a control that creates a pop-up window that displays information for an element.
 /// </summary>
-public class ToolTip : Control
+public class ToolTip : TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Text"/>.

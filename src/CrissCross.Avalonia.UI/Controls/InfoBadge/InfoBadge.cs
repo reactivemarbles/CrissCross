@@ -9,7 +9,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// InfoBadge, a control that displays a small amount of information, typically a number or a small piece of text, in a compact way.
 /// </summary>
-public class InfoBadge : global::Avalonia.Controls.Control
+public class InfoBadge : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Severity"/>.

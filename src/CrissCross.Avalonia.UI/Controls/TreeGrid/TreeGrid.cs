@@ -5,13 +5,14 @@
 using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>
 /// Work in progress.
 /// </summary>
-public class TreeGrid : Control
+public class TreeGrid : TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="Headers"/>.

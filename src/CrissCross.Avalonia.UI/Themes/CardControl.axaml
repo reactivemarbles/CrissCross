@@ -30,13 +30,13 @@
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <ContentPresenter Name="HeaderPresenter"
                                               Content="{TemplateBinding Header}"
-                                              TextBlock.FontWeight="SemiBold"
-                                              TextBlock.Foreground="{DynamicResource TextFillColorPrimary}" />
+                                              TextElement.FontWeight="SemiBold"
+                                              TextElement.Foreground="{DynamicResource TextFillColorPrimary}" />
                             <ContentPresenter Name="PART_ContentPresenter"
                                               Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
                                               Margin="0,4,0,0"
-                                              TextBlock.Foreground="{DynamicResource TextFillColorSecondary}" />
+                                              TextElement.Foreground="{DynamicResource TextFillColorSecondary}" />
                         </StackPanel>
                     </Grid>
                 </Border>

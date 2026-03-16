@@ -9,7 +9,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>
 /// PersonPicture.
 /// </summary>
-public class PersonPicture : global::Avalonia.Controls.Control
+public class PersonPicture : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>
     /// Property for <see cref="DisplayName"/>.

@@ -20,9 +20,9 @@
                                       ContentTemplate="{TemplateBinding ContentTemplate}"
                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                       VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                      TextBlock.Foreground="White"
-                                      TextBlock.FontSize="{TemplateBinding FontSize}"
-                                      TextBlock.FontWeight="{TemplateBinding FontWeight}" />
+                                      TextElement.Foreground="White"
+                                      TextElement.FontSize="{TemplateBinding FontSize}"
+                                      TextElement.FontWeight="{TemplateBinding FontWeight}" />
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -34,7 +34,7 @@
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Secondary] /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimary}" />
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Info] /template/ Border#RootBorder">
