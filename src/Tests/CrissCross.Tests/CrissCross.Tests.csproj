@@ -11,6 +11,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CrissCross\CrissCross.csproj" />
+    <Using Include="TUnit.Core"/>
+    <Using Include="TUnit.Assertions"/>
+    <Using Include="TUnit.Assertions.Extensions"/>
   </ItemGroup>
 
 </Project>

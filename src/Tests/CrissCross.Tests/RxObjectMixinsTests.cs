@@ -5,6 +5,7 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using ReactiveUI;
+using ReactiveUI.Builder;
 using Splat;
 
 namespace CrissCross.Tests;
@@ -14,6 +15,9 @@ namespace CrissCross.Tests;
 /// </summary>
 public class RxObjectMixinsTests
 {
+    [Before(HookType.Class)]
+    public static void InitializeReactiveUI() => Locator.CurrentMutable.CreateReactiveUIBuilder().WithCoreServices().BuildApp();
+
     private class TestReactiveObject : ReactiveObject
     {
         private string? _testProperty;
@@ -47,6 +51,7 @@ public class RxObjectMixinsTests
         await Assert.That(signalReceived).IsTrue();
 
         subscription.Dispose();
+        testObject.Dispose();
     }
 
     [Test]
@@ -67,6 +72,7 @@ public class RxObjectMixinsTests
 
         // Assert
         await Assert.That(actionExecuted).IsTrue();
+        testObject.Dispose();
     }
 
     [Test]
@@ -84,6 +90,7 @@ public class RxObjectMixinsTests
         await Assert.That(disposable).IsAssignableTo<IDisposable>();
 
         disposable.Dispose();
+        testObject.Dispose();
     }
 
     [Test]
@@ -105,6 +112,7 @@ public class RxObjectMixinsTests
 
         // Assert - action should not execute after disposal
         await Assert.That(actionExecuted).IsFalse();
+        testObject.Dispose();
     }
 
     [Test]
@@ -129,6 +137,7 @@ public class RxObjectMixinsTests
         await Assert.That(observableList.Count).IsEqualTo(2);
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -158,6 +167,7 @@ public class RxObjectMixinsTests
         await Assert.That(observableList.Count).IsEqualTo(2);
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -182,6 +192,7 @@ public class RxObjectMixinsTests
         await Assert.That(result).IsTrue();
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -206,6 +217,7 @@ public class RxObjectMixinsTests
         await Assert.That(result).IsFalse();
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -235,6 +247,7 @@ public class RxObjectMixinsTests
         await Assert.That(result).IsTrue();
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -254,6 +267,7 @@ public class RxObjectMixinsTests
         await Assert.That(receivedValue).IsFalse();
 
         subscription.Dispose();
+        subject.Dispose();
     }
 
     [Test]
@@ -274,5 +288,6 @@ public class RxObjectMixinsTests
         await Assert.That(observableList.Count).IsEqualTo(0);
 
         subscription.Dispose();
+        subject.Dispose();
     }
 }

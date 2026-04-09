@@ -7,12 +7,8 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using CrissCross;
 using ReactiveUI;
 using Splat;
-using TUnit.Assertions;
-using TUnit.Assertions.Extensions;
-using TUnit.Core;
 
 namespace CrissCross.Tests;
 
@@ -164,7 +160,7 @@ public class ViewModelRoutedViewHostMixinsTests
         }
     }
 
-    [Before(Test)]
+    [Before(HookType.Test)]
     public async Task Setup()
     {
         // Note: We don't clear static dictionaries as it causes test isolation issues
