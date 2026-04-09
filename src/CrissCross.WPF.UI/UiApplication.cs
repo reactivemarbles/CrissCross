@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI;
 /// </remarks>
 public class UiApplication
 {
+    [ThreadStatic]
     private static UiApplication? _uiApplication;
     private readonly Application? _application;
     private ResourceDictionary? _resources;
