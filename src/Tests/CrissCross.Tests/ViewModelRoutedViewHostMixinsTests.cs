@@ -405,7 +405,11 @@ public class ViewModelRoutedViewHostMixinsTests
     {
         // Arrange
         var hostName = GetUniqueHostName();
+        var otherHostName = GetUniqueHostName();
         var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(otherHostName);
+        var viewHost = new TestViewModelRoutedViewHost(otherHostName);
+        setNav.SetMainNavigationHost(viewHost);
 
         // Act & Assert
         await Assert.That(() => ((IUseNavigation)vm).NavigateToView<TestViewModel>()).Throws<KeyNotFoundException>();

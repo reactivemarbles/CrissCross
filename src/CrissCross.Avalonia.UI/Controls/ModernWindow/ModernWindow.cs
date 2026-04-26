@@ -17,7 +17,7 @@ public class ModernWindow : Window
     public ModernWindow()
     {
         // Configure window for modern appearance
-        SystemDecorations = SystemDecorations.BorderOnly;
+        WindowDecorations = global::Avalonia.Controls.WindowDecorations.BorderOnly;
         TransparencyLevelHint = new[] { WindowTransparencyLevel.AcrylicBlur };
     }
 }

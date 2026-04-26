@@ -751,7 +751,7 @@ public class RichTextBox : TemplatedControl
     }
 
     /// <inheritdoc/>
-    protected override void OnGotFocus(GotFocusEventArgs e)
+    protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
 
@@ -818,13 +818,13 @@ public class RichTextBox : TemplatedControl
         }
     }
 
-    private void OnTextBoxGotFocus(object? sender, GotFocusEventArgs e)
+    private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
     {
         UpdateDisplayMode();
         SynchronizeSelectionFromIndexes(raiseEvent: false);
     }
 
-    private void OnTextBoxLostFocus(object? sender, RoutedEventArgs e)
+    private void OnTextBoxLostFocus(object? sender, FocusChangedEventArgs e)
     {
         UpdateFormattedPresenter();
         UpdateDisplayMode();
@@ -1076,7 +1076,7 @@ public class RichTextBox : TemplatedControl
         var files = ToStorageItemList(filesResult);
         if (files is null || files.Count == 0)
         {
-            var legacyFiles = e.Data.GetFiles();
+            var legacyFiles = e.DataTransfer.TryGetFiles();
             if (legacyFiles is not null)
             {
                 files = [.. legacyFiles];
@@ -1134,7 +1134,7 @@ public class RichTextBox : TemplatedControl
                           (await InvokeTransferMemberAsync(e.DataTransfer, "GetText") as string);
         if (string.IsNullOrWhiteSpace(textPayload))
         {
-            textPayload = e.Data.GetText();
+            textPayload = e.DataTransfer.TryGetText();
         }
 
         if (!string.IsNullOrWhiteSpace(textPayload))

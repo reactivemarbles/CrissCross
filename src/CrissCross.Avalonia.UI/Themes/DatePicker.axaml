@@ -14,7 +14,8 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="controls:DatePicker">
+            <ControlTemplate TargetType="controls:DatePicker"
+                             x:CompileBindings="False">
                 <Border Name="Border"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
