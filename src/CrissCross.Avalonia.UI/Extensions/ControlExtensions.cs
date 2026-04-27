@@ -83,7 +83,7 @@ public static class ControlExtensions
     {
         ArgumentNullException.ThrowIfNull(control);
 
-        var root = control.GetVisualRoot();
+        var root = control.GetSelfAndVisualAncestors().LastOrDefault();
         if (root is null)
         {
             return default;

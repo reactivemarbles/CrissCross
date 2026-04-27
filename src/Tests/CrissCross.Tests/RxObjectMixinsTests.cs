@@ -4,6 +4,7 @@
 
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using ReactiveUI;
 using ReactiveUI.Builder;
 using Splat;
@@ -99,9 +100,11 @@ public class RxObjectMixinsTests
         // Arrange
         var resolver = AppLocator.CurrentMutable;
         var testObject = new TestRxObject();
-        var actionExecuted = false;
+        var actionCount = 0;
 
-        var disposable = testObject.BuildCompleteDisposable(() => actionExecuted = true);
+        var disposable = testObject.BuildCompleteDisposable(() => Interlocked.Increment(ref actionCount));
+        await Task.Delay(100);
+        var baselineActionCount = actionCount;
 
         // Act
         disposable.Dispose();
@@ -111,7 +114,7 @@ public class RxObjectMixinsTests
         await Task.Delay(100);
 
         // Assert - action should not execute after disposal
-        await Assert.That(actionExecuted).IsFalse();
+        await Assert.That(actionCount).IsEqualTo(baselineActionCount);
         testObject.Dispose();
     }
 
