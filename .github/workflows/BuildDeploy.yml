@@ -44,7 +44,7 @@ jobs:
           java-version: '11'
 
       - name: Setup .NET (With cache)
-        uses: actions/setup-dotnet@v5.0.1
+        uses: actions/setup-dotnet@v5.2.0
         with:
          dotnet-version: |
             8.0.x
