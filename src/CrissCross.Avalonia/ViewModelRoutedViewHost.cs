@@ -227,20 +227,21 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     {
         if (NavigateBackIsEnabled == true && CanNavigateBack == true && NavigationStack.Count > 1)
         {
+            var hostName = ResolveHostName();
             _navigateBack = true;
 
             // Get the previous View
             var count = NavigationStack.Count - 2;
             _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
-            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
+            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, hostName, parameter);
             if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
                 ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
             }
-            else
+            else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
             {
-                ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].OnNext(ea);
+                resultNavigating.OnNext(ea);
             }
         }
 
@@ -276,13 +277,15 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// <exception cref="ArgumentNullException">Navigation Host Name not set.</exception>
     public void Setup()
     {
-        if (string.IsNullOrWhiteSpace(HostName))
-        {
-            throw new ArgumentNullException(HostName, "Navigation Host Name not set");
-        }
+        var hostName = ResolveHostName();
 
         // requested should return result here
-        ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
+        if (!ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
+        {
+            return;
+        }
+
+        resultNavigating.DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
             if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
@@ -293,7 +296,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
 
             if (!e.Cancel)
             {
-                var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
+                var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, hostName, e.NavigationParameter);
                 var toView = e.View as INotifiyNavigation;
                 var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
                 var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
@@ -309,9 +312,9 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
                     {
                         _currentView = ViewLocator?.ResolveView(_toViewModel);
                         _currentViewModel.OnNext(_toViewModel);
-                        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != HostName).Select(x => x.Key))
+                        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values.Where(x => x.Name != hostName))
                         {
-                            ViewModelRoutedViewHostMixins.NavigationHost[host].Refresh();
+                            host.Refresh();
                         }
                     }
                 }
@@ -332,7 +335,13 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
 
                 if (callVmNavTo)
                 {
-                    tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName!]);
+                    if (!ViewModelRoutedViewHostMixins.CurrentViewDisposable.TryGetValue(hostName, out var disposable))
+                    {
+                        disposable = [];
+                        ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName] = disposable;
+                    }
+
+                    tvm?.WhenNavigatedTo(nea, disposable);
                 }
 
                 if (callVmNavFrom)
@@ -367,18 +376,19 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     {
         _toViewModel = AppLocator.Current.GetService<T>(contract);
         _lastView = _currentView;
+        var hostName = ResolveHostName();
 
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
         }
-        else
+        else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].OnNext(ea);
+            resultNavigating.OnNext(ea);
         }
     }
 
@@ -386,18 +396,34 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     {
         _toViewModel = viewModel;
         _lastView = _currentView;
+        var hostName = ResolveHostName();
 
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
         }
-        else
+        else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName!].OnNext(ea);
+            resultNavigating.OnNext(ea);
         }
+    }
+
+    private string ResolveHostName()
+    {
+        if (string.IsNullOrWhiteSpace(HostName))
+        {
+            HostName = Name;
+        }
+
+        if (string.IsNullOrWhiteSpace(HostName))
+        {
+            throw new ArgumentNullException(HostName, "Navigation Host Name not set");
+        }
+
+        return HostName!;
     }
 }

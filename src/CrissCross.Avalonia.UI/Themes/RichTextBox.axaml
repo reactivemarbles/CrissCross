@@ -15,6 +15,11 @@
         <Setter Property="Padding" Value="8" />
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="AcceptsTab" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="CaretBrush" Value="#FFFFFF" />
+        <Setter Property="SelectionBrush" Value="#400078D4" />
         <Setter Property="Template">
             <ControlTemplate TargetType="controls:RichTextBox">
                 <controls:Border
@@ -39,8 +44,8 @@
                         <controls:ScrollViewer
                             Name="PART_DisplayScrollViewer"
                             Margin="{TemplateBinding Padding}"
-                            HorizontalScrollBarVisibility="Auto"
-                            VerticalScrollBarVisibility="Auto"
+                            HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                            VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                             Focusable="False"
                             IsHitTestVisible="{Binding IsVisible, ElementName=PART_FormattedPresenter}">
                              <controls:FormattedTextPresenter
@@ -52,7 +57,7 @@
                                  FontSize="{TemplateBinding FontSize}"
                                  Foreground="{TemplateBinding Foreground}"
                                  IsVisible="False"
-                                 TextWrapping="Wrap" />
+                                 TextWrapping="{TemplateBinding TextWrapping}" />
                          </controls:ScrollViewer>
 
                         <!--  Editing TextBox  -->
@@ -63,15 +68,18 @@
                             VerticalAlignment="Stretch"
                             AcceptsReturn="{TemplateBinding AcceptsReturn}"
                             AcceptsTab="{TemplateBinding AcceptsTab}"
+                            CaretBrush="{TemplateBinding CaretBrush}"
+                            SelectionBrush="{TemplateBinding SelectionBrush}"
                             Background="Transparent"
                             BorderThickness="0"
-                            CaretBrush="#FFFFFF"
+                            ScrollViewer.HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                            TextWrapping="{TemplateBinding TextWrapping}"
+                            ScrollViewer.VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
                             FontFamily="{TemplateBinding FontFamily}"
                             FontSize="{TemplateBinding FontSize}"
                             Foreground="{TemplateBinding Foreground}"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
-                            SelectionBrush="#400078D4"
-                            TextWrapping="Wrap" />
+                             />
                     </controls:Grid>
                 </controls:Border>
             </ControlTemplate>
@@ -107,6 +115,15 @@
     <Style Selector="controls|RichTextBox[IsReadOnly=True]">
         <Setter Property="Background" Value="#2D2D2D" />
         <Setter Property="Cursor" Value="Arrow" />
+    </Style>
+
+    <!--  Selection enabled mode - mirror WPF style behavior  -->
+    <Style Selector="controls|RichTextBox[IsTextSelectionEnabled=True]">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
 
     <!--  Error State (for validation)  -->

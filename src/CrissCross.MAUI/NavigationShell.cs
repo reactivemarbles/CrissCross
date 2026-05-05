@@ -144,6 +144,18 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
     }
 
     /// <summary>
+    /// Gets or sets the host name used for navigation.
+    /// </summary>
+    /// <value>
+    /// The host name used for navigation.
+    /// </value>
+    public string HostName
+    {
+        get => Name;
+        set => Name = value;
+    }
+
+    /// <summary>
     /// Gets or sets a value indicating whether [navigate back is enabled].
     /// </summary>
     /// <value>

@@ -1,15 +1,16 @@
+using System;
+using CP.BuildTools;
+using Microsoft.Build.Construction;
 using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.NerdbankGitVersioning;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.NerdbankGitVersioning;
 using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using CP.BuildTools;
-using Nuke.Common.Tools.MSBuild;
-using System;
 
 ////[GitHubActions(
 ////    "BuildOnly",
@@ -25,17 +26,13 @@ using System;
 ////    ImportSecrets = new[] { nameof(NuGetApiKey) },
 ////    InvokedTargets = new[] { nameof(Compile), nameof(Deploy) })]
 partial class Build : NukeBuild
-{
-    //// Support plugins are available for:
-    ////   - JetBrains ReSharper        https://nuke.build/resharper
-    ////   - JetBrains Rider            https://nuke.build/rider
-    ////   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ////   - Microsoft VSCode           https://nuke.build/vscode
-
+{    
     public static int Main() => Execute<Build>(x => x.Pack);
 
+    private static AbsolutePath SolutionFile => RootDirectory / "src" / "CrissCross.slnx";
+
     [GitRepository] readonly GitRepository Repository;
-    [Solution(GenerateProjects = true)] readonly Solution Solution;
+    readonly Solution Solution = SolutionFile.ReadSolution();
     [NerdbankGitVersioning] readonly NerdbankGitVersioning NerdbankVersioning;
     [Parameter][Secret] readonly string NuGetApiKey;
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -60,15 +57,18 @@ partial class Build : NukeBuild
 
     Target Restore => _ => _
         .DependsOn(Clean)
-        .Executes(() => DotNetRestore(s => s.SetProjectFile(Solution)));
+        .Executes(() =>
+        {
+            DotNetWorkloadRestore(s => s.DisableSkipManifestUpdate().SetProject(Solution));
+            return DotNetRestore(s => s.SetProjectFile(Solution));
+        });
 
     Target Compile => _ => _
         .DependsOn(Restore, Print)
-        .Executes(() => MSBuildTasks.MSBuild(s => s
+        .Executes(() => DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetMaxCpuCount(Environment.ProcessorCount)
-                .SetRestore(false)));
+                .SetNoRestore(true)));
 
     Target Pack => _ => _
     .DependsOn(Compile)
@@ -77,13 +77,19 @@ partial class Build : NukeBuild
     {
         if (Repository.IsOnMainOrMasterBranch())
         {
-            MSBuildTasks.MSBuild(s => s
-                        .SetSolutionFile(Solution)
-                        .SetConfiguration(Configuration)
-                        .SetTargets("build,pack")
-                        .SetMaxCpuCount(Environment.ProcessorCount)
-                        .SetPackageVersion(NerdbankVersioning.NuGetPackageVersion)
-                        .SetPackageOutputPath(PackagesDirectory));
+            var packableProjects = Solution.GetPackableProjects();
+            foreach (var project in packableProjects!)
+            {
+                Log.Information("Packing {Project}", project.Name);
+            }
+
+            DotNetPack(settings => settings
+                .SetConfiguration(Configuration)
+                .SetNoBuild(true)
+                .SetVersion(NerdbankVersioning.NuGetPackageVersion)
+                .SetOutputDirectory(PackagesDirectory)
+                .CombineWith(packableProjects, (packSettings, project) =>
+                    packSettings.SetProject(project)));
         }
     });
 

@@ -56,6 +56,42 @@ public class RichTextBox : TemplatedControl
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsReadOnly), false);
 
     /// <summary>
+    /// Property for <see cref="IsTextSelectionEnabled"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsTextSelectionEnabledProperty =
+        AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsTextSelectionEnabled), false);
+
+    /// <summary>
+    /// Property for <see cref="TextWrapping"/>.
+    /// </summary>
+    public static readonly StyledProperty<TextWrapping> TextWrappingProperty =
+        AvaloniaProperty.Register<RichTextBox, TextWrapping>(nameof(TextWrapping), TextWrapping.Wrap);
+
+    /// <summary>
+    /// Property for <see cref="HorizontalScrollBarVisibility"/>.
+    /// </summary>
+    public static readonly StyledProperty<ScrollBarVisibility> HorizontalScrollBarVisibilityProperty =
+        AvaloniaProperty.Register<RichTextBox, ScrollBarVisibility>(nameof(HorizontalScrollBarVisibility), ScrollBarVisibility.Disabled);
+
+    /// <summary>
+    /// Property for <see cref="VerticalScrollBarVisibility"/>.
+    /// </summary>
+    public static readonly StyledProperty<ScrollBarVisibility> VerticalScrollBarVisibilityProperty =
+        AvaloniaProperty.Register<RichTextBox, ScrollBarVisibility>(nameof(VerticalScrollBarVisibility), ScrollBarVisibility.Auto);
+
+    /// <summary>
+    /// Property for <see cref="CaretBrush"/>.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> CaretBrushProperty =
+        AvaloniaProperty.Register<RichTextBox, IBrush?>(nameof(CaretBrush), Brushes.White);
+
+    /// <summary>
+    /// Property for <see cref="SelectionBrush"/>.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> SelectionBrushProperty =
+        AvaloniaProperty.Register<RichTextBox, IBrush?>(nameof(SelectionBrush), Brush.Parse("#400078D4"));
+
+    /// <summary>
     /// Property for <see cref="Watermark"/>.
     /// </summary>
     public static readonly StyledProperty<string?> WatermarkProperty =
@@ -200,6 +236,60 @@ public class RichTextBox : TemplatedControl
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether text selection-only mode is enabled.
+    /// </summary>
+    public bool IsTextSelectionEnabled
+    {
+        get => GetValue(IsTextSelectionEnabledProperty);
+        set => SetValue(IsTextSelectionEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the wrapping mode.
+    /// </summary>
+    public TextWrapping TextWrapping
+    {
+        get => GetValue(TextWrappingProperty);
+        set => SetValue(TextWrappingProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the horizontal scroll bar visibility.
+    /// </summary>
+    public ScrollBarVisibility HorizontalScrollBarVisibility
+    {
+        get => GetValue(HorizontalScrollBarVisibilityProperty);
+        set => SetValue(HorizontalScrollBarVisibilityProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the vertical scroll bar visibility.
+    /// </summary>
+    public ScrollBarVisibility VerticalScrollBarVisibility
+    {
+        get => GetValue(VerticalScrollBarVisibilityProperty);
+        set => SetValue(VerticalScrollBarVisibilityProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret brush.
+    /// </summary>
+    public IBrush? CaretBrush
+    {
+        get => GetValue(CaretBrushProperty);
+        set => SetValue(CaretBrushProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the selection brush.
+    /// </summary>
+    public IBrush? SelectionBrush
+    {
+        get => GetValue(SelectionBrushProperty);
+        set => SetValue(SelectionBrushProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the watermark text.
     /// </summary>
     public string? Watermark
@@ -301,6 +391,22 @@ public class RichTextBox : TemplatedControl
     public bool HasSelection => SelectionStart != SelectionEnd;
 
     /// <summary>
+    /// Gets the current selection length.
+    /// </summary>
+    public int SelectionLength
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(Text))
+            {
+                return 0;
+            }
+
+            return Math.Abs(SelectionEnd - SelectionStart);
+        }
+    }
+
+    /// <summary>
     /// Gets the selected text.
     /// </summary>
     public string SelectedText
@@ -317,6 +423,8 @@ public class RichTextBox : TemplatedControl
             return Text.Substring(start, Math.Min(length, Text.Length - start));
         }
     }
+
+    private bool IsReadOnlyInternal => IsReadOnly || IsTextSelectionEnabled;
 
     /// <summary>
     /// Returns the text position nearest the provided point.
@@ -409,6 +517,46 @@ public class RichTextBox : TemplatedControl
         CaretIndex = SelectionEnd;
         SynchronizeSelectionFromIndexes(raiseEvent: true);
         _editingTextBox?.SelectAll();
+    }
+
+    /// <summary>
+    /// Selects a range by offset and length.
+    /// </summary>
+    /// <param name="startIndex">The start index.</param>
+    /// <param name="length">The length.</param>
+    public void Select(int startIndex, int length)
+    {
+        var max = Document.Length;
+        var start = Math.Clamp(startIndex, 0, max);
+        var end = Math.Clamp(start + length, 0, max);
+        SelectionStart = Math.Min(start, end);
+        SelectionEnd = Math.Max(start, end);
+        CaretIndex = SelectionEnd;
+        ApplySelectionToTextBox();
+        SynchronizeSelectionFromIndexes(raiseEvent: true);
+    }
+
+    /// <summary>
+    /// Selects a range using flow document text pointers.
+    /// </summary>
+    /// <param name="start">The selection start.</param>
+    /// <param name="end">The selection end.</param>
+    public void Select(TextPointer start, TextPointer end)
+    {
+        ArgumentNullException.ThrowIfNull(start);
+        ArgumentNullException.ThrowIfNull(end);
+        if (!ReferenceEquals(start.Document, Document) || !ReferenceEquals(end.Document, Document))
+        {
+            throw new InvalidOperationException("Selection pointers must belong to this document.");
+        }
+
+        var min = Math.Min(start.Offset, end.Offset);
+        var max = Math.Max(start.Offset, end.Offset);
+        SelectionStart = min;
+        SelectionEnd = max;
+        CaretIndex = max;
+        ApplySelectionToTextBox();
+        SynchronizeSelectionFromIndexes(raiseEvent: true);
     }
 
     /// <summary>
@@ -595,8 +743,12 @@ public class RichTextBox : TemplatedControl
         {
             _editingTextBox.AcceptsReturn = AcceptsReturn;
             _editingTextBox.AcceptsTab = AcceptsTab;
-            _editingTextBox.IsReadOnly = IsReadOnly;
-            _editingTextBox.TextWrapping = TextWrapping.Wrap;
+            _editingTextBox.IsReadOnly = IsReadOnly || IsTextSelectionEnabled;
+            _editingTextBox.TextWrapping = TextWrapping;
+            ScrollViewer.SetHorizontalScrollBarVisibility(_editingTextBox, HorizontalScrollBarVisibility);
+            ScrollViewer.SetVerticalScrollBarVisibility(_editingTextBox, VerticalScrollBarVisibility);
+            _editingTextBox.CaretBrush = CaretBrush;
+            _editingTextBox.SelectionBrush = SelectionBrush;
             _editingTextBox.Text = Text;
 
             _editingTextBox.TextChanged += OnTextBoxTextChanged;
@@ -604,13 +756,14 @@ public class RichTextBox : TemplatedControl
             _editingTextBox.GotFocus += OnTextBoxGotFocus;
             _editingTextBox.LostFocus += OnTextBoxLostFocus;
             _editingTextBox.ContextMenu = _contextMenu;
-            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnly);
+            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnlyInternal);
         }
 
         if (_formattedPresenter is not null)
         {
+            _formattedPresenter.TextWrapping = TextWrapping;
             _formattedPresenter.ContextMenu = _contextMenu;
-            DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnly);
+            DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
         }
 
         // Initialize document
@@ -629,6 +782,8 @@ public class RichTextBox : TemplatedControl
         {
             return;
         }
+
+        var readOnly = IsReadOnly || IsTextSelectionEnabled;
 
         if (change.Property == TextProperty)
         {
@@ -651,16 +806,52 @@ public class RichTextBox : TemplatedControl
         {
             _editingTextBox.AcceptsTab = AcceptsTab;
         }
-        else if (change.Property == IsReadOnlyProperty && _editingTextBox is not null)
+        else if (change.Property == TextWrappingProperty && _editingTextBox is not null)
         {
-            _editingTextBox.IsReadOnly = IsReadOnly;
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnly);
+            _editingTextBox.TextWrapping = TextWrapping;
             if (_formattedPresenter is not null)
             {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnly);
+                _formattedPresenter.TextWrapping = TextWrapping;
+            }
+        }
+        else if (change.Property == HorizontalScrollBarVisibilityProperty && _editingTextBox is not null)
+        {
+            ScrollViewer.SetHorizontalScrollBarVisibility(_editingTextBox, HorizontalScrollBarVisibility);
+        }
+        else if (change.Property == VerticalScrollBarVisibilityProperty && _editingTextBox is not null)
+        {
+            ScrollViewer.SetVerticalScrollBarVisibility(_editingTextBox, VerticalScrollBarVisibility);
+        }
+        else if (change.Property == CaretBrushProperty && _editingTextBox is not null)
+        {
+            _editingTextBox.CaretBrush = CaretBrush;
+        }
+        else if (change.Property == SelectionBrushProperty && _editingTextBox is not null)
+        {
+            _editingTextBox.SelectionBrush = SelectionBrush;
+        }
+        else if (change.Property == IsReadOnlyProperty && _editingTextBox is not null)
+        {
+            _editingTextBox.IsReadOnly = readOnly;
+            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !readOnly);
+            if (_formattedPresenter is not null)
+            {
+                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !readOnly);
             }
 
-            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnly);
+            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !readOnly);
+        }
+        else if (change.Property == IsTextSelectionEnabledProperty && _editingTextBox is not null)
+        {
+            _editingTextBox.IsReadOnly = readOnly;
+            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !readOnly);
+            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !readOnly);
+            if (_formattedPresenter is not null)
+            {
+                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !readOnly);
+            }
+
+            UpdateDisplayMode();
         }
         else if (change.Property == SelectionStartProperty || change.Property == SelectionEndProperty)
         {
@@ -684,15 +875,15 @@ public class RichTextBox : TemplatedControl
         }
         else if (change.Property == IsDragDropEnabledProperty)
         {
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnly);
+            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnlyInternal);
             if (_editingTextBox is not null)
             {
-                DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnly);
+                DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnlyInternal);
             }
 
             if (_formattedPresenter is not null)
             {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnly);
+                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
             }
         }
     }
@@ -707,7 +898,7 @@ public class RichTextBox : TemplatedControl
         }
 
         // Handle formatting shortcuts
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsFormattingEnabled && !IsReadOnly)
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsFormattingEnabled && !IsReadOnlyInternal)
         {
             switch (e.Key)
             {
@@ -779,7 +970,7 @@ public class RichTextBox : TemplatedControl
         _isUpdating = true;
 
         var oldText = Text;
-        var newText = _editingTextBox?.Text;
+        var newText = _editingTextBox?.Text ?? string.Empty;
 
         // Update document to reflect changes
         if (oldText != newText)
@@ -789,6 +980,7 @@ public class RichTextBox : TemplatedControl
             Document.SetText(newText);
             Text = newText;
             UpdateFormattedPresenter();
+            RaiseEvent(new TextChangedEventArgs(TextChangedEvent));
         }
 
         _isUpdating = false;
@@ -854,7 +1046,7 @@ public class RichTextBox : TemplatedControl
 
     private void ApplyFormattingToSelection(TextFormatType formatType)
     {
-        if (!IsFormattingEnabled || IsReadOnly || !HasSelection)
+        if (!IsFormattingEnabled || IsReadOnlyInternal || !HasSelection)
         {
             return;
         }
@@ -873,7 +1065,7 @@ public class RichTextBox : TemplatedControl
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(style);
 
-        if (!IsFormattingEnabled || IsReadOnly || !HasSelection)
+        if (!IsFormattingEnabled || IsReadOnlyInternal || !HasSelection)
         {
             return;
         }
@@ -922,7 +1114,7 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        if (!IsDragDropEnabled || IsReadOnly)
+        if (!IsDragDropEnabled || IsReadOnlyInternal)
         {
             e.DragEffects = DragDropEffects.None;
             e.Handled = true;
@@ -1064,7 +1256,7 @@ public class RichTextBox : TemplatedControl
             return null;
         }
 
-        if (!IsDragDropEnabled || IsReadOnly)
+        if (!IsDragDropEnabled || IsReadOnlyInternal)
         {
             e.DragEffects = DragDropEffects.None;
             e.Handled = true;
@@ -1081,6 +1273,17 @@ public class RichTextBox : TemplatedControl
             {
                 files = [.. legacyFiles];
             }
+        }
+
+        static string NormalizeClipboardText(string? textPayload)
+        {
+            if (string.IsNullOrWhiteSpace(textPayload))
+            {
+                return string.Empty;
+            }
+
+            var fragment = HtmlClipboardUtilities.ExtractFragment(textPayload);
+            return string.IsNullOrWhiteSpace(fragment) ? textPayload : fragment;
         }
 
         if (files is { Count: > 0 })
@@ -1136,6 +1339,8 @@ public class RichTextBox : TemplatedControl
         {
             textPayload = e.DataTransfer.TryGetText();
         }
+
+        textPayload = NormalizeClipboardText(textPayload);
 
         if (!string.IsNullOrWhiteSpace(textPayload))
         {
@@ -1260,7 +1465,7 @@ public class RichTextBox : TemplatedControl
         }
 
         var hasSelection = HasSelection;
-        var canEdit = !IsReadOnly;
+        var canEdit = !IsReadOnlyInternal;
 
         foreach (var item in items)
         {

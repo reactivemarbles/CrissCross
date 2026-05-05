@@ -2,6 +2,8 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Reactive.Disposables.Fluent;
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -31,6 +33,13 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
 
         InitializeComponent();
 
+        if (NavigationFrame is not null)
+        {
+            NavigationFrame.Name = NavHostName;
+            NavigationFrame.HostName = NavHostName;
+            this.SetMainNavigationHost(NavigationFrame);
+        }
+
         // Set the DataContext to the MainViewModel
         DataContext = AppLocator.Current.GetService<MainViewModel>();
 
@@ -39,7 +48,11 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
         this.WhenActivated(_ =>
         {
             // Navigate to home page initially
-            this.NavigateToView<HomePageViewModel>();
+            this.WhenSetup()
+                .Where(x => x)
+                .Take(1)
+                .Subscribe(System.Reactive.Observer.Create<bool>(_ => this.NavigateToView<HomePageViewModel>()))
+                .DisposeWith(_);
         });
     }
 
@@ -59,6 +72,13 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
         // Create custom layout with navigation menu and navigation frame
         if (presenter.Name == "PART_ContentPresenter" && presenter.Content == null)
         {
+            if (NavigationFrame is not null)
+            {
+                NavigationFrame.Name = NavHostName;
+                NavigationFrame.HostName = NavHostName;
+                this.SetMainNavigationHost(NavigationFrame);
+            }
+
             // Create the main layout grid using CrissCross Grid
             var mainGrid = new UI.Controls.Grid();
             mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));

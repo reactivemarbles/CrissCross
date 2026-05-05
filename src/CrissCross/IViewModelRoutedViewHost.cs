@@ -63,6 +63,14 @@ public interface IViewModelRoutedViewHost : IActivatableView, IEnableLogger
     string Name { get; set; }
 
     /// <summary>
+    /// Gets or sets the host name used for navigation.
+    /// </summary>
+    /// <value>
+    /// The host name used for navigation.
+    /// </value>
+    string HostName { get; set; }
+
+    /// <summary>
     /// Gets a value indicating whether [requires setup].
     /// </summary>
     /// <value>

@@ -35,14 +35,14 @@
                                 Margin="0,0,0,4"
                                 FontSize="12"
                                 Text="Standard TextBox:" />
-                            <controls:TextBox Watermark="Enter text here..." />
+                            <controls:TextBox PlaceholderText="Enter text here..." />
                         </controls:StackPanel>
                         <controls:StackPanel>
                             <controls:TextBlock
                                 Margin="0,0,0,4"
                                 FontSize="12"
                                 Text="Disabled TextBox:" />
-                            <controls:TextBox IsEnabled="False" Watermark="Disabled" />
+                            <controls:TextBox IsEnabled="False" PlaceholderText="Disabled" />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
@@ -153,7 +153,7 @@
                                 Margin="0,0,0,4"
                                 FontSize="12"
                                 Text="Standard PasswordBox:" />
-                            <controls:PasswordBox Watermark="Enter password..." />
+                            <controls:PasswordBox PlaceholderText="Enter password..." />
                         </controls:StackPanel>
                     </controls:StackPanel>
                 </controls:StackPanel>
