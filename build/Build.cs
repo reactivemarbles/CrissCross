@@ -1,15 +1,16 @@
+using System;
+using CP.BuildTools;
+using Microsoft.Build.Construction;
 using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.NerdbankGitVersioning;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.MSBuild;
+using Nuke.Common.Tools.NerdbankGitVersioning;
 using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using CP.BuildTools;
-using Nuke.Common.Tools.MSBuild;
-using System;
 
 ////[GitHubActions(
 ////    "BuildOnly",
@@ -28,8 +29,10 @@ partial class Build : NukeBuild
 {    
     public static int Main() => Execute<Build>(x => x.Pack);
 
+    private static AbsolutePath SolutionFile => RootDirectory / "src" / "CrissCross.slnx";
+
     [GitRepository] readonly GitRepository Repository;
-    [Solution(GenerateProjects = true)] readonly Solution Solution;
+    readonly Solution Solution = SolutionFile.ReadSolution();
     [NerdbankGitVersioning] readonly NerdbankGitVersioning NerdbankVersioning;
     [Parameter][Secret] readonly string NuGetApiKey;
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
