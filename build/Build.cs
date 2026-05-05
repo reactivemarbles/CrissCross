@@ -25,13 +25,7 @@ using System;
 ////    ImportSecrets = new[] { nameof(NuGetApiKey) },
 ////    InvokedTargets = new[] { nameof(Compile), nameof(Deploy) })]
 partial class Build : NukeBuild
-{
-    //// Support plugins are available for:
-    ////   - JetBrains ReSharper        https://nuke.build/resharper
-    ////   - JetBrains Rider            https://nuke.build/rider
-    ////   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ////   - Microsoft VSCode           https://nuke.build/vscode
-
+{    
     public static int Main() => Execute<Build>(x => x.Pack);
 
     [GitRepository] readonly GitRepository Repository;
@@ -60,15 +54,18 @@ partial class Build : NukeBuild
 
     Target Restore => _ => _
         .DependsOn(Clean)
-        .Executes(() => DotNetRestore(s => s.SetProjectFile(Solution)));
+        .Executes(() =>
+        {
+            DotNetWorkloadRestore(s => s.DisableSkipManifestUpdate().SetProject(Solution));
+            return DotNetRestore(s => s.SetProjectFile(Solution));
+        });
 
     Target Compile => _ => _
         .DependsOn(Restore, Print)
-        .Executes(() => MSBuildTasks.MSBuild(s => s
+        .Executes(() => DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetMaxCpuCount(Environment.ProcessorCount)
-                .SetRestore(false)));
+                .SetNoRestore(true)));
 
     Target Pack => _ => _
     .DependsOn(Compile)
@@ -77,13 +74,19 @@ partial class Build : NukeBuild
     {
         if (Repository.IsOnMainOrMasterBranch())
         {
-            MSBuildTasks.MSBuild(s => s
-                        .SetSolutionFile(Solution)
-                        .SetConfiguration(Configuration)
-                        .SetTargets("build,pack")
-                        .SetMaxCpuCount(Environment.ProcessorCount)
-                        .SetPackageVersion(NerdbankVersioning.NuGetPackageVersion)
-                        .SetPackageOutputPath(PackagesDirectory));
+            var packableProjects = Solution.GetPackableProjects();
+            foreach (var project in packableProjects!)
+            {
+                Log.Information("Packing {Project}", project.Name);
+            }
+
+            DotNetPack(settings => settings
+                .SetConfiguration(Configuration)
+                .SetNoBuild(true)
+                .SetVersion(NerdbankVersioning.NuGetPackageVersion)
+                .SetOutputDirectory(PackagesDirectory)
+                .CombineWith(packableProjects, (packSettings, project) =>
+                    packSettings.SetProject(project)));
         }
     });
 

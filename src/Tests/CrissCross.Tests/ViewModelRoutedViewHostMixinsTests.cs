@@ -72,6 +72,12 @@ public class ViewModelRoutedViewHostMixinsTests
 
         public string Name { get; set; }
 
+        public string HostName
+        {
+            get => Name;
+            set => Name = value;
+        }
+
         public bool RequiresSetup => false;
 
         public IObservable<Unit> Activated => Observable.Return(Unit.Default);

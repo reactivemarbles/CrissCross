@@ -12,8 +12,6 @@ namespace CrissCross.Avalonia.UI.Gallery.ViewModels;
 /// </summary>
 public class MainViewModel : RxObject, IUseHostedNavigation
 {
-    private const string HostName = "mainNavHost";
-
     /// <summary>
     /// Initializes a new instance of the <see cref="MainViewModel"/> class.
     /// </summary>
@@ -22,17 +20,17 @@ public class MainViewModel : RxObject, IUseHostedNavigation
         {
             DisplayName = "Gallery";
 
-            // Navigation commands for each control category - use IUseHostedNavigation with explicit host name
-            GotoHome = ReactiveCommand.Create(() => this.NavigateToView<HomePageViewModel>(HostName));
-            GotoButtons = ReactiveCommand.Create(() => this.NavigateToView<ButtonsPageViewModel>(HostName));
-            GotoInput = ReactiveCommand.Create(() => this.NavigateToView<InputPageViewModel>(HostName));
-            GotoProgress = ReactiveCommand.Create(() => this.NavigateToView<ProgressPageViewModel>(HostName));
-            GotoCheckBox = ReactiveCommand.Create(() => this.NavigateToView<CheckBoxPageViewModel>(HostName));
-            GotoRadioButton = ReactiveCommand.Create(() => this.NavigateToView<RadioButtonPageViewModel>(HostName));
-            GotoComboBox = ReactiveCommand.Create(() => this.NavigateToView<ComboBoxPageViewModel>(HostName));
-            GotoSlider = ReactiveCommand.Create(() => this.NavigateToView<SliderPageViewModel>(HostName));
-            GotoDatePicker = ReactiveCommand.Create(() => this.NavigateToView<DatePickerPageViewModel>(HostName));
-            GotoColorPicker = ReactiveCommand.Create(() => this.NavigateToView<ColorPickerPageViewModel>(HostName));
+            // Navigation commands for each control category.
+            GotoHome = ReactiveCommand.Create(() => this.NavigateToView<HomePageViewModel>());
+            GotoButtons = ReactiveCommand.Create(() => this.NavigateToView<ButtonsPageViewModel>());
+            GotoInput = ReactiveCommand.Create(() => this.NavigateToView<InputPageViewModel>());
+            GotoProgress = ReactiveCommand.Create(() => this.NavigateToView<ProgressPageViewModel>());
+            GotoCheckBox = ReactiveCommand.Create(() => this.NavigateToView<CheckBoxPageViewModel>());
+            GotoRadioButton = ReactiveCommand.Create(() => this.NavigateToView<RadioButtonPageViewModel>());
+            GotoComboBox = ReactiveCommand.Create(() => this.NavigateToView<ComboBoxPageViewModel>());
+            GotoSlider = ReactiveCommand.Create(() => this.NavigateToView<SliderPageViewModel>());
+            GotoDatePicker = ReactiveCommand.Create(() => this.NavigateToView<DatePickerPageViewModel>());
+            GotoColorPicker = ReactiveCommand.Create(() => this.NavigateToView<ColorPickerPageViewModel>());
         });
 
     /// <summary>

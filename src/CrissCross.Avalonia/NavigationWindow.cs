@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -42,7 +43,9 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         {
             if (e.Sender is NavigationWindow navigationWindow && e.NewValue.Value is ViewModelRoutedViewHost host)
             {
-                host.HostName = navigationWindow.Name;
+                var hostName = ResolveNavigationHostName(navigationWindow, nameof(NavigationWindow));
+                navigationWindow.Name = hostName;
+                host.Name = hostName;
                 navigationWindow.SetMainNavigationHost(host);
             }
         });
@@ -86,13 +89,21 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        var hostName = ResolveNavigationHostName(this, nameof(NavigationWindow));
+        Name = hostName;
         NavigationFrame = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
-            HostName = Name,
+            HostName = hostName,
             NavigateBackIsEnabled = NavigateBackIsEnabled
         };
+
+        if (NavigationFrame is not null)
+        {
+            NavigationFrame.Name = hostName;
+            this.SetMainNavigationHost(NavigationFrame);
+        }
     }
 
     /// <summary>
@@ -113,5 +124,15 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         }
 
         return base.RegisterContentPresenter(presenter);
+    }
+
+    private static string ResolveNavigationHostName(NavigationWindow navigationWindow, string fallbackPrefix)
+    {
+        if (!string.IsNullOrWhiteSpace(navigationWindow.Name))
+        {
+            return navigationWindow.Name!;
+        }
+
+        return $"__crisscross_navhost_{fallbackPrefix}_{RuntimeHelpers.GetHashCode(navigationWindow):X8}";
     }
 }
