@@ -75,6 +75,11 @@
     <File Path="stylecop.json" />
     <File Path="testconfig.json" />
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
+    <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
+    <Project Path="Tests/CrissCross.WPF.Plot.Tests/CrissCross.WPF.Plot.Tests.csproj" />
+  </Folder>
   <Project Path="../build/_build.csproj">
     <Build Project="false" />
   </Project>
@@ -88,7 +93,4 @@
   <Project Path="CrissCross.WPF.WebView2/CrissCross.WPF.WebView2.csproj" />
   <Project Path="CrissCross.WPF/CrissCross.WPF.csproj" />
   <Project Path="CrissCross/CrissCross.csproj" />
-  <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
-  <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
-  <Project Path="Tests/CrissCross.WPF.Plot.Tests/CrissCross.WPF.Plot.Tests.csproj" />
 </Solution>
