@@ -84,4 +84,10 @@ public interface INavigationService
     /// </summary>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool GoBack();
+
+    /// <summary>
+    /// Navigates the NavigationView to the next journal entry.
+    /// </summary>
+    /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
+    bool GoForward();
 }

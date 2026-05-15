@@ -129,6 +129,17 @@ public partial class SignalUI : RxObject, IPlottableUI
     public IDisposable? MouseCoordinatesObs { get; set; }
 
     /// <summary>
+    /// Clears plotted coordinates and duplicate-time tracking so subsequent updates can reuse prior X values.
+    /// </summary>
+    public void ClearData()
+    {
+        PlotLine!.Data.Coordinates.Clear();
+        _timeSet.Clear();
+        _uniqueDataBuffer.Clear();
+        _uniqueTimeBuffer.Clear();
+    }
+
+    /// <summary>
     /// Initializes a new data logger line on the plot and sets its color using the specified hex value.
     /// </summary>
     /// <remarks>The data logger line is configured with a fixed line width and disables automatic axis limit

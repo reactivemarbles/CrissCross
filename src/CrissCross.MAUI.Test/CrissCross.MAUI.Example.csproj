@@ -66,6 +66,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
+    <ProjectReference Include="..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -83,7 +83,7 @@ public partial class LiveChartViewModel
     /// Uses a snapshot of PlotLinesCollectionUI to avoid concurrent modification exceptions.
     /// Items are not disposed when cleared as they remain owned by PlotLinesCollectionUI.
     /// </remarks>
-    private void UpdateChartObjectsCollection()
+    public void UpdateChartObjectsCollection()
     {
         // Get existing collection (items remain alive, owned by PlotLinesCollectionUI)
         var chartSettings = PlotLinesCollectionUI.Select(pl => pl.ChartSettings).Where(cs => cs != null);

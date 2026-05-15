@@ -22,6 +22,8 @@ public class MainViewModel : RxObject
     {
         GotoFirst = ReactiveCommand.Create(() => this.NavigateToView<FirstViewModel>());
 
+        GotoControlsGallery = ReactiveCommand.Create(() => this.NavigateToView<ControlsGalleryViewModel>());
+
         GotoMain = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
     }
 
@@ -32,6 +34,14 @@ public class MainViewModel : RxObject
     /// The goto first.
     /// </value>
     public ICommand? GotoFirst { get; }
+
+    /// <summary>
+    /// Gets the goto controls gallery command.
+    /// </summary>
+    /// <value>
+    /// The goto controls gallery command.
+    /// </value>
+    public ICommand? GotoControlsGallery { get; }
 
     /// <summary>
     /// Gets the goto main.

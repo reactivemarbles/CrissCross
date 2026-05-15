@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|SearchBox">
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto,Auto">
+                        <TextBox MinWidth="180"
+                                 VerticalContentAlignment="Center"
+                                 Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                 PlaceholderText="{TemplateBinding PlaceholderText}" />
+                        <Button Grid.Column="1"
+                                MinWidth="32"
+                                Margin="6,0,0,0"
+                                Command="{Binding ClearCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="×" />
+                        <Button Grid.Column="2"
+                                MinWidth="72"
+                                Margin="6,0,0,0"
+                                Command="{Binding SearchCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Search" />
+                    </Grid>
+                    <TextBlock Margin="2,4,0,0"
+                               Opacity="0.72"
+                               Text="{Binding QueryState.ResultSummary, RelativeSource={RelativeSource TemplatedParent}}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

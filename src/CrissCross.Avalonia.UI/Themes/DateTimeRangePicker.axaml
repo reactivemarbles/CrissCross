@@ -1,0 +1,41 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|DateTimeRangePicker">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:DateTimePicker SelectedDate="{Binding Start, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        <TextBlock VerticalAlignment="Center" Text="to" />
+                        <controls:DateTimePicker SelectedDate="{Binding End, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        <Button Command="{Binding ApplyRangeCommand, RelativeSource={RelativeSource TemplatedParent}}" Content="Apply" />
+                    </StackPanel>
+                    <StackPanel Margin="0,6,0,0" Orientation="Horizontal" Spacing="6">
+                        <Button Command="{Binding ApplyPresetCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="Today"
+                                Content="Today" />
+                        <Button Command="{Binding ApplyPresetCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="Yesterday"
+                                Content="Yesterday" />
+                        <Button Command="{Binding ApplyPresetCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="LastSevenDays"
+                                Content="Last 7 days" />
+                        <Button Command="{Binding ApplyPresetCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="ThisMonth"
+                                Content="This month" />
+                    </StackPanel>
+                    <TextBlock Margin="0,6,0,0"
+                               Opacity="0.72"
+                               Text="{Binding CurrentRange.DisplayText, RelativeSource={RelativeSource TemplatedParent}}" />
+                    <TextBlock Margin="0,2,0,0"
+                               Opacity="0.72"
+                               Text="{Binding CurrentRange.ValidationMessage, RelativeSource={RelativeSource TemplatedParent}}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

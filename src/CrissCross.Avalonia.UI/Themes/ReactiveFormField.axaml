@@ -1,0 +1,46 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|ReactiveFormField">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,4">
+                        <TextBlock DockPanel.Dock="Right"
+                                   Margin="6,0,0,0"
+                                   Opacity="0.72"
+                                   Text="{Binding State, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="4">
+                            <ContentPresenter Content="{TemplateBinding Header}" />
+                            <TextBlock Foreground="#C42B1C"
+                                       IsVisible="{TemplateBinding IsRequired}"
+                                       Text="*" />
+                        </StackPanel>
+                    </DockPanel>
+                    <Border Padding="1"
+                            BorderBrush="#33000000"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Border>
+                    <TextBlock Margin="2,4,0,0"
+                               Opacity="0.72"
+                               Text="{TemplateBinding HelperText}" />
+                    <ItemsControl Margin="2,4,0,0"
+                                  ItemsSource="{Binding Messages, RelativeSource={RelativeSource TemplatedParent}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="core:ValidationMessage">
+                                <TextBlock Foreground="#C42B1C"
+                                           Text="{Binding DisplayText}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

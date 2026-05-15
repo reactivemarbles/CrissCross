@@ -81,11 +81,14 @@
   <Project Path="CrissCross.Avalonia.UI/CrissCross.Avalonia.UI.csproj" />
   <Project Path="CrissCross.Avalonia/CrissCross.Avalonia.csproj" />
   <Project Path="CrissCross.MAUI/CrissCross.MAUI.csproj" />
+  <Project Path="CrissCross.Maui.UI/CrissCross.Maui.UI.csproj" />
   <Project Path="CrissCross.WinForms/CrissCross.WinForms.csproj" />
   <Project Path="CrissCross.WPF.Plot/CrissCross.WPF.Plot.csproj" />
   <Project Path="CrissCross.WPF.UI/CrissCross.WPF.UI.csproj" />
   <Project Path="CrissCross.WPF.WebView2/CrissCross.WPF.WebView2.csproj" />
   <Project Path="CrissCross.WPF/CrissCross.WPF.csproj" />
   <Project Path="CrissCross/CrissCross.csproj" />
+  <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
   <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
+  <Project Path="Tests/CrissCross.WPF.Plot.Tests/CrissCross.WPF.Plot.Tests.csproj" />
 </Solution>

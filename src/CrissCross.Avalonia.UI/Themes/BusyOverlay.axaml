@@ -1,0 +1,48 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|BusyOverlay">
+        <Setter Property="Background" Value="#80000000" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    <Border Background="{TemplateBinding Background}"
+                            IsVisible="{TemplateBinding IsBusy}">
+                        <StackPanel MaxWidth="420"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="8">
+                            <controls:ProgressRing Width="44"
+                                                   Height="44"
+                                                   HorizontalAlignment="Center"
+                                                   IsIndeterminate="True" />
+                            <TextBlock Margin="0,8,0,0"
+                                       HorizontalAlignment="Center"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       Text="{Binding Operation.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                            <TextBlock HorizontalAlignment="Center"
+                                       Foreground="White"
+                                       Opacity="0.8"
+                                       Text="{Binding Operation.Message, RelativeSource={RelativeSource TemplatedParent}}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                            <Button MinWidth="96"
+                                    Margin="0,8,0,0"
+                                    Command="{Binding Operation.CancelCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Content="Cancel"
+                                    IsVisible="{Binding Operation.IsCancellable, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

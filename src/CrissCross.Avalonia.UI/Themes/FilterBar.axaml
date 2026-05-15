@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|FilterBar">
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="core:FilterToken">
+                <Border Margin="0,0,6,6"
+                        Padding="10,4"
+                        Background="#14000000"
+                        CornerRadius="12">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6">
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="{Binding DisplayText}" />
+                        <Button MinWidth="24"
+                                Content="×" />
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel LastChildFill="True">
+                    <Button DockPanel.Dock="Right"
+                            MinWidth="72"
+                            Margin="8,0,0,6"
+                            Command="{Binding ClearAllCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                            Content="Clear" />
+                    <ItemsPresenter />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

@@ -43,6 +43,7 @@ public partial class MainWindowViewModel : RxObject
             new NavigationModel(typeof(IndicatorsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Indicators", Icon = new SymbolIcon(SymbolRegular.Gauge20) },
             new NavigationModel(typeof(NavigationControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Navigation", Icon = new SymbolIcon(SymbolRegular.Navigation20) },
             new NavigationModel(typeof(ContainerControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Containers", Icon = new SymbolIcon(SymbolRegular.AppFolder20) },
+            new NavigationModel(typeof(FeaturePlaygroundViewModel), NavigationModels, MainWindow.Navigation) { Name = "Feature Playground", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
             new NavigationModel(typeof(TreeViewViewModel), NavigationModels, MainWindow.Navigation) { Name = "TreeViews", Icon = new SymbolIcon(SymbolRegular.DataTreemap20), },
         ]);
 
@@ -71,6 +72,7 @@ public partial class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new NavigationControlsViewModel()).Register<IViewFor<NavigationControlsViewModel>>(static () => new NavigationControlsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ContainerControlsViewModel()).Register<IViewFor<ContainerControlsViewModel>>(static () => new ContainerControlsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorControlsViewModel()).Register<IViewFor<ColorControlsViewModel>>(static () => new ColorControlsView());
+        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new FeaturePlaygroundViewModel()).Register<IViewFor<FeaturePlaygroundViewModel>>(static () => new FeaturePlaygroundView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new TreeViewViewModel()).Register<IViewFor<TreeViewViewModel>>(static () => new TreeViewView());
 
         AppLocator.CurrentMutable.SetupComplete();

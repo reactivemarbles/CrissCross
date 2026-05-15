@@ -1,0 +1,38 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|ValidationSummary">
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="core:ValidationMessage">
+                <Button Margin="0,0,0,4"
+                        HorizontalContentAlignment="Stretch"
+                        Command="{Binding NavigateToFieldCommand, RelativeSource={RelativeSource AncestorType=controls:ValidationSummary}}"
+                        CommandParameter="{Binding}">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{Binding Severity}" />
+                        <TextBlock Text="{Binding DisplayText}" />
+                    </StackPanel>
+                </Button>
+            </DataTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="12"
+                        Background="#0FC42B1C"
+                        BorderBrush="#33C42B1C"
+                        BorderThickness="1"
+                        CornerRadius="6">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{Binding SummaryState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <ItemsPresenter Margin="0,8,0,0" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

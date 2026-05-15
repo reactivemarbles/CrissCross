@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|ChipGroup">
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="core:ChipModel">
+                <controls:Chip Margin="0,0,6,6"
+                               Model="{Binding}" />
+            </DataTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ItemsPresenter />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|CommandButton">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="ExecutingContent" Value="Working..." />
+    </Style>
+
+    <Style Selector="controls|AsyncCommandButton">
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="ExecutingContent" Value="Working..." />
+    </Style>
+
+</Styles>

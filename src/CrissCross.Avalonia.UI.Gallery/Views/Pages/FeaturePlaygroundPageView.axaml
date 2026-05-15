@@ -1,0 +1,88 @@
+<UserControl
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.FeaturePlaygroundPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    x:DataType="vm:FeaturePlaygroundPageViewModel">
+    <ScrollViewer>
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock FontSize="28" FontWeight="SemiBold" Text="Reactive feature playground" />
+            <controls:TextBlock Opacity="0.75" Text="{Binding PlatformNotes}" TextWrapping="Wrap" />
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Async reactive command" />
+                    <controls:CommandButton
+                        Width="240"
+                        Command="{Binding RunImportCommand}"
+                        Content="Run deterministic import"
+                        ErrorContent="Import failed"
+                        ExecutingContent="Importing..."
+                        IsExecuting="{Binding IsOperationRunning}"
+                        Progress="{Binding CommandProgress}"
+                        State="{Binding CommandState}" />
+                    <controls:BusyOverlay Operation="{Binding CurrentOperation}">
+                        <Border MinHeight="72" Padding="12" Background="#220078D4" CornerRadius="6">
+                            <controls:TextBlock Text="BusyOverlay remains deterministic and uses the shared BusyOperation model." TextWrapping="Wrap" />
+                        </Border>
+                    </controls:BusyOverlay>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Search, filters, and paging" />
+                    <controls:SearchBox
+                        ClearCommand="{Binding ClearSearchCommand}"
+                        PlaceholderText="Search telemetry"
+                        QueryState="{Binding SearchState}"
+                        SearchCommand="{Binding SearchCommand}"
+                        Text="{Binding SearchText}" />
+                    <controls:FilterBar ClearAllCommand="{Binding ClearSearchCommand}" QueryState="{Binding SearchState}" />
+                    <controls:DataPager
+                        PageRequestCommand="{Binding PageRequestCommand}"
+                        PaginationState="{Binding PaginationState}"
+                        QueryState="{Binding SearchState}"
+                        SortKey="timestamp" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Workflow controls" />
+                    <controls:SegmentedControl
+                        SelectedKey="{Binding SegmentState.SelectedKey}"
+                        SelectionChangedCommand="{Binding SegmentChangedCommand}"
+                        SelectionState="{Binding SegmentState}" />
+                    <controls:Stepper
+                        CurrentKey="{Binding StepperState.CurrentKey}"
+                        State="{Binding StepperState}"
+                        StepRequestedCommand="{Binding StepRequestedCommand}" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Theme and date/time" />
+                    <controls:ThemeSwitcher
+                        CurrentState="{Binding ThemeState}"
+                        SelectedChoice="{Binding SelectedTheme}"
+                        ThemeChangedCommand="{Binding ThemeChangedCommand}" />
+                    <controls:DateTimeRangePicker
+                        CurrentRange="{Binding CurrentRange}"
+                        RangeChangedCommand="{Binding RangeChangedCommand}"
+                        RangeLabel="Historian replay window"
+                        SelectedPreset="Custom" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="8">
+                    <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Activation/disposal" />
+                    <controls:TextBlock Text="{Binding ActivationLog}" TextWrapping="Wrap" />
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
+    </ScrollViewer>
+</UserControl>

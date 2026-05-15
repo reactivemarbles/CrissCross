@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|DataPager">
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <Button MinWidth="42"
+                                Margin="0,0,6,0"
+                                Command="{Binding FirstPageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="First"
+                                IsEnabled="{Binding PaginationState.CanGoFirst, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="42"
+                                Margin="0,0,6,0"
+                                Command="{Binding PreviousPageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Prev"
+                                IsEnabled="{Binding PaginationState.CanGoPrevious, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="42"
+                                Margin="0,0,6,0"
+                                Command="{Binding NextPageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Next"
+                                IsEnabled="{Binding PaginationState.CanGoNext, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="42"
+                                Command="{Binding LastPageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Last"
+                                IsEnabled="{Binding PaginationState.CanGoLast, RelativeSource={RelativeSource TemplatedParent}}" />
+                    </StackPanel>
+                    <TextBlock Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               Opacity="0.72"
+                               Text="{Binding PaginationState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

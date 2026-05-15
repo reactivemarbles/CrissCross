@@ -213,20 +213,20 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    public async Task SetMainNavigationHost_DoesNotRegisterTwice()
+    public async Task SetMainNavigationHost_ReplacesExistingHostForSameKey()
     {
         // Arrange
         var hostName = GetUniqueHostName();
         var setNav = new TestSetNavigationViewModel(hostName);
-        var viewHost1 = new TestViewModelRoutedViewHost(hostName);
-        var viewHost2 = new TestViewModelRoutedViewHost(hostName);
+        var staleHost = new TestViewModelRoutedViewHost(hostName);
+        var replacementHost = new TestViewModelRoutedViewHost(hostName);
 
         // Act
-        setNav.SetMainNavigationHost(viewHost1);
-        setNav.SetMainNavigationHost(viewHost2);
+        setNav.SetMainNavigationHost(staleHost);
+        setNav.SetMainNavigationHost(replacementHost);
 
-        // Assert - Should still be the first one
-        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(viewHost1);
+        // Assert - recreated shells/windows must not keep navigating through stale hosts.
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(replacementHost);
     }
 
     [Test]
@@ -336,7 +336,6 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    [Skip("Method returns void/does nothing when host not found instead of throwing")]
     public async Task NavigateBack_WithIUseNavigation_ThrowsWhenSpecificHostNotRegistered()
     {
         // Arrange
@@ -377,7 +376,6 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    [Skip("Method returns null when host not found instead of throwing")]
     public async Task NavigateBack_WithIUseHostedNavigation_ThrowsWhenSpecificHostNotRegistered()
     {
         // Arrange
@@ -450,7 +448,6 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    [Skip("Method does nothing when host not found instead of throwing")]
     public async Task NavigateToView_WithIUseHostedNavigation_ThrowsWhenSpecificHostNotRegistered()
     {
         // Arrange
@@ -482,7 +479,6 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    [Skip("Method does nothing when host not found instead of throwing")]
     public async Task NavigateToViewAndClearHistory_WithIUseNavigation_ThrowsWhenSpecificHostNotRegistered()
     {
         // Arrange
@@ -523,7 +519,6 @@ public class ViewModelRoutedViewHostMixinsTests
     }
 
     [Test]
-    [Skip("Method does nothing when host not found instead of throwing")]
     public async Task NavigateToViewAndClearHistory_WithIUseHostedNavigation_ThrowsWhenSpecificHostNotRegistered()
     {
         // Arrange

@@ -31,6 +31,15 @@ public partial class LiveChart
     }
 
     /// <summary>
+    /// Gets or sets normalized observable-first plot sources bound to this chart.
+    /// </summary>
+    public IEnumerable<IReactivePlotSource>? ReactivePlotSources
+    {
+        get => (IEnumerable<IReactivePlotSource>?)GetValue(ReactivePlotSourcesProperty);
+        set => SetValue(ReactivePlotSourcesProperty, value);
+    }
+
+    /// <summary>
     /// Gets or sets the width of the right column as a <see cref="GridLength"/> value.
     /// </summary>
     public GridLength RightWidth

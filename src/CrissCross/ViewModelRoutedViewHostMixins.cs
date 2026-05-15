@@ -24,8 +24,6 @@ using Splat;
 
 namespace CrissCross;
 
-#pragma warning disable RCS1175 // Unused 'this' parameter.
-
 /// <summary>
 /// View Model Routed View Host Mixins.
 /// </summary>
@@ -68,14 +66,14 @@ public static class ViewModelRoutedViewHostMixins
             var dis = new CompositeDisposable();
             @this.WhenSetup().Subscribe(_ =>
             {
-                if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var host))
+                if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var host) && host != null)
                 {
                     host.CanNavigateBackObservable
                     .DistinctUntilChanged()
                     .Subscribe(x => obs.OnNext(x == true))
                     .DisposeWith(dis);
                 }
-            });
+            }).DisposeWith(dis);
 
             obs.OnNext(false);
 
@@ -103,7 +101,7 @@ public static class ViewModelRoutedViewHostMixins
              var dis = new CompositeDisposable();
              @this.WhenSetup(hostName).Subscribe(_ =>
              {
-                 if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value))
+                 if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value) && value != null)
                  {
                      value.CanNavigateBackObservable
                          .DistinctUntilChanged()
@@ -134,10 +132,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var value))
-        {
-            value.ClearHistory();
-        }
+        GetRequiredNavigationHost(@this.Name).ClearHistory();
     }
 
     /// <summary>
@@ -147,15 +142,17 @@ public static class ViewModelRoutedViewHostMixins
     /// <param name="hostName">Name of the host.</param>
     public static void ClearHistory(this IUseHostedNavigation dummy, string hostName = "")
     {
+        if (dummy == null)
+        {
+            throw new ArgumentNullException(nameof(dummy));
+        }
+
         if (NavigationHost.Count == 0)
         {
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value))
-        {
-            value.ClearHistory();
-        }
+        GetRequiredNavigationHost(hostName).ClearHistory();
     }
 
     /// <summary>
@@ -175,10 +172,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var value))
-        {
-            value.NavigateBack(parameter);
-        }
+        GetRequiredNavigationHost(@this.Name).NavigateBack(parameter);
     }
 
     /// <summary>
@@ -191,20 +185,17 @@ public static class ViewModelRoutedViewHostMixins
     /// <exception cref="System.InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
     public static IRxObject? NavigateBack(this IUseHostedNavigation dummy, string? hostName = "", object? parameter = null)
     {
+        if (dummy == null)
+        {
+            throw new ArgumentNullException(nameof(dummy));
+        }
+
         if (NavigationHost.Count == 0)
         {
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null)
-        {
-            if (TryGetNavigationHost(hostName, out var value))
-            {
-                return value.NavigateBack(parameter);
-            }
-        }
-
-        return null;
+        return GetRequiredNavigationHost(hostName).NavigateBack(parameter);
     }
 
     /// <summary>
@@ -227,10 +218,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var value))
-        {
-            value.Navigate<T>(contract, parameter);
-        }
+        GetRequiredNavigationHost(@this.Name).Navigate<T>(contract, parameter);
     }
 
     /// <summary>
@@ -254,7 +242,8 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel && @this.TryGetNavigationHost(out var value))
+        var value = GetRequiredNavigationHost(@this.Name);
+        if (AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
         {
             value.Navigate(toViewModel, contract, parameter);
         }
@@ -271,15 +260,17 @@ public static class ViewModelRoutedViewHostMixins
     public static void NavigateToView<T>(this IUseHostedNavigation dummy, string? hostName = "", string? contract = null, object? parameter = null)
         where T : class, IRxObject
     {
+        if (dummy == null)
+        {
+            throw new ArgumentNullException(nameof(dummy));
+        }
+
         if (NavigationHost.Count == 0)
         {
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value))
-        {
-            value.Navigate<T>(contract, parameter);
-        }
+        GetRequiredNavigationHost(hostName).Navigate<T>(contract, parameter);
     }
 
     /// <summary>
@@ -293,12 +284,18 @@ public static class ViewModelRoutedViewHostMixins
     /// <exception cref="InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
     public static void NavigateToView(this IUseHostedNavigation dummy, Type rxObject, string? hostName = "", string? contract = null, object? parameter = null)
     {
+        if (dummy == null)
+        {
+            throw new ArgumentNullException(nameof(dummy));
+        }
+
         if (NavigationHost.Count == 0)
         {
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value) && AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
+        var value = GetRequiredNavigationHost(hostName);
+        if (AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
         {
             value.Navigate(toViewModel, contract, parameter);
         }
@@ -324,10 +321,7 @@ public static class ViewModelRoutedViewHostMixins
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var value))
-        {
-            value.NavigateAndReset<T>(contract, parameter);
-        }
+        GetRequiredNavigationHost(@this.Name).NavigateAndReset<T>(contract, parameter);
     }
 
     /// <summary>
@@ -341,15 +335,17 @@ public static class ViewModelRoutedViewHostMixins
     public static void NavigateToViewAndClearHistory<T>(this IUseHostedNavigation dummy, string hostName = "", string? contract = null, object? parameter = null)
         where T : class, IRxObject
     {
+        if (dummy == null)
+        {
+            throw new ArgumentNullException(nameof(dummy));
+        }
+
         if (NavigationHost.Count == 0)
         {
             throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
         }
 
-        if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value))
-        {
-            value.NavigateAndReset<T>(contract, parameter);
-        }
+        GetRequiredNavigationHost(hostName).NavigateAndReset<T>(contract, parameter);
     }
 
     /// <summary>
@@ -401,17 +397,7 @@ public static class ViewModelRoutedViewHostMixins
         {
             foreach (var key in hostKeys)
             {
-                if (NavigationHost.ContainsKey(key))
-                {
-                    if (!Equals(NavigationHost[key], viewHost))
-                    {
-                        NavigationHost[key] = viewHost;
-                    }
-                }
-                else
-                {
-                    NavigationHost.Add(key, viewHost);
-                }
+                NavigationHost[key] = viewHost;
 
                 if (!WhenSetupSubjects.ContainsKey(key))
                 {
@@ -536,8 +522,6 @@ public static class ViewModelRoutedViewHostMixins
         }).DisposeWith(@this.CleanUp);
     }
 
-#pragma warning disable CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
-
     /// <summary>
     /// Notify When the Host is setup.
     /// </summary>
@@ -553,7 +537,7 @@ public static class ViewModelRoutedViewHostMixins
                 var dis = new CompositeDisposable();
                 @this.BuildComplete(() => ASetupCompleted.Subscribe(_ =>
                     {
-                if (@this.Name != null && @this.TryGetNavigationHost(out var host) && WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
+                if (@this.Name != null && @this.TryGetNavigationHost(out var host) && host != null && WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
                 {
                     whenSetup.Where(x => x).Subscribe(obs).DisposeWith(dis);
                 }
@@ -575,7 +559,7 @@ public static class ViewModelRoutedViewHostMixins
                 var dis = new CompositeDisposable();
                 ASetupCompleted.Subscribe(_ =>
                 {
-                    if (TryGetNavigationHost(hostName, out var host))
+                    if (TryGetNavigationHost(hostName, out var host) && host != null)
                     {
                         if (WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
                         {
@@ -585,8 +569,6 @@ public static class ViewModelRoutedViewHostMixins
                 }).DisposeWith(dis);
                 return dis;
             });
-#pragma warning restore CA1854 // Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
-#pragma warning restore RCS1175 // Unused 'this' parameter.
 
     private static bool TryGetNavigationHost(string? hostName, out IViewModelRoutedViewHost? host)
     {
@@ -603,7 +585,7 @@ public static class ViewModelRoutedViewHostMixins
             return true;
         }
 
-        if (NavigationHost.TryGetValue(hostName, out host))
+        if (NavigationHost.TryGetValue(hostName!, out host))
         {
             return true;
         }
@@ -613,20 +595,9 @@ public static class ViewModelRoutedViewHostMixins
             if (string.Equals(existingHost.Name, hostName, StringComparison.Ordinal))
             {
                 host = existingHost;
-                AliasNavigationHost(hostName, host);
+                AliasNavigationHost(hostName!, host);
                 return true;
             }
-        }
-
-        if (NavigationHost.Count == 1)
-        {
-            host = NavigationHost.First().Value;
-            if (!string.IsNullOrWhiteSpace(hostName))
-            {
-                AliasNavigationHost(hostName, host);
-            }
-
-            return true;
         }
 
         return false;
@@ -634,6 +605,17 @@ public static class ViewModelRoutedViewHostMixins
 
     private static bool TryGetNavigationHost(this IUseNavigation @this, out IViewModelRoutedViewHost? host) =>
         TryGetNavigationHost(@this.Name, out host);
+
+    private static IViewModelRoutedViewHost GetRequiredNavigationHost(string? hostName)
+    {
+        if (TryGetNavigationHost(hostName, out var host) && host != null)
+        {
+            return host;
+        }
+
+        var requestedHostName = string.IsNullOrWhiteSpace(hostName) ? "<default>" : hostName;
+        throw new KeyNotFoundException($"Navigation host '{requestedHostName}' has not been registered.");
+    }
 
     private static void AliasNavigationHost(string hostName, IViewModelRoutedViewHost host)
     {

@@ -16,22 +16,21 @@ namespace CrissCross.WPF.UI.Controls;
 [System.Drawing.ToolboxBitmap(typeof(NavigationView), "NavigationView.bmp")]
 public partial class NavigationView : System.Windows.Controls.Control, INavigationView
 {
-    /// <summary>
-    /// The page identifier or target tag navigation views dictionary.
-    /// </summary>
-#pragma warning disable SA1401 // Fields should be private
-    protected Dictionary<string, INavigationViewItem> PageIdOrTargetTagNavigationViewsDictionary = [];
-
-    /// <summary>
-    /// The page type navigation views dictionary.
-    /// </summary>
-    protected Dictionary<Type, INavigationViewItem> PageTypeNavigationViewsDictionary = [];
-#pragma warning restore SA1401 // Fields should be private
-
     private static readonly Thickness titleBarPaneOpenMargin = new(35, 0, 0, 0);
     private static readonly Thickness titleBarPaneCompactMargin = new(55, 0, 0, 0);
     private static readonly Thickness autoSuggestBoxMargin = new(8, 8, 8, 16);
     private static readonly Thickness frameMargin = new(0, 50, 0, 0);
+
+    /// <summary>
+    /// The page identifier or target tag navigation views dictionary.
+    /// </summary>
+    private readonly Dictionary<string, INavigationViewItem> _pageIdOrTargetTagNavigationViewsDictionary = [];
+
+    /// <summary>
+    /// The page type navigation views dictionary.
+    /// </summary>
+    private readonly Dictionary<Type, INavigationViewItem> _pageTypeNavigationViewsDictionary = [];
+
     private readonly ObservableCollection<string> _autoSuggestBoxItems = [];
     private readonly ObservableCollection<NavigationViewBreadcrumbItem> _breadcrumbBarItems = [];
 
@@ -107,7 +106,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     {
         base.OnInitialized(e);
 
-        NavigationStack.CollectionChanged += NavigationStackOnCollectionChanged;
+        _navigationStack.CollectionChanged += NavigationStackOnCollectionChanged;
 
         InvalidateArrange();
         InvalidateVisual();
@@ -129,7 +128,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         Unloaded -= OnUnloaded;
         SizeChanged -= OnSizeChanged;
 
-        NavigationStack.CollectionChanged -= NavigationStackOnCollectionChanged;
+        _navigationStack.CollectionChanged -= NavigationStackOnCollectionChanged;
 
         if (MenuItems is ObservableCollection<object> mi)
         {
@@ -141,8 +140,8 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             fmi.CollectionChanged -= OnMenuItems_CollectionChanged;
         }
 
-        PageIdOrTargetTagNavigationViewsDictionary.Clear();
-        PageTypeNavigationViewsDictionary.Clear();
+        _pageIdOrTargetTagNavigationViewsDictionary.Clear();
+        _pageTypeNavigationViewsDictionary.Clear();
 
         ClearJournal();
 
@@ -174,7 +173,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     }
 
     /// <summary>
-    /// Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" /> attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.
+    /// Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />ï¿½attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.
     /// </summary>
     /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data. This event data reports details about the mouse button that was pressed and the handled state.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -273,27 +272,27 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
 
         foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
         {
-            if (!PageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
+            if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
             {
-                PageIdOrTargetTagNavigationViewsDictionary.Add(
+                _pageIdOrTargetTagNavigationViewsDictionary.Add(
                     singleNavigationViewItem.Id,
                     singleNavigationViewItem);
             }
 
             if (
-                !PageIdOrTargetTagNavigationViewsDictionary.ContainsKey(
+                !_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(
                     singleNavigationViewItem.TargetPageTag))
             {
-                PageIdOrTargetTagNavigationViewsDictionary.Add(
+                _pageIdOrTargetTagNavigationViewsDictionary.Add(
                     singleNavigationViewItem.TargetPageTag,
                     singleNavigationViewItem);
             }
 
             if (
                 singleNavigationViewItem.TargetPageType is not null
-                && !PageTypeNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageType))
+                && !_pageTypeNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageType))
             {
-                PageTypeNavigationViewsDictionary.Add(
+                _pageTypeNavigationViewsDictionary.Add(
                     singleNavigationViewItem.TargetPageType,
                     singleNavigationViewItem);
             }
@@ -426,7 +425,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// </summary>
     protected virtual void CloseNavigationViewItemMenus()
     {
-        if (Journal.Count == 0 || IsPaneOpen)
+        if (_journal.Count == 0 || IsPaneOpen)
         {
             return;
         }
@@ -434,7 +433,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         DeactivateMenuItems(MenuItems);
         DeactivateMenuItems(FooterMenuItems);
 
-        var currentItem = PageIdOrTargetTagNavigationViewsDictionary[Journal[^1]];
+        var currentItem = _pageIdOrTargetTagNavigationViewsDictionary[_journal[^1]];
         if (currentItem.NavigationViewItemParent is null)
         {
             currentItem.Activate(this);

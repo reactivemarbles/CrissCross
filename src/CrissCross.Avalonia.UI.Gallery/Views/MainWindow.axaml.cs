@@ -195,6 +195,8 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             progressExpander.Content = progressStack;
             navStack.Children.Add(progressExpander);
 
+            AddNavigationButton(navStack, "✨ Reactive Feature Playground", "GotoFeaturePlayground");
+
             navScrollViewer.Content = navStack;
             navBorder.Child = navScrollViewer;
             contentGrid.Children.Add(navBorder);

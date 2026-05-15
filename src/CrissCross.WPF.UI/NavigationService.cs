@@ -16,9 +16,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     /// <summary>
     /// Control representing navigation.
     /// </summary>
-#pragma warning disable SA1401 // Fields should be private
-    protected INavigationView? NavigationControl;
-#pragma warning restore SA1401 // Fields should be private
+    private INavigationView? _navigationControl;
 
     /// <summary>
     /// Locally attached page service.
@@ -27,27 +25,27 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
 
     /// <inheritdoc />
     public INavigationView GetNavigationControl() =>
-        NavigationControl ?? throw new ArgumentNullException(nameof(NavigationControl));
+        _navigationControl ?? throw new ArgumentNullException(nameof(_navigationControl));
 
     /// <inheritdoc />
     public void SetNavigationControl(INavigationView navigation)
     {
-        NavigationControl = navigation;
+        _navigationControl = navigation;
 
         if (_pageService != null)
         {
-            NavigationControl.SetPageService(_pageService);
+            _navigationControl.SetPageService(_pageService);
 
             return;
         }
 
-        NavigationControl.SetServiceProvider(serviceProvider);
+        _navigationControl.SetServiceProvider(serviceProvider);
     }
 
     /// <inheritdoc />
     public void SetPageService(IPageService pageService)
     {
-        if (NavigationControl == null)
+        if (_navigationControl == null)
         {
             _pageService = pageService;
 
@@ -56,7 +54,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
 
         ThrowIfPageServiceIsNull();
 
-        NavigationControl.SetPageService(_pageService!);
+        _navigationControl.SetPageService(_pageService!);
     }
 
     /// <inheritdoc />
@@ -64,7 +62,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.Navigate(pageType);
+        return _navigationControl!.Navigate(pageType);
     }
 
     /// <inheritdoc />
@@ -72,7 +70,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.Navigate(pageType, dataContext);
+        return _navigationControl!.Navigate(pageType, dataContext);
     }
 
     /// <inheritdoc />
@@ -80,7 +78,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.Navigate(pageIdOrTargetTag);
+        return _navigationControl!.Navigate(pageIdOrTargetTag);
     }
 
     /// <inheritdoc />
@@ -88,7 +86,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.Navigate(pageIdOrTargetTag, dataContext);
+        return _navigationControl!.Navigate(pageIdOrTargetTag, dataContext);
     }
 
     /// <inheritdoc />
@@ -96,7 +94,15 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.GoBack();
+        return _navigationControl!.GoBack();
+    }
+
+    /// <inheritdoc />
+    public bool GoForward()
+    {
+        ThrowIfNavigationControlIsNull();
+
+        return _navigationControl!.GoForward();
     }
 
     /// <inheritdoc />
@@ -104,7 +110,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.NavigateWithHierarchy(pageType);
+        return _navigationControl!.NavigateWithHierarchy(pageType);
     }
 
     /// <inheritdoc />
@@ -112,18 +118,18 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         ThrowIfNavigationControlIsNull();
 
-        return NavigationControl!.NavigateWithHierarchy(pageType, dataContext);
+        return _navigationControl!.NavigateWithHierarchy(pageType, dataContext);
     }
 
     /// <summary>
     /// Throws if navigation control is null.
     /// </summary>
-    /// <exception cref="ArgumentNullException">NavigationControl.</exception>
+    /// <exception cref="ArgumentNullException">Navigation control.</exception>
     protected void ThrowIfNavigationControlIsNull()
     {
-        if (NavigationControl is null)
+        if (_navigationControl is null)
         {
-            throw new ArgumentNullException(nameof(NavigationControl));
+            throw new ArgumentNullException(nameof(_navigationControl));
         }
     }
 

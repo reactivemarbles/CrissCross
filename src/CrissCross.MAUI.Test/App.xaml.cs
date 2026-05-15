@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using CrissCross.Maui.UI;
 using ReactiveUI;
 using ReactiveUI.Builder;
 using Splat;
@@ -23,12 +24,15 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+        Resources.UseCrissCrossMauiUiResources();
         RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
         AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
 
         AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
         AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        AppLocator.CurrentMutable.RegisterConstant<ControlsGalleryViewModel>(new());
+        AppLocator.CurrentMutable.Register<IViewFor<ControlsGalleryViewModel>>(() => new ControlsGalleryView());
         MainPage = new AppShell();
     }
 }

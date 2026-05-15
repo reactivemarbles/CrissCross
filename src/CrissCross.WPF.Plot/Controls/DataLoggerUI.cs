@@ -155,11 +155,6 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
             var (valueList, nPoints) = d;
             var count = valueList.Count;
 
-            if (PlotLine!.Data.Coordinates.Count >= nPoints)
-            {
-                PlotLine.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - nPoints);
-            }
-
             try
             {
                 // Reuse or grow buffer to avoid allocations
@@ -184,6 +179,11 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                     var values = new double[count];
                     Array.Copy(_valueBuffer, values, count);
                     PlotLine!.Add(values);
+                }
+
+                if (PlotLine!.Data.Coordinates.Count > nPoints)
+                {
+                    PlotLine.Data.Coordinates.RemoveRange(0, PlotLine.Data.Coordinates.Count - nPoints);
                 }
             }
             catch
@@ -218,5 +218,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
             ChartSettings.Dispose();
             _valueBuffer = null;
         }
+
+        base.Dispose(disposing);
     }
 }
