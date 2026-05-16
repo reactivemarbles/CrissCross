@@ -9,7 +9,7 @@
 
 CrissCross is a ReactiveUI-first application toolkit for .NET desktop and cross-platform apps. It provides a shared navigation model, lifecycle helpers, reusable state objects, themed UI controls, shell services, plot integration, and WebView2 hosting across WPF, Avalonia, MAUI, and WinForms.
 
-This README is the canonical documentation source for every library project and package in this solution:
+This is the canonical documentation source for every library project and package in this solution:
 
 | Library | Purpose |
 | --- | --- |
@@ -24,23 +24,6 @@ This README is the canonical documentation source for every library project and 
 | `CrissCross.WPF.UI` | WPF themed controls, Fluent-style shell services, themes, resource dictionaries, and gallery controls. |
 | `CrissCross.WPF.WebView2` | WPF WebView2 wrapper with overlay window hosting support. |
 
-## Requirements
-
-Use Visual Studio 2026 or a recent .NET SDK installation with the workloads required by the projects you build.
-
-| Area | Requirements |
-| --- | --- |
-| Core, WPF, Avalonia, WinForms | .NET SDK 8.0, 9.0, or 10.0 depending on target framework. |
-| WPF and WinForms | Windows. Projects target `net472`, `net481`, and Windows .NET TFMs where applicable. |
-| MAUI | MAUI workloads for Windows, Android, iOS, Mac Catalyst, macOS, and tvOS targets as needed. |
-| WebView2 | Microsoft Edge WebView2 runtime installed on target machines. |
-| Tests | Microsoft Testing Platform and the repo workloads restored. |
-
-Restore workloads before building MAUI or full-solution targets:
-
-```powershell
-dotnet workload restore src/CrissCross.slnx
-```
 
 ## Target Frameworks
 
@@ -57,24 +40,7 @@ dotnet workload restore src/CrissCross.slnx
 | `CrissCross.WPF.UI` | `net472`, `net481`, `net8.0-windows10.0.19041.0`, `net9.0-windows10.0.19041.0`, `net10.0-windows10.0.19041.0`. |
 | `CrissCross.WPF.WebView2` | `net472`, `net481`, `net8.0-windows`, `net9.0-windows`, `net10.0-windows`. |
 
-## Build And Test
-
-The main solution file is `src/CrissCross.slnx`.
-
-```powershell
-cd src
-dotnet restore CrissCross.slnx
-dotnet build CrissCross.slnx
-dotnet test --solution CrissCross.slnx
-```
-
-Build an individual package when you only need one surface:
-
-```powershell
-dotnet build src/CrissCross.WPF.UI/CrissCross.WPF.UI.csproj
-dotnet build src/CrissCross.Avalonia.UI/CrissCross.Avalonia.UI.csproj
-dotnet build src/CrissCross.Maui.UI/CrissCross.Maui.UI.csproj -f net10.0-windows10.0.19041.0
-```
+## Gallery Projects
 
 Run the galleries:
 
@@ -1846,3 +1812,16 @@ Use this checklist when adding or verifying package parity:
 | `CrissCross.Maui.UI` | MAUI feature controls, theme resources, and state-model bindings. |
 | `CrissCross.WPF.Plot` | Live chart, reactive plot binding, adapters, sources, plot UI models, and right properties view. |
 | `CrissCross.WPF.WebView2` | `WebView2Wpf`, `WindowHost<TWindow>`, WebView2 events, browser commands, and overlay content. |
+
+
+---
+
+## Contributing
+
+Issues and PRs are welcome. Please include platform, .NET version, and a minimal repro where applicable.
+
+---
+
+## License
+
+MIT © ReactiveUI Association Incorporated
