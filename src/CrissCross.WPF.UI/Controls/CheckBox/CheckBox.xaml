@@ -131,6 +131,6 @@
     </Style>
 
     <Style BasedOn="{StaticResource DefaultCheckBoxStyle}" TargetType="{x:Type CheckBox}" />
+    <Style BasedOn="{StaticResource DefaultCheckBoxStyle}" TargetType="{x:Type controls:CheckBox}" />
 
 </ResourceDictionary>
-

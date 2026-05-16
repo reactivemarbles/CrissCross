@@ -22,10 +22,22 @@
                 TextWrapping="Wrap" />
 
             <UniformGrid Columns="2">
-                <Border Margin="0,0,12,12" Padding="16" BorderBrush="#FFD0D0D0" BorderThickness="1" CornerRadius="8">
+                <Border
+                    Margin="0,0,12,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
                     <StackPanel>
-                        <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Async reactive command" />
-                        <ui:TextBlock Margin="0,4,0,12" Opacity="0.7" Text="ReactiveCommand.CreateFromTask drives command state, progress, and BusyOverlay." TextWrapping="Wrap" />
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Async reactive command" />
+                        <ui:TextBlock
+                            Margin="0,4,0,12"
+                            Opacity="0.7"
+                            Text="ReactiveCommand.CreateFromTask drives command state, progress, and BusyOverlay."
+                            TextWrapping="Wrap" />
                         <ui:CommandButton
                             Width="220"
                             HorizontalAlignment="Left"
@@ -37,16 +49,28 @@
                             Progress="{Binding CommandProgress}"
                             State="{Binding CommandState}" />
                         <ui:BusyOverlay Margin="0,12,0,0" Operation="{Binding CurrentOperation}">
-                            <Border MinHeight="72" Padding="12" Background="#110078D4" CornerRadius="6">
+                            <Border
+                                MinHeight="72"
+                                Padding="12"
+                                Background="#110078D4"
+                                CornerRadius="6">
                                 <ui:TextBlock Text="Busy overlay keeps the underlying layout visible while reporting cancellable progress." TextWrapping="Wrap" />
                             </Border>
                         </ui:BusyOverlay>
                     </StackPanel>
                 </Border>
 
-                <Border Margin="0,0,0,12" Padding="16" BorderBrush="#FFD0D0D0" BorderThickness="1" CornerRadius="8">
+                <Border
+                    Margin="0,0,0,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
                     <StackPanel>
-                        <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Search, filters, and paging" />
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Search, filters, and paging" />
                         <ui:SearchBox
                             Margin="0,8,0,8"
                             ClearCommand="{Binding ClearSearchCommand}"
@@ -66,9 +90,17 @@
                     </StackPanel>
                 </Border>
 
-                <Border Margin="0,0,12,12" Padding="16" BorderBrush="#FFD0D0D0" BorderThickness="1" CornerRadius="8">
+                <Border
+                    Margin="0,0,12,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
                     <StackPanel>
-                        <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Workflow controls" />
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Workflow controls" />
                         <ui:SegmentedControl
                             Margin="0,8,0,12"
                             SelectedKey="{Binding SegmentState.SelectedKey, Mode=OneWay}"
@@ -81,9 +113,17 @@
                     </StackPanel>
                 </Border>
 
-                <Border Margin="0,0,0,12" Padding="16" BorderBrush="#FFD0D0D0" BorderThickness="1" CornerRadius="8">
+                <Border
+                    Margin="0,0,0,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
                     <StackPanel>
-                        <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Theme and date/time" />
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Theme and date/time" />
                         <ui:ThemeSwitcher
                             Margin="0,8,0,12"
                             CurrentState="{Binding ThemeState}"
@@ -98,10 +138,21 @@
                 </Border>
             </UniformGrid>
 
-            <Border Margin="0,8,0,0" Padding="16" BorderBrush="#FFD0D0D0" BorderThickness="1" CornerRadius="8">
+            <Border
+                Margin="0,8,0,0"
+                Padding="16"
+                BorderBrush="#FFD0D0D0"
+                BorderThickness="1"
+                CornerRadius="8">
                 <StackPanel>
-                    <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Activation/disposal" />
-                    <ui:TextBlock Margin="0,8,0,0" Text="{Binding ActivationLog}" TextWrapping="Wrap" />
+                    <ui:TextBlock
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Activation/disposal" />
+                    <ui:TextBlock
+                        Margin="0,8,0,0"
+                        Text="{Binding ActivationLog}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </StackPanel>

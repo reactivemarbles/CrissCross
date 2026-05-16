@@ -31,7 +31,7 @@ public partial class MainViewModel : RxObject
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ui:ControlsDictionary />
-                        <ui:ThemesDictionary Theme="Light" />
+                        <ui:ThemesDictionary Theme="Dark" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </Application.Resources>

@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>CrissCross.MAUI.Test</RootNamespace>
+    <AssemblyName>CrissCross.Maui.UI.Gallery</AssemblyName>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <PublishReadyToRun>false</PublishReadyToRun>
+
+    <ApplicationTitle>CrissCross.Maui.UI.Gallery</ApplicationTitle>
+    <ApplicationId>com.reactivemarbles.crisscross.maui.ui.gallery</ApplicationId>
+    <ApplicationIdGuid>23e20d0e-38ff-4e94-8c8b-6cf436c2d05e</ApplicationIdGuid>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="..\CrissCross.MAUI.Test\Resources\AppIcon\appicon.svg" ForegroundFile="..\CrissCross.MAUI.Test\Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+    <MauiSplashScreen Include="..\CrissCross.MAUI.Test\Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+    <MauiImage Include="..\CrissCross.MAUI.Test\Resources\Images\*" />
+    <MauiImage Update="..\CrissCross.MAUI.Test\Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+    <MauiFont Include="..\CrissCross.MAUI.Test\Resources\Fonts\*" />
+    <MauiAsset Include="..\CrissCross.MAUI.Test\Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.MAUI.Test\App.xaml.cs" Link="App.xaml.cs" />
+    <Compile Include="..\CrissCross.MAUI.Test\AppShell.xaml.cs" Link="AppShell.xaml.cs" />
+    <Compile Include="..\CrissCross.MAUI.Test\MauiProgram.cs" Link="MauiProgram.cs" />
+    <Compile Include="..\CrissCross.MAUI.Test\ViewModels\*.cs" Link="ViewModels\%(Filename)%(Extension)" />
+    <Compile Include="..\CrissCross.MAUI.Test\Views\*.xaml.cs" Link="Views\%(Filename)%(Extension)" />
+    <MauiXaml Include="..\CrissCross.MAUI.Test\App.xaml" Link="App.xaml" />
+    <MauiXaml Include="..\CrissCross.MAUI.Test\AppShell.xaml" Link="AppShell.xaml" />
+    <MauiXaml Include="..\CrissCross.MAUI.Test\Resources\Styles\*.xaml" Link="Resources\Styles\%(Filename)%(Extension)" />
+    <MauiXaml Include="..\CrissCross.MAUI.Test\Views\*.xaml" Link="Views\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+    <Compile Include="..\CrissCross.MAUI.Test\Platforms\Windows\*.cs" Link="Platforms\Windows\%(Filename)%(Extension)" />
+    <ApplicationDefinition Include="..\CrissCross.MAUI.Test\Platforms\Windows\App.xaml" Link="Platforms\Windows\App.xaml" />
+    <None Include="..\CrissCross.MAUI.Test\Platforms\Windows\app.manifest" Link="Platforms\Windows\app.manifest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <Compile Include="..\CrissCross.MAUI.Test\Platforms\Android\*.cs" Link="Platforms\Android\%(Filename)%(Extension)" />
+    <None Include="..\CrissCross.MAUI.Test\Platforms\Android\AndroidManifest.xml" Link="Platforms\Android\AndroidManifest.xml" />
+    <AndroidResource Include="..\CrissCross.MAUI.Test\Platforms\Android\Resources\**\*" Link="Platforms\Android\Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="Microsoft.Maui.Controls" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <PackageReference Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm"
+                      ExcludeAssets="all"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.MAUI\CrissCross.MAUI.csproj" />
+    <ProjectReference Include="..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
+  </ItemGroup>
+
+</Project>

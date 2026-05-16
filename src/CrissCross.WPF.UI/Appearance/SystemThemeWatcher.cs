@@ -53,7 +53,7 @@ public static class SystemThemeWatcher
             ObserveWindowWhenLoaded(window, backdrop, updateAccents, forceBackgroundReplace);
         }
 
-        if (_observedWindows.Count == 0)
+        if (_observedWindows.Count == 0 && ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Unknown)
         {
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(
@@ -152,6 +152,15 @@ public static class SystemThemeWatcher
 #endif
             observedWindow.AddHook(WndProc);
             _observedWindows.Add(observedWindow);
+
+            var currentApplicationTheme = ApplicationThemeManager.GetAppTheme();
+            if (observedWindow.RootVisual is not null && currentApplicationTheme != ApplicationTheme.Unknown)
+            {
+                WindowBackgroundManager.UpdateBackground(
+                    observedWindow.RootVisual,
+                    currentApplicationTheme,
+                    observedWindow.Backdrop);
+            }
         }
     }
 

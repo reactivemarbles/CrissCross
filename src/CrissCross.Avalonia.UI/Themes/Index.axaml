@@ -4,6 +4,8 @@
     <!-- CrissCross.Avalonia.UI Control Themes -->
     <!-- Include this in your App.axaml to use CrissCross.Avalonia.UI controls with proper styling -->
 
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Resources/FluentTheme.axaml" />
+
     <!-- Button Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Button.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelButton.axaml" />
@@ -81,6 +83,7 @@
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/InfoBadge.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Badge.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Snackbar.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Alarms.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AlarmBanner.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/EmptyState.axaml" />
 
