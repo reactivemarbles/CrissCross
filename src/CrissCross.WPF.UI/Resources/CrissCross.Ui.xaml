@@ -12,7 +12,6 @@
 
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AccessText/AccessText.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Anchor/Anchor.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AppBar/AppBar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AutoSuggestBox/AutoSuggestBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Badge/Badge.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/BreadcrumbBar/BreadcrumbBar.xaml" />
@@ -26,7 +25,6 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CardControl/CardControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CardExpander/CardExpander.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CheckBox/CheckBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CheckBox/CheckBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Chip/Chip.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ChipGroup/ChipGroup.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ColorPicker/ColorPicker.xaml" />
@@ -34,12 +32,10 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CommandButton/CommandButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ContentDialog/ContentDialog.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ContextMenu/ContextMenu.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ContextMenu/ContextMenu.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DataGrid/DataGrid.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DataFilterPanel/DataFilterPanel.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DataPager/DataPager.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DatePicker/DatePicker.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DateTimePicker/DateTimePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DateTimeRangePicker/DateTimeRangePicker.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DropDownButton/DropDownButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/DynamicScrollBar/DynamicScrollBar.xaml" />
@@ -75,7 +71,6 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NavigationControls/NavigationVM.xaml" />
 
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NumberBox/NumberBox.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/NumberPad/NumberPad.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Page/Page.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/PasswordBox/PasswordBox.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ProgressBar/ProgressBar.xaml" />
@@ -91,7 +86,6 @@
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/SegmentedControl/SegmentedControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Separator/Separator.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Slider/Slider.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/SquareSlider/SquareSlider.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Snackbar/Snackbar.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/SplitButton/SplitButton.xaml" />
         <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/StatusBar/StatusBar.xaml" />
