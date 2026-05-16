@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -25,6 +25,7 @@ public partial class MainView
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
             this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
             this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+            this.BindCommand(ViewModel, vm => vm.GotoControlsGallery, v => v.GotoControlsGallery).DisposeWith(d);
         });
     }
 }

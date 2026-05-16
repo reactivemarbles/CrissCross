@@ -1,0 +1,48 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|EmptyState">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel MaxWidth="480"
+                            Margin="24"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                    <ContentPresenter HorizontalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    <TextBlock Margin="0,12,0,0"
+                               HorizontalAlignment="Center"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Text="{Binding Model.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+                    <TextBlock Margin="0,6,0,0"
+                               HorizontalAlignment="Center"
+                               Opacity="0.72"
+                               Text="{Binding Model.Message, RelativeSource={RelativeSource TemplatedParent}}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+                    <StackPanel Margin="0,16,0,0"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                        <Button MinWidth="96"
+                                Command="{Binding Model.PrimaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding Model.PrimaryActionText, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsVisible="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="96"
+                                Command="{Binding Model.SecondaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding Model.SecondaryActionText, RelativeSource={RelativeSource TemplatedParent}}"
+                                IsVisible="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}}" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

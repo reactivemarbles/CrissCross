@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -25,6 +25,7 @@ namespace CrissCross.WPF.Plot;
 public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewModel>
 {
     private readonly CompositeDisposable _dd = [];
+    private IReactivePlotConnection? _reactivePlotConnection;
     private IDisposable? _crosshairDisposable;
     private bool _needLock;
     private bool _needAutoScale = true;
@@ -60,6 +61,11 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
 
     private void ElementBinding1(CompositeDisposable d)
     {
+        Disposable.Create(DisposeReactivePlotConnection).DisposeWith(d);
+        UnloadedObservable()
+            .Subscribe(_ => DisposeReactivePlotConnection())
+            .DisposeWith(d);
+
         this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn).DisposeWith(d);
         this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
         this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn).DisposeWith(d);
@@ -132,6 +138,42 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             }
         }
     }
+
+    private void ChangeReactivePlotSources(IEnumerable<IReactivePlotSource>? sources)
+    {
+        DisposeReactivePlotConnection();
+        if (ViewModel is null || sources is null)
+        {
+            return;
+        }
+
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        _needCrossHairOff = true;
+        ExecuteMarkerOnOff();
+        ViewModel.ClearContent();
+        _reactivePlotConnection = new ReactivePlotBinder().Bind(
+            ViewModel,
+            sources,
+            new ReactivePlotBindingOptions
+            {
+                UiScheduler = RxSchedulers.MainThreadScheduler,
+                MaxVisiblePoints = UseFixedNumberOfPoints ? NumberPointsPlotted : null,
+                MaxAxisCount = ViewModel.YAxisList.Count,
+            });
+        ViewModel.InitializeAxisLines();
+    }
+
+    private void DisposeReactivePlotConnection()
+    {
+        _reactivePlotConnection?.Dispose();
+        _reactivePlotConnection = null;
+    }
+
+    private IObservable<System.Reactive.EventPattern<RoutedEventArgs>> UnloadedObservable() =>
+        Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(handler => Unloaded += handler, handler => Unloaded -= handler);
 
     private void ChangeScatterObserver(ScatterEnumObsPoints input)
     {

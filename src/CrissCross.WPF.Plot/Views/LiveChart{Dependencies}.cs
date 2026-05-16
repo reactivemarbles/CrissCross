@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -112,6 +112,16 @@ public partial class LiveChart
     /// property to provide dynamic, real-time data updates to the chart through data binding in XAML or code.</remarks>
     public static readonly DependencyProperty ObservablesProperty =
         DependencyProperty.Register(nameof(Observables), typeof(IEnumerable<IObservable<(string, double)>>), typeof(LiveChart));
+
+    /// <summary>
+    /// Identifies the ReactivePlotSources dependency property, which binds normalized observable plot sources to the chart.
+    /// </summary>
+    public static readonly DependencyProperty ReactivePlotSourcesProperty =
+        DependencyProperty.Register(
+            nameof(ReactivePlotSources),
+            typeof(IEnumerable<IReactivePlotSource>),
+            typeof(LiveChart),
+            new PropertyMetadata(null, new PropertyChangedCallback(ReactivePlotSourcesCallback)));
 
     /// <summary>
     /// Identifies the SignalObservablesWithTimeStamp dependency property, which enables binding to a collection of
@@ -237,6 +247,19 @@ public partial class LiveChart
         if (d is LiveChart livechart && e.NewValue is GridLength gridLength)
         {
             livechart.RightWidth = gridLength;
+        }
+    }
+
+    /// <summary>
+    /// Handles reactive plot source collection changes by rebinding the chart connection.
+    /// </summary>
+    /// <param name="d">The dependency object on which the property changed.</param>
+    /// <param name="e">The dependency property change event arguments.</param>
+    private static void ReactivePlotSourcesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is LiveChart livechart)
+        {
+            livechart.ChangeReactivePlotSources(e.NewValue as IEnumerable<IReactivePlotSource>);
         }
     }
 

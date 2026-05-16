@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:CrissCross.Maui.UI.Controls">
+
+    <Style x:Key="CrissCrossCommandButtonStyle" TargetType="controls:CommandButton">
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossAccentColor}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="MinimumHeightRequest" Value="40" />
+    </Style>
+
+    <Style TargetType="controls:CommandButton" BasedOn="{StaticResource CrissCrossCommandButtonStyle}" />
+    <Style TargetType="controls:AsyncCommandButton" BasedOn="{StaticResource CrissCrossCommandButtonStyle}" />
+
+    <Style TargetType="controls:Chip">
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BorderColor" Value="{DynamicResource CrissCrossBorderColor}" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="12,6" />
+        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
+    </Style>
+
+    <Style TargetType="controls:BusyOverlay">
+        <Setter Property="BackgroundColor" Value="#66000000" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style TargetType="controls:EmptyState">
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+    </Style>
+
+    <Style TargetType="controls:SearchBox">
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSurfaceColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource CrissCrossMutedTextColor}" />
+    </Style>
+
+    <Style TargetType="controls:FilterBar">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:ReactiveFormField">
+        <Setter Property="Padding" Value="0,6" />
+    </Style>
+
+    <Style TargetType="controls:ValidationSummary">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="BackgroundColor" Value="#FFFFF4CE" />
+    </Style>
+
+    <Style TargetType="controls:ChipGroup">
+        <Setter Property="Direction" Value="Row" />
+        <Setter Property="Wrap" Value="Wrap" />
+        <Setter Property="AlignItems" Value="Center" />
+    </Style>
+
+    <Style TargetType="controls:SegmentedControl">
+        <Setter Property="Spacing" Value="4" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+    </Style>
+
+    <Style TargetType="controls:DataPager">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:Stepper">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:DateTimeRangePicker">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:ThemeSwitcher">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:DataFilterPanel">
+        <Setter Property="Padding" Value="12" />
+    </Style>
+
+    <Style TargetType="controls:PropertyGridLite">
+        <Setter Property="Padding" Value="8" />
+    </Style>
+</ResourceDictionary>

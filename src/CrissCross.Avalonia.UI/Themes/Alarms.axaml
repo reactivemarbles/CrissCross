@@ -1,0 +1,13 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|Alarms">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ItemsControl ItemsSource="{TemplateBinding AlarmItems}" />
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

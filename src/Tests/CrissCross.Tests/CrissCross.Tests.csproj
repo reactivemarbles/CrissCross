@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CrissCross\CrissCross.csproj" />
+    <ProjectReference Include="..\..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
     <Using Include="TUnit.Core"/>
     <Using Include="TUnit.Assertions"/>
     <Using Include="TUnit.Assertions.Extensions"/>

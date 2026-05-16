@@ -1,8 +1,8 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Avalonia;
+using System;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -11,18 +11,6 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// </summary>
 public class SplitButton : global::Avalonia.Controls.SplitButton
 {
-    /// <summary>
-    /// Property for <see cref="CornerRadius"/>.
-    /// </summary>
-    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty =
-        AvaloniaProperty.Register<SplitButton, CornerRadius>(nameof(CornerRadius));
-
-    /// <summary>
-    /// Gets or sets the corner radius.
-    /// </summary>
-    public new CornerRadius CornerRadius
-    {
-        get => GetValue(CornerRadiusProperty);
-        set => SetValue(CornerRadiusProperty, value);
-    }
+    /// <inheritdoc/>
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.SplitButton);
 }

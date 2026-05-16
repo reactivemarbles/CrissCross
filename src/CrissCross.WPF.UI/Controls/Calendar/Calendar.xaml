@@ -504,5 +504,6 @@
     </Style>
 
     <Style BasedOn="{StaticResource DefaultCalendarStyle}" TargetType="{x:Type Calendar}" />
+    <Style BasedOn="{StaticResource DefaultCalendarStyle}" TargetType="{x:Type controls:Calendar}" />
 
 </ResourceDictionary>

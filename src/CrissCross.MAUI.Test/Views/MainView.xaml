@@ -10,6 +10,7 @@
         <StackLayout Orientation="Vertical">
             <Label Text="Main View" />
             <Button x:Name="GotoFirst" Text="Goto First" />
+            <Button x:Name="GotoControlsGallery" Text="Open Controls Gallery" />
             <Button x:Name="GotoMain" Text="Goto Back" />
         </StackLayout>
     </rxui:ReactiveContentPage.Content>

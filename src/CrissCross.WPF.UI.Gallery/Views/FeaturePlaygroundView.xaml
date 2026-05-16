@@ -1,0 +1,160 @@
+<UserControl
+    x:Class="CrissCross.WPF.UI.Gallery.Views.FeaturePlaygroundView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+    d:DesignHeight="720"
+    d:DesignWidth="1040"
+    mc:Ignorable="d">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <ui:TextBlock
+                Margin="0,0,0,8"
+                FontSize="28"
+                FontWeight="SemiBold"
+                Text="Reactive feature playground" />
+            <ui:TextBlock
+                Margin="0,0,0,20"
+                Opacity="0.75"
+                Text="{Binding PlatformNotes}"
+                TextWrapping="Wrap" />
+
+            <UniformGrid Columns="2">
+                <Border
+                    Margin="0,0,12,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <StackPanel>
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Async reactive command" />
+                        <ui:TextBlock
+                            Margin="0,4,0,12"
+                            Opacity="0.7"
+                            Text="ReactiveCommand.CreateFromTask drives command state, progress, and BusyOverlay."
+                            TextWrapping="Wrap" />
+                        <ui:CommandButton
+                            Width="220"
+                            HorizontalAlignment="Left"
+                            Command="{Binding RunImportCommand}"
+                            Content="Run deterministic import"
+                            ErrorContent="Import failed"
+                            ExecutingContent="Importing..."
+                            IsExecuting="{Binding IsOperationRunning}"
+                            Progress="{Binding CommandProgress}"
+                            State="{Binding CommandState}" />
+                        <ui:BusyOverlay Margin="0,12,0,0" Operation="{Binding CurrentOperation}">
+                            <Border
+                                MinHeight="72"
+                                Padding="12"
+                                Background="#110078D4"
+                                CornerRadius="6">
+                                <ui:TextBlock Text="Busy overlay keeps the underlying layout visible while reporting cancellable progress." TextWrapping="Wrap" />
+                            </Border>
+                        </ui:BusyOverlay>
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    Margin="0,0,0,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <StackPanel>
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Search, filters, and paging" />
+                        <ui:SearchBox
+                            Margin="0,8,0,8"
+                            ClearCommand="{Binding ClearSearchCommand}"
+                            PlaceholderText="Search telemetry"
+                            QueryState="{Binding SearchState}"
+                            SearchCommand="{Binding SearchCommand}"
+                            Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <ui:FilterBar
+                            Margin="0,0,0,8"
+                            ClearAllCommand="{Binding ClearSearchCommand}"
+                            QueryState="{Binding SearchState}" />
+                        <ui:DataPager
+                            PageRequestCommand="{Binding PageRequestCommand}"
+                            PaginationState="{Binding PaginationState}"
+                            QueryState="{Binding SearchState}"
+                            SortKey="timestamp" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    Margin="0,0,12,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <StackPanel>
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Workflow controls" />
+                        <ui:SegmentedControl
+                            Margin="0,8,0,12"
+                            SelectedKey="{Binding SegmentState.SelectedKey, Mode=OneWay}"
+                            SelectionChangedCommand="{Binding SegmentChangedCommand}"
+                            SelectionState="{Binding SegmentState}" />
+                        <ui:Stepper
+                            CurrentKey="{Binding StepperState.CurrentKey, Mode=OneWay}"
+                            State="{Binding StepperState}"
+                            StepRequestedCommand="{Binding StepRequestedCommand}" />
+                    </StackPanel>
+                </Border>
+
+                <Border
+                    Margin="0,0,0,12"
+                    Padding="16"
+                    BorderBrush="#FFD0D0D0"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <StackPanel>
+                        <ui:TextBlock
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="Theme and date/time" />
+                        <ui:ThemeSwitcher
+                            Margin="0,8,0,12"
+                            CurrentState="{Binding ThemeState}"
+                            SelectedChoice="{Binding SelectedTheme, Mode=TwoWay}"
+                            ThemeChangedCommand="{Binding ThemeChangedCommand}" />
+                        <ui:DateTimeRangePicker
+                            CurrentRange="{Binding CurrentRange}"
+                            RangeChangedCommand="{Binding RangeChangedCommand}"
+                            RangeLabel="Historian replay window"
+                            SelectedPreset="Custom" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border
+                Margin="0,8,0,0"
+                Padding="16"
+                BorderBrush="#FFD0D0D0"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <ui:TextBlock
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Activation/disposal" />
+                    <ui:TextBlock
+                        Margin="0,8,0,0"
+                        Text="{Binding ActivationLog}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

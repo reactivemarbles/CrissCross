@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -31,6 +31,7 @@ public class MainViewModel : RxObject, IUseHostedNavigation
             GotoSlider = ReactiveCommand.Create(() => this.NavigateToView<SliderPageViewModel>());
             GotoDatePicker = ReactiveCommand.Create(() => this.NavigateToView<DatePickerPageViewModel>());
             GotoColorPicker = ReactiveCommand.Create(() => this.NavigateToView<ColorPickerPageViewModel>());
+            GotoFeaturePlayground = ReactiveCommand.Create(() => this.NavigateToView<FeaturePlaygroundPageViewModel>());
         });
 
     /// <summary>
@@ -82,4 +83,9 @@ public class MainViewModel : RxObject, IUseHostedNavigation
     /// Gets the goto colorpicker command.
     /// </summary>
     public ICommand? GotoColorPicker { get; private set; }
+
+    /// <summary>
+    /// Gets the goto feature playground command.
+    /// </summary>
+    public ICommand? GotoFeaturePlayground { get; private set; }
 }

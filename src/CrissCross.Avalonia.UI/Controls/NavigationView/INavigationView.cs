@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -194,6 +194,11 @@ public interface INavigationView
     bool CanGoBack { get; }
 
     /// <summary>
+    /// Gets a value indicating whether there is at least one entry in forward navigation history.
+    /// </summary>
+    bool CanGoForward { get; }
+
+    /// <summary>
     /// Synchronously navigates current navigation Frame to the
     /// given Element.
     /// </summary>
@@ -237,6 +242,9 @@ public interface INavigationView
     /// <summary>
     /// Navigates the NavigationView to the next journal entry.
     /// </summary>
+    /// <remarks>
+    /// Forward journal navigation intentionally has no forward-requested event; only user back-button interactions raise <see cref="BackRequested"/>.
+    /// </remarks>
     /// <returns><see langword="true"/> if successfully navigated forward, otherwise <see langword="false"/>.</returns>
     bool GoForward();
 

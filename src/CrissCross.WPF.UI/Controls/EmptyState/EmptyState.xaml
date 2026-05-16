@@ -1,0 +1,66 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+
+    <Style TargetType="{x:Type controls:EmptyState}">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:EmptyState}">
+                    <StackPanel
+                        MaxWidth="480"
+                        Margin="24"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        <TextBlock
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Text="{Binding Model.Title, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=Nothing to show}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,6,0,0"
+                            HorizontalAlignment="Center"
+                            Opacity="0.72"
+                            Text="{Binding Model.Message, RelativeSource={RelativeSource TemplatedParent}}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                        <StackPanel
+                            Margin="0,16,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="PrimaryActionButton"
+                                MinWidth="96"
+                                Command="{Binding Model.PrimaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding Model.PrimaryActionText, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Button
+                                x:Name="SecondaryActionButton"
+                                MinWidth="96"
+                                Margin="8,0,0,0"
+                                Command="{Binding Model.SecondaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding Model.SecondaryActionText, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
+                            <Setter TargetName="PrimaryActionButton" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
+                            <Setter TargetName="SecondaryActionButton" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

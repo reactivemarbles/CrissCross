@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -28,6 +28,15 @@ public partial class LiveChart
     {
         get => (IEnumerable<IObservable<(string Name, double Value)>>)GetValue(ObservablesProperty);
         set => SetValue(ObservablesProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets normalized observable-first plot sources bound to this chart.
+    /// </summary>
+    public IEnumerable<IReactivePlotSource>? ReactivePlotSources
+    {
+        get => (IEnumerable<IReactivePlotSource>?)GetValue(ReactivePlotSourcesProperty);
+        set => SetValue(ReactivePlotSourcesProperty, value);
     }
 
     /// <summary>

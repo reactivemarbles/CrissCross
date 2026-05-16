@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -127,6 +127,17 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// <remarks>Dispose the returned object to unsubscribe from mouse coordinate notifications and release
     /// resources. The property may be null if no subscription is active.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
+
+    /// <summary>
+    /// Clears plotted coordinates and duplicate-time tracking so subsequent updates can reuse prior X values.
+    /// </summary>
+    public void ClearData()
+    {
+        PlotLine!.Data.Coordinates.Clear();
+        _timeSet.Clear();
+        _uniqueDataBuffer.Clear();
+        _uniqueTimeBuffer.Clear();
+    }
 
     /// <summary>
     /// Initializes a new data logger line on the plot and sets its color using the specified hex value.

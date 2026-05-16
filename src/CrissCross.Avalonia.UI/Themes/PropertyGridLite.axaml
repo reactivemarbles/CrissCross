@@ -1,0 +1,77 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|PropertyGridLite">
+        <Setter Property="MinHeight" Value="160" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="12"
+                        BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                        BorderThickness="1"
+                        CornerRadius="6">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,8" LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Left"
+                                       Margin="0,0,12,0"
+                                       VerticalAlignment="Center"
+                                       FontWeight="SemiBold"
+                                       Text="Properties" />
+                            <TextBlock DockPanel.Dock="Right"
+                                       VerticalAlignment="Center"
+                                       Opacity="0.72"
+                                       Text="{Binding InspectorState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <TextBox MinWidth="180"
+                                     Text="{Binding SearchText, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                        </DockPanel>
+
+                        <ItemsControl ItemsSource="{Binding InspectorState.Categories, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="core:PropertyDescriptorGroup">
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Margin="0,0,0,6"
+                                                   FontWeight="SemiBold"
+                                                   Text="{Binding Name}" />
+                                        <ItemsControl ItemsSource="{Binding Descriptors}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="core:PropertyDescriptorModel">
+                                                    <Grid Margin="0,0,0,6" ColumnDefinitions="160,*,Auto">
+                                                        <TextBlock VerticalAlignment="Center"
+                                                                   Text="{Binding DisplayName}" />
+                                                        <TextBlock Grid.Column="1"
+                                                                   VerticalAlignment="Center"
+                                                                   Opacity="0.86"
+                                                                   Text="{Binding ValueDisplayText}" />
+                                                        <Button Grid.Column="2"
+                                                                Margin="8,0,0,0"
+                                                                Command="{Binding ResetCommand}"
+                                                                Content="Reset"
+                                                                IsEnabled="{Binding CanReset}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button MinWidth="72"
+                                    Margin="0,0,8,0"
+                                    Command="{Binding ResetCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Content="Reset"
+                                    IsEnabled="{Binding InspectorState.CanReset, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Button MinWidth="72"
+                                    Command="{Binding CommitCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Content="Commit"
+                                    IsEnabled="{Binding InspectorState.CanCommit, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

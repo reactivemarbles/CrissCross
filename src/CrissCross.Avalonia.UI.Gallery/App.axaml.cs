@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -34,6 +34,7 @@ public partial class App : Application
         AppLocator.CurrentMutable.RegisterConstant<SliderPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<DatePickerPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<ColorPickerPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<FeaturePlaygroundPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
 
         // Register Views for ViewModels - these registrations are used by the default ReactiveUI ViewLocator
@@ -48,6 +49,7 @@ public partial class App : Application
         AppLocator.CurrentMutable.Register<IViewFor<SliderPageViewModel>>(() => new SliderPageView());
         AppLocator.CurrentMutable.Register<IViewFor<DatePickerPageViewModel>>(() => new DatePickerPageView());
         AppLocator.CurrentMutable.Register<IViewFor<ColorPickerPageViewModel>>(() => new ColorPickerPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(() => new FeaturePlaygroundPageView());
 
         // NOTE: SetupComplete is called in OnFrameworkInitializationCompleted() to ensure
         // the MainWindow and navigation host are created before BuildComplete callbacks fire

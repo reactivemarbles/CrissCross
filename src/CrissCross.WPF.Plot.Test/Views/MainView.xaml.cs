@@ -1,8 +1,9 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Reactive.Disposables.Fluent;
+using System.Reactive.Linq;
 using CrissCross.WPF.Plot.Test.ViewModels;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -26,7 +27,10 @@ namespace CrissCross.WPF.Plot.Test.Views
             this.WhenActivated(d =>
             {
                 // OneWay bind ViewModel to View
-                this.OneWayBind(ViewModel, vm => vm.LiveChartSubject, v => v.Chart.SignalObservablesWithTimeStamp).DisposeWith(d);
+                ViewModel.ReactivePlotSources
+                    .ObserveOn(RxSchedulers.MainThreadScheduler)
+                    .Subscribe(sources => Chart.ReactivePlotSources = sources)
+                    .DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(d);
 
                 // OneWay bind View to ViewModel

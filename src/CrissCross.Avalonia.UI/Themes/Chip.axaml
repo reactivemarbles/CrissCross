@@ -1,0 +1,33 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|Chip">
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="10,4"
+                        Background="#14000000"
+                        BorderBrush="#22000000"
+                        BorderThickness="1"
+                        CornerRadius="14">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6">
+                        <ContentPresenter Content="{TemplateBinding Icon}" />
+                        <Button Padding="0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Command="{Binding SelectCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{TemplateBinding Text}" />
+                        <Button MinWidth="24"
+                                Command="{Binding RemoveCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="×" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

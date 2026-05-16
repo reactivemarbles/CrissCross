@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -11,6 +11,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
+using CrissCross;
 using CrissCross.Avalonia.UI.Animations;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -262,27 +263,25 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// </summary>
     protected const string TemplateElementAutoSuggestBoxSymbolButton = "PART_AutoSuggestBoxSymbolButton";
 
-#pragma warning disable SA1401 // Fields should be private
     /// <summary>
     /// The journal.
     /// </summary>
-    protected readonly List<string> Journal = new(50);
+    private readonly List<string> _journal = new(50);
 
     /// <summary>
     /// The navigation stack.
     /// </summary>
-    protected readonly ObservableCollection<INavigationViewItem> NavigationStack = [];
+    private readonly ObservableCollection<INavigationViewItem> _navigationStack = [];
 
     /// <summary>
     /// The page identifier or target tag navigation views dictionary.
     /// </summary>
-    protected Dictionary<string, INavigationViewItem> PageIdOrTargetTagNavigationViewsDictionary = [];
+    private readonly Dictionary<string, INavigationViewItem> _pageIdOrTargetTagNavigationViewsDictionary = [];
 
     /// <summary>
     /// The page type navigation views dictionary.
     /// </summary>
-    protected Dictionary<Type, INavigationViewItem> PageTypeNavigationViewsDictionary = [];
-#pragma warning restore SA1401 // Fields should be private
+    private readonly Dictionary<Type, INavigationViewItem> _pageTypeNavigationViewsDictionary = [];
 
     private readonly ObservableCollection<object> _menuItems = [];
     private readonly ObservableCollection<object> _footerMenuItems = [];
@@ -290,7 +289,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
 
     private IServiceProvider? _serviceProvider;
     private IPageService? _pageService;
-    private int _currentIndexInJournal;
+    private int _currentIndexInJournal = -1;
 
     private ContentPresenter? _navigationViewContentPresenter;
     private ItemsControl? _menuItemsItemsControl;
@@ -549,7 +548,10 @@ public partial class NavigationView : TemplatedControl, INavigationView
     public INavigationViewItem? SelectedItem { get; protected set; }
 
     /// <inheritdoc/>
-    public bool CanGoBack => Journal.Count > 1;
+    public bool CanGoBack => NavigationJournal.CanGoBack(_journal, _currentIndexInJournal);
+
+    /// <inheritdoc/>
+    public bool CanGoForward => NavigationJournal.CanGoForward(_journal, _currentIndexInJournal);
 
     /// <inheritdoc/>
     public void SetPageService(IPageService pageService) => _pageService = pageService;
@@ -560,7 +562,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// <inheritdoc/>
     public virtual bool Navigate(Type pageType, object? dataContext = null)
     {
-        if (!PageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
+        if (!_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
         {
             return TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext);
         }
@@ -571,7 +573,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// <inheritdoc/>
     public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext = null)
     {
-        if (!PageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem))
+        if (!_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem))
         {
             return false;
         }
@@ -582,7 +584,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// <inheritdoc/>
     public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext = null)
     {
-        if (!PageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
+        if (!_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
         {
             return TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext);
         }
@@ -621,27 +623,34 @@ public partial class NavigationView : TemplatedControl, INavigationView
     }
 
     /// <inheritdoc/>
-    public virtual bool GoForward() => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public virtual bool GoBack()
+    public virtual bool GoForward()
     {
-        if (Journal.Count <= 1)
+        if (!NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId) || itemId is null)
         {
             return false;
         }
 
-        var itemId = Journal[^2];
+        return _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
+            NavigateInternal(navigationViewItem, null, false, false, true, nextIndex);
+    }
+
+    /// <inheritdoc/>
+    public virtual bool GoBack()
+    {
+        if (!NavigationJournal.TryMoveBack(_journal, _currentIndexInJournal, out var nextIndex, out var itemId) || itemId is null)
+        {
+            return false;
+        }
 
         RaiseEvent(new RoutedEventArgs(BackRequestedEvent));
-        return NavigateInternal(PageIdOrTargetTagNavigationViewsDictionary[itemId], null, false, true);
+        return _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
+            NavigateInternal(navigationViewItem, null, false, true, true, nextIndex);
     }
 
     /// <inheritdoc/>
     public virtual void ClearJournal()
     {
-        _currentIndexInJournal = 0;
-        Journal.Clear();
+        NavigationJournal.Clear(_journal, ref _currentIndexInJournal);
         _cache.Clear();
     }
 
@@ -728,21 +737,21 @@ public partial class NavigationView : TemplatedControl, INavigationView
 
         foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
         {
-            if (!PageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
+            if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
             {
-                PageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.Id, singleNavigationViewItem);
+                _pageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.Id, singleNavigationViewItem);
             }
 
             if (!string.IsNullOrEmpty(singleNavigationViewItem.TargetPageTag) &&
-                !PageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageTag))
+                !_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageTag))
             {
-                PageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.TargetPageTag, singleNavigationViewItem);
+                _pageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.TargetPageTag, singleNavigationViewItem);
             }
 
             if (singleNavigationViewItem.TargetPageType is not null &&
-                !PageTypeNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageType))
+                !_pageTypeNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageType))
             {
-                PageTypeNavigationViewsDictionary.Add(singleNavigationViewItem.TargetPageType, singleNavigationViewItem);
+                _pageTypeNavigationViewsDictionary.Add(singleNavigationViewItem.TargetPageType, singleNavigationViewItem);
             }
 
             singleNavigationViewItem.IsMenuElement = true;
@@ -754,17 +763,17 @@ public partial class NavigationView : TemplatedControl, INavigationView
         }
     }
 
-    private bool TryToNavigateWithoutINavigationViewItem(Type pageType, bool addToNavigationStack, object? dataContext = null)
+    private bool TryToNavigateWithoutINavigationViewItem(Type pageType, bool addTo_navigationStack, object? dataContext = null)
     {
         var navigationViewItem = new NavigationViewItem(pageType);
 
-        if (!NavigateInternal(navigationViewItem, dataContext, addToNavigationStack))
+        if (!NavigateInternal(navigationViewItem, dataContext, addTo_navigationStack))
         {
             return false;
         }
 
-        PageTypeNavigationViewsDictionary.Add(pageType, navigationViewItem);
-        PageIdOrTargetTagNavigationViewsDictionary.Add(navigationViewItem.Id, navigationViewItem);
+        _pageTypeNavigationViewsDictionary.Add(pageType, navigationViewItem);
+        _pageIdOrTargetTagNavigationViewsDictionary.Add(navigationViewItem.Id, navigationViewItem);
 
         return true;
     }
@@ -772,11 +781,19 @@ public partial class NavigationView : TemplatedControl, INavigationView
     private bool NavigateInternal(
         INavigationViewItem viewItem,
         object? dataContext = null,
-        bool addToNavigationStack = false,
-        bool isBackwardsNavigated = false)
+        bool addTo_navigationStack = false,
+        bool isBackwardsNavigated = false,
+        bool isJournalNavigation = false,
+        int journalIndex = -1)
     {
-        if (NavigationStack.Count > 0 && NavigationStack[^1] == viewItem)
+        if (_navigationStack.Count > 0 && _navigationStack[^1] == viewItem)
         {
+            if (isJournalNavigation)
+            {
+                AddToJournal(viewItem, true, journalIndex);
+                return true;
+            }
+
             return false;
         }
 
@@ -795,28 +812,26 @@ public partial class NavigationView : TemplatedControl, INavigationView
 
         UpdateContent(pageInstance, dataContext);
 
-        AddToJournal(viewItem, isBackwardsNavigated);
+        AddToJournal(viewItem, isJournalNavigation, journalIndex);
 
-        if (NavigationStack.Count > 0 && SelectedItem != NavigationStack[0] && NavigationStack[0].IsMenuElement)
+        if (_navigationStack.Count > 0 && SelectedItem != _navigationStack[0] && _navigationStack[0].IsMenuElement)
         {
-            SelectedItem = NavigationStack[0];
+            SelectedItem = _navigationStack[0];
             RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
         }
 
         return true;
     }
 
-    private void AddToJournal(INavigationViewItem viewItem, bool isBackwardsNavigated)
+    private void AddToJournal(INavigationViewItem viewItem, bool isJournalNavigation, int journalIndex)
     {
-        if (isBackwardsNavigated && Journal.Count >= 2)
+        if (isJournalNavigation)
         {
-            Journal.RemoveAt(Journal.Count - 1);
-            _currentIndexInJournal--;
+            _currentIndexInJournal = journalIndex;
         }
         else
         {
-            Journal.Add(viewItem.Id);
-            _currentIndexInJournal++;
+            NavigationJournal.Record(_journal, ref _currentIndexInJournal, viewItem.Id);
         }
 
         IsBackEnabled = CanGoBack;

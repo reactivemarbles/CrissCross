@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
+﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -155,11 +155,6 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
             var (valueList, nPoints) = d;
             var count = valueList.Count;
 
-            if (PlotLine!.Data.Coordinates.Count >= nPoints)
-            {
-                PlotLine.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - nPoints);
-            }
-
             try
             {
                 // Reuse or grow buffer to avoid allocations
@@ -184,6 +179,11 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                     var values = new double[count];
                     Array.Copy(_valueBuffer, values, count);
                     PlotLine!.Add(values);
+                }
+
+                if (PlotLine!.Data.Coordinates.Count > nPoints)
+                {
+                    PlotLine.Data.Coordinates.RemoveRange(0, PlotLine.Data.Coordinates.Count - nPoints);
                 }
             }
             catch
@@ -218,5 +218,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
             ChartSettings.Dispose();
             _valueBuffer = null;
         }
+
+        base.Dispose(disposing);
     }
 }

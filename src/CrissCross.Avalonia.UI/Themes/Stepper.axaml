@@ -1,0 +1,61 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|Stepper">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <WrapPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <DataTemplate x:DataType="core:StepDescriptor">
+                <Button MinWidth="96"
+                        Margin="0,0,8,8"
+                        HorizontalContentAlignment="Left"
+                        Command="{Binding $parent[controls:Stepper].JumpToStepCommand}"
+                        CommandParameter="{Binding}">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold" Text="{Binding DisplayTitle}" />
+                        <TextBlock FontSize="11"
+                                   Opacity="0.68"
+                                   Text="{Binding Status}" />
+                    </StackPanel>
+                </Button>
+            </DataTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,8"
+                               Opacity="0.72"
+                               Text="{Binding State.ProgressText, RelativeSource={RelativeSource TemplatedParent}}" />
+                    <ItemsPresenter />
+                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                        <Button MinWidth="72"
+                                Margin="0,0,8,0"
+                                Command="{Binding PreviousStepCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Previous"
+                                IsEnabled="{Binding State.CanGoPrevious, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="72"
+                                Margin="0,0,8,0"
+                                Command="{Binding NextStepCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Next"
+                                IsEnabled="{Binding State.CanGoNext, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="72"
+                                Margin="0,0,8,0"
+                                Command="{Binding FinishCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Finish"
+                                IsEnabled="{Binding State.CanFinish, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Button MinWidth="72"
+                                Command="{Binding CancelCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="Cancel" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

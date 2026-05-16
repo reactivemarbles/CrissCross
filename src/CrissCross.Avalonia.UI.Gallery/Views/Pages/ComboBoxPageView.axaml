@@ -66,7 +66,11 @@
                     <controls:TextBlock Text="AutoSuggestBox" FontSize="18" FontWeight="Bold" />
                     <controls:TextBlock Text="AutoSuggestBox provides suggestions as you type." Opacity="0.7" />
                     <controls:StackPanel Spacing="8" MaxWidth="300" HorizontalAlignment="Left">
-                        <controls:AutoSuggestBox PlaceholderText="Start typing..." />
+                        <controls:AutoSuggestBox
+                            FilterMode="Contains"
+                            ItemsSource="{Binding SampleSuggestions}"
+                            MinimumPrefixLength="1"
+                            PlaceholderText="Start typing..." />
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>

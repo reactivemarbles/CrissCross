@@ -15,13 +15,13 @@
             <controls:TextBlock
                 FontSize="20"
                 Foreground="#4EC9B0"
-                Text="100% Feature Parity Achieved!" />
+                Text="Cross-platform control gallery" />
 
             <controls:TextBlock
                 Margin="0,0,0,24"
                 Opacity="0.7"
                 TextWrapping="Wrap"
-                Text="This gallery demonstrates all 98 controls from CrissCross.WPF.UI that have been successfully migrated to Avalonia UI. Select a control category from the navigation menu to explore interactive examples." />
+                Text="This gallery demonstrates the Avalonia controls currently available from CrissCross.Avalonia.UI. Select a control category from the navigation menu to explore interactive examples." />
 
             <!--  Feature Highlights  -->
             <controls:Card Margin="0,0,0,16">
@@ -32,11 +32,10 @@
                         Text="Key Features" />
 
                     <controls:StackPanel Spacing="4">
-                        <controls:TextBlock Opacity="0.7" Text="• All 98 CrissCross.WPF.UI controls available" />
-                        <controls:TextBlock Opacity="0.7" Text="• Cross-platform: Windows, macOS, Linux" />
-                        <controls:TextBlock Opacity="0.7" Text="• Modern Fluent Design styling" />
-                        <controls:TextBlock Opacity="0.7" Text="• Full ReactiveUI integration" />
-                        <controls:TextBlock Opacity="0.7" Text="• .NET 8, 9, and 10 support" />
+                        <controls:TextBlock Opacity="0.7" Text="- Cross-platform: Windows, macOS, Linux" />
+                        <controls:TextBlock Opacity="0.7" Text="- Modern Fluent Design styling" />
+                        <controls:TextBlock Opacity="0.7" Text="- ReactiveUI integration" />
+                        <controls:TextBlock Opacity="0.7" Text="- .NET 8, 9, and 10 support" />
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>
@@ -50,12 +49,12 @@
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="#4EC9B0"
-                            Text="98" />
+                            Text="11" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
                             Opacity="0.7"
-                            Text="Total Controls" />
+                            Text="Gallery Pages" />
                     </controls:StackPanel>
                 </controls:Card>
 
@@ -66,12 +65,12 @@
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="#4EC9B0"
-                            Text="100%" />
+                            Text="Active" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
                             Opacity="0.7"
-                            Text="Coverage" />
+                            Text="Theme Resources" />
                     </controls:StackPanel>
                 </controls:Card>
 
