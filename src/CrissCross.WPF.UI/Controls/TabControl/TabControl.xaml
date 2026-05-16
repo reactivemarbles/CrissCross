@@ -1,6 +1,9 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
 
-    <Style TargetType="{x:Type TabControl}">
+    <Style x:Key="DefaultTabControlStyle" TargetType="{x:Type TabControl}">
         <Setter Property="Foreground" Value="{DynamicResource TabViewForeground}" />
         <Setter Property="Background" Value="{DynamicResource TabViewBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TabViewBorderBrush}" />
@@ -51,7 +54,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type TabItem}">
+    <Style x:Key="DefaultTabItemStyle" TargetType="{x:Type TabItem}">
         <Setter Property="Background" Value="{DynamicResource TabViewItemHeaderBackground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -120,5 +123,10 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style BasedOn="{StaticResource DefaultTabControlStyle}" TargetType="{x:Type TabControl}" />
+    <Style BasedOn="{StaticResource DefaultTabControlStyle}" TargetType="{x:Type controls:TabView}" />
+    <Style BasedOn="{StaticResource DefaultTabItemStyle}" TargetType="{x:Type TabItem}" />
+    <Style BasedOn="{StaticResource DefaultTabItemStyle}" TargetType="{x:Type controls:TabViewItem}" />
 
 </ResourceDictionary>

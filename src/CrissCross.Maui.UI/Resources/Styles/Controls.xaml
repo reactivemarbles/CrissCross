@@ -5,7 +5,7 @@
     xmlns:controls="clr-namespace:CrissCross.Maui.UI.Controls">
 
     <Style x:Key="CrissCrossCommandButtonStyle" TargetType="controls:CommandButton">
-        <Setter Property="BackgroundColor" Value="{StaticResource CrissCrossAccentColor}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossAccentColor}" />
         <Setter Property="TextColor" Value="White" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="14,8" />
@@ -16,12 +16,12 @@
     <Style TargetType="controls:AsyncCommandButton" BasedOn="{StaticResource CrissCrossCommandButtonStyle}" />
 
     <Style TargetType="controls:Chip">
-        <Setter Property="BackgroundColor" Value="{StaticResource CrissCrossSubtleSurfaceColor}" />
-        <Setter Property="BorderColor" Value="{StaticResource CrissCrossBorderColor}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BorderColor" Value="{DynamicResource CrissCrossBorderColor}" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="CornerRadius" Value="16" />
         <Setter Property="Padding" Value="12,6" />
-        <Setter Property="TextColor" Value="{StaticResource CrissCrossTextColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
     </Style>
 
     <Style TargetType="controls:BusyOverlay">
@@ -31,13 +31,13 @@
 
     <Style TargetType="controls:EmptyState">
         <Setter Property="Padding" Value="24" />
-        <Setter Property="BackgroundColor" Value="{StaticResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
     </Style>
 
     <Style TargetType="controls:SearchBox">
-        <Setter Property="BackgroundColor" Value="{StaticResource CrissCrossSurfaceColor}" />
-        <Setter Property="TextColor" Value="{StaticResource CrissCrossTextColor}" />
-        <Setter Property="PlaceholderColor" Value="{StaticResource CrissCrossMutedTextColor}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSurfaceColor}" />
+        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource CrissCrossMutedTextColor}" />
     </Style>
 
     <Style TargetType="controls:FilterBar">
@@ -62,7 +62,7 @@
     <Style TargetType="controls:SegmentedControl">
         <Setter Property="Spacing" Value="4" />
         <Setter Property="Padding" Value="4" />
-        <Setter Property="BackgroundColor" Value="{StaticResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
     </Style>
 
     <Style TargetType="controls:DataPager">

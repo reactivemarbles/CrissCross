@@ -109,7 +109,7 @@ public class ThemeSwitcher : TemplatedControl
     }
 
     /// <summary>
-    /// Gets or sets a command invoked with the current state after a theme is applied.
+    /// Gets or sets a command invoked with the selected theme choice after a theme is applied.
     /// </summary>
     public ICommand? ThemeChangedCommand
     {
@@ -129,7 +129,7 @@ public class ThemeSwitcher : TemplatedControl
     public ThemePreferenceState CreateState() => new(SelectedChoice, SystemChoice, SupportsHighContrast);
 
     /// <summary>
-    /// Applies a theme choice and emits the current state.
+    /// Applies a theme choice and emits the selected choice.
     /// </summary>
     /// <param name="choice">The requested theme choice or name.</param>
     public void ApplyChoice(object? choice)
@@ -142,9 +142,9 @@ public class ThemeSwitcher : TemplatedControl
 
         ApplyTheme(ThemeService, state.EffectiveChoice);
 
-        if (ThemeChangedCommand?.CanExecute(state) == true)
+        if (ThemeChangedCommand?.CanExecute(selectedChoice) == true)
         {
-            ThemeChangedCommand.Execute(state);
+            ThemeChangedCommand.Execute(selectedChoice);
         }
     }
 

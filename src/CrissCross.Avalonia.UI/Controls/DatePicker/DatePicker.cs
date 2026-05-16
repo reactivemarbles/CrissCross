@@ -2,7 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Avalonia.Controls;
+using System;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -11,5 +11,6 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// </summary>
 public class DatePicker : global::Avalonia.Controls.DatePicker
 {
-    // Inherits all functionality from Avalonia DatePicker
+    /// <inheritdoc/>
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.DatePicker);
 }

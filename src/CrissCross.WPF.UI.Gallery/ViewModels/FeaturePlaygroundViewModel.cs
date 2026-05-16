@@ -47,7 +47,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         _themeState = new ThemePreferenceState(_selectedTheme, ThemeChoice.Dark, supportsHighContrast: true);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
-        SearchCommand = ReactiveCommand.CreateFromTask(SearchAsync);
+        SearchCommand = ReactiveCommand.CreateFromTask<string>(SearchAsync);
         ClearSearchCommand = ReactiveCommand.Create(ClearSearch);
         PageRequestCommand = ReactiveCommand.Create<PageRequest>(ApplyPageRequest);
         RangeChangedCommand = ReactiveCommand.Create<DateTimeRange>(ApplyRange);
@@ -67,7 +67,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     /// <summary>
     /// Gets the search submit command.
     /// </summary>
-    public ReactiveCommand<Unit, Unit> SearchCommand { get; }
+    public ReactiveCommand<string, Unit> SearchCommand { get; }
 
     /// <summary>
     /// Gets the search clear command.
@@ -303,8 +303,9 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         SearchState = CreateSearchState(SearchText, false);
     }
 
-    private async Task SearchAsync(CancellationToken cancellationToken)
+    private async Task SearchAsync(string submittedText, CancellationToken cancellationToken)
     {
+        SearchText = submittedText;
         SearchState = CreateSearchState(SearchText, true);
         await Task.Delay(150, cancellationToken).ConfigureAwait(true);
         SearchState = CreateSearchState(SearchText, false);
