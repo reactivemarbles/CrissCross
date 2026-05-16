@@ -127,7 +127,7 @@ public partial class StreamerUI : RxObject, IPlottableUI
         var darray = new double[_numberPointsPlottedSaved];
         PlotLine.Data = new(darray);
         PlotLine.ViewScrollLeft();
-        PlotLine.Period = 32000 / 2048;
+        PlotLine.Period = (double)_fs / _nSamples;
         PlotLine.LineStyle.Width = 1f;
         PlotLine.Color = Color.FromHex(color);
     }

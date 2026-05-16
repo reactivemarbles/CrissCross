@@ -154,14 +154,16 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel.ClearContent();
+        var sourceArray = sources as IReactivePlotSource[] ?? sources.ToArray();
+        ConfigureReactivePlotXAxis(sourceArray);
         _reactivePlotConnection = new ReactivePlotBinder().Bind(
             ViewModel,
-            sources,
+            sourceArray,
             new ReactivePlotBindingOptions
             {
                 UiScheduler = RxSchedulers.MainThreadScheduler,
                 MaxVisiblePoints = UseFixedNumberOfPoints ? NumberPointsPlotted : null,
-                MaxAxisCount = ViewModel.YAxisList.Count,
+                MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
             });
         ViewModel.InitializeAxisLines();
     }
@@ -547,7 +549,35 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         }
     }
 
-    private void YAxisSetup() => ViewModel!.YAxesSetup(YAxisName);
+    private void YAxisSetup()
+    {
+        var (yNames, hexColors) = YAxisName;
+        if (ViewModel is null || yNames is null || hexColors is null || yNames.Count == 0 || hexColors.Count == 0)
+        {
+            return;
+        }
+
+        ViewModel.YAxesSetup(YAxisName);
+    }
+
+    private void ConfigureReactivePlotXAxis(IEnumerable<IReactivePlotSource> sources)
+    {
+        var xAxisKinds = sources
+            .OfType<ReactivePlotSource>()
+            .Select(source => source.XAxisKind)
+            .Where(kind => kind is not null)
+            .Select(kind => kind!.Value)
+            .Distinct()
+            .ToArray();
+
+        if (xAxisKinds.Length == 1 && xAxisKinds[0] is PlotXAxisKind.OADate or PlotXAxisKind.Ticks)
+        {
+            ViewModel!.CreateAxisWithTimeStamp();
+            return;
+        }
+
+        ViewModel!.CreateAxisWithPoints();
+    }
 
     private void MainChartGrid_MouseDown(object sender, MouseEventArgs e)
     {

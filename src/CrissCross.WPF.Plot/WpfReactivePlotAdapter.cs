@@ -21,6 +21,7 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     private readonly List<double> _retainedX = [];
     private readonly List<double> _retainedY = [];
     private IPlottableUI? _ui;
+    private PlotXAxisKind? _signalXAxisKind;
     private bool _disposed;
 
     public WpfReactivePlotAdapter(LiveChartViewModel chart, PlotSeriesKey key, PlotType plotType, string color)
@@ -34,8 +35,6 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         {
             case PlotType.Signal:
                 _signalSubject = new Subject<(string? Name, IList<double>? Value, IList<double> X, int Axis)>();
-                _ui = new SignalUI(_chart.WpfPlot1vm!, _signalSubject, _chart.MouseCoordinatesObservable, _color, fixedPoints: _chart.WhenAnyValue(x => x.UseFixedNumberOfPoints), numberPointsPlotted: _chart.WhenAnyValue(x => x.NumberPointsPlotted));
-                AddUi();
                 break;
             case PlotType.Scatter:
                 _scatterSubject = new Subject<(string? Name, IList<double>? X, IList<double> Y, int Axis)>();
@@ -84,6 +83,7 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         switch (PlotType)
         {
             case PlotType.Signal:
+                EnsureSignalUi(update.XAxisKind);
                 _signalSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
                 break;
             case PlotType.Scatter:
@@ -134,6 +134,33 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         _chart.PlotLinesCollectionUI.Add(_ui);
         _chart.UpdateChartObjectsCollection();
         AssignAxis(Key.Axis);
+    }
+
+    private void EnsureSignalUi(PlotXAxisKind xAxisKind)
+    {
+        if (_ui is SignalUI && _signalXAxisKind == xAxisKind)
+        {
+            return;
+        }
+
+        if (_ui is not null)
+        {
+            _chart.PlotLinesCollectionUI.Remove(_ui);
+            _ui.Dispose();
+            _ui = null;
+            _chart.UpdateChartObjectsCollection();
+        }
+
+        _signalXAxisKind = xAxisKind;
+        _ui = new SignalUI(
+            _chart.WpfPlot1vm!,
+            _signalSubject!,
+            _chart.MouseCoordinatesObservable,
+            _color,
+            fixedPoints: _chart.WhenAnyValue(x => x.UseFixedNumberOfPoints),
+            numberPointsPlotted: _chart.WhenAnyValue(x => x.NumberPointsPlotted),
+            ticks: xAxisKind == PlotXAxisKind.Ticks);
+        AddUi();
     }
 
     private ReactivePlotUpdate PrepareSnapshotUpdate(ReactivePlotUpdate update)

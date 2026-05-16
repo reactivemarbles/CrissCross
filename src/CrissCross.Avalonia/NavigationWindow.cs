@@ -38,15 +38,14 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     public static readonly StyledProperty<ViewModelRoutedViewHost?> NavigationFrameProperty =
         AvaloniaProperty.Register<NavigationWindow, ViewModelRoutedViewHost?>(nameof(NavigationFrame));
 
+    private string? _navigationHostName;
+
     static NavigationWindow() =>
         NavigationFrameProperty.Changed.Subscribe(static (e) =>
         {
             if (e.Sender is NavigationWindow navigationWindow && e.NewValue.Value is ViewModelRoutedViewHost host)
             {
-                var hostName = ResolveNavigationHostName(navigationWindow, nameof(NavigationWindow));
-                navigationWindow.Name = hostName;
-                host.Name = hostName;
-                navigationWindow.SetMainNavigationHost(host);
+                navigationWindow.ConfigureNavigationHost(host, nameof(NavigationWindow));
             }
         });
 
@@ -83,14 +82,20 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         private set => SetValue(NavigationFrameProperty, value);
     }
 
+    /// <inheritdoc/>
+    string? ISetNavigation.Name => _navigationHostName ?? Name;
+
+    /// <inheritdoc/>
+    string? IUseNavigation.Name => _navigationHostName ?? Name;
+
     /// <summary>
     /// Called when the control finishes initialization.
     /// </summary>
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        var hostName = ResolveNavigationHostName(this, nameof(NavigationWindow));
-        Name = hostName;
+        var hostName = ResolveNavigationHostName(nameof(NavigationWindow));
+        _navigationHostName = hostName;
         NavigationFrame = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -98,12 +103,6 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
             HostName = hostName,
             NavigateBackIsEnabled = NavigateBackIsEnabled
         };
-
-        if (NavigationFrame is not null)
-        {
-            NavigationFrame.Name = hostName;
-            this.SetMainNavigationHost(NavigationFrame);
-        }
     }
 
     /// <summary>
@@ -126,13 +125,32 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         return base.RegisterContentPresenter(presenter);
     }
 
-    private static string ResolveNavigationHostName(NavigationWindow navigationWindow, string fallbackPrefix)
+    private void ConfigureNavigationHost(ViewModelRoutedViewHost host, string fallbackPrefix)
     {
-        if (!string.IsNullOrWhiteSpace(navigationWindow.Name))
+        var hostName = ResolveNavigationHostName(fallbackPrefix);
+        _navigationHostName = hostName;
+        host.HostName = hostName;
+
+        if (string.IsNullOrWhiteSpace(host.Name))
         {
-            return navigationWindow.Name!;
+            host.Name = hostName;
         }
 
-        return $"__crisscross_navhost_{fallbackPrefix}_{RuntimeHelpers.GetHashCode(navigationWindow):X8}";
+        this.SetMainNavigationHost(host);
+    }
+
+    private string ResolveNavigationHostName(string fallbackPrefix)
+    {
+        if (!string.IsNullOrWhiteSpace(_navigationHostName))
+        {
+            return _navigationHostName!;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Name))
+        {
+            return Name!;
+        }
+
+        return $"__crisscross_navhost_{fallbackPrefix}_{RuntimeHelpers.GetHashCode(this):X8}";
     }
 }

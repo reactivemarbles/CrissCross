@@ -34,6 +34,25 @@ public sealed class ReactivePlotBinderTests
     }
 
     [Test]
+    public async Task SignalPointsAdapter_EmitsAppendUpdateWithNumericXAxisKind()
+    {
+        IObservable<(string? Name, IList<double>? Value, IList<double> X, int Axis)> points =
+            Observable.Return((Name: (string?)"Motor", Value: (IList<double>?)[1.0, 2.0], X: (IList<double>)[10.0, 20.0], Axis: 2));
+        var source = ReactivePlotSource.FromSignalPoints(points);
+
+        var update = await source.Updates.FirstAsync();
+
+        await Assert.That(source.PlotType).IsEqualTo(PlotType.Signal);
+        await Assert.That(update.PlotType).IsEqualTo(PlotType.Signal);
+        await Assert.That(update.Kind).IsEqualTo(ReactivePlotUpdateKind.Append);
+        await Assert.That(update.XAxisKind).IsEqualTo(PlotXAxisKind.Numeric);
+        await Assert.That(((ReactivePlotSource)source).XAxisKind).IsEqualTo(PlotXAxisKind.Numeric);
+        await Assert.That(update.Key).IsEqualTo(new PlotSeriesKey("Motor", 2));
+        await Assert.That(update.X).IsEquivalentTo([10.0, 20.0]);
+        await Assert.That(update.Y).IsEquivalentTo([1.0, 2.0]);
+    }
+
+    [Test]
     public async Task SignalXyAdapter_SupportsObservableReplaceUpdates()
     {
         var snapshots = new Subject<(string? Name, IList<double>? Y, IList<double> X, int Axis)>();

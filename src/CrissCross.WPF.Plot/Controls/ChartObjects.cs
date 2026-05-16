@@ -117,7 +117,7 @@ public partial class ChartObjects : RxObject, IAppearance
         // Create a crosshair to highlight the point under the cursor
         Crosshair = wpfPlot.Plot.Add.Crosshair(0, 0);
         Crosshair.IsVisible = false;
-        Crosshair!.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(colorName!));
+        Crosshair!.LineColor = ResolveColor(colorName);
 
         // Create a marker to highlight the point under the cursor
         Marker = wpfPlot!.Plot.Add.Marker(0, 0);
@@ -125,7 +125,7 @@ public partial class ChartObjects : RxObject, IAppearance
         Marker.Size = 17;
         Marker.LineWidth = 2;
         Marker.IsVisible = false;
-        Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(colorName!));
+        Marker!.Color = ResolveColor(colorName);
 
         // Create a text label to place near the highlighted value
         MarkerText = wpfPlot!.Plot.Add.Text(" ", 0, 0);
@@ -134,7 +134,7 @@ public partial class ChartObjects : RxObject, IAppearance
         MarkerText.OffsetX = 7;
         MarkerText.OffsetY = -7;
         MarkerText.IsVisible = false;
-        MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(colorName!));
+        MarkerText!.LabelFontColor = ResolveColor(colorName);
         MarkerText.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
     }
 
@@ -156,13 +156,14 @@ public partial class ChartObjects : RxObject, IAppearance
         this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
             .Subscribe(x =>
             {
+                var color = ResolveColor(x.Item2);
                 plotable!.LineStyle.Width = (float)x.Item1;
-                plotable!.LineStyle.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+                plotable!.LineStyle.Color = color;
                 IsChecked = x.Item3 != "Invisible";
                 plotable!.IsVisible = x.Item3 != "Invisible";
-                Crosshair!.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-                Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-                MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+                Crosshair!.LineColor = color;
+                Marker!.Color = color;
+                MarkerText!.LabelFontColor = color;
                 wpfPlot.Refresh();
             }).DisposeWith(Disposables);
 
@@ -192,10 +193,11 @@ public partial class ChartObjects : RxObject, IAppearance
         this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
             .Subscribe(x =>
             {
+                var color = ResolveColor(x.Item2);
                 IsChecked = x.Item3 != "Invisible";
-                Crosshair!.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-                Marker!.Color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
-                MarkerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(x.Item2!));
+                Crosshair!.LineColor = color;
+                Marker!.Color = color;
+                MarkerText!.LabelFontColor = color;
                 wpfPlot.Refresh();
             }).DisposeWith(Disposables);
 
@@ -229,5 +231,30 @@ public partial class ChartObjects : RxObject, IAppearance
     {
         IsCheckedCmd?.Dispose();
         base.Dispose(disposing);
+    }
+
+    private static ScottPlot.Color ResolveColor(string? colorName)
+    {
+        if (string.IsNullOrWhiteSpace(colorName))
+        {
+            return ScottPlot.Colors.White;
+        }
+
+        if (colorName!.StartsWith("#", StringComparison.Ordinal))
+        {
+            try
+            {
+                return ScottPlot.Color.FromHex(colorName);
+            }
+            catch (FormatException)
+            {
+                return ScottPlot.Colors.White;
+            }
+        }
+
+        var systemColor = System.Drawing.Color.FromName(colorName);
+        return systemColor.A == 0 && !string.Equals(colorName, nameof(System.Drawing.Color.Transparent), StringComparison.OrdinalIgnoreCase)
+            ? ScottPlot.Colors.White
+            : ScottPlot.Color.FromColor(systemColor);
     }
 }

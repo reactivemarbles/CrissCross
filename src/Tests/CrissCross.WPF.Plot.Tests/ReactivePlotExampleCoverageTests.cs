@@ -22,7 +22,7 @@ public sealed class ReactivePlotExampleCoverageTests
         var dependencies = ReadSource("CrissCross.WPF.Plot", "Views", "LiveChart{Dependencies}.cs");
         var documentation = ReadRepositoryFile("docs", "reactive-wpf-plot-streams.md");
 
-        await Assert.That(viewModel).Contains("ReactivePlotSource.FromSignalTicks");
+        await Assert.That(viewModel).Contains("ReactivePlotSource.FromSignalPoints");
         await Assert.That(viewModel).Contains("ReactivePlotSource.FromScatterPoints");
         await Assert.That(viewModel).Contains("ReactivePlotSource.FromDataLoggerPoints");
         await Assert.That(viewModel).Contains("ReactivePlotSource.FromStreamerPoints");
@@ -32,7 +32,7 @@ public sealed class ReactivePlotExampleCoverageTests
         await Assert.That(view).Contains("ReactivePlotSources");
         await Assert.That(properties).Contains("IEnumerable<IReactivePlotSource>?");
         await Assert.That(dependencies).Contains("ReactivePlotSourcesProperty");
-        await Assert.That(documentation).Contains("ReactivePlotSource.FromSignalTicks");
+        await Assert.That(documentation).Contains("ReactivePlotSource.FromSignalPoints");
         await Assert.That(documentation).Contains("ReactivePlotSource.FromSignalXyPoints");
         await Assert.That(documentation).Contains("ReactivePlotBindingOptions");
     }

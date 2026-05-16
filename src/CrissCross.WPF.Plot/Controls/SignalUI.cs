@@ -103,7 +103,9 @@ public partial class SignalUI : RxObject, IPlottableUI
             ChartSettings.Crosshair!.Position = closestCoordinate;
             ChartSettings.Marker!.Position = closestCoordinate;
             ChartSettings.MarkerText!.Location = closestCoordinate;
-            ChartSettings.MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}";
+            ChartSettings.MarkerText!.LabelText = _ticks ?
+                $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}" :
+                $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
 
             Plot?.Refresh();
         }).DisposeWith(Disposables);
