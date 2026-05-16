@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Button/Button.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style TargetType="{x:Type controls:CommandButton}" BasedOn="{StaticResource DefaultUiButtonStyle}">
         <Setter Property="MinHeight" Value="32" />
     </Style>

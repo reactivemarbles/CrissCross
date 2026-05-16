@@ -71,11 +71,11 @@
                         <ui:TextBlock FontSize="18" FontWeight="SemiBold" Text="Workflow controls" />
                         <ui:SegmentedControl
                             Margin="0,8,0,12"
-                            SelectedKey="{Binding SegmentState.SelectedKey, Mode=TwoWay}"
+                            SelectedKey="{Binding SegmentState.SelectedKey, Mode=OneWay}"
                             SelectionChangedCommand="{Binding SegmentChangedCommand}"
                             SelectionState="{Binding SegmentState}" />
                         <ui:Stepper
-                            CurrentKey="{Binding StepperState.CurrentKey, Mode=TwoWay}"
+                            CurrentKey="{Binding StepperState.CurrentKey, Mode=OneWay}"
                             State="{Binding StepperState}"
                             StepRequestedCommand="{Binding StepRequestedCommand}" />
                     </StackPanel>

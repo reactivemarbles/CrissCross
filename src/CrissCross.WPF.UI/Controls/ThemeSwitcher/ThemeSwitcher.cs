@@ -124,7 +124,7 @@ public class ThemeSwitcher : Control
     }
 
     /// <summary>
-    /// Gets or sets a command invoked with the current state after a theme is applied.
+    /// Gets or sets a command invoked with the selected theme choice after a theme is applied.
     /// </summary>
     public ICommand? ThemeChangedCommand
     {
@@ -155,11 +155,11 @@ public class ThemeSwitcher : Control
         var state = CreateState();
         SetCurrentValue(CurrentStateProperty, state);
 
-        ApplyTheme(ThemeService, state.EffectiveChoice);
+        ApplyTheme(ThemeService ?? new ThemeService(), selectedChoice, state.EffectiveChoice);
 
-        if (ThemeChangedCommand?.CanExecute(state) == true)
+        if (ThemeChangedCommand?.CanExecute(selectedChoice) == true)
         {
-            ThemeChangedCommand.Execute(state);
+            ThemeChangedCommand.Execute(selectedChoice);
         }
     }
 
@@ -183,15 +183,11 @@ public class ThemeSwitcher : Control
             : ThemeChoice.System;
     }
 
-    private static void ApplyTheme(IThemeService? themeService, ThemeChoice effectiveChoice)
-    {
-        if (themeService is null)
-        {
-            return;
-        }
-
-        themeService.SetTheme(ToApplicationTheme(effectiveChoice));
-    }
+    private static void ApplyTheme(IThemeService themeService, ThemeChoice selectedChoice, ThemeChoice effectiveChoice) =>
+        themeService.SetTheme(
+            selectedChoice == ThemeChoice.System
+                ? themeService.GetSystemTheme()
+                : ToApplicationTheme(effectiveChoice));
 
     private static ApplicationTheme ToApplicationTheme(ThemeChoice choice) => choice switch
     {
