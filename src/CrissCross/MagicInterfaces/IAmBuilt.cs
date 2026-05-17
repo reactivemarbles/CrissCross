@@ -5,6 +5,6 @@
 namespace CrissCross;
 
 /// <summary>
-/// IAmBuilt.
+/// Marker interface indicating that a type has been built or constructed.
 /// </summary>
 public interface IAmBuilt;

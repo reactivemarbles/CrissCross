@@ -27,11 +27,11 @@ namespace CrissCross.WPF.Plot.Test.Views
             this.WhenActivated(d =>
             {
                 // OneWay bind ViewModel to View
+                this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(d);
                 ViewModel.ReactivePlotSources
                     .ObserveOn(RxSchedulers.MainThreadScheduler)
                     .Subscribe(sources => Chart.ReactivePlotSources = sources)
                     .DisposeWith(d);
-                this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(d);
 
                 // OneWay bind View to ViewModel
                 this.WhenAnyValue(x => x.Chart.ViewModel).BindTo(ViewModel, vm => vm.LiveChartViewModel).DisposeWith(d);

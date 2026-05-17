@@ -241,11 +241,7 @@ public partial class LiveChart
     public (IList<string> yNames, IList<string> hexColors) YAxisName
     {
         get => ((IList<string> yNames, IList<string> hexColors))GetValue(YAxisNameProperty);
-        set
-        {
-            SetValue(YAxisNameProperty, value);
-            YAxisSetup();
-        }
+        set => SetValue(YAxisNameProperty, value);
     }
 
 #if NET8_0_OR_GREATER

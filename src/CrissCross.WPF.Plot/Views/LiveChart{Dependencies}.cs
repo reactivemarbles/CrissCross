@@ -217,7 +217,11 @@ public partial class LiveChart
     /// names with a LiveChart instance. It enables data binding and styling for Y axis labels in XAML-based
     /// applications.</remarks>
     public static readonly DependencyProperty YAxisNameProperty =
-        DependencyProperty.Register(nameof(YAxisName), typeof((IList<string>, IList<string>)), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(YAxisName),
+            typeof((IList<string>, IList<string>)),
+            typeof(LiveChart),
+            new PropertyMetadata(default((IList<string> yNames, IList<string> hexColors)), new PropertyChangedCallback(YAxisNameCallback)));
 
     /// <summary>
     /// Identifies the ControlMenu dependency property, which represents a collection of chart objects associated with
@@ -260,6 +264,25 @@ public partial class LiveChart
         if (d is LiveChart livechart)
         {
             livechart.ChangeReactivePlotSources(e.NewValue as IEnumerable<IReactivePlotSource>);
+        }
+    }
+
+    /// <summary>
+    /// Handles axis metadata changes by rebuilding chart axes before reactive plot sources are rebound.
+    /// </summary>
+    /// <param name="d">The dependency object on which the property changed.</param>
+    /// <param name="e">The dependency property change event arguments.</param>
+    private static void YAxisNameCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not LiveChart livechart)
+        {
+            return;
+        }
+
+        livechart.YAxisSetup();
+        if (livechart.ReactivePlotSources is not null)
+        {
+            livechart.ChangeReactivePlotSources(livechart.ReactivePlotSources);
         }
     }
 

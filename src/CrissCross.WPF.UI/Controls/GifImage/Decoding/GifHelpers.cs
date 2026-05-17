@@ -33,7 +33,7 @@ internal static class GifHelpers
         while ((len = await sourceStream.ReadByteAsync(cancellationToken)) > 0)
         {
             await sourceStream.ReadAllAsync(buffer, 0, len, cancellationToken).ConfigureAwait(false);
-            await targetStream.WriteAsync(buffer.AsMemory(0, len), cancellationToken);
+            await targetStream.WriteBufferAsync(buffer, 0, len, cancellationToken);
         }
     }
 

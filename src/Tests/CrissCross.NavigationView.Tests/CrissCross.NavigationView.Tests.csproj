@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
+    <ProjectReference Include="..\..\CrissCross.Avalonia\CrissCross.Avalonia.csproj" />
     <ProjectReference Include="..\..\CrissCross.Avalonia.UI\CrissCross.Avalonia.UI.csproj" />
     <Using Include="TUnit.Core" />
     <Using Include="TUnit.Assertions" />

@@ -11,7 +11,7 @@ internal static class StreamExtensions
         var totalRead = 0;
         while (totalRead < count)
         {
-            var n = await stream.ReadAsync(buffer.AsMemory(offset + totalRead, count - totalRead), cancellationToken);
+            var n = await stream.ReadBufferAsync(buffer, offset + totalRead, count - totalRead, cancellationToken);
             if (n == 0)
             {
                 throw new EndOfStreamException();
@@ -39,7 +39,7 @@ internal static class StreamExtensions
     public static async Task<int> ReadByteAsync(this Stream stream, CancellationToken cancellationToken = default)
     {
         var buffer = new byte[1];
-        var n = await stream.ReadAsync(buffer.AsMemory(0, 1), cancellationToken);
+        var n = await stream.ReadBufferAsync(buffer, 0, 1, cancellationToken);
         return n switch
         {
             0 => -1,
@@ -62,11 +62,29 @@ internal static class StreamExtensions
         var buffer = new byte[bufferSize];
         int bytesRead;
         long bytesCopied = 0;
-        while ((bytesRead = await source.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false)) != 0)
+        while ((bytesRead = await source.ReadBufferAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
         {
-            await destination.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+            await destination.WriteBufferAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
             bytesCopied += bytesRead;
             progress?.Report(bytesCopied);
         }
+    }
+
+    public static Task<int> ReadBufferAsync(this Stream stream, byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
+    {
+#if NET472 || NET481
+        return stream.ReadAsync(buffer, offset, count, cancellationToken);
+#else
+        return stream.ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+#endif
+    }
+
+    public static Task WriteBufferAsync(this Stream stream, byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
+    {
+#if NET472 || NET481
+        return stream.WriteAsync(buffer, offset, count, cancellationToken);
+#else
+        return stream.WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+#endif
     }
 }

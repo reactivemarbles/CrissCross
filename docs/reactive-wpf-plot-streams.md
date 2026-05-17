@@ -5,7 +5,7 @@
 ## Minimal usage
 
 ```csharp
-var signalTicks = new Subject<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>();
+var signalPoints = new Subject<(string? Name, IList<double>? Value, IList<double> X, int Axis)>();
 var scatterPoints = new Subject<(string? Name, IList<double>? X, IList<double> Y, int Axis)>();
 var loggerPoints = new Subject<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>();
 var streamerPoints = new Subject<(string? Name, IList<double>? Y, IList<double> X, int Axis)>();
@@ -13,7 +13,7 @@ var signalXyPoints = new Subject<(string? Name, IList<double>? Y, IList<double> 
 
 Chart.ReactivePlotSources =
 [
-    ReactivePlotSource.FromSignalTicks(signalTicks),
+    ReactivePlotSource.FromSignalPoints(signalPoints),
     ReactivePlotSource.FromScatterPoints(scatterPoints),
     ReactivePlotSource.FromDataLoggerPoints(loggerPoints),
     ReactivePlotSource.FromStreamerPoints(streamerPoints),
@@ -28,6 +28,7 @@ Each source emits one logical series. Series identity is derived from the emitte
 | Chart type | Factory | Update mode | X-axis kind |
 |---|---|---|---|
 | Signal | `ReactivePlotSource.FromSignalTicks(...)` | Append | Ticks |
+| Signal | `ReactivePlotSource.FromSignalPoints(...)` | Append | Numeric |
 | Scatter | `ReactivePlotSource.FromScatterPoints(...)` | Replace | Numeric |
 | DataLogger | `ReactivePlotSource.FromDataLoggerPoints(...)` | Append | Numeric ordinal |
 | Streamer | `ReactivePlotSource.FromStreamerPoints(...)` | Append | Numeric |
@@ -61,4 +62,4 @@ Use `UiScheduler` in tests or specialized hosts to control marshalling determini
 
 ## Example project
 
-The WPF plot example at `src/CrissCross.WPF.Plot.Test` demonstrates all five source factories through `MainViewModel.ReactivePlotSources`. It starts live demo subjects when the chart view model is attached and disposes the interval subscription with the view model.
+The WPF plot example at `src/CrissCross.WPF.Plot.Test` demonstrates all five chart types through `MainViewModel.ReactivePlotSources`. It uses one numeric X-axis scale for the live demo so all series render together, starts live demo subjects when the chart view model is attached, and disposes the interval subscription with the view model.

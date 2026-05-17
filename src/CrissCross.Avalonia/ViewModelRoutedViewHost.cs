@@ -111,9 +111,9 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// <value>
     /// The name of the host.
     /// </value>
-    public string? HostName
+    public string HostName
     {
-        get => GetValue(HostNameProperty);
+        get => GetValue(HostNameProperty) ?? string.Empty;
         set => SetValue(HostNameProperty, value);
     }
 

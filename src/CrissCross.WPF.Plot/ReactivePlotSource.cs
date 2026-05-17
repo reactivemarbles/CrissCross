@@ -15,20 +15,29 @@ namespace CrissCross.WPF.Plot;
 public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IObservable<ReactivePlotUpdate> Updates) : IReactivePlotSource
 {
     /// <summary>
+    /// Gets the X-axis interpretation used by updates emitted from this source when it is known upfront.
+    /// </summary>
+    public PlotXAxisKind? XAxisKind { get; init; }
+
+    /// <summary>
     /// Creates a source from an already-normalized update stream.
     /// </summary>
     /// <param name="key">The stable series key.</param>
     /// <param name="plotType">The chart type.</param>
     /// <param name="updates">The update stream.</param>
+    /// <param name="xAxisKind">The X-axis interpretation used by the source when known upfront.</param>
     /// <returns>A reactive plot source.</returns>
-    public static IReactivePlotSource FromUpdates(PlotSeriesKey key, PlotType plotType, IObservable<ReactivePlotUpdate> updates)
+    public static IReactivePlotSource FromUpdates(PlotSeriesKey key, PlotType plotType, IObservable<ReactivePlotUpdate> updates, PlotXAxisKind? xAxisKind = null)
     {
         if (updates is null)
         {
             throw new ArgumentNullException(nameof(updates));
         }
 
-        return new ReactivePlotSource(key, plotType, updates);
+        return new ReactivePlotSource(key, plotType, updates)
+        {
+            XAxisKind = xAxisKind,
+        };
     }
 
     /// <summary>
@@ -54,7 +63,39 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
             PlotXAxisKind.Ticks,
             sequence++));
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected);
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
+        {
+            XAxisKind = PlotXAxisKind.Ticks,
+        };
+    }
+
+    /// <summary>
+    /// Adapts legacy signal point observables to append updates with numeric X-axis values.
+    /// </summary>
+    /// <param name="updates">The legacy signal point stream.</param>
+    /// <returns>A reactive signal source.</returns>
+    public static IReactivePlotSource FromSignalPoints(IObservable<(string? Name, IList<double>? Value, IList<double> X, int Axis)> updates)
+    {
+        if (updates is null)
+        {
+            throw new ArgumentNullException(nameof(updates));
+        }
+
+        var sequence = 0L;
+        var projected = updates.Select(update => CreateUpdate(
+            update.Name,
+            update.Axis,
+            PlotType.Signal,
+            ReactivePlotUpdateKind.Append,
+            update.X,
+            update.Value,
+            PlotXAxisKind.Numeric,
+            sequence++));
+
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
+        {
+            XAxisKind = PlotXAxisKind.Numeric,
+        };
     }
 
     /// <summary>
@@ -80,7 +121,10 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
             PlotXAxisKind.Numeric,
             sequence++));
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Scatter, projected);
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Scatter, projected)
+        {
+            XAxisKind = PlotXAxisKind.Numeric,
+        };
     }
 
     /// <summary>
@@ -103,7 +147,10 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
             return CreateUpdate(update.Name, update.Axis, PlotType.DataLogger, ReactivePlotUpdateKind.Append, x, update.Value, PlotXAxisKind.Numeric, sequence++, maxPoints);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.DataLogger, projected);
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.DataLogger, projected)
+        {
+            XAxisKind = PlotXAxisKind.Numeric,
+        };
     }
 
     /// <summary>
@@ -129,7 +176,10 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
             PlotXAxisKind.Numeric,
             sequence++));
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Streamer, projected);
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Streamer, projected)
+        {
+            XAxisKind = PlotXAxisKind.Numeric,
+        };
     }
 
     /// <summary>
@@ -155,7 +205,10 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
             PlotXAxisKind.Numeric,
             sequence++));
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.SignalXY, projected);
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.SignalXY, projected)
+        {
+            XAxisKind = PlotXAxisKind.Numeric,
+        };
     }
 
     /// <summary>
