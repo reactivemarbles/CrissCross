@@ -386,6 +386,7 @@ internal static class HtmlContentParser
             }
 
             _segments.Add(TextSegment.CreateImage(_offset, source, alignment, width, height));
+            _offset++;
         }
 
         public IReadOnlyList<TextSegment> Build() => _segments;

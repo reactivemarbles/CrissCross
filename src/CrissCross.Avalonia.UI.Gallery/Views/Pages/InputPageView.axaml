@@ -77,25 +77,31 @@
 
             <!--  RichTextBox  -->
             <controls:Card>
-                <controls:StackPanel Spacing="12">
+                <controls:StackPanel Spacing="14">
                     <controls:TextBlock
                         FontSize="18"
                         FontWeight="Bold"
                         Text="RichTextBox" />
-                    <controls:TextBlock Opacity="0.7" Text="Rich text boxes provide multi-line text editing with visual formatting:" />
+                    <controls:TextBlock
+                        Opacity="0.7"
+                        Text="RichTextBox demonstrates formatted editing, rich clipboard, drag/drop, document serialization, and display-only review modes."
+                        TextWrapping="Wrap" />
+
                     <controls:TextBlock
                         Margin="16,0,0,0"
                         FontSize="12"
-                        Opacity="0.6">
-                        <Run Text="• Select text and press " /><Run FontWeight="Bold" Text="Ctrl+B" /><Run Text=" for " /><Run FontWeight="Bold" Text="Bold" />
+                        Opacity="0.7">
+                        <Run FontWeight="Bold" Text="Formatting toolbar and commands: " /><Run Text="select text, then use buttons or Ctrl+B/Ctrl+I/Ctrl+U for inline styles, font family, size, foreground, and highlight." />
                         <LineBreak />
-                        <Run Text="• Select text and press " /><Run FontWeight="Bold" Text="Ctrl+I" /><Run Text=" for " /><Run FontStyle="Italic" Text="Italic" />
+                        <Run FontWeight="Bold" Text="Context menu: " /><Run Text="right-click inside the editor for undo, redo, cut, copy, paste, select all, and formatting actions with live enabled state." />
                         <LineBreak />
-                        <Run Text="• Select text and press " /><Run FontWeight="Bold" Text="Ctrl+U" /><Run Text=" for " /><Run Text="Underline" TextDecorations="Underline" />
+                        <Run FontWeight="Bold" Text="Drag and drop text or images: " /><Run Text="drop plain text, HTML fragments, image files, or data:image URIs when drag/drop and image-drop are enabled." />
                         <LineBreak />
-                        <Run Text="• Right-click for the formatting popup (font, size, colors, decorations)" />
+                        <Run FontWeight="Bold" Text="Copy/paste workflow: " /><Run Text="copy or cut selected formatted text, paste rich/plain clipboard samples, and paste image clipboard samples." />
                         <LineBreak />
-                        <Run Text="• Drag text or image files onto the RichTextBox to insert content" />
+                        <Run FontWeight="Bold" Text="Serialization/import/export samples: " /><Run Text="load plain text, HTML, Markdown, save/load streams, and export HTML/Markdown snapshots." />
+                        <LineBreak />
+                        <Run FontWeight="Bold" Text="Edit/display mode switch: " /><Run Text="toggle the main editor between EditOnFocus and Display while the preview stays in EditMode=&quot;Display&quot;." />
                     </controls:TextBlock>
 
                     <controls:StackPanel HorizontalAlignment="Left" Spacing="16">
@@ -103,35 +109,103 @@
                             <controls:TextBlock
                                 Margin="0,0,0,4"
                                 FontSize="12"
-                                Text="RichTextBox with Visual Formatting:" />
+                                Text="Representative editor surface:" />
                             <controls:RichTextBox
                                 Name="FormattingRichTextBox"
+                                Width="760"
+                                MinHeight="220"
                                 AcceptsReturn="True"
                                 AcceptsTab="True"
+                                EditMode="EditOnFocus"
+                                IsDocumentEnabled="True"
+                                IsDragDropEnabled="True"
                                 IsFormattingEnabled="True"
-                                Text="Welcome to RichTextBox!&#x0a;&#x0a;Select this text and press Ctrl+B to make it bold." />
+                                IsImageDropEnabled="True"
+                                IsImagePasteEnabled="True"
+                                IsRichClipboardEnabled="True"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto"
+                                Watermark="Type formatted content, paste text/images, or drop content here." />
+                        </controls:StackPanel>
+
+                        <controls:StackPanel>
+                            <controls:TextBlock
+                                Margin="0,0,0,4"
+                                FontSize="12"
+                                Text="Display-only preview (EditMode=&quot;Display&quot;):" />
+                            <controls:RichTextBox
+                                Name="DisplayRichTextBox"
+                                Width="760"
+                                MinHeight="120"
+                                EditMode="Display"
+                                IsReadOnly="True"
+                                IsTextSelectionEnabled="True"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto" />
                         </controls:StackPanel>
 
                         <controls:StackPanel Spacing="8">
                             <controls:TextBlock
                                 FontSize="12"
                                 Opacity="0.7"
-                                Text="WPF parity demo actions (auto-insert content):" />
-                            <WrapPanel ItemHeight="32" ItemWidth="160" Orientation="Horizontal">
-                                <controls:Button Click="OnRichTextResetClick" Content="Reset Content" />
-                                <controls:Button Click="OnRichTextAppendPlainClick" Content="Append Plain Text" />
-                                <controls:Button Click="OnRichTextAppendHtmlClick" Content="Append HTML" />
-                                <controls:Button Click="OnRichTextMarkdownClick" Content="Load Markdown" />
-                                <controls:Button Click="OnRichTextInsertImageClick" Content="Insert Image" />
-                                <controls:Button Click="OnRichTextReplaceSelectionClick" Content="Replace Selection" />
+                                Text="Formatting toolbar and commands:" />
+                            <WrapPanel ItemHeight="32" ItemWidth="150" Orientation="Horizontal">
                                 <controls:Button Click="OnRichTextSelectAllClick" Content="Select All" />
                                 <controls:Button Click="OnRichTextBoldClick" Content="Toggle Bold" />
                                 <controls:Button Click="OnRichTextItalicClick" Content="Toggle Italic" />
                                 <controls:Button Click="OnRichTextUnderlineClick" Content="Toggle Underline" />
                                 <controls:Button Click="OnRichTextStrikeClick" Content="Toggle Strikethrough" />
                                 <controls:Button Click="OnRichTextClearFormattingClick" Content="Clear Formatting" />
+                                <controls:Button Click="OnRichTextFontFamilyClick" Content="Font Family" />
+                                <controls:Button Click="OnRichTextFontSizeClick" Content="Font Size" />
+                                <controls:Button Click="OnRichTextForegroundClick" Content="Foreground" />
+                                <controls:Button Click="OnRichTextHighlightClick" Content="Highlight" />
+                                <controls:Button Click="OnRichTextUndoClick" Content="Undo" />
+                                <controls:Button Click="OnRichTextRedoClick" Content="Redo" />
                             </WrapPanel>
                         </controls:StackPanel>
+
+                        <controls:StackPanel Spacing="8">
+                            <controls:TextBlock
+                                FontSize="12"
+                                Opacity="0.7"
+                                Text="Clipboard, context menu, and drag/drop workflows:" />
+                            <WrapPanel ItemHeight="32" ItemWidth="170" Orientation="Horizontal">
+                                <controls:Button Click="OnRichTextCopyClick" Content="Copy Selection" />
+                                <controls:Button Click="OnRichTextCutClick" Content="Cut Selection" />
+                                <controls:Button Click="OnRichTextPasteSampleClick" Content="Paste Clipboard Sample" />
+                                <controls:Button Click="OnRichTextPasteImageSampleClick" Content="Paste Image Sample" />
+                                <controls:Button Click="OnRichTextDropTextSampleClick" Content="Drop Text Sample" />
+                                <controls:Button Click="OnRichTextDropImageSampleClick" Content="Drop Image Sample" />
+                            </WrapPanel>
+                        </controls:StackPanel>
+
+                        <controls:StackPanel Spacing="8">
+                            <controls:TextBlock
+                                FontSize="12"
+                                Opacity="0.7"
+                                Text="Serialization/import/export samples and mode switching:" />
+                            <WrapPanel ItemHeight="32" ItemWidth="170" Orientation="Horizontal">
+                                <controls:Button Click="OnRichTextResetClick" Content="Load Sample Content" />
+                                <controls:Button Click="OnRichTextAppendPlainClick" Content="Append Plain Text" />
+                                <controls:Button Click="OnRichTextAppendHtmlClick" Content="Append HTML" />
+                                <controls:Button Click="OnRichTextMarkdownClick" Content="Load Markdown" />
+                                <controls:Button Click="OnRichTextInsertImageClick" Content="Insert Image" />
+                                <controls:Button Click="OnRichTextReplaceSelectionClick" Content="Replace Selection" />
+                                <controls:Button Click="OnRichTextExportHtmlClick" Content="Export HTML" />
+                                <controls:Button Click="OnRichTextExportMarkdownClick" Content="Export Markdown" />
+                                <controls:Button Click="OnRichTextSaveLoadStreamClick" Content="Save/Load Stream Sample" />
+                                <controls:Button Click="OnRichTextToggleDisplayModeClick" Content="Toggle Display Mode" />
+                            </WrapPanel>
+                        </controls:StackPanel>
+
+                        <controls:TextBlock
+                            Name="RichTextStatusTextBlock"
+                            MaxWidth="760"
+                            FontSize="12"
+                            Opacity="0.7"
+                            Text="Status: representative content loaded; right-click the editor for the Context menu."
+                            TextWrapping="Wrap" />
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>

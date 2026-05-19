@@ -47,8 +47,8 @@
                     <ui:ImageIcon Source="/Assets/ControlImages/TextBox.png" />
                 </ui:TextBox.Icon>
             </ui:TextBox>
-            <ui:RichTextBox Grid.Column="2" Margin="5" />
-            <ui:HexColorTextBox Grid.Row="1" Margin="5" />
+            <ui:HexColorTextBox Grid.Column="2" Margin="5" />
+            <ui:RichTextBox Height="200" Grid.Row="2" Grid.ColumnSpan="3" Margin="5" />
         </Grid>
     </Grid>
 </UserControl>

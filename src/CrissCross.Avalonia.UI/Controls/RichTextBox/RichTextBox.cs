@@ -2,15 +2,19 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Globalization;
 using System.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -116,6 +120,36 @@ public class RichTextBox : TemplatedControl
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsDragDropEnabled), true);
 
     /// <summary>
+    /// Property for <see cref="EditMode"/>.
+    /// </summary>
+    public static readonly StyledProperty<RichTextEditMode> EditModeProperty =
+        AvaloniaProperty.Register<RichTextBox, RichTextEditMode>(nameof(EditMode), RichTextEditMode.EditOnFocus);
+
+    /// <summary>
+    /// Property for <see cref="IsRichClipboardEnabled"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsRichClipboardEnabledProperty =
+        AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsRichClipboardEnabled), true);
+
+    /// <summary>
+    /// Property for <see cref="IsImagePasteEnabled"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsImagePasteEnabledProperty =
+        AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsImagePasteEnabled), true);
+
+    /// <summary>
+    /// Property for <see cref="IsImageDropEnabled"/>.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsImageDropEnabledProperty =
+        AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsImageDropEnabled), true);
+
+    /// <summary>
+    /// Property for <see cref="MaxDroppedTextFileBytes"/>.
+    /// </summary>
+    public static readonly StyledProperty<long> MaxDroppedTextFileBytesProperty =
+        AvaloniaProperty.Register<RichTextBox, long>(nameof(MaxDroppedTextFileBytes), 1_048_576);
+
+    /// <summary>
     /// Property for <see cref="SelectionStart"/>.
     /// </summary>
     public static readonly StyledProperty<int> SelectionStartProperty =
@@ -151,6 +185,9 @@ public class RichTextBox : TemplatedControl
     public static readonly RoutedEvent<FormattingEventArgs> FormattingAppliedEvent =
         RoutedEvent.Register<RichTextBox, FormattingEventArgs>(nameof(FormattingApplied), RoutingStrategies.Bubble);
 
+    private readonly Stack<RichTextHistoryEntry> _undoStack = new();
+    private readonly Stack<RichTextHistoryEntry> _redoStack = new();
+    private readonly IRichTextClipboardAdapter _defaultClipboardAdapter = new RichTextMemoryClipboardAdapter();
     private global::Avalonia.Controls.TextBox? _editingTextBox;
     private FormattedTextPresenter? _formattedPresenter;
     private ContextMenu? _contextMenu;
@@ -163,11 +200,27 @@ public class RichTextBox : TemplatedControl
     {
         Document = new FlowDocument();
         Selection = new TextSelection(Document);
-        CreateContextMenu();
+        CopyCommand = new RichTextCommand(_ => CopyCore(), _ => CanCopy);
+        CutCommand = new RichTextCommand(_ => CutCore(), _ => CanCut);
+        PasteCommand = new RichTextCommand(_ => PasteCore(), _ => CanPaste);
+        UndoCommand = new RichTextCommand(_ => UndoCore(), _ => CanUndo);
+        RedoCommand = new RichTextCommand(_ => RedoCore(), _ => CanRedo);
+        SelectAllCommand = new RichTextCommand(_ => SelectAllCore(), _ => Document.Length > 0);
+        ToggleBoldCommand = new RichTextCommand(_ => ApplyFormattingToSelection(TextFormatType.Bold), _ => CanApplyFormatting);
+        ToggleItalicCommand = new RichTextCommand(_ => ApplyFormattingToSelection(TextFormatType.Italic), _ => CanApplyFormatting);
+        ToggleUnderlineCommand = new RichTextCommand(_ => ApplyFormattingToSelection(TextFormatType.Underline), _ => CanApplyFormatting);
+        ToggleStrikethroughCommand = new RichTextCommand(_ => ApplyFormattingToSelection(TextFormatType.Strikethrough), _ => CanApplyFormatting);
+        ClearFormattingCommand = new RichTextCommand(_ => ClearFormattingCore(), _ => !IsReadOnlyInternal && IsFormattingEnabled && HasAnyFormatting());
+        SetFontFamilyCommand = new RichTextCommand(parameter => SetSelectionFontFamily(parameter?.ToString() ?? string.Empty), parameter => CanApplyFormatting && !string.IsNullOrWhiteSpace(parameter?.ToString()));
+        SetFontSizeCommand = new RichTextCommand(parameter => SetSelectionFontSize(Convert.ToDouble(parameter, CultureInfo.InvariantCulture)), parameter => CanApplyFormatting && parameter is not null);
+        SetForegroundCommand = new RichTextCommand(parameter => SetSelectionForeground((Color)parameter!), parameter => CanApplyFormatting && parameter is Color);
+        SetHighlightCommand = new RichTextCommand(parameter => SetSelectionHighlight((Color)parameter!), parameter => CanApplyFormatting && parameter is Color);
         Focusable = true;
+
         AddHandler(DragDrop.DragOverEvent, OnDragOver, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
         AddHandler(DragDrop.DropEvent, OnDrop, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
         DragDrop.SetAllowDrop(this, true);
+
         Text = string.Empty;
         Document.SetText(Text);
     }
@@ -326,6 +379,171 @@ public class RichTextBox : TemplatedControl
     }
 
     /// <summary>
+    /// Gets or sets the edit/display mode.
+    /// </summary>
+    public RichTextEditMode EditMode
+    {
+        get => GetValue(EditModeProperty);
+        set => SetValue(EditModeProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether HTML clipboard payloads are copied and pasted.
+    /// </summary>
+    public bool IsRichClipboardEnabled
+    {
+        get => GetValue(IsRichClipboardEnabledProperty);
+        set => SetValue(IsRichClipboardEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether image paste is enabled.
+    /// </summary>
+    public bool IsImagePasteEnabled
+    {
+        get => GetValue(IsImagePasteEnabledProperty);
+        set => SetValue(IsImagePasteEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether image drop is enabled.
+    /// </summary>
+    public bool IsImageDropEnabled
+    {
+        get => GetValue(IsImageDropEnabledProperty);
+        set => SetValue(IsImageDropEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum UTF-8 text file size accepted by runtime file drops.
+    /// </summary>
+    public long MaxDroppedTextFileBytes
+    {
+        get => GetValue(MaxDroppedTextFileBytesProperty);
+        set => SetValue(MaxDroppedTextFileBytesProperty, Math.Max(0, value));
+    }
+
+    /// <summary>
+    /// Gets or sets the clipboard adapter used by copy, cut, and paste operations.
+    /// </summary>
+    public IRichTextClipboardAdapter? ClipboardAdapter { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current selection can be copied.
+    /// </summary>
+    public bool CanCopy => HasSelection;
+
+    /// <summary>
+    /// Gets a value indicating whether the current selection can be cut.
+    /// </summary>
+    public bool CanCut => HasSelection && !IsReadOnlyInternal;
+
+    /// <summary>
+    /// Gets a value indicating whether the clipboard can be pasted into the current document.
+    /// </summary>
+    public bool CanPaste
+    {
+        get
+        {
+            var clipboard = GetClipboardAdapter();
+            return !IsReadOnlyInternal &&
+                   ((IsRichClipboardEnabled && clipboard.ContainsHtml) ||
+                    clipboard.ContainsPlainText ||
+                    (IsImagePasteEnabled && clipboard.ContainsImage && RichTextHelpers.IsSupportedImageSource(clipboard.ImageSource)));
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether undo history is available.
+    /// </summary>
+    public bool CanUndo => !IsReadOnlyInternal && _undoStack.Count > 0;
+
+    /// <summary>
+    /// Gets a value indicating whether redo history is available.
+    /// </summary>
+    public bool CanRedo => !IsReadOnlyInternal && _redoStack.Count > 0;
+
+    /// <summary>
+    /// Gets a value indicating whether formatting can be applied to the current selection.
+    /// </summary>
+    public bool CanApplyFormatting => IsFormattingEnabled && !IsReadOnlyInternal && HasSelection;
+
+    /// <summary>
+    /// Gets the copy command.
+    /// </summary>
+    public ICommand CopyCommand { get; }
+
+    /// <summary>
+    /// Gets the cut command.
+    /// </summary>
+    public ICommand CutCommand { get; }
+
+    /// <summary>
+    /// Gets the paste command.
+    /// </summary>
+    public ICommand PasteCommand { get; }
+
+    /// <summary>
+    /// Gets the undo command.
+    /// </summary>
+    public ICommand UndoCommand { get; }
+
+    /// <summary>
+    /// Gets the redo command.
+    /// </summary>
+    public ICommand RedoCommand { get; }
+
+    /// <summary>
+    /// Gets the select all command.
+    /// </summary>
+    public ICommand SelectAllCommand { get; }
+
+    /// <summary>
+    /// Gets the bold formatting command.
+    /// </summary>
+    public ICommand ToggleBoldCommand { get; }
+
+    /// <summary>
+    /// Gets the italic formatting command.
+    /// </summary>
+    public ICommand ToggleItalicCommand { get; }
+
+    /// <summary>
+    /// Gets the underline formatting command.
+    /// </summary>
+    public ICommand ToggleUnderlineCommand { get; }
+
+    /// <summary>
+    /// Gets the strikethrough formatting command.
+    /// </summary>
+    public ICommand ToggleStrikethroughCommand { get; }
+
+    /// <summary>
+    /// Gets the clear formatting command.
+    /// </summary>
+    public ICommand ClearFormattingCommand { get; }
+
+    /// <summary>
+    /// Gets the font family formatting command.
+    /// </summary>
+    public ICommand SetFontFamilyCommand { get; }
+
+    /// <summary>
+    /// Gets the font size formatting command.
+    /// </summary>
+    public ICommand SetFontSizeCommand { get; }
+
+    /// <summary>
+    /// Gets the foreground color formatting command.
+    /// </summary>
+    public ICommand SetForegroundCommand { get; }
+
+    /// <summary>
+    /// Gets the highlight color formatting command.
+    /// </summary>
+    public ICommand SetHighlightCommand { get; }
+
+    /// <summary>
     /// Gets or sets the selection start index.
     /// </summary>
     public int SelectionStart
@@ -420,11 +638,50 @@ public class RichTextBox : TemplatedControl
 
             var start = Math.Min(SelectionStart, SelectionEnd);
             var length = Math.Abs(SelectionEnd - SelectionStart);
-            return Text.Substring(start, Math.Min(length, Text.Length - start));
+            return Document.GetTextRange(Document.GetTextPointer(start), Document.GetTextPointer(start + length));
         }
     }
 
-    private bool IsReadOnlyInternal => IsReadOnly || IsTextSelectionEnabled;
+    /// <summary>
+    /// Gets the selected content as an HTML fragment preserving inline formatting where possible.
+    /// </summary>
+    public string SelectedHtml
+    {
+        get
+        {
+            if (!HasSelection || string.IsNullOrEmpty(Text))
+            {
+                return string.Empty;
+            }
+
+            var start = Math.Min(SelectionStart, SelectionEnd);
+            var end = Math.Max(SelectionStart, SelectionEnd);
+            var builder = new StringBuilder();
+            foreach (var segment in Document.Segments)
+            {
+                if (!segment.HasRenderableText || segment.EndIndex <= start || segment.StartIndex >= end)
+                {
+                    continue;
+                }
+
+                var segmentStart = Math.Max(start, segment.StartIndex);
+                var segmentEnd = Math.Min(end, segment.EndIndex);
+                var segmentLength = segmentEnd - segmentStart;
+                if (segmentLength <= 0)
+                {
+                    continue;
+                }
+
+                var localStart = segmentStart - segment.StartIndex;
+                var selectedText = segment.Text.Substring(localStart, segmentLength);
+                builder.Append(RichTextHelpers.FormatSegmentAsHtml(segment, selectedText));
+            }
+
+            return builder.ToString();
+        }
+    }
+
+    private bool IsReadOnlyInternal => IsReadOnly || IsTextSelectionEnabled || EditMode == RichTextEditMode.Display;
 
     /// <summary>
     /// Returns the text position nearest the provided point.
@@ -434,45 +691,62 @@ public class RichTextBox : TemplatedControl
     /// <returns>The nearest document position.</returns>
     public TextPointer? GetPositionFromPoint(in Point point, bool snapToText)
     {
-        if (_editingTextBox is null)
-        {
-            return snapToText ? CaretPosition : null;
-        }
-
-        var bounds = _editingTextBox.Bounds;
-        if (!snapToText && !bounds.Contains(point))
+        var textBounds = GetTextHitTestBounds();
+        if (!snapToText && !textBounds.Contains(point))
         {
             return null;
         }
 
-        return CaretPosition;
+        if (Document.Length == 0)
+        {
+            return Document.GetTextPointer(0);
+        }
+
+        if (TryGetRenderedDocumentOffsetFromPoint(point, out var renderedOffset))
+        {
+            return Document.GetTextPointer(renderedOffset);
+        }
+
+        return Document.GetTextPointer(EstimateDocumentOffsetFromPoint(point, textBounds));
     }
 
     /// <summary>
     /// Determines whether the document should be serialized.
     /// </summary>
     /// <returns><see langword="true"/> when the current document has content.</returns>
-    public bool ShouldSerializeDocument() => !string.IsNullOrWhiteSpace(Document.GetText());
+    public bool ShouldSerializeDocument() => !string.IsNullOrWhiteSpace(Document.GetPlainText());
+
+    /// <summary>
+    /// Gets the rendered plain text for the current document.
+    /// </summary>
+    /// <returns>The plain text projection.</returns>
+    public string GetPlainText() => Document.GetPlainText();
+
+    /// <summary>
+    /// Gets the current HTML/markup representation for the document.
+    /// </summary>
+    /// <returns>The HTML/markup representation.</returns>
+    public string GetHtml() => Document.GetText();
 
     /// <summary>
     /// Applies bold formatting to the selection.
     /// </summary>
-    public void ToggleBold() => ApplyFormattingToSelection(TextFormatType.Bold);
+    public void ToggleBold() => ToggleBoldCommand.Execute(null);
 
     /// <summary>
     /// Applies italic formatting to the selection.
     /// </summary>
-    public void ToggleItalic() => ApplyFormattingToSelection(TextFormatType.Italic);
+    public void ToggleItalic() => ToggleItalicCommand.Execute(null);
 
     /// <summary>
     /// Applies underline formatting to the selection.
     /// </summary>
-    public void ToggleUnderline() => ApplyFormattingToSelection(TextFormatType.Underline);
+    public void ToggleUnderline() => ToggleUnderlineCommand.Execute(null);
 
     /// <summary>
     /// Applies strikethrough formatting to the selection.
     /// </summary>
-    public void ToggleStrikethrough() => ApplyFormattingToSelection(TextFormatType.Strikethrough);
+    public void ToggleStrikethrough() => ToggleStrikethroughCommand.Execute(null);
 
     /// <summary>
     /// Applies a font family to the selected content.
@@ -510,14 +784,7 @@ public class RichTextBox : TemplatedControl
     /// <summary>
     /// Selects all text.
     /// </summary>
-    public void SelectAll()
-    {
-        SelectionStart = 0;
-        SelectionEnd = Document.Length;
-        CaretIndex = SelectionEnd;
-        SynchronizeSelectionFromIndexes(raiseEvent: true);
-        _editingTextBox?.SelectAll();
-    }
+    public void SelectAll() => SelectAllCommand.Execute(null);
 
     /// <summary>
     /// Selects a range by offset and length.
@@ -534,6 +801,7 @@ public class RichTextBox : TemplatedControl
         CaretIndex = SelectionEnd;
         ApplySelectionToTextBox();
         SynchronizeSelectionFromIndexes(raiseEvent: true);
+        NotifyCommandStateChanged();
     }
 
     /// <summary>
@@ -557,6 +825,7 @@ public class RichTextBox : TemplatedControl
         CaretIndex = max;
         ApplySelectionToTextBox();
         SynchronizeSelectionFromIndexes(raiseEvent: true);
+        NotifyCommandStateChanged();
     }
 
     /// <summary>
@@ -564,19 +833,20 @@ public class RichTextBox : TemplatedControl
     /// </summary>
     public void Clear()
     {
-        SetHtml(string.Empty);
-        UpdateFormattedPresenter();
+        if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        var before = CaptureHistory();
+        SetHtmlCore(string.Empty, resetUndo: false);
+        CommitHistory(before);
     }
 
     /// <summary>
     /// Clears all formatting.
     /// </summary>
-    public void ClearFormatting()
-    {
-        Document.ClearFormatting();
-        SyncTextFromDocument();
-        UpdateFormattedPresenter();
-    }
+    public void ClearFormatting() => ClearFormattingCommand.Execute(null);
 
     /// <summary>
     /// Appends plain text to the end of the document.
@@ -605,21 +875,7 @@ public class RichTextBox : TemplatedControl
     /// Replaces the current content with HTML.
     /// </summary>
     /// <param name="html">The html content.</param>
-    public void SetHtml(string? html)
-    {
-        _isUpdating = true;
-        Document.SetText(html);
-        Text = html;
-        if (_editingTextBox is not null)
-        {
-            _editingTextBox.Text = html;
-            _editingTextBox.CaretIndex = _editingTextBox.Text?.Length ?? 0;
-        }
-
-        _isUpdating = false;
-        ClampSelectionToDocument();
-        UpdateFormattedPresenter();
-    }
+    public void SetHtml(string? html) => SetHtmlCore(html, resetUndo: true);
 
     /// <summary>
     /// Replaces the current content with plain text.
@@ -651,43 +907,116 @@ public class RichTextBox : TemplatedControl
     {
         ArgumentNullException.ThrowIfNull(html);
 
+        if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        var before = CaptureHistory();
         var start = Math.Min(SelectionStart, SelectionEnd);
         var length = Math.Abs(SelectionEnd - SelectionStart);
         Document.Replace(start, length, html);
         SyncTextFromDocument();
 
-        var newCaret = Math.Clamp(start + html.Length, 0, Document.Length);
+        var insertedLength = HtmlTextProjection.Create(html).Length;
+        var newCaret = Math.Clamp(start + insertedLength, 0, Document.Length);
         SelectionStart = newCaret;
         SelectionEnd = newCaret;
         CaretIndex = newCaret;
         ApplySelectionToTextBox();
         SynchronizeSelectionFromIndexes(raiseEvent: true);
+        CommitHistory(before);
     }
 
     /// <summary>
     /// Copies the selection to the clipboard.
     /// </summary>
-    public void Copy() => _editingTextBox?.Copy();
+    public void Copy() => CopyCommand.Execute(null);
 
     /// <summary>
     /// Cuts the selection to the clipboard.
     /// </summary>
-    public void Cut() => _editingTextBox?.Cut();
+    public void Cut() => CutCommand.Execute(null);
 
     /// <summary>
     /// Pastes from the clipboard.
     /// </summary>
-    public void Paste() => _editingTextBox?.Paste();
+    public void Paste() => PasteCommand.Execute(null);
+
+    /// <summary>
+    /// Ensures that the RichTextBox context menu exists and returns it.
+    /// </summary>
+    /// <returns>The context menu used by the control.</returns>
+    public ContextMenu EnsureContextMenu()
+    {
+        _contextMenu ??= CreateContextMenu();
+        UpdateContextMenuState();
+        return _contextMenu;
+    }
+
+    /// <summary>
+    /// Refreshes command enablement for the context menu items.
+    /// </summary>
+    public void RefreshContextMenuState()
+    {
+        _contextMenu ??= CreateContextMenu();
+        UpdateContextMenuState();
+    }
+
+    /// <summary>
+    /// Inserts a dropped text payload when drag/drop and edit state allow it.
+    /// </summary>
+    /// <param name="text">The dropped text or HTML payload.</param>
+    /// <returns><see langword="true"/> when content was inserted.</returns>
+    public bool TryDropText(string? text)
+    {
+        if (!IsDragDropEnabled || IsReadOnlyInternal)
+        {
+            return false;
+        }
+
+        var textPayload = RichTextHelpers.NormalizeClipboardText(text);
+        if (string.IsNullOrWhiteSpace(textPayload))
+        {
+            return false;
+        }
+
+        if (RichTextHelpers.LooksLikeHtml(textPayload))
+        {
+            ReplaceSelectionWithHtml(textPayload);
+        }
+        else
+        {
+            ReplaceSelection(textPayload);
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Inserts a dropped image source when drag/drop, image policy, and edit state allow it.
+    /// </summary>
+    /// <param name="imageSource">The image file URI/path or data URI.</param>
+    /// <returns><see langword="true"/> when an image was inserted.</returns>
+    public bool TryDropImage(string? imageSource)
+    {
+        if (imageSource is null)
+        {
+            return false;
+        }
+
+        return TryInsertImage(imageSource, requireDragDrop: true);
+    }
 
     /// <summary>
     /// Undoes the last action.
     /// </summary>
-    public void Undo() => _editingTextBox?.Undo();
+    public void Undo() => UndoCommand.Execute(null);
 
     /// <summary>
     /// Redoes the last undone action.
     /// </summary>
-    public void Redo() => _editingTextBox?.Redo();
+    public void Redo() => RedoCommand.Execute(null);
 
     /// <summary>
     /// Saves content to a stream.
@@ -703,6 +1032,34 @@ public class RichTextBox : TemplatedControl
     }
 
     /// <summary>
+    /// Saves content to a stream in the requested format.
+    /// </summary>
+    /// <param name="stream">The stream to save to.</param>
+    /// <param name="format">The data format to save.</param>
+    /// <param name="encoding">The encoding to use.</param>
+    public void Save(Stream stream, RichTextDataFormat format, Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        encoding ??= Encoding.UTF8;
+        var content = format switch
+        {
+            RichTextDataFormat.PlainText => GetPlainText(),
+            RichTextDataFormat.Html => GetHtml(),
+            RichTextDataFormat.Markdown => GetMarkdown(),
+            RichTextDataFormat.Rtf => string.Empty,
+            _ => GetHtml()
+        };
+        var bytes = encoding.GetBytes(content);
+        stream.Write(bytes, 0, bytes.Length);
+    }
+
+    /// <summary>
+    /// Gets a Markdown-compatible text representation.
+    /// </summary>
+    /// <returns>The Markdown-compatible representation.</returns>
+    public string GetMarkdown() => GetPlainText();
+
+    /// <summary>
     /// Loads content from a stream.
     /// </summary>
     /// <param name="stream">The stream to load from.</param>
@@ -712,7 +1069,33 @@ public class RichTextBox : TemplatedControl
         ArgumentNullException.ThrowIfNull(stream);
         encoding ??= Encoding.UTF8;
         using var reader = new StreamReader(stream, encoding);
-        Text = reader.ReadToEnd();
+        SetHtml(reader.ReadToEnd());
+    }
+
+    /// <summary>
+    /// Loads content from a stream in the requested format.
+    /// </summary>
+    /// <param name="stream">The stream to load from.</param>
+    /// <param name="format">The data format to load.</param>
+    /// <param name="encoding">The encoding to use.</param>
+    public void Load(Stream stream, RichTextDataFormat format, Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        encoding ??= Encoding.UTF8;
+        using var reader = new StreamReader(stream, encoding);
+        var content = reader.ReadToEnd();
+        if (format == RichTextDataFormat.PlainText)
+        {
+            SetPlainText(content);
+        }
+        else if (format == RichTextDataFormat.Markdown)
+        {
+            SetMarkdown(content);
+        }
+        else
+        {
+            SetHtml(content);
+        }
     }
 
     /// <inheritdoc/>
@@ -737,6 +1120,7 @@ public class RichTextBox : TemplatedControl
         // Find template parts
         _editingTextBox = e.NameScope.Find<global::Avalonia.Controls.TextBox>("PART_TextBox");
         _formattedPresenter = e.NameScope.Find<FormattedTextPresenter>("PART_FormattedPresenter");
+        _contextMenu ??= CreateContextMenu();
 
         // Setup editing text box
         if (_editingTextBox is not null)
@@ -886,6 +1270,23 @@ public class RichTextBox : TemplatedControl
                 DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
             }
         }
+        else if (change.Property == EditModeProperty)
+        {
+            if (_editingTextBox is not null)
+            {
+                _editingTextBox.IsReadOnly = IsReadOnlyInternal;
+                DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnlyInternal);
+            }
+
+            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnlyInternal);
+            if (_formattedPresenter is not null)
+            {
+                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
+            }
+
+            UpdateDisplayMode();
+            NotifyCommandStateChanged();
+        }
     }
 
     /// <inheritdoc/>
@@ -897,29 +1298,48 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        // Handle formatting shortcuts
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsFormattingEnabled && !IsReadOnlyInternal)
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             switch (e.Key)
             {
-                case Key.B:
-                    ToggleBold();
+                case Key.C:
+                    CopyCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.I:
-                    ToggleItalic();
+                case Key.X:
+                    CutCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.U:
-                    ToggleUnderline();
+                case Key.V:
+                    PasteCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.Z:
+                    UndoCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.Y:
+                    RedoCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.B when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleBoldCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.I when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleItalicCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.U when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleUnderlineCommand.Execute(null);
                     e.Handled = true;
                     return;
                 case Key.A:
-                    SelectAll();
+                    SelectAllCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift):
-                    ToggleStrikethrough();
+                case Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleStrikethroughCommand.Execute(null);
                     e.Handled = true;
                     return;
             }
@@ -951,7 +1371,11 @@ public class RichTextBox : TemplatedControl
             _editingTextBox.IsVisible = true;
             _editingTextBox.IsHitTestVisible = true;
             _editingTextBox.Opacity = 1;
-            _editingTextBox.Focus();
+
+            if (!_editingTextBox.IsFocused)
+            {
+                _editingTextBox.Focus();
+            }
         }
 
         if (_formattedPresenter is not null)
@@ -1022,6 +1446,229 @@ public class RichTextBox : TemplatedControl
         UpdateDisplayMode();
     }
 
+    private void SelectAllCore()
+    {
+        SelectionStart = 0;
+        SelectionEnd = Document.Length;
+        CaretIndex = SelectionEnd;
+        SynchronizeSelectionFromIndexes(raiseEvent: true);
+        _editingTextBox?.SelectAll();
+        NotifyCommandStateChanged();
+    }
+
+    private void ClearFormattingCore()
+    {
+        if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        var before = CaptureHistory();
+        Document.ClearFormatting();
+        SyncTextFromDocument();
+        UpdateFormattedPresenter();
+        CommitHistory(before);
+    }
+
+    private void SetHtmlCore(string? html, bool resetUndo)
+    {
+        _isUpdating = true;
+        Document.SetText(html);
+        Text = html;
+        if (_editingTextBox is not null)
+        {
+            _editingTextBox.Text = html;
+            _editingTextBox.CaretIndex = _editingTextBox.Text?.Length ?? 0;
+        }
+
+        _isUpdating = false;
+        ClampSelectionToDocument();
+        UpdateFormattedPresenter();
+        if (resetUndo)
+        {
+            _undoStack.Clear();
+            _redoStack.Clear();
+        }
+
+        NotifyCommandStateChanged();
+    }
+
+    private IRichTextClipboardAdapter GetClipboardAdapter() => ClipboardAdapter ?? _defaultClipboardAdapter;
+
+    private RichTextHistoryEntry CaptureHistory() => new(Document.GetText(), SelectionStart, SelectionEnd, CaretIndex);
+
+    private void CommitHistory(RichTextHistoryEntry before)
+    {
+        if (string.Equals(before.Html, Document.GetText(), StringComparison.Ordinal))
+        {
+            NotifyCommandStateChanged();
+            return;
+        }
+
+        _undoStack.Push(before);
+        _redoStack.Clear();
+        NotifyCommandStateChanged();
+    }
+
+    private void RestoreHistory(RichTextHistoryEntry entry)
+    {
+        _isUpdating = true;
+        Document.SetText(entry.Html);
+        Text = entry.Html;
+        if (_editingTextBox is not null)
+        {
+            _editingTextBox.Text = Text;
+        }
+
+        _isUpdating = false;
+        SelectionStart = Math.Clamp(entry.SelectionStart, 0, Document.Length);
+        SelectionEnd = Math.Clamp(entry.SelectionEnd, 0, Document.Length);
+        CaretIndex = Math.Clamp(entry.CaretIndex, 0, Document.Length);
+        ApplySelectionToTextBox();
+        SynchronizeSelectionFromIndexes(raiseEvent: true);
+        UpdateFormattedPresenter();
+        RaiseEvent(new TextChangedEventArgs(TextChangedEvent));
+        NotifyCommandStateChanged();
+    }
+
+    private void UndoCore()
+    {
+        if (!CanUndo)
+        {
+            return;
+        }
+
+        var current = CaptureHistory();
+        var previous = _undoStack.Pop();
+        _redoStack.Push(current);
+        RestoreHistory(previous);
+    }
+
+    private void RedoCore()
+    {
+        if (!CanRedo)
+        {
+            return;
+        }
+
+        var current = CaptureHistory();
+        var next = _redoStack.Pop();
+        _undoStack.Push(current);
+        RestoreHistory(next);
+    }
+
+    private void CopyCore()
+    {
+        if (!CanCopy)
+        {
+            return;
+        }
+
+        var selectedText = SelectedText;
+        var clipboard = GetClipboardAdapter();
+        clipboard.SetPlainText(selectedText);
+        if (IsRichClipboardEnabled)
+        {
+            var selectedHtml = SelectedHtml;
+            clipboard.SetHtml(string.IsNullOrEmpty(selectedHtml) ? HtmlClipboardUtilities.EncodePlainText(selectedText) : selectedHtml);
+        }
+
+        NotifyCommandStateChanged();
+    }
+
+    private void CutCore()
+    {
+        if (!CanCut)
+        {
+            return;
+        }
+
+        CopyCore();
+        ReplaceSelectionWithHtml(string.Empty);
+    }
+
+    private void PasteCore()
+    {
+        if (!CanPaste)
+        {
+            return;
+        }
+
+        var clipboard = GetClipboardAdapter();
+        if (IsRichClipboardEnabled && clipboard.ContainsHtml && !string.IsNullOrEmpty(clipboard.HtmlText))
+        {
+            var fragment = HtmlClipboardUtilities.ExtractFragment(clipboard.HtmlText) ?? clipboard.HtmlText;
+            ReplaceSelectionWithHtml(fragment ?? string.Empty);
+            return;
+        }
+
+        if (IsImagePasteEnabled && clipboard.ContainsImage && TryInsertImage(clipboard.ImageSource, requireDragDrop: false))
+        {
+            return;
+        }
+
+        if (clipboard.ContainsPlainText)
+        {
+            ReplaceSelection(clipboard.PlainText ?? string.Empty);
+        }
+    }
+
+    private bool TryInsertImage(string? imageSource, bool requireDragDrop)
+    {
+        if (IsReadOnlyInternal || (requireDragDrop && !IsDragDropEnabled))
+        {
+            return false;
+        }
+
+        if (requireDragDrop)
+        {
+            if (!IsImageDropEnabled)
+            {
+                return false;
+            }
+        }
+        else if (!IsImagePasteEnabled)
+        {
+            return false;
+        }
+
+        if (!RichTextHelpers.IsSupportedImageSource(imageSource))
+        {
+            return false;
+        }
+
+        ReplaceSelectionWithHtml(RichTextHelpers.CreateImageHtml(imageSource!.Trim()));
+        return true;
+    }
+
+    private void NotifyCommandStateChanged()
+    {
+        foreach (var command in new[]
+        {
+            CopyCommand,
+            CutCommand,
+            PasteCommand,
+            UndoCommand,
+            RedoCommand,
+            SelectAllCommand,
+            ToggleBoldCommand,
+            ToggleItalicCommand,
+            ToggleUnderlineCommand,
+            ToggleStrikethroughCommand,
+            ClearFormattingCommand,
+            SetFontFamilyCommand,
+            SetFontSizeCommand,
+            SetForegroundCommand,
+            SetHighlightCommand
+        })
+        {
+            if (command is RichTextCommand richTextCommand)
+            {
+                richTextCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
     private bool HasAnyFormatting()
     {
         foreach (var segment in Document.Segments)
@@ -1053,10 +1700,12 @@ public class RichTextBox : TemplatedControl
 
         var start = Math.Min(SelectionStart, SelectionEnd);
         var length = Math.Abs(SelectionEnd - SelectionStart);
+        var before = CaptureHistory();
 
         Document.ToggleFormatting(start, length, formatType);
         SyncTextFromDocument();
         UpdateFormattedPresenter();
+        CommitHistory(before);
 
         RaiseEvent(new FormattingEventArgs(FormattingAppliedEvent, this, formatType, SelectedText));
     }
@@ -1098,7 +1747,12 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        var showEditing = _editingTextBox.IsFocused || IsFocused;
+        var showEditing = EditMode switch
+        {
+            RichTextEditMode.Edit => true,
+            RichTextEditMode.Display => false,
+            _ => _editingTextBox.IsFocused || IsFocused,
+        };
         _editingTextBox.IsVisible = showEditing;
         _editingTextBox.IsHitTestVisible = showEditing;
         _editingTextBox.Opacity = showEditing ? 1 : 0;
@@ -1114,14 +1768,7 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        if (!IsDragDropEnabled || IsReadOnlyInternal)
-        {
-            e.DragEffects = DragDropEffects.None;
-            e.Handled = true;
-            return;
-        }
-
-        e.DragEffects = DragDropEffects.Copy;
+        e.DragEffects = CanAcceptDropData(e.DataTransfer) ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
     }
 
@@ -1132,304 +1779,328 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        static bool IsSupportedImagePath(string? path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return false;
-            }
-
-            var extension = Path.GetExtension(path);
-            return extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".webp", StringComparison.OrdinalIgnoreCase);
-        }
-
-        static string GetMimeType(string path)
-        {
-            var extension = Path.GetExtension(path);
-            return extension.ToLowerInvariant() switch
-            {
-                ".png" => "image/png",
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".gif" => "image/gif",
-                ".bmp" => "image/bmp",
-                ".webp" => "image/webp",
-                _ => "application/octet-stream"
-            };
-        }
-
-        static async Task<string?> TryCreateDataUriAsync(IStorageFile file)
-        {
-            var localPath = file.TryGetLocalPath() ?? file.Path.AbsolutePath;
-            if (!IsSupportedImagePath(localPath))
-            {
-                return null;
-            }
-
-            await using var stream = await file.OpenReadAsync();
-            using var buffer = new MemoryStream();
-            await stream.CopyToAsync(buffer);
-            var bytes = buffer.ToArray();
-            if (bytes.Length == 0)
-            {
-                return null;
-            }
-
-            var mimeType = GetMimeType(localPath);
-            return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
-        }
-
-        static async Task<object?> InvokeTransferMemberAsync(IDataTransfer dataTransfer, string memberName)
-        {
-            MethodInfo? targetMethod = null;
-            foreach (var method in dataTransfer.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (string.Equals(method.Name, memberName, StringComparison.Ordinal))
-                {
-                    targetMethod = method;
-                    break;
-                }
-            }
-
-            if (targetMethod is null)
-            {
-                return null;
-            }
-
-            object? invocationResult;
-            var parameters = targetMethod.GetParameters();
-            if (parameters.Length == 0)
-            {
-                invocationResult = targetMethod.Invoke(dataTransfer, null);
-            }
-            else if (parameters.Length == 1 && parameters[0].ParameterType == typeof(CancellationToken))
-            {
-                invocationResult = targetMethod.Invoke(dataTransfer, [CancellationToken.None]);
-            }
-            else
-            {
-                return null;
-            }
-
-            if (invocationResult is null)
-            {
-                return null;
-            }
-
-            if (invocationResult is Task task)
-            {
-                await task;
-                return task.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)?.GetValue(task);
-            }
-
-            var asTaskMethod = invocationResult.GetType().GetMethod("AsTask", BindingFlags.Public | BindingFlags.Instance, []);
-            if (asTaskMethod?.Invoke(invocationResult, null) is Task valueTaskAsTask)
-            {
-                await valueTaskAsTask;
-                return valueTaskAsTask.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)?.GetValue(valueTaskAsTask);
-            }
-
-            return invocationResult;
-        }
-
-        static IReadOnlyList<IStorageItem>? ToStorageItemList(object? value)
-        {
-            if (value is IReadOnlyList<IStorageItem> readOnlyList)
-            {
-                return readOnlyList;
-            }
-
-            if (value is IEnumerable<IStorageItem> typedEnumerable)
-            {
-                return [.. typedEnumerable];
-            }
-
-            if (value is IEnumerable<object> objectEnumerable)
-            {
-                return [.. objectEnumerable.OfType<IStorageItem>()];
-            }
-
-            return null;
-        }
-
-        if (!IsDragDropEnabled || IsReadOnlyInternal)
+        if (!CanAcceptDropData(e.DataTransfer))
         {
             e.DragEffects = DragDropEffects.None;
             e.Handled = true;
             return;
         }
 
-        var filesResult = await InvokeTransferMemberAsync(e.DataTransfer, "GetFilesAsync") ??
-                          await InvokeTransferMemberAsync(e.DataTransfer, "GetFiles");
-        var files = ToStorageItemList(filesResult);
-        if (files is null || files.Count == 0)
+        MoveSelectionToDropPoint(e.GetPosition(this));
+        var inserted = await TryInsertDropDataAsync(e.DataTransfer);
+        e.DragEffects = inserted ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private bool CanAcceptDropData(IDataTransfer dataTransfer)
+    {
+        if (!IsDragDropEnabled || IsReadOnlyInternal)
         {
-            var legacyFiles = e.DataTransfer.TryGetFiles();
-            if (legacyFiles is not null)
+            return false;
+        }
+
+        var textPayload = RichTextHelpers.NormalizeClipboardText(dataTransfer.TryGetText());
+        if (!string.IsNullOrWhiteSpace(textPayload))
+        {
+            return true;
+        }
+
+        var files = dataTransfer.TryGetFiles();
+        if (files is null)
+        {
+            return false;
+        }
+
+        foreach (var file in files)
+        {
+            var path = GetStorageItemPath(file);
+            if (RichTextHelpers.IsSupportedImagePath(path))
             {
-                files = [.. legacyFiles];
+                return IsImageDropEnabled;
+            }
+
+            if (file is IStorageFile && RichTextHelpers.IsSupportedTextFilePath(path))
+            {
+                return true;
             }
         }
 
-        static string NormalizeClipboardText(string? textPayload)
-        {
-            if (string.IsNullOrWhiteSpace(textPayload))
-            {
-                return string.Empty;
-            }
+        return false;
+    }
 
-            var fragment = HtmlClipboardUtilities.ExtractFragment(textPayload);
-            return string.IsNullOrWhiteSpace(fragment) ? textPayload : fragment;
-        }
-
-        if (files is { Count: > 0 })
+    private async Task<bool> TryInsertDropDataAsync(IDataTransfer dataTransfer)
+    {
+        var files = dataTransfer.TryGetFiles();
+        if (files is { Length: > 0 })
         {
-            var imageTags = new List<string>();
+            var inserted = false;
             foreach (var file in files)
             {
                 if (file is IStorageFile storageFile)
                 {
-                    var dataUri = await TryCreateDataUriAsync(storageFile);
-                    if (!string.IsNullOrWhiteSpace(dataUri))
+                    if (await TryDropStorageFileAsync(storageFile).ConfigureAwait(true))
                     {
-                        imageTags.Add($"<img src=\"{dataUri}\" />");
-                        continue;
+                        inserted = true;
                     }
                 }
-
-                var path = file.Path.AbsolutePath;
-                if (IsSupportedImagePath(path))
+                else if (RichTextHelpers.IsSupportedImagePath(GetStorageItemPath(file)) && TryDropImage(file.Path.AbsoluteUri))
                 {
-                    imageTags.Add($"<img src=\"{file.Path.AbsoluteUri}\" />");
-                }
-                else if (file is IStorageFile textFile)
-                {
-                    await using var readStream = await textFile.OpenReadAsync();
-                    using var reader = new StreamReader(readStream, Encoding.UTF8, true);
-                    var text = await reader.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        ReplaceSelection(text);
-                    }
+                    inserted = true;
                 }
             }
 
-            if (imageTags.Count > 0)
-            {
-                var htmlBuilder = new StringBuilder();
-                foreach (var tag in imageTags)
-                {
-                    htmlBuilder.Append(tag);
-                }
+            return inserted;
+        }
 
-                ReplaceSelectionWithHtml(htmlBuilder.ToString());
-            }
+        return TryDropText(dataTransfer.TryGetText());
+    }
 
-            e.Handled = true;
+    private async Task<bool> TryDropStorageFileAsync(IStorageFile file)
+    {
+        var path = GetStorageItemPath(file);
+        if (RichTextHelpers.IsSupportedImagePath(path))
+        {
+            var imageSource = await TryCreateImageSourceAsync(file).ConfigureAwait(true);
+            return !string.IsNullOrWhiteSpace(imageSource) && TryDropImage(imageSource);
+        }
+
+        if (!RichTextHelpers.IsSupportedTextFilePath(path))
+        {
+            return false;
+        }
+
+        var properties = await file.GetBasicPropertiesAsync().ConfigureAwait(true);
+        if (properties.Size is { } size && size > (ulong)MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        await using var readStream = await file.OpenReadAsync().ConfigureAwait(true);
+        if (readStream.CanSeek && readStream.Length > MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        using var reader = new StreamReader(readStream, Encoding.UTF8, true);
+        var text = await reader.ReadToEndAsync().ConfigureAwait(true);
+        if (Encoding.UTF8.GetByteCount(text) > MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        return TryDropText(text);
+    }
+
+    private async Task<string?> TryCreateImageSourceAsync(IStorageFile file)
+    {
+        var localPath = file.TryGetLocalPath();
+        if (RichTextHelpers.IsSupportedImagePath(localPath))
+        {
+            return new Uri(localPath!, UriKind.Absolute).AbsoluteUri;
+        }
+
+        var path = GetStorageItemPath(file);
+        if (!RichTextHelpers.IsSupportedImagePath(path))
+        {
+            return null;
+        }
+
+        if (file.Path.IsFile || file.Path.Scheme is "http" or "https")
+        {
+            return file.Path.AbsoluteUri;
+        }
+
+        await using var stream = await file.OpenReadAsync().ConfigureAwait(true);
+        using var buffer = new MemoryStream();
+        await stream.CopyToAsync(buffer).ConfigureAwait(true);
+        var bytes = buffer.ToArray();
+        if (bytes.Length == 0)
+        {
+            return null;
+        }
+
+        var mimeType = RichTextHelpers.GetImageMimeType(path);
+        return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
+    }
+
+    private void MoveSelectionToDropPoint(Point point)
+    {
+        var position = GetPositionFromPoint(point, snapToText: true);
+        if (position is null)
+        {
             return;
         }
 
-        var textPayload = (await InvokeTransferMemberAsync(e.DataTransfer, "GetTextAsync") as string) ??
-                          (await InvokeTransferMemberAsync(e.DataTransfer, "GetText") as string);
-        if (string.IsNullOrWhiteSpace(textPayload))
-        {
-            textPayload = e.DataTransfer.TryGetText();
-        }
-
-        textPayload = NormalizeClipboardText(textPayload);
-
-        if (!string.IsNullOrWhiteSpace(textPayload))
-        {
-            var looksLikeHtml = textPayload.Contains('<', StringComparison.Ordinal) && textPayload.Contains('>', StringComparison.Ordinal);
-            if (looksLikeHtml)
-            {
-                ReplaceSelectionWithHtml(textPayload);
-            }
-            else
-            {
-                ReplaceSelection(textPayload);
-            }
-        }
-
-        e.Handled = true;
+        Select(position.Offset, 0);
     }
 
-    private void CreateContextMenu()
+    private bool TryGetRenderedDocumentOffsetFromPoint(Point point, out int offset)
+    {
+        offset = 0;
+
+        if (_editingTextBox is not null)
+        {
+            var textPresenter = _editingTextBox.GetVisualDescendants().OfType<TextPresenter>().FirstOrDefault();
+            if (TryHitTestTextLayout(textPresenter, point, out offset))
+            {
+                return true;
+            }
+        }
+
+        return TryHitTestTextLayout(_formattedPresenter, point, out offset);
+    }
+
+    private bool TryHitTestTextLayout(Visual? visual, Point point, out int offset)
+    {
+        offset = 0;
+        var textLayout = visual switch
+        {
+            TextPresenter presenter => presenter.TextLayout,
+            FormattedTextPresenter presenter => presenter.TextLayout,
+            _ => null,
+        };
+
+        if (visual is null || textLayout is null)
+        {
+            return false;
+        }
+
+        var translatedPoint = this.TranslatePoint(point, visual);
+        if (!translatedPoint.HasValue)
+        {
+            return false;
+        }
+
+        var hitTest = textLayout.HitTestPoint(translatedPoint.Value);
+        offset = Math.Clamp(hitTest.TextPosition, 0, Document.Length);
+        return hitTest.IsInside || new Rect(visual.Bounds.Size).Contains(translatedPoint.Value);
+    }
+
+    private Rect GetTextHitTestBounds()
+    {
+        if (_editingTextBox is not null)
+        {
+            return _editingTextBox.Bounds;
+        }
+
+        if (_formattedPresenter is not null)
+        {
+            return _formattedPresenter.Bounds;
+        }
+
+        var width = Bounds.Width > 0 ? Bounds.Width : Math.Max(Document.Length * GetEstimatedCharacterWidth(), GetEstimatedCharacterWidth());
+        var height = Bounds.Height > 0 ? Bounds.Height : GetEstimatedLineHeight();
+        return new Rect(0, 0, width, height);
+    }
+
+    private int EstimateDocumentOffsetFromPoint(Point point, Rect bounds)
+    {
+        var text = Document.GetPlainText();
+        if (text.Length == 0)
+        {
+            return 0;
+        }
+
+        var characterWidth = GetEstimatedCharacterWidth();
+        var lineHeight = GetEstimatedLineHeight();
+        var relativeX = Math.Max(0, point.X - bounds.X);
+        var relativeY = Math.Max(0, point.Y - bounds.Y);
+        var targetLine = Math.Max(0, (int)Math.Floor(relativeY / lineHeight));
+        var targetColumn = Math.Max(0, (int)Math.Round(relativeX / characterWidth, MidpointRounding.AwayFromZero));
+        var currentLine = 0;
+        var currentColumn = 0;
+
+        for (var offset = 0; offset < text.Length; offset++)
+        {
+            if (currentLine == targetLine && currentColumn >= targetColumn)
+            {
+                return Math.Clamp(offset, 0, Document.Length);
+            }
+
+            if (text[offset] == '\n')
+            {
+                if (currentLine == targetLine)
+                {
+                    return offset;
+                }
+
+                currentLine++;
+                currentColumn = 0;
+                continue;
+            }
+
+            currentColumn++;
+        }
+
+        return Document.Length;
+    }
+
+    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * 0.6 : 8.4);
+
+    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * 1.4 : 19.6);
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
+    private string? GetStorageItemPath(IStorageItem file)
+    {
+        var localPath = file.TryGetLocalPath();
+        if (!string.IsNullOrWhiteSpace(localPath))
+        {
+            return localPath;
+        }
+
+        return file.Path.IsAbsoluteUri ? file.Path.AbsolutePath : file.Path.ToString();
+    }
+
+    private ContextMenu CreateContextMenu()
     {
         _contextMenu = new ContextMenu();
+        _contextMenu.Opened += (_, _) => UpdateContextMenuState();
 
-        var cutItem = new MenuItem { Header = "Cut", InputGesture = new KeyGesture(Key.X, KeyModifiers.Control) };
-        cutItem.Click += (_, _) => Cut();
+        var cutItem = new global::Avalonia.Controls.MenuItem { Header = "Cut", InputGesture = new KeyGesture(Key.X, KeyModifiers.Control), Command = CutCommand };
 
-        var copyItem = new MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, KeyModifiers.Control) };
-        copyItem.Click += (_, _) => Copy();
+        var copyItem = new global::Avalonia.Controls.MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, KeyModifiers.Control), Command = CopyCommand };
 
-        var pasteItem = new MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, KeyModifiers.Control) };
-        pasteItem.Click += (_, _) => Paste();
+        var pasteItem = new global::Avalonia.Controls.MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, KeyModifiers.Control), Command = PasteCommand };
 
-        var selectAllItem = new MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, KeyModifiers.Control) };
-        selectAllItem.Click += (_, _) => SelectAll();
+        var selectAllItem = new global::Avalonia.Controls.MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, KeyModifiers.Control), Command = SelectAllCommand };
 
-        var undoItem = new MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, KeyModifiers.Control) };
-        undoItem.Click += (_, _) => Undo();
+        var undoItem = new global::Avalonia.Controls.MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, KeyModifiers.Control), Command = UndoCommand };
 
-        var redoItem = new MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, KeyModifiers.Control) };
-        redoItem.Click += (_, _) => Redo();
+        var redoItem = new global::Avalonia.Controls.MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, KeyModifiers.Control), Command = RedoCommand };
 
-        var boldItem = new MenuItem { Header = "Bold", InputGesture = new KeyGesture(Key.B, KeyModifiers.Control) };
-        boldItem.Click += (_, _) => ToggleBold();
+        var boldItem = new global::Avalonia.Controls.MenuItem { Header = "Bold", InputGesture = new KeyGesture(Key.B, KeyModifiers.Control), Command = ToggleBoldCommand };
 
-        var italicItem = new MenuItem { Header = "Italic", InputGesture = new KeyGesture(Key.I, KeyModifiers.Control) };
-        italicItem.Click += (_, _) => ToggleItalic();
+        var italicItem = new global::Avalonia.Controls.MenuItem { Header = "Italic", InputGesture = new KeyGesture(Key.I, KeyModifiers.Control), Command = ToggleItalicCommand };
 
-        var underlineItem = new MenuItem { Header = "Underline", InputGesture = new KeyGesture(Key.U, KeyModifiers.Control) };
-        underlineItem.Click += (_, _) => ToggleUnderline();
+        var underlineItem = new global::Avalonia.Controls.MenuItem { Header = "Underline", InputGesture = new KeyGesture(Key.U, KeyModifiers.Control), Command = ToggleUnderlineCommand };
 
-        var strikethroughItem = new MenuItem { Header = "Strikethrough" };
-        strikethroughItem.Click += (_, _) => ToggleStrikethrough();
+        var strikethroughItem = new global::Avalonia.Controls.MenuItem { Header = "Strikethrough", Command = ToggleStrikethroughCommand };
 
-        var fontItem = new MenuItem { Header = "Font" };
-        var fontConsolas = new MenuItem { Header = "Consolas" };
-        fontConsolas.Click += (_, _) => SetSelectionFontFamily("Consolas");
-        var fontSegoe = new MenuItem { Header = "Segoe UI" };
-        fontSegoe.Click += (_, _) => SetSelectionFontFamily("Segoe UI");
-        var fontTimes = new MenuItem { Header = "Times New Roman" };
-        fontTimes.Click += (_, _) => SetSelectionFontFamily("Times New Roman");
+        var fontItem = new global::Avalonia.Controls.MenuItem { Header = "Font" };
+        var fontConsolas = new global::Avalonia.Controls.MenuItem { Header = "Consolas", Command = SetFontFamilyCommand, CommandParameter = "Consolas" };
+        var fontSegoe = new global::Avalonia.Controls.MenuItem { Header = "Segoe UI", Command = SetFontFamilyCommand, CommandParameter = "Segoe UI" };
+        var fontTimes = new global::Avalonia.Controls.MenuItem { Header = "Times New Roman", Command = SetFontFamilyCommand, CommandParameter = "Times New Roman" };
         fontItem.ItemsSource = new object[] { fontConsolas, fontSegoe, fontTimes };
 
-        var fontSizeItem = new MenuItem { Header = "Font Size" };
-        var size12 = new MenuItem { Header = "12" };
-        size12.Click += (_, _) => SetSelectionFontSize(12);
-        var size16 = new MenuItem { Header = "16" };
-        size16.Click += (_, _) => SetSelectionFontSize(16);
-        var size20 = new MenuItem { Header = "20" };
-        size20.Click += (_, _) => SetSelectionFontSize(20);
+        var fontSizeItem = new global::Avalonia.Controls.MenuItem { Header = "Font Size" };
+        var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = 12d };
+        var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = 16d };
+        var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = 20d };
         fontSizeItem.ItemsSource = new object[] { size12, size16, size20 };
 
-        var foregroundItem = new MenuItem { Header = "Foreground" };
-        var fgWhite = new MenuItem { Header = "White" };
-        fgWhite.Click += (_, _) => SetSelectionForeground(Colors.White);
-        var fgBlue = new MenuItem { Header = "DeepSkyBlue" };
-        fgBlue.Click += (_, _) => SetSelectionForeground(Colors.DeepSkyBlue);
-        var fgOrange = new MenuItem { Header = "Orange" };
-        fgOrange.Click += (_, _) => SetSelectionForeground(Colors.Orange);
+        var foregroundItem = new global::Avalonia.Controls.MenuItem { Header = "Foreground" };
+        var fgWhite = new global::Avalonia.Controls.MenuItem { Header = "White", Command = SetForegroundCommand, CommandParameter = Colors.White };
+        var fgBlue = new global::Avalonia.Controls.MenuItem { Header = "DeepSkyBlue", Command = SetForegroundCommand, CommandParameter = Colors.DeepSkyBlue };
+        var fgOrange = new global::Avalonia.Controls.MenuItem { Header = "Orange", Command = SetForegroundCommand, CommandParameter = Colors.Orange };
         foregroundItem.ItemsSource = new object[] { fgWhite, fgBlue, fgOrange };
 
-        var highlightItem = new MenuItem { Header = "Highlight" };
-        var hlTransparent = new MenuItem { Header = "Transparent" };
-        hlTransparent.Click += (_, _) => SetSelectionHighlight(Colors.Transparent);
-        var hlYellow = new MenuItem { Header = "Yellow" };
-        hlYellow.Click += (_, _) => SetSelectionHighlight(Colors.Yellow);
-        var hlGreen = new MenuItem { Header = "LightGreen" };
-        hlGreen.Click += (_, _) => SetSelectionHighlight(Colors.LightGreen);
+        var highlightItem = new global::Avalonia.Controls.MenuItem { Header = "Highlight" };
+        var hlTransparent = new global::Avalonia.Controls.MenuItem { Header = "Transparent", Command = SetHighlightCommand, CommandParameter = Colors.Transparent };
+        var hlYellow = new global::Avalonia.Controls.MenuItem { Header = "Yellow", Command = SetHighlightCommand, CommandParameter = Colors.Yellow };
+        var hlGreen = new global::Avalonia.Controls.MenuItem { Header = "LightGreen", Command = SetHighlightCommand, CommandParameter = Colors.LightGreen };
         highlightItem.ItemsSource = new object[] { hlTransparent, hlYellow, hlGreen };
 
-        var clearFormattingItem = new MenuItem { Header = "Clear Formatting" };
-        clearFormattingItem.Click += (_, _) => ClearFormatting();
+        var clearFormattingItem = new global::Avalonia.Controls.MenuItem { Header = "Clear Formatting", Command = ClearFormattingCommand };
 
         _contextMenu.ItemsSource = new object[]
         {
@@ -1455,6 +2126,7 @@ public class RichTextBox : TemplatedControl
         };
 
         ContextMenu = _contextMenu;
+        return _contextMenu;
     }
 
     private void UpdateContextMenuState()
@@ -1469,18 +2141,19 @@ public class RichTextBox : TemplatedControl
 
         foreach (var item in items)
         {
-            if (item is MenuItem menuItem)
+            if (item is global::Avalonia.Controls.MenuItem menuItem)
             {
                 var header = menuItem.Header?.ToString();
                 menuItem.IsEnabled = header switch
                 {
-                    "Cut" => hasSelection && canEdit,
+                    "Cut" => CanCut,
                     "Copy" => hasSelection,
-                    "Paste" => canEdit,
-                    "Undo" => canEdit,
-                    "Redo" => canEdit,
+                    "Paste" => CanPaste,
+                    "Undo" => CanUndo,
+                    "Redo" => CanRedo,
+                    "Select All" => Document.Length > 0,
                     "Bold" or "Italic" or "Underline" or "Strikethrough" or "Font" or "Font Size" or "Foreground" or "Highlight" => hasSelection && canEdit && IsFormattingEnabled,
-                    "Clear Formatting" => canEdit && IsFormattingEnabled,
+                    "Clear Formatting" => ClearFormattingCommand.CanExecute(null),
                     _ => true
                 };
             }
@@ -1529,5 +2202,161 @@ public class RichTextBox : TemplatedControl
         {
             RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
         }
+    }
+
+    private readonly record struct RichTextHistoryEntry(string Html, int SelectionStart, int SelectionEnd, int CaretIndex);
+
+    private static class RichTextHelpers
+    {
+        public static string FormatSegmentAsHtml(TextSegment segment, string text)
+        {
+            var result = HtmlClipboardUtilities.EncodePlainText(text);
+            var styles = new List<string>();
+            if (segment.FontFamily is not null)
+            {
+                styles.Add($"font-family:{segment.FontFamily.Name}");
+            }
+
+            if (segment.FontSize.HasValue)
+            {
+                styles.Add(FormattableString.Invariant($"font-size:{segment.FontSize.Value}px"));
+            }
+
+            if (segment.Foreground is SolidColorBrush foreground)
+            {
+                styles.Add($"color:{foreground.Color}");
+            }
+
+            if (segment.Background is SolidColorBrush background)
+            {
+                styles.Add($"background-color:{background.Color}");
+            }
+
+            if (styles.Count > 0)
+            {
+                result = $"<span style=\"{string.Join(';', styles)}\">{result}</span>";
+            }
+
+            if (segment.IsStrikethrough)
+            {
+                result = $"<s>{result}</s>";
+            }
+
+            if (segment.IsUnderline)
+            {
+                result = $"<u>{result}</u>";
+            }
+
+            if (segment.IsItalic)
+            {
+                result = $"<em>{result}</em>";
+            }
+
+            if (segment.IsBold)
+            {
+                result = $"<strong>{result}</strong>";
+            }
+
+            return result;
+        }
+
+        public static bool LooksLikeHtml(string text) => text.Contains('<', StringComparison.Ordinal) && text.Contains('>', StringComparison.Ordinal);
+
+        public static string NormalizeClipboardText(string? textPayload)
+        {
+            if (string.IsNullOrWhiteSpace(textPayload))
+            {
+                return string.Empty;
+            }
+
+            var fragment = HtmlClipboardUtilities.ExtractFragment(textPayload);
+            return string.IsNullOrWhiteSpace(fragment) ? textPayload : fragment;
+        }
+
+        public static bool IsSupportedImageSource(string? source)
+        {
+            if (string.IsNullOrWhiteSpace(source))
+            {
+                return false;
+            }
+
+            var value = source.Trim();
+            if (value.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            {
+                return value.Contains(";base64,", StringComparison.OrdinalIgnoreCase) || value.Contains(',', StringComparison.Ordinal);
+            }
+
+            if (Uri.TryCreate(value, UriKind.Absolute, out var uri))
+            {
+                return IsSupportedImagePath(uri.IsFile ? uri.LocalPath : uri.AbsolutePath);
+            }
+
+            return IsSupportedImagePath(value);
+        }
+
+        public static bool IsSupportedImagePath(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            return extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".webp", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsSupportedTextFilePath(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            return extension.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".md", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".markdown", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".csv", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".log", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".json", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".rtf", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetImageMimeType(string? path)
+        {
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            if (extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/jpeg";
+            }
+
+            if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/gif";
+            }
+
+            if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/bmp";
+            }
+
+            if (extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/webp";
+            }
+
+            return "image/png";
+        }
+
+        public static string CreateImageHtml(string imageSource) => $"<img src=\"{imageSource.Replace("\"", "%22", StringComparison.Ordinal)}\" />";
     }
 }

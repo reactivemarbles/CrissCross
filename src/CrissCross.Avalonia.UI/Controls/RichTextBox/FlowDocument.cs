@@ -58,7 +58,7 @@ public sealed class FlowDocument
     public IReadOnlyList<TextSegment> Segments => _coreDocument.Segments;
 
     /// <summary>
-    /// Gets the number of characters in the raw document.
+    /// Gets the number of characters in the rendered document text.
     /// </summary>
     public int Length => _coreDocument.Length;
 
@@ -154,6 +154,20 @@ public sealed class FlowDocument
     public string GetText() => _coreDocument.PlainText;
 
     /// <summary>
+    /// Gets the rendered plain text for the document.
+    /// </summary>
+    /// <returns>The plain text projection.</returns>
+    public string GetPlainText() => _coreDocument.RenderedText;
+
+    /// <summary>
+    /// Gets the source HTML fragment for a rendered document range.
+    /// </summary>
+    /// <param name="offset">The rendered start offset.</param>
+    /// <param name="length">The rendered range length.</param>
+    /// <returns>The source HTML fragment for the requested range.</returns>
+    public string GetHtmlRange(int offset, int length) => _coreDocument.GetHtmlRange(offset, length);
+
+    /// <summary>
     /// Creates a pointer at the specified offset.
     /// </summary>
     /// <param name="offset">The offset relative to <see cref="ContentStart"/>.</param>
@@ -172,7 +186,7 @@ public sealed class FlowDocument
     /// <returns>The requested substring, or <see cref="string.Empty"/> when the range is empty.</returns>
     public string GetTextRange(TextPointer start, TextPointer end)
     {
-        var text = GetText();
+        var text = GetPlainText();
         if (text.Length == 0)
         {
             return string.Empty;
@@ -185,7 +199,7 @@ public sealed class FlowDocument
         }
 
         var safeLength = Math.Min(rangeLength, text.Length - rangeStart);
-        return safeLength <= 0 ? string.Empty : text.Substring(rangeStart, safeLength);
+        return safeLength <= 0 ? string.Empty : _coreDocument.GetTextRange(rangeStart, safeLength);
     }
 
     /// <summary>

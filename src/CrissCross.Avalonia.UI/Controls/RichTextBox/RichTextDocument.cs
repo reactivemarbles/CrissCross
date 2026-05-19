@@ -11,6 +11,7 @@ public class RichTextDocument
 {
     private readonly List<TextSegment> _segments = [];
     private string _rawText = string.Empty;
+    private HtmlTextProjection _projection = HtmlTextProjection.Create(string.Empty);
 
     /// <summary>
     /// Gets the segments in the document.
@@ -23,9 +24,14 @@ public class RichTextDocument
     public string PlainText => _rawText;
 
     /// <summary>
-    /// Gets the total length of the underlying HTML string.
+    /// Gets the rendered plain-text projection of the document.
     /// </summary>
-    public int Length => _rawText.Length;
+    public string RenderedText => _projection.Text;
+
+    /// <summary>
+    /// Gets the total rendered text length, excluding markup tags.
+    /// </summary>
+    public int Length => _projection.Length;
 
     /// <summary>
     /// Sets the document text, replacing existing content.
@@ -64,7 +70,7 @@ public class RichTextDocument
             return;
         }
 
-        var index = Math.Clamp(offset, 0, _rawText.Length);
+        var index = _projection.GetSourceInsertionOffset(offset);
         _rawText = _rawText.Insert(index, text);
         RebuildSegments();
     }
@@ -76,13 +82,18 @@ public class RichTextDocument
     /// <param name="length">The number of characters to delete.</param>
     public void Delete(int offset, int length)
     {
-        if (length <= 0 || offset < 0 || offset >= _rawText.Length)
+        if (length <= 0 || offset < 0 || offset >= _projection.Length)
         {
             return;
         }
 
-        var boundedLength = Math.Min(length, _rawText.Length - offset);
-        _rawText = _rawText.Remove(offset, boundedLength);
+        var (sourceStart, sourceLength) = _projection.GetSourceRange(offset, length);
+        if (sourceLength <= 0)
+        {
+            return;
+        }
+
+        _rawText = RemoveEmptyFormattingElements(_rawText.Remove(sourceStart, sourceLength));
         RebuildSegments();
     }
 
@@ -97,7 +108,10 @@ public class RichTextDocument
         Delete(offset, length);
         if (!string.IsNullOrEmpty(text))
         {
-            Insert(offset, text);
+            var sourceOffset = _projection.GetSourceInsertionOffset(Math.Clamp(offset, 0, _projection.Length));
+            var boundedOffset = Math.Clamp(sourceOffset, 0, _rawText.Length);
+            _rawText = _rawText.Insert(boundedOffset, text);
+            RebuildSegments();
         }
     }
 
@@ -126,14 +140,73 @@ public class RichTextDocument
     /// </summary>
     public void ClearFormatting()
     {
-        var plain = HtmlContentParser.ToPlainText(_rawText);
+        var plain = _projection.Text;
         _rawText = HtmlClipboardUtilities.EncodePlainText(plain);
         RebuildSegments();
+    }
+
+    /// <summary>
+    /// Gets rendered text for a document range.
+    /// </summary>
+    /// <param name="offset">The rendered start offset.</param>
+    /// <param name="length">The rendered range length.</param>
+    /// <returns>The rendered text in the requested range.</returns>
+    public string GetTextRange(int offset, int length) => _projection.GetRangeText(offset, length);
+
+    /// <summary>
+    /// Gets the source HTML fragment for a rendered document range.
+    /// </summary>
+    /// <param name="offset">The rendered start offset.</param>
+    /// <param name="length">The rendered range length.</param>
+    /// <returns>The source HTML fragment for the requested range.</returns>
+    public string GetHtmlRange(int offset, int length)
+    {
+        if (length <= 0 || string.IsNullOrEmpty(_rawText))
+        {
+            return string.Empty;
+        }
+
+        var (sourceStart, sourceLength) = _projection.GetSourceRange(offset, length);
+        if (sourceLength <= 0 || sourceStart < 0 || sourceStart >= _rawText.Length)
+        {
+            return string.Empty;
+        }
+
+        var safeLength = Math.Min(sourceLength, _rawText.Length - sourceStart);
+        return safeLength <= 0 ? string.Empty : _rawText.Substring(sourceStart, safeLength);
+    }
+
+    private static string RemoveEmptyFormattingElements(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return string.Empty;
+        }
+
+        var cleaned = text;
+        string previous;
+        do
+        {
+            previous = cleaned;
+            cleaned = cleaned
+                .Replace("<strong></strong>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<b></b>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<em></em>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<i></i>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<u></u>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<s></s>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<strike></strike>", string.Empty, StringComparison.OrdinalIgnoreCase)
+                .Replace("<del></del>", string.Empty, StringComparison.OrdinalIgnoreCase);
+        }
+        while (!string.Equals(previous, cleaned, StringComparison.Ordinal));
+
+        return cleaned;
     }
 
     private void RebuildSegments()
     {
         _segments.Clear();
+        _projection = HtmlTextProjection.Create(_rawText);
         var parsed = HtmlContentParser.Parse(_rawText);
         if (parsed.Count == 0)
         {

@@ -54,6 +54,47 @@ public class GalleryExampleCoverageTests
     }
 
     [Test]
+    public async Task AvaloniaGallery_RichTextBoxDemo_ShowcasesFullControlSurface()
+    {
+        var view = ReadSource("CrissCross.Avalonia.UI.Gallery", "Views", "Pages", "InputPageView.axaml");
+        var codeBehind = ReadSource("CrissCross.Avalonia.UI.Gallery", "Views", "Pages", "InputPageView.axaml.cs");
+        var documentation = ReadSource("..", "docs", "gallery-examples.md");
+
+        await Assert.That(view).Contains("Formatting toolbar and commands");
+        await Assert.That(view).Contains("Context menu");
+        await Assert.That(view).Contains("Drag and drop text or images");
+        await Assert.That(view).Contains("Copy/paste workflow");
+        await Assert.That(view).Contains("Serialization/import/export samples");
+        await Assert.That(view).Contains("EditMode=\"Display\"");
+        await Assert.That(view).Contains("IsRichClipboardEnabled=\"True\"");
+        await Assert.That(view).Contains("IsImagePasteEnabled=\"True\"");
+        await Assert.That(view).Contains("IsImageDropEnabled=\"True\"");
+        await Assert.That(view).Contains("Toggle Display Mode");
+        await Assert.That(view).Contains("Copy Selection");
+        await Assert.That(view).Contains("Paste Clipboard Sample");
+        await Assert.That(view).Contains("Export HTML");
+        await Assert.That(view).Contains("Export Markdown");
+        await Assert.That(view).Contains("Save/Load Stream Sample");
+        await Assert.That(view).Contains("Undo");
+        await Assert.That(view).Contains("Redo");
+        await Assert.That(view).Contains("Font Family");
+        await Assert.That(view).Contains("Font Size");
+        await Assert.That(view).Contains("Foreground");
+        await Assert.That(view).Contains("Highlight");
+        await Assert.That(codeBehind).Contains("LoadRepresentativeRichTextContent");
+        await Assert.That(codeBehind).Contains("SetSelectionFontFamily");
+        await Assert.That(codeBehind).Contains("SetSelectionFontSize");
+        await Assert.That(codeBehind).Contains("SetSelectionForeground");
+        await Assert.That(codeBehind).Contains("SetSelectionHighlight");
+        await Assert.That(codeBehind).Contains("Save(memoryStream, RichTextDataFormat.Html");
+        await Assert.That(codeBehind).Contains("Load(memoryStream, RichTextDataFormat.Html");
+        await Assert.That(codeBehind).Contains("ClipboardAdapter");
+        await Assert.That(documentation).Contains("RichTextBox gallery");
+        await Assert.That(documentation).Contains("formatting toolbar/actions");
+        await Assert.That(documentation).Contains("serialization/import/export");
+    }
+
+    [Test]
     public async Task MauiExample_IncludesUiGalleryWithSharedStylesAndPlatformNotes()
     {
         var viewModel = ReadSource("CrissCross.MAUI.Test", "ViewModels", "ControlsGalleryViewModel.cs");
