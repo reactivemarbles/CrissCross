@@ -4,7 +4,6 @@
 
 using System;
 using System.IO;
-using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -42,14 +41,22 @@ public class FormattedTextPresenter : TextBlock
 
     private const string InlineObjectBoundarySentinel = "\u200B";
 
-    private static readonly HttpClient HttpClient = new();
-
     /// <summary>
     /// Initializes a new instance of the <see cref="FormattedTextPresenter"/> class.
     /// </summary>
     public FormattedTextPresenter()
     {
     }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether HTTP/HTTPS image sources may be resolved by <see cref="RemoteImageLoader"/>.
+    /// </summary>
+    public bool IsRemoteImageLoadingEnabled { get; set; }
+
+    /// <summary>
+    /// Gets or sets the opt-in remote image loader used for HTTP/HTTPS image sources.
+    /// </summary>
+    public Func<Uri, IImage?>? RemoteImageLoader { get; set; }
 
     /// <summary>
     /// Gets or sets the document to display.
@@ -167,7 +174,7 @@ public class FormattedTextPresenter : TextBlock
         }
     }
 
-    private static DocumentsInline? CreateImageInline(TextSegment segment)
+    private DocumentsInline? CreateImageInline(TextSegment segment)
     {
         if (string.IsNullOrWhiteSpace(segment.ImageSource))
         {
@@ -206,7 +213,7 @@ public class FormattedTextPresenter : TextBlock
         };
     }
 
-    private static bool TryLoadImage(string source, out IImage? bitmap)
+    private bool TryLoadImage(string source, out IImage? bitmap)
     {
         bitmap = null;
 
@@ -234,7 +241,7 @@ public class FormattedTextPresenter : TextBlock
 
                 if (absolute.Scheme is "http" or "https")
                 {
-                    return TryLoadFromHttp(absolute, out bitmap);
+                    return TryLoadRemoteImage(absolute, out bitmap);
                 }
 
                 using var assetStream = AssetLoader.Open(absolute);
@@ -257,7 +264,8 @@ public class FormattedTextPresenter : TextBlock
         return false;
     }
 
-    private static bool TryLoadDataUri(string source, out IImage? bitmap)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
+    private bool TryLoadDataUri(string source, out IImage? bitmap)
     {
         bitmap = null;
         if (!source.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
@@ -303,16 +311,18 @@ public class FormattedTextPresenter : TextBlock
         }
     }
 
-    private static bool TryLoadFromHttp(Uri uri, out IImage? bitmap)
+    private bool TryLoadRemoteImage(Uri uri, out IImage? bitmap)
     {
         bitmap = null;
+        if (!IsRemoteImageLoadingEnabled || RemoteImageLoader is null)
+        {
+            return false;
+        }
+
         try
         {
-            using var response = HttpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).GetAwaiter().GetResult();
-            response.EnsureSuccessStatusCode();
-            using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
-            bitmap = CreateBitmapFromStream(stream);
-            return true;
+            bitmap = RemoteImageLoader(uri);
+            return bitmap is not null;
         }
         catch
         {
@@ -321,7 +331,8 @@ public class FormattedTextPresenter : TextBlock
         }
     }
 
-    private static Bitmap CreateBitmapFromStream(Stream stream)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
+    private Bitmap CreateBitmapFromStream(Stream stream)
     {
         using var buffer = new MemoryStream();
         stream.CopyTo(buffer);

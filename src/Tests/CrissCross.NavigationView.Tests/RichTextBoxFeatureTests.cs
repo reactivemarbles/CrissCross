@@ -2,11 +2,17 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.IO;
+using System.Text;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using CrissCross.Avalonia.UI.Controls;
 using AvaloniaContextMenu = Avalonia.Controls.ContextMenu;
 using AvaloniaMenuItem = Avalonia.Controls.MenuItem;
+using DocumentsInlineUIContainer = Avalonia.Controls.Documents.InlineUIContainer;
 
 namespace CrissCross.NavigationView.Tests;
 
@@ -127,12 +133,25 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(FindMenuItem(menu, "Paste")!.IsEnabled).IsTrue();
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsTrue();
 
+        InvokeMenuItem(FindMenuItem(menu, "Bold")!);
+        await Assert.That(richTextBox.GetHtml()).IsEqualTo("<strong>Hello</strong> world");
+        richTextBox.Select(0, 5);
+
         richTextBox.IsReadOnly = true;
         richTextBox.RefreshContextMenuState();
 
         await Assert.That(FindMenuItem(menu, "Cut")!.IsEnabled).IsFalse();
         await Assert.That(FindMenuItem(menu, "Copy")!.IsEnabled).IsTrue();
         await Assert.That(FindMenuItem(menu, "Paste")!.IsEnabled).IsFalse();
+        await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsFalse();
+
+        richTextBox.IsReadOnly = false;
+        richTextBox.RefreshContextMenuState();
+        await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsTrue();
+
+        richTextBox.IsReadOnly = true;
+        menu.RaiseEvent(new RoutedEventArgs(AvaloniaContextMenu.OpenedEvent, menu));
+
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsFalse();
     }
 
@@ -210,6 +229,69 @@ public sealed class RichTextBoxFeatureTests
     }
 
     [Test]
+    public async Task RichTextBox_GetPositionFromPoint_MapsPointToRenderedDocumentOffset()
+    {
+        var richTextBox = new RichTextBox { Width = 240, Height = 40 };
+
+        richTextBox.SetPlainText("abcdef");
+        richTextBox.Select(richTextBox.Document.Length, 0);
+
+        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(0, 0), snapToText: true)?.Offset).IsEqualTo(0);
+        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(1_000, 0), snapToText: true)?.Offset).IsEqualTo(richTextBox.Document.Length);
+        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(-10, 0), snapToText: false)).IsNull();
+    }
+
+    [Test]
+    public async Task RichTextBox_RuntimeDragOver_AdvertisesCopyOnlyForSupportedPayloads()
+    {
+        var richTextBox = new RichTextBox();
+
+        var unsupported = RaiseDragOver(richTextBox, TestDataTransfer.Empty, new global::Avalonia.Point(0, 0));
+        var supported = RaiseDragOver(richTextBox, TestDataTransfer.Text("drop"), new global::Avalonia.Point(0, 0));
+
+        await Assert.That(unsupported.DragEffects).IsEqualTo(DragDropEffects.None);
+        await Assert.That(unsupported.Handled).IsTrue();
+        await Assert.That(supported.DragEffects).IsEqualTo(DragDropEffects.Copy);
+        await Assert.That(supported.Handled).IsTrue();
+    }
+
+    [Test]
+    public async Task RichTextBox_RuntimeDrop_TextUsesHitTestedDropPosition()
+    {
+        var richTextBox = new RichTextBox { Width = 240, Height = 40 };
+
+        richTextBox.SetPlainText("abcdef");
+        richTextBox.Select(richTextBox.Document.Length, 0);
+
+        RaiseDrop(richTextBox, TestDataTransfer.Text("XX"), new global::Avalonia.Point(0, 0));
+
+        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("XXabcdef");
+        await Assert.That(richTextBox.CaretIndex).IsEqualTo(2);
+    }
+
+    [Test]
+    public async Task RichTextBox_RuntimeDrop_EnforcesImageAndTextFilePolicies()
+    {
+        var imageDisabled = new RichTextBox { IsImageDropEnabled = false };
+
+        RaiseDrop(imageDisabled, TestDataTransfer.File(CreateStorageFile(".png", string.Empty)), new global::Avalonia.Point(0, 0));
+
+        await Assert.That(imageDisabled.GetHtml()).DoesNotContain("<img");
+
+        var unsupported = new RichTextBox();
+        RaiseDrop(unsupported, TestDataTransfer.File(CreateStorageFile(".exe", "should-not-load")), new global::Avalonia.Point(0, 0));
+        await Task.Delay(25);
+
+        await Assert.That(unsupported.GetPlainText()).IsEmpty();
+
+        var oversized = new RichTextBox { MaxDroppedTextFileBytes = 4 };
+        RaiseDrop(oversized, TestDataTransfer.File(CreateStorageFile(".txt", "12345")), new global::Avalonia.Point(0, 0));
+        await Task.Delay(25);
+
+        await Assert.That(oversized.GetPlainText()).IsEmpty();
+    }
+
+    [Test]
     public async Task FormattedTextPresenter_ImageInline_KeepsPreviousTextRunSplitSafe()
     {
         var document = new FlowDocument();
@@ -222,6 +304,28 @@ public sealed class RichTextBoxFeatureTests
 
         var firstRun = presenter.Inlines?.OfType<global::Avalonia.Controls.Documents.Run>().FirstOrDefault();
         await Assert.That(firstRun?.Text).IsEqualTo("abcdef\u200B");
+    }
+
+    [Test]
+    public async Task FormattedTextPresenter_RemoteImages_AreDisabledByDefaultAndUseOptInLoader()
+    {
+        var document = new FlowDocument();
+        var remoteLoaderCalls = 0;
+        var presenter = new FormattedTextPresenter
+        {
+            RemoteImageLoader = _ =>
+            {
+                remoteLoaderCalls++;
+                throw new InvalidOperationException("Remote images must be opt-in.");
+            }
+        };
+
+        document.SetText("before<img src=\"https://example.invalid/photo.png\" />after");
+        presenter.Document = document;
+        presenter.UpdateInlines();
+
+        await Assert.That(remoteLoaderCalls).IsEqualTo(0);
+        await Assert.That(presenter.Inlines?.OfType<DocumentsInlineUIContainer>().Any()).IsFalse();
     }
 
     [Test]
@@ -313,6 +417,28 @@ public sealed class RichTextBoxFeatureTests
 
     private static Color? GetSolidColor(IBrush? brush) => brush is SolidColorBrush solidColorBrush ? solidColorBrush.Color : null;
 
+    private static DragEventArgs RaiseDragOver(RichTextBox richTextBox, IDataTransfer dataTransfer, global::Avalonia.Point point)
+    {
+        var args = new DragEventArgs(DragDrop.DragOverEvent, dataTransfer, richTextBox, point, KeyModifiers.None);
+        richTextBox.RaiseEvent(args);
+        return args;
+    }
+
+    private static DragEventArgs RaiseDrop(RichTextBox richTextBox, IDataTransfer dataTransfer, global::Avalonia.Point point)
+    {
+        var args = new DragEventArgs(DragDrop.DropEvent, dataTransfer, richTextBox, point, KeyModifiers.None);
+        richTextBox.RaiseEvent(args);
+        return args;
+    }
+
+    private static IStorageFile CreateStorageFile(string extension, string content)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"rtb-drop-{Guid.NewGuid():N}{extension}");
+        File.WriteAllText(path, content, Encoding.UTF8);
+        var storageFileType = typeof(IStorageFile).Assembly.GetType("Avalonia.Platform.Storage.FileIO.BclStorageFile", throwOnError: true)!;
+        return (IStorageFile)Activator.CreateInstance(storageFileType, new FileInfo(path))!;
+    }
+
     private static AvaloniaMenuItem? FindMenuItem(AvaloniaContextMenu menu, string header)
     {
         foreach (var item in FlattenMenuItems(menu.ItemsSource))
@@ -325,6 +451,9 @@ public sealed class RichTextBoxFeatureTests
 
         return null;
     }
+
+    private static void InvokeMenuItem(AvaloniaMenuItem menuItem) =>
+        menuItem.RaiseEvent(new RoutedEventArgs(AvaloniaMenuItem.ClickEvent, menuItem));
 
     private static IEnumerable<AvaloniaMenuItem> FlattenMenuItems(object? source)
     {
@@ -367,5 +496,29 @@ public sealed class RichTextBoxFeatureTests
         public void SetHtml(string? html) => HtmlText = html;
 
         public void SetImage(string? imageSource) => ImageSource = imageSource;
+    }
+
+    private sealed class TestDataTransfer(params IDataTransferItem[] items) : IDataTransfer
+    {
+        public static readonly TestDataTransfer Empty = new();
+
+        public IReadOnlyList<DataFormat> Formats { get; } = items.SelectMany(item => item.Formats).Distinct().ToArray();
+
+        public IReadOnlyList<IDataTransferItem> Items { get; } = items;
+
+        public static TestDataTransfer Text(string text) => new(new TestDataTransferItem(DataFormat.Text, text));
+
+        public static TestDataTransfer File(IStorageItem file) => new(new TestDataTransferItem(DataFormat.File, file));
+
+        public void Dispose()
+        {
+        }
+    }
+
+    private sealed class TestDataTransferItem(DataFormat format, object value) : IDataTransferItem
+    {
+        public IReadOnlyList<DataFormat> Formats { get; } = [format];
+
+        public object? TryGetRaw(DataFormat requestedFormat) => Formats.Contains(requestedFormat) ? value : null;
     }
 }

@@ -7,12 +7,14 @@ using System.Linq;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -140,6 +142,12 @@ public class RichTextBox : TemplatedControl
     /// </summary>
     public static readonly StyledProperty<bool> IsImageDropEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsImageDropEnabled), true);
+
+    /// <summary>
+    /// Property for <see cref="MaxDroppedTextFileBytes"/>.
+    /// </summary>
+    public static readonly StyledProperty<long> MaxDroppedTextFileBytesProperty =
+        AvaloniaProperty.Register<RichTextBox, long>(nameof(MaxDroppedTextFileBytes), 1_048_576);
 
     /// <summary>
     /// Property for <see cref="SelectionStart"/>.
@@ -404,6 +412,15 @@ public class RichTextBox : TemplatedControl
     {
         get => GetValue(IsImageDropEnabledProperty);
         set => SetValue(IsImageDropEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum UTF-8 text file size accepted by runtime file drops.
+    /// </summary>
+    public long MaxDroppedTextFileBytes
+    {
+        get => GetValue(MaxDroppedTextFileBytesProperty);
+        set => SetValue(MaxDroppedTextFileBytesProperty, Math.Max(0, value));
     }
 
     /// <summary>
@@ -674,18 +691,23 @@ public class RichTextBox : TemplatedControl
     /// <returns>The nearest document position.</returns>
     public TextPointer? GetPositionFromPoint(in Point point, bool snapToText)
     {
-        if (_editingTextBox is null)
-        {
-            return snapToText ? CaretPosition : null;
-        }
-
-        var bounds = _editingTextBox.Bounds;
-        if (!snapToText && !bounds.Contains(point))
+        var textBounds = GetTextHitTestBounds();
+        if (!snapToText && !textBounds.Contains(point))
         {
             return null;
         }
 
-        return CaretPosition;
+        if (Document.Length == 0)
+        {
+            return Document.GetTextPointer(0);
+        }
+
+        if (TryGetRenderedDocumentOffsetFromPoint(point, out var renderedOffset))
+        {
+            return Document.GetTextPointer(renderedOffset);
+        }
+
+        return Document.GetTextPointer(EstimateDocumentOffsetFromPoint(point, textBounds));
     }
 
     /// <summary>
@@ -1276,29 +1298,48 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        // Handle formatting shortcuts
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control) && IsFormattingEnabled && !IsReadOnlyInternal)
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
         {
             switch (e.Key)
             {
-                case Key.B:
-                    ToggleBold();
+                case Key.C:
+                    CopyCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.I:
-                    ToggleItalic();
+                case Key.X:
+                    CutCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.U:
-                    ToggleUnderline();
+                case Key.V:
+                    PasteCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.Z:
+                    UndoCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.Y:
+                    RedoCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.B when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleBoldCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.I when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleItalicCommand.Execute(null);
+                    e.Handled = true;
+                    return;
+                case Key.U when IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleUnderlineCommand.Execute(null);
                     e.Handled = true;
                     return;
                 case Key.A:
-                    SelectAll();
+                    SelectAllCommand.Execute(null);
                     e.Handled = true;
                     return;
-                case Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift):
-                    ToggleStrikethrough();
+                case Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && IsFormattingEnabled && !IsReadOnlyInternal:
+                    ToggleStrikethroughCommand.Execute(null);
                     e.Handled = true;
                     return;
             }
@@ -1727,14 +1768,7 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        if (!IsDragDropEnabled || IsReadOnlyInternal)
-        {
-            e.DragEffects = DragDropEffects.None;
-            e.Handled = true;
-            return;
-        }
-
-        e.DragEffects = DragDropEffects.Copy;
+        e.DragEffects = CanAcceptDropData(e.DataTransfer) ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
     }
 
@@ -1745,232 +1779,328 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        static bool IsSupportedImagePath(string? path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return false;
-            }
-
-            var extension = Path.GetExtension(path);
-            return extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".webp", StringComparison.OrdinalIgnoreCase);
-        }
-
-        static string GetMimeType(string path)
-        {
-            var extension = Path.GetExtension(path);
-            return extension.ToLowerInvariant() switch
-            {
-                ".png" => "image/png",
-                ".jpg" or ".jpeg" => "image/jpeg",
-                ".gif" => "image/gif",
-                ".bmp" => "image/bmp",
-                ".webp" => "image/webp",
-                _ => "application/octet-stream"
-            };
-        }
-
-        static async Task<string?> TryCreateImageSourceAsync(IStorageFile file)
-        {
-            var localPath = file.TryGetLocalPath();
-            if (IsSupportedImagePath(localPath))
-            {
-                return new Uri(localPath!, UriKind.Absolute).AbsoluteUri;
-            }
-
-            var path = file.Path.AbsolutePath;
-            if (!IsSupportedImagePath(path))
-            {
-                return null;
-            }
-
-            if (file.Path.IsFile || file.Path.Scheme is "http" or "https")
-            {
-                return file.Path.AbsoluteUri;
-            }
-
-            await using var stream = await file.OpenReadAsync();
-            using var buffer = new MemoryStream();
-            await stream.CopyToAsync(buffer);
-            var bytes = buffer.ToArray();
-            if (bytes.Length == 0)
-            {
-                return null;
-            }
-
-            var mimeType = GetMimeType(path);
-            return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
-        }
-
-        if (!IsDragDropEnabled || IsReadOnlyInternal)
+        if (!CanAcceptDropData(e.DataTransfer))
         {
             e.DragEffects = DragDropEffects.None;
             e.Handled = true;
             return;
         }
 
-        IReadOnlyList<IStorageItem>? files = null;
-        var legacyFiles = e.DataTransfer.TryGetFiles();
-        if (legacyFiles is not null)
+        MoveSelectionToDropPoint(e.GetPosition(this));
+        var inserted = await TryInsertDropDataAsync(e.DataTransfer);
+        e.DragEffects = inserted ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private bool CanAcceptDropData(IDataTransfer dataTransfer)
+    {
+        if (!IsDragDropEnabled || IsReadOnlyInternal)
         {
-            files = [.. legacyFiles];
+            return false;
         }
 
-        static string NormalizeClipboardText(string? textPayload)
+        var textPayload = RichTextHelpers.NormalizeClipboardText(dataTransfer.TryGetText());
+        if (!string.IsNullOrWhiteSpace(textPayload))
         {
-            if (string.IsNullOrWhiteSpace(textPayload))
+            return true;
+        }
+
+        var files = dataTransfer.TryGetFiles();
+        if (files is null)
+        {
+            return false;
+        }
+
+        foreach (var file in files)
+        {
+            var path = GetStorageItemPath(file);
+            if (RichTextHelpers.IsSupportedImagePath(path))
             {
-                return string.Empty;
+                return IsImageDropEnabled;
             }
 
-            var fragment = HtmlClipboardUtilities.ExtractFragment(textPayload);
-            return string.IsNullOrWhiteSpace(fragment) ? textPayload : fragment;
+            if (file is IStorageFile && RichTextHelpers.IsSupportedTextFilePath(path))
+            {
+                return true;
+            }
         }
 
-        if (files is { Count: > 0 })
+        return false;
+    }
+
+    private async Task<bool> TryInsertDropDataAsync(IDataTransfer dataTransfer)
+    {
+        var files = dataTransfer.TryGetFiles();
+        if (files is { Length: > 0 })
         {
-            var imageTags = new List<string>();
+            var inserted = false;
             foreach (var file in files)
             {
                 if (file is IStorageFile storageFile)
                 {
-                    var imageSource = await TryCreateImageSourceAsync(storageFile);
-                    if (!string.IsNullOrWhiteSpace(imageSource))
+                    if (await TryDropStorageFileAsync(storageFile).ConfigureAwait(true))
                     {
-                        imageTags.Add(RichTextHelpers.CreateImageHtml(imageSource));
-                        continue;
+                        inserted = true;
                     }
                 }
-
-                var path = file.Path.AbsolutePath;
-                if (IsSupportedImagePath(path))
+                else if (RichTextHelpers.IsSupportedImagePath(GetStorageItemPath(file)) && TryDropImage(file.Path.AbsoluteUri))
                 {
-                    imageTags.Add(RichTextHelpers.CreateImageHtml(file.Path.AbsoluteUri));
-                }
-                else if (file is IStorageFile textFile)
-                {
-                    await using var readStream = await textFile.OpenReadAsync();
-                    using var reader = new StreamReader(readStream, Encoding.UTF8, true);
-                    var text = await reader.ReadToEndAsync();
-                    if (!string.IsNullOrWhiteSpace(text))
-                    {
-                        ReplaceSelection(text);
-                    }
+                    inserted = true;
                 }
             }
 
-            if (imageTags.Count > 0)
-            {
-                var htmlBuilder = new StringBuilder();
-                foreach (var tag in imageTags)
-                {
-                    htmlBuilder.Append(tag);
-                }
+            return inserted;
+        }
 
-                ReplaceSelectionWithHtml(htmlBuilder.ToString());
-            }
+        return TryDropText(dataTransfer.TryGetText());
+    }
 
-            e.Handled = true;
+    private async Task<bool> TryDropStorageFileAsync(IStorageFile file)
+    {
+        var path = GetStorageItemPath(file);
+        if (RichTextHelpers.IsSupportedImagePath(path))
+        {
+            var imageSource = await TryCreateImageSourceAsync(file).ConfigureAwait(true);
+            return !string.IsNullOrWhiteSpace(imageSource) && TryDropImage(imageSource);
+        }
+
+        if (!RichTextHelpers.IsSupportedTextFilePath(path))
+        {
+            return false;
+        }
+
+        var properties = await file.GetBasicPropertiesAsync().ConfigureAwait(true);
+        if (properties.Size is { } size && size > (ulong)MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        await using var readStream = await file.OpenReadAsync().ConfigureAwait(true);
+        if (readStream.CanSeek && readStream.Length > MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        using var reader = new StreamReader(readStream, Encoding.UTF8, true);
+        var text = await reader.ReadToEndAsync().ConfigureAwait(true);
+        if (Encoding.UTF8.GetByteCount(text) > MaxDroppedTextFileBytes)
+        {
+            return false;
+        }
+
+        return TryDropText(text);
+    }
+
+    private async Task<string?> TryCreateImageSourceAsync(IStorageFile file)
+    {
+        var localPath = file.TryGetLocalPath();
+        if (RichTextHelpers.IsSupportedImagePath(localPath))
+        {
+            return new Uri(localPath!, UriKind.Absolute).AbsoluteUri;
+        }
+
+        var path = GetStorageItemPath(file);
+        if (!RichTextHelpers.IsSupportedImagePath(path))
+        {
+            return null;
+        }
+
+        if (file.Path.IsFile || file.Path.Scheme is "http" or "https")
+        {
+            return file.Path.AbsoluteUri;
+        }
+
+        await using var stream = await file.OpenReadAsync().ConfigureAwait(true);
+        using var buffer = new MemoryStream();
+        await stream.CopyToAsync(buffer).ConfigureAwait(true);
+        var bytes = buffer.ToArray();
+        if (bytes.Length == 0)
+        {
+            return null;
+        }
+
+        var mimeType = RichTextHelpers.GetImageMimeType(path);
+        return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
+    }
+
+    private void MoveSelectionToDropPoint(Point point)
+    {
+        var position = GetPositionFromPoint(point, snapToText: true);
+        if (position is null)
+        {
             return;
         }
 
-        var textPayload = e.DataTransfer.TryGetText();
+        Select(position.Offset, 0);
+    }
 
-        textPayload = NormalizeClipboardText(textPayload);
+    private bool TryGetRenderedDocumentOffsetFromPoint(Point point, out int offset)
+    {
+        offset = 0;
 
-        if (!string.IsNullOrWhiteSpace(textPayload))
+        if (_editingTextBox is not null)
         {
-            var looksLikeHtml = textPayload.Contains('<', StringComparison.Ordinal) && textPayload.Contains('>', StringComparison.Ordinal);
-            if (looksLikeHtml)
+            var textPresenter = _editingTextBox.GetVisualDescendants().OfType<TextPresenter>().FirstOrDefault();
+            if (TryHitTestTextLayout(textPresenter, point, out offset))
             {
-                ReplaceSelectionWithHtml(textPayload);
-            }
-            else
-            {
-                ReplaceSelection(textPayload);
+                return true;
             }
         }
 
-        e.Handled = true;
+        return TryHitTestTextLayout(_formattedPresenter, point, out offset);
+    }
+
+    private bool TryHitTestTextLayout(Visual? visual, Point point, out int offset)
+    {
+        offset = 0;
+        var textLayout = visual switch
+        {
+            TextPresenter presenter => presenter.TextLayout,
+            FormattedTextPresenter presenter => presenter.TextLayout,
+            _ => null,
+        };
+
+        if (visual is null || textLayout is null)
+        {
+            return false;
+        }
+
+        var translatedPoint = this.TranslatePoint(point, visual);
+        if (!translatedPoint.HasValue)
+        {
+            return false;
+        }
+
+        var hitTest = textLayout.HitTestPoint(translatedPoint.Value);
+        offset = Math.Clamp(hitTest.TextPosition, 0, Document.Length);
+        return hitTest.IsInside || new Rect(visual.Bounds.Size).Contains(translatedPoint.Value);
+    }
+
+    private Rect GetTextHitTestBounds()
+    {
+        if (_editingTextBox is not null)
+        {
+            return _editingTextBox.Bounds;
+        }
+
+        if (_formattedPresenter is not null)
+        {
+            return _formattedPresenter.Bounds;
+        }
+
+        var width = Bounds.Width > 0 ? Bounds.Width : Math.Max(Document.Length * GetEstimatedCharacterWidth(), GetEstimatedCharacterWidth());
+        var height = Bounds.Height > 0 ? Bounds.Height : GetEstimatedLineHeight();
+        return new Rect(0, 0, width, height);
+    }
+
+    private int EstimateDocumentOffsetFromPoint(Point point, Rect bounds)
+    {
+        var text = Document.GetPlainText();
+        if (text.Length == 0)
+        {
+            return 0;
+        }
+
+        var characterWidth = GetEstimatedCharacterWidth();
+        var lineHeight = GetEstimatedLineHeight();
+        var relativeX = Math.Max(0, point.X - bounds.X);
+        var relativeY = Math.Max(0, point.Y - bounds.Y);
+        var targetLine = Math.Max(0, (int)Math.Floor(relativeY / lineHeight));
+        var targetColumn = Math.Max(0, (int)Math.Round(relativeX / characterWidth, MidpointRounding.AwayFromZero));
+        var currentLine = 0;
+        var currentColumn = 0;
+
+        for (var offset = 0; offset < text.Length; offset++)
+        {
+            if (currentLine == targetLine && currentColumn >= targetColumn)
+            {
+                return Math.Clamp(offset, 0, Document.Length);
+            }
+
+            if (text[offset] == '\n')
+            {
+                if (currentLine == targetLine)
+                {
+                    return offset;
+                }
+
+                currentLine++;
+                currentColumn = 0;
+                continue;
+            }
+
+            currentColumn++;
+        }
+
+        return Document.Length;
+    }
+
+    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * 0.6 : 8.4);
+
+    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * 1.4 : 19.6);
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
+    private string? GetStorageItemPath(IStorageItem file)
+    {
+        var localPath = file.TryGetLocalPath();
+        if (!string.IsNullOrWhiteSpace(localPath))
+        {
+            return localPath;
+        }
+
+        return file.Path.IsAbsoluteUri ? file.Path.AbsolutePath : file.Path.ToString();
     }
 
     private ContextMenu CreateContextMenu()
     {
         _contextMenu = new ContextMenu();
+        _contextMenu.Opened += (_, _) => UpdateContextMenuState();
 
         var cutItem = new global::Avalonia.Controls.MenuItem { Header = "Cut", InputGesture = new KeyGesture(Key.X, KeyModifiers.Control), Command = CutCommand };
-        cutItem.Click += (_, _) => Cut();
 
         var copyItem = new global::Avalonia.Controls.MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, KeyModifiers.Control), Command = CopyCommand };
-        copyItem.Click += (_, _) => Copy();
 
         var pasteItem = new global::Avalonia.Controls.MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, KeyModifiers.Control), Command = PasteCommand };
-        pasteItem.Click += (_, _) => Paste();
 
         var selectAllItem = new global::Avalonia.Controls.MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, KeyModifiers.Control), Command = SelectAllCommand };
-        selectAllItem.Click += (_, _) => SelectAll();
 
         var undoItem = new global::Avalonia.Controls.MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, KeyModifiers.Control), Command = UndoCommand };
-        undoItem.Click += (_, _) => Undo();
 
         var redoItem = new global::Avalonia.Controls.MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, KeyModifiers.Control), Command = RedoCommand };
-        redoItem.Click += (_, _) => Redo();
 
         var boldItem = new global::Avalonia.Controls.MenuItem { Header = "Bold", InputGesture = new KeyGesture(Key.B, KeyModifiers.Control), Command = ToggleBoldCommand };
-        boldItem.Click += (_, _) => ToggleBold();
 
         var italicItem = new global::Avalonia.Controls.MenuItem { Header = "Italic", InputGesture = new KeyGesture(Key.I, KeyModifiers.Control), Command = ToggleItalicCommand };
-        italicItem.Click += (_, _) => ToggleItalic();
 
         var underlineItem = new global::Avalonia.Controls.MenuItem { Header = "Underline", InputGesture = new KeyGesture(Key.U, KeyModifiers.Control), Command = ToggleUnderlineCommand };
-        underlineItem.Click += (_, _) => ToggleUnderline();
 
         var strikethroughItem = new global::Avalonia.Controls.MenuItem { Header = "Strikethrough", Command = ToggleStrikethroughCommand };
-        strikethroughItem.Click += (_, _) => ToggleStrikethrough();
 
         var fontItem = new global::Avalonia.Controls.MenuItem { Header = "Font" };
         var fontConsolas = new global::Avalonia.Controls.MenuItem { Header = "Consolas", Command = SetFontFamilyCommand, CommandParameter = "Consolas" };
-        fontConsolas.Click += (_, _) => SetSelectionFontFamily("Consolas");
         var fontSegoe = new global::Avalonia.Controls.MenuItem { Header = "Segoe UI", Command = SetFontFamilyCommand, CommandParameter = "Segoe UI" };
-        fontSegoe.Click += (_, _) => SetSelectionFontFamily("Segoe UI");
         var fontTimes = new global::Avalonia.Controls.MenuItem { Header = "Times New Roman", Command = SetFontFamilyCommand, CommandParameter = "Times New Roman" };
-        fontTimes.Click += (_, _) => SetSelectionFontFamily("Times New Roman");
         fontItem.ItemsSource = new object[] { fontConsolas, fontSegoe, fontTimes };
 
         var fontSizeItem = new global::Avalonia.Controls.MenuItem { Header = "Font Size" };
         var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = 12d };
-        size12.Click += (_, _) => SetSelectionFontSize(12);
         var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = 16d };
-        size16.Click += (_, _) => SetSelectionFontSize(16);
         var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = 20d };
-        size20.Click += (_, _) => SetSelectionFontSize(20);
         fontSizeItem.ItemsSource = new object[] { size12, size16, size20 };
 
         var foregroundItem = new global::Avalonia.Controls.MenuItem { Header = "Foreground" };
         var fgWhite = new global::Avalonia.Controls.MenuItem { Header = "White", Command = SetForegroundCommand, CommandParameter = Colors.White };
-        fgWhite.Click += (_, _) => SetSelectionForeground(Colors.White);
         var fgBlue = new global::Avalonia.Controls.MenuItem { Header = "DeepSkyBlue", Command = SetForegroundCommand, CommandParameter = Colors.DeepSkyBlue };
-        fgBlue.Click += (_, _) => SetSelectionForeground(Colors.DeepSkyBlue);
         var fgOrange = new global::Avalonia.Controls.MenuItem { Header = "Orange", Command = SetForegroundCommand, CommandParameter = Colors.Orange };
-        fgOrange.Click += (_, _) => SetSelectionForeground(Colors.Orange);
         foregroundItem.ItemsSource = new object[] { fgWhite, fgBlue, fgOrange };
 
         var highlightItem = new global::Avalonia.Controls.MenuItem { Header = "Highlight" };
         var hlTransparent = new global::Avalonia.Controls.MenuItem { Header = "Transparent", Command = SetHighlightCommand, CommandParameter = Colors.Transparent };
-        hlTransparent.Click += (_, _) => SetSelectionHighlight(Colors.Transparent);
         var hlYellow = new global::Avalonia.Controls.MenuItem { Header = "Yellow", Command = SetHighlightCommand, CommandParameter = Colors.Yellow };
-        hlYellow.Click += (_, _) => SetSelectionHighlight(Colors.Yellow);
         var hlGreen = new global::Avalonia.Controls.MenuItem { Header = "LightGreen", Command = SetHighlightCommand, CommandParameter = Colors.LightGreen };
-        hlGreen.Click += (_, _) => SetSelectionHighlight(Colors.LightGreen);
         highlightItem.ItemsSource = new object[] { hlTransparent, hlYellow, hlGreen };
 
         var clearFormattingItem = new global::Avalonia.Controls.MenuItem { Header = "Clear Formatting", Command = ClearFormattingCommand };
-        clearFormattingItem.Click += (_, _) => ClearFormatting();
 
         _contextMenu.ItemsSource = new object[]
         {
@@ -2171,13 +2301,60 @@ public class RichTextBox : TemplatedControl
                 return false;
             }
 
-            var extension = Path.GetExtension(path);
+            var extension = Path.GetExtension(path) ?? string.Empty;
             return extension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
                    extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
                    extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase) ||
                    extension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
                    extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase) ||
                    extension.Equals(".webp", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static bool IsSupportedTextFilePath(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            return extension.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".md", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".markdown", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".csv", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".log", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".json", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
+                   extension.Equals(".rtf", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static string GetImageMimeType(string? path)
+        {
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            if (extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/jpeg";
+            }
+
+            if (extension.Equals(".gif", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/gif";
+            }
+
+            if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/bmp";
+            }
+
+            if (extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
+            {
+                return "image/webp";
+            }
+
+            return "image/png";
         }
 
         public static string CreateImageHtml(string imageSource) => $"<img src=\"{imageSource.Replace("\"", "%22", StringComparison.Ordinal)}\" />";
