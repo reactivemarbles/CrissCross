@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using Avalonia.Input;
 using CrissCross.Avalonia.UI.Controls;
 
 namespace CrissCross.NavigationView.Tests;
@@ -168,6 +169,49 @@ public sealed class RichTextBoxCoreTests
 
         await Assert.That(richTextBox.GetHtml()).IsEqualTo(" world<em>Avalonia</em>");
         await Assert.That(richTextBox.GetPlainText()).IsEqualTo(" worldAvalonia");
+    }
+
+    [Test]
+    public async Task RichTextBox_KeyboardShortcuts_RouteEditingCommandsThroughCommandPipeline()
+    {
+        var clipboard = new FakeRichTextClipboardAdapter { PlainText = "paste" };
+        var richTextBox = new TestableRichTextBox { ClipboardAdapter = clipboard };
+
+        richTextBox.SetPlainText("Hello world");
+        richTextBox.Select(6, 5);
+        richTextBox.SendKey(Key.C);
+
+        await Assert.That(clipboard.PlainText).IsEqualTo("world");
+
+        richTextBox.SendKey(Key.X);
+        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello ");
+        await Assert.That(clipboard.PlainText).IsEqualTo("world");
+
+        clipboard.PlainText = "Avalonia";
+        clipboard.HtmlText = null;
+        richTextBox.Select(richTextBox.Document.Length, 0);
+        richTextBox.SendKey(Key.V);
+        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello Avalonia");
+
+        richTextBox.SendKey(Key.Z);
+        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello ");
+
+        richTextBox.SendKey(Key.Y);
+        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello Avalonia");
+    }
+
+    private sealed class TestableRichTextBox : RichTextBox
+    {
+        public void SendKey(Key key)
+        {
+            var args = new KeyEventArgs
+            {
+                Key = key,
+                KeyModifiers = KeyModifiers.Control
+            };
+
+            OnKeyDown(args);
+        }
     }
 
     private sealed class FakeRichTextClipboardAdapter : IRichTextClipboardAdapter
