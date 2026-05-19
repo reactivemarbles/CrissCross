@@ -2054,75 +2054,53 @@ public class RichTextBox : TemplatedControl
     private ContextMenu CreateContextMenu()
     {
         _contextMenu = new ContextMenu();
+        _contextMenu.Opened += (_, _) => UpdateContextMenuState();
 
         var cutItem = new global::Avalonia.Controls.MenuItem { Header = "Cut", InputGesture = new KeyGesture(Key.X, KeyModifiers.Control), Command = CutCommand };
-        cutItem.Click += (_, _) => Cut();
 
         var copyItem = new global::Avalonia.Controls.MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, KeyModifiers.Control), Command = CopyCommand };
-        copyItem.Click += (_, _) => Copy();
 
         var pasteItem = new global::Avalonia.Controls.MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, KeyModifiers.Control), Command = PasteCommand };
-        pasteItem.Click += (_, _) => Paste();
 
         var selectAllItem = new global::Avalonia.Controls.MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, KeyModifiers.Control), Command = SelectAllCommand };
-        selectAllItem.Click += (_, _) => SelectAll();
 
         var undoItem = new global::Avalonia.Controls.MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, KeyModifiers.Control), Command = UndoCommand };
-        undoItem.Click += (_, _) => Undo();
 
         var redoItem = new global::Avalonia.Controls.MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, KeyModifiers.Control), Command = RedoCommand };
-        redoItem.Click += (_, _) => Redo();
 
         var boldItem = new global::Avalonia.Controls.MenuItem { Header = "Bold", InputGesture = new KeyGesture(Key.B, KeyModifiers.Control), Command = ToggleBoldCommand };
-        boldItem.Click += (_, _) => ToggleBold();
 
         var italicItem = new global::Avalonia.Controls.MenuItem { Header = "Italic", InputGesture = new KeyGesture(Key.I, KeyModifiers.Control), Command = ToggleItalicCommand };
-        italicItem.Click += (_, _) => ToggleItalic();
 
         var underlineItem = new global::Avalonia.Controls.MenuItem { Header = "Underline", InputGesture = new KeyGesture(Key.U, KeyModifiers.Control), Command = ToggleUnderlineCommand };
-        underlineItem.Click += (_, _) => ToggleUnderline();
 
         var strikethroughItem = new global::Avalonia.Controls.MenuItem { Header = "Strikethrough", Command = ToggleStrikethroughCommand };
-        strikethroughItem.Click += (_, _) => ToggleStrikethrough();
 
         var fontItem = new global::Avalonia.Controls.MenuItem { Header = "Font" };
         var fontConsolas = new global::Avalonia.Controls.MenuItem { Header = "Consolas", Command = SetFontFamilyCommand, CommandParameter = "Consolas" };
-        fontConsolas.Click += (_, _) => SetSelectionFontFamily("Consolas");
         var fontSegoe = new global::Avalonia.Controls.MenuItem { Header = "Segoe UI", Command = SetFontFamilyCommand, CommandParameter = "Segoe UI" };
-        fontSegoe.Click += (_, _) => SetSelectionFontFamily("Segoe UI");
         var fontTimes = new global::Avalonia.Controls.MenuItem { Header = "Times New Roman", Command = SetFontFamilyCommand, CommandParameter = "Times New Roman" };
-        fontTimes.Click += (_, _) => SetSelectionFontFamily("Times New Roman");
         fontItem.ItemsSource = new object[] { fontConsolas, fontSegoe, fontTimes };
 
         var fontSizeItem = new global::Avalonia.Controls.MenuItem { Header = "Font Size" };
         var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = 12d };
-        size12.Click += (_, _) => SetSelectionFontSize(12);
         var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = 16d };
-        size16.Click += (_, _) => SetSelectionFontSize(16);
         var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = 20d };
-        size20.Click += (_, _) => SetSelectionFontSize(20);
         fontSizeItem.ItemsSource = new object[] { size12, size16, size20 };
 
         var foregroundItem = new global::Avalonia.Controls.MenuItem { Header = "Foreground" };
         var fgWhite = new global::Avalonia.Controls.MenuItem { Header = "White", Command = SetForegroundCommand, CommandParameter = Colors.White };
-        fgWhite.Click += (_, _) => SetSelectionForeground(Colors.White);
         var fgBlue = new global::Avalonia.Controls.MenuItem { Header = "DeepSkyBlue", Command = SetForegroundCommand, CommandParameter = Colors.DeepSkyBlue };
-        fgBlue.Click += (_, _) => SetSelectionForeground(Colors.DeepSkyBlue);
         var fgOrange = new global::Avalonia.Controls.MenuItem { Header = "Orange", Command = SetForegroundCommand, CommandParameter = Colors.Orange };
-        fgOrange.Click += (_, _) => SetSelectionForeground(Colors.Orange);
         foregroundItem.ItemsSource = new object[] { fgWhite, fgBlue, fgOrange };
 
         var highlightItem = new global::Avalonia.Controls.MenuItem { Header = "Highlight" };
         var hlTransparent = new global::Avalonia.Controls.MenuItem { Header = "Transparent", Command = SetHighlightCommand, CommandParameter = Colors.Transparent };
-        hlTransparent.Click += (_, _) => SetSelectionHighlight(Colors.Transparent);
         var hlYellow = new global::Avalonia.Controls.MenuItem { Header = "Yellow", Command = SetHighlightCommand, CommandParameter = Colors.Yellow };
-        hlYellow.Click += (_, _) => SetSelectionHighlight(Colors.Yellow);
         var hlGreen = new global::Avalonia.Controls.MenuItem { Header = "LightGreen", Command = SetHighlightCommand, CommandParameter = Colors.LightGreen };
-        hlGreen.Click += (_, _) => SetSelectionHighlight(Colors.LightGreen);
         highlightItem.ItemsSource = new object[] { hlTransparent, hlYellow, hlGreen };
 
         var clearFormattingItem = new global::Avalonia.Controls.MenuItem { Header = "Clear Formatting", Command = ClearFormattingCommand };
-        clearFormattingItem.Click += (_, _) => ClearFormatting();
 
         _contextMenu.ItemsSource = new object[]
         {

@@ -133,12 +133,25 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(FindMenuItem(menu, "Paste")!.IsEnabled).IsTrue();
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsTrue();
 
+        InvokeMenuItem(FindMenuItem(menu, "Bold")!);
+        await Assert.That(richTextBox.GetHtml()).IsEqualTo("<strong>Hello</strong> world");
+        richTextBox.Select(0, 5);
+
         richTextBox.IsReadOnly = true;
         richTextBox.RefreshContextMenuState();
 
         await Assert.That(FindMenuItem(menu, "Cut")!.IsEnabled).IsFalse();
         await Assert.That(FindMenuItem(menu, "Copy")!.IsEnabled).IsTrue();
         await Assert.That(FindMenuItem(menu, "Paste")!.IsEnabled).IsFalse();
+        await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsFalse();
+
+        richTextBox.IsReadOnly = false;
+        richTextBox.RefreshContextMenuState();
+        await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsTrue();
+
+        richTextBox.IsReadOnly = true;
+        menu.RaiseEvent(new RoutedEventArgs(AvaloniaContextMenu.OpenedEvent, menu));
+
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsFalse();
     }
 
@@ -438,6 +451,9 @@ public sealed class RichTextBoxFeatureTests
 
         return null;
     }
+
+    private static void InvokeMenuItem(AvaloniaMenuItem menuItem) =>
+        menuItem.RaiseEvent(new RoutedEventArgs(AvaloniaMenuItem.ClickEvent, menuItem));
 
     private static IEnumerable<AvaloniaMenuItem> FlattenMenuItems(object? source)
     {
