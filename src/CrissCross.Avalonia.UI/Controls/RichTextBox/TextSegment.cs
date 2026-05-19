@@ -31,7 +31,12 @@ public class TextSegment(string text, int startIndex)
     /// <summary>
     /// Gets the end index in the document.
     /// </summary>
-    public int EndIndex => StartIndex + Text.Length;
+    public int EndIndex => StartIndex + Length;
+
+    /// <summary>
+    /// Gets the number of rendered document positions consumed by this segment.
+    /// </summary>
+    public int Length => IsImage ? 1 : Text.Length;
 
     /// <summary>
     /// Gets or sets a value indicating whether this segment is bold.

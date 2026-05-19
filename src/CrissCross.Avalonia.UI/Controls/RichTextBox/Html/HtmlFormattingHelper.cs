@@ -10,13 +10,19 @@ internal static class HtmlFormattingHelper
 {
     public static (string? Content, bool Applied) Toggle(string source, int start, int length, TextFormatType formatType)
     {
-        if (string.IsNullOrEmpty(source) || length <= 0 || start < 0 || start >= source.Length)
+        var projection = HtmlTextProjection.Create(source);
+        if (string.IsNullOrEmpty(source) || length <= 0 || start < 0 || start >= projection.Length)
         {
             return (source, false);
         }
 
-        var boundedLength = Math.Min(length, source.Length - start);
-        var selection = source.Substring(start, boundedLength);
+        var (sourceStart, sourceLength) = projection.GetSourceRange(start, length);
+        if (sourceLength <= 0)
+        {
+            return (source, false);
+        }
+
+        var selection = source.Substring(sourceStart, sourceLength);
         var (openTag, closeTag) = GetTags(formatType);
         if (string.IsNullOrEmpty(openTag) || string.IsNullOrEmpty(closeTag))
         {
@@ -28,18 +34,18 @@ internal static class HtmlFormattingHelper
         {
             var inner = selection[openTag.Length..(selection.Length - closeTag.Length)];
             var builder = new StringBuilder(source.Length - openTag.Length - closeTag.Length);
-            _ = builder.Append(source, 0, start);
+            _ = builder.Append(source, 0, sourceStart);
             _ = builder.Append(inner);
-            _ = builder.Append(source, start + boundedLength, source.Length - start - boundedLength);
+            _ = builder.Append(source, sourceStart + sourceLength, source.Length - sourceStart - sourceLength);
             return (builder.ToString(), false);
         }
 
         var wrappedBuilder = new StringBuilder(source.Length + openTag.Length + closeTag.Length);
-        _ = wrappedBuilder.Append(source, 0, start);
+        _ = wrappedBuilder.Append(source, 0, sourceStart);
         _ = wrappedBuilder.Append(openTag);
         _ = wrappedBuilder.Append(selection);
         _ = wrappedBuilder.Append(closeTag);
-        _ = wrappedBuilder.Append(source, start + boundedLength, source.Length - start - boundedLength);
+        _ = wrappedBuilder.Append(source, sourceStart + sourceLength, source.Length - sourceStart - sourceLength);
         return (wrappedBuilder.ToString(), true);
     }
 

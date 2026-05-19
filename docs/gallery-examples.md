@@ -27,6 +27,7 @@ The WPF, Avalonia, and MAUI examples cover:
 - async reactive commands using `ReactiveCommand.CreateFromTask` with deterministic delays and no network dependency.
 - activation/disposal via `WhenNavigatedTo` plus disposable observable activity, and view `WhenActivated` patterns.
 - platform-specific behavior notes in each playground view model.
+- RichTextBox gallery coverage in the Avalonia Input page: representative formatted content, formatting toolbar/actions, context menu discovery, text/image drag-drop instructions, text/image copy-paste workflow, edit/display mode switching, and serialization/import/export samples.
 
 ## Build and run from WSL
 
@@ -58,3 +59,4 @@ The MAUI Android target requires installed Android workloads/emulator/device. Th
 4. Change segmented selection and stepper state.
 5. Change theme selection and inspect platform-specific theme behavior.
 6. Navigate away and back to verify activation/disposal logging resets without duplicate timers.
+7. In the Avalonia Input page RichTextBox gallery, verify the formatting toolbar/actions, right-click context menu, text/image clipboard paste, text/image drag/drop sample buttons, serialization/import/export buttons, and edit/display mode switch.

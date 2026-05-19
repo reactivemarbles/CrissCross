@@ -40,6 +40,8 @@ public class FormattedTextPresenter : TextBlock
     public static readonly StyledProperty<double> DefaultFontSizeProperty =
         AvaloniaProperty.Register<FormattedTextPresenter, double>(nameof(DefaultFontSize), 14);
 
+    private const string InlineObjectBoundarySentinel = "\u200B";
+
     private static readonly HttpClient HttpClient = new();
 
     /// <summary>
@@ -105,6 +107,8 @@ public class FormattedTextPresenter : TextBlock
 
             if (segment.IsImage)
             {
+                // Keep the preceding shaped text run splittable when Avalonia wraps before an embedded inline.
+                AppendInlineObjectBoundarySentinel();
                 var imageInline = CreateImageInline(segment);
                 if (imageInline is not null)
                 {
@@ -323,5 +327,29 @@ public class FormattedTextPresenter : TextBlock
         stream.CopyTo(buffer);
         buffer.Position = 0;
         return new Bitmap(buffer);
+    }
+
+    private void AppendInlineObjectBoundarySentinel()
+    {
+        if (Inlines is null)
+        {
+            return;
+        }
+
+        if (Inlines.Count > 0 && Inlines[^1] is Run run)
+        {
+            if (run.Text?.EndsWith(InlineObjectBoundarySentinel, StringComparison.Ordinal) != true)
+            {
+                run.Text += InlineObjectBoundarySentinel;
+            }
+
+            return;
+        }
+
+        Inlines.Add(new Run(InlineObjectBoundarySentinel)
+        {
+            Foreground = Brushes.Transparent,
+            FontSize = 1,
+        });
     }
 }
