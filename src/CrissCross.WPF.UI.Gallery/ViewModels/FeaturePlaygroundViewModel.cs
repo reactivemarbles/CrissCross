@@ -10,6 +10,8 @@ using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CrissCross.WPF.UI;
+using CrissCross.WPF.UI.Appearance;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
@@ -44,7 +46,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         _currentRange = CreateRange(DateTimeOffset.Now);
         _segmentState = new SegmentedSelectionState(CreateSegments(), "table");
         _stepperState = new StepperState(CreateSteps("review"), "review", StepperOrientation.Horizontal);
-        _themeState = new ThemePreferenceState(_selectedTheme, ThemeChoice.Dark, supportsHighContrast: true);
+        _themeState = CreateThemeState(_selectedTheme);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
         SearchCommand = ReactiveCommand.CreateFromTask<string>(SearchAsync);
@@ -208,7 +210,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
             }
 
             this.RaiseAndSetIfChanged(ref _selectedTheme, value);
-            ThemeState = new ThemePreferenceState(value, ThemeChoice.Dark, supportsHighContrast: true);
+            ThemeState = CreateThemeState(value);
         }
     }
 
@@ -287,6 +289,16 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         new StepDescriptor("review", "Review", currentKey == "review" ? StepStatus.Active : StepStatus.Pending),
         new StepDescriptor("publish", "Publish", StepStatus.Pending, canEnter: currentKey == "review")
     ];
+
+    private static ThemePreferenceState CreateThemeState(ThemeChoice selectedChoice) =>
+        new(selectedChoice, GetSystemThemeChoice(), supportsHighContrast: true);
+
+    private static ThemeChoice GetSystemThemeChoice() => new ThemeService().GetSystemTheme() switch
+    {
+        ApplicationTheme.Dark => ThemeChoice.Dark,
+        ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
+        _ => ThemeChoice.Light
+    };
 
     private async Task RunImportAsync(CancellationToken cancellationToken)
     {

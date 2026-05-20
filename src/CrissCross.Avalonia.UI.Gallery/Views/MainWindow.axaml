@@ -3,9 +3,34 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:nav="https://github.com/reactivemarbles/CrissCross"
+    xmlns:ui="using:CrissCross.Avalonia.UI.Controls"
     xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
     Name="mainNavHost"
     Title="CrissCross Avalonia UI Gallery"
     Width="1200"
     Height="800"
-    x:DataType="vm:MainViewModel" />
+    x:DataType="vm:MainViewModel">
+    <nav:NavigationWindow.Styles>
+        <Style Selector="nav|NavigationWindow">
+            <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource WindowForeground}" />
+        </Style>
+
+        <Style Selector="ui|Border.gallery-title">
+            <Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorSecondaryBrush}" />
+        </Style>
+
+        <Style Selector="ui|Border.gallery-navigation">
+            <Setter Property="Background" Value="{DynamicResource SolidBackgroundFillColorBaseBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        </Style>
+
+        <Style Selector="ui|Border.gallery-content">
+            <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+        </Style>
+
+        <Style Selector="ui|TextBlock.gallery-shell-text">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+    </nav:NavigationWindow.Styles>
+</nav:NavigationWindow>

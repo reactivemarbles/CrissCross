@@ -55,7 +55,7 @@
                                     <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
                                     <TextBlock
                                         FontSize="11"
-                                        Foreground="Gray"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                         Text="{Binding Description}"
                                         TextTrimming="CharacterEllipsis" />
                                 </StackPanel>

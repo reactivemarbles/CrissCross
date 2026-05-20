@@ -54,7 +54,7 @@
             <Border
                 Grid.Row="5"
                 Padding="10"
-                BorderBrush="Black"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1">
                 <ui:TextBlock
                     FontSize="14"

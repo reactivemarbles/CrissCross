@@ -149,13 +149,15 @@ public class ThemeSwitcher : Control
     /// <param name="choice">The requested theme choice or name.</param>
     public void ApplyChoice(object? choice)
     {
+        var themeService = ThemeService ?? new ThemeService();
         var selectedChoice = ParseChoice(choice);
+        SetCurrentValue(SystemChoiceProperty, ToThemeChoice(themeService.GetSystemTheme()));
         SetCurrentValue(SelectedChoiceProperty, selectedChoice);
 
         var state = CreateState();
         SetCurrentValue(CurrentStateProperty, state);
 
-        ApplyTheme(ThemeService ?? new ThemeService(), selectedChoice, state.EffectiveChoice);
+        ApplyTheme(themeService, selectedChoice, state.EffectiveChoice);
 
         if (ThemeChangedCommand?.CanExecute(selectedChoice) == true)
         {
@@ -194,6 +196,13 @@ public class ThemeSwitcher : Control
         ThemeChoice.Dark => ApplicationTheme.Dark,
         ThemeChoice.HighContrast => ApplicationTheme.HighContrast,
         _ => ApplicationTheme.Light
+    };
+
+    private static ThemeChoice ToThemeChoice(ApplicationTheme theme) => theme switch
+    {
+        ApplicationTheme.Dark => ThemeChoice.Dark,
+        ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
+        _ => ThemeChoice.Light
     };
 
     private sealed class ThemeSwitcherCommand : ICommand

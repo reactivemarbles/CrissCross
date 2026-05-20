@@ -303,8 +303,30 @@
     <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{StaticResource ControlFillColorDisabled}" />
     <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource TextFillColorPrimary}" />
     <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="{StaticResource TextFillColorDisabled}" />
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource ControlStrokeColorDefault}" />
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{StaticResource ControlStrokeColorSecondary}" />
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource SystemAccentColorPrimary}" />
     <SolidColorBrush x:Key="TextControlFocusedBorderBrush" Color="{StaticResource SystemAccentColorPrimary}" />
     <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="{StaticResource TextFillColorSecondary}" />
+
+    <!-- ComboBox -->
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource ControlFillColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="{StaticResource ControlFillColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{StaticResource ControlFillColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundDisabled" Color="{StaticResource ControlFillColorDisabled}" />
+    <SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource TextFillColorPrimary}" />
+    <SolidColorBrush x:Key="ComboBoxForegroundDisabled" Color="{StaticResource TextFillColorDisabled}" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource ControlStrokeColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="{StaticResource ControlStrokeColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushDisabled" Color="{StaticResource ControlStrokeColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxBorderBrushFocused" Color="{StaticResource SystemAccentColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxPlaceholderForeground" Color="{StaticResource TextFillColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="{StaticResource TextFillColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource AcrylicBackgroundFillColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{StaticResource SurfaceStrokeColorDefault}" />
+    <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{StaticResource SubtleFillColorSecondary}" />
+    <SolidColorBrush x:Key="ComboBoxItemForeground" Color="{StaticResource TextFillColorPrimary}" />
+    <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="{StaticResource TextFillColorPrimary}" />
 
     <!-- ContentDialog -->
     <SolidColorBrush x:Key="ContentDialogSmokeFill" Color="{StaticResource SmokeFillColorDefault}" />
@@ -319,11 +341,18 @@
     <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="{StaticResource TextFillColorPrimary}" />
     <SolidColorBrush x:Key="NavigationViewItemForegroundPressed" Color="{StaticResource TextFillColorSecondary}" />
     <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource SystemAccentColorPrimary}" />
+    <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{StaticResource LayerFillColorDefault}" />
+    <SolidColorBrush x:Key="NavigationViewItemSeparatorForeground" Color="{StaticResource DividerStrokeColorDefault}" />
     <SolidColorBrush x:Key="NavigationViewItemBackground" Color="{StaticResource SubtleFillColorTransparent}" />
     <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="{StaticResource SubtleFillColorSecondary}" />
     <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="{StaticResource SubtleFillColorSecondary}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed" Color="{StaticResource SubtleFillColorTertiary}" />
+    <SolidColorBrush x:Key="NavigationViewItemBorderBrush" Color="{StaticResource SubtleFillColorTransparent}" />
     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{StaticResource LayerFillColorDefault}" />
     <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="{StaticResource CardStrokeColorDefault}" />
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedLeftFluent" Color="{StaticResource ControlFillColorDefault}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundLeftFluent" Color="{StaticResource TextFillColorPrimary}" />
+    <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOverLeftFluent" Color="{StaticResource TextFillColorPrimary}" />
 
     <!-- Card -->
     <SolidColorBrush x:Key="CardBackground" Color="{StaticResource CardBackgroundFillColorDefault}" />

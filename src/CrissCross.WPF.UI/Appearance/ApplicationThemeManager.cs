@@ -33,6 +33,7 @@ public static class ApplicationThemeManager
     internal const string LibraryNamespace = "crisscross.wpf.ui;";
 
     internal const string ThemesDictionaryPath = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Theme/";
+    private const string ThemeDictionaryLookup = "/resources/theme/";
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
 
     /// <summary>
@@ -98,7 +99,7 @@ public static class ApplicationThemeManager
         }
 
         var isUpdated = appDictionaries.UpdateDictionary(
-            "theme",
+            ThemeDictionaryLookup,
             new Uri(ThemesDictionaryPath + themeDictionaryName + ".xaml", UriKind.Absolute));
 
 #if DEBUG
@@ -279,7 +280,7 @@ public static class ApplicationThemeManager
     private static void FetchApplicationTheme()
     {
         ResourceDictionaryManager appDictionaries = new(LibraryNamespace);
-        var themeDictionary = appDictionaries.GetDictionary("theme");
+        var themeDictionary = appDictionaries.GetDictionary(ThemeDictionaryLookup);
 
         if (themeDictionary == null)
         {
