@@ -25,7 +25,7 @@
                 <Border
                     Margin="0,0,12,12"
                     Padding="16"
-                    BorderBrush="#FFD0D0D0"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8">
                     <StackPanel>
@@ -63,7 +63,7 @@
                 <Border
                     Margin="0,0,0,12"
                     Padding="16"
-                    BorderBrush="#FFD0D0D0"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8">
                     <StackPanel>
@@ -93,7 +93,7 @@
                 <Border
                     Margin="0,0,12,12"
                     Padding="16"
-                    BorderBrush="#FFD0D0D0"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8">
                     <StackPanel>
@@ -116,7 +116,7 @@
                 <Border
                     Margin="0,0,0,12"
                     Padding="16"
-                    BorderBrush="#FFD0D0D0"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="8">
                     <StackPanel>
@@ -141,7 +141,7 @@
             <Border
                 Margin="0,8,0,0"
                 Padding="16"
-                BorderBrush="#FFD0D0D0"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="8">
                 <StackPanel>

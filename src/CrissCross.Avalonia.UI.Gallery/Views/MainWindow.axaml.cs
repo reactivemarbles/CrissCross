@@ -87,16 +87,16 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             // Title Bar using CrissCross Border
             var titleBorder = new UI.Controls.Border
             {
-                Background = Brush.Parse("#2D2D30"),
                 Padding = new Thickness(16, 12)
             };
+            titleBorder.Classes.Add("gallery-title");
             var titleText = new UI.Controls.TextBlock
             {
                 Text = "CrissCross Avalonia UI Gallery",
                 FontSize = 24,
-                FontWeight = FontWeight.Bold,
-                Foreground = Brushes.White
+                FontWeight = FontWeight.Bold
             };
+            titleText.Classes.Add("gallery-shell-text");
             titleBorder.Child = titleText;
             mainGrid.Children.Add(titleBorder);
             Grid.SetRow(titleBorder, 0);
@@ -111,10 +111,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             // Navigation Menu using CrissCross Border
             var navBorder = new UI.Controls.Border
             {
-                Background = Brush.Parse("#252526"),
-                BorderBrush = Brush.Parse("#3F3F46"),
                 BorderThickness = new Thickness(0, 0, 1, 0)
             };
+            navBorder.Classes.Add("gallery-navigation");
             var navScrollViewer = new ScrollViewer();
             var navStack = new UI.Controls.StackPanel { Margin = new Thickness(8) };
 
@@ -124,9 +123,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
                 Text = "Control Categories",
                 FontSize = 16,
                 FontWeight = FontWeight.Bold,
-                Foreground = Brushes.White,
                 Margin = new Thickness(8, 8, 8, 16)
             };
+            navHeader.Classes.Add("gallery-shell-text");
             navStack.Children.Add(navHeader);
 
             // Home button using CrissCross Button
@@ -205,10 +204,10 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             // Content Display Area with NavigationFrame from base class using CrissCross Border
             var contentBorder = new UI.Controls.Border
             {
-                Background = Brush.Parse("#1E1E1E"),
                 Padding = new Thickness(0),
                 Child = NavigationFrame
             };
+            contentBorder.Classes.Add("gallery-content");
             contentGrid.Children.Add(contentBorder);
             Grid.SetColumn(contentBorder, 1);
 

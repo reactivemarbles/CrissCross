@@ -31,7 +31,7 @@ public class ThemesDictionary : ResourceDictionary
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemesDictionary"/> class.
     /// </summary>
-    public ThemesDictionary() => SetSourceBasedOnSelectedTheme(ApplicationTheme.Dark);
+    public ThemesDictionary() => SetSourceBasedOnSelectedTheme(GetSystemApplicationTheme());
 
     /// <summary>
     /// Sets the default application theme.
@@ -40,6 +40,13 @@ public class ThemesDictionary : ResourceDictionary
     {
         set => SetSourceBasedOnSelectedTheme(value);
     }
+
+    private static ApplicationTheme GetSystemApplicationTheme() => ApplicationThemeManager.GetSystemTheme() switch
+    {
+        SystemTheme.Dark or SystemTheme.Glow or SystemTheme.CapturedMotion => ApplicationTheme.Dark,
+        SystemTheme.HCBlack or SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCWhite => ApplicationTheme.HighContrast,
+        _ => ApplicationTheme.Light
+    };
 
     private void SetSourceBasedOnSelectedTheme(ApplicationTheme? selectedApplicationTheme)
     {
