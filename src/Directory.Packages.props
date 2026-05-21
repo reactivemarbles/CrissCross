@@ -60,7 +60,7 @@
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.58" />
 
     <!-- Polyfill for .NET Framework -->
-    <PackageVersion Include="Polyfill" Version="10.5.1" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="Polyfill" Version="10.6.0" Condition="$(TargetFramework.StartsWith('net4'))" />
 
     <!-- Testing Packages -->
     <PackageVersion Include="TUnit" Version="1.44.39" Condition="$(IsTestProject)" />
