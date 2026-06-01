@@ -32,9 +32,9 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.60" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.70" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.60" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.70" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
