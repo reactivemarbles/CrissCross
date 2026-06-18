@@ -48,7 +48,7 @@
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.30" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.4.0" />
+    <PackageVersion Include="AngleSharp" Version="1.5.0" />
     <PackageVersion Include="AppBarButton.WPF" Version="1.0.2" />
     <PackageVersion Include="BBCode.WPF" Version="1.0.2" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="3.1.26" />
