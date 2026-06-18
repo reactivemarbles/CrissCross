@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <AvaloniaVersion>12.0.3</AvaloniaVersion>
+    <AvaloniaVersion>12.0.4</AvaloniaVersion>
     <SplatVersion>19.3.1</SplatVersion>
     <ReactiveUIVersion>23.2.27</ReactiveUIVersion>
     <WebViewVersion>1.0.3967.48</WebViewVersion>
