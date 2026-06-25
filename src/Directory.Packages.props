@@ -23,7 +23,7 @@
 
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.0.1" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.0.3" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WinForms" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
