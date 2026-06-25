@@ -16,7 +16,7 @@
     <PackageReference Include="NuGet.Packaging" Version="7.6.0" />
     <PackageReference Include="Nuke.Common" Version="10.1.0" />
     <PackageReference Include="CP.Nuke.BuildTools" Version="3.0.2" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.8" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.9" />
   </ItemGroup>
 
   <ItemGroup>
