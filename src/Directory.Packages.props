@@ -79,7 +79,7 @@
 
     <!-- Android Specific -->
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation" Version="1.11.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="1.11.0" />
+    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="1.11.2" />
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.11.2" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
   </ItemGroup>
