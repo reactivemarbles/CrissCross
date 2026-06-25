@@ -7,7 +7,7 @@
     <SplatVersion>19.3.1</SplatVersion>
     <ReactiveUIVersion>23.2.27</ReactiveUIVersion>
     <WebViewVersion>1.0.4022.49</WebViewVersion>
-    <DotNetVersion>10.0.8</DotNetVersion>
+    <DotNetVersion>10.0.9</DotNetVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,9 +32,9 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.70" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.71" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.70" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.71" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="!$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
