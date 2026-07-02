@@ -56,7 +56,7 @@
     <PackageVersion Include="CP.Extensions.Hosting.MainUIThread" Version="3.1.26" />
     <PackageVersion Include="CP.Xaml.Converters" Version="1.1.3" />
     <PackageVersion Include="Markdig" Version="1.3.0" />
-    <PackageVersion Include="ReactiveList" Version="4.0.48" />
+    <PackageVersion Include="ReactiveList" Version="5.0.7" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.58" />
 
     <!-- Polyfill for .NET Framework -->
