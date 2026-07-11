@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Layout;
 using ReactiveUI;
@@ -30,6 +31,9 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
 
     /// <summary>Stores the can Navigate Back Subject value.</summary>
     private readonly Signal<bool?> _canNavigateBackSubject = new();
+
+    /// <summary>Stores the resolved views in the same order as the public navigation stack.</summary>
+    private readonly List<IViewFor?> _navigationViews = [];
 
     /// <summary>Stores the current View Model value.</summary>
     private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
@@ -64,6 +68,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
             {
                 _activeViewModel = vm as IRxObject;
                 NavigationStack.Add(_activeViewModel?.GetType());
+                _navigationViews.Add(_currentView);
             }
 
             if (_currentView is not null)
@@ -156,7 +161,11 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     protected override Type StyleKeyOverride => typeof(ReactiveTransitioningContentControl);
 
     /// <summary>Clears the history.</summary>
-    public void ClearHistory() => NavigationStack.Clear();
+    public void ClearHistory()
+    {
+        NavigationStack.Clear();
+        _navigationViews.Clear();
+    }
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <typeparam name="T">The Type.</typeparam>
@@ -165,10 +174,20 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     public void Navigate<T>(string? contract = null, object? parameter = null)
         where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
+    /// <summary>Navigates a view model instance whose type is known at compile time.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void Navigate<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
@@ -191,10 +210,24 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
         InternalNavigate<T>(contract, parameter);
     }
 
+    /// <summary>Navigates a view model instance whose type is known at compile time and resets history.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void NavigateAndReset<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject
+    {
+        _resetStack = true;
+        InternalNavigate(viewModel, contract, parameter);
+    }
+
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
     public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
     {
         _resetStack = true;
@@ -258,6 +291,10 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
         while (NavigationStack.Count > 1)
         {
             NavigationStack.RemoveAt(0);
+            if (_navigationViews.Count > 1)
+            {
+                _navigationViews.RemoveAt(0);
+            }
         }
     }
 
@@ -295,8 +332,19 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
                 if (_navigateBack && _toViewModel is not null)
                 {
                     // Remove the current
-                    NavigationStack.RemoveAt(NavigationStack.Count - 1);
-                    _currentView = ViewLocator?.ResolveView(_toViewModel);
+                    var currentIndex = NavigationStack.Count - 1;
+                    NavigationStack.RemoveAt(currentIndex);
+                    if (_navigationViews.Count > currentIndex)
+                    {
+                        _navigationViews.RemoveAt(currentIndex);
+                    }
+
+                    _currentView = _navigationViews.Count > 0 ? _navigationViews[^1] : null;
+                    if (_currentView is not null)
+                    {
+                        _currentView.ViewModel = _toViewModel;
+                    }
+
                     _currentViewModel.OnNext(_toViewModel);
                     foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values.Where(x => x.Name != hostName))
                     {
@@ -306,6 +354,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
                 else if (_toViewModel is not null && _resetStack)
                 {
                     NavigationStack.Clear();
+                    _navigationViews.Clear();
                     _currentViewModel.OnNext(_toViewModel);
                 }
                 else if (_toViewModel is not null && _currentView is not null)
@@ -354,6 +403,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
 
         _canNavigateBackSubject.Dispose();
         _currentViewModel.Dispose();
+        _navigationViews.Clear();
     }
 
     /// <summary>Runs the internal Navigate operation.</summary>
@@ -361,14 +411,26 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
     private void InternalNavigate<T>(string? contract, object? parameter)
+        where T : class, IRxObject => InternalNavigate(AppLocator.Current.GetService<T>(contract), contract, parameter);
+
+    /// <summary>Runs typed navigation for a supplied view model instance.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The optional navigation contract.</param>
+    /// <param name="parameter">The optional navigation parameter.</param>
+    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
-        _toViewModel = AppLocator.Current.GetService<T>(contract);
+        _toViewModel = viewModel;
         _lastView = _currentView;
         var hostName = ResolveHostName();
 
-        // NOTE: This gets a new instance of the View
-        _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+        // The generic locator path is fully AOT-compatible because the view model type is known here.
+        _currentView = ViewLocator?.ResolveView<T>(contract);
+        if (_currentView is not null)
+        {
+            _currentView.ViewModel = _toViewModel;
+        }
 
         var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
@@ -385,6 +447,8 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
         _toViewModel = viewModel;

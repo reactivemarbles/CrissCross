@@ -20,6 +20,9 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <summary>Stores the can Navigate Back Subject value.</summary>
     private readonly Signal<bool?> _canNavigateBackSubject = new();
 
+    /// <summary>Stores the resolved views in the same order as the public navigation stack.</summary>
+    private readonly List<IViewFor?> _navigationViews = [];
+
     /// <summary>Stores the current View Model value.</summary>
     private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
 
@@ -59,6 +62,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
             {
                 _activeViewModel = vm as IRxObject;
                 NavigationStack.Add(_activeViewModel?.GetType());
+                _navigationViews.Add(_currentView);
             }
 
             if (_currentView is not null)
@@ -145,7 +149,11 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     public bool RequiresSetup => true;
 
     /// <summary>Clears the history.</summary>
-    public void ClearHistory() => NavigationStack.Clear();
+    public void ClearHistory()
+    {
+        NavigationStack.Clear();
+        _navigationViews.Clear();
+    }
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <typeparam name="T">The Type.</typeparam>
@@ -154,10 +162,22 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     public void Navigate<T>(string? contract = null, object? parameter = null)
         where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
+    /// <summary>Navigates a view model instance whose type is known at compile time.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void Navigate<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
@@ -180,10 +200,26 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         InternalNavigate<T>(contract, parameter);
     }
 
+    /// <summary>Navigates a view model instance whose type is known at compile time and resets history.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void NavigateAndReset<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject
+    {
+        _resetStack = true;
+        InternalNavigate(viewModel, contract, parameter);
+    }
+
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
     {
         _resetStack = true;
@@ -246,6 +282,10 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         while (NavigationStack.Count > 1)
         {
             NavigationStack.RemoveAt(0);
+            if (_navigationViews.Count > 1)
+            {
+                _navigationViews.RemoveAt(0);
+            }
         }
     }
 
@@ -285,10 +325,21 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
                 if (_navigateBack)
                 {
                     // Remove the current
-                    NavigationStack.RemoveAt(NavigationStack.Count - 1);
+                    var currentIndex = NavigationStack.Count - 1;
+                    NavigationStack.RemoveAt(currentIndex);
+                    if (_navigationViews.Count > currentIndex)
+                    {
+                        _navigationViews.RemoveAt(currentIndex);
+                    }
+
                     if (_toViewModel is not null)
                     {
-                        _currentView = ViewLocator?.ResolveView(_toViewModel);
+                        _currentView = _navigationViews.Count > 0 ? _navigationViews[_navigationViews.Count - 1] : null;
+                        if (_currentView is not null)
+                        {
+                            _currentView.ViewModel = _toViewModel;
+                        }
+
                         _currentViewModel.OnNext(_toViewModel);
                         foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != HostName).Select(x => x.Key))
                         {
@@ -299,6 +350,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
                 else if (_toViewModel is not null && _resetStack)
                 {
                     NavigationStack.Clear();
+                    _navigationViews.Clear();
                     _currentViewModel.OnNext(_toViewModel);
                 }
                 else if (_toViewModel is not null && _currentView is not null)
@@ -334,13 +386,24 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
     private void InternalNavigate<T>(string? contract, object? parameter)
+        where T : class, IRxObject => InternalNavigate(AppLocator.Current.GetService<T>(contract), contract, parameter);
+
+    /// <summary>Runs typed navigation for a supplied view model instance.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The navigation contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
-        _toViewModel = AppLocator.Current.GetService<T>(contract);
+        _toViewModel = viewModel;
         _lastView = _currentView;
 
-        // NOTE: This gets a new instance of the View
-        _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+        _currentView = ViewLocator?.ResolveView<T>(contract);
+        if (_currentView is not null)
+        {
+            _currentView.ViewModel = _toViewModel;
+        }
 
         var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
@@ -357,6 +420,10 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
         _toViewModel = viewModel;

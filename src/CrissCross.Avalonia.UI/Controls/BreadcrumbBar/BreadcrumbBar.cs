@@ -83,6 +83,8 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
     /// <param name="contract">The viewmodel contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
     /// <param name="breadcrumbItemContent">Content of the breadcrumb item.</param>
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
     public void NavigateTo(Type type, string? contract = null, object? parameter = null, string? breadcrumbItemContent = null)
     {
         if (string.IsNullOrEmpty(_hostName))

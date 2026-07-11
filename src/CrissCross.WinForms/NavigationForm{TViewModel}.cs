@@ -19,7 +19,7 @@ where TViewModel : class, IRxObject, new()
     public NavigationForm()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+        Load += OnLoad;
     }
 
     /// <inheritdoc/>
@@ -35,4 +35,10 @@ where TViewModel : class, IRxObject, new()
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Initializes the view model when the form loads.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="eventArgs">The event arguments.</param>
+    private void OnLoad(object? sender, EventArgs eventArgs) =>
+        ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new();
 }

@@ -1146,6 +1146,14 @@ public class ViewModelRoutedViewHostMixinsTests
             CanNavigateBack = NavigationStack.Count > 1;
         }
 
+        /// <summary>Provides typed instance navigation.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract value.</param>
+        /// <param name="parameter">The parameter value.</param>
+        public void Navigate<T>(T viewModel, string? contract = null, object? parameter = null)
+            where T : class, IRxObject => Navigate((IRxObject)viewModel, contract, parameter);
+
         /// <summary>Provides the Navigate member.</summary>
         /// <param name="viewModel">The viewModel value.</param>
         /// <param name="contract">The contract value.</param>
@@ -1182,6 +1190,14 @@ public class ViewModelRoutedViewHostMixinsTests
             NavigationStack.Add(typeof(T));
             CanNavigateBack = false;
         }
+
+        /// <summary>Provides typed instance navigation with a history reset.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The contract value.</param>
+        /// <param name="parameter">The parameter value.</param>
+        public void NavigateAndReset<T>(T viewModel, string? contract = null, object? parameter = null)
+            where T : class, IRxObject => NavigateAndReset((IRxObject)viewModel, contract, parameter);
 
         /// <summary>Provides the NavigateAndReset member.</summary>
         /// <param name="viewModel">The viewModel value.</param>

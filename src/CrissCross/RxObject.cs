@@ -12,10 +12,6 @@ namespace CrissCross;
 /// <seealso cref="CrissCross.IRxObject" />
 /// <seealso cref="ReactiveObject" />
 /// <seealso cref="IRxObject" />
-#if NET8_0_OR_GREATER
-[System.Diagnostics.CodeAnalysis.RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-[System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
-#endif
 public abstract class RxObject : ReactiveObject, IRxObject
 {
     /// <summary>Initializes a new instance of the <see cref="RxObject"/> class.</summary>

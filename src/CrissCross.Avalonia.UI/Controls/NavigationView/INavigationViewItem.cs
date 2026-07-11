@@ -44,6 +44,9 @@ public interface INavigationViewItem
     /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="T:Avalonia.Controls.Control"/>).</summary>
     Type? TargetPageType { get; set; }
 
+    /// <summary>Gets or sets the AOT-safe factory used when no page service is configured.</summary>
+    Func<object?>? TargetPageFactory => null;
+
     /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.</summary>
     Type? TargetViewModelType { get; set; }
 

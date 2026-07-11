@@ -66,16 +66,40 @@ public interface IViewModelRoutedViewHost : IActivatableView, IEnableLogger
     /// <summary>Setups this instance.</summary>
     void Setup();
 
+    /// <summary>Navigates to a view model type known at compile time.</summary>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The navigation contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    void Navigate<TViewModel>(TViewModel viewModel, string? contract = null, object? parameter = null)
+        where TViewModel : class, IRxObject;
+
     /// <summary>Navigates the specified contract.</summary>
     /// <param name="viewModel">The view model to navigate to.</param>
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null);
+
+    /// <summary>Navigates to a view model type known at compile time and clears history.</summary>
+    /// <typeparam name="TViewModel">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The navigation contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    void NavigateAndReset<TViewModel>(TViewModel viewModel, string? contract = null, object? parameter = null)
+        where TViewModel : class, IRxObject;
 
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model to navigate to.</param>
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null);
 
     /// <summary>Navigates the back.</summary>

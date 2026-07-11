@@ -5,7 +5,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 
@@ -123,27 +122,12 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
             SelectedDate = Date
         };
 
-        _ = _calendar.Bind(
-            global::Avalonia.Controls.Calendar.SelectedDateProperty,
-            new Binding(nameof(Date))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay
-            });
-        _ = _calendar.Bind(
-            global::Avalonia.Controls.Calendar.IsTodayHighlightedProperty,
-            new Binding(nameof(IsTodayHighlighted))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay
-            });
-        _ = _calendar.Bind(
-            global::Avalonia.Controls.Calendar.FirstDayOfWeekProperty,
-            new Binding(nameof(FirstDayOfWeek))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay
-            });
+        var calendar = _calendar;
+        _ = this.GetObservable(DateProperty).Subscribe(SyncCalendarDate);
+        _ = this.GetObservable(IsTodayHighlightedProperty).Subscribe(SyncCalendarTodayHighlight);
+        _ = calendar.GetObservable(global::Avalonia.Controls.Calendar.IsTodayHighlightedProperty).Subscribe(SyncPickerTodayHighlight);
+        _ = this.GetObservable(FirstDayOfWeekProperty).Subscribe(SyncCalendarFirstDayOfWeek);
+        _ = calendar.GetObservable(global::Avalonia.Controls.Calendar.FirstDayOfWeekProperty).Subscribe(SyncPickerFirstDayOfWeek);
 
         _calendar.SelectedDatesChanged += OnSelectedDatesChanged;
 
@@ -157,13 +141,9 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
             VerticalOffset = 1D,
         };
 
-        _ = _popup.Bind(
-            Popup.IsOpenProperty,
-            new Binding(nameof(IsCalendarOpen))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay
-            });
+        var popup = _popup;
+        _ = this.GetObservable(IsCalendarOpenProperty).Subscribe(SyncPopupOpenState);
+        _ = popup.GetObservable(Popup.IsOpenProperty).Subscribe(SyncPickerOpenState);
 
         // Add popup to visual tree
         var adornerLayer = AdornerLayer.GetAdornerLayer(this);
@@ -176,5 +156,89 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
             // Fallback: add to parent panel
             parent.Children.Add(_popup);
         }
+    }
+
+    /// <summary>Synchronizes the calendar date from the picker.</summary>
+    /// <param name="value">The selected date.</param>
+    private void SyncCalendarDate(DateTime? value)
+    {
+        if (_calendar?.SelectedDate == value)
+        {
+            return;
+        }
+
+        _calendar!.SelectedDate = value;
+    }
+
+    /// <summary>Synchronizes the calendar highlight setting from the picker.</summary>
+    /// <param name="value">The highlight setting.</param>
+    private void SyncCalendarTodayHighlight(bool value)
+    {
+        if (_calendar?.IsTodayHighlighted == value)
+        {
+            return;
+        }
+
+        _calendar!.IsTodayHighlighted = value;
+    }
+
+    /// <summary>Synchronizes the picker highlight setting from the calendar.</summary>
+    /// <param name="value">The highlight setting.</param>
+    private void SyncPickerTodayHighlight(bool value)
+    {
+        if (IsTodayHighlighted == value)
+        {
+            return;
+        }
+
+        SetCurrentValue(IsTodayHighlightedProperty, value);
+    }
+
+    /// <summary>Synchronizes the calendar first day of week from the picker.</summary>
+    /// <param name="value">The first day of week.</param>
+    private void SyncCalendarFirstDayOfWeek(DayOfWeek value)
+    {
+        if (_calendar?.FirstDayOfWeek == value)
+        {
+            return;
+        }
+
+        _calendar!.FirstDayOfWeek = value;
+    }
+
+    /// <summary>Synchronizes the picker first day of week from the calendar.</summary>
+    /// <param name="value">The first day of week.</param>
+    private void SyncPickerFirstDayOfWeek(DayOfWeek value)
+    {
+        if (FirstDayOfWeek == value)
+        {
+            return;
+        }
+
+        SetCurrentValue(FirstDayOfWeekProperty, value);
+    }
+
+    /// <summary>Synchronizes the popup open state from the picker.</summary>
+    /// <param name="value">The open state.</param>
+    private void SyncPopupOpenState(bool value)
+    {
+        if (_popup?.IsOpen == value)
+        {
+            return;
+        }
+
+        _popup!.IsOpen = value;
+    }
+
+    /// <summary>Synchronizes the picker open state from the popup.</summary>
+    /// <param name="value">The open state.</param>
+    private void SyncPickerOpenState(bool value)
+    {
+        if (IsCalendarOpen == value)
+        {
+            return;
+        }
+
+        SetCurrentValue(IsCalendarOpenProperty, value);
     }
 }

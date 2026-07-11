@@ -751,11 +751,18 @@ public class NavigationView : TemplatedControl, INavigationView
                 ?? throw new InvalidOperationException($"GetService returned null for {viewItem.TargetPageType}");
         }
 
-        return _pageService is not null ? _pageService.GetPage(viewItem.TargetPageType)
-                ?? throw new InvalidOperationException($"GetPage returned null for {viewItem.TargetPageType}") : _cache.Remember(
-            viewItem.TargetPageType,
-            viewItem.NavigationCacheMode,
-            () => Activator.CreateInstance(viewItem.TargetPageType))
+        if (_pageService is not null)
+        {
+            return _pageService.GetPage(viewItem.TargetPageType)
+                ?? throw new InvalidOperationException($"GetPage returned null for {viewItem.TargetPageType}");
+        }
+
+        if (viewItem.TargetPageFactory is null)
+        {
+            throw new InvalidOperationException($"No page service or AOT-safe page factory is configured for {viewItem.TargetPageType}.");
+        }
+
+        return _cache.Remember(viewItem.TargetPageType, viewItem.NavigationCacheMode, viewItem.TargetPageFactory)
             ?? throw new ArgumentNullException($"Unable to create instance of {viewItem.TargetPageType}");
     }
 

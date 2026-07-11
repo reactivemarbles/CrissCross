@@ -86,6 +86,31 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(navigationView.IsBackEnabled).IsFalse();
     }
 
+    /// <summary>Verifies that Avalonia navigation uses the configured AOT-safe page factory.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task AvaloniaNavigate_WhenPageFactoryIsConfigured_UsesFactory()
+    {
+        var factoryCalls = 0;
+        var item = new AvaloniaControls.NavigationViewItem(
+            "Test page",
+            typeof(AvaloniaTestPage),
+            () =>
+            {
+                factoryCalls++;
+                return new AvaloniaTestPage();
+            });
+        var navigationView = new TestAvaloniaNavigationView();
+        GetFieldValue<Dictionary<Type, AvaloniaControls.INavigationViewItem>>(
+            navigationView,
+            "_pageTypeNavigationViewsDictionary")[typeof(AvaloniaTestPage)] = item;
+
+        var navigated = navigationView.Navigate(typeof(AvaloniaTestPage));
+
+        await Assert.That(navigated).IsTrue();
+        await Assert.That(factoryCalls).IsEqualTo(1);
+    }
+
     /// <summary>Provides the SeedWpfAlreadyCurrentJournalMove member.</summary>
     /// <param name="navigationView">The navigationView value.</param>
     /// <param name="item">The item value.</param>

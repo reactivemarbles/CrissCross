@@ -21,8 +21,7 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
         .Register<NavigationUserControl<TViewModel>, TViewModel?>(nameof(ViewModel));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.</summary>
-    public NavigationUserControl() =>
-        this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+    public NavigationUserControl() => AttachedToVisualTree += OnAttachedToVisualTree;
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;
@@ -40,4 +39,10 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Initializes the view model when the control enters a visual tree.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="eventArgs">The visual-tree attachment event arguments.</param>
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs eventArgs) =>
+        ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new();
 }

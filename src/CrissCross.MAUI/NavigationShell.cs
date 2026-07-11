@@ -17,10 +17,6 @@ namespace CrissCross.MAUI;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IViewModelRoutedViewHost" />
 /// <seealso cref="IUseNavigation" />
-#if NET8_0_OR_GREATER
-[RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-[RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
-#endif
 public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedViewHost, IUseNavigation, IDisposable
 {
     /// <summary>The navigate back is enabled property.</summary>
@@ -51,6 +47,9 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
 
     /// <summary>Stores the can Navigate Back Subject value.</summary>
     private readonly Signal<bool?> _canNavigateBackSubject = new();
+
+    /// <summary>Stores resolved views in the same order as the view model navigation stack.</summary>
+    private readonly List<IViewFor?> _navigationViews = [];
 
     /// <summary>Stores the current View Model value.</summary>
     private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
@@ -91,10 +90,15 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
                 if (!_navigateBack)
                 {
                     NavigationStack.Add(_activeViewModel?.GetType());
+                    _navigationViews.Add(_currentView);
                 }
                 else if (NavigationStack?.Count > 1)
                 {
                     _ = NavigationStack.Remove(NavigationStack.Last());
+                    if (_navigationViews.Count > 1)
+                    {
+                        _navigationViews.RemoveAt(_navigationViews.Count - 1);
+                    }
                 }
             }
 
@@ -179,7 +183,11 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
     public IViewLocator? ViewLocator { get; set; }
 
     /// <summary>Clears the history.</summary>
-    public void ClearHistory() => NavigationStack.Clear();
+    public void ClearHistory()
+    {
+        NavigationStack.Clear();
+        _navigationViews.Clear();
+    }
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <typeparam name="T">The Type.</typeparam>
@@ -188,10 +196,22 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
     public void Navigate<T>(string? contract = null, object? parameter = null)
         where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
+    /// <summary>Navigates a view model instance whose type is known at compile time.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void Navigate<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+
     /// <summary>Navigates the specified contract.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+#if NET8_0_OR_GREATER
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
@@ -214,10 +234,26 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
         InternalNavigate<T>(contract, parameter);
     }
 
+    /// <summary>Navigates a view model instance whose type is known at compile time and resets history.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The parameter.</param>
+    public void NavigateAndReset<T>(T viewModel, string? contract = null, object? parameter = null)
+        where T : class, IRxObject
+    {
+        _resetStack = true;
+        InternalNavigate(viewModel, contract, parameter);
+    }
+
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
+#if NET8_0_OR_GREATER
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+#endif
     public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
     {
         _resetStack = true;
@@ -282,6 +318,10 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
         while (NavigationStack.Count > 1)
         {
             NavigationStack.RemoveAt(0);
+            if (_navigationViews.Count > 1)
+            {
+                _navigationViews.RemoveAt(0);
+            }
         }
     }
 
@@ -334,6 +374,10 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
                             if (NavigationStack.Count > 1)
                             {
                                 NavigationStack.RemoveAt(NavigationStack.Count - 1);
+                                if (_navigationViews.Count > 1)
+                                {
+                                    _navigationViews.RemoveAt(_navigationViews.Count - 1);
+                                }
                             }
 
                             CanNavigateBack = NavigationStack?.Count > 1;
@@ -359,6 +403,7 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
                         if (navigatingForward && page.ViewModel is IRxObject)
                         {
                             NavigationStack?.Add(page.ViewModel.GetType());
+                            _navigationViews.Add(page);
                         }
                     }
                 }
@@ -394,7 +439,13 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
                     {
                         if (_toViewModel is not null)
                         {
-                            _currentView = ViewLocator?.ResolveView(_toViewModel);
+                            var previousIndex = _navigationViews.Count - PreviousViewModelStackOffset;
+                            _currentView = previousIndex >= 0 ? _navigationViews[previousIndex] : null;
+                            if (_currentView is not null)
+                            {
+                                _currentView.ViewModel = _toViewModel;
+                            }
+
                             _currentViewModel.OnNext(_toViewModel);
                             foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != Name).Select(x => x.Key))
                             {
@@ -405,6 +456,7 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
                     else if (_toViewModel is not null && _resetStack)
                     {
                         NavigationStack.Clear();
+                        _navigationViews.Clear();
                         _currentViewModel.OnNext(_toViewModel);
                     }
                     else if (_toViewModel is not null && _currentView is not null)
@@ -516,14 +568,25 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
     private void InternalNavigate<T>(string? contract, object? parameter)
+        where T : class, IRxObject => InternalNavigate(AppLocator.Current.GetService<T>(contract), contract, parameter);
+
+    /// <summary>Runs typed navigation for a supplied view model instance.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The optional navigation contract.</param>
+    /// <param name="parameter">The optional navigation parameter.</param>
+    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
         _userInstigated = true;
-        _toViewModel = AppLocator.Current.GetService<T>(contract);
+        _toViewModel = viewModel;
         _lastView = _currentView;
 
-        // NOTE: This gets a new instance of the View
-        _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+        _currentView = ViewLocator?.ResolveView<T>(contract);
+        if (_currentView is not null)
+        {
+            _currentView.ViewModel = _toViewModel;
+        }
 
         var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
@@ -540,6 +603,8 @@ public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedVi
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
+    [RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
         _userInstigated = true;

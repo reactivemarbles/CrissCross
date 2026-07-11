@@ -21,8 +21,7 @@ public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewMode
         .Register<NavigationWindow<TViewModel>, TViewModel?>(nameof(ViewModel));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationWindow{TViewModel}"/> class.</summary>
-    public NavigationWindow() =>
-        this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+    public NavigationWindow() => AttachedToVisualTree += OnAttachedToVisualTree;
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;
@@ -40,4 +39,10 @@ public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewMode
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Initializes the view model when the window enters a visual tree.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="eventArgs">The visual-tree attachment event arguments.</param>
+    private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs eventArgs) =>
+        ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new();
 }

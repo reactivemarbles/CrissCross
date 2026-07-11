@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 namespace CrissCross.Avalonia.UI.Storage;
 
 /// <summary>An implementation of IStore that saves data to a JSON file.</summary>
+[System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Arbitrary runtime value types require dynamic JSON serialization metadata.")]
+[System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Arbitrary runtime value types and assembly metadata may be removed by trimming.")]
 public class JsonFileStore : IStore
 {
     /// <summary>Name of the serialized type metadata property.</summary>

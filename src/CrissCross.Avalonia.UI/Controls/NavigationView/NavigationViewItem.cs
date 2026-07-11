@@ -100,6 +100,13 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     public NavigationViewItem(string name, Type targetPageType)
         : this(targetPageType) => Content = name;
 
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="targetPageType">Type of the target page.</param>
+    /// <param name="targetPageFactory">The AOT-safe target page factory.</param>
+    public NavigationViewItem(string name, Type targetPageType, Func<object?> targetPageFactory)
+        : this(name, targetPageType) => TargetPageFactory = targetPageFactory;
+
     /// <inheritdoc/>
     public new event EventHandler<RoutedEventArgs>? Click;
 
@@ -164,6 +171,9 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         get => GetValue(TargetPageTypeProperty);
         set => SetValue(TargetPageTypeProperty, value);
     }
+
+    /// <inheritdoc/>
+    public Func<object?>? TargetPageFactory { get; set; }
 
     /// <inheritdoc/>
     public Type? TargetViewModelType

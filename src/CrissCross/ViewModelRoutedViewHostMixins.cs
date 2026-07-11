@@ -213,6 +213,10 @@ public static class ViewModelRoutedViewHostMixins
         /// <param name="hostName">Name of the host.</param>
         /// <param name="contract">The contract.</param>
         /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
+#endif
         public void NavigateToView(Type rxObject, string? hostName = "", string? contract = null, object? parameter = null)
         {
             ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
@@ -347,6 +351,10 @@ public static class ViewModelRoutedViewHostMixins
         /// <param name="rxObject">The view model type.</param>
         /// <param name="contract">The contract.</param>
         /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
+#endif
         public void NavigateToView(Type rxObject, string? contract = null, object? parameter = null)
         {
             ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
@@ -551,6 +559,10 @@ public static class ViewModelRoutedViewHostMixins
     /// <param name="rxObject">The view model type.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
+#endif
     private static void NavigateResolvedView(IViewModelRoutedViewHost viewHost, Type rxObject, string? contract, object? parameter)
     {
         ThrowHelper.ThrowIfNull(rxObject, nameof(rxObject));
