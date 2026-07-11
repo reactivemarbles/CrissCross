@@ -11,12 +11,8 @@ namespace CrissCross.WPF.UI.Test.ViewModels;
 /// <seealso cref="INavigationAware" />
 public class SettingsViewModel : RxObject, INavigationAware
 {
+    /// <summary>Tracks whether application settings have been loaded.</summary>
     private bool _isInitialized;
-
-    private CrissCross.WPF.UI.Appearance.ApplicationTheme _currentApplicationTheme = CrissCross.WPF.UI
-        .Appearance
-        .ApplicationTheme
-        .Unknown;
 
     /// <summary>Initializes a new instance of the <see cref="SettingsViewModel"/> class.</summary>
     public SettingsViewModel() => ChangeThemeCommand = ReactiveCommand.Create<string>(OnChangeTheme);
@@ -44,17 +40,20 @@ public class SettingsViewModel : RxObject, INavigationAware
     /// </value>
     public CrissCross.WPF.UI.Appearance.ApplicationTheme CurrentApplicationTheme
     {
-        get => _currentApplicationTheme;
-        set => this.RaiseAndSetIfChanged(ref _currentApplicationTheme, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
+= CrissCross.WPF.UI.Appearance.ApplicationTheme.Unknown;
 
     /// <summary>Method triggered when the class is navigated.</summary>
     public void OnNavigatedTo()
     {
-        if (!_isInitialized)
+        if (_isInitialized)
         {
-            InitializeViewModel();
+            return;
         }
+
+        InitializeViewModel();
     }
 
     /// <summary>Method triggered when the navigation leaves the current class.</summary>
@@ -62,9 +61,12 @@ public class SettingsViewModel : RxObject, INavigationAware
     {
     }
 
+    /// <summary>Gets the executing assembly version.</summary>
+    /// <returns>The formatted assembly version.</returns>
     private static string GetAssemblyVersion() =>
         System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
 
+    /// <summary>Loads the current application settings.</summary>
     private void InitializeViewModel()
     {
         CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationThemeManager.GetAppTheme();
@@ -73,6 +75,8 @@ public class SettingsViewModel : RxObject, INavigationAware
         _isInitialized = true;
     }
 
+    /// <summary>Applies the requested application theme.</summary>
+    /// <param name="parameter">The requested theme key.</param>
     private void OnChangeTheme(string parameter)
     {
         switch (parameter)

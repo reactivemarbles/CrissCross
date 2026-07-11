@@ -17,8 +17,8 @@ public partial class MainView
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
         });
     }
 }

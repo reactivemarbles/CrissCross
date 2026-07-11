@@ -13,6 +13,16 @@ namespace CrissCross.WPF.UI.Test.ViewModels;
 /// <seealso cref="INavigationAware" />
 public class DataViewModel : RxObject, INavigationAware
 {
+    /// <summary>The number of colors generated for the sample.</summary>
+    private const int GeneratedColorCount = 8192;
+
+    /// <summary>The alpha channel used by generated colors.</summary>
+    private const byte GeneratedColorAlpha = 200;
+
+    /// <summary>The exclusive upper bound for generated color channels.</summary>
+    private const int GeneratedChannelUpperBound = 250;
+
+    /// <summary>Tracks whether sample data has been generated.</summary>
     private bool _isInitialized;
 
     /// <summary>Gets or sets the colors.</summary>
@@ -28,10 +38,12 @@ public class DataViewModel : RxObject, INavigationAware
     /// <summary>Method triggered when the class is navigated.</summary>
     public void OnNavigatedTo()
     {
-        if (!_isInitialized)
+        if (_isInitialized)
         {
-            InitializeViewModel();
+            return;
         }
+
+        InitializeViewModel();
     }
 
     /// <summary>Method triggered when the navigation leaves the current class.</summary>
@@ -39,6 +51,7 @@ public class DataViewModel : RxObject, INavigationAware
     {
     }
 
+    /// <summary>Generates the sample color collection.</summary>
     private void InitializeViewModel()
     {
         using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
@@ -53,17 +66,17 @@ public class DataViewModel : RxObject, INavigationAware
             return (byte)(min + (value % (max - min)));
         }
 
-        for (var i = 0; i < 8192; i++)
+        for (var i = 0; i < GeneratedColorCount; i++)
         {
             colorCollection.Add(
                 new DataColor
                 {
                     Color = new SolidColorBrush(
                         Color.FromArgb(
-                            (byte)200,
-                            GetRandomByte(0, 250),
-                            GetRandomByte(0, 250),
-                            GetRandomByte(0, 250)))
+                            GeneratedColorAlpha,
+                            GetRandomByte(0, GeneratedChannelUpperBound),
+                            GetRandomByte(0, GeneratedChannelUpperBound),
+                            GetRandomByte(0, GeneratedChannelUpperBound)))
                 });
         }
 

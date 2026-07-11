@@ -34,7 +34,7 @@ public partial class MainWindow : INavigationWindow
 
         InitializeComponent();
 
-        Breadcrumb.SetupNavigation("mainWindow");
+        Breadcrumb.SetupNavigation(nameof(mainWindow));
         Navigation = Breadcrumb;
 
         SetPageService(pageService);

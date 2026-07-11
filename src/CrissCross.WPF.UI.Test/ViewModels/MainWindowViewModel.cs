@@ -11,20 +11,8 @@ namespace CrissCross.WPF.UI.Test.ViewModels;
 /// <seealso cref="RxObject" />
 public class MainWindowViewModel : RxObject
 {
-    private bool _isInitialized;
-
-    private ObservableCollection<object> _navigationItems = [];
-
-    private ObservableCollection<MenuItem> _trayMenuItems = [];
-
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel"/> class.</summary>
-    public MainWindowViewModel()
-    {
-        if (!_isInitialized)
-        {
-            InitializeViewModel();
-        }
-    }
+    public MainWindowViewModel() => InitializeViewModel();
 
     /// <summary>Gets or sets the application title.</summary>
     /// <value>
@@ -43,9 +31,10 @@ public class MainWindowViewModel : RxObject
     /// </value>
     public ObservableCollection<object> NavigationItems
     {
-        get => _navigationItems;
-        set => this.RaiseAndSetIfChanged(ref _navigationItems, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
+= [];
 
     /// <summary>Gets or sets the navigation footer.</summary>
     /// <value>
@@ -64,10 +53,12 @@ public class MainWindowViewModel : RxObject
     /// </value>
     public ObservableCollection<MenuItem> TrayMenuItems
     {
-        get => _trayMenuItems;
-        set => this.RaiseAndSetIfChanged(ref _trayMenuItems, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
+= [];
 
+    /// <summary>Populates the initial navigation and tray menu state.</summary>
     private void InitializeViewModel()
     {
         ApplicationTitle = "CrissCross.WPF.UI Demo";
@@ -108,7 +99,5 @@ public class MainWindowViewModel : RxObject
         [
             new MenuItem { Header = "Home", Tag = "tray_home" }
         ];
-
-        _isInitialized = true;
     }
 }

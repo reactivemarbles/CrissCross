@@ -36,7 +36,7 @@ public class EnumToBooleanConverter : IValueConverter
             throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum");
         }
 
-        var enumValue = Enum.Parse(typeof(CrissCross.WPF.UI.Appearance.ApplicationTheme), enumString);
+        var enumValue = Enum.Parse<CrissCross.WPF.UI.Appearance.ApplicationTheme>(enumString);
 
         return enumValue.Equals(value);
     }
@@ -57,6 +57,6 @@ public class EnumToBooleanConverter : IValueConverter
             throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
         }
 
-        return Enum.Parse(typeof(CrissCross.WPF.UI.Appearance.ApplicationTheme), enumString);
+        return Enum.Parse<CrissCross.WPF.UI.Appearance.ApplicationTheme>(enumString);
     }
 }

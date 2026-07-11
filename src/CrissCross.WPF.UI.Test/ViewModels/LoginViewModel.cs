@@ -10,17 +10,18 @@ namespace CrissCross.WPF.UI.Test;
 /// <seealso cref="CrissCross.RxObject" />
 public class LoginViewModel : RxObject
 {
-
     /// <summary>Initializes a new instance of the <see cref="LoginViewModel"/> class.</summary>
     public LoginViewModel() =>
         LoginCommand = ReactiveCommand.Create(() =>
         {
             // This is a placeholder for the actual login logic
-            if (Password == "1234" && Username == "User")
+            if (Password != "1234" || Username != "User")
             {
-                Password = string.Empty;
-                Username = string.Empty;
+                return;
             }
+
+            Password = string.Empty;
+            Username = string.Empty;
         });
 
     /// <summary>Gets the login command.</summary>

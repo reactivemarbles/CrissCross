@@ -12,6 +12,9 @@ namespace CrissCross.Avalonia.Test.Views;
 /// <seealso cref="Window" />
 public partial class MainWindow : NavigationWindow<MainWindowViewModel>
 {
+    /// <summary>The navigation button height.</summary>
+    private const double NavigationButtonHeight = 30;
+
     /// <summary>Provides the navigation back button.</summary>
     private Button? _navBack;
 
@@ -57,7 +60,7 @@ public partial class MainWindow : NavigationWindow<MainWindowViewModel>
             {
                 Content = "Back",
                 Name = "NavBack",
-                Height = 30
+                Height = NavigationButtonHeight
             };
             grid.Children.Add(_navBack);
             Grid.SetColumn(_navBack, 0);

@@ -8,18 +8,21 @@ using Splat;
 namespace CrissCross.WPF.UI.CC_Nav.Test.Views;
 
 /// <summary>Interaction logic for MainView.xaml.</summary>
-public class BrowserView : IUseHostedNavigation
+public partial class BrowserView : IUseHostedNavigation
 {
+    /// <summary>The delay before navigating to the entered URL.</summary>
+    private const double WebUrlThrottleSeconds = 0.8;
+
     /// <summary>Initializes a new instance of the <see cref="BrowserView"/> class.</summary>
     public BrowserView()
     {
-        _ = InitializeComponent();
+        InitializeComponent();
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
-            this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
-            this.WhenAnyValue(x => x.ViewModel!.WebUrl)
-                .Throttle(TimeSpan.FromSeconds(0.8), RxSchedulers.TaskpoolScheduler)
+            _ = this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
+            _ = this.WhenAnyValue(x => x.ViewModel!.WebUrl)
+                .Throttle(TimeSpan.FromSeconds(WebUrlThrottleSeconds), RxSchedulers.TaskpoolScheduler)
                 .DistinctUntilChanged()
                 .Where(query => !string.IsNullOrWhiteSpace(query))
                 .ObserveOn(RxSchedulers.MainThreadScheduler)

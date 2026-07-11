@@ -17,14 +17,14 @@ public class MainViewModel : RxObject
             {
                 GotoFirst = ReactiveCommand.Create(() =>
                 {
-                    this.NavigateToView<MainViewModel>("SecondForm");
-                    this.NavigateToView<FirstViewModel>("MainForm");
+                    this.NavigateToView<MainViewModel>(nameof(SecondForm));
+                    this.NavigateToView<FirstViewModel>(nameof(MainForm));
                 });
 
                 GotoMain = ReactiveCommand.Create(() =>
                 {
-                    this.NavigateToView<MainViewModel>("MainForm");
-                    this.NavigateToView<FirstViewModel>("SecondForm");
+                    this.NavigateToView<MainViewModel>(nameof(MainForm));
+                    this.NavigateToView<FirstViewModel>(nameof(SecondForm));
                 });
             });
 

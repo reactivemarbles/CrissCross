@@ -11,6 +11,9 @@ namespace CrissCross.Avalonia.Test.Views;
 /// <summary>MainUserControl member.</summary>
 public partial class MainUserControl : NavigationUserControl<MainWindowViewModel>
 {
+    /// <summary>The navigation button height.</summary>
+    private const double NavigationButtonHeight = 30;
+
     /// <summary>Provides the navigation back button.</summary>
     private Button? _navBack;
 
@@ -56,7 +59,7 @@ public partial class MainUserControl : NavigationUserControl<MainWindowViewModel
             {
                 Content = "Back",
                 Name = "NavBack",
-                Height = 30
+                Height = NavigationButtonHeight
             };
             grid.Children.Add(_navBack);
             Grid.SetColumn(_navBack, 0);

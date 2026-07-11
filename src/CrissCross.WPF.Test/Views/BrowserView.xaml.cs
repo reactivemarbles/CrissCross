@@ -11,6 +11,9 @@ namespace CrissCross.WPF.Test.Views;
 /// <summary>Interaction logic for MainView.xaml.</summary>
 public partial class BrowserView : IUseHostedNavigation
 {
+    /// <summary>The delay before navigating to the entered URL.</summary>
+    private const double WebUrlThrottleSeconds = 0.8;
+
     /// <summary>Initializes a new instance of the <see cref="BrowserView"/> class.</summary>
     public BrowserView()
     {
@@ -20,7 +23,7 @@ public partial class BrowserView : IUseHostedNavigation
             ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
             _ = this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
             _ = this.WhenAnyValue(x => x.ViewModel!.WebUrl)
-                .Throttle(TimeSpan.FromSeconds(0.8), RxSchedulers.TaskpoolScheduler)
+                .Throttle(TimeSpan.FromSeconds(WebUrlThrottleSeconds), RxSchedulers.TaskpoolScheduler)
                 .DistinctUntilChanged()
                 .Where(query => !string.IsNullOrWhiteSpace(query))
                 .ObserveOn(RxSchedulers.MainThreadScheduler)

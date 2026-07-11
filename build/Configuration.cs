@@ -9,4 +9,6 @@ public class Configuration : Enumeration
 
     public static implicit operator string(Configuration configuration) =>
         configuration?.Value;
+
+    public override string ToString() => Value;
 }

@@ -7,11 +7,11 @@ using System.Windows.Media;
 namespace CrissCross.WPF.UI.Test.Models;
 
 /// <summary>DataColor member.</summary>
-public record struct DataColor
+public readonly record struct DataColor
 {
     /// <summary>Gets or sets the color.</summary>
     /// <value>
     /// The color.
     /// </value>
-    public Brush Color { get; set; }
+    public Brush Color { get; init; }
 }

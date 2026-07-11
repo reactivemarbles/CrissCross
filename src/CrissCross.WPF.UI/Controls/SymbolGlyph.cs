@@ -18,23 +18,11 @@ public static class SymbolGlyph
     /// <returns>Symbol Regular.</returns>
     public static SymbolRegular Parse(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return DefaultIcon;
-        }
-
-        try
-        {
-            return Enum.Parse<SymbolRegular>(name);
-        }
-        catch (Exception)
-        {
 #if DEBUG
-            throw;
+        return string.IsNullOrEmpty(name) ? DefaultIcon : Enum.Parse<SymbolRegular>(name);
 #else
-            return DefaultIcon;
+        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolRegular>(name, out var symbol) ? symbol : DefaultIcon;
 #endif
-        }
     }
 
     /// <summary>Finds icon based on name.</summary>
@@ -42,22 +30,10 @@ public static class SymbolGlyph
     /// <returns>Symbol Regular.</returns>
     public static SymbolFilled ParseFilled(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return DefaultFilledIcon;
-        }
-
-        try
-        {
-            return Enum.Parse<SymbolFilled>(name);
-        }
-        catch (Exception)
-        {
 #if DEBUG
-            throw;
+        return string.IsNullOrEmpty(name) ? DefaultFilledIcon : Enum.Parse<SymbolFilled>(name);
 #else
-            return DefaultFilledIcon;
+        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolFilled>(name, out var symbol) ? symbol : DefaultFilledIcon;
 #endif
-        }
     }
 }

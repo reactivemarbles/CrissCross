@@ -17,15 +17,9 @@ public class MainViewModel : RxObject
         this.BuildComplete(() =>
             {
                 DisplayName = "Main View";
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: "First View");
-                });
+                GotoFirst = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: "First View"));
 
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: DisplayName);
-                });
+                GotoMain = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: DisplayName));
             });
 
     /// <summary>Gets the goto first.</summary>

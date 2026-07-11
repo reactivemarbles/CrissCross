@@ -12,20 +12,13 @@ namespace CrissCross.WPF.UI.CC_Nav.Test;
 /// <seealso cref="CrissCross.RxObject" />
 public class BrowserViewModel : RxObject
 {
-
     /// <summary>Initializes a new instance of the <see cref="BrowserViewModel"/> class.</summary>
     public BrowserViewModel() =>
         this.BuildComplete(() =>
         {
-            GotoMain = ReactiveCommand.Create(() =>
-            {
-                MainWindow.Navigation?.NavigateToView<MainViewModel>("mainWindow");
-            });
+            GotoMain = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateToView<MainViewModel>("mainWindow"));
 
-            GotoFirst = ReactiveCommand.Create(() =>
-            {
-                MainWindow.Navigation?.NavigateToView<FirstViewModel>("mainWindow");
-            });
+            GotoFirst = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateToView<FirstViewModel>("mainWindow"));
             WebUrl = "https://www.aicsolutions.com";
         });
 
