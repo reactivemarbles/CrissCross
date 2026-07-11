@@ -9,6 +9,9 @@ namespace CrissCross.Avalonia.UI;
 /// <summary>A service that provides methods related to displaying the <see cref="Snackbar"/>.</summary>
 public class SnackbarService : ISnackbarService
 {
+    /// <summary>Provides the DefaultTimeoutSeconds member.</summary>
+    private const int DefaultTimeoutSeconds = 5;
+
     /// <summary>Provides the _presenter member.</summary>
     private SnackbarPresenter? _presenter;
 
@@ -16,7 +19,7 @@ public class SnackbarService : ISnackbarService
     private Snackbar? _snackbar;
 
     /// <inheritdoc />
-    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(5);
+    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(DefaultTimeoutSeconds);
 
     /// <inheritdoc />
     public void SetSnackbarPresenter(SnackbarPresenter contentPresenter) => _presenter = contentPresenter;

@@ -18,6 +18,75 @@ namespace CrissCross.NavigationView.Tests;
 /// <summary>Comprehensive feature coverage for the Avalonia RichTextBox control surface.</summary>
 public sealed class RichTextBoxFeatureTests
 {
+    /// <summary>The rendered start offset for the word Hello.</summary>
+    private const int HelloStartOffset = 0;
+
+    /// <summary>The rendered length of the word Hello.</summary>
+    private const int HelloLength = 5;
+
+    /// <summary>The rendered start offset for the word world.</summary>
+    private const int WorldStartOffset = 6;
+
+    /// <summary>The rendered length of the word world.</summary>
+    private const int WorldLength = 5;
+
+    /// <summary>The styled font size encoded in the parsed HTML fixture.</summary>
+    private const int ParsedStyledFontSize = 18;
+
+    /// <summary>The styled image width encoded in the parsed HTML fixture.</summary>
+    private const int ParsedImageWidth = 40;
+
+    /// <summary>The styled image height encoded in the parsed HTML fixture.</summary>
+    private const int ParsedImageHeight = 30;
+
+    /// <summary>The font size applied by the style command test.</summary>
+    private const int StyleCommandFontSize = 20;
+
+    /// <summary>The rendered length of the mixed bold and plain text selection.</summary>
+    private const int MixedSelectionLength = 10;
+
+    /// <summary>The rendered document length after inserting an image and trailing text.</summary>
+    private const int ImageDropDocumentLength = 8;
+
+    /// <summary>The test control width used for hit testing.</summary>
+    private const int HitTestWidth = 240;
+
+    /// <summary>The test control height used for hit testing.</summary>
+    private const int HitTestHeight = 40;
+
+    /// <summary>The far right X coordinate used to snap to the document end.</summary>
+    private const int FarRightPointX = 1_000;
+
+    /// <summary>The X coordinate outside the control bounds.</summary>
+    private const int OutsideLeftPointX = -10;
+
+    /// <summary>The caret offset after dropping the XX text payload.</summary>
+    private const int DroppedTextLength = 2;
+
+    /// <summary>The delay used to allow asynchronous drop handlers to complete.</summary>
+    private const int DropProcessingDelayMilliseconds = 25;
+
+    /// <summary>The byte limit used to reject an oversized dropped text file.</summary>
+    private const int DroppedTextFileByteLimit = 4;
+
+    /// <summary>The natural width of the remote image test double.</summary>
+    private const int RemoteImageNaturalWidth = 1200;
+
+    /// <summary>The natural height of the remote image test double.</summary>
+    private const int RemoteImageNaturalHeight = 600;
+
+    /// <summary>The expected rendered width after fitting a remote image.</summary>
+    private const int RemoteImageRenderedWidth = 640;
+
+    /// <summary>The expected rendered height after fitting a remote image.</summary>
+    private const int RemoteImageRenderedHeight = 320;
+
+    /// <summary>The explicit image width applied to an inline image segment.</summary>
+    private const int ExplicitImageWidth = 48;
+
+    /// <summary>The explicit image height applied to an inline image segment.</summary>
+    private const int ExplicitImageHeight = 32;
+
     /// <summary>Provides the FlowDocument_ParsesInlineFormattingImagesAndParagraphAlignment member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -43,12 +112,12 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(styled.IsItalic).IsTrue();
         await Assert.That(styled.IsUnderline).IsTrue();
         await Assert.That(styled.FontFamily?.Name).IsEqualTo("Consolas");
-        await Assert.That(styled.FontSize).IsEqualTo(18);
+        await Assert.That(styled.FontSize).IsEqualTo(ParsedStyledFontSize);
         await Assert.That(GetSolidColor(styled.Foreground)).IsEqualTo(Colors.Red);
         await Assert.That(GetSolidColor(styled.Background)).IsEqualTo(Colors.Yellow);
         await Assert.That(image.ImageSource).IsEqualTo("file:///tmp/photo.png");
-        await Assert.That(image.ImageWidth).IsEqualTo(40);
-        await Assert.That(image.ImageHeight).IsEqualTo(30);
+        await Assert.That(image.ImageWidth).IsEqualTo(ParsedImageWidth);
+        await Assert.That(image.ImageHeight).IsEqualTo(ParsedImageHeight);
         await Assert.That(image.ImageAlignment).IsEqualTo(HorizontalAlignment.Right);
         await Assert.That(paragraph.TextAlignment).IsEqualTo(TextAlignment.Center);
     }
@@ -72,13 +141,13 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox();
 
         richTextBox.SetPlainText("Hello world");
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.SetSelectionFontFamily("Consolas");
-        richTextBox.Select(6, 5);
-        richTextBox.SetSelectionFontSize(20);
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
+        richTextBox.SetSelectionFontSize(StyleCommandFontSize);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.SetSelectionForeground(Colors.DeepSkyBlue);
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.SetSelectionHighlight(Colors.LightGreen);
 
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello world");
@@ -112,7 +181,7 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox();
 
         richTextBox.SetHtml("Hello <strong>bold</strong> plain");
-        richTextBox.Select(6, 10);
+        richTextBox.Select(WorldStartOffset, MixedSelectionLength);
         richTextBox.ToggleItalic();
 
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello bold plain");
@@ -128,7 +197,7 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
         richTextBox.SetPlainText("Hello world");
-        richTextBox.Select(0, 5);
+        richTextBox.Select(HelloStartOffset, HelloLength);
         var menu = richTextBox.EnsureContextMenu();
         richTextBox.RefreshContextMenuState();
 
@@ -144,7 +213,7 @@ public sealed class RichTextBoxFeatureTests
 
         InvokeMenuItem(FindMenuItem(menu, "Bold")!);
         await Assert.That(richTextBox.Html).IsEqualTo("<strong>Hello</strong> world");
-        richTextBox.Select(0, 5);
+        richTextBox.Select(HelloStartOffset, HelloLength);
 
         richTextBox.IsReadOnly = true;
         richTextBox.RefreshContextMenuState();
@@ -173,17 +242,17 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
         richTextBox.SetPlainText("Hello world");
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.ToggleBoldCommand.Execute(null);
 
         await Assert.That(richTextBox.Html).IsEqualTo("Hello <strong>world</strong>");
 
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.CopyCommand.Execute(null);
         await Assert.That(clipboard.PlainText).IsEqualTo("world");
         await Assert.That(clipboard.HtmlText).IsEqualTo("<strong>world</strong>");
 
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.PasteCommand.Execute(null);
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello world");
     }
@@ -240,8 +309,8 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(richTextBox.TryDropImage("file:///tmp/photo.png")).IsTrue();
         richTextBox.ReplaceSelection("Z");
 
-        await Assert.That(richTextBox.Document.Length).IsEqualTo(8);
-        await Assert.That(richTextBox.CaretIndex).IsEqualTo(8);
+        await Assert.That(richTextBox.Document.Length).IsEqualTo(ImageDropDocumentLength);
+        await Assert.That(richTextBox.CaretIndex).IsEqualTo(ImageDropDocumentLength);
         await Assert.That(richTextBox.Html).IsEqualTo("abcdef<img src=\"file:///tmp/photo.png\" />Z");
     }
 
@@ -250,14 +319,14 @@ public sealed class RichTextBoxFeatureTests
     [Test]
     public async Task RichTextBox_GetPositionFromPoint_MapsPointToRenderedDocumentOffset()
     {
-        var richTextBox = new RichTextBox { Width = 240, Height = 40 };
+        var richTextBox = new RichTextBox { Width = HitTestWidth, Height = HitTestHeight };
 
         richTextBox.SetPlainText("abcdef");
         richTextBox.Select(richTextBox.Document.Length, 0);
 
         await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(0, 0), snapToText: true)?.Offset).IsEqualTo(0);
-        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(1_000, 0), snapToText: true)?.Offset).IsEqualTo(richTextBox.Document.Length);
-        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(-10, 0), snapToText: false)).IsNull();
+        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(FarRightPointX, 0), snapToText: true)?.Offset).IsEqualTo(richTextBox.Document.Length);
+        await Assert.That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(OutsideLeftPointX, 0), snapToText: false)).IsNull();
     }
 
     /// <summary>Provides the RichTextBox_RuntimeDragOver_AdvertisesCopyOnlyForSupportedPayloads member.</summary>
@@ -281,7 +350,7 @@ public sealed class RichTextBoxFeatureTests
     [Test]
     public async Task RichTextBox_RuntimeDrop_TextUsesHitTestedDropPosition()
     {
-        var richTextBox = new RichTextBox { Width = 240, Height = 40 };
+        var richTextBox = new RichTextBox { Width = HitTestWidth, Height = HitTestHeight };
 
         richTextBox.SetPlainText("abcdef");
         richTextBox.Select(richTextBox.Document.Length, 0);
@@ -289,7 +358,7 @@ public sealed class RichTextBoxFeatureTests
         _ = RaiseDrop(richTextBox, TestDataTransfer.Text("XX"), new global::Avalonia.Point(0, 0));
 
         await Assert.That(richTextBox.PlainText).IsEqualTo("XXabcdef");
-        await Assert.That(richTextBox.CaretIndex).IsEqualTo(2);
+        await Assert.That(richTextBox.CaretIndex).IsEqualTo(DroppedTextLength);
     }
 
     /// <summary>Provides the RichTextBox_RuntimeDrop_EnforcesImageAndTextFilePolicies member.</summary>
@@ -305,13 +374,13 @@ public sealed class RichTextBoxFeatureTests
 
         var unsupported = new RichTextBox();
         _ = RaiseDrop(unsupported, TestDataTransfer.File(CreateStorageFile(".exe", "should-not-load")), new global::Avalonia.Point(0, 0));
-        await Task.Delay(25);
+        await Task.Delay(DropProcessingDelayMilliseconds);
 
         await Assert.That(unsupported.PlainText).IsEmpty();
 
-        var oversized = new RichTextBox { MaxDroppedTextFileBytes = 4 };
+        var oversized = new RichTextBox { MaxDroppedTextFileBytes = DroppedTextFileByteLimit };
         _ = RaiseDrop(oversized, TestDataTransfer.File(CreateStorageFile(".txt", "12345")), new global::Avalonia.Point(0, 0));
-        await Task.Delay(25);
+        await Task.Delay(DropProcessingDelayMilliseconds);
 
         await Assert.That(oversized.PlainText).IsEmpty();
     }
@@ -357,7 +426,7 @@ public sealed class RichTextBoxFeatureTests
         const string imageSource = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAQSURBVBhXY/jPwPCfARkAAB7zAf+x9MCaAAAAAElFTkSuQmCC";
         var presenter = new FormattedTextPresenter();
 
-        document.SetText($"abcdef<img src=\"{imageSource}\" width=\"48\" height=\"48\" />");
+        document.SetText($"abcdef<img src=\"{imageSource}\" width=\"{ExplicitImageWidth}\" height=\"{ExplicitImageWidth}\" />");
         presenter.Document = document;
         presenter.UpdateInlines();
 
@@ -372,7 +441,7 @@ public sealed class RichTextBoxFeatureTests
     {
         var document = new FlowDocument();
         var remoteLoaderCalls = 0;
-        var loadedImage = new TestImage(new global::Avalonia.Size(1200, 600));
+        var loadedImage = new TestImage(new global::Avalonia.Size(RemoteImageNaturalWidth, RemoteImageNaturalHeight));
         var presenter = new FormattedTextPresenter
         {
             RemoteImageLoader = _ =>
@@ -394,15 +463,15 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(remoteLoaderCalls).IsEqualTo(1);
         await Assert.That(imageElement).IsNotNull();
         await Assert.That(imageElement!.Source).IsSameReferenceAs(loadedImage);
-        await Assert.That(imageElement.Width).IsEqualTo(640);
-        await Assert.That(imageElement.Height).IsEqualTo(320);
+        await Assert.That(imageElement.Width).IsEqualTo(RemoteImageRenderedWidth);
+        await Assert.That(imageElement.Height).IsEqualTo(RemoteImageRenderedHeight);
         await Assert.That(imageElement.HorizontalAlignment).IsEqualTo(HorizontalAlignment.Right);
 
-        imageSegment.ImageWidth = 48;
-        imageSegment.ImageHeight = 32;
+        imageSegment.ImageWidth = ExplicitImageWidth;
+        imageSegment.ImageHeight = ExplicitImageHeight;
         var explicitlySizedImage = presenter.CreateImageElement(imageSegment);
-        await Assert.That(explicitlySizedImage!.Width).IsEqualTo(48);
-        await Assert.That(explicitlySizedImage.Height).IsEqualTo(32);
+        await Assert.That(explicitlySizedImage!.Width).IsEqualTo(ExplicitImageWidth);
+        await Assert.That(explicitlySizedImage.Height).IsEqualTo(ExplicitImageHeight);
 
         presenter.RemoteImageLoader = _ => throw new InvalidOperationException("Loader failure");
         await Assert.That(presenter.CreateImageElement(imageSegment)).IsNull();
@@ -417,7 +486,7 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
         richTextBox.SetHtml("<strong>Hello</strong> <em>world</em>");
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.Copy();
 
         await Assert.That(clipboard.PlainText).IsEqualTo("world");
@@ -425,7 +494,7 @@ public sealed class RichTextBoxFeatureTests
 
         clipboard.HtmlText = null;
         clipboard.PlainText = "Avalonia";
-        richTextBox.Select(0, 5);
+        richTextBox.Select(HelloStartOffset, HelloLength);
         richTextBox.Paste();
 
         await Assert.That(richTextBox.PlainText).IsEqualTo("Avalonia world");
@@ -465,7 +534,7 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
         richTextBox.SetPlainText("Hello world");
-        richTextBox.Select(0, 5);
+        richTextBox.Select(HelloStartOffset, HelloLength);
         richTextBox.EditMode = RichTextEditMode.Display;
 
         await Assert.That(richTextBox.CanCopy).IsTrue();
@@ -482,7 +551,7 @@ public sealed class RichTextBoxFeatureTests
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello world");
 
         richTextBox.EditMode = RichTextEditMode.Edit;
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.Paste();
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Hello");
     }
@@ -496,7 +565,7 @@ public sealed class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox();
 
         richTextBox.SetPlainText("Hello world");
-        richTextBox.Select(6, 5);
+        richTextBox.Select(WorldStartOffset, WorldLength);
         apply(richTextBox);
 
         await Assert.That(richTextBox.Html).IsEqualTo(expectedHtml);

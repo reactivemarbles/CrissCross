@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Path = System.Windows.Shapes.Path;
@@ -16,7 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// It supports theming via dynamic resources present in CrissCross (accent, stroke and text brushes).
 /// </summary>
 [TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
-[TemplatePart(Name = "Pointer", Type = typeof(Path))]
+[TemplatePart(Name = Pointer, Type = typeof(Path))]
 [TemplatePart(Name = "PointerCap", Type = typeof(Ellipse))]
 [TemplatePart(Name = "RangeIndicatorLight", Type = typeof(Ellipse))]
 public sealed class CircularGauge : Control
@@ -208,6 +207,45 @@ public sealed class CircularGauge : Control
     /// <summary>Dependency property to Get/Set the value.</summary>
     public static readonly DependencyProperty ValueProperty =
         DependencyProperty.Register(nameof(Value), typeof(double), typeof(CircularGauge), new PropertyMetadata(0d, OnValuePropertyChanged));
+
+    /// <summary>Provides the pointer template part name.</summary>
+    private const string Pointer = nameof(Pointer);
+
+    /// <summary>Provides the foreground pointer z-index.</summary>
+    private const int PointerZIndex = 100_000;
+
+    /// <summary>Provides the pointer cap z-index.</summary>
+    private const int PointerCapZIndex = PointerZIndex + 1;
+
+    /// <summary>Provides the first range gradient stop offset.</summary>
+    private const double RangeGradientStartOffset = 0.2;
+
+    /// <summary>Provides the middle range gradient stop offset.</summary>
+    private const double RangeGradientMiddleOffset = 0.5;
+
+    /// <summary>Provides the final range gradient stop offset.</summary>
+    private const double RangeGradientEndOffset = 0.8;
+
+    /// <summary>Provides the full semi-circle angle in degrees.</summary>
+    private const double SemiCircleDegrees = 180.0;
+
+    /// <summary>Provides the center render transform origin coordinate.</summary>
+    private const double CenterOrigin = 0.5;
+
+    /// <summary>Provides the value detection poll interval.</summary>
+    private const int DetectionPollIntervalMilliseconds = 500;
+
+    /// <summary>Provides the number of detection polls per timeout unit.</summary>
+    private const int DetectionPollsPerTimeoutUnit = 2;
+
+    /// <summary>Provides the range segment opacity.</summary>
+    private const double RangeSegmentOpacity = 0.65;
+
+    /// <summary>Provides the range segment stroke thickness.</summary>
+    private const double RangeSegmentStrokeThickness = 0.25;
+
+    /// <summary>Provides the range segment z-index.</summary>
+    private const int RangeSegmentZIndex = 150;
 
     /// <summary>Provides the AnimatingSpeedFactor member.</summary>
     private const int AnimatingSpeedFactor = 6;
@@ -654,7 +692,7 @@ public sealed class CircularGauge : Control
 
         // Get reference to known elements on the control template
         _rootGrid = GetTemplateChild("LayoutRoot") as Grid;
-        _pointer = GetTemplateChild("Pointer") as Path;
+        _pointer = GetTemplateChild(Pointer) as Path;
         _pointerCap = GetTemplateChild("PointerCap") as Ellipse;
         _lightIndicator = GetTemplateChild("RangeIndicatorLight") as Ellipse;
 
@@ -664,8 +702,8 @@ public sealed class CircularGauge : Control
 
         // Set Z index of pointer and pointer cap to a really high number so that it stays on top
         // of the scale and the range indicator
-        Panel.SetZIndex(_pointer, 100_000);
-        Panel.SetZIndex(_pointerCap, 100_001);
+        Panel.SetZIndex(_pointer, PointerZIndex);
+        Panel.SetZIndex(_pointerCap, PointerCapZIndex);
 
         // Reset Pointer
         if (!ResetPointerOnStartUp)
@@ -771,6 +809,7 @@ public sealed class CircularGauge : Control
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     private static void AMajorValueHasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not CircularGauge gauge)
         {
             return;
@@ -800,10 +839,10 @@ public sealed class CircularGauge : Control
             EndPoint = new(1, 1)
         };
 
-        var color1 = new GradientStop { Offset = 0.2, Color = gradientColor == Brushes.Transparent ? Colors.Transparent : Colors.LightGray };
+        var color1 = new GradientStop { Offset = RangeGradientStartOffset, Color = gradientColor == Brushes.Transparent ? Colors.Transparent : Colors.LightGray };
         gradient.GradientStops.Add(color1);
-        gradient.GradientStops.Add(new GradientStop { Color = ((SolidColorBrush)gradientColor).Color, Offset = 0.5 });
-        gradient.GradientStops.Add(new GradientStop { Color = ((SolidColorBrush)gradientColor).Color, Offset = 0.8 });
+        gradient.GradientStops.Add(new GradientStop { Color = ((SolidColorBrush)gradientColor).Color, Offset = RangeGradientMiddleOffset });
+        gradient.GradientStops.Add(new GradientStop { Color = ((SolidColorBrush)gradientColor).Color, Offset = RangeGradientEndOffset });
         return gradient;
     }
 
@@ -899,6 +938,7 @@ public sealed class CircularGauge : Control
     /// <param name="e">The event arguments.</param>
     private static void ScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not CircularGauge gauge)
         {
             return;
@@ -949,14 +989,14 @@ public sealed class CircularGauge : Control
             else
             {
                 count++;
-                if (count >= DetectionTimeOut * 2)
+                if (count >= DetectionTimeOut * DetectionPollsPerTimeoutUnit)
                 {
                     count = 0;
                     ShowError = Visibility.Visible;
                 }
             }
 
-            await Task.Delay(500).ConfigureAwait(false);
+            await Task.Delay(DetectionPollIntervalMilliseconds).ConfigureAwait(false);
         }
     }
 
@@ -1004,7 +1044,7 @@ public sealed class CircularGauge : Control
         var endAngle = ScaleStartAngle + ScaleSweepAngle;
 
         // Calculating the Points for the below Optimal Range segment from the center of the gauge
-        var isReflexAngle = Math.Abs(optimalStartAngleFromStart - ScaleStartAngle) > 180.0;
+        var isReflexAngle = Math.Abs(optimalStartAngleFromStart - ScaleStartAngle) > SemiCircleDegrees;
         _rangeIndicator1 = DrawSegment(
                                                 GetCircumferencePoint(ScaleStartAngle, _arcradius1),
                                                 GetCircumferencePoint(ScaleStartAngle, _arcradius2),
@@ -1014,7 +1054,7 @@ public sealed class CircularGauge : Control
                                                 BelowOptimalRangeColor);
 
         // Calculating the Points for the Optimal Range segment from the center of the gauge
-        var isReflexAngle1 = Math.Abs(optimalEndAngleFromStart - optimalStartAngleFromStart) > 180.0;
+        var isReflexAngle1 = Math.Abs(optimalEndAngleFromStart - optimalStartAngleFromStart) > SemiCircleDegrees;
         _rangeIndicator2 = DrawSegment(
                                                 GetCircumferencePoint(optimalStartAngleFromStart, _arcradius1),
                                                 GetCircumferencePoint(optimalStartAngleFromStart, _arcradius2),
@@ -1024,7 +1064,7 @@ public sealed class CircularGauge : Control
                                                 OptimalRangeColor);
 
         // Calculating the Points for the Above Optimal Range segment from the center of the gauge
-        var isReflexAngle2 = Math.Abs(endAngle - optimalEndAngleFromStart) > 180.0;
+        var isReflexAngle2 = Math.Abs(endAngle - optimalEndAngleFromStart) > SemiCircleDegrees;
         _rangeIndicator3 = DrawSegment(
                                                 GetCircumferencePoint(optimalEndAngleFromStart, _arcradius1),
                                                 GetCircumferencePoint(optimalEndAngleFromStart, _arcradius2),
@@ -1057,7 +1097,7 @@ public sealed class CircularGauge : Control
             majortickgp.Children.Add(new RotateTransform { Angle = i });
 
             // Obtaining the angle in radians for calculating the points
-            var indicatorRadians = i * Math.PI / 180;
+            var indicatorRadians = i * Math.PI / SemiCircleDegrees;
 
             // Finding the point on the Scale where the major ticks are drawn here drawing the
             // points with center as (0,0)
@@ -1109,7 +1149,7 @@ public sealed class CircularGauge : Control
                 Height = MajorTickSize.Height,
                 Width = MajorTickSize.Width,
                 Fill = ScaleForeground,
-                RenderTransformOrigin = new(0.5, 0.5),
+                RenderTransformOrigin = new(CenterOrigin, CenterOrigin),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 RenderTransform = majortickgp
@@ -1125,7 +1165,7 @@ public sealed class CircularGauge : Control
                 for (var mi = i + onedegree; mi < (i + majorTickUnitAngle); mi += onedegree)
                 {
                     // Obtaining the angle in radians for calculating the points
-                    var minorTickRadians = mi * Math.PI / 180;
+                    var minorTickRadians = mi * Math.PI / SemiCircleDegrees;
 
                     // Finding the point on the Scale where the minor ticks are drawn
                     var minorticktt = new TranslateTransform
@@ -1145,7 +1185,7 @@ public sealed class CircularGauge : Control
                         Fill = ScaleForeground,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
-                        RenderTransformOrigin = new(0.5, 0.5),
+                        RenderTransformOrigin = new(CenterOrigin, CenterOrigin),
                         RenderTransform = minortickgp
                     };
                     _ = _rootGrid.Children.Add(mr);
@@ -1197,8 +1237,8 @@ public sealed class CircularGauge : Control
             StrokeLineJoin = PenLineJoin.Round,
             Stroke = rangestrokecolor,
             Fill = clr,
-            Opacity = 0.65,
-            StrokeThickness = 0.25,
+            Opacity = RangeSegmentOpacity,
+            StrokeThickness = RangeSegmentStrokeThickness,
             Data = new PathGeometry
             {
                 Figures =
@@ -1214,7 +1254,7 @@ public sealed class CircularGauge : Control
         };
 
         // Set Z index of range indicator
-        range.SetValue(Panel.ZIndexProperty, 150);
+        range.SetValue(Panel.ZIndexProperty, RangeSegmentZIndex);
 
         // Adding the segment to the root grid
         _rootGrid?.Children.Add(range);
@@ -1228,7 +1268,7 @@ public sealed class CircularGauge : Control
     /// <returns>The result.</returns>
     private Point GetCircumferencePoint(double angle, double radius)
     {
-        var angleRadian = angle * Math.PI / 180;
+        var angleRadian = angle * Math.PI / SemiCircleDegrees;
 
         // Radius-- is the Radius of the gauge
         return new Point(Radius + (radius * Math.Cos(angleRadian)), Radius + (radius * Math.Sin(angleRadian)));

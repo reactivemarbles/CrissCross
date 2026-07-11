@@ -15,6 +15,33 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// <summary>Reactive manual-QA view model for the gallery feature playground.</summary>
 public sealed class FeaturePlaygroundViewModel : RxObject
 {
+    /// <summary>The initial page index.</summary>
+    private const int SamplePageIndex = 1;
+
+    /// <summary>The number of entries on a sample page.</summary>
+    private const int SamplePageSize = 10;
+
+    /// <summary>The total sample result count.</summary>
+    private const int SampleResultCount = 42;
+
+    /// <summary>The result count shown after searching.</summary>
+    private const int SearchResultCount = 7;
+
+    /// <summary>The interval between activation refreshes.</summary>
+    private const int ActivationRefreshSeconds = 5;
+
+    /// <summary>The default range offset in hours.</summary>
+    private const int DefaultRangeHours = -4;
+
+    /// <summary>The initial command progress.</summary>
+    private const double InitialCommandProgress = 0.35;
+
+    /// <summary>The simulated import delay in milliseconds.</summary>
+    private const int ImportDelayMilliseconds = 250;
+
+    /// <summary>The simulated search delay in milliseconds.</summary>
+    private const int SearchDelayMilliseconds = 150;
+
     /// <summary>Tracks whether the import command is running.</summary>
     private readonly ObservableAsPropertyHelper<bool> _isOperationRunning;
 
@@ -47,7 +74,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     {
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
-        _paginationState = new(1, 10, 42);
+        _paginationState = new(SamplePageIndex, SamplePageSize, SampleResultCount);
         _currentRange = CreateRange(DateTimeOffset.Now);
         _segmentState = new(CreateSegments(), "table");
         _stepperState = new(CreateSteps("review"), "review", StepperOrientation.Horizontal);
@@ -206,7 +233,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         ArgumentNullException.ThrowIfNull(disposables);
 
         ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
-        _ = Observable.Interval(TimeSpan.FromSeconds(5), RxSchedulers.TaskpoolScheduler)
+        _ = Observable.Interval(TimeSpan.FromSeconds(ActivationRefreshSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
             .DisposeWith(disposables);
@@ -232,7 +259,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         debouncedText: text?.Trim(),
         submittedText: text?.Trim(),
         isSearching: isSearching,
-        resultCount: string.IsNullOrWhiteSpace(text) ? 42 : 7,
+        resultCount: string.IsNullOrWhiteSpace(text) ? SampleResultCount : SearchResultCount,
         filters:
         [
             new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
@@ -242,7 +269,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     /// <summary>Creates the default date/time range.</summary>
     /// <param name="now">The current time.</param>
     /// <returns>The default date/time range.</returns>
-    private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(-4), now, DateTimeRangePreset.Custom, "Last four hours");
+    private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(DefaultRangeHours), now, DateTimeRangePreset.Custom, "Last four hours");
 
     /// <summary>Creates the segmented control items.</summary>
     /// <returns>The segment items.</returns>
@@ -285,15 +312,15 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     private async Task RunImportAsync(CancellationToken cancellationToken)
     {
         CommandState = CommandButtonState.Executing;
-        CommandProgress = 0.35;
+        CommandProgress = InitialCommandProgress;
         CurrentOperation = new("Loading deterministic sample data", "Simulates a cancellable import without network access.", CommandProgress, ClearSearchCommand);
 
-        await Task.Delay(250, cancellationToken).ConfigureAwait(true);
+        await Task.Delay(ImportDelayMilliseconds, cancellationToken).ConfigureAwait(true);
 
         CommandProgress = 1.0;
         CurrentOperation = null;
         CommandState = CommandButtonState.Succeeded;
-        PaginationState = new(0, 10, 42);
+        PaginationState = new(0, SamplePageSize, SampleResultCount);
         SearchState = CreateSearchState(SearchText, false);
     }
 
@@ -305,7 +332,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     {
         SearchText = submittedText;
         SearchState = CreateSearchState(SearchText, true);
-        await Task.Delay(150, cancellationToken).ConfigureAwait(true);
+        await Task.Delay(SearchDelayMilliseconds, cancellationToken).ConfigureAwait(true);
         SearchState = CreateSearchState(SearchText, false);
     }
 
@@ -318,7 +345,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
 
     /// <summary>Applies a page request.</summary>
     /// <param name="request">The page request.</param>
-    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, 42);
+    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, SampleResultCount);
 
     /// <summary>Applies a date/time range.</summary>
     /// <param name="range">The date/time range.</param>

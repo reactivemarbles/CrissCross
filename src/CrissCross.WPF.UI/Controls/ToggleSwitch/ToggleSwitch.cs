@@ -13,14 +13,14 @@ public class ToggleSwitch : System.Windows.Controls.Primitives.ToggleButton
 {
     /// <summary>Property for <see cref="OffContent"/>.</summary>
     public static readonly DependencyProperty OffContentProperty = DependencyProperty.Register(
-        "OffContent",
+        nameof(OffContent),
         typeof(object),
         typeof(ToggleSwitch),
         new PropertyMetadata(null));
 
     /// <summary>Property for <see cref="OnContent"/>.</summary>
     public static readonly DependencyProperty OnContentProperty = DependencyProperty.Register(
-        "OnContent",
+        nameof(OnContent),
         typeof(object),
         typeof(ToggleSwitch),
         new PropertyMetadata(null));

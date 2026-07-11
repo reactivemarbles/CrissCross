@@ -61,6 +61,9 @@ public class Image : Control
     public static readonly DependencyProperty InnerCornerRadiusProperty =
         InnerCornerRadiusPropertyKey.DependencyProperty;
 
+    /// <summary>Divisor used to offset corner radius by half of the border thickness.</summary>
+    private const double CornerRadiusThicknessDivisor = 2.0;
+
     /// <summary>Gets or sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
     public ImageSource Source
     {
@@ -112,9 +115,9 @@ public class Image : Control
         d.SetValue(
             InnerCornerRadiusPropertyKey,
             new CornerRadius(
-                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / 2), 0)),
-                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / 2), 0)),
-                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / 2), 0)),
-                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / 2), 0))));
+                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / CornerRadiusThicknessDivisor), 0)),
+                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / CornerRadiusThicknessDivisor), 0)),
+                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / CornerRadiusThicknessDivisor), 0)),
+                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / CornerRadiusThicknessDivisor), 0))));
     }
 }

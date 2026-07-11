@@ -14,21 +14,21 @@ public class PasswordBox : TextBox
         nameof(Password),
         typeof(string),
         typeof(PasswordBox),
-        new PropertyMetadata(string.Empty, OnPasswordPropertyChanged));
+            new PropertyMetadata(string.Empty, static (d, _) => OnPasswordPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="PasswordChar"/>.</summary>
     public static readonly DependencyProperty PasswordCharProperty = DependencyProperty.Register(
         nameof(PasswordChar),
         typeof(char),
         typeof(PasswordBox),
-        new PropertyMetadata('*', OnPasswordCharPropertyChanged));
+            new PropertyMetadata('*', static (d, _) => OnPasswordCharPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="IsPasswordRevealed"/>.</summary>
     public static readonly DependencyProperty IsPasswordRevealedProperty = DependencyProperty.Register(
         nameof(IsPasswordRevealed),
         typeof(bool),
         typeof(PasswordBox),
-        new PropertyMetadata(false, OnPasswordRevealModePropertyChanged));
+            new PropertyMetadata(false, static (d, _) => OnPasswordRevealModePropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="RevealButtonEnabled"/>.</summary>
     public static readonly DependencyProperty RevealButtonEnabledProperty = DependencyProperty.Register(
@@ -170,45 +170,23 @@ public class PasswordBox : TextBox
     }
 
     /// <summary>Called when <see cref="Password"/> is changed.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnPasswordPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="control">The password box.</param>
+    private static void OnPasswordPropertyChanged(PasswordBox control)
     {
-        if (d is not PasswordBox control)
-        {
-            return;
-        }
-
         control.OnPasswordChanged();
     }
 
     /// <summary>Called if the character is changed in the during the run.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnPasswordCharPropertyChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    /// <param name="control">The password box.</param>
+    private static void OnPasswordCharPropertyChanged(PasswordBox control)
     {
-        if (d is not PasswordBox control)
-        {
-            return;
-        }
-
         control.OnPasswordCharChanged();
     }
 
     /// <summary>Called if the reveal mode is changed in the during the run.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnPasswordRevealModePropertyChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    /// <param name="control">The password box.</param>
+    private static void OnPasswordRevealModePropertyChanged(PasswordBox control)
     {
-        if (d is not PasswordBox control)
-        {
-            return;
-        }
-
         control.OnPasswordRevealModeChanged();
     }
 

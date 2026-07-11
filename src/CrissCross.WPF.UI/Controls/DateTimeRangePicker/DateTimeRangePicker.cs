@@ -151,6 +151,7 @@ public class DateTimeRangePicker : Control
     /// <param name="args">The event arguments.</param>
     private static void OnRangeInputChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
+        _ = args;
         if (dependencyObject is not DateTimeRangePicker picker)
         {
             return;

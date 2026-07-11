@@ -12,6 +12,9 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// <summary>AllControlsViewModel provides a searchable, data-driven list of control demos.</summary>
 public class AllControlsViewModel : RxObject
 {
+    /// <summary>The delay applied before refreshing the control filter.</summary>
+    private const int FilterThrottleMilliseconds = 150;
+
     /// <summary>Stores the available control demos.</summary>
     private readonly ObservableCollection<ControlItem> _controls;
 
@@ -40,7 +43,7 @@ public class AllControlsViewModel : RxObject
         Populate();
 
         _ = this.WhenAnyValue(x => x.FilterText)
-            .Throttle(TimeSpan.FromMilliseconds(150))
+            .Throttle(TimeSpan.FromMilliseconds(FilterThrottleMilliseconds))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => FilteredControls.Refresh());
     }

@@ -114,6 +114,12 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             typeof(NumericPushButton),
             new PropertyMetadata(true, UpdateUseCrissCross));
 
+    /// <summary>Delay before collapsing the keypad after the owner is disabled.</summary>
+    private const int IsEnabledFalseDelayMilliseconds = 100;
+
+    /// <summary>Delay before hiding the error state.</summary>
+    private const int ErrorVisibilityDelaySeconds = 2;
+
     /// <summary>Stores the _errrorTimer value.</summary>
     private readonly DispatcherTimer _errrorTimer;
 
@@ -147,7 +153,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             _keypad = new(this) { MaskColor = maskColor, UseCrissCrossThemeManager = useThemeManager };
         }));
         _isEnabledFalseTimer = new(
-            TimeSpan.FromMilliseconds(100),
+            TimeSpan.FromMilliseconds(IsEnabledFalseDelayMilliseconds),
             DispatcherPriority.Normal,
             (s, e) =>
             {
@@ -163,7 +169,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             Dispatcher);
 
         _errrorTimer = new(
-            TimeSpan.FromSeconds(2),
+            TimeSpan.FromSeconds(ErrorVisibilityDelaySeconds),
             DispatcherPriority.Normal,
             (s, e) =>
             {
@@ -173,7 +179,7 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
             Dispatcher);
 
         _keypadDisposable.Add(EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => Loaded += handler, handler => Loaded -= handler)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Loaded += handler, handler => Loaded -= handler)
             .Subscribe(loadedArgs =>
         {
             _ = this.UpdateSpinButtonContent();

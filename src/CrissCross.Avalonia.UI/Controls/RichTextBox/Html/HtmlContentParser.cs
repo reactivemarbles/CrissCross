@@ -18,6 +18,39 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>Provides the HtmlContentParser member.</summary>
 internal static class HtmlContentParser
 {
+    /// <summary>Provides the UnitSuffixLength member.</summary>
+    private const int UnitSuffixLength = 2;
+
+    /// <summary>Provides the HeadingTagLength member.</summary>
+    private const int HeadingTagLength = 2;
+
+    /// <summary>Provides the StyleDeclarationTokenCount member.</summary>
+    private const int StyleDeclarationTokenCount = 2;
+
+    /// <summary>Provides the DefaultFontSize member.</summary>
+    private const double DefaultFontSize = 14d;
+
+    /// <summary>Provides the PercentDivisor member.</summary>
+    private const double PercentDivisor = 100d;
+
+    /// <summary>Provides the HeadingOneFontSize member.</summary>
+    private const double HeadingOneFontSize = 32d;
+
+    /// <summary>Provides the HeadingTwoFontSize member.</summary>
+    private const double HeadingTwoFontSize = 28d;
+
+    /// <summary>Provides the HeadingThreeFontSize member.</summary>
+    private const double HeadingThreeFontSize = 24d;
+
+    /// <summary>Provides the HeadingFourFontSize member.</summary>
+    private const double HeadingFourFontSize = 20d;
+
+    /// <summary>Provides the HeadingFiveFontSize member.</summary>
+    private const double HeadingFiveFontSize = 18d;
+
+    /// <summary>Provides the HeadingSixFontSize member.</summary>
+    private const double HeadingSixFontSize = 16d;
+
     /// <summary>Provides the BrowsingContext member.</summary>
     private static readonly IBrowsingContext BrowsingContext = AngleSharp.BrowsingContext.New(Configuration.Default);
 
@@ -197,11 +230,11 @@ internal static class HtmlContentParser
         var trimmed = attributeValue.Trim().ToLowerInvariant();
         if (trimmed.EndsWith("px", StringComparison.Ordinal))
         {
-            trimmed = trimmed[..^2];
+            trimmed = trimmed[..^UnitSuffixLength];
         }
         else if (trimmed.EndsWith("pt", StringComparison.Ordinal))
         {
-            trimmed = trimmed[..^2];
+            trimmed = trimmed[..^UnitSuffixLength];
         }
 
         return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : null;
@@ -250,8 +283,8 @@ internal static class HtmlContentParser
 
         foreach (var part in declaration.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
-            var tokens = part.Split(':', 2, StringSplitOptions.TrimEntries);
-            if (tokens.Length == 2)
+            var tokens = part.Split(':', StyleDeclarationTokenCount, StringSplitOptions.TrimEntries);
+            if (tokens.Length == StyleDeclarationTokenCount)
             {
                 yield return (tokens[0], tokens[1]);
             }
@@ -336,7 +369,7 @@ internal static class HtmlContentParser
         /// <returns><see langword="true"/> when the tag is a heading.</returns>
         private static bool IsHeadingTag(string? tagName) =>
             tagName?.StartsWith("H", StringComparison.Ordinal) == true &&
-            tagName.Length == 2 &&
+            tagName.Length == HeadingTagLength &&
             char.IsDigit(tagName[1]);
 
         /// <summary>Applies one style declaration.</summary>
@@ -389,18 +422,18 @@ internal static class HtmlContentParser
             var trimmed = value.Trim().ToLowerInvariant();
             if (trimmed.EndsWith("px", StringComparison.Ordinal))
             {
-                trimmed = trimmed[..^2];
+                trimmed = trimmed[..^UnitSuffixLength];
             }
             else if (trimmed.EndsWith("pt", StringComparison.Ordinal))
             {
-                trimmed = trimmed[..^2];
+                trimmed = trimmed[..^UnitSuffixLength];
             }
             else if (trimmed.EndsWith("%", StringComparison.Ordinal))
             {
                 if (double.TryParse(trimmed[..^1], NumberStyles.Float, CultureInfo.InvariantCulture, out var pct))
                 {
-                    var baseSize = current ?? 14d;
-                    return baseSize * (pct / 100d);
+                    var baseSize = current ?? DefaultFontSize;
+                    return baseSize * (pct / PercentDivisor);
                 }
 
                 return current;
@@ -414,12 +447,12 @@ internal static class HtmlContentParser
         /// <returns>The result.</returns>
         private static double? GetHeadingSize(string tag) => tag switch
         {
-            "H1" => 32,
-            "H2" => 28,
-            "H3" => 24,
-            "H4" => 20,
-            "H5" => 18,
-            "H6" => 16,
+            "H1" => HeadingOneFontSize,
+            "H2" => HeadingTwoFontSize,
+            "H3" => HeadingThreeFontSize,
+            "H4" => HeadingFourFontSize,
+            "H5" => HeadingFiveFontSize,
+            "H6" => HeadingSixFontSize,
             _ => null,
         };
     }

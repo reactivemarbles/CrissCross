@@ -22,13 +22,7 @@ internal sealed class BrushToColorConverter : IValueConverter
             return brush.Color;
         }
 
-        return value is Color ? value : new Color
-        {
-            A = 255,
-            R = 255,
-            G = 0,
-            B = 0
-        };
+        return value is Color ? value : Colors.Red;
     }
 
     /// <summary>Provides the ConvertBack member.</summary>

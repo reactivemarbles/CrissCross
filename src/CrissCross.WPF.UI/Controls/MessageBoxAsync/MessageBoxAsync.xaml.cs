@@ -20,6 +20,21 @@ public partial class MessageBoxAsync : IListenForMessages
         typeof(ObservableCollection<Button>),
         typeof(MessageBoxAsync));
 
+    /// <summary>Minimum dialog button height.</summary>
+    private const int DialogButtonMinHeight = 21;
+
+    /// <summary>Minimum dialog button width.</summary>
+    private const int DialogButtonMinWidth = 65;
+
+    /// <summary>Left margin applied between dialog buttons.</summary>
+    private const int DialogButtonLeftMargin = 4;
+
+    /// <summary>Polling delay while waiting for a dialog result.</summary>
+    private const int MessagePollingDelayMilliseconds = 100;
+
+    /// <summary>Bottom margin applied to message content.</summary>
+    private const int MessageContentBottomMargin = 8;
+
     /// <summary>Stores the _closeOkCommand value.</summary>
     private readonly ReactiveCommand<Unit, MessageBoxResult>? _closeOkCommand;
 
@@ -200,9 +215,9 @@ public partial class MessageBoxAsync : IListenForMessages
         Command = command,
         IsDefault = isDefault,
         IsCancel = isCancel,
-        MinHeight = 21,
-        MinWidth = 65,
-        Margin = new(4, 0, 0, 0)
+        MinHeight = DialogButtonMinHeight,
+        MinWidth = DialogButtonMinWidth,
+        Margin = new(DialogButtonLeftMargin, 0, 0, 0)
     };
 
     /// <summary>Messages the box show.</summary>
@@ -229,13 +244,13 @@ public partial class MessageBoxAsync : IListenForMessages
         // If message box is already shown wait for it to be actioned
         while (Visibility == Visibility.Visible)
         {
-            await Task.Delay(100).ConfigureAwait(true);
+            await Task.Delay(MessagePollingDelayMilliseconds).ConfigureAwait(true);
         }
 
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, 8) };
+            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, MessageContentBottomMargin) };
             Buttons.Clear();
             foreach (var button in GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9))
             {
@@ -252,7 +267,7 @@ public partial class MessageBoxAsync : IListenForMessages
         var customMessageBoxResult = GetCustomMessageBoxResult();
         while (customMessageBoxResult == CustomMessageBoxResult.None)
         {
-            await Task.Delay(100).ConfigureAwait(true);
+            await Task.Delay(MessagePollingDelayMilliseconds).ConfigureAwait(true);
             customMessageBoxResult = GetCustomMessageBoxResult();
         }
 
@@ -273,13 +288,13 @@ public partial class MessageBoxAsync : IListenForMessages
         // If message box is already shown wait for it to be actioned
         while (Visibility == Visibility.Visible)
         {
-            await Task.Delay(100).ConfigureAwait(true);
+            await Task.Delay(MessagePollingDelayMilliseconds).ConfigureAwait(true);
         }
 
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, 8) };
+            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, MessageContentBottomMargin) };
             Buttons.Clear();
             foreach (var button in GetButtons(button))
             {
@@ -296,7 +311,7 @@ public partial class MessageBoxAsync : IListenForMessages
         var messageBoxResult = GetMessageBoxResult();
         while (messageBoxResult == MessageBoxResult.None)
         {
-            await Task.Delay(100).ConfigureAwait(true);
+            await Task.Delay(MessagePollingDelayMilliseconds).ConfigureAwait(true);
             messageBoxResult = GetMessageBoxResult();
         }
 
@@ -384,6 +399,11 @@ public partial class MessageBoxAsync : IListenForMessages
                     result.Add(owner.NoButton);
                     result.Add(owner.CancelButton);
                     break;
+                }
+
+            default:
+                {
+                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
                 }
         }
 

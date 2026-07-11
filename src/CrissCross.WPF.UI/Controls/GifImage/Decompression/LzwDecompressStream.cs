@@ -14,6 +14,9 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
     /// <summary>Provides the MaxCodeLength member.</summary>
     private const int MaxCodeLength = 12;
 
+    /// <summary>The number of reserved clear and stop codes in the GIF LZW table.</summary>
+    private const int ReservedCodeCount = 2;
+
     /// <summary>Stores the _reader value.</summary>
     private readonly BitReader _reader = new(compressedBuffer);
 
@@ -300,7 +303,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset()
         {
-            _count = (1 << _minimumCodeLength) + 2;
+            _count = (1 << _minimumCodeLength) + ReservedCodeCount;
             _codeLength = _minimumCodeLength + 1;
         }
 

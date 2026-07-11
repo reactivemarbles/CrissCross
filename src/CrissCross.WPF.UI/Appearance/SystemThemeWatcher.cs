@@ -180,6 +180,9 @@ public static class SystemThemeWatcher
     /// <returns>The result.</returns>
     private static IntPtr WndProc(IntPtr windowHandle, int msg, IntPtr wordParameter, IntPtr longParameter, ref bool handled)
     {
+        _ = wordParameter;
+        _ = longParameter;
+
         if (msg == (int)User32.WM.WININICHANGE)
         {
             UpdateObservedWindow(windowHandle);

@@ -14,6 +14,12 @@ internal static class ColorSpaceHelper
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Value (0-1).</returns>
     public static (double H, double S, double V) RgbToHsv(double r, double g, double b)
     {
+        const double undefinedChannel = -1.0;
+        const double rgbToHsvGreenSector = 2.0;
+        const double rgbToHsvBlueSector = 4.0;
+        const double hueDegreesPerSector = 60.0;
+        const double hueDegrees = 360.0;
+
         double min;
         double max;
         double delta;
@@ -32,28 +38,28 @@ internal static class ColorSpaceHelper
         else
         {
             // pure black
-            s = -1;
-            h = -1;
+            s = undefinedChannel;
+            h = undefinedChannel;
             return (h, s, v);
         }
 
         h = max switch
         {
             _ when r == max => (g - b) / delta,
-            _ when g == max => 2 + ((b - r) / delta),
-            _ => 4 + ((r - g) / delta),
+            _ when g == max => rgbToHsvGreenSector + ((b - r) / delta),
+            _ => rgbToHsvBlueSector + ((r - g) / delta),
         };
 
-        h *= 60;
+        h *= hueDegreesPerSector;
         if (h < 0)
         {
-            h += 360;
+            h += hueDegrees;
         }
 
         if (double.IsNaN(h))
         {
             // delta == 0, case of pure gray
-            h = -1;
+            h = undefinedChannel;
         }
 
         return (h, s, v);
@@ -66,6 +72,15 @@ internal static class ColorSpaceHelper
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Lightness (0-1).</returns>
     public static (double H, double S, double L) RgbToHsl(double r, double g, double b)
     {
+        const double undefinedChannel = -1.0;
+        const double halfScale = 0.5;
+        const double doubleScale = 2.0;
+        const double hslGreenOffset = 1.0 / 3.0;
+        const double hslBlueOffset = 2.0 / 3.0;
+        const double hueSectorCount = 6.0;
+        const double hueDegrees = 360.0;
+        const double half = 2.0;
+
         double h;
         double s;
         double l;
@@ -73,28 +88,28 @@ internal static class ColorSpaceHelper
         var min = Math.Min(Math.Min(r, g), b);
         var max = Math.Max(Math.Max(r, g), b);
         var delta = max - min;
-        l = (max + min) / 2;
+        l = (max + min) / half;
 
         if (max == 0)
         {
             // pure black
-            return (-1, -1, 0);
+            return (undefinedChannel, undefinedChannel, 0);
         }
 
         if (delta == 0)
         {
             // gray
-            return (-1, 0, l);
+            return (undefinedChannel, 0, l);
         }
 
         // magic
-        s = l <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
+        s = l <= halfScale ? delta / (max + min) : delta / (doubleScale - max - min);
 
         h = max switch
         {
-            _ when r == max => (g - b) / 6 / delta,
-            _ when g == max => (1.0f / 3) + ((b - r) / 6 / delta),
-            _ => (2.0f / 3) + ((r - g) / 6 / delta),
+            _ when r == max => (g - b) / hueSectorCount / delta,
+            _ when g == max => hslGreenOffset + ((b - r) / hueSectorCount / delta),
+            _ => hslBlueOffset + ((r - g) / hueSectorCount / delta),
         };
 
         if (h < 0)
@@ -107,7 +122,7 @@ internal static class ColorSpaceHelper
             h--;
         }
 
-        h *= 360;
+        h *= hueDegrees;
 
         return (h, s, l);
     }
@@ -119,18 +134,26 @@ internal static class ColorSpaceHelper
     /// <returns>Values (0-1) in order: R, G, B.</returns>
     public static (double R, double G, double B) HsvToRgb(double h, double s, double v)
     {
+        const int redYellowSector = 0;
+        const int yellowGreenSector = 1;
+        const int greenCyanSector = 2;
+        const int cyanBlueSector = 3;
+        const int bluePurpleSector = 4;
+        const double hueDegreesPerSector = 60.0;
+        const double hueDegrees = 360.0;
+
         if (s == 0)
         {
             // achromatic (grey)
             return (v, v, v);
         }
 
-        if (h >= 360.0)
+        if (h >= hueDegrees)
         {
             h = 0;
         }
 
-        h /= 60;
+        h /= hueDegreesPerSector;
         var i = (int)h;
         var f = h - i;
         var p = v * (1 - s);
@@ -139,11 +162,11 @@ internal static class ColorSpaceHelper
 
         return i switch
         {
-            0 => (v, t, p),
-            1 => (q, v, p),
-            2 => (p, v, t),
-            3 => (p, q, v),
-            4 => (t, p, v),
+            redYellowSector => (v, t, p),
+            yellowGreenSector => (q, v, p),
+            greenCyanSector => (p, v, t),
+            cyanBlueSector => (p, q, v),
+            bluePurpleSector => (t, p, v),
             _ => (v, p, q),
         };
     }
@@ -155,8 +178,11 @@ internal static class ColorSpaceHelper
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Lightness (0-1).</returns>
     public static (double H, double S, double L) HsvToHsl(double h, double s, double v)
     {
-        var hsl_l = v * (1 - (s / 2));
-        double hsl_s = hsl_l == 0 || hsl_l == 1 ? -1 : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
+        const double undefinedChannel = -1.0;
+        const double doubleScale = 2.0;
+
+        var hsl_l = v * (1 - (s / doubleScale));
+        double hsl_s = hsl_l == 0 || hsl_l == 1 ? undefinedChannel : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
 
         return (h, hsl_s, hsl_l);
     }
@@ -168,20 +194,29 @@ internal static class ColorSpaceHelper
     /// <returns>Values (0-1) in order: R, G, B.</returns>
     public static (double R, double G, double B) HslToRgb(double h, double s, double l)
     {
-        var hueCircleSegment = (int)(h / 60);
-        var circleSegmentFraction = (h - (60 * hueCircleSegment)) / 60;
+        const double halfScale = 0.5;
+        const double doubleScale = 2.0;
+        const double hueDegreesPerSector = 60.0;
+        const int redYellowSector = 0;
+        const int yellowGreenSector = 1;
+        const int greenCyanSector = 2;
+        const int cyanBlueSector = 3;
+        const int bluePurpleSector = 4;
 
-        var maxRGB = l < 0.5 ? l * (1 + s) : l + s - (l * s);
-        var minRGB = (2 * l) - maxRGB;
+        var hueCircleSegment = (int)(h / hueDegreesPerSector);
+        var circleSegmentFraction = (h - (hueDegreesPerSector * hueCircleSegment)) / hueDegreesPerSector;
+
+        var maxRGB = l < halfScale ? l * (1 + s) : l + s - (l * s);
+        var minRGB = (doubleScale * l) - maxRGB;
         var delta = maxRGB - minRGB;
 
         return hueCircleSegment switch
         {
-            0 => (maxRGB, (delta * circleSegmentFraction) + minRGB, minRGB), // red-yellow
-            1 => ((delta * (1 - circleSegmentFraction)) + minRGB, maxRGB, minRGB), // yellow-green
-            2 => (minRGB, maxRGB, (delta * circleSegmentFraction) + minRGB), // green-cyan
-            3 => (minRGB, (delta * (1 - circleSegmentFraction)) + minRGB, maxRGB), // cyan-blue
-            4 => ((delta * circleSegmentFraction) + minRGB, minRGB, maxRGB), // blue-purple
+            redYellowSector => (maxRGB, (delta * circleSegmentFraction) + minRGB, minRGB), // red-yellow
+            yellowGreenSector => ((delta * (1 - circleSegmentFraction)) + minRGB, maxRGB, minRGB), // yellow-green
+            greenCyanSector => (minRGB, maxRGB, (delta * circleSegmentFraction) + minRGB), // green-cyan
+            cyanBlueSector => (minRGB, (delta * (1 - circleSegmentFraction)) + minRGB, maxRGB), // cyan-blue
+            bluePurpleSector => ((delta * circleSegmentFraction) + minRGB, minRGB, maxRGB), // blue-purple
             _ => (maxRGB, minRGB, (delta * (1 - circleSegmentFraction)) + minRGB), // purple-red and invalid values
         };
     }
@@ -193,8 +228,11 @@ internal static class ColorSpaceHelper
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Value (0-1).</returns>
     public static (double H, double S, double V) HslToHsv(double h, double s, double l)
     {
+        const double undefinedChannel = -1.0;
+        const double doubleScale = 2.0;
+
         var hsv_v = l + (s * Math.Min(l, 1 - l));
-        double hsv_s = hsv_v == 0 ? -1 : 2 * (1 - (l / hsv_v));
+        double hsv_s = hsv_v == 0 ? undefinedChannel : doubleScale * (1 - (l / hsv_v));
 
         return (h, hsv_s, hsv_v);
     }

@@ -12,7 +12,7 @@ public class ChipGroup : FlexLayout
         nameof(State),
         typeof(ChipGroupState),
         typeof(ChipGroup),
-        propertyChanged: OnStateChanged);
+        propertyChanged: static (bindable, _, newValue) => OnStateChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="SelectionMode"/>.</summary>
     public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(
@@ -105,9 +105,8 @@ public class ChipGroup : FlexLayout
 
     /// <summary>Runs the state changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnStateChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnStateChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not ChipGroup control)
         {

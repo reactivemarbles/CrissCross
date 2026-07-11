@@ -9,6 +9,81 @@ namespace CrissCross.Tests;
 /// <summary>Tests for platform-neutral application control state models shared by UI stacks.</summary>
 public class ApplicationControlStateTests
 {
+    /// <summary>Provides the determinate progress value.</summary>
+    private const double DeterminateProgress = 0.42;
+
+    /// <summary>Provides the priority filter threshold.</summary>
+    private const int PriorityFilterThreshold = 2;
+
+    /// <summary>Provides the expected active filter count.</summary>
+    private const int ExpectedActiveFilterCount = 2;
+
+    /// <summary>Provides the expected selected chip count.</summary>
+    private const int ExpectedSelectedChipCount = 2;
+
+    /// <summary>Provides the expected removable chip count.</summary>
+    private const int ExpectedRemovableChipCount = 2;
+
+    /// <summary>Provides the expected enabled segment count.</summary>
+    private const int ExpectedEnabledSegmentCount = 2;
+
+    /// <summary>Provides the middle page index.</summary>
+    private const int MiddlePageIndex = 2;
+
+    /// <summary>Provides the middle page size.</summary>
+    private const int MiddlePageSize = 25;
+
+    /// <summary>Provides the middle page total item count.</summary>
+    private const int MiddlePageTotalItemCount = 103;
+
+    /// <summary>Provides the expected middle page number.</summary>
+    private const int ExpectedMiddlePageNumber = 3;
+
+    /// <summary>Provides the expected middle page total pages.</summary>
+    private const int ExpectedMiddlePageTotalPages = 5;
+
+    /// <summary>Provides the expected first item number.</summary>
+    private const int ExpectedMiddlePageFirstItemNumber = 51;
+
+    /// <summary>Provides the expected last item number.</summary>
+    private const int ExpectedMiddlePageLastItemNumber = 75;
+
+    /// <summary>Provides the page request page size.</summary>
+    private const int PageRequestPageSize = 50;
+
+    /// <summary>Provides the reversed range hour offset.</summary>
+    private const int ReversedRangeHourOffset = -2;
+
+    /// <summary>Provides the last seven days offset.</summary>
+    private const int LastSevenDaysOffset = -7;
+
+    /// <summary>Provides the expected theme choice count.</summary>
+    private const int ExpectedThemeChoiceCount = 3;
+
+    /// <summary>Provides the expected descriptor count.</summary>
+    private const int ExpectedDescriptorCount = 3;
+
+    /// <summary>Provides the expected visible descriptor count.</summary>
+    private const int ExpectedVisibleDescriptorCount = 2;
+
+    /// <summary>Provides the expected active token count.</summary>
+    private const int ExpectedActiveTokenCount = 2;
+
+    /// <summary>Provides the modified property value.</summary>
+    private const int ModifiedPropertyValue = 5;
+
+    /// <summary>Provides the original property value.</summary>
+    private const int OriginalPropertyValue = 3;
+
+    /// <summary>Provides the expected modified descriptor count.</summary>
+    private const int ExpectedModifiedDescriptorCount = 2;
+
+    /// <summary>Gets a symbol for email display-name assertions.</summary>
+    private static string Email => nameof(Email);
+
+    /// <summary>Gets a symbol for timeout display-name assertions.</summary>
+    private static string Timeout => nameof(Timeout);
+
     /// <summary>Provides the CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -42,12 +117,12 @@ public class ApplicationControlStateTests
     public async Task BusyOperation_DeterminateProgress_IsActiveDeterminateAndCancellable()
     {
         var cancelCommand = new TestCommand();
-        var operation = new BusyOperation("Importing", "42 items", 0.42, cancelCommand);
+        var operation = new BusyOperation("Importing", "42 items", DeterminateProgress, cancelCommand);
 
         await Assert.That(operation.IsActive).IsTrue();
         await Assert.That(operation.IsDeterminate).IsTrue();
         await Assert.That(operation.IsCancellable).IsTrue();
-        await Assert.That(operation.Progress).IsEqualTo(0.42);
+        await Assert.That(operation.Progress).IsEqualTo(DeterminateProgress);
     }
 
     /// <summary>Provides the EmptyStateModel_WithPrimaryAction_ReportsActionAvailability member.</summary>
@@ -76,7 +151,7 @@ public class ApplicationControlStateTests
         var filters = new[]
         {
             new FilterToken("status", FilterOperator.Equals, "open", "Status: Open"),
-            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, 2, "Priority >= 2")
+            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, PriorityFilterThreshold, "Priority >= 2")
         };
 
         var state = new SearchQueryState("  pump fault  ", "pump", "pump fault", isSearching: true, resultCount: 12, filters: filters);
@@ -84,7 +159,7 @@ public class ApplicationControlStateTests
         await Assert.That(state.NormalizedText).IsEqualTo("pump fault");
         await Assert.That(state.HasQuery).IsTrue();
         await Assert.That(state.IsFiltered).IsTrue();
-        await Assert.That(state.ActiveFilterCount).IsEqualTo(2);
+        await Assert.That(state.ActiveFilterCount).IsEqualTo(ExpectedActiveFilterCount);
         await Assert.That(state.ResultSummary).IsEqualTo("12 results");
     }
 
@@ -137,8 +212,8 @@ public class ApplicationControlStateTests
 
         await Assert.That(group.HasSelection).IsTrue();
         await Assert.That(group.CanSelectMultiple).IsTrue();
-        await Assert.That(group.SelectedChips).Count().IsEqualTo(2);
-        await Assert.That(group.RemovableChips).Count().IsEqualTo(2);
+        await Assert.That(group.SelectedChips).Count().IsEqualTo(ExpectedSelectedChipCount);
+        await Assert.That(group.RemovableChips).Count().IsEqualTo(ExpectedRemovableChipCount);
         await Assert.That(group.GetChip("open")?.Text).IsEqualTo("Open");
     }
 
@@ -158,7 +233,7 @@ public class ApplicationControlStateTests
 
         await Assert.That(state.SelectedItem?.Key).IsEqualTo("grid");
         await Assert.That(state.HasSelection).IsTrue();
-        await Assert.That(state.EnabledItems).Count().IsEqualTo(2);
+        await Assert.That(state.EnabledItems).Count().IsEqualTo(ExpectedEnabledSegmentCount);
         await Assert.That(state.GetItem("list")?.HasIcon).IsTrue();
     }
 
@@ -187,7 +262,7 @@ public class ApplicationControlStateTests
     {
         var messages = new[]
         {
-            new ValidationMessage("email", "Email", "Required", ValidationSeverity.Error),
+            new ValidationMessage("email", nameof(Email), "Required", ValidationSeverity.Error),
             new ValidationMessage("password", "Password", "Weak", ValidationSeverity.Warning),
             new ValidationMessage("profile", "Profile", "Checking availability", ValidationSeverity.Pending)
         };
@@ -210,16 +285,16 @@ public class ApplicationControlStateTests
     [Test]
     public async Task PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability()
     {
-        var state = new PaginationState(pageIndex: 2, pageSize: 25, totalItemCount: 103);
+        var state = new PaginationState(pageIndex: MiddlePageIndex, pageSize: MiddlePageSize, totalItemCount: MiddlePageTotalItemCount);
 
-        await Assert.That(state.PageNumber).IsEqualTo(3);
-        await Assert.That(state.TotalPages).IsEqualTo(5);
+        await Assert.That(state.PageNumber).IsEqualTo(ExpectedMiddlePageNumber);
+        await Assert.That(state.TotalPages).IsEqualTo(ExpectedMiddlePageTotalPages);
         await Assert.That(state.CanGoFirst).IsTrue();
         await Assert.That(state.CanGoPrevious).IsTrue();
         await Assert.That(state.CanGoNext).IsTrue();
         await Assert.That(state.CanGoLast).IsTrue();
-        await Assert.That(state.FirstItemNumber).IsEqualTo(51);
-        await Assert.That(state.LastItemNumber).IsEqualTo(75);
+        await Assert.That(state.FirstItemNumber).IsEqualTo(ExpectedMiddlePageFirstItemNumber);
+        await Assert.That(state.LastItemNumber).IsEqualTo(ExpectedMiddlePageLastItemNumber);
         await Assert.That(state.SummaryText).IsEqualTo("51-75 of 103");
     }
 
@@ -248,10 +323,10 @@ public class ApplicationControlStateTests
             new FilterToken("status", FilterOperator.Equals, "open", "Status: Open")
         };
         var query = new SearchQueryState(" alarm ", submittedText: "alarm", filters: filters);
-        var request = new PageRequest(pageIndex: 1, pageSize: 50, sortKey: "created", sortDescending: true, queryState: query);
+        var request = new PageRequest(pageIndex: 1, pageSize: PageRequestPageSize, sortKey: "created", sortDescending: true, queryState: query);
 
         await Assert.That(request.PageIndex).IsEqualTo(1);
-        await Assert.That(request.Offset).IsEqualTo(50);
+        await Assert.That(request.Offset).IsEqualTo(PageRequestPageSize);
         await Assert.That(request.HasSort).IsTrue();
         await Assert.That(request.HasQuery).IsTrue();
         await Assert.That(request.ActiveFilters).Count().IsEqualTo(1);
@@ -319,7 +394,7 @@ public class ApplicationControlStateTests
     public async Task DateTimeRange_ReversedCustomRange_IsInvalidAndReportsDuration()
     {
         var start = new DateTimeOffset(2026, 5, 13, 12, 0, 0, TimeSpan.Zero);
-        var end = start.AddHours(-2);
+        var end = start.AddHours(ReversedRangeHourOffset);
         var range = new DateTimeRange(start, end, DateTimeRangePreset.Custom, "Manual");
 
         await Assert.That(range.IsValid).IsFalse();
@@ -339,7 +414,7 @@ public class ApplicationControlStateTests
         var range = preset.CreateRange(reference);
 
         await Assert.That(range.Preset).IsEqualTo(DateTimeRangePreset.LastSevenDays);
-        await Assert.That(range.Start).IsEqualTo(reference.AddDays(-7));
+        await Assert.That(range.Start).IsEqualTo(reference.AddDays(LastSevenDaysOffset));
         await Assert.That(range.End).IsEqualTo(reference);
         await Assert.That(range.IsValid).IsTrue();
         await Assert.That(range.DisplayText).IsEqualTo("Last 7 days: 2026-05-06 09:30 - 2026-05-13 09:30");
@@ -357,7 +432,7 @@ public class ApplicationControlStateTests
         await Assert.That(state.EffectiveChoice).IsEqualTo(ThemeChoice.Dark);
         await Assert.That(state.IsSystemSelected).IsTrue();
         await Assert.That(state.SupportsChoice(ThemeChoice.HighContrast)).IsFalse();
-        await Assert.That(state.AvailableChoices).Count().IsEqualTo(3);
+        await Assert.That(state.AvailableChoices).Count().IsEqualTo(ExpectedThemeChoiceCount);
         await Assert.That(state.DisplayText).IsEqualTo("System (Dark)");
     }
 
@@ -416,16 +491,16 @@ public class ApplicationControlStateTests
         var state = new DataFilterPanelState(descriptors, expressions, isDirty: true);
         var queryState = state.ToSearchQueryState(" alarm ", resultCount: 4);
 
-        await Assert.That(state.DescriptorCount).IsEqualTo(3);
-        await Assert.That(state.ActiveFilterCount).IsEqualTo(2);
+        await Assert.That(state.DescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.ActiveFilterCount).IsEqualTo(ExpectedActiveFilterCount);
         await Assert.That(state.CanApply).IsTrue();
         await Assert.That(state.CanClear).IsTrue();
-        await Assert.That(state.ActiveTokens).Count().IsEqualTo(2);
+        await Assert.That(state.ActiveTokens).Count().IsEqualTo(ExpectedActiveTokenCount);
         await Assert.That(state.ActiveTokens[0].DisplayText).IsEqualTo("Status equals Open");
         await Assert.That(state.GetDescriptor("created")?.EditorKind).IsEqualTo(FilterEditorKind.DateRange);
         await Assert.That(queryState.NormalizedText).IsEqualTo("alarm");
         await Assert.That(queryState.ResultSummary).IsEqualTo("4 results");
-        await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(2);
+        await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(ExpectedActiveFilterCount);
     }
 
     /// <summary>Provides the PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState member.</summary>
@@ -443,8 +518,8 @@ public class ApplicationControlStateTests
             "Retry count",
             "Connection",
             PropertyEditorKind.Number,
-            value: 5,
-            originalValue: 3,
+            value: ModifiedPropertyValue,
+            originalValue: OriginalPropertyValue,
             isReadOnly: false,
             resetCommand: resetCommand,
             validationMessages: messages);
@@ -465,7 +540,7 @@ public class ApplicationControlStateTests
         var descriptors = new[]
         {
             new PropertyDescriptorModel("endpoint", "Endpoint", "Connection", PropertyEditorKind.Text, "opc.tcp://localhost", "opc.tcp://localhost"),
-            new PropertyDescriptorModel("timeout", "Timeout", "Connection", PropertyEditorKind.Number, 5, 3),
+            new PropertyDescriptorModel("timeout", nameof(Timeout), "Connection", PropertyEditorKind.Number, ModifiedPropertyValue, OriginalPropertyValue),
             new PropertyDescriptorModel(
                 "mode",
                 "Mode",
@@ -479,10 +554,10 @@ public class ApplicationControlStateTests
 
         var state = new PropertyGridState(descriptors, "connection");
 
-        await Assert.That(state.DescriptorCount).IsEqualTo(3);
-        await Assert.That(state.VisibleDescriptorCount).IsEqualTo(2);
-        await Assert.That(state.EditableDescriptorCount).IsEqualTo(3);
-        await Assert.That(state.ModifiedDescriptorCount).IsEqualTo(2);
+        await Assert.That(state.DescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.VisibleDescriptorCount).IsEqualTo(ExpectedVisibleDescriptorCount);
+        await Assert.That(state.EditableDescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.ModifiedDescriptorCount).IsEqualTo(ExpectedModifiedDescriptorCount);
         await Assert.That(state.InvalidDescriptorCount).IsEqualTo(1);
         await Assert.That(state.CanCommit).IsFalse();
         await Assert.That(state.Categories).Count().IsEqualTo(1);

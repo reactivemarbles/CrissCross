@@ -13,6 +13,42 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="Control" />
 public partial class PersonPicture : Control, IDisposable
 {
+    /// <summary>Divisor used to evaluate plural resource suffixes.</summary>
+    private const int PluralFormDivisor = 10;
+
+    /// <summary>Start of the second plural resource range.</summary>
+    private const int BadgeItemPluralTwoStart = 3;
+
+    /// <summary>Start of the third plural resource range.</summary>
+    private const int BadgeItemPluralThreeStart = 2;
+
+    /// <summary>End of the second plural resource range.</summary>
+    private const int BadgeItemPluralTwoEnd = 4;
+
+    /// <summary>Start of the fifth plural resource range.</summary>
+    private const int BadgeItemPluralFiveStart = 5;
+
+    /// <summary>End of the fifth plural resource range.</summary>
+    private const int BadgeItemPluralFiveEnd = 10;
+
+    /// <summary>Start of the sixth plural resource range.</summary>
+    private const int BadgeItemPluralSixStart = 11;
+
+    /// <summary>End of the sixth plural resource range.</summary>
+    private const int BadgeItemPluralSixEnd = 19;
+
+    /// <summary>Largest badge number displayed directly before using a capped label.</summary>
+    private const int BadgeMaximumDisplayNumber = 99;
+
+    /// <summary>Initials font size ratio relative to the picture width.</summary>
+    private const double InitialsFontSizeRatio = 0.42;
+
+    /// <summary>Badge ellipse size ratio relative to the picture size.</summary>
+    private const double BadgeSizeRatio = 0.5;
+
+    /// <summary>Badge text font size ratio relative to the badge ellipse height.</summary>
+    private const double BadgeFontSizeRatio = 0.6;
+
     /// <summary>Provides the ResourceAccessor member.</summary>
     private static readonly ResourceAccessor ResourceAccessor = new(typeof(PersonPicture));
 
@@ -98,16 +134,16 @@ public partial class PersonPicture : Control, IDisposable
     /// <returns>The localized badge text for the numeric value.</returns>
     private static string? GetLocalizedPluralBadgeItemStringResource(int numericValue)
     {
-        var valueMod10 = numericValue % 10;
+        var valueMod10 = numericValue % PluralFormDivisor;
         var resourceName = numericValue switch
         {
             1 => ResourceAccessor.BadgeItemSingular,
-            2 => ResourceAccessor.BadgeItemPlural7,
-            3 or 4 => ResourceAccessor.BadgeItemPlural2,
-            >= 5 and <= 10 => ResourceAccessor.BadgeItemPlural5,
-            >= 11 and <= 19 => ResourceAccessor.BadgeItemPlural6,
+            BadgeItemPluralThreeStart => ResourceAccessor.BadgeItemPlural7,
+            >= BadgeItemPluralTwoStart and <= BadgeItemPluralTwoEnd => ResourceAccessor.BadgeItemPlural2,
+            >= BadgeItemPluralFiveStart and <= BadgeItemPluralFiveEnd => ResourceAccessor.BadgeItemPlural5,
+            >= BadgeItemPluralSixStart and <= BadgeItemPluralSixEnd => ResourceAccessor.BadgeItemPlural6,
             _ when valueMod10 == 1 => ResourceAccessor.BadgeItemPlural1,
-            _ when valueMod10 is >= 2 and <= 4 => ResourceAccessor.BadgeItemPlural3,
+            _ when valueMod10 is >= BadgeItemPluralThreeStart and <= BadgeItemPluralTwoEnd => ResourceAccessor.BadgeItemPlural3,
             _ => ResourceAccessor.BadgeItemPlural4
         };
 
@@ -133,21 +169,13 @@ public partial class PersonPicture : Control, IDisposable
 
     /// <summary>Helper to determine the initials that should be shown.</summary>
     /// <returns>The result.</returns>
-    private string? GetInitials()
-    {
-        if (!string.IsNullOrEmpty(Initials))
+    private string? GetInitials() =>
+        (Initials, _m_displayNameInitials) switch
         {
-            return Initials;
-        }
-        else if (!string.IsNullOrEmpty(_m_displayNameInitials))
-        {
-            return _m_displayNameInitials;
-        }
-        else
-        {
-            return null;
-        }
-    }
+            ({ Length: > 0 } initials, _) => initials,
+            (_, { Length: > 0 } displayNameInitials) => displayNameInitials,
+            _ => null
+        };
 
     /// <summary>Helper to determine the image source that should be shown.</summary>
     /// <returns>The result.</returns>
@@ -192,7 +220,7 @@ public partial class PersonPicture : Control, IDisposable
         }
         else if (!string.IsNullOrEmpty(initials))
         {
-            _ = VisualStateManager.GoToState(this, "Initials", false);
+            _ = VisualStateManager.GoToState(this, nameof(Initials), false);
         }
         else
         {
@@ -257,7 +285,7 @@ public partial class PersonPicture : Control, IDisposable
         // should have badging number to show if we are here
         _ = VisualStateManager.GoToState(this, "BadgeWithoutImageSource", false);
 
-        if (badgeNumber <= 99)
+        if (badgeNumber <= BadgeMaximumDisplayNumber)
         {
             _m_badgeNumberTextBlock.Text = badgeNumber.ToString();
         }
@@ -407,7 +435,7 @@ public partial class PersonPicture : Control, IDisposable
         // font size to be 42% of the container. Since it's circular, 42% of either Width or Height.
         // Note that we cap it to a minimum of 1, since a font size of less than 1 is an invalid value
         // that will result in a failure.
-        var fontSize = Math.Max(1.0, Width * .42);
+        var fontSize = Math.Max(1.0, Width * InitialsFontSizeRatio);
 
         var initialsTextBlock = _m_initialsTextBlock;
         if (initialsTextBlock is not null)
@@ -434,12 +462,12 @@ public partial class PersonPicture : Control, IDisposable
         // Design guidelines have specified the font size to be 60% of the badging plate, and we want to keep
         // badging plate to be about 50% of the control so that don't block the initial/profile picture.
         var newSize = Math.Min(newControlSize.Width, newControlSize.Height);
-        _m_badgingEllipse.Height = newSize * 0.5;
-        _m_badgingEllipse.Width = newSize * 0.5;
-        _m_badgingBackgroundEllipse.Height = newSize * 0.5;
-        _m_badgingBackgroundEllipse.Width = newSize * 0.5;
-        _m_badgeNumberTextBlock.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
-        _m_badgeGlyphIcon.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
+        _m_badgingEllipse.Height = newSize * BadgeSizeRatio;
+        _m_badgingEllipse.Width = newSize * BadgeSizeRatio;
+        _m_badgingBackgroundEllipse.Height = newSize * BadgeSizeRatio;
+        _m_badgingBackgroundEllipse.Width = newSize * BadgeSizeRatio;
+        _m_badgeNumberTextBlock.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * BadgeFontSizeRatio);
+        _m_badgeGlyphIcon.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * BadgeFontSizeRatio);
     }
 
     /// <summary>Provides the OnUnloaded member.</summary>

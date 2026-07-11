@@ -12,7 +12,7 @@ public class Chip : Button
         nameof(Model),
         typeof(ChipModel),
         typeof(Chip),
-        propertyChanged: OnModelChanged);
+        propertyChanged: static (bindable, _, newValue) => OnModelChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="IsSelected"/>.</summary>
     public static readonly BindableProperty IsSelectedProperty = BindableProperty.Create(
@@ -49,9 +49,8 @@ public class Chip : Button
 
     /// <summary>Runs the model changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnModelChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnModelChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not Chip chip || newValue is not ChipModel model)
         {

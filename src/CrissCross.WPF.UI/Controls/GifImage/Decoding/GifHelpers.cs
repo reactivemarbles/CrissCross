@@ -9,6 +9,24 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 /// <summary>Provides the GifHelpers member.</summary>
 internal static class GifHelpers
 {
+    /// <summary>The maximum GIF data sub-block size in bytes.</summary>
+    private const int MaxDataSubBlockByteCount = 255;
+
+    /// <summary>The GIF color byte count.</summary>
+    private const int GifColorByteCount = 3;
+
+    /// <summary>The green byte offset in a GIF color.</summary>
+    private const int GifColorGreenOffset = 1;
+
+    /// <summary>The blue byte offset in a GIF color.</summary>
+    private const int GifColorBlueOffset = 2;
+
+    /// <summary>The Netscape repeat count minimum data length.</summary>
+    private const int NetscapeRepeatCountDataLength = 3;
+
+    /// <summary>The Netscape repeat count offset.</summary>
+    private const int NetscapeRepeatCountOffset = 1;
+
     /// <summary>Provides the ReadStringAsync member.</summary>
     /// <param name="stream">The stream value.</param>
     /// <param name="length">The length value.</param>
@@ -50,8 +68,7 @@ internal static class GifHelpers
     {
         int len;
 
-        // the length is on 1 byte, so each data sub-block can't be more than 255 bytes long
-        var buffer = new byte[255];
+        var buffer = new byte[MaxDataSubBlockByteCount];
         while ((len = await sourceStream.ReadByteAsync(cancellationToken)) > 0)
         {
             await sourceStream.ReadAllAsync(buffer, 0, len, cancellationToken).ConfigureAwait(false);
@@ -65,15 +82,16 @@ internal static class GifHelpers
     /// <returns>The result.</returns>
     public static async Task<GifColor[]> ReadColorTableAsync(Stream stream, int size)
     {
-        var length = 3 * size;
+        var length = GifColorByteCount * size;
         var bytes = new byte[length];
         await stream.ReadAllAsync(bytes, 0, length).ConfigureAwait(false);
         var colorTable = new GifColor[size];
         for (var i = 0; i < size; i++)
         {
-            var r = bytes[3 * i];
-            var g = bytes[(3 * i) + 1];
-            var b = bytes[(3 * i) + 2];
+            var colorOffset = GifColorByteCount * i;
+            var r = bytes[colorOffset];
+            var g = bytes[colorOffset + GifColorGreenOffset];
+            var b = bytes[colorOffset + GifColorBlueOffset];
             colorTable[i] = new(r, g, b);
         }
 
@@ -91,7 +109,7 @@ internal static class GifHelpers
     /// <returns>The result.</returns>
     public static ushort GetRepeatCount(GifApplicationExtension ext)
     {
-        return ext.Data is { Length: >= 3 } data ? BitConverter.ToUInt16(data, 1) : (ushort)1;
+        return ext.Data is { Length: >= NetscapeRepeatCountDataLength } data ? BitConverter.ToUInt16(data, NetscapeRepeatCountOffset) : (ushort)1;
     }
 
     /// <summary>Provides the UnknownBlockTypeException member.</summary>

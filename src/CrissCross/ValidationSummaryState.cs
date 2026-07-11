@@ -12,6 +12,9 @@ namespace CrissCross;
 /// <summary>Immutable aggregate validation state for form summary controls and submit gating.</summary>
 public sealed class ValidationSummaryState
 {
+    /// <summary>The maximum number of categories included in the summary text.</summary>
+    private const int SummaryCategoryCapacity = 3;
+
     /// <summary>Initializes a new instance of the <see cref="ValidationSummaryState"/> class.</summary>
     /// <param name="messages">The validation messages to summarize.</param>
     public ValidationSummaryState(IEnumerable<ValidationMessage>? messages)
@@ -57,7 +60,7 @@ public sealed class ValidationSummaryState
     {
         get
         {
-            var parts = new List<string>(3);
+            var parts = new List<string>(SummaryCategoryCapacity);
             AddCount(parts, ErrorCount, "error");
             AddCount(parts, WarningCount, "warning");
             AddCount(parts, PendingCount, "pending");

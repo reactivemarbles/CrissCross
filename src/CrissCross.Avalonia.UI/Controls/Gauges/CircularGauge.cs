@@ -332,6 +332,17 @@ public class CircularGauge : TemplatedControl
     /// <summary>Provides the DrawScale member.</summary>
     private void DrawScale()
     {
+        const double canvasCenterX = 100.0;
+        const double canvasCenterY = 100.0;
+        const double degreesInHalfCircle = 180.0;
+        const double majorTickStrokeThickness = 2.0;
+        const double minorTickStrokeThickness = 1.0;
+        const double majorTickLength = 10.0;
+        const double minorTickLength = 5.0;
+        const double labelFontSize = 10.0;
+        const double labelHorizontalOffset = 12.0;
+        const double labelVerticalOffset = 6.0;
+
         if (_scaleCanvas is null)
         {
             return;
@@ -339,54 +350,47 @@ public class CircularGauge : TemplatedControl
 
         _scaleCanvas.Children.Clear();
 
-        // Fixed center for the 200x200 canvas in the Viewbox
-        const double centerX = 100;
-        const double centerY = 100;
-
         var majorTickUnitAngle = ScaleSweepAngle / MajorDivisionsCount;
         var majorTicksUnitValue = (MaxValue - MinValue) / MajorDivisionsCount;
-
-        const double majorTickLength = 10.0;
-        const double minorTickLength = 5.0;
 
         // Draw major and minor ticks
         for (var i = 0; i <= MajorDivisionsCount; i++)
         {
             var angle = ScaleStartAngle + (i * majorTickUnitAngle);
-            var angleRadian = angle * Math.PI / 180;
+            var angleRadian = angle * Math.PI / degreesInHalfCircle;
 
             // Major tick - drawn as rotated rectangle centered at the tick position
-            var startX = centerX + (ScaleRadius * Math.Cos(angleRadian));
-            var startY = centerY + (ScaleRadius * Math.Sin(angleRadian));
-            var endX = centerX + ((ScaleRadius - majorTickLength) * Math.Cos(angleRadian));
-            var endY = centerY + ((ScaleRadius - majorTickLength) * Math.Sin(angleRadian));
+            var startX = canvasCenterX + (ScaleRadius * Math.Cos(angleRadian));
+            var startY = canvasCenterY + (ScaleRadius * Math.Sin(angleRadian));
+            var endX = canvasCenterX + ((ScaleRadius - majorTickLength) * Math.Cos(angleRadian));
+            var endY = canvasCenterY + ((ScaleRadius - majorTickLength) * Math.Sin(angleRadian));
 
             var majorTick = new Line
             {
                 StartPoint = new(startX, startY),
                 EndPoint = new(endX, endY),
                 Stroke = ScaleColor,
-                StrokeThickness = 2
+                StrokeThickness = majorTickStrokeThickness
             };
             _scaleCanvas.Children.Add(majorTick);
 
             // Scale label
             var labelRadius = ScaleLabelRadius;
-            var labelX = centerX + (labelRadius * Math.Cos(angleRadian));
-            var labelY = centerY + (labelRadius * Math.Sin(angleRadian));
+            var labelX = canvasCenterX + (labelRadius * Math.Cos(angleRadian));
+            var labelY = canvasCenterY + (labelRadius * Math.Sin(angleRadian));
 
             var labelValue = MinValue + (i * majorTicksUnitValue);
             var label = new TextBlock
             {
                 Text = labelValue.ToString($"F{Decimals}"),
-                FontSize = 10,
+                FontSize = labelFontSize,
                 Foreground = ScaleColor,
                 TextAlignment = TextAlignment.Center,
             };
 
             // Offset label to center it on the position
-            Canvas.SetLeft(label, labelX - 12);
-            Canvas.SetTop(label, labelY - 6);
+            Canvas.SetLeft(label, labelX - labelHorizontalOffset);
+            Canvas.SetTop(label, labelY - labelVerticalOffset);
             _scaleCanvas.Children.Add(label);
 
             // Minor ticks (except after last major tick)
@@ -396,19 +400,19 @@ public class CircularGauge : TemplatedControl
                 for (var j = 1; j < MinorDivisionsCount; j++)
                 {
                     var minorAngle = angle + (j * minorTickUnitAngle);
-                    var minorAngleRadian = minorAngle * Math.PI / 180;
+                    var minorAngleRadian = minorAngle * Math.PI / degreesInHalfCircle;
 
-                    var minorStartX = centerX + (ScaleRadius * Math.Cos(minorAngleRadian));
-                    var minorStartY = centerY + (ScaleRadius * Math.Sin(minorAngleRadian));
-                    var minorEndX = centerX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
-                    var minorEndY = centerY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
+                    var minorStartX = canvasCenterX + (ScaleRadius * Math.Cos(minorAngleRadian));
+                    var minorStartY = canvasCenterY + (ScaleRadius * Math.Sin(minorAngleRadian));
+                    var minorEndX = canvasCenterX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
+                    var minorEndY = canvasCenterY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
 
                     var minorTick = new Line
                     {
                         StartPoint = new(minorStartX, minorStartY),
                         EndPoint = new(minorEndX, minorEndY),
                         Stroke = ScaleColor,
-                        StrokeThickness = 1
+                        StrokeThickness = minorTickStrokeThickness
                     };
                     _scaleCanvas.Children.Add(minorTick);
                 }

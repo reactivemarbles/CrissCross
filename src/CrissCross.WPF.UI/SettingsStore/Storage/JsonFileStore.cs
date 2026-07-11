@@ -122,11 +122,11 @@ public class JsonFileStore(string storeFolderPath) : IStore
                 writer.WriteStartObject();
                 if (kvp.Value is not null)
                 {
-                    writer.WriteString("Type", kvp.Value.GetType().AssemblyQualifiedName);
+                    writer.WriteString(nameof(Type), kvp.Value.GetType().AssemblyQualifiedName);
                 }
                 else
                 {
-                    writer.WriteString("Type", string.Empty);
+                    writer.WriteString(nameof(Type), string.Empty);
                 }
 
                 writer.WriteString("Name", kvp.Key);
@@ -237,7 +237,7 @@ public class JsonFileStore(string storeFolderPath) : IStore
     /// <returns>The value type, or <see langword="null"/>.</returns>
     private static Type? GetEntryValueType(JsonElement element)
     {
-        if (!element.TryGetProperty("Type", out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
+        if (!element.TryGetProperty(nameof(Type), out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
         {
             return null;
         }

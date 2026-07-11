@@ -77,29 +77,19 @@ public static class ApplicationThemeManager
 
         var appDictionaries = new ResourceDictionaryManager(LibraryNamespace);
 
-        var themeDictionaryName = "Light";
-
-        switch (applicationTheme)
+        var themeDictionaryName = applicationTheme switch
         {
-            case ApplicationTheme.Dark:
-                {
-                    themeDictionaryName = "Dark";
-                    break;
-                }
-
-            case ApplicationTheme.HighContrast:
-                {
-                    themeDictionaryName = GetSystemTheme() switch
-                    {
-                        SystemTheme.HC1 => "HC1",
-                        SystemTheme.HC2 => "HC2",
-                        SystemTheme.HCBlack => "HCBlack",
-                        SystemTheme.HCWhite => "HCWhite",
-                        _ => "HCWhite",
-                    };
-                    break;
-                }
-        }
+            ApplicationTheme.Dark => "Dark",
+            ApplicationTheme.HighContrast => GetSystemTheme() switch
+            {
+                SystemTheme.HC1 => "HC1",
+                SystemTheme.HC2 => "HC2",
+                SystemTheme.HCBlack => "HCBlack",
+                SystemTheme.HCWhite => "HCWhite",
+                _ => "HCWhite",
+            },
+            _ => "Light",
+        };
 
         var isUpdated = appDictionaries.UpdateDictionary(
             ThemeDictionaryLookup,

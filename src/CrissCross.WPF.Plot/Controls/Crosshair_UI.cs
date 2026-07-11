@@ -21,6 +21,15 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class Crosshair_UI : RxObject, IPlottableUI
 {
+    /// <summary>The crosshair stroke width.</summary>
+    private const float CrosshairLineWidth = 3;
+
+    /// <summary>The vertical offset for the horizontal-axis label.</summary>
+    private const float HorizontalLabelOffsetY = -10;
+
+    /// <summary>The horizontal offset for the horizontal-axis label.</summary>
+    private const float HorizontalLabelOffsetX = 80;
+
     /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects _chartSettings;
@@ -117,7 +126,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     {
         PlotLine = Plot.Plot.Add.Crosshair(position, 0);
         PlotLine.IsVisible = true;
-        PlotLine.LineWidth = 3;
+        PlotLine.LineWidth = CrosshairLineWidth;
         PlotLine.HorizontalLine.IsDraggable = true;
         PlotLine.VerticalLine.IsDraggable = true;
         PlotLine!.HorizontalLine.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
@@ -126,8 +135,8 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         PlotLine.VerticalLine.Text = "Click and drag me";
         PlotLine.HorizontalLine.LabelStyle.IsVisible = true;
         PlotLine.VerticalLine.LabelStyle.IsVisible = true;
-        PlotLine.HorizontalLine.LabelStyle.OffsetY = -10;
-        PlotLine.HorizontalLine.LabelStyle.OffsetX = 80;
+        PlotLine.HorizontalLine.LabelStyle.OffsetY = HorizontalLabelOffsetY;
+        PlotLine.HorizontalLine.LabelStyle.OffsetX = HorizontalLabelOffsetX;
         PlotLine.HorizontalLine.LabelStyle.Rotation = 0;
         PlotLine.HorizontalLine.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
         PlotLine.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));

@@ -86,22 +86,15 @@ internal sealed class GifDataStream
                 }
                 else if (block is GifExtension extension)
                 {
-                    switch (extension.Kind)
+                    Action processExtension = extension.Kind switch
                     {
-                        case GifBlockKind.Control:
-                            {
-                                controlExtensions.Add(extension);
-                                break;
-                            }
+                        GifBlockKind.Control => () => controlExtensions.Add(extension),
+                        GifBlockKind.SpecialPurpose => () => specialExtensions.Add(extension),
+                        GifBlockKind.GraphicRendering or GifBlockKind.Other => static () => { },
+                        _ => static () => { }
+                    };
 
-                        case GifBlockKind.SpecialPurpose:
-                            {
-                                specialExtensions.Add(extension);
-                                break;
-                            }
-
-                            // Just discard plain text extensions for now, since we have no use for it
-                    }
+                    processExtension();
                 }
                 else if (block is GifTrailer)
                 {

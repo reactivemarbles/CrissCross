@@ -9,6 +9,45 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 /// <summary>Provides the GifLogicalScreenDescriptor member.</summary>
 internal sealed class GifLogicalScreenDescriptor : IGifRect
 {
+    /// <summary>The logical screen descriptor byte count.</summary>
+    private const int DescriptorByteCount = 7;
+
+    /// <summary>The height offset.</summary>
+    private const int HeightOffset = 2;
+
+    /// <summary>The packed fields offset.</summary>
+    private const int PackedFieldsOffset = 4;
+
+    /// <summary>The background color index offset.</summary>
+    private const int BackgroundColorIndexOffset = 5;
+
+    /// <summary>The pixel aspect ratio offset.</summary>
+    private const int PixelAspectRatioOffset = 6;
+
+    /// <summary>The global color table flag mask.</summary>
+    private const int GlobalColorTableFlagMask = 0x80;
+
+    /// <summary>The color resolution mask.</summary>
+    private const int ColorResolutionMask = 0x70;
+
+    /// <summary>The color resolution shift.</summary>
+    private const int ColorResolutionShift = 4;
+
+    /// <summary>The global color table sorted flag mask.</summary>
+    private const int GlobalColorTableSortedFlagMask = 0x08;
+
+    /// <summary>The global color table size mask.</summary>
+    private const int GlobalColorTableSizeMask = 0x07;
+
+    /// <summary>The color table size exponent offset.</summary>
+    private const int ColorTableSizeExponentOffset = 1;
+
+    /// <summary>The GIF pixel aspect ratio offset.</summary>
+    private const int PixelAspectRatioValueOffset = 15;
+
+    /// <summary>The GIF pixel aspect ratio divisor.</summary>
+    private const double PixelAspectRatioDivisor = 64.0;
+
     /// <summary>Gets the Width value.</summary>
     public int Width { get; private set; }
 
@@ -52,20 +91,20 @@ internal sealed class GifLogicalScreenDescriptor : IGifRect
     /// <returns>The result.</returns>
     private async Task ReadInternalAsync(Stream stream)
     {
-        var bytes = new byte[7];
+        var bytes = new byte[DescriptorByteCount];
         await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
         Width = BitConverter.ToUInt16(bytes, 0);
-        Height = BitConverter.ToUInt16(bytes, 2);
-        var packedFields = bytes[4];
-        HasGlobalColorTable = (packedFields & 0x80) != 0;
-        ColorResolution = ((packedFields & 0x70) >> 4) + 1;
-        IsGlobalColorTableSorted = (packedFields & 0x08) != 0;
-        GlobalColorTableSize = 1 << ((packedFields & 0x07) + 1);
-        BackgroundColorIndex = bytes[5];
+        Height = BitConverter.ToUInt16(bytes, HeightOffset);
+        var packedFields = bytes[PackedFieldsOffset];
+        HasGlobalColorTable = (packedFields & GlobalColorTableFlagMask) != 0;
+        ColorResolution = ((packedFields & ColorResolutionMask) >> ColorResolutionShift) + ColorTableSizeExponentOffset;
+        IsGlobalColorTableSorted = (packedFields & GlobalColorTableSortedFlagMask) != 0;
+        GlobalColorTableSize = 1 << ((packedFields & GlobalColorTableSizeMask) + ColorTableSizeExponentOffset);
+        BackgroundColorIndex = bytes[BackgroundColorIndexOffset];
         PixelAspectRatio =
-            bytes[6] == 0
+            bytes[PixelAspectRatioOffset] == 0
                 ? 0.0
-                : (15 + bytes[6]) / 64.0;
+                : (PixelAspectRatioValueOffset + bytes[PixelAspectRatioOffset]) / PixelAspectRatioDivisor;
     }
 }

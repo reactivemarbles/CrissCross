@@ -5,17 +5,16 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace CrissCross.WPF.Benchmarks
+namespace CrissCross.WPF.Benchmarks;
+
+/// <summary>Entry point for running WPF benchmarks.</summary>
+public static class Program
 {
-    /// <summary>Entry point for running WPF benchmarks.</summary>
-    public static class Program
+    /// <summary>Main entry point for BenchmarkDotNet.</summary>
+    /// <param name="args">Command-line arguments.</param>
+    public static void Main(string[] args)
     {
-        /// <summary>Main entry point for BenchmarkDotNet.</summary>
-        /// <param name="args">Command-line arguments.</param>
-        public static void Main(string[] args)
-        {
-            var config = ManualConfig.CreateEmpty();
-            _ = BenchmarkRunner.Run<ViewModelRoutedViewHostBenchmark>(config);
-        }
+        var config = ManualConfig.CreateEmpty();
+        _ = BenchmarkRunner.Run<ViewModelRoutedViewHostBenchmark>(config);
     }
 }

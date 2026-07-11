@@ -5,17 +5,16 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-namespace CrissCross.MAUI.Benchmarks
+namespace CrissCross.MAUI.Benchmarks;
+
+/// <summary>Entry point for running MAUI benchmarks.</summary>
+public static class Program
 {
-    /// <summary>Entry point for running MAUI benchmarks.</summary>
-    public static class Program
+    /// <summary>Main entry point for BenchmarkDotNet.</summary>
+    /// <param name="args">Command-line arguments.</param>
+    public static void Main(string[] args)
     {
-        /// <summary>Main entry point for BenchmarkDotNet.</summary>
-        /// <param name="args">Command-line arguments.</param>
-        public static void Main(string[] args)
-        {
-            var config = ManualConfig.CreateEmpty();
-            _ = BenchmarkRunner.Run<NavigationShellBenchmark>(config);
-        }
+        var config = ManualConfig.CreateEmpty();
+        _ = BenchmarkRunner.Run<NavigationShellBenchmark>(config);
     }
 }

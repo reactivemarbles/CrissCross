@@ -259,6 +259,19 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
                     IsPaneToggleVisible = false;
                     break;
                 }
+
+            case NavigationViewPaneDisplayMode.Left or
+                NavigationViewPaneDisplayMode.LeftMinimal or
+                NavigationViewPaneDisplayMode.Top or
+                NavigationViewPaneDisplayMode.Bottom:
+                {
+                    break;
+                }
+
+            default:
+                {
+                    throw new ArgumentOutOfRangeException(nameof(PaneDisplayMode), PaneDisplayMode, null);
+                }
         }
     }
 

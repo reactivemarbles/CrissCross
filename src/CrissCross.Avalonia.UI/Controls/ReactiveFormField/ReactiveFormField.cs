@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using CrissCross;
 
 namespace CrissCross.Avalonia.UI.Controls;

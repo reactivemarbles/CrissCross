@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -30,6 +29,12 @@ public class FormattedTextPresenter : TextBlock
 
     /// <summary>Provides the InlineObjectBoundarySentinel member.</summary>
     private const string InlineObjectBoundarySentinel = "\u200B";
+
+    /// <summary>Provides the DefaultImageMaxWidth member.</summary>
+    private const double DefaultImageMaxWidth = 640;
+
+    /// <summary>Provides the DefaultImageMaxHeight member.</summary>
+    private const double DefaultImageMaxHeight = 480;
 
     /// <summary>Gets or sets a value indicating whether HTTP/HTTPS image sources may be resolved by <see cref="RemoteImageLoader"/>.</summary>
     public bool IsRemoteImageLoadingEnabled { get; set; }
@@ -89,8 +94,8 @@ public class FormattedTextPresenter : TextBlock
         var image = new Image
         {
             Source = bitmap,
-            MaxWidth = 640,
-            MaxHeight = 480,
+            MaxWidth = DefaultImageMaxWidth,
+            MaxHeight = DefaultImageMaxHeight,
             Stretch = Stretch.Uniform,
             StretchDirection = StretchDirection.DownOnly,
             HorizontalAlignment = segment.ImageAlignment,
@@ -108,7 +113,7 @@ public class FormattedTextPresenter : TextBlock
 
         if (!segment.ImageWidth.HasValue && !segment.ImageHeight.HasValue && bitmap.Size is { Width: > 0, Height: > 0 } naturalSize)
         {
-            var scale = Math.Min(1, Math.Min(640 / naturalSize.Width, 480 / naturalSize.Height));
+            var scale = Math.Min(1, Math.Min(DefaultImageMaxWidth / naturalSize.Width, DefaultImageMaxHeight / naturalSize.Height));
             image.Width = naturalSize.Width * scale;
             image.Height = naturalSize.Height * scale;
         }

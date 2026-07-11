@@ -46,6 +46,21 @@ public class ProgressRing : TemplatedControl
         nameof(CoverRingVisibility),
         true);
 
+    /// <summary>Minimum accepted progress percentage.</summary>
+    private const double MinimumProgress = 0d;
+
+    /// <summary>Maximum accepted progress percentage.</summary>
+    private const double MaximumProgress = 100d;
+
+    /// <summary>Degrees represented by one percentage point.</summary>
+    private const double DegreesPerPercent = 3.6d;
+
+    /// <summary>Degrees in a full circle.</summary>
+    private const double FullCircleDegrees = 360d;
+
+    /// <summary>Maximum rendered arc angle.</summary>
+    private const double MaximumArcDegrees = 359d;
+
     /// <summary>Provides the ProgressRing member.</summary>
     static ProgressRing()
     {
@@ -107,20 +122,20 @@ public class ProgressRing : TemplatedControl
     protected void UpdateProgressAngle()
     {
         var percentage = Progress;
-        if (percentage > 100)
+        if (percentage > MaximumProgress)
         {
-            percentage = 100;
+            percentage = MaximumProgress;
         }
 
-        if (percentage < 0)
+        if (percentage < MinimumProgress)
         {
-            percentage = 0;
+            percentage = MinimumProgress;
         }
 
-        var endAngle = 3.6d * percentage;
-        if (endAngle >= 360)
+        var endAngle = DegreesPerPercent * percentage;
+        if (endAngle >= FullCircleDegrees)
         {
-            endAngle = 359;
+            endAngle = MaximumArcDegrees;
         }
 
         EngAngle = endAngle;

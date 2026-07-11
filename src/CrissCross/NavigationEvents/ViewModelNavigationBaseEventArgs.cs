@@ -8,23 +8,30 @@ using System.Runtime.Serialization;
 namespace CrissCross;
 
 /// <summary>View Model Navigation Base Event Args.</summary>
+/// <remarks>Initializes shared navigation event state.</remarks>
+/// <param name="from">The navigation source.</param>
+/// <param name="to">The navigation destination.</param>
+/// <param name="navigationParameter">The navigation parameter.</param>
 /// <seealso cref="EventArgs" />
 [DataContract]
-public abstract class ViewModelNavigationBaseEventArgs
+public abstract class ViewModelNavigationBaseEventArgs(
+    IRxObject? from = null,
+    IRxObject? to = null,
+    object? navigationParameter = null)
                 : EventArgs, IViewModelNavigationBaseEventArgs
 {
     /// <summary>Gets where navigation starts.</summary>
     /// <value>From.</value>
     [DataMember]
-    public IRxObject? From { get; protected set; }
+    public IRxObject? From { get; protected set; } = from;
 
     /// <summary>Gets the navigation parameter.</summary>
     /// <value>The navigation parameter.</value>
     [DataMember]
-    public object? NavigationParameter { get; protected set; }
+    public object? NavigationParameter { get; protected set; } = navigationParameter;
 
     /// <summary>Gets where navigation ends.</summary>
     /// <value>To.</value>
     [DataMember]
-    public IRxObject? To { get; protected set; }
+    public IRxObject? To { get; protected set; } = to;
 }

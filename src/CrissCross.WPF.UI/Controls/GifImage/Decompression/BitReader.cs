@@ -8,6 +8,18 @@ namespace CrissCross.WPF.UI.Controls.Decompression;
 /// <param name="buffer">The buffer value.</param>
 internal sealed class BitReader(byte[] buffer)
 {
+    /// <summary>The number of bits in the local read window.</summary>
+    private const int ReadWindowBitCount = 32;
+
+    /// <summary>The number of bytes in the local read window.</summary>
+    private const int ReadWindowByteCount = 4;
+
+    /// <summary>The byte shift for bit-to-byte conversion.</summary>
+    private const int ByteShift = 3;
+
+    /// <summary>The byte-aligned bit position mask.</summary>
+    private const int ByteAlignedBitPositionMask = 0x07;
+
     /// <summary>Stores the _bytePosition value.</summary>
     private int _bytePosition = -1;
 
@@ -34,11 +46,11 @@ internal sealed class BitReader(byte[] buffer)
             _bitPosition = 0;
             _currentValue = ReadInt32();
         }
-        else if (bitCount > 32 - _bitPosition)
+        else if (bitCount > ReadWindowBitCount - _bitPosition)
         {
-            var n = _bitPosition >> 3;
+            var n = _bitPosition >> ByteShift;
             _bytePosition += n;
-            _bitPosition &= 0x07;
+            _bitPosition &= ByteAlignedBitPositionMask;
             _currentValue = ReadInt32() >> _bitPosition;
         }
 
@@ -54,14 +66,14 @@ internal sealed class BitReader(byte[] buffer)
     private int ReadInt32()
     {
         var value = 0;
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < ReadWindowByteCount; i++)
         {
             if (_bytePosition + i >= buffer.Length)
             {
                 break;
             }
 
-            value |= buffer[_bytePosition + i] << (i << 3);
+            value |= buffer[_bytePosition + i] << (i << ByteShift);
         }
 
         return value;

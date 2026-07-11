@@ -4,7 +4,6 @@
 
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
 using CrissCross;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -59,7 +58,7 @@ public class ChipGroup : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != GroupStateProperty || !(change.GetNewValue<ChipGroupState?>() is { } state))
+        if (change.Property != GroupStateProperty || change.GetNewValue<ChipGroupState?>() is not { } state)
         {
             return;
         }

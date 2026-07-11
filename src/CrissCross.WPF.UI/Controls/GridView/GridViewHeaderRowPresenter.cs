@@ -9,6 +9,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Extends <see cref="System.Windows.Controls.GridViewHeaderRowPresenter"/>, and adds layout support for <see cref="GridViewColumn"/>, which can have <see cref="GridViewColumn.MinWidth"/> and <see cref="GridViewColumn.MaxWidth"/>.</summary>
 public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeaderRowPresenter
 {
+    /// <summary>The width of the column resize indicator.</summary>
+    private const double IndicatorWidth = 3d;
+
     /// <summary>Initializes a new instance of the <see cref="GridViewHeaderRowPresenter"/> class.</summary>
     public GridViewHeaderRowPresenter() => Loaded += OnLoaded;
 
@@ -73,7 +76,7 @@ public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeader
         }
 
         indicator.Margin = new(0);
-        indicator.Width = 3.0;
+        indicator.Width = IndicatorWidth;
 
         ResourceDictionary resourceDictionary =
             new()

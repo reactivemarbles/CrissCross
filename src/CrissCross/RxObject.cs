@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using ReactiveUI;
 
 namespace CrissCross;
@@ -14,8 +13,8 @@ namespace CrissCross;
 /// <seealso cref="ReactiveObject" />
 /// <seealso cref="IRxObject" />
 #if NET8_0_OR_GREATER
-[RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-[RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+[System.Diagnostics.CodeAnalysis.RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
+[System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
 #endif
 public abstract class RxObject : ReactiveObject, IRxObject
 {

@@ -60,13 +60,6 @@ internal sealed class BidirectionalNavigator : IBidirectionalNavigator
             .Select(BidirectionalNavigationResolverHelpers.ToTyped<TViewModel, TView>);
 
     /// <inheritdoc/>
-    public IObservable<NavigationResolution> NavigateViewModel<TViewModelKey>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewModelKey : class => NavigateViewModel(typeof(TViewModelKey), contract, parameter, cancellationToken);
-
-    /// <inheritdoc/>
     public IObservable<NavigationResolution> NavigateViewModel(
         Type viewModelKey,
         string? contract = null,
@@ -96,13 +89,6 @@ internal sealed class BidirectionalNavigator : IBidirectionalNavigator
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel> => ResolveView(typeof(TView), null, contract, parameter, NavigationType.New, cancellationToken)
             .Select(BidirectionalNavigationResolverHelpers.ToTyped<TViewModel, TView>);
-
-    /// <inheritdoc/>
-    public IObservable<NavigationResolution> NavigateView<TViewKey>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewKey : class => NavigateView(typeof(TViewKey), contract, parameter, cancellationToken);
 
     /// <inheritdoc/>
     public IObservable<NavigationResolution> NavigateView(

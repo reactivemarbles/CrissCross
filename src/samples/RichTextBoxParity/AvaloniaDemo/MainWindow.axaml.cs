@@ -11,7 +11,6 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-
 using DemoRichTextBox = CrissCross.Avalonia.UI.Controls.RichTextBox;
 
 namespace RichTextBoxParity.AvaloniaDemo;
@@ -19,6 +18,15 @@ namespace RichTextBoxParity.AvaloniaDemo;
 /// <summary>Main window for the Avalonia RichTextBox parity demo.</summary>
 public partial class MainWindow : Window
 {
+    /// <summary>State refresh interval in milliseconds.</summary>
+    private const int StateRefreshMilliseconds = 500;
+
+    /// <summary>Maximum selected-text preview length.</summary>
+    private const int PreviewMaxLength = 48;
+
+    /// <summary>Length retained before appending preview ellipsis.</summary>
+    private const int PreviewTrimmedLength = 45;
+
     /// <summary>Refreshes observable editor and clipboard state.</summary>
     private readonly DispatcherTimer _stateTimer;
 
@@ -65,7 +73,7 @@ public partial class MainWindow : Window
 
         _stateTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(500),
+            Interval = TimeSpan.FromMilliseconds(StateRefreshMilliseconds),
         };
         _stateTimer.Tick += StateTimerTick;
         _stateTimer.Start();
@@ -107,20 +115,20 @@ public partial class MainWindow : Window
         }
 
         var normalized = text.Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal);
-        return normalized.Length <= 48 ? normalized : normalized[..45] + "...";
+        return normalized.Length <= PreviewMaxLength ? normalized : normalized[..PreviewTrimmedLength] + "...";
     }
 
     /// <summary>Resolves named controls from the loaded XAML tree.</summary>
     private void ResolveControls()
     {
-        _editor = this.Get<DemoRichTextBox>("Editor");
-        _textStateText = this.Get<TextBlock>("TextStateText");
-        _selectionStateText = this.Get<TextBlock>("SelectionStateText");
-        _commandStateText = this.Get<TextBlock>("CommandStateText");
-        _clipboardStateText = this.Get<TextBlock>("ClipboardStateText");
-        _dropStateText = this.Get<TextBlock>("DropStateText");
-        _lastActionText = this.Get<TextBlock>("LastActionText");
-        _selectedTextPreview = this.Get<TextBox>("SelectedTextPreview");
+        _editor = this.Get<DemoRichTextBox>(nameof(Editor));
+        _textStateText = this.Get<TextBlock>(nameof(TextStateText));
+        _selectionStateText = this.Get<TextBlock>(nameof(SelectionStateText));
+        _commandStateText = this.Get<TextBlock>(nameof(CommandStateText));
+        _clipboardStateText = this.Get<TextBlock>(nameof(ClipboardStateText));
+        _dropStateText = this.Get<TextBlock>(nameof(DropStateText));
+        _lastActionText = this.Get<TextBlock>(nameof(LastActionText));
+        _selectedTextPreview = this.Get<TextBox>(nameof(SelectedTextPreview));
     }
 
     /// <summary>Configures the RichTextBox with sample content and event reporting.</summary>
@@ -137,22 +145,22 @@ public partial class MainWindow : Window
     /// <summary>Connects toolbar buttons to the RichTextBox command surface.</summary>
     private void WireToolbar()
     {
-        Wire("BoldButton", () => Execute("Bold", _editor.ToggleBold));
-        Wire("ItalicButton", () => Execute("Italic", _editor.ToggleItalic));
-        Wire("UnderlineButton", () => Execute("Underline", _editor.ToggleUnderline));
-        Wire("StrikeButton", () => Execute("Strikethrough", _editor.ToggleStrikethrough));
-        Wire("ClearFormattingButton", () => Execute("Clear formatting", _editor.ClearFormatting));
-        Wire("UndoButton", () => Execute("Undo", _editor.Undo));
-        Wire("RedoButton", () => Execute("Redo", _editor.Redo));
-        WireTask("CutButton", () => ExecuteAsync("Cut", _editor.CutToClipboardAsync));
-        WireTask("CopyButton", () => ExecuteAsync("Copy", _editor.CopyToClipboardAsync));
-        WireTask("PasteButton", () => ExecuteAsync("Paste", _editor.PasteFromClipboardAsync));
-        Wire("SelectAllButton", () => Execute("Select all", _editor.SelectAll));
-        Wire("ResetButton", ResetEditor);
-        WireTask("SeedClipboardButton", SeedClipboardAsync);
-        Wire("SimulateDropButton", SimulateTextDrop);
-        Wire("InsertHtmlButton", InsertHtmlSample);
-        this.Get<Border>("DragSource").PointerPressed += DragSourcePointerPressed;
+        Wire(nameof(BoldButton), () => Execute("Bold", _editor.ToggleBold));
+        Wire(nameof(ItalicButton), () => Execute("Italic", _editor.ToggleItalic));
+        Wire(nameof(UnderlineButton), () => Execute("Underline", _editor.ToggleUnderline));
+        Wire(nameof(StrikeButton), () => Execute("Strikethrough", _editor.ToggleStrikethrough));
+        Wire(nameof(ClearFormattingButton), () => Execute("Clear formatting", _editor.ClearFormatting));
+        Wire(nameof(UndoButton), () => Execute("Undo", _editor.Undo));
+        Wire(nameof(RedoButton), () => Execute("Redo", _editor.Redo));
+        WireTask(nameof(CutButton), () => ExecuteAsync("Cut", _editor.CutToClipboardAsync));
+        WireTask(nameof(CopyButton), () => ExecuteAsync("Copy", _editor.CopyToClipboardAsync));
+        WireTask(nameof(PasteButton), () => ExecuteAsync("Paste", _editor.PasteFromClipboardAsync));
+        Wire(nameof(SelectAllButton), () => Execute("Select all", _editor.SelectAll));
+        Wire(nameof(ResetButton), ResetEditor);
+        WireTask(nameof(SeedClipboardButton), SeedClipboardAsync);
+        Wire(nameof(SimulateDropButton), SimulateTextDrop);
+        Wire(nameof(InsertHtmlButton), InsertHtmlSample);
+        this.Get<Border>(nameof(DragSource)).PointerPressed += DragSourcePointerPressed;
     }
 
     /// <summary>Connects a button click to a synchronous action.</summary>

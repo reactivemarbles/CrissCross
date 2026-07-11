@@ -200,7 +200,7 @@ public partial class LiveChart
             nameof(YAxisName),
             typeof((IList<string> yNames, IList<string> hexColors)),
             typeof(LiveChart),
-            new PropertyMetadata(default((IList<string> yNames, IList<string> hexColors)), new PropertyChangedCallback(YAxisNameCallback)));
+            new PropertyMetadata(default((IList<string> yNames, IList<string> hexColors)), new PropertyChangedCallback((d, _) => YAxisNameCallback(d))));
 
     /// <summary>
     /// Identifies the ControlMenu dependency property, which represents a collection of chart objects associated with
@@ -248,8 +248,7 @@ public partial class LiveChart
 
     /// <summary>Handles axis metadata changes by rebuilding chart axes before reactive plot sources are rebound.</summary>
     /// <param name="d">The dependency object on which the property changed.</param>
-    /// <param name="e">The dependency property change event arguments.</param>
-    private static void YAxisNameCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void YAxisNameCallback(DependencyObject d)
     {
         if (d is not LiveChart livechart)
         {

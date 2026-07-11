@@ -2,11 +2,8 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
 using System.Windows.Media.Imaging;
-using CP.Reactive.Collections;
 using CrissCross.WPF.UI.Controls;
-using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
@@ -15,6 +12,9 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 public class Person
     : ReactiveTreeItem
 {
+    /// <summary>The height and width of the person icon.</summary>
+    private const int IconSize = 20;
+
     /// <summary>Initializes a new instance of the <see cref="Person"/> class.</summary>
     /// <param name="name">The name.</param>
     /// <param name="children">The children.</param>
@@ -22,7 +22,7 @@ public class Person
         : base(children)
     {
         DisplayName = name;
-        Icon = new ImageIcon() { Height = 20, Width = 20, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
+        Icon = new ImageIcon() { Height = IconSize, Width = IconSize, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
     }
 
     /// <summary>Gets the view model.</summary>

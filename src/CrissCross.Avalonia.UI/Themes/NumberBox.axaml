@@ -29,7 +29,7 @@
                                  BorderThickness="0"
                                  Foreground="{TemplateBinding Foreground}"
                                  Text="{TemplateBinding Text}"
-                                 Watermark="{TemplateBinding Watermark}"
+                                 PlaceholderText="{TemplateBinding PlaceholderText}"
                                  IsReadOnly="{TemplateBinding IsReadOnly}"
                                  VerticalContentAlignment="Center"
                                  Padding="{TemplateBinding Padding}" />

@@ -15,7 +15,7 @@ public class GifImage : global::Avalonia.Controls.Image
         AvaloniaProperty.Register<GifImage, CornerRadius>(nameof(CornerRadius), new CornerRadius(0));
 
     /// <summary>Property for <see cref="StretchDirection"/>.</summary>
-    public static readonly StyledProperty<StretchDirection> StretchDirectionProperty =
+    public static new readonly StyledProperty<StretchDirection> StretchDirectionProperty =
         AvaloniaProperty.Register<GifImage, StretchDirection>(nameof(StretchDirection), StretchDirection.Both);
 
     /// <summary>Property for <see cref="SourceUri"/>.</summary>
@@ -50,7 +50,7 @@ public class GifImage : global::Avalonia.Controls.Image
     }
 
     /// <summary>Gets or sets the stretch direction.</summary>
-    public StretchDirection StretchDirection
+    public new StretchDirection StretchDirection
     {
         get => GetValue(StretchDirectionProperty);
         set => SetValue(StretchDirectionProperty, value);
@@ -85,7 +85,7 @@ public class GifImage : global::Avalonia.Controls.Image
     }
 
     /// <summary>Gets or sets a value indicating whether the animation is currently playing.</summary>
-    public bool IsAnimating
+    public new bool IsAnimating
     {
         get => GetValue(IsAnimatingProperty);
         set => SetValue(IsAnimatingProperty, value);

@@ -9,6 +9,12 @@ namespace CrissCross.WPF.UI.Converters;
 /// <summary>Provides the ProgressThicknessConverter member.</summary>
 internal sealed class ProgressThicknessConverter : IValueConverter
 {
+    /// <summary>Provides the fallback progress indicator thickness.</summary>
+    private const double DefaultThickness = 12d;
+
+    /// <summary>Provides the height divisor used to calculate progress indicator thickness.</summary>
+    private const double HeightDivisor = 8d;
+
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>
     /// <param name="targetType">The targetType value.</param>
@@ -18,7 +24,7 @@ internal sealed class ProgressThicknessConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         // TODO: It's too hardcoded, we should define better formula.
-        return value is double height ? height / 8 : 12.0d;
+        return value is double height ? height / HeightDivisor : DefaultThickness;
     }
 
     /// <summary>Provides the ConvertBack member.</summary>

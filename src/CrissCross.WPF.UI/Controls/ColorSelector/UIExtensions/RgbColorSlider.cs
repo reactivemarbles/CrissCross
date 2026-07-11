@@ -24,8 +24,8 @@ internal sealed class RgbColorSlider : PreviewColorSlider
 
     protected override void GenerateBackground()
     {
-        var colorStart = GetColorForSelectedArgb(0);
-        var colorEnd = GetColorForSelectedArgb(255);
+        var colorStart = GetColorForSelectedArgb(MinimumColorChannelValue);
+        var colorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
         LeftCapColor.Color = colorStart;
         RightCapColor.Color = colorEnd;
         BackgroundGradient =
@@ -40,10 +40,10 @@ internal sealed class RgbColorSlider : PreviewColorSlider
     /// <returns>The result.</returns>
     private Color GetColorForSelectedArgb(int value)
     {
-        var a = (byte)(CurrentColorState.A * 255);
-        var r = (byte)(CurrentColorState.RGB_R * 255);
-        var g = (byte)(CurrentColorState.RGB_G * 255);
-        var b = (byte)(CurrentColorState.RGB_B * 255);
+        var a = (byte)(CurrentColorState.A * ColorChannelScale);
+        var r = (byte)(CurrentColorState.RGB_R * ColorChannelScale);
+        var g = (byte)(CurrentColorState.RGB_G * ColorChannelScale);
+        var b = (byte)(CurrentColorState.RGB_B * ColorChannelScale);
         return SliderArgbType switch
         {
             "A" => Color.FromArgb((byte)value, r, g, b),

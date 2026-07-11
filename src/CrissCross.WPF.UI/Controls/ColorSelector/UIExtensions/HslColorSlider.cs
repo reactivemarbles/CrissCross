@@ -26,18 +26,18 @@ internal sealed class HslColorSlider : PreviewColorSlider
     {
         if (SliderHslType == "H")
         {
-            var colorStart = GetColorForSelectedArgb(0);
-            var colorEnd = GetColorForSelectedArgb(360);
+            var colorStart = GetColorForSelectedArgb(MinimumHueDegrees);
+            var colorEnd = GetColorForSelectedArgb(FullHueDegrees);
             LeftCapColor.Color = colorStart;
             RightCapColor.Color = colorEnd;
             BackgroundGradient =
             [
                 new GradientStop(colorStart, 0),
-                new GradientStop(GetColorForSelectedArgb(60), 1 / 6.0),
-                new GradientStop(GetColorForSelectedArgb(120), 2 / 6.0),
-                new GradientStop(GetColorForSelectedArgb(180), 0.5),
-                new GradientStop(GetColorForSelectedArgb(240), 4 / 6.0),
-                new GradientStop(GetColorForSelectedArgb(300), 5 / 6.0),
+                new GradientStop(GetColorForSelectedArgb(YellowHueDegrees), YellowGradientOffset),
+                new GradientStop(GetColorForSelectedArgb(GreenHueDegrees), GreenGradientOffset),
+                new GradientStop(GetColorForSelectedArgb(CyanHueDegrees), CyanGradientOffset),
+                new GradientStop(GetColorForSelectedArgb(BlueHueDegrees), BlueGradientOffset),
+                new GradientStop(GetColorForSelectedArgb(MagentaHueDegrees), MagentaGradientOffset),
                 new GradientStop(colorEnd, 1)
             ];
             return;
@@ -45,21 +45,21 @@ internal sealed class HslColorSlider : PreviewColorSlider
 
         if (SliderHslType == "L")
         {
-            var colorStart = GetColorForSelectedArgb(0);
-            var colorEnd = GetColorForSelectedArgb(255);
+            var colorStart = GetColorForSelectedArgb(MinimumColorChannelValue);
+            var colorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
             LeftCapColor.Color = colorStart;
             RightCapColor.Color = colorEnd;
             BackgroundGradient =
             [
                 new GradientStop(colorStart, 0),
-                new GradientStop(GetColorForSelectedArgb(128), 0.5),
+                new GradientStop(GetColorForSelectedArgb(MidpointColorChannelValue), CyanGradientOffset),
                 new GradientStop(colorEnd, 1)
             ];
             return;
         }
 
-        var fallbackColorStart = GetColorForSelectedArgb(0);
-        var fallbackColorEnd = GetColorForSelectedArgb(255);
+        var fallbackColorStart = GetColorForSelectedArgb(MinimumColorChannelValue);
+        var fallbackColorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
         LeftCapColor.Color = fallbackColorStart;
         RightCapColor.Color = fallbackColorEnd;
         BackgroundGradient =
@@ -82,29 +82,29 @@ internal sealed class HslColorSlider : PreviewColorSlider
                     double r = rgbtuple.Item1;
                     double g = rgbtuple.Item2;
                     double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
                 }
 
             case "S":
                 {
-                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, value / 255.0, CurrentColorState.HSL_L);
+                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, value / ColorChannelScale, CurrentColorState.HSL_L);
                     double r = rgbtuple.Item1;
                     double g = rgbtuple.Item2;
                     double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
                 }
 
             case "L":
                 {
-                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, CurrentColorState.HSL_S, value / 255.0);
+                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, CurrentColorState.HSL_S, value / ColorChannelScale);
                     double r = rgbtuple.Item1;
                     double g = rgbtuple.Item2;
                     double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
                 }
 
             default:
-                return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(CurrentColorState.RGB_R * 255), (byte)(CurrentColorState.RGB_G * 255), (byte)(CurrentColorState.RGB_B * 255));
+                return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(CurrentColorState.RGB_R * ColorChannelScale), (byte)(CurrentColorState.RGB_G * ColorChannelScale), (byte)(CurrentColorState.RGB_B * ColorChannelScale));
         }
     }
 }

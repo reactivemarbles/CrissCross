@@ -23,14 +23,7 @@ internal sealed class FallbackBrushConverter : IValueConverter
             return brush;
         }
 
-        return value is Color color ? new SolidColorBrush(color) : new SolidColorBrush(
-            new Color
-            {
-                A = 255,
-                R = 255,
-                G = 0,
-                B = 0
-            });
+        return new SolidColorBrush(value is Color color ? color : Colors.Red);
     }
 
     /// <summary>Provides the ConvertBack member.</summary>

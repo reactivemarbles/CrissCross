@@ -13,6 +13,9 @@ internal sealed class HtmlTextProjection
     /// <summary>Provides the EmbeddedObjectText member.</summary>
     private const string EmbeddedObjectText = "\uFFFC";
 
+    /// <summary>Provides the MaximumEntityLength member.</summary>
+    private const int MaximumEntityLength = 16;
+
     /// <summary>HTML block elements whose closing tag contributes a paragraph break.</summary>
     private static readonly HashSet<string> BlockEndTags = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -240,7 +243,7 @@ internal sealed class HtmlTextProjection
         }
 
         var entityEnd = source.IndexOf(';', index);
-        if (entityEnd <= index || entityEnd - index > 16)
+        if (entityEnd <= index || entityEnd - index > MaximumEntityLength)
         {
             return false;
         }

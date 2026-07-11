@@ -171,13 +171,10 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         {
             adornerLayer.Children.Add(_popup);
         }
-        else
+        else if (this.GetVisualParent() is Panel parent)
         {
             // Fallback: add to parent panel
-            if (this.GetVisualParent() is Panel parent)
-            {
-                parent.Children.Add(_popup);
-            }
+            parent.Children.Add(_popup);
         }
     }
 }

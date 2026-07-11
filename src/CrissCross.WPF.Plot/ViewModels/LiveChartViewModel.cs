@@ -26,6 +26,15 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
+    /// <summary>The upper boundary used for manual Y-axis scaling.</summary>
+    private const double ManualYAxisMaximum = 100;
+
+    /// <summary>The default number of right-side axes.</summary>
+    private const int DefaultRightAxisCount = 3;
+
+    /// <summary>The axis index used for temperature data.</summary>
+    private const int TemperatureAxisIndex = 2;
+
     /// <summary>Stores the wpf plot1 value.</summary>
     private WpfPlot? _wpfPlot1;
 
@@ -523,7 +532,7 @@ public partial class LiveChartViewModel : RxObject
     {
         foreach (var axis in YAxisList)
         {
-            WpfPlot1vm?.Plot.Axes.SetLimitsY(0, 100, axis);
+            WpfPlot1vm?.Plot.Axes.SetLimitsY(0, ManualYAxisMaximum, axis);
         }
 
         WpfPlot1vm?.Refresh();
@@ -580,7 +589,7 @@ public partial class LiveChartViewModel : RxObject
         XAxis1.MinorTickStyle.Color = baseColor;
 
         // Setup Y Axis
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < DefaultRightAxisCount; i++)
         {
             var rightAxis = WpfPlot1vm!.Plot.Axes.AddRightAxis();
             rightAxis.FrameLineStyle.Color = baseColor;
@@ -597,8 +606,8 @@ public partial class LiveChartViewModel : RxObject
         YAxisList[1].Label.Text = "[um]";
         YAxisList[1].Label.ForeColor = Color.FromHex("#4daf4a");
 
-        YAxisList[2].Label.Text = "[°C]";
-        YAxisList[2].Label.ForeColor = Color.FromHex("#984ea3");
+        YAxisList[TemperatureAxisIndex].Label.Text = "[°C]";
+        YAxisList[TemperatureAxisIndex].Label.ForeColor = Color.FromHex("#984ea3");
 
         AxisStyle();
     }

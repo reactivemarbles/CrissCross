@@ -24,6 +24,18 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class ChartObjects : RxObject, IAppearance
 {
+    /// <summary>The default chart line width.</summary>
+    private const double DefaultLineWidth = 3;
+
+    /// <summary>The cursor marker size.</summary>
+    private const float CursorMarkerSize = 17;
+
+    /// <summary>The cursor marker stroke width.</summary>
+    private const float CursorMarkerLineWidth = 2;
+
+    /// <summary>The cursor marker text offset.</summary>
+    private const float CursorMarkerTextOffset = 7;
+
     /// <summary>Stores the is cross hair visible value.</summary>
     [Reactive]
     private bool _isCrossHairVisible;
@@ -85,7 +97,7 @@ public partial class ChartObjects : RxObject, IAppearance
         ItemName = itemName;
         ColorText = "#FFD3D3D3";
         OpacityCheckBox = "1";
-        LineWidth = 3;
+        LineWidth = DefaultLineWidth;
         IsVisible = true;
         IsChecked = true;
         DisplayedValue = 0;
@@ -130,8 +142,8 @@ public partial class ChartObjects : RxObject, IAppearance
         // Create a marker to highlight the point under the cursor
         Marker = wpfPlot!.Plot.Add.Marker(0, 0);
         Marker.Shape = MarkerShape.OpenCircle;
-        Marker.Size = 17;
-        Marker.LineWidth = 2;
+        Marker.Size = CursorMarkerSize;
+        Marker.LineWidth = CursorMarkerLineWidth;
         Marker.IsVisible = false;
         Marker!.Color = ResolveColor(colorName);
 
@@ -139,8 +151,8 @@ public partial class ChartObjects : RxObject, IAppearance
         MarkerText = wpfPlot!.Plot.Add.Text(" ", 0, 0);
         MarkerText.LabelAlignment = Alignment.LowerLeft;
         MarkerText.LabelBold = true;
-        MarkerText.OffsetX = 7;
-        MarkerText.OffsetY = -7;
+        MarkerText.OffsetX = CursorMarkerTextOffset;
+        MarkerText.OffsetY = -CursorMarkerTextOffset;
         MarkerText.IsVisible = false;
         MarkerText!.LabelFontColor = ResolveColor(colorName);
         MarkerText.LabelStyle.BackgroundColor = Colors.White;

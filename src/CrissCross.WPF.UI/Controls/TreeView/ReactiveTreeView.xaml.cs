@@ -22,13 +22,17 @@ public partial class ReactiveTreeView
         InitializeComponent();
         ViewModel = new();
         BorderThickness = new(0);
-        _ = this.WhenActivated(d =>
-            this.WhenAnyValue(v => v.ViewModel)
-                .Where(vm => vm is not null)
-                .Select(vm => vm!.WhenAnyValue(x => x.Children))
-                .Switch()
-                .SelectMany(children => children.CurrentItems)
-                .Subscribe(items => ItemsSource = items)
-                .DisposeWith(d));
+        _ = this.WhenActivated(OnActivated);
     }
+
+    /// <summary>Connects the tree items to the active view model.</summary>
+    /// <param name="disposables">The activation disposables.</param>
+    private void OnActivated(CompositeDisposable disposables) =>
+        this.WhenAnyValue(v => v.ViewModel)
+            .Where(vm => vm is not null)
+            .Select(vm => vm!.WhenAnyValue(x => x.Children))
+            .Switch()
+            .SelectMany(children => children.CurrentItems)
+            .Subscribe(items => ItemsSource = items)
+            .DisposeWith(disposables);
 }

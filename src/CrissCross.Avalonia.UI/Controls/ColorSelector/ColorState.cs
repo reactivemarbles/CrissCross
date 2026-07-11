@@ -5,62 +5,47 @@
 namespace CrissCross.Avalonia.UI;
 
 /// <summary>Represents the state of a color in multiple color spaces (RGB, HSV, HSL).</summary>
-public struct ColorState : IEquatable<ColorState>
+/// <param name="rgbR">The RGB red component.</param>
+/// <param name="rgbG">The RGB green component.</param>
+/// <param name="rgbB">The RGB blue component.</param>
+/// <param name="a">The alpha component.</param>
+/// <param name="hsvH">The HSV hue component.</param>
+/// <param name="hsvS">The HSV saturation component.</param>
+/// <param name="hsvV">The HSV value component.</param>
+/// <param name="hslH">The HSL hue component.</param>
+/// <param name="hslS">The HSL saturation component.</param>
+/// <param name="hslL">The HSL lightness component.</param>
+public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double hsvH, double hsvS, double hsvV, double hslH, double hslS, double hslL) : IEquatable<ColorState>
 {
     /// <summary>Provides the _rgbR member.</summary>
-    private double _rgbR;
+    private double _rgbR = rgbR;
 
     /// <summary>Provides the _rgbG member.</summary>
-    private double _rgbG;
+    private double _rgbG = rgbG;
 
     /// <summary>Provides the _rgbB member.</summary>
-    private double _rgbB;
+    private double _rgbB = rgbB;
 
     /// <summary>Provides the _hsvH member.</summary>
-    private double _hsvH;
+    private double _hsvH = hsvH;
 
     /// <summary>Provides the _hsvS member.</summary>
-    private double _hsvS;
+    private double _hsvS = hsvS;
 
     /// <summary>Provides the _hsvV member.</summary>
-    private double _hsvV;
+    private double _hsvV = hsvV;
 
     /// <summary>Provides the _hslH member.</summary>
-    private double _hslH;
+    private double _hslH = hslH;
 
     /// <summary>Provides the _hslS member.</summary>
-    private double _hslS;
+    private double _hslS = hslS;
 
     /// <summary>Provides the _hslL member.</summary>
-    private double _hslL;
-
-    /// <summary>Initializes a new instance of the <see cref="ColorState"/> struct.</summary>
-    /// <param name="rgbR">The RGB red component.</param>
-    /// <param name="rgbG">The RGB green component.</param>
-    /// <param name="rgbB">The RGB blue component.</param>
-    /// <param name="a">The alpha component.</param>
-    /// <param name="hsvH">The HSV hue component.</param>
-    /// <param name="hsvS">The HSV saturation component.</param>
-    /// <param name="hsvV">The HSV value component.</param>
-    /// <param name="hslH">The HSL hue component.</param>
-    /// <param name="hslS">The HSL saturation component.</param>
-    /// <param name="hslL">The HSL lightness component.</param>
-    public ColorState(double rgbR, double rgbG, double rgbB, double a, double hsvH, double hsvS, double hsvV, double hslH, double hslS, double hslL)
-    {
-        _rgbR = rgbR;
-        _rgbG = rgbG;
-        _rgbB = rgbB;
-        A = a;
-        _hsvH = hsvH;
-        _hsvS = hsvS;
-        _hsvV = hsvV;
-        _hslH = hslH;
-        _hslS = hslS;
-        _hslL = hslL;
-    }
+    private double _hslL = hslL;
 
     /// <summary>Gets or sets the alpha component.</summary>
-    public double A { get; set; }
+    public double A { get; set; } = a;
 
     /// <summary>Gets or sets the RGB red component.</summary>
     public double RGB_R

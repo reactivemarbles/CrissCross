@@ -7,29 +7,28 @@ using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using Splat;
 
-namespace CrissCross.WPF.Plot.Test.Views
-{
-    /// <summary>Interaction logic for MainView.xaml.</summary>
-    [IViewFor<MainViewModel>]
-    public partial class MainView
-    {
-        /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
-        public MainView()
-        {
-            InitializeComponent();
-            ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
-            _ = this.WhenActivated(d =>
-            {
-                // OneWay bind ViewModel to View
-                _ = this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(d);
-                _ = ViewModel.ReactivePlotSources
-                    .ObserveOn(RxSchedulers.MainThreadScheduler)
-                    .Subscribe(sources => Chart.ReactivePlotSources = sources)
-                    .DisposeWith(d);
+namespace CrissCross.WPF.Plot.Test.Views;
 
-                // OneWay bind View to ViewModel
-                _ = this.WhenAnyValue(x => x.Chart.ViewModel).BindTo(ViewModel, vm => vm.LiveChartViewModel).DisposeWith(d);
-            });
-        }
+/// <summary>Interaction logic for MainView.xaml.</summary>
+[IViewFor<MainViewModel>]
+public partial class MainView
+{
+    /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
+    public MainView()
+    {
+        InitializeComponent();
+        ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
+        _ = this.WhenActivated(d =>
+        {
+            // OneWay bind ViewModel to View
+            _ = this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(d);
+            _ = ViewModel.ReactivePlotSources
+                .ObserveOn(RxSchedulers.MainThreadScheduler)
+                .Subscribe(sources => Chart.ReactivePlotSources = sources)
+                .DisposeWith(d);
+
+            // OneWay bind View to ViewModel
+            _ = this.WhenAnyValue(x => x.Chart.ViewModel).BindTo(ViewModel, vm => vm.LiveChartViewModel).DisposeWith(d);
+        });
     }
 }

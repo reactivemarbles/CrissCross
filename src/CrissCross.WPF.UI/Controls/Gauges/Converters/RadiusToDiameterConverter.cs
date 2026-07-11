@@ -11,13 +11,16 @@ namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
 /// <summary>Converts radius to diameter.</summary>
 public class RadiusToDiameterConverter : IValueConverter
 {
+    /// <summary>Provides the diameter multiplier.</summary>
+    private const double DiameterMultiplier = 2.0;
+
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value produced by the binding source.</param>
     /// <param name="targetType">The type of the binding target property.</param>
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * 2;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * DiameterMultiplier;
 
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>

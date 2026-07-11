@@ -9,17 +9,17 @@ namespace CrissCross.WPF.UI.Controls;
 public class BezelToggleButton : CommonToggleButtonBase
 {
     /// <summary>The glare opacity mask property.</summary>
-    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register("GlareOpacityMask", typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(nameof(GlareOpacityMask), typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(null));
 
     /// <summary>The minor background1 property.</summary>
-    public static readonly DependencyProperty MinorBackground1Property = DependencyProperty.Register("MinorBackground1", typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(null));
+    public static readonly DependencyProperty MinorBackground1Property = DependencyProperty.Register(nameof(MinorBackground1), typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(null));
 
     /// <summary>The pressed brush property.</summary>
-    public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register("PressedBrush", typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(Brushes.Green));
+    public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(nameof(PressedBrush), typeof(Brush), typeof(BezelToggleButton), new PropertyMetadata(Brushes.Green));
 
     /// <summary>Initializes a new instance of the <see cref="BezelToggleButton"/> class.</summary>
     public BezelToggleButton()
-        : base("CrissCross.WPF.UI.Controls.BezelToggleButton")
+        : base(typeof(BezelToggleButton).FullName!)
     {
     }
 

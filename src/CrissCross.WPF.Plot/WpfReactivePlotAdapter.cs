@@ -5,7 +5,6 @@
 using ReactiveUI;
 using ScottPlot;
 using ScottPlot.DataSources;
-using ScottPlot.Plottables;
 
 namespace CrissCross.WPF.Plot;
 

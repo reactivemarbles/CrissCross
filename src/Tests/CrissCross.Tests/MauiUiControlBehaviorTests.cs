@@ -11,6 +11,24 @@ namespace CrissCross.Tests;
 /// <summary>Tests for MAUI UI controls that project shared platform-neutral CrissCross control state.</summary>
 public class MauiUiControlBehaviorTests
 {
+    /// <summary>Provides the busy operation progress value.</summary>
+    private const double BusyOperationProgress = 0.25;
+
+    /// <summary>Provides the requested page index that should be clamped.</summary>
+    private const int RequestedPageIndex = 99;
+
+    /// <summary>Provides the expected clamped page index.</summary>
+    private const int ExpectedPageIndex = 2;
+
+    /// <summary>Provides the test page size.</summary>
+    private const int PageSize = 25;
+
+    /// <summary>Provides the test total item count.</summary>
+    private const int TotalItemCount = 60;
+
+    /// <summary>Provides the expected rendered item count.</summary>
+    private const int ExpectedRenderedItemCount = 2;
+
     /// <summary>Provides the CommandButton_SettingIsExecuting_TransitionsToExecutingState member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -31,7 +49,7 @@ public class MauiUiControlBehaviorTests
     {
         var overlay = new BusyOverlay
         {
-            Operation = new("Saving", "Writing values", progress: 0.25)
+            Operation = new("Saving", "Writing values", progress: BusyOperationProgress)
         };
 
         await Assert.That(overlay.IsBusy).IsTrue();
@@ -45,16 +63,16 @@ public class MauiUiControlBehaviorTests
         var command = new CaptureCommand();
         var pager = new DataPager
         {
-            PaginationState = new(pageIndex: 1, pageSize: 25, totalItemCount: 60),
+            PaginationState = new(pageIndex: 1, pageSize: PageSize, totalItemCount: TotalItemCount),
             PageRequestCommand = command,
             SortKey = "name",
             SortDescending = true
         };
 
-        pager.MoveToPage(99);
+        pager.MoveToPage(RequestedPageIndex);
 
-        await Assert.That(pager.CurrentRequest?.PageIndex).IsEqualTo(2);
-        await Assert.That(pager.CurrentRequest?.PageSize).IsEqualTo(25);
+        await Assert.That(pager.CurrentRequest?.PageIndex).IsEqualTo(ExpectedPageIndex);
+        await Assert.That(pager.CurrentRequest?.PageSize).IsEqualTo(PageSize);
         await Assert.That(pager.CurrentRequest?.SortKey).IsEqualTo("name");
         await Assert.That(pager.CurrentRequest?.SortDescending).IsTrue();
         await Assert.That(command.LastParameter).IsEqualTo(pager.CurrentRequest);
@@ -79,7 +97,7 @@ public class MauiUiControlBehaviorTests
 
         _ = target.SelectSegment("closed");
 
-        await Assert.That(target.Children.Count).IsEqualTo(2);
+        await Assert.That(target.Children.Count).IsEqualTo(ExpectedRenderedItemCount);
         await Assert.That(target.SelectedKey).IsEqualTo("closed");
         await Assert.That(target.Children.OfType<Button>().Select(static button => button.Text)).IsEquivalentTo(["Open", "Closed"]);
         await Assert.That(command.LastParameter).IsEqualTo("closed");
@@ -104,7 +122,7 @@ public class MauiUiControlBehaviorTests
 
         _ = target.SelectChip("urgent");
 
-        await Assert.That(target.Children.Count).IsEqualTo(2);
+        await Assert.That(target.Children.Count).IsEqualTo(ExpectedRenderedItemCount);
         await Assert.That(target.SelectionMode).IsEqualTo(ChipGroupSelectionMode.Multiple);
         await Assert.That(target.Children.OfType<Button>().Select(static button => button.Text)).IsEquivalentTo(["Urgent", "Needs review"]);
         await Assert.That(command.LastParameter).IsEqualTo("urgent");

@@ -44,6 +44,21 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
             typeof(SquareSlider),
             new PropertyMetadata(PickerType.HSV, OnColorSpaceChanged));
 
+    /// <summary>Provides the width and height of the generated gradient bitmap.</summary>
+    private const int GradientBitmapDimension = 32;
+
+    /// <summary>Provides the default bitmap resolution in dots per inch.</summary>
+    private const double DefaultBitmapDpi = 96D;
+
+    /// <summary>Provides the number of channels in an RGB pixel.</summary>
+    private const int RgbChannelCount = 3;
+
+    /// <summary>Provides the offset of the green channel in an RGB pixel.</summary>
+    private const int GreenChannelOffset = 1;
+
+    /// <summary>Provides the offset of the blue channel in an RGB pixel.</summary>
+    private const int BlueChannelOffset = 2;
+
     /// <summary>Stores the _rangeX value.</summary>
     private double _rangeX;
 
@@ -59,7 +74,13 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
     /// <summary>Initializes a new instance of the <see cref="SquareSlider"/> class.</summary>
     public SquareSlider()
     {
-        GradientBitmap = new(32, 32, 96, 96, PixelFormats.Rgb24, null);
+        GradientBitmap = new(
+            GradientBitmapDimension,
+            GradientBitmapDimension,
+            DefaultBitmapDpi,
+            DefaultBitmapDpi,
+            PixelFormats.Rgb24,
+            null);
         InitializeComponent();
         RecalculateGradient();
     }
@@ -148,8 +169,8 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
 
     /// <summary>Provides the OnHueChanged member.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="args">The event arguments.</param>
-    private static void OnHueChanged(DependencyObject d, DependencyPropertyChangedEventArgs args) => ((SquareSlider)d).RecalculateGradient();
+    /// <param name="_">Unused event arguments required by the dependency property callback.</param>
+    private static void OnHueChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((SquareSlider)d).RecalculateGradient();
 
     /// <summary>Provides the RecalculateGradient member.</summary>
     private void RecalculateGradient()
@@ -157,7 +178,7 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
         var w = GradientBitmap!.PixelWidth;
         var h = GradientBitmap.PixelHeight;
         var hue = Hue;
-        var pixels = new byte[w * h * 3];
+        var pixels = new byte[w * h * RgbChannelCount];
         for (var j = 0; j < h; j++)
         {
             for (var i = 0; i < w; i++)
@@ -166,14 +187,14 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
                 double r = rgbtuple.Item1;
                 double g = rgbtuple.Item2;
                 double b = rgbtuple.Item3;
-                var pos = ((j * h) + i) * 3;
-                pixels[pos] = (byte)(r * 255);
-                pixels[pos + 1] = (byte)(g * 255);
-                pixels[pos + 2] = (byte)(b * 255);
+                var pos = ((j * w) + i) * RgbChannelCount;
+                pixels[pos] = (byte)(r * byte.MaxValue);
+                pixels[pos + GreenChannelOffset] = (byte)(g * byte.MaxValue);
+                pixels[pos + BlueChannelOffset] = (byte)(b * byte.MaxValue);
             }
         }
 
-        GradientBitmap.WritePixels(new Int32Rect(0, 0, w, h), pixels, w * 3, 0);
+        GradientBitmap.WritePixels(new Int32Rect(0, 0, w, h), pixels, w * RgbChannelCount, 0);
     }
 
     /// <summary>Provides the OnMouseDown member.</summary>
@@ -209,8 +230,8 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
 
     /// <summary>Provides the OnMouseUp member.</summary>
     /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
-    private void OnMouseUp(object sender, MouseButtonEventArgs e) => ((UIElement)sender).ReleaseMouseCapture();
+    /// <param name="_">Unused event arguments required by the mouse event handler.</param>
+    private void OnMouseUp(object sender, MouseButtonEventArgs _) => ((UIElement)sender).ReleaseMouseCapture();
 
     /// <summary>Provides the RaisePropertyChanged member.</summary>
     /// <param name="property">The property value.</param>

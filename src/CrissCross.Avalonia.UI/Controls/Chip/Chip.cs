@@ -89,7 +89,7 @@ public class Chip : TemplatedControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != ModelProperty || !(change.GetNewValue<ChipModel?>() is { } model))
+        if (change.Property != ModelProperty || change.GetNewValue<ChipModel?>() is not { } model)
         {
             return;
         }

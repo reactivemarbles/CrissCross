@@ -72,6 +72,7 @@ public class Card : System.Windows.Controls.ContentControl
     /// <param name="e">The event arguments.</param>
     private static void FooterChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not Card control)
         {
             return;
@@ -85,6 +86,7 @@ public class Card : System.Windows.Controls.ContentControl
     /// <param name="e">The event arguments.</param>
     private static void HeaderChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not Card c)
         {
             return;

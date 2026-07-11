@@ -18,6 +18,24 @@ namespace RichTextBoxParity.WpfDemo;
 /// <summary>Interaction window for the native WPF RichTextBox parity demo.</summary>
 public partial class MainWindow : Window
 {
+    /// <summary>Milliseconds between clipboard availability polls.</summary>
+    private const int ClipboardPollIntervalMilliseconds = 750;
+
+    /// <summary>Maximum selected text preview length shown in state output.</summary>
+    private const int SelectedTextPreviewMaxLength = 80;
+
+    /// <summary>Maximum rendered width for an inline dropped image.</summary>
+    private const int DroppedImageMaxWidth = 640;
+
+    /// <summary>Maximum rendered height for an inline dropped image.</summary>
+    private const int DroppedImageMaxHeight = 480;
+
+    /// <summary>Uniform margin for inline dropped images.</summary>
+    private const int DroppedImageMargin = 2;
+
+    /// <summary>Suffix appended to truncated selected text previews.</summary>
+    private const string PreviewEllipsis = "...";
+
     /// <summary>Image extensions that WPF can decode for inline file drops.</summary>
     private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -52,7 +70,7 @@ public partial class MainWindow : Window
 
         _clipboardTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(750)
+            Interval = TimeSpan.FromMilliseconds(ClipboardPollIntervalMilliseconds)
         };
         _clipboardTimer.Tick += ClipboardTimerTick;
         _clipboardTimer.Start();
@@ -118,7 +136,9 @@ public partial class MainWindow : Window
     private static string Preview(string text)
     {
         string compact = text.Replace(Environment.NewLine, "\\n", StringComparison.Ordinal);
-        return compact.Length <= 80 ? compact : $"{compact[..77]}...";
+        return compact.Length <= SelectedTextPreviewMaxLength
+            ? compact
+            : compact[..(SelectedTextPreviewMaxLength - PreviewEllipsis.Length)] + PreviewEllipsis;
     }
 
     /// <summary>Returns whether the file is a supported image file for inline rendering.</summary>
@@ -145,9 +165,9 @@ public partial class MainWindow : Window
         return new Image
         {
             Source = bitmap,
-            MaxWidth = 640,
-            MaxHeight = 480,
-            Margin = new(2),
+            MaxWidth = DroppedImageMaxWidth,
+            MaxHeight = DroppedImageMaxHeight,
+            Margin = new(DroppedImageMargin),
             Stretch = Stretch.Uniform,
             StretchDirection = StretchDirection.DownOnly,
             ToolTip = Path.GetFileName(file)

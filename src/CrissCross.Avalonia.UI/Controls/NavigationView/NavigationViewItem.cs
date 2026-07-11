@@ -6,8 +6,6 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 
@@ -103,7 +101,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         : this(targetPageType) => Content = name;
 
     /// <inheritdoc/>
-    public event EventHandler<RoutedEventArgs>? Click;
+    public new event EventHandler<RoutedEventArgs>? Click;
 
     /// <inheritdoc/>
     public string Id { get; }
@@ -196,7 +194,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     }
 
     /// <inheritdoc/>
-    public IControlTemplate? Template
+    public new IControlTemplate? Template
     {
         get => base.Template;
         set => base.Template = value;

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using FontFamily = System.Windows.Media.FontFamily;
 using FontStyle = System.Windows.FontStyle;

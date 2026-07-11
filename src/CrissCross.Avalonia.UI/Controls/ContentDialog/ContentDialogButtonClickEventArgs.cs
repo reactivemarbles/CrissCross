@@ -7,15 +7,9 @@ using Avalonia.Interactivity;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>Provides data for the <see cref="ContentDialog.ButtonClicked"/> event.</summary>
-public class ContentDialogButtonClickEventArgs : RoutedEventArgs
+/// <param name="button">The button that was clicked.</param>
+public class ContentDialogButtonClickEventArgs(ContentDialogButton button) : RoutedEventArgs
 {
-    /// <summary>Initializes a new instance of the <see cref="ContentDialogButtonClickEventArgs"/> class.</summary>
-    /// <param name="button">The button that was clicked.</param>
-    public ContentDialogButtonClickEventArgs(ContentDialogButton button)
-    {
-        Button = button;
-    }
-
     /// <summary>Gets or sets the button that was clicked.</summary>
-    public ContentDialogButton Button { get; set; }
+    public ContentDialogButton Button { get; set; } = button;
 }

@@ -94,6 +94,7 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
     /// <param name="e">The event arguments.</param>
     private static void IsScrollingProperty_OnChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollBar bar)
         {
             return;
@@ -116,6 +117,7 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollBar bar)
         {
             return;

@@ -555,7 +555,8 @@ public class WebView2Wpf : ContentControl, IWebView2
 
         // Always ensure previous subscription is removed before (re)adding.
         browser._webBrowser.Unloaded -= browser.OnWebBrowserUnloaded;
-        if (!browser.AutoDispose)
+        bool autoDispose = args.NewValue is bool value ? value : browser.AutoDispose;
+        if (!autoDispose)
         {
             return;
         }

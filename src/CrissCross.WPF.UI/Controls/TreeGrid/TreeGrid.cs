@@ -36,8 +36,8 @@ public class TreeGrid : System.Windows.Controls.Primitives.Selector
 
     /// <summary>Provides the OnHeadersChanged member.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnHeadersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="_">Unused event arguments required by the dependency property callback.</param>
+    private static void OnHeadersChanged(DependencyObject d, DependencyPropertyChangedEventArgs _)
     {
         if (d is not TreeGrid treeGrid)
         {

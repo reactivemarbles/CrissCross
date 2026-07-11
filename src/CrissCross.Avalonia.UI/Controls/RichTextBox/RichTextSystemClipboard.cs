@@ -4,6 +4,7 @@
 
 using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.Media.Imaging;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -71,7 +72,7 @@ internal sealed class RichTextSystemClipboard(Func<IClipboard?> getClipboard)
             using (bitmap)
             {
                 await using var stream = new MemoryStream();
-                bitmap.Save(stream);
+                bitmap.Save(stream, PngBitmapEncoderOptions.Default);
                 imageSource = "data:image/png;base64," + Convert.ToBase64String(stream.ToArray());
             }
         }

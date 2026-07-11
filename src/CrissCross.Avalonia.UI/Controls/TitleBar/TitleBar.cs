@@ -16,7 +16,7 @@ public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
         string.Empty);
 
     /// <summary>Property for <see cref="Header"/>.</summary>
-    public static readonly StyledProperty<object> HeaderProperty = AvaloniaProperty.Register<TitleBar, object>(
+    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<TitleBar, object?>(
         nameof(Header),
         null);
 
@@ -51,7 +51,7 @@ public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
         true);
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<TitleBar, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<TitleBar, object?>(
         nameof(Icon),
         null);
 
@@ -63,7 +63,7 @@ public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
     }
 
     /// <summary>Gets or sets the header.</summary>
-    public object Header
+    public object? Header
     {
         get => GetValue(HeaderProperty);
         set => SetValue(HeaderProperty, value);

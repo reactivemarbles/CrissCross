@@ -135,8 +135,8 @@ public class ThemeSwitcher : Control
 
     /// <summary>Provides the OnThemeInputChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>
-    /// <param name="args">The event arguments.</param>
-    private static void OnThemeInputChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    /// <param name="_">Unused event arguments required by the dependency property callback.</param>
+    private static void OnThemeInputChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs _)
     {
         if (dependencyObject is not ThemeSwitcher switcher)
         {

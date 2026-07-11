@@ -58,8 +58,8 @@ public class TitleBarButton : Button
     /// <summary>Initializes a new instance of the <see cref="TitleBarButton"/> class.</summary>
     public TitleBarButton()
     {
-        Loaded += (_, e) => TitleBarButton_Loaded(e);
-        Unloaded += (_, e) => TitleBarButton_Unloaded(e);
+        Loaded += (_, _) => TitleBarButton_Loaded();
+        Unloaded += (_, _) => TitleBarButton_Unloaded();
     }
 
     /// <summary>Gets or sets the type of the button.</summary>
@@ -207,14 +207,12 @@ public class TitleBarButton : Button
     }
 
     /// <summary>Provides the TitleBarButton_Unloaded member.</summary>
-    /// <param name="e">The event arguments.</param>
-    private void TitleBarButton_Unloaded(RoutedEventArgs e) =>
+    private void TitleBarButton_Unloaded() =>
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .RemoveValueChanged(this, OnButtonsForegroundChanged);
 
     /// <summary>Provides the TitleBarButton_Loaded member.</summary>
-    /// <param name="e">The event arguments.</param>
-    private void TitleBarButton_Loaded(RoutedEventArgs e)
+    private void TitleBarButton_Loaded()
     {
         RenderButtonsForeground = ButtonsForeground;
         DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))

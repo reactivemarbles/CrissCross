@@ -35,6 +35,9 @@ public class PickerControlBase : UserControl, IColorStateStorage
             typeof(RoutedEventHandler),
             typeof(PickerControlBase));
 
+    /// <summary>The impossible alpha channel used to seed the previous color sentinel.</summary>
+    private const byte PreviousColorSentinelChannel = 5;
+
     /// <summary>Stores the _ignoreColorPropertyChange value.</summary>
     private bool _ignoreColorPropertyChange;
 
@@ -42,7 +45,7 @@ public class PickerControlBase : UserControl, IColorStateStorage
     private bool _ignoreColorChange;
 
     /// <summary>Stores the _previousColor value.</summary>
-    private Color _previousColor = System.Windows.Media.Color.FromArgb(5, 5, 5, 5);
+    private Color _previousColor = System.Windows.Media.Color.FromArgb(PreviousColorSentinelChannel, PreviousColorSentinelChannel, PreviousColorSentinelChannel, PreviousColorSentinelChannel);
 
     /// <summary>Initializes a new instance of the <see cref="PickerControlBase"/> class.</summary>
     public PickerControlBase()

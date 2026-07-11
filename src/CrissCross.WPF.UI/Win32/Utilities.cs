@@ -9,6 +9,18 @@ namespace CrissCross.WPF.UI.Win32;
 /// <summary>Common Window utilities.</summary>
 internal static class Utilities
 {
+    /// <summary>Provides the first Windows 10 build number.</summary>
+    private const int Windows10InitialBuild = 10_240;
+
+    /// <summary>Provides the first Windows 11 build number.</summary>
+    private const int Windows11InitialBuild = 22_000;
+
+    /// <summary>Provides Windows 11 Insider build 22523.</summary>
+    private const int Windows11InsiderBuild22523 = 22_523;
+
+    /// <summary>Provides Windows 11 Insider build 22557.</summary>
+    private const int Windows11InsiderBuild22557 = 22_557;
+
 #if !NET5_0_OR_GREATER
     /// <summary>The Windows registry path that stores the current OS version.</summary>
     private const string CurrentVersionRegistryPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
@@ -38,16 +50,16 @@ internal static class Utilities
     public static bool IsOSWindows8OrNewer => new Version(6, 2) <= _version;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 10_240).</summary>
-    public static bool IsOSWindows10OrNewer => _version.Build >= 10_240;
+    public static bool IsOSWindows10OrNewer => _version.Build >= Windows10InitialBuild;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_000).</summary>
-    public static bool IsOSWindows11OrNewer => _version.Build >= 22_000;
+    public static bool IsOSWindows11OrNewer => _version.Build >= Windows11InitialBuild;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_523).</summary>
-    public static bool IsOSWindows11Insider1OrNewer => _version.Build >= 22_523;
+    public static bool IsOSWindows11Insider1OrNewer => _version.Build >= Windows11InsiderBuild22523;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_557).</summary>
-    public static bool IsOSWindows11Insider2OrNewer => _version.Build >= 22_557;
+    public static bool IsOSWindows11Insider2OrNewer => _version.Build >= Windows11InsiderBuild22557;
 
     /// <summary>Gets a value indicating whether indicates whether Desktop Window Manager (DWM) composition is enabled.</summary>
     public static bool IsCompositionEnabled

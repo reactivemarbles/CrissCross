@@ -514,7 +514,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
             return;
         }
 
-        if (browser.AutoDispose)
+        var autoDispose = (args.NewValue as bool?) ?? browser.AutoDispose;
+        if (autoDispose)
         {
             browser._webBrowser.Unloaded += browser.OnWebBrowserUnloaded;
             return;

@@ -42,7 +42,9 @@
       <Build Solution="Release|Any CPU" Project="false" />
     </Project>
     <Project Path="CrissCross.Avalonia.UI.Gallery/CrissCross.Avalonia.UI.Gallery.csproj" />
-    <Project Path="CrissCross.Maui.UI.Gallery/CrissCross.Maui.UI.Gallery.csproj" />
+    <Project Path="CrissCross.Maui.UI.Gallery/CrissCross.Maui.UI.Gallery.csproj">
+      <Deploy Solution="Debug|Any CPU" />
+    </Project>
     <Project Path="CrissCross.MAUI.Test/CrissCross.MAUI.Example.csproj">
       <Build Solution="Release|Any CPU" Project="false" />
       <Deploy />

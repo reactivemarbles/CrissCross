@@ -20,6 +20,12 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 {
+    /// <summary>The boundary used to distinguish manual scale interactions.</summary>
+    private const double ManualScaleBoundary = 50;
+
+    /// <summary>The coordinate marker text offset.</summary>
+    private const float CoordinateMarkerTextOffset = 7;
+
     /// <summary>Stores the dd value.</summary>
     private readonly CompositeDisposable _dd = [];
 
@@ -553,7 +559,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
         foreach (var verticalAxis in ViewModel.YAxisList)
         {
-            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-50, 50, verticalAxis);
+            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-ManualScaleBoundary, ManualScaleBoundary, verticalAxis);
         }
 
         ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleX(xaxis: ViewModel!.XAxis1);
@@ -651,8 +657,8 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
         var marker = ViewModel.WpfPlot1vm.Plot.Add.Marker(mouseLocation);
         var markerText = ViewModel.WpfPlot1vm.Plot.Add.Text(text, mouseLocation);
-        markerText.OffsetX = 7;
-        markerText.OffsetY = -7;
+        markerText.OffsetX = CoordinateMarkerTextOffset;
+        markerText.OffsetY = -CoordinateMarkerTextOffset;
         markerText!.LabelFontColor = PlotColor.FromColor(System.Drawing.Color.FromName("White"));
         marker.Axes.XAxis = ViewModel!.WpfPlot1vm!.Plot.Axes.Bottom;
         marker.Axes.YAxis = ViewModel.YAxisList[0];

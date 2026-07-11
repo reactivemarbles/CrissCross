@@ -12,6 +12,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Provides the UriLoader member.</summary>
 internal static class UriLoader
 {
+    /// <summary>The completed download percentage.</summary>
+    private const int CompletedDownloadPercentage = 100;
+
     /// <summary>Gets or sets DownloadCacheLocation.</summary>
     public static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
 
@@ -38,7 +41,7 @@ internal static class UriLoader
             cacheStream = await OpenTempFileStreamAsync(cacheFileName);
         }
 
-        progress?.Report(100);
+        progress?.Report(CompletedDownloadPercentage);
         return cacheStream;
     }
 
@@ -71,7 +74,7 @@ internal static class UriLoader
                     {
                         if (length > 0)
                         {
-                            progress.Report((int)(100 * bytesCopied / length));
+                            progress.Report((int)(CompletedDownloadPercentage * bytesCopied / length));
                         }
                         else
                         {

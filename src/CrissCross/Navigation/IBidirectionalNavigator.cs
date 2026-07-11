@@ -41,18 +41,6 @@ public interface IBidirectionalNavigator
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel>;
 
-    /// <summary>Resolves a ViewModel-first navigation request using an interface or base-class key.</summary>
-    /// <typeparam name="TViewModelKey">The caller-facing view model lookup key.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>An observable navigation resolution.</returns>
-    IObservable<NavigationResolution> NavigateViewModel<TViewModelKey>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewModelKey : class;
-
     /// <summary>Resolves a ViewModel-first navigation request using a runtime key.</summary>
     /// <param name="viewModelKey">The view model lookup key.</param>
     /// <param name="contract">The navigation contract.</param>
@@ -94,18 +82,6 @@ public interface IBidirectionalNavigator
         CancellationToken cancellationToken = default)
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel>;
-
-    /// <summary>Resolves a View-first navigation request using an interface or base-class key.</summary>
-    /// <typeparam name="TViewKey">The caller-facing view lookup key.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>An observable navigation resolution.</returns>
-    IObservable<NavigationResolution> NavigateView<TViewKey>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewKey : class;
 
     /// <summary>Resolves a View-first navigation request using a runtime key.</summary>
     /// <param name="viewKey">The view lookup key.</param>

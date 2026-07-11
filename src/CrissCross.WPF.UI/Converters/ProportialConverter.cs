@@ -9,15 +9,24 @@ namespace CrissCross.WPF.UI.Converters;
 /// <summary>Provides the ProportialConverter member.</summary>
 internal sealed class ProportialConverter : IMultiValueConverter
 {
+    /// <summary>Provides the primary value index.</summary>
+    private const int PrimaryValueIndex = 0;
+
+    /// <summary>Provides the available-size value index.</summary>
+    private const int AvailableSizeIndex = 1;
+
+    /// <summary>Provides the scale-factor value index.</summary>
+    private const int ScaleFactorIndex = 2;
+
     /// <summary>Provides the Convert member.</summary>
     /// <param name="values">The values value.</param>
     /// <param name="targetType">The targetType value.</param>
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values[0] switch
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values[PrimaryValueIndex] switch
     {
-        double firstValue when values[1] is double secondValue && values[2] is double scaleFactor => firstValue * (secondValue / scaleFactor),
+        double firstValue when values[AvailableSizeIndex] is double secondValue && values[ScaleFactorIndex] is double scaleFactor => firstValue * (secondValue / scaleFactor),
         _ => 0
     };
 

@@ -35,6 +35,27 @@ public partial class NumberPad : IDisposable
             typeof(NumberPad),
             new PropertyMetadata(null, UpdateTheme));
 
+    /// <summary>Delay used before and after keypad fade operations.</summary>
+    private const int CloseAnimationDelayMilliseconds = 20;
+
+    /// <summary>Number of stored keypad margin values.</summary>
+    private const int KeypadMarginCount = 4;
+
+    /// <summary>Fallback scale when the owner is not scaled above its desired size.</summary>
+    private const double ViewboxScaleFallback = 1.0;
+
+    /// <summary>Horizontal spacing between the owner button and keypad.</summary>
+    private const int KeypadHorizontalMargin = 10;
+
+    /// <summary>Vertical offset used when positioning the keypad above the owner.</summary>
+    private const int KeypadVerticalOffset = 100;
+
+    /// <summary>Index of the top margin in the stored margin array.</summary>
+    private const int MarginTopIndex = 1;
+
+    /// <summary>Index of the left margin in the stored margin array.</summary>
+    private const int MarginLeftIndex = 2;
+
     /// <summary>Stores the _disposables value.</summary>
     private readonly CompositeDisposable _disposables = [];
 
@@ -42,7 +63,7 @@ public partial class NumberPad : IDisposable
     private readonly DispatcherTimer _limitsTimer;
 
     /// <summary>Stores the _margin value.</summary>
-    private readonly double[] _margin = new double[4];
+    private readonly double[] _margin = new double[KeypadMarginCount];
 
     /// <summary>Stores the _owner value.</summary>
     private readonly INumberPadButton _owner;
@@ -70,8 +91,8 @@ public partial class NumberPad : IDisposable
         Unit.Content = _owner.Units;
         _owner.IsEnabled = false;
         _ = EventSignal
-            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => MouseLeftButtonDown += handler, handler => MouseLeftButtonDown -= handler)
-            .Merge(EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => Mask.MouseLeftButtonDown += handler, handler => Mask.MouseLeftButtonDown -= handler))
+            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => MouseLeftButtonDown += handler, handler => MouseLeftButtonDown -= handler)
+            .Merge(EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => Mask.MouseLeftButtonDown += handler, handler => Mask.MouseLeftButtonDown -= handler))
             .Subscribe(e =>
             {
                 var mouse = e.GetPosition(this);
@@ -85,26 +106,26 @@ public partial class NumberPad : IDisposable
                 CloseKeypad();
             }).DisposeWith(_disposables);
         _ = EventSignal
-            .From<KeyEventHandler, KeyEventArgs>(handler => PreviewKeyDown += handler, handler => PreviewKeyDown -= handler)
+            .From<KeyEventHandler, KeyEventArgs>(handler => handler.Invoke, handler => PreviewKeyDown += handler, handler => PreviewKeyDown -= handler)
             .Subscribe(Window_PreviewKeyDown)
             .DisposeWith(_disposables);
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => Value.GotFocus += handler, handler => Value.GotFocus -= handler)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.GotFocus += handler, handler => Value.GotFocus -= handler)
             .Select(_ => true)
-            .Merge(EventSignal.From<RoutedEventHandler, RoutedEventArgs>(handler => Value.LostFocus += handler, handler => Value.LostFocus -= handler).Select(_ => false))
+            .Merge(EventSignal.From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.LostFocus += handler, handler => Value.LostFocus -= handler).Select(_ => false))
             .Subscribe(x => _hasFocus = x)
             .DisposeWith(_disposables);
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => Accept.Click += handler, handler => Accept.Click -= handler)
-            .Subscribe(AcceptResult)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Accept.Click += handler, handler => Accept.Click -= handler)
+            .Subscribe(_ => AcceptResult())
             .DisposeWith(_disposables);
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => CancelBtn.Click += handler, handler => CancelBtn.Click -= handler)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => CancelBtn.Click += handler, handler => CancelBtn.Click -= handler)
             .Subscribe(_ => CloseKeypad())
             .DisposeWith(_disposables);
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => ClearBtn.Click += handler, handler => ClearBtn.Click -= handler)
-            .Subscribe(ClearValues)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => ClearBtn.Click += handler, handler => ClearBtn.Click -= handler)
+            .Subscribe(_ => ClearValues())
             .DisposeWith(_disposables);
         _limitsTimer = new(
             TimeSpan.FromSeconds(1),
@@ -259,7 +280,7 @@ public partial class NumberPad : IDisposable
         else
         {
             _ = EventSignal
-                .From<RoutedEventHandler, RoutedEventArgs>(handler => c.Loaded += handler, handler => c.Loaded -= handler)
+                .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => c.Loaded += handler, handler => c.Loaded -= handler)
                 .Take(1)
                 .Subscribe(_ => SystemThemeWatcher.UnWatch(c))
                 .DisposeWith(c._disposables);
@@ -280,8 +301,7 @@ public partial class NumberPad : IDisposable
     }
 
     /// <summary>Clear Button Clicked.</summary>
-    /// <param name="e">Routed Event Arguments.</param>
-    private void ClearValues(RoutedEventArgs e)
+    private void ClearValues()
     {
         Value.Value = double.NaN;
         Value.Text = string.Empty;
@@ -291,13 +311,13 @@ public partial class NumberPad : IDisposable
     /// <summary>Provides the CloseKeypad member.</summary>
     private async void CloseKeypad()
     {
-        ClearValues(null!);
-        await Task.Delay(20).ConfigureAwait(true);
+        ClearValues();
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         FadeOut();
         Value.Value = GetInitialValue(Value.Minimum, Value.Maximum);
         _currentValue = Value.Value.Value.ToString(CultureInfo.InvariantCulture);
         _owner.DisposeKeypad();
-        await Task.Delay(20).ConfigureAwait(true);
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         _owner.IsEnabled = true;
     }
 
@@ -317,8 +337,7 @@ public partial class NumberPad : IDisposable
     }
 
     /// <summary>Enter Button Clicked.</summary>
-    /// <param name="e">Routed Event Arguments.</param>
-    private async void AcceptResult(RoutedEventArgs e)
+    private async void AcceptResult()
     {
         if (Value.Value.HasValue)
         {
@@ -342,10 +361,10 @@ public partial class NumberPad : IDisposable
             _owner.DisposeKeypad();
         }
 
-        ClearValues(null!);
-        await Task.Delay(20).ConfigureAwait(true);
+        ClearValues();
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         FadeOut();
-        await Task.Delay(20).ConfigureAwait(true);
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         _owner.IsEnabled = true;
     }
 
@@ -403,7 +422,7 @@ public partial class NumberPad : IDisposable
         SetTopMargin(window, ownerPosition);
         SetLeftMargin(button, window, ownerPosition);
 
-        WGrid.Margin = new(_margin[2], _margin[1], 0, 0);
+        WGrid.Margin = new(_margin[MarginLeftIndex], _margin[MarginTopIndex], 0, 0);
     }
 
     /// <summary>Provides the Window_PreviewKeyDown member.</summary>
@@ -424,7 +443,7 @@ public partial class NumberPad : IDisposable
         {
             case Key.Enter or Key.Return:
                 {
-                    AcceptResult(null!);
+                    AcceptResult();
                     break;
                 }
 
@@ -448,6 +467,11 @@ public partial class NumberPad : IDisposable
                         _currentValue = $"{(int)value}.";
                     }
 
+                    break;
+                }
+
+            default:
+                {
                     break;
                 }
         }
@@ -497,15 +521,15 @@ public partial class NumberPad : IDisposable
         if (element is not null)
         {
             var scaledWidth = element.ActualWidth / element.Child.DesiredSize.Width;
-            _margin[2] = ownerPosition.X + (button.ActualWidth * (scaledWidth > 1 ? scaledWidth : 1)) + 10;
+            _margin[MarginLeftIndex] = ownerPosition.X + (button.ActualWidth * (scaledWidth > ViewboxScaleFallback ? scaledWidth : ViewboxScaleFallback)) + KeypadHorizontalMargin;
         }
         else
         {
-            _margin[2] = ownerPosition.X + button.ActualWidth + 10;
+            _margin[MarginLeftIndex] = ownerPosition.X + button.ActualWidth + KeypadHorizontalMargin;
         }
 
-        _margin[2] = (_margin[2] + WGrid.Width) > (window.ActualWidth - 10) ? ownerPosition.X - WGrid.Width : _margin[2];
-        _margin[2] = _margin[2] > (window.ActualWidth - 10) ? window.ActualWidth - WGrid.Width - 10 : _margin[2];
+        _margin[MarginLeftIndex] = (_margin[MarginLeftIndex] + WGrid.Width) > (window.ActualWidth - KeypadHorizontalMargin) ? ownerPosition.X - WGrid.Width : _margin[MarginLeftIndex];
+        _margin[MarginLeftIndex] = _margin[MarginLeftIndex] > (window.ActualWidth - KeypadHorizontalMargin) ? window.ActualWidth - WGrid.Width - KeypadHorizontalMargin : _margin[MarginLeftIndex];
     }
 
     /// <summary>Sets the keypad top margin near the owner button.</summary>
@@ -513,6 +537,6 @@ public partial class NumberPad : IDisposable
     /// <param name="ownerPosition">The owner position.</param>
     private void SetTopMargin(System.Windows.Window window, Point ownerPosition)
     {
-        _margin[1] = Math.Min(ownerPosition.Y - 100, window.ActualHeight - WGrid.Height - 10);
+        _margin[MarginTopIndex] = Math.Min(ownerPosition.Y - KeypadVerticalOffset, window.ActualHeight - WGrid.Height - KeypadHorizontalMargin);
     }
 }

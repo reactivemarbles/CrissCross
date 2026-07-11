@@ -93,8 +93,17 @@ public class ColorSelector : TemplatedControl
     /// <returns>The result.</returns>
     private static Color HsvToRgb(double h, double s, double v)
     {
-        var hi = (int)(h / 60) % 6;
-        var f = (h / 60) - Math.Floor(h / 60);
+        const int redHueSector = 0;
+        const int yellowHueSector = 1;
+        const int greenHueSector = 2;
+        const int cyanHueSector = 3;
+        const int blueHueSector = 4;
+        const int hueSectorCount = 6;
+        const double hueDegreesPerSector = 60.0;
+        const double byteChannelScale = byte.MaxValue;
+
+        var hi = (int)(h / hueDegreesPerSector) % hueSectorCount;
+        var f = (h / hueDegreesPerSector) - Math.Floor(h / hueDegreesPerSector);
         var p = v * (1 - s);
         var q = v * (1 - (f * s));
         var t = v * (1 - ((1 - f) * s));
@@ -104,7 +113,7 @@ public class ColorSelector : TemplatedControl
         double b;
         switch (hi)
         {
-            case 0:
+            case redHueSector:
                 {
                     r = v;
                     g = t;
@@ -112,7 +121,7 @@ public class ColorSelector : TemplatedControl
                     break;
                 }
 
-            case 1:
+            case yellowHueSector:
                 {
                     r = q;
                     g = v;
@@ -120,7 +129,7 @@ public class ColorSelector : TemplatedControl
                     break;
                 }
 
-            case 2:
+            case greenHueSector:
                 {
                     r = p;
                     g = v;
@@ -128,7 +137,7 @@ public class ColorSelector : TemplatedControl
                     break;
                 }
 
-            case 3:
+            case cyanHueSector:
                 {
                     r = p;
                     g = q;
@@ -136,7 +145,7 @@ public class ColorSelector : TemplatedControl
                     break;
                 }
 
-            case 4:
+            case blueHueSector:
                 {
                     r = t;
                     g = p;
@@ -153,7 +162,7 @@ public class ColorSelector : TemplatedControl
                 }
         }
 
-        return Color.FromRgb((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+        return Color.FromRgb((byte)(r * byteChannelScale), (byte)(g * byteChannelScale), (byte)(b * byteChannelScale));
     }
 
     /// <summary>Provides the HsvToRgba member.</summary>
@@ -165,7 +174,7 @@ public class ColorSelector : TemplatedControl
     private static Color HsvToRgba(double h, double s, double v, double a)
     {
         var rgb = HsvToRgb(h, s, v);
-        return Color.FromArgb((byte)(a * 255), rgb.R, rgb.G, rgb.B);
+        return Color.FromArgb((byte)(a * byte.MaxValue), rgb.R, rgb.G, rgb.B);
     }
 
     /// <summary>Provides the UpdateFromHsv member.</summary>

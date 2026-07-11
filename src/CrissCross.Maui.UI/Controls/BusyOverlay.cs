@@ -12,7 +12,7 @@ public class BusyOverlay : ContentView
         nameof(Operation),
         typeof(BusyOperation),
         typeof(BusyOverlay),
-        propertyChanged: OnOperationChanged);
+        propertyChanged: static (bindable, _, newValue) => OnOperationChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="IsBusy"/>.</summary>
     public static readonly BindableProperty IsBusyProperty = BindableProperty.Create(
@@ -36,9 +36,8 @@ public class BusyOverlay : ContentView
 
     /// <summary>Runs the operation changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnOperationChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnOperationChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not BusyOverlay overlay)
         {

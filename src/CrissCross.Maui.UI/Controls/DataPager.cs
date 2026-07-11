@@ -25,6 +25,9 @@ public class DataPager : ContentView
     /// <summary>Bindable property for <see cref="QueryState"/>.</summary>
     public static readonly BindableProperty QueryStateProperty = BindableProperty.Create(nameof(QueryState), typeof(SearchQueryState), typeof(DataPager));
 
+    /// <summary>Default page size used when no pagination state has been supplied.</summary>
+    private const int DefaultPageSize = 20;
+
     /// <summary>Initializes a new instance of the <see cref="DataPager"/> class.</summary>
     public DataPager()
     {
@@ -95,7 +98,7 @@ public class DataPager : ContentView
     {
         var state = PaginationState;
         var clampedPageIndex = state is null ? Math.Max(0, pageIndex) : Math.Clamp(pageIndex, 0, state.TotalPages - 1);
-        var pageSize = state?.PageSize ?? 20;
+        var pageSize = state?.PageSize ?? DefaultPageSize;
         return new PageRequest(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
     }
 
@@ -115,22 +118,15 @@ public class DataPager : ContentView
     }
 
     /// <summary>Command wrapper for page navigation actions.</summary>
-    private sealed class PageNavigationCommand : ICommand
+    /// <param name="execute">The execute action.</param>
+    /// <param name="canExecute">The can execute predicate.</param>
+    private sealed class PageNavigationCommand(Action execute, Func<bool> canExecute) : ICommand
     {
         /// <summary>Stores the can execute predicate.</summary>
-        private readonly Func<bool> _canExecute;
+        private readonly Func<bool> _canExecute = canExecute;
 
         /// <summary>Stores the execute action.</summary>
-        private readonly Action _execute;
-
-        /// <summary>Initializes a new instance of the <see cref="PageNavigationCommand"/> class.</summary>
-        /// <param name="execute">The execute action.</param>
-        /// <param name="canExecute">The can execute predicate.</param>
-        public PageNavigationCommand(Action execute, Func<bool> canExecute)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
+        private readonly Action _execute = execute;
 
         /// <inheritdoc />
         public event EventHandler? CanExecuteChanged;

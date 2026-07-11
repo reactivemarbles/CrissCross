@@ -87,6 +87,27 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     public static readonly DependencyProperty WarningVisibleProperty =
         DependencyProperty.Register(nameof(WarningVisible), typeof(Visibility), typeof(CheckBoxModern), new PropertyMetadata(Visibility.Collapsed));
 
+    /// <summary>The RGB channel used for the disabled check background.</summary>
+    private const byte DisabledColorChannel = 137;
+
+    /// <summary>The blue RGB channel used for the hover check background.</summary>
+    private const byte HoverBlueChannel = 253;
+
+    /// <summary>The green RGB channel used for the hover check background.</summary>
+    private const byte HoverGreenChannel = 230;
+
+    /// <summary>The red RGB channel used for the hover check background.</summary>
+    private const byte HoverRedChannel = 190;
+
+    /// <summary>The font-size scale used when automatic text sizing is enabled.</summary>
+    private const double AutomaticFontSizeScale = 0.6d;
+
+    /// <summary>The delay before applying disabled-state behavior.</summary>
+    private const int DisabledStateDelayMilliseconds = 100;
+
+    /// <summary>The duration that warning feedback remains visible.</summary>
+    private const int WarningDisplayMilliseconds = 2000;
+
     /// <summary>Stores the _isChecked value.</summary>
     private readonly Signal<CheckBoxResultEventArgs> _isChecked = new();
 
@@ -109,7 +130,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     public CheckBoxModern()
     {
         _ = EventSignal
-            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => PreviewMouseLeftButtonDown += handler, handler => PreviewMouseLeftButtonDown -= handler)
+            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => PreviewMouseLeftButtonDown += handler, handler => PreviewMouseLeftButtonDown -= handler)
             .Subscribe(_ =>
         {
             if (Command?.CanExecute(null) == false)
@@ -121,9 +142,11 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         }).DisposeWith(_disposables);
 
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => Loaded += handler, handler => Loaded -= handler)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Loaded += handler, handler => Loaded -= handler)
             .Subscribe(async loadedArgs =>
         {
+            _ = loadedArgs;
+
             if (_isChecked.HasObservers)
             {
                 _isChecked.OnNext(new CheckBoxResultEventArgs(false, Checked));
@@ -131,7 +154,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
 
             await EnableChange(IsEnabled);
 
-            IsEnabledChanged += async (s, e) => await EnableChange((bool)e.NewValue);
+            IsEnabledChanged += async (_, e) => await EnableChange((bool)e.NewValue);
 
             if (Command is null)
             {
@@ -144,13 +167,13 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
             }
 
             _ = EventSignal
-                .From<EventHandler, EventArgs>(handler => Command.CanExecuteChanged += handler, handler => Command.CanExecuteChanged -= handler)
-                .Subscribe(async eventArgs => await EnableChange(IsEnabled && Command.CanExecute(null)))
+                .From<EventHandler, EventArgs>(handler => handler.Invoke, handler => Command.CanExecuteChanged += handler, handler => Command.CanExecuteChanged -= handler)
+                .Subscribe(async _ => await EnableChange(IsEnabled && Command.CanExecute(null)))
                 .DisposeWith(_disposables);
         }).DisposeWith(_disposables);
 
         _ = EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => MouseEnter += handler, handler => MouseEnter -= handler)
+            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => MouseEnter += handler, handler => MouseEnter -= handler)
             .Subscribe(_ =>
         {
             if (Command?.CanExecute(null) == false || !IsEnabled)
@@ -158,11 +181,11 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
                 return;
             }
 
-            CheckBackground = new SolidColorBrush(Color.FromRgb(190, 230, 253));
+            CheckBackground = new SolidColorBrush(Color.FromRgb(HoverRedChannel, HoverGreenChannel, HoverBlueChannel));
         }).DisposeWith(_disposables);
 
         _ = EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => MouseLeave += handler, handler => MouseLeave -= handler)
+            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => MouseLeave += handler, handler => MouseLeave -= handler)
             .Subscribe(_ =>
         {
             if (Command?.CanExecute(null) == false || !IsEnabled)
@@ -389,7 +412,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     public async Task ShowWarning(bool checkedAfterwards = false)
     {
         WarningVisible = Visibility.Visible;
-        await Task.Delay(2000);
+        await Task.Delay(WarningDisplayMilliseconds);
         Checked = checkedAfterwards;
         WarningVisible = Visibility.Collapsed;
     }
@@ -448,7 +471,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
             return;
         }
 
-        cb.FontSize = cb.BoxSize * 0.6;
+        cb.FontSize = cb.BoxSize * AutomaticFontSizeScale;
     }
 
     /// <summary>Provides the UpdateFontSize member.</summary>
@@ -464,7 +487,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         if ((bool)e.NewValue)
         {
             cb._lastFontSize = cb.FontSize;
-            cb.FontSize = cb.BoxSize * 0.6;
+            cb.FontSize = cb.BoxSize * AutomaticFontSizeScale;
         }
         else
         {
@@ -474,9 +497,11 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
 
     /// <summary>Provides the UpdateTickSymbol member.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void UpdateTickSymbol(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="eventArgs">The event arguments.</param>
+    private static void UpdateTickSymbol(DependencyObject d, DependencyPropertyChangedEventArgs eventArgs)
     {
+        _ = eventArgs;
+
         if (d is not CheckBoxModern cb)
         {
             return;
@@ -497,7 +522,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         }
         else
         {
-            CheckBackground = new SolidColorBrush(Color.FromRgb(137, 137, 137));
+            CheckBackground = new SolidColorBrush(Color.FromRgb(DisabledColorChannel, DisabledColorChannel, DisabledColorChannel));
             await StarTimer();
         }
     }
@@ -507,7 +532,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     private async Task StarTimer()
     {
         _startedTime = true;
-        await Task.Delay(100);
+        await Task.Delay(DisabledStateDelayMilliseconds);
         if (!_startedTime || DisabledState == DisabledState.Ignore)
         {
             return;

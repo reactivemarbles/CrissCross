@@ -46,6 +46,9 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
         typeof(VirtualizingWrapPanel),
         new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsArrange));
 
+    /// <summary>Provides the number of outer edges sharing start-and-end spacing.</summary>
+    private const int OuterEdgeCount = 2;
+
     /// <summary>Gets or sets the spacing mode used when arranging the items. The default value is <see cref="SpacingMode.Uniform"/>.</summary>
     public SpacingMode SpacingMode
     {
@@ -155,7 +158,7 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
             case SpacingMode.StartAndEndOnly:
                 {
                     innerSpacing = 0;
-                    outerSpacing = unusedWidth / 2;
+                    outerSpacing = unusedWidth / OuterEdgeCount;
                     break;
                 }
 
@@ -359,8 +362,8 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
 
     /// <summary>Private callback for <see cref="OrientationProperty"/>.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="_">Unused event arguments required by the dependency property callback.</param>
+    private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs _)
     {
         if (d is not VirtualizingWrapPanel panel)
         {
@@ -551,7 +554,7 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
         }
         else
         {
-            ChildSize = CalculateChildSize(availableSize);
+            ChildSize = CalculateChildSize();
         }
 
         ItemsPerRowCount = double.IsInfinity(GetWidth(availableSize))
@@ -562,9 +565,8 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
     }
 
     /// <summary>Calculates child size.</summary>
-    /// <param name="availableSize">The availableSize value.</param>
     /// <returns>The result.</returns>
-    private Size CalculateChildSize(Size availableSize)
+    private Size CalculateChildSize()
     {
         if (Items.Count == 0)
         {

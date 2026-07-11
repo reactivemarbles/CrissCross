@@ -18,11 +18,11 @@ public class ComboBox : global::Avalonia.Controls.ComboBox
     /// </summary>
     /// <remarks>This property can be used in styles and templates to customize the appearance of the
     /// ComboBox's border. The default value is typically zero, resulting in square corners.</remarks>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty =
         AvaloniaProperty.Register<ComboBox, CornerRadius>(nameof(CornerRadius));
 
     /// <summary>Gets or sets the corner radius.</summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

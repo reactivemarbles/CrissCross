@@ -67,24 +67,10 @@ public interface IViewModelRoutedViewHost : IActivatableView, IEnableLogger
     void Setup();
 
     /// <summary>Navigates the specified contract.</summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    void Navigate<T>(string? contract = null, object? parameter = null)
-        where T : class, IRxObject;
-
-    /// <summary>Navigates the specified contract.</summary>
     /// <param name="viewModel">The view model to navigate to.</param>
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
     void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null);
-
-    /// <summary>Navigates the and reset.</summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    void NavigateAndReset<T>(string? contract = null, object? parameter = null)
-        where T : class, IRxObject;
 
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model to navigate to.</param>

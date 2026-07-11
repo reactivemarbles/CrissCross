@@ -52,8 +52,8 @@ public class TreeGridHeader : FrameworkElement
 
     /// <summary>Provides the OnTitleChanged member.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="_">Unused event arguments required by the dependency property callback.</param>
+    private static void OnTitleChanged(DependencyObject d, DependencyPropertyChangedEventArgs _)
     {
         if (d is not TreeGridHeader header)
         {

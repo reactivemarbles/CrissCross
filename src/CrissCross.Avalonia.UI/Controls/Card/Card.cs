@@ -10,7 +10,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class Card : global::Avalonia.Controls.ContentControl
 {
     /// <summary>Property for <see cref="Footer"/>.</summary>
-    public static readonly StyledProperty<object> FooterProperty = AvaloniaProperty.Register<Card, object>(
+    public static readonly StyledProperty<object?> FooterProperty = AvaloniaProperty.Register<Card, object?>(
         nameof(Footer),
         null);
 
@@ -20,7 +20,7 @@ public class Card : global::Avalonia.Controls.ContentControl
         false);
 
     /// <summary>Property for <see cref="Header"/>.</summary>
-    public static readonly StyledProperty<object> HeaderProperty = AvaloniaProperty.Register<Card, object>(
+    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<Card, object?>(
         nameof(Header),
         null);
 
@@ -37,7 +37,7 @@ public class Card : global::Avalonia.Controls.ContentControl
     }
 
     /// <summary>Gets or sets additional content displayed at the bottom.</summary>
-    public object Footer
+    public object? Footer
     {
         get => GetValue(FooterProperty);
         set => SetValue(FooterProperty, value);

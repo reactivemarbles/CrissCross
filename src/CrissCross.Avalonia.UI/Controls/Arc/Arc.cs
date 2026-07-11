@@ -57,13 +57,16 @@ public class Arc : Shape
     /// <inheritdoc />
     protected override Geometry? CreateDefiningGeometry()
     {
-        IsLargeArc = Math.Abs(EndAngle - StartAngle) > 180;
+        const double degreesInHalfCircle = 180.0;
+        const double half = 2.0;
+
+        IsLargeArc = Math.Abs(EndAngle - StartAngle) > degreesInHalfCircle;
 
         var geometryStream = new StreamGeometry();
         var strokeThickness = StrokeThickness;
         var arcSize = new Size(
-            Math.Max(0, (Bounds.Width - strokeThickness) / 2),
-            Math.Max(0, (Bounds.Height - strokeThickness) / 2));
+            Math.Max(0, (Bounds.Width - strokeThickness) / half),
+            Math.Max(0, (Bounds.Height - strokeThickness) / half));
 
         using (var context = geometryStream.Open())
         {
@@ -77,7 +80,7 @@ public class Arc : Shape
                 SweepDirection);
         }
 
-        geometryStream.Transform = new TranslateTransform(strokeThickness / 2, strokeThickness / 2);
+        geometryStream.Transform = new TranslateTransform(strokeThickness / half, strokeThickness / half);
 
         return geometryStream;
     }
@@ -87,41 +90,44 @@ public class Arc : Shape
     /// <returns>A Point.</returns>
     private Point PointAtAngle(double angle)
     {
+        const double degreesInHalfCircle = 180.0;
+        const double degreesInRightAngle = 90.0;
+        const double degreesInFullCircle = 360.0;
+        const double half = 2.0;
+
         var strokeThickness = StrokeThickness;
 
         if (SweepDirection == SweepDirection.CounterClockwise)
         {
-            angle += 90;
-            angle %= 360;
+            angle += degreesInRightAngle;
+            angle %= degreesInFullCircle;
             if (angle < 0)
             {
-                angle += 360;
+                angle += degreesInFullCircle;
             }
 
-            var radAngle = angle * (Math.PI / 180);
-            var horizontalRadius = (Bounds.Width - strokeThickness) / 2;
-            var verticalRadius = (Bounds.Height - strokeThickness) / 2;
+            var radAngle = angle * (Math.PI / degreesInHalfCircle);
+            var horizontalRadius = (Bounds.Width - strokeThickness) / half;
+            var verticalRadius = (Bounds.Height - strokeThickness) / half;
 
             return new Point(
                 horizontalRadius + (horizontalRadius * Math.Cos(radAngle)),
                 verticalRadius - (verticalRadius * Math.Sin(radAngle)));
         }
-        else
+
+        angle -= degreesInRightAngle;
+        angle %= degreesInFullCircle;
+        if (angle < 0)
         {
-            angle -= 90;
-            angle %= 360;
-            if (angle < 0)
-            {
-                angle += 360;
-            }
-
-            var radAngle = angle * (Math.PI / 180);
-            var horizontalRadius = (Bounds.Width - strokeThickness) / 2;
-            var verticalRadius = (Bounds.Height - strokeThickness) / 2;
-
-            return new Point(
-                horizontalRadius + (horizontalRadius * Math.Cos(-radAngle)),
-                verticalRadius - (verticalRadius * Math.Sin(-radAngle)));
+            angle += degreesInFullCircle;
         }
+
+        var clockwiseRadAngle = angle * (Math.PI / degreesInHalfCircle);
+        var clockwiseHorizontalRadius = (Bounds.Width - strokeThickness) / half;
+        var clockwiseVerticalRadius = (Bounds.Height - strokeThickness) / half;
+
+        return new Point(
+            clockwiseHorizontalRadius + (clockwiseHorizontalRadius * Math.Cos(-clockwiseRadAngle)),
+            clockwiseVerticalRadius - (clockwiseVerticalRadius * Math.Sin(-clockwiseRadAngle)));
     }
 }

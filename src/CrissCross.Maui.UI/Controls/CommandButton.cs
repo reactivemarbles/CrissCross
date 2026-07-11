@@ -20,7 +20,7 @@ public class CommandButton : Button
         typeof(bool),
         typeof(CommandButton),
         false,
-        propertyChanged: OnIsExecutingChanged);
+        propertyChanged: static (bindable, _, newValue) => OnIsExecutingChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="Progress"/>.</summary>
     public static readonly BindableProperty ProgressProperty = BindableProperty.Create(
@@ -78,9 +78,8 @@ public class CommandButton : Button
 
     /// <summary>Runs the is executing changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnIsExecutingChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnIsExecutingChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not CommandButton button || newValue is not true)
         {

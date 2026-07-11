@@ -135,6 +135,42 @@ public class RichTextBox : TemplatedControl
     public static readonly RoutedEvent<FormattingEventArgs> FormattingAppliedEvent =
         RoutedEvent.Register<RichTextBox, FormattingEventArgs>(nameof(FormattingApplied), RoutingStrategies.Bubble);
 
+    /// <summary>Provides the ParagraphBreakLineCount member.</summary>
+    private const int ParagraphBreakLineCount = 2;
+
+    /// <summary>Provides the DefaultImageOverlayHeight member.</summary>
+    private const double DefaultImageOverlayHeight = 100d;
+
+    /// <summary>Provides the CharacterWidthFontScale member.</summary>
+    private const double CharacterWidthFontScale = 0.6d;
+
+    /// <summary>Provides the DefaultCharacterWidth member.</summary>
+    private const double DefaultCharacterWidth = 8.4d;
+
+    /// <summary>Provides the LineHeightFontScale member.</summary>
+    private const double LineHeightFontScale = 1.4d;
+
+    /// <summary>Provides the DefaultLineHeight member.</summary>
+    private const double DefaultLineHeight = 19.6d;
+
+    /// <summary>Provides the SmallFontSize member.</summary>
+    private const double SmallFontSize = 12d;
+
+    /// <summary>Provides the MediumFontSize member.</summary>
+    private const double MediumFontSize = 16d;
+
+    /// <summary>Provides the LargeFontSize member.</summary>
+    private const double LargeFontSize = 20d;
+
+    /// <summary>Provides the WebPHeaderLength member.</summary>
+    private const int WebPHeaderLength = 12;
+
+    /// <summary>Provides the RiffSignatureLength member.</summary>
+    private const int RiffSignatureLength = 4;
+
+    /// <summary>Provides the WebPSignatureOffset member.</summary>
+    private const int WebPSignatureOffset = 8;
+
     /// <summary>Provides the _propertyChangedHandlers member.</summary>
     private readonly Dictionary<AvaloniaProperty, Action> _propertyChangedHandlers;
 
@@ -1687,10 +1723,10 @@ public class RichTextBox : TemplatedControl
 
             var precedingLineCount = Document.Segments.Count(candidate =>
                 candidate.StartIndex < segment.StartIndex && candidate.IsLineBreak) +
-                (Document.Segments.Count(candidate => candidate.StartIndex < segment.StartIndex && candidate.IsParagraphBreak) * 2) +
+                (Document.Segments.Count(candidate => candidate.StartIndex < segment.StartIndex && candidate.IsParagraphBreak) * ParagraphBreakLineCount) +
                 1;
             var top = (precedingLineCount * lineHeight) + stackedImageOffset;
-            var imageHeight = double.IsNaN(image.Height) ? 100 : image.Height;
+            var imageHeight = double.IsNaN(image.Height) ? DefaultImageOverlayHeight : image.Height;
 
             Canvas.SetLeft(image, 0);
             Canvas.SetTop(image, top);
@@ -2035,11 +2071,11 @@ public class RichTextBox : TemplatedControl
 
     /// <summary>Provides the GetEstimatedCharacterWidth member.</summary>
     /// <returns>The result.</returns>
-    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * 0.6 : 8.4);
+    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * CharacterWidthFontScale : DefaultCharacterWidth);
 
     /// <summary>Provides the GetEstimatedLineHeight member.</summary>
     /// <returns>The result.</returns>
-    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * 1.4 : 19.6);
+    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * LineHeightFontScale : DefaultLineHeight);
 
     /// <summary>Provides the CreateContextMenu member.</summary>
     /// <returns>The result.</returns>
@@ -2075,9 +2111,9 @@ public class RichTextBox : TemplatedControl
         fontItem.ItemsSource = new object[] { fontConsolas, fontSegoe, fontTimes };
 
         var fontSizeItem = new global::Avalonia.Controls.MenuItem { Header = "Font Size" };
-        var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = 12d };
-        var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = 16d };
-        var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = 20d };
+        var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = SmallFontSize };
+        var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = MediumFontSize };
+        var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = LargeFontSize };
         fontSizeItem.ItemsSource = new object[] { size12, size16, size20 };
 
         var foregroundItem = new global::Avalonia.Controls.MenuItem { Header = "Foreground" };
@@ -2570,6 +2606,8 @@ public class RichTextBox : TemplatedControl
         /// <param name="bytes">The image file bytes.</param>
         /// <returns>The result.</returns>
         private static bool HasWebPImageSignature(ReadOnlySpan<byte> bytes) =>
-            bytes.Length >= 12 && bytes[..4].SequenceEqual("RIFF"u8) && bytes[8..12].SequenceEqual("WEBP"u8);
+            bytes.Length >= WebPHeaderLength &&
+            bytes[..RiffSignatureLength].SequenceEqual("RIFF"u8) &&
+            bytes[WebPSignatureOffset..WebPHeaderLength].SequenceEqual("WEBP"u8);
     }
 }

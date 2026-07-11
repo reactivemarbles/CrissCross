@@ -12,6 +12,36 @@ internal sealed class GifGraphicControlExtension : GifExtension
     /// <summary>Provides the ExtensionLabel member.</summary>
     internal const int ExtensionLabel = 0xF9;
 
+    /// <summary>The graphic control extension block size.</summary>
+    private const int GraphicControlBlockSize = 4;
+
+    /// <summary>The full graphic control extension byte count.</summary>
+    private const int GraphicControlByteCount = GraphicControlBlockSize + 2;
+
+    /// <summary>The packed fields offset.</summary>
+    private const int PackedFieldsOffset = 1;
+
+    /// <summary>The disposal method mask.</summary>
+    private const int DisposalMethodMask = 0x1C;
+
+    /// <summary>The disposal method shift.</summary>
+    private const int DisposalMethodShift = 2;
+
+    /// <summary>The user input flag mask.</summary>
+    private const int UserInputFlagMask = 0x02;
+
+    /// <summary>The transparency flag mask.</summary>
+    private const int TransparencyFlagMask = 0x01;
+
+    /// <summary>The delay offset.</summary>
+    private const int DelayOffset = 2;
+
+    /// <summary>The GIF delay unit in milliseconds.</summary>
+    private const int DelayUnitMilliseconds = 10;
+
+    /// <summary>The transparency index offset.</summary>
+    private const int TransparencyIndexOffset = 4;
+
     /// <summary>Initializes a new instance of the <see cref="GifGraphicControlExtension"/> class.</summary>
     private GifGraphicControlExtension()
     {
@@ -53,19 +83,19 @@ internal sealed class GifGraphicControlExtension : GifExtension
     private async Task ReadInternalAsync(Stream stream)
     {
         // Note: at this point, the label (0xF9) has already been read
-        var bytes = new byte[6];
+        var bytes = new byte[GraphicControlByteCount];
         await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
         BlockSize = bytes[0]; // should always be 4
-        if (BlockSize != 4)
+        if (BlockSize != GraphicControlBlockSize)
         {
-            throw GifHelpers.InvalidBlockSizeException("Graphic Control Extension", 4, BlockSize);
+            throw GifHelpers.InvalidBlockSizeException("Graphic Control Extension", GraphicControlBlockSize, BlockSize);
         }
 
-        var packedFields = bytes[1];
-        DisposalMethod = (GifFrameDisposalMethod)((packedFields & 0x1C) >> 2);
-        UserInput = (packedFields & 0x02) != 0;
-        HasTransparency = (packedFields & 0x01) != 0;
-        Delay = BitConverter.ToUInt16(bytes, 2) * 10; // milliseconds
-        TransparencyIndex = bytes[4];
+        var packedFields = bytes[PackedFieldsOffset];
+        DisposalMethod = (GifFrameDisposalMethod)((packedFields & DisposalMethodMask) >> DisposalMethodShift);
+        UserInput = (packedFields & UserInputFlagMask) != 0;
+        HasTransparency = (packedFields & TransparencyFlagMask) != 0;
+        Delay = BitConverter.ToUInt16(bytes, DelayOffset) * DelayUnitMilliseconds;
+        TransparencyIndex = bytes[TransparencyIndexOffset];
     }
 }

@@ -19,14 +19,14 @@ public partial class LoginPage
         // Bind the password
         _ = ViewModel.WhenAnyValue(x => x.Password).Subscribe(password => Password.Password = password ?? string.Empty);
         _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => Password.PasswordChanged += handler, handler => Password.PasswordChanged -= handler)
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Password.PasswordChanged += handler, handler => Password.PasswordChanged -= handler)
             .Select(_ => Password.Password)
             .BindTo(ViewModel, x => x.Password);
 
         // Bind the username
         _ = ViewModel.WhenAnyValue(x => x.Username).Subscribe(x => UserName.Text = x);
         _ = EventSignal
-            .From<TextChangedEventHandler, TextChangedEventArgs>(handler => UserName.TextChanged += handler, handler => UserName.TextChanged -= handler)
+            .From<TextChangedEventHandler, TextChangedEventArgs>(handler => handler.Invoke, handler => UserName.TextChanged += handler, handler => UserName.TextChanged -= handler)
             .Select(_ => UserName.Text)
             .BindTo(ViewModel, x => x.Username);
 

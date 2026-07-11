@@ -70,6 +70,7 @@ public class SymbolIcon : FontIcon
     /// <param name="e">The event arguments.</param>
     private static void OnFilledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         var self = (SymbolIcon)d;
         self.SetFontReference();
         self.OnGlyphChanged();

@@ -5,7 +5,6 @@
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
@@ -31,7 +30,7 @@ public class TextBox : global::Avalonia.Controls.TextBox
         ElementPlacement.Left);
 
     /// <summary>Property for <see cref="PlaceholderText"/>.</summary>
-    public static readonly StyledProperty<string> PlaceholderTextProperty = AvaloniaProperty.Register<TextBox, string>(
+    public static new readonly StyledProperty<string> PlaceholderTextProperty = AvaloniaProperty.Register<TextBox, string>(
         nameof(PlaceholderText),
         string.Empty);
 
@@ -86,7 +85,7 @@ public class TextBox : global::Avalonia.Controls.TextBox
     }
 
     /// <summary>Gets or sets the value.</summary>
-    public string PlaceholderText
+    public new string PlaceholderText
     {
         get => GetValue(PlaceholderTextProperty);
         set => SetValue(PlaceholderTextProperty, value);

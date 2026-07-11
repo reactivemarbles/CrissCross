@@ -52,7 +52,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
         nameof(PressedBorderBrush));
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<Button, CornerRadius>(
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<Button, CornerRadius>(
         nameof(CornerRadius));
 
     /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
@@ -112,7 +112,7 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
     }
 
     /// <summary>Gets or sets a value that represents the degree to which the corners are rounded.</summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

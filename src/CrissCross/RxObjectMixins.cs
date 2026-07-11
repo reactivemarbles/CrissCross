@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using ReactiveUI;
@@ -127,7 +126,7 @@ public static class RxObjectMixins
         /// <param name="predicate">The property selector.</param>
         /// <returns>An observable of item property observables.</returns>
 #if NET8_0_OR_GREATER
-        [RequiresUnreferencedCode("Evaluates expression-based member chains via reflection; members may be trimmed.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Evaluates expression-based member chains via reflection; members may be trimmed.")]
 #endif
         public IObservable<IEnumerable<IObservable<TResult>>> ToListOfObservables<TResult>(Expression<Func<T, TResult>> predicate) =>
             Observable.Create<IEnumerable<IObservable<TResult>>>(observer =>

@@ -11,22 +11,25 @@ namespace CrissCross.WPF.UI.Controls;
 public class RaisedBorder : ContentControl
 {
     /// <summary>The corner radius1 property.</summary>
-    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register("CornerRadius1", typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(10.0)));
+    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(nameof(CornerRadius1), typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(10.0)));
 
     /// <summary>The corner radius2 property.</summary>
-    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register("CornerRadius2", typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(20.0)));
+    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(nameof(CornerRadius2), typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(20.0)));
 
     /// <summary>The glare brush property.</summary>
-    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register("GlareBrush", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(nameof(GlareBrush), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
     /// <summary>The glare opacity mask property.</summary>
-    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register("GlareOpacityMask", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(nameof(GlareOpacityMask), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
     /// <summary>The minor border brush1 property.</summary>
-    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register("MinorBorderBrush1", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(nameof(MinorBorderBrush1), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
     /// <summary>The minor border thickness1 property.</summary>
-    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register("MinorBorderThickness1", typeof(Thickness), typeof(RaisedBorder), new PropertyMetadata(new Thickness(0.0)));
+    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(nameof(MinorBorderThickness1), typeof(Thickness), typeof(RaisedBorder), new PropertyMetadata(new Thickness(0.0)));
+
+    /// <summary>The pen thickness used to draw raised border outlines.</summary>
+    private const double BorderPenThickness = 0.5d;
 
     /// <summary>Initializes a new instance of the <see cref="RaisedBorder"/> class.</summary>
     public RaisedBorder()
@@ -122,13 +125,13 @@ public class RaisedBorder : ContentControl
         var geometry2 = RaisedBorder.CreateGeometryForPath(ActualWidth, ActualHeight, CornerRadius2, BorderThickness);
         var geometry3 = RaisedBorder.CreateGeometryForPath(ActualWidth, ActualHeight, CornerRadius2, borderThickness);
 
-        var pen = new Pen(BorderBrush, 0.5);
+        var pen = new Pen(BorderBrush, BorderPenThickness);
         var group = new GeometryGroup();
         group.Children.Add(geometry);
         group.Children.Add(geometry2);
         drawingContext.DrawGeometry(BorderBrush, pen, group);
 
-        var pen2 = new Pen(MinorBorderBrush1, 0.5);
+        var pen2 = new Pen(MinorBorderBrush1, BorderPenThickness);
         group = new();
         group.Children.Add(geometry2);
         group.Children.Add(geometry3);

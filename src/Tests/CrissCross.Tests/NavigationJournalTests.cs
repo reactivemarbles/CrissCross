@@ -7,6 +7,9 @@ namespace CrissCross.Tests;
 /// <summary>Tests for platform-neutral navigation journal operations used by UI navigation controls.</summary>
 public class NavigationJournalTests
 {
+    /// <summary>Provides the expected details entry index.</summary>
+    private const int ExpectedDetailsEntryIndex = 2;
+
     /// <summary>Provides the Record_BackAndForward_PreservesForwardEntryUntilNewNavigation member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -27,7 +30,7 @@ public class NavigationJournalTests
         await Assert.That(backEntryId).IsEqualTo("orders");
         await Assert.That(NavigationJournal.CanGoForward(journal, backIndex)).IsTrue();
         await Assert.That(canMoveForward).IsTrue();
-        await Assert.That(forwardIndex).IsEqualTo(2);
+        await Assert.That(forwardIndex).IsEqualTo(ExpectedDetailsEntryIndex);
         await Assert.That(forwardEntryId).IsEqualTo("details");
     }
 
@@ -46,7 +49,7 @@ public class NavigationJournalTests
 
         NavigationJournal.Record(journal, ref currentIndex, "settings");
 
-        await Assert.That(currentIndex).IsEqualTo(2);
+        await Assert.That(currentIndex).IsEqualTo(ExpectedDetailsEntryIndex);
         await Assert.That(journal).IsEquivalentTo(["home", "orders", "settings"]);
         await Assert.That(NavigationJournal.CanGoForward(journal, currentIndex)).IsFalse();
     }

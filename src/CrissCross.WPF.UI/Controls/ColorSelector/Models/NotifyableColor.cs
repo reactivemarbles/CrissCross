@@ -14,17 +14,23 @@ namespace CrissCross.WPF.UI;
 /// <param name="colorStateStorage">The color state storage.</param>
 public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
 {
+    /// <summary>The scale used to convert normalized color channels to byte channel values.</summary>
+    private const double ColorChannelScale = byte.MaxValue;
+
+    /// <summary>The scale used to convert normalized saturation, value, and lightness to percentages.</summary>
+    private const double PercentageScale = 100d;
+
     /// <summary>Gets or sets a.</summary>
     /// <value>
     /// a.
     /// </value>
     public double A
     {
-        get => colorStateStorage.ColorState.A * 255;
+        get => colorStateStorage.ColorState.A * ColorChannelScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.A = value / 255;
+            state.A = value / ColorChannelScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -35,11 +41,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double RGB_R
     {
-        get => colorStateStorage.ColorState.RGB_R * 255;
+        get => colorStateStorage.ColorState.RGB_R * ColorChannelScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.RGB_R = value / 255;
+            state.RGB_R = value / ColorChannelScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -50,11 +56,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double RGB_G
     {
-        get => colorStateStorage.ColorState.RGB_G * 255;
+        get => colorStateStorage.ColorState.RGB_G * ColorChannelScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.RGB_G = value / 255;
+            state.RGB_G = value / ColorChannelScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -65,11 +71,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double RGB_B
     {
-        get => colorStateStorage.ColorState.RGB_B * 255;
+        get => colorStateStorage.ColorState.RGB_B * ColorChannelScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.RGB_B = value / 255;
+            state.RGB_B = value / ColorChannelScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -95,11 +101,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double HSV_S
     {
-        get => colorStateStorage.ColorState.HSV_S * 100;
+        get => colorStateStorage.ColorState.HSV_S * PercentageScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.HSV_S = value / 100;
+            state.HSV_S = value / PercentageScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -110,11 +116,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double HSV_V
     {
-        get => colorStateStorage.ColorState.HSV_V * 100;
+        get => colorStateStorage.ColorState.HSV_V * PercentageScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.HSV_V = value / 100;
+            state.HSV_V = value / PercentageScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -140,11 +146,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double HSL_S
     {
-        get => colorStateStorage.ColorState.HSL_S * 100;
+        get => colorStateStorage.ColorState.HSL_S * PercentageScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.HSL_S = value / 100;
+            state.HSL_S = value / PercentageScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -155,11 +161,11 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// </value>
     public double HSL_L
     {
-        get => colorStateStorage.ColorState.HSL_L * 100;
+        get => colorStateStorage.ColorState.HSL_L * PercentageScale;
         set
         {
             var state = colorStateStorage.ColorState;
-            state.HSL_L = value / 100;
+            state.HSL_L = value / PercentageScale;
             colorStateStorage.ColorState = state;
         }
     }
@@ -192,6 +198,6 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
             return;
         }
 
-        this.RaisePropertyChanged(propertyName);
+        ((IReactiveObject)this).RaisePropertyChanged(new PropertyChangedEventArgs(propertyName));
     }
 }

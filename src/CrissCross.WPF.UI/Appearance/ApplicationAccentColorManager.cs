@@ -28,6 +28,42 @@ public static class ApplicationAccentColorManager
     /// <summary>The maximum value of the background HSV brightness after which the text on the accent will be turned dark.</summary>
     private const double BackgroundBrightnessThresholdValue = 80d;
 
+    /// <summary>Provides the brightness correction applied to the system glass color.</summary>
+    private const float SystemGlassBrightnessAdjustment = 6f;
+
+    /// <summary>Provides the dark-theme primary accent brightness adjustment.</summary>
+    private const float DarkPrimaryBrightnessAdjustment = 15f;
+
+    /// <summary>Provides the dark-theme primary accent saturation adjustment.</summary>
+    private const float DarkPrimarySaturationAdjustment = -12f;
+
+    /// <summary>Provides the dark-theme secondary accent brightness adjustment.</summary>
+    private const float DarkSecondaryBrightnessAdjustment = 30f;
+
+    /// <summary>Provides the dark-theme secondary accent saturation adjustment.</summary>
+    private const float DarkSecondarySaturationAdjustment = -24f;
+
+    /// <summary>Provides the dark-theme tertiary accent brightness adjustment.</summary>
+    private const float DarkTertiaryBrightnessAdjustment = 45f;
+
+    /// <summary>Provides the dark-theme tertiary accent saturation adjustment.</summary>
+    private const float DarkTertiarySaturationAdjustment = -36f;
+
+    /// <summary>Provides the light-theme primary accent brightness adjustment.</summary>
+    private const float LightPrimaryBrightnessAdjustment = -5f;
+
+    /// <summary>Provides the light-theme secondary accent brightness adjustment.</summary>
+    private const float LightSecondaryBrightnessAdjustment = -10f;
+
+    /// <summary>Provides the light-theme tertiary accent brightness adjustment.</summary>
+    private const float LightTertiaryBrightnessAdjustment = -15f;
+
+    /// <summary>Provides the secondary accent brush opacity.</summary>
+    private const double SecondaryAccentBrushOpacity = 0.9d;
+
+    /// <summary>Provides the tertiary accent brush opacity.</summary>
+    private const double TertiaryAccentBrushOpacity = 0.8d;
+
     /// <summary>Gets the SystemAccentColor.</summary>
     public static Color SystemAccent
     {
@@ -96,7 +132,7 @@ public static class ApplicationAccentColorManager
         if (systemGlassColor)
         {
             // WindowGlassColor is little darker than accent color
-            systemAccent = systemAccent.UpdateBrightness(6f);
+            systemAccent = systemAccent.UpdateBrightness(SystemGlassBrightnessAdjustment);
         }
 
         Color primaryAccent;
@@ -105,15 +141,15 @@ public static class ApplicationAccentColorManager
 
         if (applicationTheme == ApplicationTheme.Dark)
         {
-            primaryAccent = systemAccent.Update(15f, -12f);
-            secondaryAccent = systemAccent.Update(30f, -24f);
-            tertiaryAccent = systemAccent.Update(45f, -36f);
+            primaryAccent = systemAccent.Update(DarkPrimaryBrightnessAdjustment, DarkPrimarySaturationAdjustment);
+            secondaryAccent = systemAccent.Update(DarkSecondaryBrightnessAdjustment, DarkSecondarySaturationAdjustment);
+            tertiaryAccent = systemAccent.Update(DarkTertiaryBrightnessAdjustment, DarkTertiarySaturationAdjustment);
         }
         else
         {
-            primaryAccent = systemAccent.UpdateBrightness(-5f);
-            secondaryAccent = systemAccent.UpdateBrightness(-10f);
-            tertiaryAccent = systemAccent.UpdateBrightness(-15f);
+            primaryAccent = systemAccent.UpdateBrightness(LightPrimaryBrightnessAdjustment);
+            secondaryAccent = systemAccent.UpdateBrightness(LightSecondaryBrightnessAdjustment);
+            tertiaryAccent = systemAccent.UpdateBrightness(LightTertiaryBrightnessAdjustment);
         }
 
         UpdateColorResources(systemAccent, primaryAccent, secondaryAccent, tertiaryAccent);
@@ -238,7 +274,7 @@ public static class ApplicationAccentColorManager
             systemAccent.ToBrush();
         UiApplication.Current.Resources["AccentFillColorDefaultBrush"] = secondaryAccent.ToBrush();
 
-        UiApplication.Current.Resources["AccentFillColorSecondaryBrush"] = secondaryAccent.ToBrush(0.9);
-        UiApplication.Current.Resources["AccentFillColorTertiaryBrush"] = secondaryAccent.ToBrush(0.8);
+        UiApplication.Current.Resources["AccentFillColorSecondaryBrush"] = secondaryAccent.ToBrush(SecondaryAccentBrushOpacity);
+        UiApplication.Current.Resources["AccentFillColorTertiaryBrush"] = secondaryAccent.ToBrush(TertiaryAccentBrushOpacity);
     }
 }

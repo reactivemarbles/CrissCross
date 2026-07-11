@@ -5,65 +5,50 @@
 namespace CrissCross.WPF.UI;
 
 /// <summary>Represents color channel state.</summary>
-public struct ColorState : IEquatable<ColorState>
+/// <param name="red">The RGB red channel.</param>
+/// <param name="green">The RGB green channel.</param>
+/// <param name="blue">The RGB blue channel.</param>
+/// <param name="a">The alpha channel.</param>
+/// <param name="hsvHue">The HSV hue channel.</param>
+/// <param name="hsvSaturation">The HSV saturation channel.</param>
+/// <param name="hsvValue">The HSV value channel.</param>
+/// <param name="hslHue">The HSL hue channel.</param>
+/// <param name="hslSaturation">The HSL saturation channel.</param>
+/// <param name="hslLightness">The HSL lightness channel.</param>
+public struct ColorState(double red, double green, double blue, double a, double hsvHue, double hsvSaturation, double hsvValue, double hslHue, double hslSaturation, double hslLightness) : IEquatable<ColorState>
 {
     /// <summary>Stores the red RGB channel.</summary>
-    private double _rgbR;
+    private double _rgbR = red;
 
     /// <summary>Stores the green RGB channel.</summary>
-    private double _rgbG;
+    private double _rgbG = green;
 
     /// <summary>Stores the blue RGB channel.</summary>
-    private double _rgbB;
+    private double _rgbB = blue;
 
     /// <summary>Stores the HSV hue channel.</summary>
-    private double _hsvH;
+    private double _hsvH = hsvHue;
 
     /// <summary>Stores the HSV saturation channel.</summary>
-    private double _hsvS;
+    private double _hsvS = hsvSaturation;
 
     /// <summary>Stores the HSV value channel.</summary>
-    private double _hsvV;
+    private double _hsvV = hsvValue;
 
     /// <summary>Stores the HSL hue channel.</summary>
-    private double _hslH;
+    private double _hslH = hslHue;
 
     /// <summary>Stores the HSL saturation channel.</summary>
-    private double _hslS;
+    private double _hslS = hslSaturation;
 
     /// <summary>Stores the HSL lightness channel.</summary>
-    private double _hslL;
-
-    /// <summary>Initializes a new instance of the <see cref="ColorState"/> struct.</summary>
-    /// <param name="red">The RGB red channel.</param>
-    /// <param name="green">The RGB green channel.</param>
-    /// <param name="blue">The RGB blue channel.</param>
-    /// <param name="a">a.</param>
-    /// <param name="hsvHue">The HSV hue channel.</param>
-    /// <param name="hsvSaturation">The HSV saturation channel.</param>
-    /// <param name="hsvValue">The HSV value channel.</param>
-    /// <param name="hslHue">The HSL hue channel.</param>
-    /// <param name="hslSaturation">The HSL saturation channel.</param>
-    /// <param name="hslLightness">The HSL lightness channel.</param>
-    public ColorState(double red, double green, double blue, double a, double hsvHue, double hsvSaturation, double hsvValue, double hslHue, double hslSaturation, double hslLightness)
-    {
-        _rgbR = red;
-        _rgbG = green;
-        _rgbB = blue;
-        A = a;
-        _hsvH = hsvHue;
-        _hsvS = hsvSaturation;
-        _hsvV = hsvValue;
-        _hslH = hslHue;
-        _hslS = hslSaturation;
-        _hslL = hslLightness;
-    }
+    private double _hslL = hslLightness;
 
     /// <summary>Gets or sets a.</summary>
     /// <value>
     /// a.
     /// </value>
-    public double A { get; set; }
+    public double A { get; set; } = a;
 
     /// <summary>Gets or sets the RGB r.</summary>
     /// <value>

@@ -110,22 +110,15 @@ public class PropertyGridLite : Control
     }
 
     /// <summary>Provides the InspectorCommand member.</summary>
-    private sealed class InspectorCommand : ICommand
+    /// <param name="execute">The command action.</param>
+    /// <param name="canExecute">The command guard.</param>
+    private sealed class InspectorCommand(Action execute, Func<bool> canExecute) : ICommand
     {
         /// <summary>Stores the _execute value.</summary>
-        private readonly Action _execute;
+        private readonly Action _execute = execute;
 
         /// <summary>Stores the _canExecute value.</summary>
-        private readonly Func<bool> _canExecute;
-
-        /// <summary>Initializes a new instance of the <see cref="InspectorCommand"/> class.</summary>
-        /// <param name="execute">The execute value.</param>
-        /// <param name="canExecute">The canExecute value.</param>
-        public InspectorCommand(Action execute, Func<bool> canExecute)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
+        private readonly Func<bool> _canExecute = canExecute;
 
         /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;

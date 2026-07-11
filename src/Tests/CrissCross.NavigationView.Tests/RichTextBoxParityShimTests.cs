@@ -116,7 +116,10 @@ public sealed class RichTextBoxParityShimTests
     [Test]
     public async Task HtmlClipboardEnvelope_UsesNumericOffsetsWithoutMarkers()
     {
-        var payload = "StartFragment:0000000060\r\nEndFragment:0000000063\r\n".PadRight(60) + "abc";
+        const int fragmentStartOffset = 60;
+        const int fragmentEndOffset = 63;
+
+        var payload = $"StartFragment:{fragmentStartOffset:0000000000}\r\nEndFragment:{fragmentEndOffset:0000000000}\r\n".PadRight(fragmentStartOffset) + "abc";
 
         await Assert.That(HtmlClipboardUtilities.ExtractFragment(payload)).IsEqualTo("abc");
     }

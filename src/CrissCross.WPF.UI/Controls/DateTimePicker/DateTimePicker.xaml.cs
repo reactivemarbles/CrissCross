@@ -89,6 +89,7 @@ public partial class DateTimePicker : UserControl
     /// <param name="e">The event arguments.</param>
     private static void DateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DateTimePicker dateTimePicker)
         {
             return;
@@ -117,7 +118,12 @@ public partial class DateTimePicker : UserControl
     private void CalDisplay_SelectedDatesChanged(object? sender, EventArgs e)
     {
         var timeSpan = CoerceSelectedTime(GetSelectedTime());
-        var date = CalDisplay.SelectedDate.Value.Date + timeSpan;
+        if (CalDisplay.SelectedDate is not { } selectedDate)
+        {
+            return;
+        }
+
+        var date = selectedDate.Date + timeSpan;
         DateDisplay.Text = date.ToString(DateTimeFormat);
         SelectedDate = date;
     }

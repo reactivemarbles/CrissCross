@@ -16,6 +16,11 @@ public partial class PetView
     public PetView()
     {
         InitializeComponent();
-        _ = this.WhenActivated(d => this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PetName.Text).DisposeWith(d));
+        _ = this.WhenActivated(BindViewModel);
     }
+
+    /// <summary>Binds the active view model to the view.</summary>
+    /// <param name="disposables">The activation disposables.</param>
+    private void BindViewModel(CompositeDisposable disposables) =>
+        this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PetName.Text).DisposeWith(disposables);
 }

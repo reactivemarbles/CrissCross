@@ -11,8 +11,35 @@ namespace CrissCross.Tests;
 /// <summary>Tests for ViewModelRoutedViewHostMixins class.</summary>
 public class ViewModelRoutedViewHostMixinsTests
 {
+    /// <summary>Provides the ProfileContract member.</summary>
+    private const string ProfileContract = "profile";
+
+    /// <summary>Provides the propagation delay used by observable tests.</summary>
+    private const int ObservablePropagationDelayMilliseconds = 100;
+
     /// <summary>Provides the _testCounter member.</summary>
     private static int _testCounter;
+
+    /// <summary>Provides the INavigationTargetViewModel member.</summary>
+    private interface INavigationTargetViewModel
+    {
+        /// <summary>Gets the navigation scope.</summary>
+        string NavigationScope { get; }
+    }
+
+    /// <summary>Provides the INavigationTargetView member.</summary>
+    private interface INavigationTargetView
+    {
+        /// <summary>Gets the view scope.</summary>
+        string ViewScope { get; }
+    }
+
+    /// <summary>Provides the IUnregisteredNavigationKey member.</summary>
+    private interface IUnregisteredNavigationKey
+    {
+        /// <summary>Gets the key.</summary>
+        string Key { get; }
+    }
 
     /// <summary>Provides the Setup member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -22,6 +49,86 @@ public class ViewModelRoutedViewHostMixinsTests
         // Note: We don't clear static dictionaries as it causes test isolation issues
         // Each test should use unique host names to avoid conflicts
         await Task.CompletedTask;
+    }
+
+    /// <summary>Verifies that the host generic navigation shim resolves and forwards a registered view model.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task Navigate_GenericHostShim_ResolvesRegisteredViewModel()
+    {
+        var parameter = new NavigationParameter("generic-host");
+        var expectedViewModel = new TestViewModel();
+        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        RegisterTestViewModel(expectedViewModel, ProfileContract);
+
+        viewHost.Navigate<TestViewModel>(ProfileContract, parameter);
+
+        var testHost = (TestViewModelRoutedViewHost)viewHost;
+        await Assert.That(ReferenceEquals(testHost.LastViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(testHost.LastContract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(testHost.LastParameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Verifies that the host generic reset shim resolves a view model and clears history.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateAndReset_GenericHostShim_ResolvesRegisteredViewModelAndClearsHistory()
+    {
+        var parameter = new NavigationParameter("generic-reset");
+        var expectedViewModel = new TestViewModel();
+        var testHost = new TestViewModelRoutedViewHost();
+        IViewModelRoutedViewHost viewHost = testHost;
+        testHost.NavigationStack.Add(typeof(TestHostedViewModel));
+        RegisterTestViewModel(expectedViewModel, ProfileContract);
+
+        viewHost.NavigateAndReset<TestViewModel>(ProfileContract, parameter);
+
+        await Assert.That(testHost.NavigationStack.Count).IsEqualTo(1);
+        await Assert.That(ReferenceEquals(testHost.LastViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(testHost.LastContract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(testHost.LastParameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Verifies that the host generic navigation shim rejects a null host.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task Navigate_GenericHostShimWithNullHost_ThrowsArgumentNullException()
+    {
+        IViewModelRoutedViewHost? viewHost = null;
+
+        await Assert.That(() => viewHost!.Navigate<TestViewModel>()).Throws<ArgumentNullException>();
+    }
+
+    /// <summary>Verifies that the host generic reset shim rejects a null host.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateAndReset_GenericHostShimWithNullHost_ThrowsArgumentNullException()
+    {
+        IViewModelRoutedViewHost? viewHost = null;
+
+        await Assert.That(() => viewHost!.NavigateAndReset<TestViewModel>()).Throws<ArgumentNullException>();
+    }
+
+    /// <summary>Verifies that the host generic navigation shim rejects an unregistered view model.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task Navigate_GenericHostShimWithUnregisteredViewModel_ThrowsInvalidOperationException()
+    {
+        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        AppLocator.CurrentMutable.UnregisterAll<TestHostedViewModel>();
+
+        await Assert.That(() => viewHost.Navigate<TestHostedViewModel>()).Throws<InvalidOperationException>();
+    }
+
+    /// <summary>Verifies that the host generic reset shim rejects an unregistered view model.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateAndReset_GenericHostShimWithUnregisteredViewModel_ThrowsInvalidOperationException()
+    {
+        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        AppLocator.CurrentMutable.UnregisterAll<TestHostedViewModel>();
+
+        await Assert.That(() => viewHost.NavigateAndReset<TestHostedViewModel>()).Throws<InvalidOperationException>();
     }
 
     /// <summary>Provides the SetMainNavigationHost_RegistersHost member.</summary>
@@ -276,6 +383,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestViewModel(hostName);
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new TestViewModel(hostName));
         setNav.SetMainNavigationHost(viewHost);
 
         // Act
@@ -284,6 +392,30 @@ public class ViewModelRoutedViewHostMixinsTests
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
         await Assert.That(viewHost.NavigationStack[0]).IsEqualTo(typeof(TestViewModel));
+    }
+
+    /// <summary>Provides the NavigateToView_WithIUseNavigation_PreservesLegacyContractAndParameter member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateToView_WithIUseNavigation_PreservesLegacyContractAndParameter()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var parameter = new NavigationParameter("legacy");
+        var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new TestViewModel(hostName), ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        ((IUseNavigation)vm).NavigateToView<TestViewModel>(ProfileContract, parameter);
+
+        // Assert
+        await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
+        await Assert.That(viewHost.NavigationStack[0]).IsEqualTo(typeof(TestViewModel));
+        await Assert.That(viewHost.LastContract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(viewHost.LastParameter, parameter)).IsTrue();
     }
 
     /// <summary>Provides the NavigateToView_WithIUseNavigation_ThrowsWhenSpecificHostNotRegistered member.</summary>
@@ -325,6 +457,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestHostedViewModel();
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new TestViewModel(hostName));
         setNav.SetMainNavigationHost(viewHost);
 
         // Act
@@ -333,6 +466,176 @@ public class ViewModelRoutedViewHostMixinsTests
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
         await Assert.That(viewHost.NavigationStack[0]).IsEqualTo(typeof(TestViewModel));
+    }
+
+    /// <summary>Provides the NavigateToView_Type_WithIUseHostedNavigation_UsesRegisteredViewModelInstance member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateToView_Type_WithIUseHostedNavigation_UsesRegisteredViewModelInstance()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var parameter = new NavigationParameter("type-legacy");
+        var vm = new TestHostedViewModel();
+        var expectedViewModel = new TestViewModel(hostName);
+        var viewModelType = typeof(TestViewModel);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestViewModelRoutedViewHost(hostName);
+        AppLocator.CurrentMutable.UnregisterAll<TestViewModel>(ProfileContract);
+        AppLocator.CurrentMutable.RegisterConstant(expectedViewModel, ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        vm.NavigateToView(viewModelType, hostName, ProfileContract, parameter);
+
+        // Assert
+        await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
+        await Assert.That(viewHost.NavigationStack[0]).IsEqualTo(typeof(TestViewModel));
+        await Assert.That(ReferenceEquals(viewHost.LastViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(viewHost.LastContract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(viewHost.LastParameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Provides the NavigateTo_WithIUseNavigation_ResolvesInterfaceViewModelKeyToConcreteView member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_WithIUseNavigation_ResolvesInterfaceViewModelKeyToConcreteView()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var parameter = new NavigationParameter("primary-view-model-key");
+        var expectedViewModel = new NavigationTargetViewModel();
+        var expectedView = new NavigationTargetView();
+        var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestResolvedViewModelRoutedViewHost(hostName);
+        RegisterNavigationRegistry(expectedViewModel, expectedView, ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        ((IUseNavigation)vm).NavigateTo<INavigationTargetViewModel>(ProfileContract, parameter);
+
+        // Assert
+        await Assert.That(viewHost.LastResolution).IsNotNull();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution!.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.View, expectedView)).IsTrue();
+        await Assert.That(viewHost.LastResolution.View.GetType()).IsEqualTo(typeof(NavigationTargetView));
+        await Assert.That(ReferenceEquals(expectedView.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(viewHost.LastResolution.Contract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.Parameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Provides the NavigateTo_WithIUseHostedNavigation_ResolvesInterfaceViewKeyToConcreteView member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_WithIUseHostedNavigation_ResolvesInterfaceViewKeyToConcreteView()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var parameter = new NavigationParameter("hosted-view-key");
+        var expectedViewModel = new NavigationTargetViewModel();
+        var expectedView = new NavigationTargetView();
+        var vm = new TestHostedViewModel();
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestResolvedViewModelRoutedViewHost(hostName);
+        RegisterNavigationRegistry(expectedViewModel, expectedView, ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        vm.NavigateTo<INavigationTargetView>(hostName, ProfileContract, parameter);
+
+        // Assert
+        await Assert.That(viewHost.LastResolution).IsNotNull();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution!.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.View, expectedView)).IsTrue();
+        await Assert.That(viewHost.LastResolution.View.GetType()).IsEqualTo(typeof(NavigationTargetView));
+        await Assert.That(viewHost.LastResolution.Contract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.Parameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Provides the NavigateTo_Type_WithIUseNavigation_ResolvesRuntimeInterfaceKey member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_Type_WithIUseNavigation_ResolvesRuntimeInterfaceKey()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var parameter = new NavigationParameter("runtime-key");
+        var expectedViewModel = new NavigationTargetViewModel();
+        var expectedView = new NavigationTargetView();
+        var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestResolvedViewModelRoutedViewHost(hostName);
+        var navigationKey = typeof(INavigationTargetView);
+        RegisterNavigationRegistry(expectedViewModel, expectedView, ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        ((IUseNavigation)vm).NavigateTo(navigationKey, ProfileContract, parameter);
+
+        // Assert
+        await Assert.That(viewHost.LastResolution).IsNotNull();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution!.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.View, expectedView)).IsTrue();
+        await Assert.That(viewHost.LastResolution.Contract).IsEqualTo(ProfileContract);
+        await Assert.That(ReferenceEquals(viewHost.LastResolution.Parameter, parameter)).IsTrue();
+    }
+
+    /// <summary>Provides the NavigateTo_WithIUseNavigation_ThrowsWhenRegistryMissing member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_WithIUseNavigation_ThrowsWhenRegistryMissing()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestResolvedViewModelRoutedViewHost(hostName);
+        AppLocator.CurrentMutable.UnregisterAll<IBidirectionalNavigator>();
+        AppLocator.CurrentMutable.UnregisterAll<INavigationRegistry>();
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act & Assert
+        await Assert.That(() => ((IUseNavigation)vm).NavigateTo<INavigationTargetViewModel>()).Throws<InvalidOperationException>();
+    }
+
+    /// <summary>Provides the NavigateTo_WithIUseNavigation_ThrowsWhenNavigationKeyMissing member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_WithIUseNavigation_ThrowsWhenNavigationKeyMissing()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var vm = new TestViewModel(hostName);
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestResolvedViewModelRoutedViewHost(hostName);
+        RegisterEmptyNavigationRegistry();
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act
+        var exception = CaptureNavigationResolutionException(() => ((IUseNavigation)vm).NavigateTo<IUnregisteredNavigationKey>());
+
+        // Assert
+        await Assert.That(exception.SourceKind).IsEqualTo(NavigationSourceKind.View);
+        await Assert.That(exception.SourceKey).IsEqualTo(typeof(IUnregisteredNavigationKey));
+        await Assert.That(exception.KnownContracts.Count).IsEqualTo(0);
+    }
+
+    /// <summary>Provides the NavigateTo_WithIUseHostedNavigation_ThrowsWhenHostDoesNotSupportResolvedNavigation member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateTo_WithIUseHostedNavigation_ThrowsWhenHostDoesNotSupportResolvedNavigation()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var vm = new TestHostedViewModel();
+        var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterNavigationRegistry(new NavigationTargetViewModel(), new NavigationTargetView(), ProfileContract);
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Act & Assert
+        await Assert.That(() => vm.NavigateTo<INavigationTargetViewModel>(hostName, ProfileContract)).Throws<InvalidOperationException>();
     }
 
     /// <summary>Provides the NavigateToView_WithIUseHostedNavigation_ThrowsWhenSpecificHostNotRegistered member.</summary>
@@ -358,6 +661,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestViewModel(hostName);
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new TestViewModel(hostName));
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
         viewHost.NavigationStack.Add(typeof(TestViewModel));
@@ -405,6 +709,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var vm = new TestHostedViewModel();
         var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new TestViewModel(hostName));
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
 
@@ -536,7 +841,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var subscription = observable.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsTrue();
@@ -563,7 +868,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var subscription = observable.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsTrue();
@@ -592,7 +897,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var subscription = observable.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsFalse();
@@ -631,7 +936,7 @@ public class ViewModelRoutedViewHostMixinsTests
         var subscription = observable.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsFalse();
@@ -655,56 +960,110 @@ public class ViewModelRoutedViewHostMixinsTests
     /// <returns>The result.</returns>
     private static string GetUniqueHostName() => $"TestHost{Interlocked.Increment(ref _testCounter)}";
 
-    /// <summary>Provides the TestViewModel member.</summary>
-    private sealed class TestViewModel : RxObject, IUseNavigation
+    /// <summary>Provides the RegisterNavigationRegistry member.</summary>
+    /// <param name="viewModel">The view model value.</param>
+    /// <param name="view">The view value.</param>
+    /// <param name="contract">The contract value.</param>
+    private static void RegisterNavigationRegistry(NavigationTargetViewModel viewModel, NavigationTargetView view, string? contract)
     {
-        /// <summary>Provides the documented member.</summary>
-        private readonly string? _navName;
+        var registry = new NavigationRegistry();
+        _ = registry.Register<INavigationTargetViewModel, NavigationTargetViewModel, INavigationTargetView, NavigationTargetView>(
+            _ => viewModel,
+            _ => view,
+            contract);
 
-        /// <summary>Initializes a new instance of the <see cref="TestViewModel"/> class.</summary>
-        /// <param name="name">The name value.</param>
-        public TestViewModel(string? name = "")
+        RegisterNavigationRegistry(registry);
+    }
+
+    /// <summary>Provides the RegisterEmptyNavigationRegistry member.</summary>
+    private static void RegisterEmptyNavigationRegistry() => RegisterNavigationRegistry(new NavigationRegistry());
+
+    /// <summary>Provides the RegisterNavigationRegistry member.</summary>
+    /// <param name="registry">The registry value.</param>
+    private static void RegisterNavigationRegistry(NavigationRegistry registry)
+    {
+        AppLocator.CurrentMutable.UnregisterAll<IBidirectionalNavigator>();
+        AppLocator.CurrentMutable.UnregisterAll<INavigationRegistry>();
+        AppLocator.CurrentMutable.RegisterConstant<INavigationRegistry>(registry);
+        AppLocator.CurrentMutable.RegisterConstant(registry.CreateNavigator());
+    }
+
+    /// <summary>Provides the RegisterTestViewModel member.</summary>
+    /// <param name="viewModel">The view model value.</param>
+    /// <param name="contract">The contract value.</param>
+    private static void RegisterTestViewModel(TestViewModel viewModel, string? contract = null)
+    {
+        AppLocator.CurrentMutable.UnregisterAll<TestViewModel>(contract);
+        AppLocator.CurrentMutable.RegisterConstant(viewModel, contract);
+    }
+
+    /// <summary>Provides the CaptureNavigationResolutionException member.</summary>
+    /// <param name="action">The action value.</param>
+    /// <returns>The result.</returns>
+    private static NavigationResolutionException CaptureNavigationResolutionException(Action action)
+    {
+        try
         {
-            _navName = name;
+            action();
+        }
+        catch (NavigationResolutionException exception)
+        {
+            return exception;
         }
 
-        string? IUseNavigation.Name => _navName;
+        throw new InvalidOperationException("Expected a navigation resolution exception.");
+    }
+
+    /// <summary>Provides the TestViewModel member.</summary>
+    /// <param name="name">The name value.</param>
+    private sealed class TestViewModel(string? name = "") : RxObject, IUseNavigation
+    {
+        string? IUseNavigation.Name => name;
     }
 
     /// <summary>Provides the TestHostedViewModel member.</summary>
     private sealed class TestHostedViewModel : RxObject;
 
-    /// <summary>Provides the TestSetNavigationViewModel member.</summary>
-    private sealed class TestSetNavigationViewModel : RxObject, ISetNavigation
+    /// <summary>Provides the NavigationTargetViewModel member.</summary>
+    private sealed class NavigationTargetViewModel : RxObject, INavigationTargetViewModel
     {
-        /// <summary>Provides the documented member.</summary>
-        private readonly string? _setNavName;
+        /// <summary>Gets the navigation scope.</summary>
+        public string NavigationScope => "NavigationTarget";
+    }
 
-        /// <summary>Initializes a new instance of the <see cref="TestSetNavigationViewModel"/> class.</summary>
-        /// <param name="name">The name value.</param>
-        public TestSetNavigationViewModel(string? name = "TestHost")
+    /// <summary>Provides the NavigationTargetView member.</summary>
+    private sealed class NavigationTargetView : INavigationTargetView, IViewFor<NavigationTargetViewModel>
+    {
+        /// <summary>Gets the view scope.</summary>
+        public string ViewScope => "NavigationTarget";
+
+        /// <summary>Gets or sets the value.</summary>
+        public NavigationTargetViewModel? ViewModel { get; set; }
+
+        /// <summary>Gets or sets the value.</summary>
+        object? IViewFor.ViewModel
         {
-            _setNavName = name;
+            get => ViewModel;
+            set => ViewModel = (NavigationTargetViewModel?)value;
         }
+    }
 
-        string? ISetNavigation.Name => _setNavName;
+    /// <summary>Provides the TestSetNavigationViewModel member.</summary>
+    /// <param name="name">The name value.</param>
+    private sealed class TestSetNavigationViewModel(string? name = "TestHost") : RxObject, ISetNavigation
+    {
+        string? ISetNavigation.Name => name;
     }
 
     /// <summary>Provides the TestViewModelRoutedViewHost member.</summary>
-    private sealed class TestViewModelRoutedViewHost : IViewModelRoutedViewHost
+    /// <param name="name">The name value.</param>
+    private class TestViewModelRoutedViewHost(string name = "TestHost") : IViewModelRoutedViewHost
     {
         /// <summary>Provides the _currentViewModel member.</summary>
         private readonly StateSignal<INotifiyRoutableViewModel?> _currentViewModel = new(null);
 
         /// <summary>Provides the documented member.</summary>
         private readonly StateSignal<bool?> _canNavigateBack = new(false);
-
-        /// <summary>Initializes a new instance of the <see cref="TestViewModelRoutedViewHost"/> class.</summary>
-        /// <param name="name">The name value.</param>
-        public TestViewModelRoutedViewHost(string name = "TestHost")
-        {
-            Name = name;
-        }
 
         /// <summary>Gets the value.</summary>
         public ObservableCollection<Type?> NavigationStack { get; } = new();
@@ -726,7 +1085,7 @@ public class ViewModelRoutedViewHostMixinsTests
         public bool? NavigateBackIsEnabled { get; set; }
 
         /// <summary>Gets or sets the value.</summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
 
         /// <summary>Gets or sets the value.</summary>
         public string HostName
@@ -746,6 +1105,18 @@ public class ViewModelRoutedViewHostMixinsTests
 
         /// <summary>Gets or sets the value.</summary>
         public IFullLogger? Log { get; set; }
+
+        /// <summary>Gets the value.</summary>
+        public Type? LastNavigationType { get; protected set; }
+
+        /// <summary>Gets the value.</summary>
+        public IRxObject? LastViewModel { get; protected set; }
+
+        /// <summary>Gets the value.</summary>
+        public string? LastContract { get; protected set; }
+
+        /// <summary>Gets the value.</summary>
+        public object? LastParameter { get; protected set; }
 
         /// <summary>Provides the ClearHistory member.</summary>
         public void ClearHistory()
@@ -767,6 +1138,10 @@ public class ViewModelRoutedViewHostMixinsTests
         public void Navigate<T>(string? contract = null, object? parameter = null)
             where T : class, IRxObject
         {
+            LastNavigationType = typeof(T);
+            LastViewModel = null;
+            LastContract = contract;
+            LastParameter = parameter;
             NavigationStack.Add(typeof(T));
             CanNavigateBack = NavigationStack.Count > 1;
         }
@@ -777,6 +1152,10 @@ public class ViewModelRoutedViewHostMixinsTests
         /// <param name="parameter">The parameter value.</param>
         public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         {
+            LastNavigationType = viewModel.GetType();
+            LastViewModel = viewModel;
+            LastContract = contract;
+            LastParameter = parameter;
             NavigationStack.Add(viewModel.GetType());
             CanNavigateBack = NavigationStack.Count > 1;
 
@@ -795,6 +1174,10 @@ public class ViewModelRoutedViewHostMixinsTests
         public void NavigateAndReset<T>(string? contract = null, object? parameter = null)
             where T : class, IRxObject
         {
+            LastNavigationType = typeof(T);
+            LastViewModel = null;
+            LastContract = contract;
+            LastParameter = parameter;
             NavigationStack.Clear();
             NavigationStack.Add(typeof(T));
             CanNavigateBack = false;
@@ -806,6 +1189,10 @@ public class ViewModelRoutedViewHostMixinsTests
         /// <param name="parameter">The parameter value.</param>
         public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
         {
+            LastNavigationType = viewModel.GetType();
+            LastViewModel = viewModel;
+            LastContract = contract;
+            LastParameter = parameter;
             NavigationStack.Clear();
             NavigationStack.Add(viewModel.GetType());
             CanNavigateBack = false;
@@ -834,16 +1221,45 @@ public class ViewModelRoutedViewHostMixinsTests
         }
     }
 
-    /// <summary>Provides the documented member.</summary>
-    private sealed class TestView : INotifiyNavigation, IViewFor
+    /// <summary>Provides the TestResolvedViewModelRoutedViewHost member.</summary>
+    /// <param name="name">The name value.</param>
+    private sealed class TestResolvedViewModelRoutedViewHost(string name = "TestHost") : TestViewModelRoutedViewHost(name), IResolvedViewModelRoutedViewHost
     {
-        /// <summary>Initializes a new instance of the <see cref="TestView"/> class.</summary>
-        /// <param name="viewModel">The view model.</param>
-        public TestView(object? viewModel = null)
+        /// <summary>Gets the value.</summary>
+        public NavigationResolution? LastResolution { get; private set; }
+
+        /// <summary>Provides the Navigate member.</summary>
+        /// <param name="resolution">The resolution value.</param>
+        public void Navigate(NavigationResolution resolution)
         {
-            ViewModel = viewModel;
+            LastResolution = resolution;
+            LastNavigationType = resolution.ViewModel.GetType();
+            LastViewModel = resolution.ViewModel;
+            LastContract = resolution.Contract;
+            LastParameter = resolution.Parameter;
+            NavigationStack.Add(resolution.ViewModel.GetType());
+            CanNavigateBack = NavigationStack.Count > 1;
         }
 
+        /// <summary>Provides the NavigateAndReset member.</summary>
+        /// <param name="resolution">The resolution value.</param>
+        public void NavigateAndReset(NavigationResolution resolution)
+        {
+            LastResolution = resolution;
+            LastNavigationType = resolution.ViewModel.GetType();
+            LastViewModel = resolution.ViewModel;
+            LastContract = resolution.Contract;
+            LastParameter = resolution.Parameter;
+            NavigationStack.Clear();
+            NavigationStack.Add(resolution.ViewModel.GetType());
+            CanNavigateBack = false;
+        }
+    }
+
+    /// <summary>Provides the documented member.</summary>
+    /// <param name="viewModel">The view model.</param>
+    private sealed class TestView(object? viewModel = null) : INotifiyNavigation, IViewFor
+    {
         /// <summary>Gets or sets the value.</summary>
         public bool ISetupNavigatedTo { get; set; }
 
@@ -866,7 +1282,7 @@ public class ViewModelRoutedViewHostMixinsTests
         public IObservable<Unit> Deactivated => Observable.Return(Unit.Default);
 
         /// <summary>Gets or sets the value.</summary>
-        public object? ViewModel { get; set; }
+        public object? ViewModel { get; set; } = viewModel;
 
         /// <summary>Provides the Dispose member.</summary>
         public void Dispose()
@@ -874,4 +1290,8 @@ public class ViewModelRoutedViewHostMixinsTests
             CleanUp?.Dispose();
         }
     }
+
+    /// <summary>Provides the NavigationParameter member.</summary>
+    /// <param name="Value">The value.</param>
+    private sealed record NavigationParameter(string Value);
 }

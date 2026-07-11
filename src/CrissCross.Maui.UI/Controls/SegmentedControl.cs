@@ -12,7 +12,7 @@ public class SegmentedControl : HorizontalStackLayout
         nameof(State),
         typeof(SegmentedSelectionState),
         typeof(SegmentedControl),
-        propertyChanged: OnStateChanged);
+        propertyChanged: static (bindable, _, newValue) => OnStateChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="SelectedKey"/>.</summary>
     public static readonly BindableProperty SelectedKeyProperty = BindableProperty.Create(
@@ -71,9 +71,8 @@ public class SegmentedControl : HorizontalStackLayout
 
     /// <summary>Runs the state changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnStateChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnStateChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not SegmentedControl control)
         {

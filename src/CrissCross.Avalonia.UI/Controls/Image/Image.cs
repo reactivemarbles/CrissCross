@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 

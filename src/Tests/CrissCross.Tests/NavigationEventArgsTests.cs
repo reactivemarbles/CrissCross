@@ -9,6 +9,9 @@ namespace CrissCross.Tests;
 /// <summary>Tests for Navigation Event Args classes.</summary>
 public class NavigationEventArgsTests
 {
+    /// <summary>Provides the expected enum value for refresh navigation.</summary>
+    private const int RefreshNavigationTypeValue = 2;
+
     /// <summary>Provides the ViewModelNavigationEventArgs_Constructor_SetsProperties member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -226,7 +229,7 @@ public class NavigationEventArgsTests
         // Assert
         await Assert.That((int)NavigationType.New).IsEqualTo(0);
         await Assert.That((int)NavigationType.Back).IsEqualTo(1);
-        await Assert.That((int)NavigationType.Refresh).IsEqualTo(2);
+        await Assert.That((int)NavigationType.Refresh).IsEqualTo(RefreshNavigationTypeValue);
     }
 
     /// <summary>Provides the ViewModelNavigatingEventArgs_AllowsNullParameters member.</summary>
@@ -264,16 +267,10 @@ public class NavigationEventArgsTests
     private sealed class TestRxObject : RxObject;
 
     /// <summary>Provides the TestView member.</summary>
-    private sealed class TestView : IViewFor
+    /// <param name="viewModel">The viewModel value.</param>
+    private sealed class TestView(object? viewModel = null) : IViewFor
     {
-        /// <summary>Initializes a new instance of the <see cref="TestView"/> class.</summary>
-        /// <param name="viewModel">The viewModel value.</param>
-        public TestView(object? viewModel = null)
-        {
-            ViewModel = viewModel;
-        }
-
         /// <summary>Gets or sets the value.</summary>
-        public object? ViewModel { get; set; }
+        public object? ViewModel { get; set; } = viewModel;
     }
 }

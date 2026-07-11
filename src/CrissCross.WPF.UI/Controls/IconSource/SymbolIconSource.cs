@@ -2,8 +2,6 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Windows.Controls;
-
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents an icon source that uses a glyph from the specified font.</summary>

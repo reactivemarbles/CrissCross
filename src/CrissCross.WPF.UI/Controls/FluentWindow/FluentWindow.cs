@@ -34,6 +34,9 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
             typeof(FluentWindow),
             new PropertyMetadata(false, OnExtendsContentIntoTitleBarChanged));
 
+    /// <summary>The resize border thickness used when resize is enabled.</summary>
+    private const double ResizeBorderThickness = 4d;
+
     /// <summary>Stores the _interopHelper value.</summary>
     private WindowInteropHelper? _interopHelper;
 
@@ -150,7 +153,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
                 CaptionHeight = 0,
                 CornerRadius = default,
                 GlassFrameThickness = new(-1),
-                ResizeBorderThickness = ResizeMode == ResizeMode.NoResize ? default : new Thickness(4),
+                ResizeBorderThickness = ResizeMode == ResizeMode.NoResize ? default : new Thickness(ResizeBorderThickness),
                 UseAeroCaptionButtons = false
             });
 

@@ -109,7 +109,7 @@ public partial class RightPropertiesViewModel : RxObject
     /// <param name="apply">The update action.</param>
     private static void ApplyIfSpecified(string? value, Action<string> apply)
     {
-        if (string.IsNullOrEmpty(value))
+        if (value is not { Length: > 0 })
         {
             return;
         }

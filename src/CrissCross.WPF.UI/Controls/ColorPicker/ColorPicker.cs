@@ -31,7 +31,7 @@ public class ColorPicker : Control
             nameof(A),
             typeof(double),
             typeof(ColorPicker),
-            new FrameworkPropertyMetadata(255d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+            new FrameworkPropertyMetadata(MaximumColorChannelValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
 
     /// <summary>Identifies the <see cref="R"/> dependency property.</summary>
     public static readonly DependencyProperty RProperty =
@@ -56,6 +56,9 @@ public class ColorPicker : Control
             typeof(double),
             typeof(ColorPicker),
             new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+
+    /// <summary>The maximum value for an ARGB byte channel.</summary>
+    private const double MaximumColorChannelValue = byte.MaxValue;
 
     /// <summary>Stores the _updating value.</summary>
     private bool _updating;
@@ -143,6 +146,7 @@ public class ColorPicker : Control
     /// <param name="e">The event arguments.</param>
     private static void OnChannelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not ColorPicker cp)
         {
             return;
@@ -184,6 +188,6 @@ public class ColorPicker : Control
             return 0;
         }
 
-        return value > 255 ? 255 : value;
+        return value > MaximumColorChannelValue ? MaximumColorChannelValue : value;
     }
 }

@@ -422,7 +422,7 @@ public class ModernWindow
             _backgroundAnimation?.Begin();
         }
 
-        BrowseBack = ReactiveCommand.Create<object>(o => this.NavigateBack(o), this.CanNavigateBack());
+        BrowseBack = ReactiveCommand.Create<object>(this.NavigateBack, this.CanNavigateBack());
         var backButton = (AppBarButton)Template.FindName("BackButton", this);
         if (backButton is not null)
         {
@@ -448,7 +448,7 @@ public class ModernWindow
         this.AppBarRightListener(() => AppBarRight);
         this.NavBarLeftListener(() => NavBarLeft);
         this.NavBarListener(() => NavBar);
-        this.MainMenuListener(() => MainMenu);
+        this.MainMenuListener(GetMainMenu);
         this.ListenForBusy(IsBusy);
     }
 
@@ -490,6 +490,10 @@ public class ModernWindow
         _hide.Begin();
         _appBarVisible = false;
     }
+
+    /// <summary>Gets the main menu collection for listener registration.</summary>
+    /// <returns>The main menu collection.</returns>
+    private ObservableCollection<FrameworkElement> GetMainMenu() => MainMenu;
 
     /// <summary>Determines whether the specified call is busy.</summary>
     /// <param name="call">The call.</param>

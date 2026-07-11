@@ -29,7 +29,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
         nameof(MaxRating),
         typeof(int),
         typeof(RatingControl),
-        new PropertyMetadata(5));
+        new PropertyMetadata(StarCount));
 
     /// <summary>Property for <see cref="HalfStarEnabled"/>.</summary>
     public static readonly DependencyProperty HalfStarEnabledProperty = DependencyProperty.Register(
@@ -45,8 +45,38 @@ public class RatingControl : System.Windows.Controls.ContentControl
         typeof(RoutedEventHandler),
         typeof(RatingControl));
 
+    /// <summary>Provides the number of stars displayed by the control.</summary>
+    private const int StarCount = 5;
+
+    /// <summary>Provides the number of selectable rating units per star.</summary>
+    private const int RatingUnitsPerStar = 2;
+
+    /// <summary>Provides the half-star rating increment.</summary>
+    private const double HalfStarValue = 0.5D;
+
+    /// <summary>Provides the percentage scale used for pointer offsets.</summary>
+    private const int PercentageScale = 100;
+
+    /// <summary>Provides the percentage represented by one selectable rating unit.</summary>
+    private const int PercentagePerRatingUnit = PercentageScale / (StarCount * RatingUnitsPerStar);
+
+    /// <summary>Provides the first star index.</summary>
+    private const int FirstStarIndex = 0;
+
+    /// <summary>Provides the second star index.</summary>
+    private const int SecondStarIndex = 1;
+
+    /// <summary>Provides the third star index.</summary>
+    private const int ThirdStarIndex = 2;
+
+    /// <summary>Provides the fourth star index.</summary>
+    private const int FourthStarIndex = 3;
+
+    /// <summary>Provides the fifth star index.</summary>
+    private const int FifthStarIndex = 4;
+
     /// <summary>Provides the MaxValue member.</summary>
-    private const double MaxValue = 5.0D;
+    private const double MaxValue = StarCount;
 
     /// <summary>Provides the MinValue member.</summary>
     private const double MinValue = 0.0D;
@@ -195,7 +225,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
         }
 
         var currentPossition = e.GetPosition(this);
-        var mouseOffset = currentPossition.X * 100 / ActualWidth;
+        var mouseOffset = currentPossition.X * PercentageScale / ActualWidth;
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
@@ -216,7 +246,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
         }
 
         var currentPossition = e.GetPosition(this);
-        var mouseOffset = currentPossition.X * 100 / ActualWidth;
+        var mouseOffset = currentPossition.X * PercentageScale / ActualWidth;
 
         if (e.LeftButton != MouseButtonState.Pressed)
         {
@@ -238,7 +268,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
 
         if ((e.Key == Key.Right || e.Key == Key.Up) && Value < MaxValue)
         {
-            Value += HalfStarEnabled ? 0.5D : 1;
+            Value += HalfStarEnabled ? HalfStarValue : 1;
         }
 
         if ((e.Key != Key.Left && e.Key != Key.Down) || Value <= MinValue)
@@ -246,7 +276,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
             return;
         }
 
-        Value -= HalfStarEnabled ? 0.5D : 1;
+        Value -= HalfStarEnabled ? HalfStarValue : 1;
     }
 
     /// <summary>Provides the OnValuePropertyChanged member.</summary>
@@ -272,127 +302,30 @@ public class RatingControl : System.Windows.Controls.ContentControl
     {
         var currentValue = ExtractValueFromOffset(offsetPercentage);
 
-        Value = currentValue / 2D;
+        Value = currentValue / RatingUnitsPerStar;
     }
 
     /// <summary>Provides the UpdateStarsFromValue member.</summary>
-    private void UpdateStarsFromValue() => SetStarsPresence(ExtractValueFromOffset(Value * 100 / 5));
+    private void UpdateStarsFromValue() => SetStarsPresence(ExtractValueFromOffset(Value * PercentageScale / MaxValue));
 
     /// <summary>Provides the SetStarsPresence member.</summary>
     /// <param name="index">The index value.</param>
     private void SetStarsPresence(int index)
     {
-        switch (index)
+        for (var starIndex = FirstStarIndex; starIndex < StarCount; starIndex++)
         {
-            case 10:
-                {
-                    UpdateStar(4, StarValue.Filled);
-                    UpdateStar(3, StarValue.Filled);
-                    UpdateStar(2, StarValue.Filled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
+            var filledThreshold = (starIndex + 1) * RatingUnitsPerStar;
+            var starValue = StarValue.Empty;
+            if (index >= filledThreshold)
+            {
+                starValue = StarValue.Filled;
+            }
+            else if (index == filledThreshold - 1)
+            {
+                starValue = StarValue.HalfFilled;
+            }
 
-            case 9:
-                {
-                    UpdateStar(4, StarValue.HalfFilled);
-                    UpdateStar(3, StarValue.Filled);
-                    UpdateStar(2, StarValue.Filled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 8:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Filled);
-                    UpdateStar(2, StarValue.Filled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 7:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.HalfFilled);
-                    UpdateStar(2, StarValue.Filled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 6:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Filled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 5:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.HalfFilled);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 4:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Empty);
-                    UpdateStar(1, StarValue.Filled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 3:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Empty);
-                    UpdateStar(1, StarValue.HalfFilled);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 2:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Empty);
-                    UpdateStar(1, StarValue.Empty);
-                    UpdateStar(0, StarValue.Filled);
-                    break;
-                }
-
-            case 1:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Empty);
-                    UpdateStar(1, StarValue.Empty);
-                    UpdateStar(0, StarValue.HalfFilled);
-                    break;
-                }
-
-            default:
-                {
-                    UpdateStar(4, StarValue.Empty);
-                    UpdateStar(3, StarValue.Empty);
-                    UpdateStar(2, StarValue.Empty);
-                    UpdateStar(1, StarValue.Empty);
-                    UpdateStar(0, StarValue.Empty);
-                    break;
-                }
+            UpdateStar(starIndex, starValue);
         }
     }
 
@@ -403,10 +336,10 @@ public class RatingControl : System.Windows.Controls.ContentControl
     {
         var selectedIcon = starIndex switch
         {
-            1 => _symbolIconStarTwo,
-            2 => _symbolIconStarThree,
-            3 => _symbolIconStarFour,
-            4 => _symbolIconStarFive,
+            SecondStarIndex => _symbolIconStarTwo,
+            ThirdStarIndex => _symbolIconStarThree,
+            FourthStarIndex => _symbolIconStarFour,
+            FifthStarIndex => _symbolIconStarFive,
             _ => _symbolIconStarOne,
         };
 
@@ -445,16 +378,16 @@ public class RatingControl : System.Windows.Controls.ContentControl
     /// <returns>The result.</returns>
     private int ExtractValueFromOffset(double offset)
     {
-        var starValue = (int)(offset + OffsetTolerance) / 10;
+        var starValue = (int)(offset + OffsetTolerance) / PercentagePerRatingUnit;
 
         if (!HalfStarEnabled)
         {
-            if (starValue < 2)
+            if (starValue < RatingUnitsPerStar)
             {
                 return 0;
             }
 
-            if (starValue % 2 != 0)
+            if (starValue % RatingUnitsPerStar != 0)
             {
                 starValue++;
             }

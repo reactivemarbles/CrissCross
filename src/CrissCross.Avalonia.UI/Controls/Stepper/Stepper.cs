@@ -4,7 +4,6 @@
 
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Data;
 using CrissCross;
 
@@ -119,7 +118,7 @@ public class Stepper : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != StateProperty || !(change.GetNewValue<StepperState?>() is { } state))
+        if (change.Property != StateProperty || change.GetNewValue<StepperState?>() is not { } state)
         {
             return;
         }
@@ -131,7 +130,7 @@ public class Stepper : ItemsControl
     /// <summary>Provides the RequestPreviousStep member.</summary>
     private void RequestPreviousStep()
     {
-        if (!(State is { CanGoPrevious: true } state))
+        if (State is not { CanGoPrevious: true } state)
         {
             return;
         }
@@ -142,7 +141,7 @@ public class Stepper : ItemsControl
     /// <summary>Provides the RequestNextStep member.</summary>
     private void RequestNextStep()
     {
-        if (!(State is { CanGoNext: true } state))
+        if (State is not { CanGoNext: true } state)
         {
             return;
         }
@@ -151,22 +150,15 @@ public class Stepper : ItemsControl
     }
 
     /// <summary>Provides the StepNavigationCommand member.</summary>
-    private sealed class StepNavigationCommand : ICommand
+    /// <param name="execute">The execute value.</param>
+    /// <param name="canExecute">The canExecute value.</param>
+    private sealed class StepNavigationCommand(Action execute, Func<bool> canExecute) : ICommand
     {
         /// <summary>Provides the _execute member.</summary>
-        private readonly Action _execute;
+        private readonly Action _execute = execute;
 
         /// <summary>Provides the documented member.</summary>
-        private readonly Func<bool> _canExecute;
-
-        /// <summary>Initializes a new instance of the <see cref="StepNavigationCommand"/> class.</summary>
-        /// <param name="execute">The execute value.</param>
-        /// <param name="canExecute">The canExecute value.</param>
-        public StepNavigationCommand(Action execute, Func<bool> canExecute)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
+        private readonly Func<bool> _canExecute = canExecute;
 
         /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;

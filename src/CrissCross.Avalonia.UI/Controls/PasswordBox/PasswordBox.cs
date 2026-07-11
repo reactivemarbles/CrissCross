@@ -17,7 +17,7 @@ public class PasswordBox : TextBox
         string.Empty);
 
     /// <summary>Property for <see cref="PasswordChar"/>.</summary>
-    public static readonly StyledProperty<char> PasswordCharProperty = AvaloniaProperty.Register<PasswordBox, char>(
+    public static new readonly StyledProperty<char> PasswordCharProperty = AvaloniaProperty.Register<PasswordBox, char>(
         nameof(PasswordChar),
         '�');
 
@@ -32,7 +32,7 @@ public class PasswordBox : TextBox
         true);
 
     /// <summary>Property for <see cref="RevealPassword"/> (alias for IsPasswordRevealed for XAML compatibility).</summary>
-    public static readonly StyledProperty<bool> RevealPasswordProperty = AvaloniaProperty.Register<PasswordBox, bool>(
+    public static new readonly StyledProperty<bool> RevealPasswordProperty = AvaloniaProperty.Register<PasswordBox, bool>(
         nameof(RevealPassword),
         false);
 
@@ -70,7 +70,7 @@ public class PasswordBox : TextBox
     }
 
     /// <summary>Gets or sets character used to mask the password.</summary>
-    public char PasswordChar
+    public new char PasswordChar
     {
         get => GetValue(PasswordCharProperty);
         set => SetValue(PasswordCharProperty, value);
@@ -84,7 +84,7 @@ public class PasswordBox : TextBox
     }
 
     /// <summary>Gets or sets a value indicating whether to reveal the password (XAML-friendly alias).</summary>
-    public bool RevealPassword
+    public new bool RevealPassword
     {
         get => GetValue(RevealPasswordProperty);
         set => SetValue(RevealPasswordProperty, value);

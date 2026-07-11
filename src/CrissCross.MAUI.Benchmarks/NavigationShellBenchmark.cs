@@ -7,8 +7,8 @@ using System.ComponentModel;
 using BenchmarkDotNet.Attributes;
 using ReactiveUI;
 
-namespace CrissCross.MAUI.Benchmarks
-{
+namespace CrissCross.MAUI.Benchmarks;
+
     /// <summary>NavigationShellBenchmark member.</summary>
     public partial class NavigationShellBenchmark : IDisposable
     {
@@ -83,10 +83,18 @@ namespace CrissCross.MAUI.Benchmarks
         private sealed partial class DummyRxObject : IRxObject
         {
             /// <summary>Provides the PropertyChanged member.</summary>
-            public event PropertyChangedEventHandler? PropertyChanged;
+            public event PropertyChangedEventHandler? PropertyChanged
+            {
+                add { }
+                remove { }
+            }
 
             /// <summary>Gets or sets the value.</summary>
-            public event PropertyChangingEventHandler? PropertyChanging;
+            public event PropertyChangingEventHandler? PropertyChanging
+            {
+                add { }
+                remove { }
+            }
 
             /// <summary>Gets or sets the display name.</summary>
             public string? DisplayName { get; set; }
@@ -147,5 +155,4 @@ namespace CrissCross.MAUI.Benchmarks
             {
             }
         }
-    }
 }

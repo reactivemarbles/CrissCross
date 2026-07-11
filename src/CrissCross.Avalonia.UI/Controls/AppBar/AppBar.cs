@@ -4,12 +4,9 @@
 
 using System.Collections.ObjectModel;
 using Avalonia;
-using Avalonia.Animation;
-using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
-using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 

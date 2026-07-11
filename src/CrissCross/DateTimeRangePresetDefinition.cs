@@ -14,11 +14,14 @@ namespace CrissCross;
 /// <param name="displayName">The user-facing preset name.</param>
 public sealed class DateTimeRangePresetDefinition(DateTimeRangePreset preset, string displayName)
 {
+    /// <summary>The trailing day offset used by the seven-day preset.</summary>
+    private const int LastSevenDaysOffset = -7;
+
     /// <summary>Gets the today preset definition.</summary>
-    public static DateTimeRangePresetDefinition Today { get; } = new(DateTimeRangePreset.Today, "Today");
+    public static DateTimeRangePresetDefinition Today { get; } = new(DateTimeRangePreset.Today, nameof(Today));
 
     /// <summary>Gets the yesterday preset definition.</summary>
-    public static DateTimeRangePresetDefinition Yesterday { get; } = new(DateTimeRangePreset.Yesterday, "Yesterday");
+    public static DateTimeRangePresetDefinition Yesterday { get; } = new(DateTimeRangePreset.Yesterday, nameof(Yesterday));
 
     /// <summary>Gets the trailing seven-day preset definition.</summary>
     public static DateTimeRangePresetDefinition LastSevenDays { get; } = new(DateTimeRangePreset.LastSevenDays, "Last 7 days");
@@ -27,7 +30,7 @@ public sealed class DateTimeRangePresetDefinition(DateTimeRangePreset preset, st
     public static DateTimeRangePresetDefinition ThisMonth { get; } = new(DateTimeRangePreset.ThisMonth, "This month");
 
     /// <summary>Gets the custom preset definition.</summary>
-    public static DateTimeRangePresetDefinition Custom { get; } = new(DateTimeRangePreset.Custom, "Custom");
+    public static DateTimeRangePresetDefinition Custom { get; } = new(DateTimeRangePreset.Custom, nameof(Custom));
 
     /// <summary>Gets the preset identifier.</summary>
     public DateTimeRangePreset Preset { get; } = preset;
@@ -52,7 +55,7 @@ public sealed class DateTimeRangePresetDefinition(DateTimeRangePreset preset, st
     {
         DateTimeRangePreset.Today => new DateTimeOffset(referenceTime.Year, referenceTime.Month, referenceTime.Day, 0, 0, 0, referenceTime.Offset),
         DateTimeRangePreset.Yesterday => new DateTimeOffset(referenceTime.Year, referenceTime.Month, referenceTime.Day, 0, 0, 0, referenceTime.Offset).AddDays(-1),
-        DateTimeRangePreset.LastSevenDays => referenceTime.AddDays(-7),
+        DateTimeRangePreset.LastSevenDays => referenceTime.AddDays(LastSevenDaysOffset),
         DateTimeRangePreset.ThisMonth => new DateTimeOffset(referenceTime.Year, referenceTime.Month, 1, 0, 0, 0, referenceTime.Offset),
         _ => null
     };

@@ -546,6 +546,9 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <returns>The result.</returns>
     private IntPtr Hook(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
     {
+        _ = hwnd;
+        _ = wparam;
+        _ = lparam;
         if (!IsSuggestionListOpen)
         {
             return IntPtr.Zero;

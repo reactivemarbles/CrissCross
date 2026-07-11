@@ -4,7 +4,6 @@
 
 using System.Collections.ObjectModel;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Layout;
 using ReactiveUI;
 using Splat;
@@ -12,7 +11,7 @@ using Splat;
 namespace CrissCross.Avalonia;
 
 /// <summary>Hosts routed view model navigation content.</summary>
-public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IViewModelRoutedViewHost
+public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IResolvedViewModelRoutedViewHost
 {
     /// <summary>The can navigate back property.</summary>
     public static readonly StyledProperty<bool?> CanNavigateBackProperty =
@@ -25,6 +24,9 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty =
         AvaloniaProperty.Register<ViewModelRoutedViewHost, bool?>(nameof(NavigateBackIsEnabled));
+
+    /// <summary>The offset from the end of the stack to the previous entry.</summary>
+    private const int PreviousEntryOffset = 2;
 
     /// <summary>Stores the can Navigate Back Subject value.</summary>
     private readonly Signal<bool?> _canNavigateBackSubject = new();
@@ -170,6 +172,14 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
+    /// <summary>Navigates the resolved ViewModel/View pair.</summary>
+    /// <param name="resolution">The resolved navigation pair.</param>
+    public void Navigate(NavigationResolution resolution)
+    {
+        ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
+        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+    }
+
     /// <summary>Navigates and resets.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
@@ -191,6 +201,15 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         InternalNavigate(viewModel, contract, parameter);
     }
 
+    /// <summary>Navigates the resolved ViewModel/View pair and resets history.</summary>
+    /// <param name="resolution">The resolved navigation pair.</param>
+    public void NavigateAndReset(NavigationResolution resolution)
+    {
+        ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
+        _resetStack = true;
+        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+    }
+
     /// <summary>Navigates back.</summary>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
@@ -202,7 +221,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
             _navigateBack = true;
 
             // Get the previous View
-            var count = NavigationStack.Count - 2;
+            var count = NavigationStack.Count - PreviousEntryOffset;
             _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
             var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.Back, _lastView, hostName, parameter);
@@ -374,6 +393,29 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
 
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
+        if (_currentView is INotifiyNavigation { ISetupNavigating: true })
+        {
+            ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
+        }
+        else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
+        {
+            resultNavigating.OnNext(ea);
+        }
+    }
+
+    /// <summary>Runs the internal Navigate operation for an already resolved ViewModel/View pair.</summary>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="view">The resolved view.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private void InternalNavigate(IRxObject viewModel, IViewFor view, object? parameter)
+    {
+        _toViewModel = viewModel;
+        _lastView = _currentView;
+        var hostName = ResolveHostName();
+        _currentView = view;
+        _currentView.ViewModel = viewModel;
 
         var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })

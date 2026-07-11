@@ -2,7 +2,6 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Data;
@@ -19,6 +18,30 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
 {
     /// <summary>Provides the NavHostName member.</summary>
     private const string NavHostName = "mainNavHost";
+
+    /// <summary>Width of the navigation pane.</summary>
+    private const double NavigationPaneWidth = 250;
+
+    /// <summary>Large title font size.</summary>
+    private const double TitleFontSize = 24;
+
+    /// <summary>Navigation section header font size.</summary>
+    private const double NavigationHeaderFontSize = 16;
+
+    /// <summary>Large horizontal padding for title and buttons.</summary>
+    private const double LargeHorizontalSpacing = 16;
+
+    /// <summary>Medium spacing used by the navigation layout.</summary>
+    private const double MediumSpacing = 8;
+
+    /// <summary>Small spacing used by compact navigation buttons.</summary>
+    private const double SmallSpacing = 4;
+
+    /// <summary>Right border thickness for the navigation pane.</summary>
+    private const double NavigationBorderThickness = 1;
+
+    /// <summary>Title bar vertical padding.</summary>
+    private const double TitleVerticalPadding = 12;
 
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
@@ -79,13 +102,13 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             // Title Bar using CrissCross Border
             var titleBorder = new UI.Controls.Border
             {
-                Padding = new(16, 12)
+                Padding = new(LargeHorizontalSpacing, TitleVerticalPadding)
             };
             titleBorder.Classes.Add("gallery-title");
             var titleText = new UI.Controls.TextBlock
             {
                 Text = "CrissCross Avalonia UI Gallery",
-                FontSize = 24,
+                FontSize = TitleFontSize,
                 FontWeight = FontWeight.Bold
             };
             titleText.Classes.Add("gallery-shell-text");
@@ -95,7 +118,7 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
 
             // Content area grid (navigation menu + content) using CrissCross Grid
             var contentGrid = new UI.Controls.Grid();
-            contentGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(250)));
+            contentGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(NavigationPaneWidth)));
             contentGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
             mainGrid.Children.Add(contentGrid);
             Grid.SetRow(contentGrid, 1);
@@ -103,19 +126,19 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             // Navigation Menu using CrissCross Border
             var navBorder = new UI.Controls.Border
             {
-                BorderThickness = new(0, 0, 1, 0)
+                BorderThickness = new(0, 0, NavigationBorderThickness, 0)
             };
             navBorder.Classes.Add("gallery-navigation");
             var navScrollViewer = new ScrollViewer();
-            var navStack = new UI.Controls.StackPanel { Margin = new(8) };
+            var navStack = new UI.Controls.StackPanel { Margin = new(MediumSpacing) };
 
             // Navigation header using CrissCross TextBlock
             var navHeader = new UI.Controls.TextBlock
             {
                 Text = "Control Categories",
-                FontSize = 16,
+                FontSize = NavigationHeaderFontSize,
                 FontWeight = FontWeight.Bold,
-                Margin = new(8, 8, 8, 16)
+                Margin = new(MediumSpacing, MediumSpacing, MediumSpacing, LargeHorizontalSpacing)
             };
             navHeader.Classes.Add("gallery-shell-text");
             navStack.Children.Add(navHeader);
@@ -128,9 +151,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             {
                 Header = "Basic Controls",
                 IsExpanded = true,
-                Margin = new(0, 8, 0, 8)
+                Margin = new(0, MediumSpacing, 0, MediumSpacing)
             };
-            var basicStack = new UI.Controls.StackPanel { Margin = new(16, 8, 0, 8) };
+            var basicStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
             AddNavigationButton(basicStack, "Button", "GotoButtons");
             AddNavigationButton(basicStack, "CheckBox", "GotoCheckBox");
             AddNavigationButton(basicStack, "RadioButton", "GotoRadioButton");
@@ -142,9 +165,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             {
                 Header = "Input Controls",
                 IsExpanded = true,
-                Margin = new(0, 0, 0, 8)
+                Margin = new(0, 0, 0, MediumSpacing)
             };
-            var inputStack = new UI.Controls.StackPanel { Margin = new(16, 8, 0, 8) };
+            var inputStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
             AddNavigationButton(inputStack, "TextBox", "GotoInput");
             AddNavigationButton(inputStack, "ComboBox", "GotoComboBox");
             AddNavigationButton(inputStack, "Slider", "GotoSlider");
@@ -156,9 +179,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             {
                 Header = "Date & Time",
                 IsExpanded = true,
-                Margin = new(0, 0, 0, 8)
+                Margin = new(0, 0, 0, MediumSpacing)
             };
-            var dateStack = new UI.Controls.StackPanel { Margin = new(16, 8, 0, 8) };
+            var dateStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
             AddNavigationButton(dateStack, "DatePicker", "GotoDatePicker");
             dateExpander.Content = dateStack;
             navStack.Children.Add(dateExpander);
@@ -168,9 +191,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             {
                 Header = "Color Controls",
                 IsExpanded = true,
-                Margin = new(0, 0, 0, 8)
+                Margin = new(0, 0, 0, MediumSpacing)
             };
-            var colorStack = new UI.Controls.StackPanel { Margin = new(16, 8, 0, 8) };
+            var colorStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
             AddNavigationButton(colorStack, "ColorPicker", "GotoColorPicker");
             colorExpander.Content = colorStack;
             navStack.Children.Add(colorExpander);
@@ -179,9 +202,9 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             var progressExpander = new UI.Controls.Expander
             {
                 Header = "Progress",
-                Margin = new(0, 0, 0, 8)
+                Margin = new(0, 0, 0, MediumSpacing)
             };
-            var progressStack = new UI.Controls.StackPanel { Margin = new(16, 8, 0, 8) };
+            var progressStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
             AddNavigationButton(progressStack, "ProgressBar", "GotoProgress");
             progressExpander.Content = progressStack;
             navStack.Children.Add(progressExpander);
@@ -218,10 +241,10 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
         var button = new UI.Controls.Button
         {
             Content = content,
-            Margin = new(0, 4),
+            Margin = new(0, SmallSpacing),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Left,
-            Padding = new(12, 8)
+            Padding = new(TitleVerticalPadding, MediumSpacing)
         };
         _ = button.Bind(Button.CommandProperty, new Binding(commandBinding));
         stack.Children.Add(button);

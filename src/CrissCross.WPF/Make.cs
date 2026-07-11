@@ -68,6 +68,13 @@ public static class Make
     /// <summary>Runs the first-instance activation callback.</summary>
     /// <param name="state">The callback state.</param>
     /// <param name="timedOut">A value indicating whether the wait timed out.</param>
-    private static void WaitOrTimerCallback(object? state, bool timedOut) =>
+    private static void WaitOrTimerCallback(object? state, bool timedOut)
+    {
+        if (timedOut)
+        {
+            return;
+        }
+
         _ = ((Application?)state)?.Dispatcher.BeginInvoke(new Action(() => _ = Application.Current.MainWindow.Activate()));
+    }
 }

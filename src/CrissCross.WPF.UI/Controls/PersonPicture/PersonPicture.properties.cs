@@ -78,7 +78,7 @@ public partial class PersonPicture
             nameof(TemplateSettings),
             typeof(PersonPictureTemplateSettings),
             typeof(PersonPicture),
-            new PropertyMetadata(null, OnTemplateSettingsPropertyChanged));
+            new PropertyMetadata(null));
 
     /// <summary>The template settings property.</summary>
     public static readonly DependencyProperty TemplateSettingsProperty = TemplateSettingsPropertyKey.DependencyProperty;
@@ -245,18 +245,9 @@ public partial class PersonPicture
         owner.PrivateOnPropertyChanged(args);
     }
 
-    /// <summary>Provides the OnTemplateSettingsPropertyChanged member.</summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="args">The event arguments.</param>
-    private static void OnTemplateSettingsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
-
     /// <summary>Provides the CoerceStringProperty member.</summary>
-    /// <param name="d">The d value.</param>
+    /// <param name="_">The dependency object.</param>
     /// <param name="baseValue">The basevalue.</param>
     /// <returns>The result.</returns>
-    private static object CoerceStringProperty(DependencyObject d, object baseValue) => baseValue ?? string.Empty;
+    private static object CoerceStringProperty(DependencyObject _, object baseValue) => baseValue ?? string.Empty;
 }

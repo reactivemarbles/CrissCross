@@ -26,6 +26,18 @@ internal sealed partial class HueSlider : UserControl
             typeof(HueSlider),
             new PropertyMetadata(1.0));
 
+    /// <summary>The number of degrees in a complete hue circle.</summary>
+    private const double DegreesInFullCircle = 360d;
+
+    /// <summary>The number of degrees in a half hue circle.</summary>
+    private const double DegreesInHalfCircle = 180d;
+
+    /// <summary>The scale used to convert pointer coordinates into the centered hue circle coordinate space.</summary>
+    private const double PositionScale = 2d;
+
+    /// <summary>The WPF mouse wheel delta value for one wheel notch.</summary>
+    private const int MouseWheelDelta = 120;
+
     /// <summary>Initializes a new instance of the <see cref="HueSlider"/> class.</summary>
     public HueSlider() => InitializeComponent();
 
@@ -80,8 +92,8 @@ internal sealed partial class HueSlider : UserControl
     /// <param name="height">The height value.</param>
     private void UpdateValue(Point mousePos, double width, double height)
     {
-        var x = mousePos.X / (width * 2);
-        var y = mousePos.Y / (height * 2);
+        var x = mousePos.X / (width * PositionScale);
+        var y = mousePos.Y / (height * PositionScale);
 
         var length = Math.Sqrt((x * x) + (y * y));
         if (length == 0)
@@ -95,8 +107,8 @@ internal sealed partial class HueSlider : UserControl
             angle = -angle;
         }
 
-        angle = (angle * 360 / (Math.PI * 2)) + 180;
-        Value = angle.Clamp(0, 360);
+        angle = (angle * DegreesInFullCircle / (Math.PI * PositionScale)) + DegreesInHalfCircle;
+        Value = angle.Clamp(0, DegreesInFullCircle);
     }
 
     /// <summary>Provides the OnPreviewMouseWheel member.</summary>
@@ -104,7 +116,7 @@ internal sealed partial class HueSlider : UserControl
     /// <param name="args">The event arguments.</param>
     private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs args)
     {
-        Value = MathExtensions.Mod(Value + (SmallChange * args.Delta / 120), 360);
+        Value = MathExtensions.Mod(Value + (SmallChange * args.Delta / MouseWheelDelta), DegreesInFullCircle);
         args.Handled = true;
     }
 }

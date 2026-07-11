@@ -8,6 +8,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="System.Windows.Controls.ContentPresenter" />
 public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
 {
+    /// <summary>Provides the duration of the snackbar hide transition.</summary>
+    private const int HideTransitionDurationMilliseconds = 300;
+
     /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
     public SnackbarPresenter() => Unloaded += static (sender, _) =>
                                        {
@@ -193,7 +196,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
     {
         snackbar.SetCurrentValue(Snackbar.IsShownProperty, false);
 
-        await Task.Delay(300);
+        await Task.Delay(HideTransitionDurationMilliseconds);
 
         Content = null;
     }

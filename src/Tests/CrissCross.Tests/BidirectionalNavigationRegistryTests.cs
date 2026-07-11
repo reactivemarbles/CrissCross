@@ -29,6 +29,47 @@ public class BidirectionalNavigationRegistryTests
         string ViewScope { get; }
     }
 
+    /// <summary>Verifies that view-first navigation preserves a supplied view and its compatible view model.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateView_WithSuppliedView_PreservesViewAndCompatibleViewModel()
+    {
+        var expectedViewModel = new CustomerPageViewModel();
+        var expectedView = new CustomerPageView { ViewModel = expectedViewModel };
+        var registry = new NavigationRegistry();
+        _ = registry.Register<CustomerPageViewModel, CustomerPageView>(
+            static _ => new CustomerPageViewModel(),
+            static _ => new CustomerPageView());
+
+        var result = await registry.CreateNavigator()
+            .NavigateView<CustomerPageViewModel, CustomerPageView>(expectedView)
+            .FirstAsync();
+
+        await Assert.That(ReferenceEquals(result.View, expectedView)).IsTrue();
+        await Assert.That(ReferenceEquals(result.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(result.View.ViewModel, expectedViewModel)).IsTrue();
+    }
+
+    /// <summary>Verifies that generic view navigation rejects a null navigator.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateView_WithNullNavigator_ThrowsArgumentNullException()
+    {
+        IBidirectionalNavigator? navigator = null;
+
+        await Assert.That(() => navigator!.NavigateView<ICustomerPageView>()).Throws<ArgumentNullException>();
+    }
+
+    /// <summary>Verifies that generic view model navigation rejects a null navigator.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateViewModel_WithNullNavigator_ThrowsArgumentNullException()
+    {
+        IBidirectionalNavigator? navigator = null;
+
+        await Assert.That(() => navigator!.NavigateViewModel<ICustomerPageViewModel>()).Throws<ArgumentNullException>();
+    }
+
     /// <summary>Provides the Register_ViewModelAndView_AllowsViewModelTypeNavigationToResolveView member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -86,6 +127,32 @@ public class BidirectionalNavigationRegistryTests
         await Assert.That(ReferenceEquals(result.View.ViewModel, result.ViewModel)).IsTrue();
     }
 
+    /// <summary>Provides the Register_InterfaceKeys_PreservesConcreteIdentityContractAndParameter member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task Register_InterfaceKeys_PreservesConcreteIdentityContractAndParameter()
+    {
+        var expectedViewModel = new CustomerPageViewModel();
+        var expectedView = new CustomerPageView();
+        var expectedParameter = new NavigationRequestParameter("customer-42");
+        var registry = new NavigationRegistry();
+        _ = registry.Register<ICustomerPageViewModel, CustomerPageViewModel, ICustomerPageView, CustomerPageView>(
+            _ => expectedViewModel,
+            _ => expectedView,
+            DetailContract);
+
+        var result = await registry.CreateNavigator()
+            .NavigateViewModel<ICustomerPageViewModel>(DetailContract, expectedParameter)
+            .FirstAsync();
+
+        await Assert.That(ReferenceEquals(result.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(result.View, expectedView)).IsTrue();
+        await Assert.That(result.View.GetType()).IsEqualTo(typeof(CustomerPageView));
+        await Assert.That(ReferenceEquals(expectedView.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(result.Contract).IsEqualTo(DetailContract);
+        await Assert.That(ReferenceEquals(result.Parameter, expectedParameter)).IsTrue();
+    }
+
     /// <summary>Provides the Register_ViewAndViewModel_AllowsViewTypeNavigationToResolveViewModel member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -122,6 +189,33 @@ public class BidirectionalNavigationRegistryTests
         await Assert.That(result.ViewModel is CustomerPageViewModel).IsTrue();
         await Assert.That(result.View is CustomerPageView).IsTrue();
         await Assert.That(ReferenceEquals(result.View.ViewModel, result.ViewModel)).IsTrue();
+    }
+
+    /// <summary>Provides the NavigateView_RuntimeInterfaceKey_ResolvesConcreteViewAndViewModel member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task NavigateView_RuntimeInterfaceKey_ResolvesConcreteViewAndViewModel()
+    {
+        var expectedViewModel = new CustomerPageViewModel();
+        var expectedView = new CustomerPageView();
+        var expectedParameter = new NavigationRequestParameter("runtime-view-key");
+        var viewKey = typeof(ICustomerPageView);
+        var registry = new NavigationRegistry();
+        _ = registry.Register<ICustomerPageViewModel, CustomerPageViewModel, ICustomerPageView, CustomerPageView>(
+            _ => expectedViewModel,
+            _ => expectedView,
+            DetailContract);
+
+        var result = await registry.CreateNavigator()
+            .NavigateView(viewKey, DetailContract, expectedParameter)
+            .FirstAsync();
+
+        await Assert.That(ReferenceEquals(result.ViewModel, expectedViewModel)).IsTrue();
+        await Assert.That(ReferenceEquals(result.View, expectedView)).IsTrue();
+        await Assert.That(result.ViewModel.GetType()).IsEqualTo(typeof(CustomerPageViewModel));
+        await Assert.That(result.View.GetType()).IsEqualTo(typeof(CustomerPageView));
+        await Assert.That(result.Contract).IsEqualTo(DetailContract);
+        await Assert.That(ReferenceEquals(result.Parameter, expectedParameter)).IsTrue();
     }
 
     /// <summary>Provides the Register_SameViewModelWithTwoContracts_ResolvesContractSpecificView member.</summary>
@@ -377,4 +471,8 @@ public class BidirectionalNavigationRegistryTests
             set => ViewModel = (CustomerReadOnlyViewModel?)value;
         }
     }
+
+    /// <summary>Provides the NavigationRequestParameter member.</summary>
+    /// <param name="Value">The value.</param>
+    private sealed record NavigationRequestParameter(string Value);
 }

@@ -18,7 +18,7 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(Progress),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(50d, PropertyChangedCallback));
+        new PropertyMetadata(DefaultProgress, PropertyChangedCallback));
 
     /// <summary>Property for <see cref="IsIndeterminate"/>.</summary>
     public static readonly DependencyProperty IsIndeterminateProperty = DependencyProperty.Register(
@@ -80,6 +80,24 @@ public class ProgressRing : System.Windows.Controls.Control
         typeof(Visibility),
         typeof(ProgressRing),
         new PropertyMetadata(System.Windows.Visibility.Visible));
+
+    /// <summary>Default progress value.</summary>
+    private const double DefaultProgress = 50.0d;
+
+    /// <summary>Maximum supported progress value.</summary>
+    private const double MaximumProgress = 100.0d;
+
+    /// <summary>Minimum supported progress value.</summary>
+    private const double MinimumProgress = 0.0d;
+
+    /// <summary>Degree multiplier for a single progress percentage point.</summary>
+    private const double DegreesPerProgressPercent = 3.6d;
+
+    /// <summary>Degrees in a full circle.</summary>
+    private const double FullCircleDegrees = 360.0d;
+
+    /// <summary>Maximum arc angle before the path closes visually.</summary>
+    private const double MaximumArcDegrees = 359.0d;
 
     /// <summary>Gets or sets the progress.</summary>
     public double Progress
@@ -147,20 +165,20 @@ public class ProgressRing : System.Windows.Controls.Control
     protected void UpdateProgressAngle()
     {
         var percentage = Progress;
-        if (percentage > 100)
+        if (percentage > MaximumProgress)
         {
-            percentage = 100;
+            percentage = MaximumProgress;
         }
 
-        if (percentage < 0)
+        if (percentage < MinimumProgress)
         {
-            percentage = 0;
+            percentage = MinimumProgress;
         }
 
-        var endAngle = 3.6d * percentage;
-        if (endAngle >= 360)
+        var endAngle = DegreesPerProgressPercent * percentage;
+        if (endAngle >= FullCircleDegrees)
         {
-            endAngle = 359;
+            endAngle = MaximumArcDegrees;
         }
 
         EngAngle = endAngle;

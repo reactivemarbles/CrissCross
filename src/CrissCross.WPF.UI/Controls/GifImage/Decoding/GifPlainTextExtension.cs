@@ -12,6 +12,36 @@ internal sealed class GifPlainTextExtension : GifExtension
     /// <summary>Provides the ExtensionLabel member.</summary>
     internal const int ExtensionLabel = 0x01;
 
+    /// <summary>The plain text extension block size.</summary>
+    private const int PlainTextBlockSize = 12;
+
+    /// <summary>The full plain text extension byte count.</summary>
+    private const int PlainTextByteCount = PlainTextBlockSize + 1;
+
+    /// <summary>The left offset.</summary>
+    private const int LeftOffset = 1;
+
+    /// <summary>The top offset.</summary>
+    private const int TopOffset = 3;
+
+    /// <summary>The width offset.</summary>
+    private const int WidthOffset = 5;
+
+    /// <summary>The height offset.</summary>
+    private const int HeightOffset = 7;
+
+    /// <summary>The cell width offset.</summary>
+    private const int CellWidthOffset = 9;
+
+    /// <summary>The cell height offset.</summary>
+    private const int CellHeightOffset = 10;
+
+    /// <summary>The foreground color index offset.</summary>
+    private const int ForegroundColorIndexOffset = 11;
+
+    /// <summary>The background color index offset.</summary>
+    private const int BackgroundColorIndexOffset = 12;
+
     /// <summary>Initializes a new instance of the <see cref="GifPlainTextExtension"/> class.</summary>
     private GifPlainTextExtension()
     {
@@ -70,23 +100,23 @@ internal sealed class GifPlainTextExtension : GifExtension
     private async Task ReadInternalAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
     {
         // Note: at this point, the label (0x01) has already been read
-        var bytes = new byte[13];
+        var bytes = new byte[PlainTextByteCount];
         await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
         BlockSize = bytes[0];
-        if (BlockSize != 12)
+        if (BlockSize != PlainTextBlockSize)
         {
-            throw GifHelpers.InvalidBlockSizeException("Plain Text Extension", 12, BlockSize);
+            throw GifHelpers.InvalidBlockSizeException("Plain Text Extension", PlainTextBlockSize, BlockSize);
         }
 
-        Left = BitConverter.ToUInt16(bytes, 1);
-        Top = BitConverter.ToUInt16(bytes, 3);
-        Width = BitConverter.ToUInt16(bytes, 5);
-        Height = BitConverter.ToUInt16(bytes, 7);
-        CellWidth = bytes[9];
-        CellHeight = bytes[10];
-        ForegroundColorIndex = bytes[11];
-        BackgroundColorIndex = bytes[12];
+        Left = BitConverter.ToUInt16(bytes, LeftOffset);
+        Top = BitConverter.ToUInt16(bytes, TopOffset);
+        Width = BitConverter.ToUInt16(bytes, WidthOffset);
+        Height = BitConverter.ToUInt16(bytes, HeightOffset);
+        CellWidth = bytes[CellWidthOffset];
+        CellHeight = bytes[CellHeightOffset];
+        ForegroundColorIndex = bytes[ForegroundColorIndexOffset];
+        BackgroundColorIndex = bytes[BackgroundColorIndexOffset];
 
         var dataBytes = await GifHelpers.ReadDataBlocksAsync(stream).ConfigureAwait(false);
         Text = GifHelpers.GetString(dataBytes);

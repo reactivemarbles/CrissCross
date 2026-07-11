@@ -41,6 +41,12 @@ public class DynamicScrollViewer : PassiveScrollViewer
         typeof(DynamicScrollViewer),
         new PropertyMetadata(1200, TimeoutProperty_OnChanged));
 
+    /// <summary>The maximum requested timeout that is used without clamping.</summary>
+    private const int MaximumRequestedDelayMilliseconds = 10_000;
+
+    /// <summary>The timeout used when the requested delay is too large.</summary>
+    private const int MaximumScrollDelayMilliseconds = 1000;
+
     /// <summary>Stores the _verticalIdentifier value.</summary>
     private readonly EventIdentifier _verticalIdentifier = new();
 
@@ -117,6 +123,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollViewer scroll)
         {
             return;
@@ -132,6 +139,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollViewer scroll)
         {
             return;
@@ -147,6 +155,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollViewer scroll)
         {
             return;
@@ -160,6 +169,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
     /// <param name="e">The event arguments.</param>
     private static void TimeoutProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not DynamicScrollViewer scroll)
         {
             return;
@@ -185,7 +195,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
 
         if (_timeout > -1)
         {
-            await Task.Delay(_timeout < 10_000 ? _timeout : 1000);
+            await Task.Delay(_timeout < MaximumRequestedDelayMilliseconds ? _timeout : MaximumScrollDelayMilliseconds);
         }
 
         if (!_verticalIdentifier.IsEqual(currentEvent) || !_scrollingVertically)
@@ -211,7 +221,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
             IsScrollingHorizontally = true;
         }
 
-        await Task.Delay(Timeout < 10_000 ? Timeout : 1000);
+        await Task.Delay(Timeout < MaximumRequestedDelayMilliseconds ? Timeout : MaximumScrollDelayMilliseconds);
 
         if (!_horizontalIdentifier.IsEqual(currentEvent) || !_scrollingHorizontally)
         {

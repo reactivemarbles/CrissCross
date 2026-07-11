@@ -21,7 +21,7 @@ namespace CrissCross.MAUI;
 [RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
 [RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
 #endif
-public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, IUseNavigation, IDisposable
+public class NavigationShell : Shell, ISetNavigation, IResolvedViewModelRoutedViewHost, IUseNavigation, IDisposable
 {
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly BindableProperty CanNavigateBackProperty = BindableProperty.Create(
@@ -37,7 +37,7 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
         typeof(NavigationShell),
         string.Empty,
         BindingMode.Default,
-        propertyChanged: NameChanged);
+        propertyChanged: static (bindable, _, _) => NameChanged(bindable));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly BindableProperty NavigateBackIsEnabledProperty = BindableProperty.Create(
@@ -45,6 +45,9 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
         typeof(bool?),
         typeof(NavigationShell),
         true);
+
+    /// <summary>Offset from the current navigation stack count to the previous view model entry.</summary>
+    private const int PreviousViewModelStackOffset = 2;
 
     /// <summary>Stores the can Navigate Back Subject value.</summary>
     private readonly Signal<bool?> _canNavigateBackSubject = new();
@@ -89,13 +92,9 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
                 {
                     NavigationStack.Add(_activeViewModel?.GetType());
                 }
-                else
+                else if (NavigationStack?.Count > 1)
                 {
-                    // Navigate Back
-                    if (NavigationStack?.Count > 1)
-                    {
-                        _ = NavigationStack.Remove(NavigationStack.Last());
-                    }
+                    _ = NavigationStack.Remove(NavigationStack.Last());
                 }
             }
 
@@ -196,6 +195,14 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
+    /// <summary>Navigates the resolved ViewModel/View pair.</summary>
+    /// <param name="resolution">The resolved navigation pair.</param>
+    public void Navigate(NavigationResolution resolution)
+    {
+        ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
+        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+    }
+
     /// <summary>Navigates and resets.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
@@ -217,6 +224,15 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
         InternalNavigate(viewModel, contract, parameter);
     }
 
+    /// <summary>Navigates the resolved ViewModel/View pair and resets history.</summary>
+    /// <param name="resolution">The resolved navigation pair.</param>
+    public void NavigateAndReset(NavigationResolution resolution)
+    {
+        ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
+        _resetStack = true;
+        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+    }
+
     /// <summary>Navigates back.</summary>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
@@ -229,7 +245,7 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
 
             // Get the previous View
             var count = NavigationStack.Count;
-            var vm = AppLocator.Current.GetService(NavigationStack[count - 2]);
+            var vm = AppLocator.Current.GetService(NavigationStack[count - PreviousViewModelStackOffset]);
             _toViewModel = vm as IRxObject;
 
             var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.Back, _lastView, Name, parameter);
@@ -452,9 +468,7 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
 
     /// <summary>Runs the name Changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The old value.</param>
-    /// <param name="newValue">The new value.</param>
-    private static void NameChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void NameChanged(BindableObject bindable)
     {
         if (bindable is not NavigationShell ns)
         {
@@ -534,6 +548,29 @@ public class NavigationShell : Shell, ISetNavigation, IViewModelRoutedViewHost, 
 
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
+
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
+        if (_currentView is INotifiyNavigation { ISetupNavigating: true })
+        {
+            ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
+        }
+        else
+        {
+            ViewModelRoutedViewHostMixins.ResultNavigating[Name].OnNext(ea);
+        }
+    }
+
+    /// <summary>Runs the internal Navigate operation for an already resolved ViewModel/View pair.</summary>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="view">The resolved view.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private void InternalNavigate(IRxObject viewModel, IViewFor view, object? parameter)
+    {
+        _userInstigated = true;
+        _toViewModel = viewModel;
+        _lastView = _currentView;
+        _currentView = view;
+        _currentView.ViewModel = viewModel;
 
         var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, Name, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })

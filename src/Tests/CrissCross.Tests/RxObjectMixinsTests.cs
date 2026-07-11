@@ -12,6 +12,12 @@ namespace CrissCross.Tests;
 /// <summary>Tests for RxObjectMixins class.</summary>
 public class RxObjectMixinsTests
 {
+    /// <summary>Provides the propagation delay used by observable tests.</summary>
+    private const int ObservablePropagationDelayMilliseconds = 100;
+
+    /// <summary>Provides the expected observable item count.</summary>
+    private const int ExpectedObservableItemCount = 2;
+
     /// <summary>Provides the InitializeReactiveUI member.</summary>
     [Before(HookType.Class)]
 
@@ -33,7 +39,7 @@ public class RxObjectMixinsTests
         resolver.SetupComplete();
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(signalReceived).IsTrue();
@@ -58,7 +64,7 @@ public class RxObjectMixinsTests
         resolver.SetupComplete();
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(actionExecuted).IsTrue();
@@ -96,7 +102,7 @@ public class RxObjectMixinsTests
         var actionCount = 0;
 
         var disposable = testObject.BuildCompleteDisposable(() => Interlocked.Increment(ref actionCount));
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
         var baselineActionCount = actionCount;
 
         // Act
@@ -104,7 +110,7 @@ public class RxObjectMixinsTests
         resolver.SetupComplete();
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert - action should not execute after disposal
         await Assert.That(actionCount).IsEqualTo(baselineActionCount);
@@ -129,10 +135,10 @@ public class RxObjectMixinsTests
         var subscription = result.Subscribe(l => observableList = l.ToList());
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
-        await Assert.That(observableList.Count).IsEqualTo(2);
+        await Assert.That(observableList.Count).IsEqualTo(ExpectedObservableItemCount);
 
         subscription.Dispose();
         subject.Dispose();
@@ -153,7 +159,7 @@ public class RxObjectMixinsTests
         var subscription = result.Subscribe(l => observableList = l.ToList());
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Act - Add new object
         var obj2 = new TestReactiveObject { TestProperty = "Value2" };
@@ -161,10 +167,10 @@ public class RxObjectMixinsTests
         subject.OnNext(list);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
-        await Assert.That(observableList.Count).IsEqualTo(2);
+        await Assert.That(observableList.Count).IsEqualTo(ExpectedObservableItemCount);
 
         subscription.Dispose();
         subject.Dispose();
@@ -188,7 +194,7 @@ public class RxObjectMixinsTests
         var subscription = anyMatch.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsTrue();
@@ -215,7 +221,7 @@ public class RxObjectMixinsTests
         var subscription = anyMatch.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsFalse();
@@ -241,13 +247,13 @@ public class RxObjectMixinsTests
         var subscription = anyMatch.Subscribe(x => result = x);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Act - Change property to match
         obj1.TestProperty = "Match";
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert
         await Assert.That(result).IsTrue();
@@ -269,7 +275,7 @@ public class RxObjectMixinsTests
         var subscription = result.Subscribe(_ => receivedValue = true);
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert - Should not crash and should not emit for null
         await Assert.That(receivedValue).IsFalse();
@@ -292,7 +298,7 @@ public class RxObjectMixinsTests
         var subscription = result.Subscribe(l => observableList = l.ToList());
 
         // Give time for the observable to propagate
-        await Task.Delay(100);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Assert - Should handle empty list
         await Assert.That(observableList.Count).IsEqualTo(0);

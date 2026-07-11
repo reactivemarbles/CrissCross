@@ -187,11 +187,26 @@ public class TitleBar : Control, IThemeControl
     /// <summary>Provides the ElementCloseButton member.</summary>
     private const string ElementCloseButton = "PART_CloseButton";
 
+    /// <summary>Provides the number of title bar buttons tracked by the control.</summary>
+    private const int TitleBarButtonCount = 4;
+
+    /// <summary>Provides the maximize button index.</summary>
+    private const int MaximizeButtonIndex = 0;
+
+    /// <summary>Provides the minimize button index.</summary>
+    private const int MinimizeButtonIndex = 1;
+
+    /// <summary>Provides the close button index.</summary>
+    private const int CloseButtonIndex = 2;
+
+    /// <summary>Provides the help button index.</summary>
+    private const int HelpButtonIndex = 3;
+
     /// <summary>Provides the dpiScale member.</summary>
     private static DpiScale? _dpiScale;
 
     /// <summary>Stores the _buttons value.</summary>
-    private readonly TitleBarButton[] _buttons = new TitleBarButton[4];
+    private readonly TitleBarButton[] _buttons = new TitleBarButton[TitleBarButtonCount];
 
     /// <summary>Stores the _currentWindow value.</summary>
     private System.Windows.Window _currentWindow = null!;
@@ -207,7 +222,7 @@ public class TitleBar : Control, IThemeControl
         _dpiScale ??= VisualTreeHelper.GetDpi(this);
 
         Loaded += (_, e) => OnLoaded(e);
-        Unloaded += (_, e) => OnUnloaded(e);
+        Unloaded += (_, _) => OnUnloaded();
     }
 
     /// <summary>Event triggered after clicking close button.</summary>
@@ -385,10 +400,10 @@ public class TitleBar : Control, IThemeControl
         var maximizeButton = GetTemplateChild<TitleBarButton>(ElementMaximizeButton);
         var closeButton = GetTemplateChild<TitleBarButton>(ElementCloseButton);
 
-        _buttons[0] = maximizeButton;
-        _buttons[1] = minimizeButton;
-        _buttons[2] = closeButton;
-        _buttons[3] = helpButton;
+        _buttons[MaximizeButtonIndex] = maximizeButton;
+        _buttons[MinimizeButtonIndex] = minimizeButton;
+        _buttons[CloseButtonIndex] = closeButton;
+        _buttons[HelpButtonIndex] = helpButton;
     }
 
     /// <inheritdoc />
@@ -438,8 +453,7 @@ public class TitleBar : Control, IThemeControl
     }
 
     /// <summary>Provides the OnUnloaded member.</summary>
-    /// <param name="e">The event arguments.</param>
-    private void OnUnloaded(RoutedEventArgs e)
+    private void OnUnloaded()
     {
         ApplicationThemeManager.Changed -= OnThemeChanged;
     }
@@ -546,6 +560,12 @@ public class TitleBar : Control, IThemeControl
                     RaiseEvent(new RoutedEventArgs(HelpClickedEvent, this));
                     break;
                 }
+
+            case TitleBarButtonType.Unknown:
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null);
         }
     }
 
@@ -556,17 +576,17 @@ public class TitleBar : Control, IThemeControl
         window.StateChanged += OnParentWindowStateChanged;
         var handle = new WindowInteropHelper(window).Handle;
         var windowSource = HwndSource.FromHwnd(handle) ?? throw new ArgumentNullException("Window source is null");
-        windowSource.AddHook(HwndSourceHook);
+        windowSource.AddHook(
+            (IntPtr _, int msg, IntPtr _, IntPtr longParameter, ref bool handled) =>
+                HwndSourceHook(msg, longParameter, ref handled));
     }
 
     /// <summary>Provides the HwndSourceHook member.</summary>
-    /// <param name="hwnd">The hwnd value.</param>
     /// <param name="msg">The msg value.</param>
-    /// <param name="wordParameter">The word parameter value.</param>
     /// <param name="longParameter">The long parameter value.</param>
     /// <param name="handled">The handled value.</param>
     /// <returns>The result.</returns>
-    private IntPtr HwndSourceHook(IntPtr hwnd, int msg, IntPtr wordParameter, IntPtr longParameter, ref bool handled)
+    private IntPtr HwndSourceHook(int msg, IntPtr longParameter, ref bool handled)
     {
         var message = (User32.WM)msg;
 

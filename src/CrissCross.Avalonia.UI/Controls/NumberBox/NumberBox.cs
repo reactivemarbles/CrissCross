@@ -11,11 +11,11 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class NumberBox : NumericUpDown
 {
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty =
         AvaloniaProperty.Register<NumberBox, CornerRadius>(nameof(CornerRadius));
 
     /// <summary>Gets or sets the corner radius.</summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

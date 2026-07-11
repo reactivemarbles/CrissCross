@@ -9,6 +9,9 @@ namespace CrissCross.WPF.UI.TaskBar;
 /// <summary>Allows to change the status of the displayed notification in the application icon on the TaskBar.</summary>
 public static class TaskBarProgress
 {
+    /// <summary>Provides the maximum percentage-based taskbar progress value.</summary>
+    private const int MaximumProgressValue = 100;
+
     /// <summary>Allows to change the status of the progress bar in the task bar.</summary>
     /// <param name="window">Window to manipulate.</param>
     /// <param name="taskBarProgressState">State of the progress indicator.</param>
@@ -52,9 +55,9 @@ public static class TaskBarProgress
     /// <returns>A bool.</returns>
     public static bool SetValue(Window window, TaskBarProgressState taskBarProgressState, int current)
     {
-        if (current > 100)
+        if (current > MaximumProgressValue)
         {
-            current = 100;
+            current = MaximumProgressValue;
         }
 
         if (current < 0)
@@ -62,7 +65,7 @@ public static class TaskBarProgress
             current = 0;
         }
 
-        return SetValue(window, taskBarProgressState, current, 100);
+        return SetValue(window, taskBarProgressState, current, MaximumProgressValue);
     }
 
     /// <summary>Allows to change the fill of the task bar.</summary>
@@ -99,9 +102,9 @@ public static class TaskBarProgress
     /// <returns>A bool.</returns>
     public static bool SetValue(IntPtr windowHandle, TaskBarProgressState taskBarProgressState, int current)
     {
-        if (current > 100)
+        if (current > MaximumProgressValue)
         {
-            current = 100;
+            current = MaximumProgressValue;
         }
 
         if (current < 0)
@@ -109,7 +112,7 @@ public static class TaskBarProgress
             current = 0;
         }
 
-        return SetValue(windowHandle, taskBarProgressState, current, 100);
+        return SetValue(windowHandle, taskBarProgressState, current, MaximumProgressValue);
     }
 
     /// <summary>Allows to change the fill of the task bar.</summary>

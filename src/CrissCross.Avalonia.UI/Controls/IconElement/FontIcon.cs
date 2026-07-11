@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Documents;
 using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -94,9 +92,11 @@ public class FontIcon : IconElement
             FontSize,
             Foreground);
 
+        const double half = 2.0;
+
         var origin = new Point(
-            (Bounds.Width - formattedText.Width) / 2,
-            (Bounds.Height - formattedText.Height) / 2);
+            (Bounds.Width - formattedText.Width) / half,
+            (Bounds.Height - formattedText.Height) / half);
 
         context.DrawText(formattedText, origin);
     }

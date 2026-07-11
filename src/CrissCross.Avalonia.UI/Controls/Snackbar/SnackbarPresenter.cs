@@ -16,6 +16,9 @@ public class SnackbarPresenter : ContentPresenter
     public static readonly StyledProperty<Snackbar?> SnackbarContentProperty =
         AvaloniaProperty.Register<SnackbarPresenter, Snackbar?>(nameof(SnackbarContent));
 
+    /// <summary>Delay that allows the hide animation to complete.</summary>
+    private const int HideCompletionDelayMilliseconds = 300;
+
     /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
     public SnackbarPresenter() => Unloaded += OnUnloadedHandler;
 
@@ -190,7 +193,7 @@ public class SnackbarPresenter : ContentPresenter
     {
         snackbar.IsShown = false;
 
-        await Task.Delay(300);
+        await Task.Delay(HideCompletionDelayMilliseconds);
 
         SnackbarContent = null;
         Content = null;

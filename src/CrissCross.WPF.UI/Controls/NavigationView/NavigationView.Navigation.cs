@@ -132,7 +132,7 @@ public partial class NavigationView
     {
         if (
             pageInstance is not FrameworkElement frameworkElement
-            || !(GetHeaderContent(frameworkElement) is { } headerContent))
+            || GetHeaderContent(frameworkElement) is not { } headerContent)
         {
             return;
         }
@@ -441,7 +441,8 @@ public partial class NavigationView
 
         if (!_complexNavigationStackHistory.TryGetValue(lastItem, out var historyList))
         {
-            historyList = new(5);
+            const int initialHistoryCapacity = 5;
+            historyList = new(initialHistoryCapacity);
             _complexNavigationStackHistory.Add(lastItem, historyList);
         }
 

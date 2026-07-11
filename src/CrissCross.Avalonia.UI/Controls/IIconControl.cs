@@ -2,9 +2,6 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Avalonia;
-using Avalonia.Media;
-
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>Control that allows you to set an icon in it with an <see cref="Icon"/>.</summary>

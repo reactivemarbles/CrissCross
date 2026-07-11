@@ -67,21 +67,13 @@ public class TreeViewViewModel : RxObject
         Remove = ReactiveCommand.Create(() => { });
         _ = Remove.Subscribe(_ => SelectedItem?.RemoveChild());
         var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(
-            rti =>
-            {
-                if (rti is Person person)
+            rti => rti.WhenAnyValue(vs => vs.IsSelected).Select(
+                x => (x, rti switch
                 {
-                    return rti.WhenAnyValue(vs => vs.IsSelected).Select(x => (x, person.DisplayName));
-                }
-                else if (rti is Pet pet)
-                {
-                    return rti.WhenAnyValue(vs => vs.IsSelected).Select(x => (x, pet.DisplayName));
-                }
-                else
-                {
-                    return rti.WhenAnyValue(vs => vs.IsSelected).Select(x => (x, (string?)"NoName"));
-                }
-            });
+                    Person person => person.DisplayName,
+                    Pet pet => pet.DisplayName,
+                    _ => "NoName"
+                })));
         _ = isAnimalOrPerson.Subscribe(x =>
         {
             if (x.x)

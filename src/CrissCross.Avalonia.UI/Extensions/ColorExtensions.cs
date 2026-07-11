@@ -9,6 +9,15 @@ namespace CrissCross.Avalonia.UI.Extensions;
 /// <summary>Adds an extension for <see cref="Color"/> that allows manipulation with HSL and HSV color spaces.</summary>
 public static class ColorExtensions
 {
+    /// <summary>Provides the PercentFactorMaximum member.</summary>
+    private const float PercentFactorMaximum = 100f;
+
+    /// <summary>Provides the PercentFactorMinimum member.</summary>
+    private const float PercentFactorMinimum = -100f;
+
+    /// <summary>Provides the PercentDivisor member.</summary>
+    private const double PercentDivisor = 100.0;
+
     /// <summary>Provides extension members for <see cref="Color"/>.</summary>
     /// <param name="color">The input color.</param>
     extension(Color color)
@@ -59,11 +68,11 @@ public static class ColorExtensions
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateLuminance(float factor)
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, 100f);
-            ArgumentOutOfRangeException.ThrowIfLessThan(factor, -100f);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, PercentFactorMaximum);
+            ArgumentOutOfRangeException.ThrowIfLessThan(factor, PercentFactorMinimum);
 
             var hsl = color.ToHsl();
-            var newL = Math.Clamp(hsl.L + (factor / 100.0), 0.0, 1.0);
+            var newL = Math.Clamp(hsl.L + (factor / PercentDivisor), 0.0, 1.0);
             return HslColor.ToRgb(hsl.H, hsl.S, newL, hsl.A);
         }
 
@@ -72,11 +81,11 @@ public static class ColorExtensions
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateSaturation(float factor)
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, 100f);
-            ArgumentOutOfRangeException.ThrowIfLessThan(factor, -100f);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, PercentFactorMaximum);
+            ArgumentOutOfRangeException.ThrowIfLessThan(factor, PercentFactorMinimum);
 
             var hsl = color.ToHsl();
-            var newS = Math.Clamp(hsl.S + (factor / 100.0), 0.0, 1.0);
+            var newS = Math.Clamp(hsl.S + (factor / PercentDivisor), 0.0, 1.0);
             return HslColor.ToRgb(hsl.H, newS, hsl.L, hsl.A);
         }
 
@@ -85,11 +94,11 @@ public static class ColorExtensions
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateBrightness(float factor)
         {
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, 100f);
-            ArgumentOutOfRangeException.ThrowIfLessThan(factor, -100f);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(factor, PercentFactorMaximum);
+            ArgumentOutOfRangeException.ThrowIfLessThan(factor, PercentFactorMinimum);
 
             var hsv = color.ToHsv();
-            var newV = Math.Clamp(hsv.V + (factor / 100.0), 0.0, 1.0);
+            var newV = Math.Clamp(hsv.V + (factor / PercentDivisor), 0.0, 1.0);
             return HsvColor.ToRgb(hsv.H, hsv.S, newV, hsv.A);
         }
 

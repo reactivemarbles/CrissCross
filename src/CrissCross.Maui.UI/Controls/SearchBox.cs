@@ -12,7 +12,7 @@ public class SearchBox : SearchBar
         nameof(SearchState),
         typeof(SearchQueryState),
         typeof(SearchBox),
-        propertyChanged: OnSearchStateChanged);
+        propertyChanged: static (bindable, _, newValue) => OnSearchStateChanged(bindable, newValue));
 
     /// <summary>Bindable property for <see cref="SubmitCommand"/>.</summary>
     public static readonly BindableProperty SubmitCommandProperty = BindableProperty.Create(
@@ -53,9 +53,8 @@ public class SearchBox : SearchBar
 
     /// <summary>Runs the search state changed operation.</summary>
     /// <param name="bindable">The bindable object.</param>
-    /// <param name="oldValue">The previous value.</param>
     /// <param name="newValue">The new value.</param>
-    private static void OnSearchStateChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void OnSearchStateChanged(BindableObject bindable, object newValue)
     {
         if (bindable is not SearchBox searchBox || newValue is not SearchQueryState state)
         {

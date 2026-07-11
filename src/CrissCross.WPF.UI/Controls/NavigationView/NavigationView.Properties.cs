@@ -489,6 +489,7 @@ public partial class NavigationView
     /// <param name="e">The event arguments.</param>
     private static void OnPaneDisplayModePropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not NavigationView navigationView)
         {
             return;
@@ -502,6 +503,7 @@ public partial class NavigationView
     /// <param name="e">The event arguments.</param>
     private static void OnItemTemplatePropertyChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not NavigationView navigationView)
         {
             return;
@@ -574,7 +576,7 @@ public partial class NavigationView
         navigationView.FrameMargin = frameMargin;
         titleBar.Margin = titleBarPaneOpenMargin;
 
-        if (!(navigationView.AutoSuggestBox?.Margin is { Bottom: 0, Left: 0, Right: 0, Top: 0 }))
+        if (navigationView.AutoSuggestBox?.Margin is not { Bottom: 0, Left: 0, Right: 0, Top: 0 })
         {
             return;
         }
@@ -608,7 +610,7 @@ public partial class NavigationView
         autoSuggestBox.SuggestionChosen += navigationView.AutoSuggestBoxOnSuggestionChosen;
         autoSuggestBox.QuerySubmitted += navigationView.AutoSuggestBoxOnQuerySubmitted;
 
-        if (navigationView.TitleBar?.Margin != titleBarPaneOpenMargin || !(autoSuggestBox.Margin is { Bottom: 0, Left: 0, Right: 0, Top: 0 }))
+        if (navigationView.TitleBar?.Margin != titleBarPaneOpenMargin || autoSuggestBox.Margin is not { Bottom: 0, Left: 0, Right: 0, Top: 0 })
         {
             return;
         }

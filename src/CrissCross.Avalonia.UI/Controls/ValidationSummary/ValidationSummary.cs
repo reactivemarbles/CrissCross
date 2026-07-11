@@ -5,7 +5,6 @@
 using System;
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
 using CrissCross;
 
 namespace CrissCross.Avalonia.UI.Controls;

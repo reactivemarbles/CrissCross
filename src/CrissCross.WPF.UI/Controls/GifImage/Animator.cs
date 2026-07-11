@@ -16,6 +16,54 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="System.IDisposable" />
 public abstract class Animator : DependencyObject, IDisposable
 {
+    /// <summary>The BGRA bytes per pixel.</summary>
+    private const int BgraBytesPerPixel = 4;
+
+    /// <summary>The bitmap DPI used for decoded GIF frames.</summary>
+    private const int BitmapDpi = 96;
+
+    /// <summary>The default GIF frame delay in milliseconds.</summary>
+    private const int DefaultFrameDelayMilliseconds = 100;
+
+    /// <summary>The one-based Green channel offset in BGRA pixels.</summary>
+    private const int BgraGreenOffset = 1;
+
+    /// <summary>The one-based Red channel offset in BGRA pixels.</summary>
+    private const int BgraRedOffset = 2;
+
+    /// <summary>The one-based Alpha channel offset in BGRA pixels.</summary>
+    private const int BgraAlphaOffset = 3;
+
+    /// <summary>The GIF interlace first pass start row.</summary>
+    private const int InterlaceFirstPassStart = 0;
+
+    /// <summary>The GIF interlace second pass start row.</summary>
+    private const int InterlaceSecondPassStart = 4;
+
+    /// <summary>The GIF interlace third pass start row.</summary>
+    private const int InterlaceThirdPassStart = 2;
+
+    /// <summary>The GIF interlace fourth pass start row.</summary>
+    private const int InterlaceFourthPassStart = 1;
+
+    /// <summary>The GIF interlace coarse row step.</summary>
+    private const int InterlaceCoarseStep = 8;
+
+    /// <summary>The GIF interlace medium row step.</summary>
+    private const int InterlaceMediumStep = 4;
+
+    /// <summary>The GIF interlace fine row step.</summary>
+    private const int InterlaceFineStep = 2;
+
+    /// <summary>The byte padding required for BitReader lookahead.</summary>
+    private const int BitReaderLookaheadPaddingBytes = 4;
+
+    /// <summary>The bitmap stride alignment in bits.</summary>
+    private const int BitmapStrideAlignmentBits = 32;
+
+    /// <summary>The bitmap stride alignment mask.</summary>
+    private const int BitmapStrideAlignmentMask = 31;
+
     /// <summary>Stores the _bitmap value.</summary>
     private readonly WriteableBitmap _bitmap;
 
@@ -88,7 +136,7 @@ public abstract class Animator : DependencyObject, IDisposable
         _palettes = CreatePalettes(metadata);
         _bitmap = CreateBitmap(metadata);
         var desc = metadata.Header?.LogicalScreenDescriptor;
-        _stride = 4 * (((desc!.Width * 32) + 31) / 32);
+        _stride = BgraBytesPerPixel * (((desc!.Width * BitmapStrideAlignmentBits) + BitmapStrideAlignmentMask) / BitmapStrideAlignmentBits);
         _previousBackBuffer = new byte[desc.Height * _stride];
         _indexStreamBuffer = CreateIndexStreamBuffer(metadata, _sourceStream);
         _timingManager = CreateTimingManager(metadata, repeatBehavior);
@@ -414,7 +462,7 @@ public abstract class Animator : DependencyObject, IDisposable
     private static WriteableBitmap CreateBitmap(GifDataStream metadata)
     {
         var desc = metadata.Header?.LogicalScreenDescriptor;
-        return new(desc!.Width, desc.Height, 96, 96, PixelFormats.Bgra32, null);
+        return new(desc!.Width, desc.Height, BitmapDpi, BitmapDpi, PixelFormats.Bgra32, null);
     }
 
     /// <summary>Provides the CreateIndexStreamBuffer member.</summary>
@@ -434,8 +482,7 @@ public abstract class Animator : DependencyObject, IDisposable
             maxSize = Math.Max(sizes.Max(), lastSize);
         }
 
-        // Need 4 extra bytes so that BitReader doesn't need to check the size for every read
-        return new byte[maxSize + 4];
+        return new byte[maxSize + BitReaderLookaheadPaddingBytes];
     }
 
     /// <summary>Provides the CreatePalettes member.</summary>
@@ -495,7 +542,7 @@ public abstract class Animator : DependencyObject, IDisposable
     private static TimeSpan GetFrameDelay(GifFrame frame)
     {
         var gce = frame.GraphicControl;
-        return gce is not null && gce.Delay != 0 ? TimeSpan.FromMilliseconds(gce.Delay) : TimeSpan.FromMilliseconds(100);
+        return gce is not null && gce.Delay != 0 ? TimeSpan.FromMilliseconds(gce.Delay) : TimeSpan.FromMilliseconds(DefaultFrameDelayMilliseconds);
     }
 
     /// <summary>Provides the GetRepeatBehaviorFromGif member.</summary>
@@ -520,10 +567,10 @@ public abstract class Animator : DependencyObject, IDisposable
          * */
         var passes = new[]
         {
-            (Start: 0, Step: 8),
-            (Start: 4, Step: 8),
-            (Start: 2, Step: 4),
-            (Start: 1, Step: 2)
+            (Start: InterlaceFirstPassStart, Step: InterlaceCoarseStep),
+            (Start: InterlaceSecondPassStart, Step: InterlaceCoarseStep),
+            (Start: InterlaceThirdPassStart, Step: InterlaceMediumStep),
+            (Start: InterlaceFourthPassStart, Step: InterlaceFineStep)
         };
         foreach (var pass in passes)
         {
@@ -548,9 +595,9 @@ public abstract class Animator : DependencyObject, IDisposable
     private static void WriteColor(byte[] lineBuffer, Color color, int startIndex)
     {
         lineBuffer[startIndex] = color.B;
-        lineBuffer[startIndex + 1] = color.G;
-        lineBuffer[startIndex + 2] = color.R;
-        lineBuffer[startIndex + 3] = color.A;
+        lineBuffer[startIndex + BgraGreenOffset] = color.G;
+        lineBuffer[startIndex + BgraRedOffset] = color.R;
+        lineBuffer[startIndex + BgraAlphaOffset] = color.A;
     }
 
     /// <summary>Provides the ClearArea member.</summary>
@@ -561,11 +608,11 @@ public abstract class Animator : DependencyObject, IDisposable
     /// <param name="rect">The rect value.</param>
     private void ClearArea(Int32Rect rect)
     {
-        var bufferLength = 4 * rect.Width;
+        var bufferLength = BgraBytesPerPixel * rect.Width;
         var lineBuffer = new byte[bufferLength];
         for (var y = 0; y < rect.Height; y++)
         {
-            var offset = ((rect.Y + y) * _stride) + (4 * rect.X);
+            var offset = ((rect.Y + y) * _stride) + (BgraBytesPerPixel * rect.X);
             CopyToBitmap(lineBuffer, _bitmap, offset, bufferLength);
         }
 
@@ -597,33 +644,19 @@ public abstract class Animator : DependencyObject, IDisposable
         var pgce = _previousFrame?.GraphicControl;
         if (pgce is not null)
         {
-            switch (pgce.DisposalMethod)
+            Action disposePreviousFrame = pgce.DisposalMethod switch
             {
-                case GifFrameDisposalMethod.None or GifFrameDisposalMethod.DoNotDispose:
-                    {
-                        // Leave previous frame in place
-                        break;
-                    }
+                GifFrameDisposalMethod.None or GifFrameDisposalMethod.DoNotDispose => static () => { },
+                GifFrameDisposalMethod.RestoreBackground => () => ClearArea(GetFixedUpFrameRect(_previousFrame?.Descriptor)),
+                GifFrameDisposalMethod.RestorePrevious => RestorePreviousFrame,
+                _ => static () => { }
+            };
 
-                case GifFrameDisposalMethod.RestoreBackground:
-                    {
-                        ClearArea(GetFixedUpFrameRect(_previousFrame?.Descriptor));
-                        break;
-                    }
-
-                case GifFrameDisposalMethod.RestorePrevious:
-                    {
-                        CopyToBitmap(_previousBackBuffer, _bitmap, 0, _previousBackBuffer.Length);
-                        var desc = _metadata.Header?.LogicalScreenDescriptor;
-                        var rect = new Int32Rect(0, 0, desc!.Width, desc.Height);
-                        _bitmap.AddDirtyRect(rect);
-                        break;
-                    }
-            }
+            disposePreviousFrame();
         }
 
         var gce = currentFrame.GraphicControl;
-        if (!(gce is { DisposalMethod: GifFrameDisposalMethod.RestorePrevious }))
+        if (gce is not { DisposalMethod: GifFrameDisposalMethod.RestorePrevious })
         {
             return;
         }
@@ -737,7 +770,7 @@ public abstract class Animator : DependencyObject, IDisposable
         {
             UpdatePreviousFrame(frameIndex, frame);
 
-            var bufferLength = 4 * rect.Width;
+            var bufferLength = BgraBytesPerPixel * rect.Width;
             var lineBuffer = new byte[bufferLength];
 
             var palette = _palettes[frameIndex];
@@ -765,6 +798,7 @@ public abstract class Animator : DependencyObject, IDisposable
     /// <returns>The frame index buffer.</returns>
     private async Task<byte[]> GetFrameIndexBufferAsync(int frameIndex, GifFrame frame, GifImageDescriptor desc, Stream? indexStream, CancellationToken cancellationToken)
     {
+        _ = frame;
         if (_cacheFrameDataInMemory)
         {
             return _cachedFrameBytes![frameIndex];
@@ -796,7 +830,7 @@ public abstract class Animator : DependencyObject, IDisposable
     {
         for (var y = 0; y < rect.Height; y++)
         {
-            var offset = ((desc.Top + rows[y]) * _stride) + (desc.Left * 4);
+            var offset = ((desc.Top + rows[y]) * _stride) + (desc.Left * BgraBytesPerPixel);
 
             if (transparencyIndex >= 0)
             {
@@ -806,7 +840,7 @@ public abstract class Animator : DependencyObject, IDisposable
             for (var x = 0; x < rect.Width; x++)
             {
                 var index = indexBuffer[x + (y * desc.Width)];
-                var i = 4 * x;
+                var i = BgraBytesPerPixel * x;
                 if (index != transparencyIndex)
                 {
                     WriteColor(lineBuffer, palette[index], i);
@@ -829,6 +863,15 @@ public abstract class Animator : DependencyObject, IDisposable
         }
 
         DisposePreviousFrame(frame);
+    }
+
+    /// <summary>Restores the previous full bitmap buffer.</summary>
+    private void RestorePreviousFrame()
+    {
+        CopyToBitmap(_previousBackBuffer, _bitmap, 0, _previousBackBuffer.Length);
+        var desc = _metadata.Header?.LogicalScreenDescriptor;
+        var rect = new Int32Rect(0, 0, desc!.Width, desc.Height);
+        _bitmap.AddDirtyRect(rect);
     }
 
     /// <summary>Provides the RunAsync member.</summary>

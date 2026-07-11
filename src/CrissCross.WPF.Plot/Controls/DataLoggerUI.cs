@@ -23,6 +23,9 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class DataLoggerUI : RxObject, IPlottableUI
 {
+    /// <summary>The maximum number of points retained by the data logger.</summary>
+    private const int MaximumLoggedPointCount = 100_000_000;
+
     /// <summary>Stores the value buffer value.</summary>
     private double[]? _valueBuffer;
 
@@ -127,7 +130,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
     public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) => observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
         .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value?.Count > 0 && d.nPoints > 0)
-        .Select(data => (data.Value!, Math.Min(data.nPoints, 100_000_000)))
+        .Select(data => (data.Value!, Math.Min(data.nPoints, MaximumLoggedPointCount)))
         .Retry(int.MaxValue)
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>

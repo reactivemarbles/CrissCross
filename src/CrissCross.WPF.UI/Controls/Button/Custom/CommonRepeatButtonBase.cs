@@ -12,25 +12,31 @@ namespace CrissCross.WPF.UI.Controls;
 public abstract class CommonRepeatButtonBase : RepeatButton
 {
     /// <summary>The corner radius1 property.</summary>
-    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register("CornerRadius1", typeof(CornerRadius), typeof(CommonRepeatButtonBase), new PropertyMetadata(new CornerRadius(3.0)));
+    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(nameof(CornerRadius1), typeof(CornerRadius), typeof(CommonRepeatButtonBase), new PropertyMetadata(new CornerRadius(3.0)));
 
     /// <summary>The corner radius2 property.</summary>
-    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register("CornerRadius2", typeof(CornerRadius), typeof(CommonRepeatButtonBase), new PropertyMetadata(new CornerRadius(2.0)));
+    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(nameof(CornerRadius2), typeof(CornerRadius), typeof(CommonRepeatButtonBase), new PropertyMetadata(new CornerRadius(2.0)));
 
     /// <summary>The focus border thickness property.</summary>
-    public static readonly DependencyProperty FocusBorderThicknessProperty = DependencyProperty.Register("FocusBorderThickness", typeof(Thickness), typeof(CommonRepeatButtonBase), new PropertyMetadata(new Thickness(2.0)));
+    public static readonly DependencyProperty FocusBorderThicknessProperty = DependencyProperty.Register(nameof(FocusBorderThickness), typeof(Thickness), typeof(CommonRepeatButtonBase), new PropertyMetadata(new Thickness(2.0)));
 
     /// <summary>The focus brush property.</summary>
-    public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register("FocusBrush", typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(Brushes.Orange));
+    public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(nameof(FocusBrush), typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(Brushes.Orange));
 
     /// <summary>The glare brush property.</summary>
-    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register("GlareBrush", typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(nameof(GlareBrush), typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(null));
 
     /// <summary>The minor border brush1 property.</summary>
-    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register("MinorBorderBrush1", typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(new LinearGradientBrush(SystemColors.ControlDarkDarkColor, SystemColors.ControlDarkDarkColor, 45)));
+    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(nameof(MinorBorderBrush1), typeof(Brush), typeof(CommonRepeatButtonBase), new PropertyMetadata(new LinearGradientBrush(SystemColors.ControlDarkDarkColor, SystemColors.ControlDarkDarkColor, 45)));
 
     /// <summary>The minor border thickness1 property.</summary>
-    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register("MinorBorderThickness1", typeof(Thickness), typeof(CommonRepeatButtonBase), new PropertyMetadata(new Thickness(0.0)));
+    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(nameof(MinorBorderThickness1), typeof(Thickness), typeof(CommonRepeatButtonBase), new PropertyMetadata(new Thickness(0.0)));
+
+    /// <summary>The inset subtracted from the configured focus border thickness.</summary>
+    private const double FocusBorderInset = 2d;
+
+    /// <summary>The border thickness used while the pointer hovers over the button.</summary>
+    private const double HoverIndicatorBorderSize = 2d;
 
     /// <summary>Initializes a new instance of the <see cref="CommonRepeatButtonBase"/> class.</summary>
     /// <param name="styleName">Name of the style.</param>
@@ -164,7 +170,7 @@ public abstract class CommonRepeatButtonBase : RepeatButton
     protected override void OnMouseEnter(MouseEventArgs e)
     {
         base.OnMouseEnter(e);
-        SetIndicatorBorderSize(2);
+        SetIndicatorBorderSize(HoverIndicatorBorderSize);
     }
 
     /// <summary>Reports when the mouse leaves an element.</summary>
@@ -197,6 +203,8 @@ public abstract class CommonRepeatButtonBase : RepeatButton
     /// <param name="e">The event arguments.</param>
     private void CommonButtonBase_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+        _ = sender;
+        _ = e;
         var border = UserHintBorder();
 
         border?.Background = IsEnabled ? null : new SolidColorBrush(Color.FromArgb(0x55, 0, 0, 0));
@@ -243,10 +251,10 @@ public abstract class CommonRepeatButtonBase : RepeatButton
     /// <returns>The focused border thickness.</returns>
     private Thickness GetFocusedBorderThickness() =>
         new(
-            FocusBorderThickness.Left <= 2 ? 1 : (FocusBorderThickness.Left - 2),
-            FocusBorderThickness.Top <= 2 ? 1 : (FocusBorderThickness.Top - 2),
-            FocusBorderThickness.Right <= 2 ? 1 : (FocusBorderThickness.Right - 2),
-            FocusBorderThickness.Bottom <= 2 ? 1 : (FocusBorderThickness.Bottom - 2));
+            FocusBorderThickness.Left <= FocusBorderInset ? 1 : (FocusBorderThickness.Left - FocusBorderInset),
+            FocusBorderThickness.Top <= FocusBorderInset ? 1 : (FocusBorderThickness.Top - FocusBorderInset),
+            FocusBorderThickness.Right <= FocusBorderInset ? 1 : (FocusBorderThickness.Right - FocusBorderInset),
+            FocusBorderThickness.Bottom <= FocusBorderInset ? 1 : (FocusBorderThickness.Bottom - FocusBorderInset));
 
     /// <summary>Provides the UserHintBorder member.</summary>
     /// <returns>The result.</returns>

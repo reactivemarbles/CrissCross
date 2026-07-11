@@ -10,7 +10,7 @@ public class GelToggleButton : CommonToggleButtonBase
 {
     /// <summary>Initializes a new instance of the <see cref="GelToggleButton"/> class.</summary>
     public GelToggleButton()
-        : base("GelToggleButton")
+        : base(nameof(GelToggleButton))
     {
     }
 }

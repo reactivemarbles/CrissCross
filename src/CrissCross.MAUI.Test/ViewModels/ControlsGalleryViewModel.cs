@@ -13,6 +13,36 @@ namespace CrissCross.MAUI.Test;
 /// <summary>Reactive manual-QA view model for the gallery feature playground.</summary>
 public sealed class ControlsGalleryViewModel : RxObject
 {
+    /// <summary>Default sample page index for initial gallery pagination.</summary>
+    private const int InitialPageIndex = 1;
+
+    /// <summary>Default sample page index used after refreshing imported data.</summary>
+    private const int RefreshedPageIndex = 0;
+
+    /// <summary>Default number of sample rows displayed by the pager.</summary>
+    private const int SamplePageSize = 10;
+
+    /// <summary>Total number of rows in the deterministic sample data set.</summary>
+    private const int SampleTotalItemCount = 42;
+
+    /// <summary>Number of matching rows shown after applying the sample search text.</summary>
+    private const int FilteredResultCount = 7;
+
+    /// <summary>Activation heartbeat interval in seconds.</summary>
+    private const int ActivationHeartbeatSeconds = 5;
+
+    /// <summary>Number of hours included by the default range sample.</summary>
+    private const int DefaultRangeHours = -4;
+
+    /// <summary>Initial command progress shown by the busy command sample.</summary>
+    private const double ImportStartingProgress = 0.35;
+
+    /// <summary>Artificial import delay for deterministic manual QA feedback.</summary>
+    private const int ImportDelayMilliseconds = 250;
+
+    /// <summary>Artificial search delay for deterministic manual QA feedback.</summary>
+    private const int SearchDelayMilliseconds = 150;
+
     /// <summary>Provides the _isOperationRunning member.</summary>
     private readonly ObservableAsPropertyHelper<bool> _isOperationRunning;
 
@@ -48,7 +78,7 @@ public sealed class ControlsGalleryViewModel : RxObject
     {
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
-        _paginationState = new(1, 10, 42);
+        _paginationState = new(InitialPageIndex, SamplePageSize, SampleTotalItemCount);
         _currentRange = CreateRange(DateTimeOffset.Now);
         _segmentState = new(CreateSegments(), "table");
         _chipGroupState = new(CreateChips("alarms"), ChipGroupSelectionMode.Multiple);
@@ -219,7 +249,7 @@ public sealed class ControlsGalleryViewModel : RxObject
         ArgumentNullException.ThrowIfNull(disposables);
 
         ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
-        _ = Observable.Interval(TimeSpan.FromSeconds(5), RxSchedulers.TaskpoolScheduler)
+        _ = Observable.Interval(TimeSpan.FromSeconds(ActivationHeartbeatSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
             .DisposeWith(disposables);
@@ -264,7 +294,7 @@ public sealed class ControlsGalleryViewModel : RxObject
         debouncedText: text?.Trim(),
         submittedText: text?.Trim(),
         isSearching: isSearching,
-        resultCount: string.IsNullOrWhiteSpace(text) ? 42 : 7,
+        resultCount: string.IsNullOrWhiteSpace(text) ? SampleTotalItemCount : FilteredResultCount,
         filters:
         [
             new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
@@ -274,7 +304,7 @@ public sealed class ControlsGalleryViewModel : RxObject
     /// <summary>Provides the CreateRange member.</summary>
     /// <param name="now">The now value.</param>
     /// <returns>The result.</returns>
-    private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(-4), now, DateTimeRangePreset.Custom, "Last four hours");
+    private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(DefaultRangeHours), now, DateTimeRangePreset.Custom, "Last four hours");
 
     /// <summary>Provides the CreateSegments member.</summary>
     /// <returns>The result.</returns>
@@ -312,15 +342,15 @@ public sealed class ControlsGalleryViewModel : RxObject
     private async Task RunImportAsync(CancellationToken cancellationToken)
     {
         CommandState = CommandButtonState.Executing;
-        CommandProgress = 0.35;
+        CommandProgress = ImportStartingProgress;
         CurrentOperation = new("Loading deterministic sample data", "Simulates a cancellable import without network access.", CommandProgress, ClearSearchCommand);
 
-        await Task.Delay(250, cancellationToken).ConfigureAwait(true);
+        await Task.Delay(ImportDelayMilliseconds, cancellationToken).ConfigureAwait(true);
 
         CommandProgress = 1.0;
         CurrentOperation = null;
         CommandState = CommandButtonState.Succeeded;
-        PaginationState = new(0, 10, 42);
+        PaginationState = new(RefreshedPageIndex, SamplePageSize, SampleTotalItemCount);
         SearchState = CreateSearchState(SearchText, false);
     }
 
@@ -332,7 +362,7 @@ public sealed class ControlsGalleryViewModel : RxObject
     {
         SearchText = submittedText;
         SearchState = CreateSearchState(SearchText, true);
-        await Task.Delay(150, cancellationToken).ConfigureAwait(true);
+        await Task.Delay(SearchDelayMilliseconds, cancellationToken).ConfigureAwait(true);
         SearchState = CreateSearchState(SearchText, false);
     }
 
@@ -345,7 +375,7 @@ public sealed class ControlsGalleryViewModel : RxObject
 
     /// <summary>Provides the ApplyPageRequest member.</summary>
     /// <param name="request">The request value.</param>
-    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, 42);
+    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, SampleTotalItemCount);
 
     /// <summary>Provides the ApplyRange member.</summary>
     /// <param name="range">The range value.</param>

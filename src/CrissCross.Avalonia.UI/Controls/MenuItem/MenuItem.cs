@@ -10,7 +10,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class MenuItem : global::Avalonia.Controls.MenuItem
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
-    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<MenuItem, object?>(
+    public static new readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<MenuItem, object?>(
         nameof(Icon),
         null);
 

@@ -220,6 +220,31 @@ public static class ViewModelRoutedViewHostMixins
             NavigateResolvedView(GetRequiredNavigationHost(hostName), rxObject, contract, parameter);
         }
 
+        /// <summary>Navigates the named host to the registered navigation key.</summary>
+        /// <typeparam name="TNavigationKey">The caller-facing view model or view lookup key.</typeparam>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo<TNavigationKey>(string? hostName = "", string? contract = null, object? parameter = null)
+            where TNavigationKey : class
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(hostName), typeof(TNavigationKey), contract, parameter);
+        }
+
+        /// <summary>Navigates the named host to the registered navigation key.</summary>
+        /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo(Type navigationKey, string? hostName = "", string? contract = null, object? parameter = null)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(hostName), navigationKey, contract, parameter);
+        }
+
         /// <summary>Navigates the named host to the requested view model type and clears history.</summary>
         /// <typeparam name="T">The view model type.</typeparam>
         /// <param name="hostName">Name of the host.</param>
@@ -329,6 +354,29 @@ public static class ViewModelRoutedViewHostMixins
             NavigateResolvedView(GetRequiredNavigationHost(navigation.Name), rxObject, contract, parameter);
         }
 
+        /// <summary>Navigates the primary host to the registered navigation key.</summary>
+        /// <typeparam name="TNavigationKey">The caller-facing view model or view lookup key.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo<TNavigationKey>(string? contract = null, object? parameter = null)
+            where TNavigationKey : class
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(navigation.Name), typeof(TNavigationKey), contract, parameter);
+        }
+
+        /// <summary>Navigates the primary host to the registered navigation key.</summary>
+        /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo(Type navigationKey, string? contract = null, object? parameter = null)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(navigation.Name), navigationKey, contract, parameter);
+        }
+
         /// <summary>Navigates the primary host to the requested view model type and clears history.</summary>
         /// <typeparam name="T">The view model type.</typeparam>
         /// <param name="contract">The contract.</param>
@@ -394,12 +442,12 @@ public static class ViewModelRoutedViewHostMixins
     /// <param name="hostName">The host name.</param>
     private static void AddHostKey(List<string> hostKeys, string? hostName)
     {
-        if (string.IsNullOrWhiteSpace(hostName) || hostKeys.Contains(hostName))
+        if (string.IsNullOrWhiteSpace(hostName) || hostKeys.Contains(hostName!))
         {
             return;
         }
 
-        hostKeys.Add(hostName);
+        hostKeys.Add(hostName!);
     }
 
     /// <summary>Adds a dictionary value only when the key is absent.</summary>
@@ -513,6 +561,48 @@ public static class ViewModelRoutedViewHostMixins
 
         viewHost.Navigate(toViewModel, contract, parameter);
     }
+
+    /// <summary>Navigates to the navigation pair resolved from a caller-facing key.</summary>
+    /// <param name="viewHost">The view host.</param>
+    /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private static void NavigateResolvedNavigationKey(IViewModelRoutedViewHost viewHost, Type navigationKey, string? contract, object? parameter)
+    {
+        if (viewHost is not IResolvedViewModelRoutedViewHost resolvedViewHost)
+        {
+            throw new InvalidOperationException("The registered navigation host does not support resolved ViewModel/View navigation.");
+        }
+
+        var resolution = ResolveNavigationKey(navigationKey, contract, parameter);
+        resolvedViewHost.Navigate(resolution);
+    }
+
+    /// <summary>Resolves a caller-facing navigation key through the registered bidirectional navigator.</summary>
+    /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    /// <returns>The navigation resolution.</returns>
+    private static NavigationResolution ResolveNavigationKey(Type navigationKey, string? contract, object? parameter)
+    {
+        ThrowHelper.ThrowIfNull(navigationKey, nameof(navigationKey));
+        var navigator = GetRequiredNavigator();
+        try
+        {
+            return navigator.NavigateViewModel(navigationKey, contract, parameter).FirstAsync().GetAwaiter().GetResult();
+        }
+        catch (NavigationResolutionException)
+        {
+            return navigator.NavigateView(navigationKey, contract, parameter).FirstAsync().GetAwaiter().GetResult();
+        }
+    }
+
+    /// <summary>Gets the registered bidirectional navigator.</summary>
+    /// <returns>The registered navigator.</returns>
+    private static IBidirectionalNavigator GetRequiredNavigator() =>
+        AppLocator.Current.GetService<IBidirectionalNavigator>() ??
+            AppLocator.Current.GetService<INavigationRegistry>()?.CreateNavigator() ??
+            throw new InvalidOperationException("No bidirectional navigation registry has been registered.");
 
     /// <summary>Throws when no navigation hosts are registered.</summary>
     private static void EnsureNavigationHostAvailable()

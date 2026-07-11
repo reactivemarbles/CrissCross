@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
@@ -25,7 +24,7 @@ public class ColorDisplay : TemplatedControl
         AvaloniaProperty.Register<ColorDisplay, bool>(nameof(ShowSecondColor), false);
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty =
         AvaloniaProperty.Register<ColorDisplay, CornerRadius>(nameof(CornerRadius), new CornerRadius(4));
 
     /// <summary>Gets or sets the primary color to display.</summary>
@@ -50,7 +49,7 @@ public class ColorDisplay : TemplatedControl
     }
 
     /// <summary>Gets or sets the corner radius.</summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

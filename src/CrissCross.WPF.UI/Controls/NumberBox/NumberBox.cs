@@ -21,7 +21,7 @@ public class NumberBox : TextBox
         new FrameworkPropertyMetadata(
             null,
             FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-            OnValuePropertyChanged,
+            static (d, e) => OnValuePropertyChanged((NumberBox)d, (double?)e.OldValue),
             null,
             false,
             UpdateSourceTrigger.PropertyChanged));
@@ -87,7 +87,7 @@ public class NumberBox : TextBox
         nameof(NumberFormatter),
         typeof(INumberFormatter),
         typeof(NumberBox),
-        new PropertyMetadata(null, OnNumberFormatterPropertyChanged));
+        new PropertyMetadata(null, static (_, e) => OnNumberFormatterPropertyChanged(e.NewValue)));
 
     /// <summary>Routed event for <see cref="ValueChanged"/>.</summary>
     public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(
@@ -357,26 +357,18 @@ public class NumberBox : TextBox
     private static ValidateNumberFormatter GetRegionalSettingsAwareDecimalFormatter() => new();
 
     /// <summary>Provides the OnValuePropertyChanged member.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="numberBox">The number box.</param>
+    /// <param name="oldValue">The old value.</param>
+    private static void OnValuePropertyChanged(NumberBox numberBox, double? oldValue)
     {
-        if (d is not NumberBox numberBox)
-        {
-            return;
-        }
-
-        numberBox.OnValueChanged(d, (double?)e.OldValue);
+        numberBox.OnValueChanged(numberBox, oldValue);
     }
 
     /// <summary>Provides the OnNumberFormatterPropertyChanged member.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void OnNumberFormatterPropertyChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    /// <param name="newValue">The new value.</param>
+    private static void OnNumberFormatterPropertyChanged(object newValue)
     {
-        if (e.NewValue is INumberParser)
+        if (newValue is INumberParser)
         {
             return;
         }

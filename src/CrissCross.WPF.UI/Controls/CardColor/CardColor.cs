@@ -109,6 +109,7 @@ public class CardColor : System.Windows.Controls.Control
     /// <param name="e">The event arguments.</param>
     private static void OnSubtitlePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not CardColor cardColor)
         {
             return;
@@ -122,6 +123,7 @@ public class CardColor : System.Windows.Controls.Control
     /// <param name="e">The event arguments.</param>
     private static void OnColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not CardColor cardColor)
         {
             return;
@@ -135,6 +137,7 @@ public class CardColor : System.Windows.Controls.Control
     /// <param name="e">The event arguments.</param>
     private static void OnBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not CardColor cardColor)
         {
             return;

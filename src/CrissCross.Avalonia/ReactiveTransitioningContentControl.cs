@@ -15,6 +15,12 @@ namespace CrissCross.Avalonia;
 /// <seealso cref="IDisposable" />
 public class ReactiveTransitioningContentControl : ContentControl, IDisposable
 {
+    /// <summary>The animation timer interval in milliseconds.</summary>
+    private const double AnimationIntervalMilliseconds = 10d;
+
+    /// <summary>The opacity increment applied for each animation tick.</summary>
+    private const double OpacityIncrement = 0.08d;
+
     /// <summary>Stores the opacity Subject value.</summary>
     private readonly Signal<double> _opacitySubject = new();
 
@@ -131,9 +137,9 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
         var (from, to, current) = GetPresenters();
         _ = to!.Bind(OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
         var opacity = 0d;
-        _ = Observable.Interval(TimeSpan.FromMilliseconds(10)).Subscribe(_ =>
+        _ = Observable.Interval(TimeSpan.FromMilliseconds(AnimationIntervalMilliseconds)).Subscribe(_ =>
         {
-            opacity += 0.08;
+            opacity += OpacityIncrement;
             if (opacity > 1d)
             {
                 opacity = 1d;

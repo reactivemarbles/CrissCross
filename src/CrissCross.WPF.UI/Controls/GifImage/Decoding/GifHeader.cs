@@ -7,6 +7,12 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 /// <summary>Provides the GifHeader member.</summary>
 internal sealed class GifHeader : GifBlock
 {
+    /// <summary>The GIF signature byte count.</summary>
+    private const int SignatureByteCount = 3;
+
+    /// <summary>The GIF version byte count.</summary>
+    private const int VersionByteCount = 3;
+
     /// <summary>Initializes a new instance of the <see cref="GifHeader"/> class.</summary>
     private GifHeader()
     {
@@ -38,13 +44,13 @@ internal sealed class GifHeader : GifBlock
     /// <returns>The result.</returns>
     private async Task ReadInternalAsync(Stream stream)
     {
-        Signature = await GifHelpers.ReadStringAsync(stream, 3).ConfigureAwait(false);
+        Signature = await GifHelpers.ReadStringAsync(stream, SignatureByteCount).ConfigureAwait(false);
         if (Signature != "GIF")
         {
             throw GifHelpers.InvalidSignatureException(Signature);
         }
 
-        Version = await GifHelpers.ReadStringAsync(stream, 3).ConfigureAwait(false);
+        Version = await GifHelpers.ReadStringAsync(stream, VersionByteCount).ConfigureAwait(false);
         if (Version != "87a" && Version != "89a")
         {
             throw GifHelpers.UnsupportedVersionException(Version);

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Layout;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -24,8 +23,10 @@ public class DateTimePicker : StackPanel
     /// <summary>Initializes a new instance of the <see cref="DateTimePicker"/> class.</summary>
     public DateTimePicker()
     {
+        const double defaultSpacing = 4.0;
+
         Orientation = Orientation.Horizontal;
-        Spacing = 4;
+        Spacing = defaultSpacing;
 
         _datePicker = new();
         _timePicker = new();

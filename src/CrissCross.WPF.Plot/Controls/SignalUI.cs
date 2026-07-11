@@ -23,6 +23,9 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class SignalUI : RxObject, IPlottableUI
 {
+    /// <summary>The initial number of signal points shown in the viewport.</summary>
+    private const int InitialViewPointCount = 100;
+
     /// <summary>Stores the time set value.</summary>
     private readonly HashSet<double> _timeSet = [];
 
@@ -156,7 +159,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         PlotLine.ManageAxisLimits = false;
         PlotLine.LineStyle.Width = 1;
         PlotLine.Color = Color.FromHex(color);
-        PlotLine.ViewSlide(100);
+        PlotLine.ViewSlide(InitialViewPointCount);
     }
 
     /// <summary>Subscribes to an observable sequence of signal data and updates the plot with new values as they arrive.</summary>
@@ -178,7 +181,7 @@ public partial class SignalUI : RxObject, IPlottableUI
                 // Convert ticks to OADate
                 for (var i = 0; i < count; i++)
                 {
-                    datetime[i] = new DateTime(Convert.ToInt64(dateTimeList[i])).ToOADate();
+                    datetime[i] = new DateTime(Convert.ToInt64(dateTimeList[i]), DateTimeKind.Local).ToOADate();
                 }
             }
             else

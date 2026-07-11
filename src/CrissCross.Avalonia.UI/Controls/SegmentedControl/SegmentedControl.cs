@@ -4,7 +4,6 @@
 
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Data;
 using CrissCross;
 
@@ -50,7 +49,7 @@ public class SegmentedControl : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != SelectionStateProperty || !(change.GetNewValue<SegmentedSelectionState?>() is { } state))
+        if (change.Property != SelectionStateProperty || change.GetNewValue<SegmentedSelectionState?>() is not { } state)
         {
             return;
         }

@@ -11,6 +11,9 @@ namespace CrissCross.Avalonia.UI.Storage;
 /// <summary>An implementation of IStore that saves data to a JSON file.</summary>
 public class JsonFileStore : IStore
 {
+    /// <summary>Name of the serialized type metadata property.</summary>
+    private const string TypePropertyName = nameof(Type);
+
     /// <summary>Provides the SerializerOptions member.</summary>
     private static readonly JsonSerializerOptions SerializerOptions = CreateOptions();
 
@@ -106,11 +109,11 @@ public class JsonFileStore : IStore
                 writer.WriteStartObject();
                 if (kvp.Value is not null)
                 {
-                    writer.WriteString("Type", kvp.Value.GetType().AssemblyQualifiedName);
+                    writer.WriteString(TypePropertyName, kvp.Value.GetType().AssemblyQualifiedName);
                 }
                 else
                 {
-                    writer.WriteString("Type", string.Empty);
+                    writer.WriteString(TypePropertyName, string.Empty);
                 }
 
                 writer.WriteString("Name", kvp.Key);
@@ -136,7 +139,7 @@ public class JsonFileStore : IStore
     /// <inheritdoc/>
     public IEnumerable<string> ListIds()
     {
-        return !Directory.Exists(FolderPath) ? [] : Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension)!;
+        return !Directory.Exists(FolderPath) ? [] : Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension).OfType<string>();
     }
 
     /// <inheritdoc/>
@@ -221,7 +224,7 @@ public class JsonFileStore : IStore
     /// <returns>The resolved type, or <see langword="null"/>.</returns>
     private static Type? ReadValueType(JsonElement element)
     {
-        if (!element.TryGetProperty("Type", out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
+        if (!element.TryGetProperty(TypePropertyName, out var typeProp) || typeProp.ValueKind != JsonValueKind.String)
         {
             return null;
         }

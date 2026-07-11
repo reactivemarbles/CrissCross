@@ -4,8 +4,6 @@
 
 using System.Windows.Input;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using CrissCross;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -50,7 +48,7 @@ public class FilterBar : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != QueryStateProperty || !(change.GetNewValue<SearchQueryState?>() is { } state))
+        if (change.Property != QueryStateProperty || change.GetNewValue<SearchQueryState?>() is not { } state)
         {
             return;
         }

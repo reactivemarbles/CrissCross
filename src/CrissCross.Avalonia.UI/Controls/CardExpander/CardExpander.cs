@@ -6,16 +6,16 @@ using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Inherited from the <see cref="Avalonia.Controls.Expander"/> control which can hide the collapsible content.</summary>
+/// <summary>Inherited from the <see cref="global::Avalonia.Controls.Expander"/> control which can hide the collapsible content.</summary>
 public class CardExpander : global::Avalonia.Controls.Expander
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<CardExpander, object>(
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardExpander, object?>(
         nameof(Icon),
         null);
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardExpander, CornerRadius>(
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardExpander, CornerRadius>(
         nameof(CornerRadius),
         new CornerRadius(4));
 
@@ -32,7 +32,7 @@ public class CardExpander : global::Avalonia.Controls.Expander
     }
 
     /// <summary>Gets or sets the corner radius.</summary>
-    public CornerRadius CornerRadius
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);

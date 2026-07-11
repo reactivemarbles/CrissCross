@@ -42,7 +42,7 @@ public static class AnimationBehavior
     /// <summary>The animator property.</summary>
     public static readonly DependencyProperty AnimatorProperty =
         DependencyProperty.RegisterAttached(
-            "Animator",
+            nameof(Animator),
             typeof(Animator),
             typeof(AnimationBehavior),
             new PropertyMetadata(null));
@@ -90,7 +90,7 @@ public static class AnimationBehavior
     /// <summary>The repeat behavior property.</summary>
     public static readonly DependencyProperty RepeatBehaviorProperty =
         DependencyProperty.RegisterAttached(
-          "RepeatBehavior",
+          nameof(RepeatBehavior),
           typeof(RepeatBehavior),
           typeof(AnimationBehavior),
           new PropertyMetadata(
@@ -387,6 +387,7 @@ public static class AnimationBehavior
     /// <param name="e">The event arguments.</param>
     private static void AnimateInDesignModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not System.Windows.Controls.Image image)
         {
             return;
@@ -657,12 +658,20 @@ public static class AnimationBehavior
 
     /// <summary>Provides the OnLoaded member.</summary>
     /// <param name="sender">The event sender.</param>
-    private static void OnLoaded(System.Windows.Controls.Image sender) => sender.RaiseEvent(new RoutedEventArgs(LoadedEvent, sender));
+    private static void OnLoaded(System.Windows.Controls.Image sender)
+    {
+        sender.RaiseEvent(new RoutedEventArgs(LoadedEvent, sender));
+    }
 
     /// <summary>Provides the RepeatBehaviorChanged member.</summary>
     /// <param name="o">The o value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void RepeatBehaviorChanged(DependencyObject o, DependencyPropertyChangedEventArgs e) => GetAnimator(o)?.OnRepeatBehaviorChanged();
+    private static void RepeatBehaviorChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+    {
+        _ = e;
+
+        GetAnimator(o)?.OnRepeatBehaviorChanged();
+    }
 
     /// <summary>Provides the SetAnimator member.</summary>
     /// <param name="obj">The obj value.</param>
@@ -742,6 +751,7 @@ public static class AnimationBehavior
     /// <param name="e">The event arguments.</param>
     private static void SourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (o is not System.Windows.Controls.Image image)
         {
             return;

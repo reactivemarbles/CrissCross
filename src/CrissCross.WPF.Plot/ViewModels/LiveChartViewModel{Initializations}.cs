@@ -22,6 +22,12 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
+    /// <summary>The maximum number of generic plot lines.</summary>
+    private const int MaximumGenericPlotLineCount = 16;
+
+    /// <summary>The line width used for scatter points.</summary>
+    private const float ScatterPointLineWidth = 0.3f;
+
     /// <summary>Stores the is xaxis date time value.</summary>
     [Reactive]
     private bool _isXAxisDateTime;
@@ -39,8 +45,7 @@ public partial class LiveChartViewModel : RxObject
     /// <param name="data">The data value.</param>
     /// <param name="getYAxis">The getYAxis value.</param>
     /// <param name="createPlotUI">The createPlotUI value.</param>
-    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
-    /// points (<see langword="false"/>).</param>
+    /// <param name="isXAxisDateTime">Whether the X-axis values are date/time values; <see langword="false"/> uses numeric points.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/>, <paramref name="getYAxis"/>, or <paramref name="createPlotUI"/> is null, or
     /// if a plot UI element cannot be created for a data item.</exception>
     /// <exception cref="IndexOutOfRangeException">Thrown if the Y-axis index provided by <paramref name="getYAxis"/> is less than zero or greater than or equal to
@@ -56,7 +61,7 @@ public partial class LiveChartViewModel : RxObject
         ConfigureXAxis(isXAxisDateTime);
         HideAllYAxis();
 
-        foreach (var plotLine in data.Take(16))
+        foreach (var plotLine in data.Take(MaximumGenericPlotLineCount))
         {
             AddGenericPlotLine(plotLine, getYAxis!, createPlotUI);
         }
@@ -145,7 +150,7 @@ public partial class LiveChartViewModel : RxObject
         var newMyItem = new ScatterUI(WpfPlot1vm!, (data.Name, data.X, data.Y, data.Axis), SetColorLegend(PlotLinesCollectionUI!));
         newMyItem.PlotLine!.Axes.YAxis = YAxisList[data.Axis];
         newMyItem.PlotLine!.MarkerSize = 1f;
-        newMyItem.PlotLine!.LineWidth = 0.3f;
+        newMyItem.PlotLine!.LineWidth = ScatterPointLineWidth;
 
         for (var j = 0; j < YAxisList.Count; j++)
         {
@@ -341,7 +346,7 @@ public partial class LiveChartViewModel : RxObject
     /// be called during view model initialization to ensure mouse coordinate updates are available.</remarks>
     private void InitializeMouseObservable() =>
         EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => WpfPlot1vm!.MouseMove += handler, handler => WpfPlot1vm!.MouseMove -= handler)
+            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => WpfPlot1vm!.MouseMove += handler, handler => WpfPlot1vm!.MouseMove -= handler)
             .Retry(int.MaxValue)
             .Subscribe(e =>
         {

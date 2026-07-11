@@ -40,6 +40,9 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         typeof(VirtualizingPanelBase),
         new FrameworkPropertyMetadata(3));
 
+    /// <summary>Provides the left margin reserved for grouped items.</summary>
+    private const double GroupedItemLeftMargin = 5D;
+
     /// <summary>Stores the _previousVerticalScrollBarVisibility value.</summary>
     private Visibility _previousVerticalScrollBarVisibility = Visibility.Collapsed;
 
@@ -428,7 +431,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
              * Therfore the vieport size provided by the group item is used. */
             var viewportSize = groupItem.Constraints.Viewport.Size;
             var headerSize = groupItem.HeaderDesiredSizes.PixelSize;
-            var availableWidth = Math.Max(viewportSize.Width - 5, 0); // left margin of 5 dp
+            var availableWidth = Math.Max(viewportSize.Width - GroupedItemLeftMargin, 0);
             var availableHeight = Math.Max(viewportSize.Height - headerSize.Height, 0);
             availableSize = new(availableWidth, availableHeight);
 

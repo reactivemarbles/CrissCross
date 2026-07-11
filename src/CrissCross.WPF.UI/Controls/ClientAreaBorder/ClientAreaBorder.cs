@@ -121,7 +121,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     {
         base.OnVisualParentChanged(oldParent);
 
-        if (_oldWindow is { } oldWindow)
+        if (_oldWindow is not null)
         {
             _windowStateChangedSubscription?.Dispose();
             _windowClosingSubscription?.Dispose();
@@ -133,10 +133,10 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         {
             _windowStateChangedSubscription?.Dispose();
             _windowStateChangedSubscription = EventSignal
-                .From<EventHandler, EventArgs>(handler => newWindow.StateChanged += handler, handler => newWindow.StateChanged -= handler)
+                .From<EventHandler, EventArgs>(handler => handler.Invoke, handler => newWindow.StateChanged += handler, handler => newWindow.StateChanged -= handler)
                 .Subscribe(e => OnWindowStateChanged(newWindow, e));
             _windowClosingSubscription = EventSignal
-                .From<CancelEventHandler, CancelEventArgs>(handler => newWindow.Closing += handler, handler => newWindow.Closing -= handler)
+                .From<CancelEventHandler, CancelEventArgs>(handler => handler.Invoke, handler => newWindow.Closing += handler, handler => newWindow.Closing -= handler)
                 .Subscribe(OnWindowClosing);
         }
 
@@ -161,9 +161,11 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     }
 
     /// <summary>Provides the OnWindowClosing member.</summary>
-    /// <param name="e">The event arguments.</param>
-    private void OnWindowClosing(CancelEventArgs e)
+    /// <param name="eventArgs">The event arguments.</param>
+    private void OnWindowClosing(CancelEventArgs eventArgs)
     {
+        _ = eventArgs;
+
         ApplicationThemeManager.Changed -= OnThemeChanged;
         if (_oldWindow is null)
         {
@@ -175,12 +177,17 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
 
     /// <summary>Provides the OnWindowStateChanged member.</summary>
     /// <param name="window">The window value.</param>
-    /// <param name="e">The event arguments.</param>
-    private void OnWindowStateChanged(System.Windows.Window window, EventArgs e) => Padding = window.WindowState switch
+    /// <param name="eventArgs">The event arguments.</param>
+    private void OnWindowStateChanged(System.Windows.Window window, EventArgs eventArgs)
     {
-        WindowState.Maximized => WindowChromeNonClientFrameThickness,
-        _ => default,
-    };
+        _ = eventArgs;
+
+        Padding = window.WindowState switch
+        {
+            WindowState.Maximized => WindowChromeNonClientFrameThickness,
+            _ => default,
+        };
+    }
 
     /// <summary>Provides the ApplyDefaultWindowBorder member.</summary>
     private void ApplyDefaultWindowBorder()

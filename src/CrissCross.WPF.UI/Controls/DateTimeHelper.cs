@@ -12,6 +12,18 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 internal static class DateTimeHelper
 {
+    /// <summary>The number of months in a year.</summary>
+    private const int MonthsInYear = 12;
+
+    /// <summary>The number of years in a decade.</summary>
+    private const int YearsInDecade = 10;
+
+    /// <summary>The offset from the start of a decade to its final year.</summary>
+    private const int DecadeEndOffset = 9;
+
+    /// <summary>The offset used to convert one-based month numbers to zero-based indexes.</summary>
+    private const int MonthIndexOffset = 1;
+
     /// <summary>Provides the cal member.</summary>
     private static readonly System.Globalization.Calendar cal = new GregorianCalendar();
 
@@ -96,17 +108,17 @@ internal static class DateTimeHelper
     /// <param name="dt2">The dt2 value.</param>
     /// <returns>The result.</returns>
     public static int CompareYearMonth(DateTime dt1, DateTime dt2) =>
-        ((dt1.Year - dt2.Year) * 12) + (dt1.Month - dt2.Month);
+        ((dt1.Year - dt2.Year) * MonthsInYear) + (dt1.Month - dt2.Month);
 
     /// <summary>Provides the DecadeOfDate member.</summary>
     /// <param name="date">The date value.</param>
     /// <returns>The result.</returns>
-    public static int DecadeOfDate(DateTime date) => date.Year - (date.Year % 10);
+    public static int DecadeOfDate(DateTime date) => date.Year - (date.Year % YearsInDecade);
 
     /// <summary>Provides the DiscardDayTime member.</summary>
     /// <param name="d">The d value.</param>
     /// <returns>The result.</returns>
-    public static DateTime DiscardDayTime(DateTime d) => new(d.Year, d.Month, 1, 0, 0, 0);
+    public static DateTime DiscardDayTime(DateTime d) => new(d.Year, d.Month, 1, 0, 0, 0, d.Kind);
 
     /// <summary>Provides the DiscardTime member.</summary>
     /// <param name="d">The d value.</param>
@@ -120,7 +132,7 @@ internal static class DateTimeHelper
     /// <summary>Provides the EndOfDecade member.</summary>
     /// <param name="date">The date value.</param>
     /// <returns>The result.</returns>
-    public static int EndOfDecade(DateTime date) => DecadeOfDate(date) + 9;
+    public static int EndOfDecade(DateTime date) => DecadeOfDate(date) + DecadeEndOffset;
 
     /// <summary>Provides the GetCurrentDateFormat member.</summary>
     /// <returns>The result.</returns>
@@ -211,7 +223,7 @@ internal static class DateTimeHelper
 
             if (monthNames?.Length > 0)
             {
-                result = monthNames[(date.Value.Month - 1) % monthNames.Length];
+                result = monthNames[(date.Value.Month - MonthIndexOffset) % monthNames.Length];
             }
         }
 

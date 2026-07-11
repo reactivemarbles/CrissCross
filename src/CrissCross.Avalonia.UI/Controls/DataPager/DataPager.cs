@@ -98,9 +98,11 @@ public class DataPager : TemplatedControl
     /// <returns>The page request snapshot.</returns>
     public PageRequest CreateRequest(int pageIndex)
     {
+        const int defaultPageSize = 20;
+
         var state = PaginationState;
         var clampedPageIndex = state is null ? Math.Max(0, pageIndex) : Math.Clamp(pageIndex, 0, state.TotalPages - 1);
-        var pageSize = state?.PageSize ?? 20;
+        var pageSize = state?.PageSize ?? defaultPageSize;
         return new PageRequest(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
     }
 
@@ -120,22 +122,15 @@ public class DataPager : TemplatedControl
     }
 
     /// <summary>Provides the PageNavigationCommand member.</summary>
-    private sealed class PageNavigationCommand : ICommand
+    /// <param name="execute">The execute value.</param>
+    /// <param name="canExecute">The canExecute value.</param>
+    private sealed class PageNavigationCommand(Action execute, Func<bool> canExecute) : ICommand
     {
         /// <summary>Provides the _execute member.</summary>
-        private readonly Action _execute;
+        private readonly Action _execute = execute;
 
         /// <summary>Provides the documented member.</summary>
-        private readonly Func<bool> _canExecute;
-
-        /// <summary>Initializes a new instance of the <see cref="PageNavigationCommand"/> class.</summary>
-        /// <param name="execute">The execute value.</param>
-        /// <param name="canExecute">The canExecute value.</param>
-        public PageNavigationCommand(Action execute, Func<bool> canExecute)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
+        private readonly Func<bool> _canExecute = canExecute;
 
         /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;

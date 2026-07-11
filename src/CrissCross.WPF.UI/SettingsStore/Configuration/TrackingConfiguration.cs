@@ -252,7 +252,6 @@ public class TrackingConfiguration : ITrackingConfiguration
     }
 
     /// <summary>
-    /// <typeparam name="TProperty">The TProperty type.</typeparam>
     /// Set up tracking for the specified property. Allows supplying a name for the property.
     /// This overload is used when the target object has a list of child objects whose properties
     /// it wishes to track. Each child object's properties can be tracked with a different name,
@@ -563,14 +562,8 @@ public class TrackingConfiguration : ITrackingConfiguration
                 {
                     return converter.ConvertFrom(value);
                 }
-                else if (t?.IsEnum == true)
-                {
-                    return Enum.ToObject(t, value);
-                }
-                else
-                {
-                    return System.Convert.ChangeType(value, t!);
-                }
+
+                return t?.IsEnum == true ? Enum.ToObject(t, value) : System.Convert.ChangeType(value, t!);
             }
         }
 
@@ -594,11 +587,11 @@ public class TrackingConfiguration : ITrackingConfiguration
                 var defaultAtt = pi.GetCustomAttribute<DefaultValueAttribute>();
                 if (defaultAtt is not null)
                 {
-                    TrackedProperties[pi.Name] = new(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v), defaultAtt.Value);
+                    TrackedProperties[pi.Name] = new(pi.GetValue, (x, v) => SetValue(x, pi, v), defaultAtt.Value);
                 }
                 else
                 {
-                    TrackedProperties[pi.Name] = new(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v));
+                    TrackedProperties[pi.Name] = new(pi.GetValue, (x, v) => SetValue(x, pi, v));
                 }
             }
         }

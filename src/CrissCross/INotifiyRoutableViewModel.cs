@@ -15,7 +15,7 @@ public interface INotifiyRoutableViewModel : IReactiveObject, IUseHostedNavigati
     /// <value>
     /// The name.
     /// </value>
-    string? Name { get; }
+    new string? Name { get; }
 
     /// <summary>Raises the <see cref="E:NavigatedFrom"/> event.</summary>
     /// <param name="e">The navigation event data.</param>

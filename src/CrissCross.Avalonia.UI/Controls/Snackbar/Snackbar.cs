@@ -107,7 +107,7 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     }
 
     /// <summary>Gets or sets the snackbar presenter.</summary>
-    protected SnackbarPresenter? Presenter { get; set; }
+    protected new SnackbarPresenter? Presenter { get; set; }
 
     /// <summary>Shows the snackbar.</summary>
     /// <param name="immediately">if set to <c>true</c> shows immediately.</param>

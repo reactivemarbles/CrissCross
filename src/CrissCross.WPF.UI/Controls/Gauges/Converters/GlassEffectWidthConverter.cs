@@ -11,13 +11,19 @@ namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
 /// <summary>Scaling factor for drawing the glass effect.</summary>
 public class GlassEffectWidthConverter : IValueConverter
 {
+    /// <summary>Provides the diameter multiplier.</summary>
+    private const double DiameterMultiplier = 2.0;
+
+    /// <summary>Provides the glass width scale factor.</summary>
+    private const double GlassWidthScaleFactor = 0.94;
+
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value produced by the binding source.</param>
     /// <param name="targetType">The type of the binding target property.</param>
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * 2 * 0.94;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * DiameterMultiplier * GlassWidthScaleFactor;
 
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>

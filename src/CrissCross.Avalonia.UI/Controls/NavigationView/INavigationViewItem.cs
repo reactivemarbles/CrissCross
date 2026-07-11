@@ -41,7 +41,7 @@ public interface INavigationViewItem
     /// <summary>Gets or sets a unique tag used by the parent navigation system for the purpose of searching and navigating.</summary>
     string TargetPageTag { get; set; }
 
-    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="Avalonia.Controls.Control"/>).</summary>
+    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="T:Avalonia.Controls.Control"/>).</summary>
     Type? TargetPageType { get; set; }
 
     /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.</summary>

@@ -7,6 +7,9 @@ namespace CrissCross.WPF.UI;
 /// <summary>A service that provides methods related to displaying the <see cref="Snackbar"/>.</summary>
 public class SnackbarService : ISnackbarService
 {
+    /// <summary>Provides the default snackbar timeout in seconds.</summary>
+    private const double DefaultTimeoutSeconds = 5d;
+
     /// <summary>Stores the _presenter value.</summary>
     private SnackbarPresenter? _presenter;
 
@@ -14,7 +17,7 @@ public class SnackbarService : ISnackbarService
     private Snackbar? _snackbar;
 
     /// <inheritdoc />
-    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(5);
+    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(DefaultTimeoutSeconds);
 
     /// <inheritdoc />
     public void SetSnackbarPresenter(SnackbarPresenter contentPresenter) => _presenter = contentPresenter;

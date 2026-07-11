@@ -49,9 +49,9 @@ public partial class AppBar : IHaveAppBar
         AppBarRightControl.ItemsSource = AppBarRight;
         _hide = BottomAppBar.Resources["Hide"] as Storyboard;
         _show = BottomAppBar.Resources["Show"] as Storyboard;
-        _ = EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => BottomAppBar.MouseEnter += handler, handler => BottomAppBar.MouseEnter -= handler)
+        _ = EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => BottomAppBar.MouseEnter += handler, handler => BottomAppBar.MouseEnter -= handler)
             .Select(_ => true)
-            .Merge(EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => BottomAppBar.MouseLeave += handler, handler => BottomAppBar.MouseLeave -= handler).Select(_ => false))
+            .Merge(EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => BottomAppBar.MouseLeave += handler, handler => BottomAppBar.MouseLeave -= handler).Select(_ => false))
             .Subscribe(isOver => _mouseIsOverAppBar = isOver)
             .DisposeWith(_disposables);
 
@@ -62,7 +62,7 @@ public partial class AppBar : IHaveAppBar
             var parentWindow = Window.GetWindow(this);
             if (parentWindow is not null)
             {
-                _ = EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => parentWindow.PreviewMouseDown += handler, handler => parentWindow.PreviewMouseDown -= handler)
+                _ = EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => parentWindow.PreviewMouseDown += handler, handler => parentWindow.PreviewMouseDown -= handler)
                     .Subscribe(e =>
                 {
                     if (_mouseIsOverAppBar)
@@ -150,7 +150,7 @@ public partial class AppBar : IHaveAppBar
     {
         if (GetTemplateChild(name) is not T dependencyObject)
         {
-            throw new ArgumentNullException(name);
+            throw new ArgumentException($"Template child '{name}' was not found.", nameof(name));
         }
 
         return dependencyObject;

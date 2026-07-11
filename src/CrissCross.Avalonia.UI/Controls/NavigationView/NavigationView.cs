@@ -481,7 +481,7 @@ public class NavigationView : TemplatedControl, INavigationView
     /// <inheritdoc/>
     public virtual bool Navigate(Type pageType, object? dataContext = null)
     {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext) : NavigateInternal(navigationViewItem, dataContext);
+        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, dataContext) : NavigateInternal(navigationViewItem, dataContext);
     }
 
     /// <inheritdoc/>
@@ -493,7 +493,7 @@ public class NavigationView : TemplatedControl, INavigationView
     /// <inheritdoc/>
     public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext = null)
     {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext) : NavigateInternal(navigationViewItem, dataContext, true);
+        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, dataContext) : NavigateInternal(navigationViewItem, dataContext);
     }
 
     /// <inheritdoc/>
@@ -530,7 +530,7 @@ public class NavigationView : TemplatedControl, INavigationView
     public virtual bool GoForward()
     {
         return !NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId) || itemId is null ? false : _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
-            NavigateInternal(navigationViewItem, null, false, false, true, nextIndex);
+            NavigateInternal(navigationViewItem, isJournalNavigation: true, journalIndex: nextIndex);
     }
 
     /// <inheritdoc/>
@@ -543,7 +543,7 @@ public class NavigationView : TemplatedControl, INavigationView
 
         RaiseEvent(new RoutedEventArgs(BackRequestedEvent));
         return _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
-            NavigateInternal(navigationViewItem, null, false, true, true, nextIndex);
+            NavigateInternal(navigationViewItem, isJournalNavigation: true, journalIndex: nextIndex);
     }
 
     /// <inheritdoc/>
@@ -649,14 +649,13 @@ public class NavigationView : TemplatedControl, INavigationView
 
     /// <summary>Provides the TryToNavigateWithoutINavigationViewItem member.</summary>
     /// <param name="pageType">The pageType value.</param>
-    /// <param name="addTo_navigationStack">The addTo_navigationStack value.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns>The result.</returns>
-    private bool TryToNavigateWithoutINavigationViewItem(Type pageType, bool addTo_navigationStack, object? dataContext = null)
+    private bool TryToNavigateWithoutINavigationViewItem(Type pageType, object? dataContext = null)
     {
         var navigationViewItem = new NavigationViewItem(pageType);
 
-        if (!NavigateInternal(navigationViewItem, dataContext, addTo_navigationStack))
+        if (!NavigateInternal(navigationViewItem, dataContext))
         {
             return false;
         }
@@ -670,16 +669,12 @@ public class NavigationView : TemplatedControl, INavigationView
     /// <summary>Provides the NavigateInternal member.</summary>
     /// <param name="viewItem">The viewItem value.</param>
     /// <param name="dataContext">The dataContext value.</param>
-    /// <param name="addTo_navigationStack">The addTo_navigationStack value.</param>
-    /// <param name="isBackwardsNavigated">The isBackwardsNavigated value.</param>
     /// <param name="isJournalNavigation">The isJournalNavigation value.</param>
     /// <param name="journalIndex">The journalIndex value.</param>
     /// <returns>The result.</returns>
     private bool NavigateInternal(
         INavigationViewItem viewItem,
         object? dataContext = null,
-        bool addTo_navigationStack = false,
-        bool isBackwardsNavigated = false,
         bool isJournalNavigation = false,
         int journalIndex = -1)
     {

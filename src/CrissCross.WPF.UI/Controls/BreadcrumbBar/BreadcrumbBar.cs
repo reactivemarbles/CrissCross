@@ -39,6 +39,9 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
         typeof(EventHandler<BreadcrumbBarItemClickedEventArgs>),
         typeof(BreadcrumbBar));
 
+    /// <summary>The offset from the end used to update the item before the current last item.</summary>
+    private const int PreviousItemOffset = 2;
+
     /// <summary>Stores the _hostName value.</summary>
     private string? _hostName;
 
@@ -210,6 +213,7 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
     /// <param name="e">The event arguments.</param>
     private void OnLoaded(RoutedEventArgs e)
     {
+        _ = e;
         ItemContainerGenerator.ItemsChanged += ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged += ItemContainerGeneratorOnStatusChanged;
 
@@ -220,6 +224,7 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
     /// <param name="e">The event arguments.</param>
     private void OnUnloaded(RoutedEventArgs e)
     {
+        _ = e;
         ItemContainerGenerator.ItemsChanged -= ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged -= ItemContainerGeneratorOnStatusChanged;
     }
@@ -240,7 +245,7 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
             return;
         }
 
-        InteractWithItemContainer(2, static item => item.IsLast = false);
+        InteractWithItemContainer(PreviousItemOffset, static item => item.IsLast = false);
         UpdateLastContainer();
     }
 

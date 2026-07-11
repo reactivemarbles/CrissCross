@@ -18,22 +18,15 @@ public class DockToTextAlignmentConverter : IValueConverter
     /// <returns>TextAlignment value.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Dock dock)
-        {
-            switch (dock)
+        return value is Dock dock
+            ? dock switch
             {
-                case Dock.Left:
-                    return TextAlignment.Left;
-
-                case Dock.Right:
-                    return TextAlignment.Right;
-
-                case Dock.Top or Dock.Bottom:
-                    return TextAlignment.Center;
+                Dock.Left => TextAlignment.Left,
+                Dock.Right => TextAlignment.Right,
+                Dock.Top or Dock.Bottom => TextAlignment.Center,
+                _ => TextAlignment.Left
             }
-        }
-
-        return TextAlignment.Left;
+            : TextAlignment.Left;
     }
 
     /// <summary>Converts the back.</summary>
@@ -44,18 +37,13 @@ public class DockToTextAlignmentConverter : IValueConverter
     /// <returns>Dock value.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is TextAlignment textAlignment)
-        {
-            switch (textAlignment)
+        return value is TextAlignment textAlignment
+            ? textAlignment switch
             {
-                case TextAlignment.Left:
-                    return Dock.Left;
-
-                case TextAlignment.Right:
-                    return Dock.Right;
+                TextAlignment.Left => Dock.Left,
+                TextAlignment.Right => Dock.Right,
+                _ => Dock.Left
             }
-        }
-
-        return Dock.Left;
+            : Dock.Left;
     }
 }

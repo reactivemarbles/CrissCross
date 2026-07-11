@@ -53,6 +53,9 @@ public class RatingControl : TemplatedControl
         nameof(IsReadOnly),
         false);
 
+    /// <summary>Increment used for half-star ratings.</summary>
+    private const double HalfStarIncrement = 0.5d;
+
     /// <summary>Provides the _starsPanel member.</summary>
     private global::Avalonia.Controls.StackPanel? _starsPanel;
 
@@ -187,8 +190,8 @@ public class RatingControl : TemplatedControl
         if (HalfStarEnabled)
         {
             var fractionalPart = starIndex - Math.Floor(starIndex);
-            Value = fractionalPart < 0.5
-                ? Math.Floor(starIndex) + 0.5
+            Value = fractionalPart < HalfStarIncrement
+                ? Math.Floor(starIndex) + HalfStarIncrement
                 : Math.Ceiling(starIndex);
         }
         else

@@ -43,7 +43,7 @@ public partial class MainWindow : IAmBuilt
             _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
             _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
 
-            NavBreadcrumb.SetupNavigation("mainWindow");
+            NavBreadcrumb.SetupNavigation(nameof(mainWindow));
 
             // Navigate to the main view
             NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");

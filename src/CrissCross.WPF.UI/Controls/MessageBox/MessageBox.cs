@@ -103,10 +103,16 @@ public class MessageBox : System.Windows.Window
         typeof(MessageBox),
         new PropertyMetadata(null));
 
+    /// <summary>Divisor used to calculate centered window offsets.</summary>
+    private const double CenterOffsetDivisor = 2.0;
+
+    /// <summary>Multiplier used to apply symmetric horizontal margins.</summary>
+    private const double HorizontalMarginMultiplier = 2.0;
+
 #if !NET8_0_OR_GREATER
     /// <summary>Provides the CanCenterOverWPFOwnerPropertyInfo member.</summary>
     private static readonly PropertyInfo CanCenterOverWPFOwnerPropertyInfo = typeof(System.Windows.Window).GetProperty(
-        "CanCenterOverWPFOwner",
+        nameof(CanCenterOverWPFOwner),
         BindingFlags.NonPublic | BindingFlags.Instance)!;
 #endif
 
@@ -323,7 +329,7 @@ public class MessageBox : System.Windows.Window
         var desiredSize = rootElement.DesiredSize;
 
         // left and right margin
-        const double margin = 12.0 * 2;
+        const double margin = 12.0 * HorizontalMarginMultiplier;
 
         SetCurrentValue(WidthProperty, desiredSize.Width + margin);
         SetCurrentValue(HeightProperty, desiredSize.Height);
@@ -352,8 +358,8 @@ public class MessageBox : System.Windows.Window
         var screenWidth = SystemParameters.PrimaryScreenWidth;
         var screenHeight = SystemParameters.PrimaryScreenHeight;
 
-        SetCurrentValue(LeftProperty, (screenWidth / 2) - (Width / 2));
-        SetCurrentValue(TopProperty, (screenHeight / 2) - (Height / 2));
+        SetCurrentValue(LeftProperty, (screenWidth / CenterOffsetDivisor) - (Width / CenterOffsetDivisor));
+        SetCurrentValue(TopProperty, (screenHeight / CenterOffsetDivisor) - (Height / CenterOffsetDivisor));
     }
 
     /// <summary>Occurs after the <see cref="MessageBoxButton"/> is clicked.</summary>
@@ -394,8 +400,8 @@ public class MessageBox : System.Windows.Window
     /// <summary>Provides the CenterWindowOnOwner member.</summary>
     private void CenterWindowOnOwner()
     {
-        var left = Owner.Left + ((Owner.Width - Width) / 2);
-        var top = Owner.Top + ((Owner.Height - Height) / 2);
+        var left = Owner.Left + ((Owner.Width - Width) / CenterOffsetDivisor);
+        var top = Owner.Top + ((Owner.Height - Height) / CenterOffsetDivisor);
 
         SetCurrentValue(LeftProperty, left);
         SetCurrentValue(TopProperty, top);

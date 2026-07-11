@@ -17,6 +17,21 @@ public static class TransitionAnimationProvider
     /// <summary>Provides the default deceleration ratio.</summary>
     private const double DefaultDecelerationRatio = 0.7D;
 
+    /// <summary>Provides the minimum supported transition duration in milliseconds.</summary>
+    private const int MinimumDurationMilliseconds = 10;
+
+    /// <summary>Provides the maximum supported transition duration in milliseconds.</summary>
+    private const int MaximumDurationMilliseconds = 10_000;
+
+    /// <summary>Provides the vertical slide distance in device-independent pixels.</summary>
+    private const double VerticalSlideOffset = 30d;
+
+    /// <summary>Provides the horizontal slide distance in device-independent pixels.</summary>
+    private const double HorizontalSlideOffset = 50d;
+
+    /// <summary>Provides the centered transform-origin coordinate.</summary>
+    private const double TransformOriginCenter = 0.5d;
+
     /// <summary>Attempts to apply an animation effect while adding content to the frame.</summary>
     /// <param name="element">Currently rendered element.</param>
     /// <param name="type">Selected transition type.</param>
@@ -40,14 +55,14 @@ public static class TransitionAnimationProvider
             return false;
         }
 
-        if (duration < 10)
+        if (duration < MinimumDurationMilliseconds)
         {
             return false;
         }
 
-        if (duration > 10_000)
+        if (duration > MaximumDurationMilliseconds)
         {
-            duration = 10_000;
+            duration = MaximumDurationMilliseconds;
         }
 
         var timespanDuration = new Duration(TimeSpan.FromMilliseconds(duration));
@@ -116,7 +131,7 @@ public static class TransitionAnimationProvider
         {
             Duration = duration,
             DecelerationRatio = DefaultDecelerationRatio,
-            From = 30,
+            From = VerticalSlideOffset,
             To = 0,
         };
 
@@ -127,9 +142,9 @@ public static class TransitionAnimationProvider
                 new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(0.5, 0.5)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(0.5, 0.5));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
         animatedUiElement.RenderTransform.BeginAnimation(
@@ -156,7 +171,7 @@ public static class TransitionAnimationProvider
         {
             Duration = duration,
             DecelerationRatio = DefaultDecelerationRatio,
-            From = 30,
+            From = VerticalSlideOffset,
             To = 0,
         };
 
@@ -167,9 +182,9 @@ public static class TransitionAnimationProvider
                 new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(0.5, 0.5)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(0.5, 0.5));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
         animatedUiElement.RenderTransform.BeginAnimation(
@@ -186,7 +201,7 @@ public static class TransitionAnimationProvider
         {
             Duration = duration,
             DecelerationRatio = DefaultDecelerationRatio,
-            From = 50,
+            From = HorizontalSlideOffset,
             To = 0,
         };
 
@@ -197,9 +212,9 @@ public static class TransitionAnimationProvider
                 new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(0.5, 0.5)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(0.5, 0.5));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
         animatedUiElement.RenderTransform.BeginAnimation(
@@ -216,7 +231,7 @@ public static class TransitionAnimationProvider
         {
             Duration = duration,
             DecelerationRatio = DefaultDecelerationRatio,
-            From = -50,
+            From = -HorizontalSlideOffset,
             To = 0,
         };
 
@@ -227,9 +242,9 @@ public static class TransitionAnimationProvider
                 new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(0.5, 0.5)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(0.5, 0.5));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
         animatedUiElement.RenderTransform.BeginAnimation(

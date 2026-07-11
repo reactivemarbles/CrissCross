@@ -11,5 +11,5 @@ public interface IUseNavigation : IAmBuilt
     /// <value>
     /// The name.
     /// </value>
-    string? Name { get; }
+    new string? Name { get; }
 }

@@ -41,6 +41,18 @@ public class Arc : System.Windows.Shapes.Shape
         typeof(Arc),
         new PropertyMetadata(SweepDirection.Clockwise, PropertyChangedCallback));
 
+    /// <summary>The number of degrees in a full circle.</summary>
+    private const double DegreesInFullCircle = 360d;
+
+    /// <summary>The number of degrees in a half circle.</summary>
+    private const double DegreesInHalfCircle = 180d;
+
+    /// <summary>The number of degrees in a right angle.</summary>
+    private const double DegreesInRightAngle = 90d;
+
+    /// <summary>The divisor used to convert a diameter to a radius.</summary>
+    private const double RadiusDivisor = 2d;
+
     /// <summary>Stores the _rootLayout value.</summary>
     private System.Windows.Controls.Viewbox? _rootLayout;
 
@@ -86,7 +98,7 @@ public class Arc : System.Windows.Shapes.Shape
             return;
         }
 
-        control.IsLargeArc = Math.Abs(control.EndAngle - control.StartAngle) > 180;
+        control.IsLargeArc = Math.Abs(control.EndAngle - control.StartAngle) > DegreesInHalfCircle;
         control.InvalidateVisual();
     }
 
@@ -99,8 +111,8 @@ public class Arc : System.Windows.Shapes.Shape
     {
         var geometryStream = new StreamGeometry();
         var arcSize = new Size(
-            Math.Max(0, (RenderSize.Width - StrokeThickness) / 2),
-            Math.Max(0, (RenderSize.Height - StrokeThickness) / 2));
+            Math.Max(0, (RenderSize.Width - StrokeThickness) / RadiusDivisor),
+            Math.Max(0, (RenderSize.Height - StrokeThickness) / RadiusDivisor));
 
         using var context = geometryStream.Open();
         context.BeginFigure(PointAtAngle(Math.Min(StartAngle, EndAngle)), false, false);
@@ -114,7 +126,7 @@ public class Arc : System.Windows.Shapes.Shape
             true,
             false);
 
-        geometryStream.Transform = new TranslateTransform(StrokeThickness / 2, StrokeThickness / 2);
+        geometryStream.Transform = new TranslateTransform(StrokeThickness / RadiusDivisor, StrokeThickness / RadiusDivisor);
 
         return geometryStream;
     }
@@ -129,38 +141,36 @@ public class Arc : System.Windows.Shapes.Shape
     {
         if (SweepDirection == SweepDirection.Counterclockwise)
         {
-            angle += 90;
-            angle %= 360;
+            angle += DegreesInRightAngle;
+            angle %= DegreesInFullCircle;
             if (angle < 0)
             {
-                angle += 360;
+                angle += DegreesInFullCircle;
             }
 
-            var radAngle = angle * (Math.PI / 180);
-            var horizontalRadius = (RenderSize.Width - StrokeThickness) / 2;
-            var verticalRadius = (RenderSize.Height - StrokeThickness) / 2;
+            var radAngle = angle * (Math.PI / DegreesInHalfCircle);
+            var horizontalRadius = (RenderSize.Width - StrokeThickness) / RadiusDivisor;
+            var verticalRadius = (RenderSize.Height - StrokeThickness) / RadiusDivisor;
 
             return new Point(
                 horizontalRadius + (horizontalRadius * Math.Cos(radAngle)),
                 verticalRadius - (verticalRadius * Math.Sin(radAngle)));
         }
-        else
+
+        angle -= DegreesInRightAngle;
+        angle %= DegreesInFullCircle;
+        if (angle < 0)
         {
-            angle -= 90;
-            angle %= 360;
-            if (angle < 0)
-            {
-                angle += 360;
-            }
-
-            var radAngle = angle * (Math.PI / 180);
-            var horizontalRadius = (RenderSize.Width - StrokeThickness) / 2;
-            var verticalRadius = (RenderSize.Height - StrokeThickness) / 2;
-
-            return new Point(
-                horizontalRadius + (horizontalRadius * Math.Cos(-radAngle)),
-                verticalRadius - (verticalRadius * Math.Sin(-radAngle)));
+            angle += DegreesInFullCircle;
         }
+
+        var clockwiseRadAngle = angle * (Math.PI / DegreesInHalfCircle);
+        var clockwiseHorizontalRadius = (RenderSize.Width - StrokeThickness) / RadiusDivisor;
+        var clockwiseVerticalRadius = (RenderSize.Height - StrokeThickness) / RadiusDivisor;
+
+        return new Point(
+            clockwiseHorizontalRadius + (clockwiseHorizontalRadius * Math.Cos(-clockwiseRadAngle)),
+            clockwiseVerticalRadius - (clockwiseVerticalRadius * Math.Sin(-clockwiseRadAngle)));
     }
 
     /// <summary>Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, and returns a child at the specified index from a collection of child elements.</summary>

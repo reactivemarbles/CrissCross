@@ -137,22 +137,15 @@ public class DataFilterPanel : TemplatedControl
     }
 
     /// <summary>Provides the PanelCommand member.</summary>
-    private sealed class PanelCommand : ICommand
+    /// <param name="execute">The execute value.</param>
+    /// <param name="canExecute">The canExecute value.</param>
+    private sealed class PanelCommand(Action execute, Func<bool> canExecute) : ICommand
     {
         /// <summary>Provides the _execute member.</summary>
-        private readonly Action _execute;
+        private readonly Action _execute = execute;
 
         /// <summary>Provides the documented member.</summary>
-        private readonly Func<bool> _canExecute;
-
-        /// <summary>Initializes a new instance of the <see cref="PanelCommand"/> class.</summary>
-        /// <param name="execute">The execute value.</param>
-        /// <param name="canExecute">The canExecute value.</param>
-        public PanelCommand(Action execute, Func<bool> canExecute)
-        {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
+        private readonly Func<bool> _canExecute = canExecute;
 
         /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;

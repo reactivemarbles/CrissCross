@@ -7,6 +7,9 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>PersonPicture Control. Displays the Profile Picture, or in its absence Initials, for a given Contact.</summary>
 internal static class InitialsGeneratorExtensions
 {
+    /// <summary>Maximum leading characters inspected for character type detection.</summary>
+    private const int CharacterDetectionLimit = 3;
+
     /// <summary>Unicode ranges treated as glyph character sets.</summary>
     private static readonly (int Start, int End)[] _glyphRanges =
     [
@@ -133,7 +136,8 @@ internal static class InitialsGeneratorExtensions
 
                 return result.ToUpper();
             }
-            else if (words.Length > 1)
+
+            if (words.Length > 1)
             {
                 // If there's at least two words, we'll show two initials.
                 // NOTE: Based on current implementation, we could be showing punctuation.
@@ -146,17 +150,13 @@ internal static class InitialsGeneratorExtensions
 
                 return result.ToUpper();
             }
-            else
-            {
-                // If there's only spaces in the name, we'll get a Vector size of 0.
-                return string.Empty;
-            }
-        }
-        else
-        {
-            // Return empty string. In our code-behind we will produce a generic glyph as a result.
+
+            // If there's only spaces in the name, we'll get a Vector size of 0.
             return string.Empty;
         }
+
+        // Return empty string. In our code-behind we will produce a generic glyph as a result.
+        return string.Empty;
     }
 
     /// <summary>Helper function which indicates the type of characters in a given string.</summary>
@@ -172,7 +172,7 @@ internal static class InitialsGeneratorExtensions
         // by truncating to one or two.
         var result = CharacterType.Other;
 
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < CharacterDetectionLimit; i++)
         {
             // Break on null character. 0xFEFF is a terminating character which appears as null.
             if ((i >= str.Length) || (str[i] == '\0') || (str[i] == 0xFEFF))
@@ -210,6 +210,16 @@ internal static class InitialsGeneratorExtensions
                         }
 
                         break;
+                    }
+
+                case CharacterType.Other:
+                    {
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(str), str, null);
                     }
             }
         }
