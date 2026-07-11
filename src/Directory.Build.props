@@ -52,7 +52,20 @@
   <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net11.0'))">
     <Features>$(Features);runtime-async=on</Features>
   </PropertyGroup>
+  
+  <!-- AOT Compatibility Settings for non-test, non-WPF projects on modern .NET -->
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('WPF')) != 'true' and '$(IsTestProject)' != 'true' and $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <!-- Mark this library as AOT-compatible -->
+    <IsAotCompatible>true</IsAotCompatible>
 
+    <!-- Enable trim analyzers to verify library is trim-safe -->
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+
+    <!-- Treat trimming warnings as errors during build -->
+    <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+  </PropertyGroup>
+  
   <ItemGroup Condition="$(IsTestProject)">
     <PackageReference Include="TUnit"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
