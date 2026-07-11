@@ -1,27 +1,40 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Expression = System.Linq.Expressions.Expression;
 
 namespace CrissCross.WPF.UI.Configuration;
 
-/// <summary>
-/// A TrackingConfiguration is an object that determines how a target object will be tracked.
-/// </summary>
+/// <summary>A TrackingConfiguration is an object that determines how a target object will be tracked.</summary>
 public class TrackingConfiguration : ITrackingConfiguration
 {
+    /// <summary>Stores the _idFunc value.</summary>
     private Func<object, string>? _idFunc;
+
+    /// <summary>Stores the _canPersistFunc value.</summary>
     private Func<object, bool> _canPersistFunc = _ => true;
+
+    /// <summary>Stores the _applyingPropertyAction value.</summary>
     private Action<object, PropertyOperationData>? _applyingPropertyAction;
+
+    /// <summary>Stores the _persistingPropertyAction value.</summary>
     private Action<object, PropertyOperationData>? _persistingPropertyAction;
+
+    /// <summary>Stores the _appliedAction value.</summary>
     private Action<object>? _appliedAction;
+
+    /// <summary>Stores the _persistedAction value.</summary>
     private Action<object>? _persistedAction;
 
+    /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
     internal TrackingConfiguration()
     {
     }
 
+    /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
+    /// <param name="tracker">The tracker value.</param>
+    /// <param name="targetType">The targetType value.</param>
     internal TrackingConfiguration(
         Tracker tracker,
         Type targetType)
@@ -33,6 +46,9 @@ public class TrackingConfiguration : ITrackingConfiguration
         ReadAttributes();
     }
 
+    /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
+    /// <param name="baseConfig">The baseConfig value.</param>
+    /// <param name="targetType">The targetType value.</param>
     internal TrackingConfiguration(
         TrackingConfiguration baseConfig,
         Type targetType)
@@ -57,43 +73,31 @@ public class TrackingConfiguration : ITrackingConfiguration
         ReadAttributes();
     }
 
-    /// <summary>
-    /// Gets the type of the target.
-    /// </summary>
+    /// <summary>Gets the type of the target.</summary>
     /// <value>
     /// The type of the target.
     /// </value>
     public Type? TargetType { get; }
 
-    /// <summary>
-    /// Gets the StateTracker that owns this tracking configuration.
-    /// </summary>
+    /// <summary>Gets the StateTracker that owns this tracking configuration.</summary>
     public virtual Tracker? Tracker { get; }
 
-    /// <summary>
-    /// Gets a dictionary containing the tracked properties.
-    /// </summary>
+    /// <summary>Gets or sets the value.</summary>
     /// <value>
     /// The tracked properties.
     /// </value>
     public Dictionary<string, TrackedPropertyInfo> TrackedProperties { get; } = [];
 
-    /// <summary>
-    /// Gets list containing the events that will trigger persisting.
-    /// </summary>
+    /// <summary>Gets or sets the value.</summary>
     public List<Trigger> PersistTriggers { get; } = [];
 
-    /// <summary>
-    /// Gets or sets the stop tracking trigger.
-    /// </summary>
+    /// <summary>Gets or sets the stop tracking trigger.</summary>
     /// <value>
     /// The stop tracking trigger.
     /// </value>
     public Trigger? StopTrackingTrigger { get; set; }
 
-    /// <summary>
-    /// Allows value conversion and cancallation when applying a stored value to a property.
-    /// </summary>
+    /// <summary>Allows value conversion and cancallation when applying a stored value to a property.</summary>
     /// <param name="action">The action.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration WhenApplyingProperty(Action<object, PropertyOperationData> action)
@@ -102,9 +106,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Allows supplying a callback that will be called when all saved state is applied to a target object.
-    /// </summary>
+    /// <summary>Allows supplying a callback that will be called when all saved state is applied to a target object.</summary>
     /// <param name="action">The action.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration WhenAppliedState(Action<object> action)
@@ -113,9 +115,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Allows value conversion and cancallation when persisting a property of the target object.
-    /// </summary>
+    /// <summary>Allows value conversion and cancallation when persisting a property of the target object.</summary>
     /// <param name="action">The action.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration WhenPersistingProperty(Action<object, PropertyOperationData> action)
@@ -124,9 +124,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Whens the persisted.
-    /// </summary>
+    /// <summary>Whens the persisted.</summary>
     /// <param name="action">The action.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration WhenPersisted(Action<object> action)
@@ -135,24 +133,18 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Ases the generic.
-    /// </summary>
+    /// <summary>Ases the generic.</summary>
     /// <typeparam name="T">THe type.</typeparam>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> AsGeneric<T>()
         => new(this);
 
-    /// <summary>
-    /// Gets the store identifier.
-    /// </summary>
+    /// <summary>Gets the store identifier.</summary>
     /// <param name="target">The target.</param>
     /// <returns>A string.</returns>
     public string GetStoreId(object target) => _idFunc!(target);
 
-    /// <summary>
-    /// Identifiers the specified identifier function.
-    /// </summary>
+    /// <summary>Identifiers the specified identifier function.</summary>
     /// <param name="idFunc">The provided function will be used to get an identifier for a target object in order to identify the data that belongs to it.</param>
     /// <param name="namespace">Serves to distinguish objects with the same ids that are used in different contexts.</param>
     /// <param name="includeType">If true, the name of the type will be included in the id. This prevents id clashes with different types.</param>
@@ -164,24 +156,22 @@ public class TrackingConfiguration : ITrackingConfiguration
             var idBuilder = new StringBuilder();
             if (includeType)
             {
-                idBuilder.Append($"[{target.GetType()}]");
+                _ = idBuilder.Append($"[{target.GetType()}]");
             }
 
-            if (@namespace != null)
+            if (@namespace is not null)
             {
-                idBuilder.Append($"{@namespace}.");
+                _ = idBuilder.Append($"{@namespace}.");
             }
 
-            idBuilder.Append($"{idFunc(target)}");
+            _ = idBuilder.Append($"{idFunc(target)}");
             return idBuilder.ToString();
         };
 
         return this;
     }
 
-    /// <summary>
-    /// Determines whether this instance can persist the specified can persist function.
-    /// </summary>
+    /// <summary>Determines whether this instance can persist the specified can persist function.</summary>
     /// <param name="canPersistFunc">The can persist function.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration CanPersist(Func<object, bool> canPersistFunc)
@@ -190,22 +180,20 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Registers the specified event of the target object as a trigger that will cause the target's data to be persisted.
-    /// </summary>
-    /// <param name="eventNames">The names of the events that will cause the target object's data to be persisted.</param>
-    /// <returns>
-    /// ITrackingConfiguration.
-    /// </returns>
+    /// <summary>Registers the specified event of the target object as a trigger that will cause the target's data to be persisted.</summary>
     /// <remarks>
     /// Automatically persist a target object when it fires the specified name.
     /// </remarks>
     /// <example>
     /// For a Window object, "LocationChanged" and/or "SizeChanged" would be appropriate.
     /// </example>
+    /// <param name="eventNames">The names of the events that will cause the target object's data to be persisted.</param>
+    /// <returns>
+    /// ITrackingConfiguration.
+    /// </returns>
     public ITrackingConfiguration PersistOn(params string[] eventNames)
     {
-        if (eventNames == null)
+        if (eventNames is null)
         {
             throw new ArgumentNullException(nameof(eventNames));
         }
@@ -218,9 +206,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Automatically persist a target object when the specified eventSourceObject fires the specified event.
-    /// </summary>
+    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSourceObject">If not provided.</param>
     /// <returns>
@@ -228,13 +214,11 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </returns>
     public ITrackingConfiguration PersistOn(string eventName, object eventSourceObject)
     {
-        PersistOn(eventName, _ => eventSourceObject);
+        _ = PersistOn(eventName, _ => eventSourceObject);
         return this;
     }
 
-    /// <summary>
-    /// Automatically persist a target object when the specified eventSourceObject fires the specified event.
-    /// </summary>
+    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
     /// <param name="eventName">The name of the event that should trigger persisting stete.</param>
     /// <param name="eventSourceGetter">The event source getter.</param>
     /// <returns>
@@ -246,41 +230,36 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Stop tracking the target when it fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when it fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <returns>ITrackingConfiguration.</returns>
     public ITrackingConfiguration StopTrackingOn(string eventName) => StopTrackingOn(eventName, target => target);
 
-    /// <summary>
-    /// Stop tracking the target when the specified eventSource object fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSource">The event source.</param>
     /// <returns>ITrackingConfiguration.</returns>
     public ITrackingConfiguration StopTrackingOn(string eventName, object eventSource) => StopTrackingOn(eventName, _ => eventSource);
 
-    /// <summary>
-    /// Stop tracking the target when the specified eventSource object fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSourceGetter">The event source getter.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration StopTrackingOn(string eventName, Func<object, object> eventSourceGetter)
     {
-        StopTrackingTrigger = new Trigger(eventName, target => eventSourceGetter(target));
+        StopTrackingTrigger = new(eventName, target => eventSourceGetter(target));
         return this;
     }
 
     /// <summary>
+    /// <typeparam name="TProperty">The TProperty type.</typeparam>
     /// Set up tracking for the specified property. Allows supplying a name for the property.
     /// This overload is used when the target object has a list of child objects whose properties
     /// it wishes to track. Each child object's properties can be tracked with a different name,
     /// e.g. by including the index in the name.
     /// </summary>
     /// <typeparam name="T">Type of target object.</typeparam>
-    /// <typeparam name="TProperty">Type of property.</typeparam>
+    /// <typeparam name="TProperty">The tracked property type.</typeparam>
     /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing properties of nested objects.</param>
     /// <param name="name">Name to use when tracking the property's data.</param>
     /// <returns>
@@ -288,7 +267,7 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </returns>
     public ITrackingConfiguration Property<T, TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression, string? name = null)
     {
-        if (propertyAccessExpression == null)
+        if (propertyAccessExpression is null)
         {
             throw new ArgumentNullException(nameof(propertyAccessExpression));
         }
@@ -303,19 +282,19 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// e.g. by including the index in the name.
     /// </summary>
     /// <typeparam name="T">Type of target object.</typeparam>
-    /// <typeparam name="TProperty">Type of property.</typeparam>
+    /// <typeparam name="TProperty">The tracked property type.</typeparam>
     /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing properties of nested objects.</param>
     /// <param name="defaultValue">If there is no value in the store for the property, the defaultValue will be used.</param>
     /// <param name="name">Name to use when tracking the property's data.</param>
     /// <returns>ITrackingConfiguration.</returns>
     public ITrackingConfiguration Property<T, TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression, TProperty defaultValue, string? name = null)
     {
-        if (propertyAccessExpression == null)
+        if (propertyAccessExpression is null)
         {
             throw new ArgumentNullException(nameof(propertyAccessExpression));
         }
 
-        if (name == null && propertyAccessExpression?.Body is MemberExpression me)
+        if (name is null && propertyAccessExpression.Body is MemberExpression me)
         {
             // If not specified, use the entire expression as the name of the property.
             // Note: we don't use just the member name because it might conflict with
@@ -327,9 +306,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return Property(name, propertyAccessExpression, true, defaultValue);
     }
 
-    /// <summary>
-    /// Set up tracking for one or more properties. The expression should be an anonymous type projection (e.g. x => new { x.MyProp1, x.MyProp2 }).
-    /// </summary>
+    /// <summary>Set up tracking for one or more properties. The expression should be an anonymous type projection (e.g. x => new { x.MyProp1, x.MyProp2 }).</summary>
     /// <typeparam name="T">Type of target object.</typeparam>
     /// <param name="projection">A projection of properties to track. Allows providing nested object properties.</param>
     /// <returns>ITrackingConfiguration.</returns>
@@ -343,31 +320,23 @@ public class TrackingConfiguration : ITrackingConfiguration
         var newExp = projection.Body as NewExpression;
 
         // VB.NET encapsulates the new expression in a convert-to-object expression
-        if (newExp == null && projection.Body is UnaryExpression ue && ue.NodeType == ExpressionType.Convert && ue.Type == typeof(object))
+        if (newExp is null && projection.Body is UnaryExpression ue && ue.NodeType == ExpressionType.Convert && ue.Type == typeof(object))
         {
             newExp = ue.Operand as NewExpression;
         }
 
-        if (newExp != null)
+        if (newExp is not null)
         {
             var accessors = newExp.Members?.Select((m, i) =>
             {
                 var right = Expression.Parameter(typeof(object));
                 var propType = (m as PropertyInfo)?.PropertyType;
-                return new
-                {
-                    name = m.Name,
-                    type = propType,
-                    getter = Expression.Lambda(Expression.Convert((newExp.Arguments[i] as MemberExpression)!, typeof(object)), projection.Parameters[0]).Compile() as Func<T, object>,
-
-                    // todo: call the Convert method instead of using Expression.Convert which will not work for enums
-                    setter = Expression.Lambda(Expression.Block(Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType!)), Expression.Empty()), projection.Parameters[0], right).Compile() as Action<T, object?>
-                };
+                return (name: m.Name, type: propType, getter: Expression.Lambda(Expression.Convert((newExp.Arguments[i] as MemberExpression)!, typeof(object)), projection.Parameters[0]).Compile() as Func<T, object>, setter: Expression.Lambda(Expression.Block(Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType!)), Expression.Empty()), projection.Parameters[0], right).Compile() as Action<T, object?>);
             });
 
             foreach (var a in accessors!)
             {
-                TrackedProperties[a.name] = new TrackedPropertyInfo(x => a.getter!((T)x), (x, v) => a.setter!((T)x, Convert(v, a.name, a.type)));
+                TrackedProperties[a.name] = new(x => a.getter!((T)x), (x, v) => a.setter!((T)x, Convert(v, a.name, a.type)));
             }
         }
         else
@@ -378,50 +347,50 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>
-    /// Reads the data from the tracked properties and saves it to the data store for the tracked object.
-    /// </summary>
+    /// <summary>Reads the data from the tracked properties and saves it to the data store for the tracked object.</summary>
+    /// <param name="target">The target object.</param>
     internal void Persist(object target)
     {
-        if (_canPersistFunc(target))
+        if (!_canPersistFunc(target))
         {
-            var name = _idFunc!(target);
+            return;
+        }
 
-            IDictionary<string, object?>? originalValues = null;
-            var values = new Dictionary<string, object?>();
-            foreach (var propertyName in TrackedProperties.Keys)
+        var name = _idFunc!(target);
+
+        IDictionary<string, object?>? originalValues = null;
+        var values = new Dictionary<string, object?>();
+        foreach (var propertyName in TrackedProperties.Keys)
+        {
+            try
             {
-                try
+                var value = TrackedProperties[propertyName]?.Getter!(target);
+                var shouldPersist = OnPersistingProperty(target, propertyName, ref value);
+                if (shouldPersist)
                 {
-                    var value = TrackedProperties[propertyName]?.Getter!(target);
-                    var shouldPersist = OnPersistingProperty(target, propertyName, ref value);
-                    if (shouldPersist)
-                    {
-                        values[propertyName] = value;
-                    }
-                    else
-                    {
-                        // keeping previously stored value in case persist cancelled
-                        originalValues ??= Tracker?.Store.GetData(name);
-                        values[propertyName] = originalValues?[propertyName];
-                        Trace.WriteLine($"Persisting cancelled, key='{name}', property='{propertyName}'.");
-                    }
+                    values[propertyName] = value;
                 }
-                catch (Exception ex)
+                else
                 {
-                    Trace.WriteLine($"Persisting failed, property key = '{name}', property = {propertyName}, message='{ex.Message}'.");
+                    // keeping previously stored value in case persist cancelled
+                    originalValues ??= Tracker?.Store.GetData(name);
+                    values[propertyName] = originalValues?[propertyName];
+                    Trace.WriteLine($"Persisting cancelled, key='{name}', property='{propertyName}'.");
                 }
             }
-
-            Tracker?.Store.SetData(name, values);
-
-            OnStatePersisted(target);
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Persisting failed, property key = '{name}', property = {propertyName}, message='{ex.Message}'.");
+            }
         }
+
+        Tracker?.Store.SetData(name, values);
+
+        OnStatePersisted(target);
     }
 
-    /// <summary>
-    /// Applies any previously stored data to the tracked properties of the target object.
-    /// </summary>
+    /// <summary>Applies any previously stored data to the tracked properties of the target object.</summary>
+    /// <param name="target">The target object.</param>
     internal void Apply(object target)
     {
         if (TrackedProperties.Count == 0)
@@ -465,9 +434,8 @@ public class TrackingConfiguration : ITrackingConfiguration
         OnStateApplied(target);
     }
 
-    /// <summary>
-    /// Apply specified defaults to the tracked properties of the target object.
-    /// </summary>
+    /// <summary>Apply specified defaults to the tracked properties of the target object.</summary>
+    /// <param name="target">The target object.</param>
     internal void ApplyDefaults(object target)
     {
         if (TrackedProperties.Count == 0)
@@ -491,6 +459,8 @@ public class TrackingConfiguration : ITrackingConfiguration
         OnStateApplied(target);
     }
 
+    /// <summary>Provides the StopTracking member.</summary>
+    /// <param name="target">The target object.</param>
     internal void StopTracking(object target)
     {
         // unsubscribe from all trigger events
@@ -505,6 +475,8 @@ public class TrackingConfiguration : ITrackingConfiguration
         Tracker?.RemoveFromList(target);
     }
 
+    /// <summary>Provides the StartTracking member.</summary>
+    /// <param name="target">The target object.</param>
     internal void StartTracking(object target)
     {
         // listen for trigger events (for persisting)
@@ -517,9 +489,17 @@ public class TrackingConfiguration : ITrackingConfiguration
         StopTrackingTrigger?.Subscribe(target, () => StopTracking(target));
     }
 
+    /// <summary>Configures tracking for a property expression.</summary>
+    /// <typeparam name="T">The tracked object type.</typeparam>
+    /// <typeparam name="TProperty">The TProperty type.</typeparam>
+    /// <param name="name">The name value.</param>
+    /// <param name="propertyAccessExpression">The propertyAccessExpression value.</param>
+    /// <param name="defaultSpecified">The defaultSpecified value.</param>
+    /// <param name="defaultValue">The defaultvalue.</param>
+    /// <returns>The result.</returns>
     internal ITrackingConfiguration Property<T, TProperty>(string? name, Expression<Func<T, TProperty?>>? propertyAccessExpression, bool defaultSpecified, TProperty defaultValue)
     {
-        if (name == null && propertyAccessExpression?.Body is MemberExpression me)
+        if (name is null && propertyAccessExpression?.Body is MemberExpression me)
         {
             // If not specified, use the entire expression as the name of the property.
             // Note: we don't use just the member name because it might conflict with
@@ -536,25 +516,34 @@ public class TrackingConfiguration : ITrackingConfiguration
         var setter = Expression.Lambda(Expression.Block(Expression.Assign(membershipExpression!, Expression.Convert(right, membershipExpression?.Type!)), Expression.Empty()), propertyAccessExpression?.Parameters[0]!, right).Compile() as Action<T, object?>;
         if (defaultSpecified)
         {
-            TrackedProperties[name!] = new TrackedPropertyInfo(x => getter!((T)x), (x, v) => setter!((T)x, v), defaultValue);
+            TrackedProperties[name!] = new(x => getter!((T)x), (x, v) => setter!((T)x, v), defaultValue);
         }
         else
         {
-            TrackedProperties[name!] = new TrackedPropertyInfo(x => getter!((T)x), (x, v) => setter!((T)x, v));
+            TrackedProperties[name!] = new(x => getter!((T)x), (x, v) => setter!((T)x, v));
         }
 
         return this;
     }
 
+    /// <summary>Provides the SetValue member.</summary>
+    /// <param name="target">The target object.</param>
+    /// <param name="pi">The pi value.</param>
+    /// <param name="value">The value.</param>
     private static void SetValue(object target, PropertyInfo pi, object? value)
     {
         var valueToWrite = Convert(value, pi.Name, pi.PropertyType);
         pi.SetValue(target, valueToWrite);
     }
 
+    /// <summary>Provides the Convert member.</summary>
+    /// <param name="value">The value.</param>
+    /// <param name="propertyName">The propertyName value.</param>
+    /// <param name="t">The t value.</param>
+    /// <returns>The result.</returns>
     private static object? Convert(object? value, string? propertyName, Type? t)
     {
-        if (value == null)
+        if (value is null)
         {
             if (t?.IsValueType == true)
             {
@@ -588,10 +577,11 @@ public class TrackingConfiguration : ITrackingConfiguration
         return value;
     }
 
+    /// <summary>Provides the ReadAttributes member.</summary>
     private void ReadAttributes()
     {
         var keyProperty = TargetType?.GetProperties().SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
-        if (keyProperty != null)
+        if (keyProperty is not null)
         {
             _idFunc = (t) => keyProperty.GetValue(t, null)?.ToString()!;
         }
@@ -599,16 +589,16 @@ public class TrackingConfiguration : ITrackingConfiguration
         foreach (var pi in TargetType?.GetProperties()!)
         {
             var propTrackableAtt = pi.GetCustomAttributes(true).OfType<TrackableAttribute>().SingleOrDefault();
-            if (propTrackableAtt != null)
+            if (propTrackableAtt is not null)
             {
                 var defaultAtt = pi.GetCustomAttribute<DefaultValueAttribute>();
-                if (defaultAtt != null)
+                if (defaultAtt is not null)
                 {
-                    TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v), defaultAtt.Value);
+                    TrackedProperties[pi.Name] = new(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v), defaultAtt.Value);
                 }
                 else
                 {
-                    TrackedProperties[pi.Name] = new TrackedPropertyInfo(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v));
+                    TrackedProperties[pi.Name] = new(x => pi.GetValue(x), (x, v) => SetValue(x, pi, v));
                 }
             }
         }
@@ -619,16 +609,21 @@ public class TrackingConfiguration : ITrackingConfiguration
 
             if (attributes.OfType<PersistOnAttribute>().Any())
             {
-                PersistOn(eventInfo.Name);
+                _ = PersistOn(eventInfo.Name);
             }
 
             if (attributes.OfType<StopTrackingOnAttribute>().Any())
             {
-                StopTrackingOn(eventInfo.Name);
+                _ = StopTrackingOn(eventInfo.Name);
             }
         }
     }
 
+    /// <summary>Provides the OnApplyingProperty member.</summary>
+    /// <param name="target">The target object.</param>
+    /// <param name="property">The property value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>The result.</returns>
     private bool OnApplyingProperty(object target, string property, ref object? value)
     {
         var args = new PropertyOperationData(property, value);
@@ -637,8 +632,15 @@ public class TrackingConfiguration : ITrackingConfiguration
         return !args.Cancel;
     }
 
+    /// <summary>Provides the OnStateApplied member.</summary>
+    /// <param name="target">The target object.</param>
     private void OnStateApplied(object target) => _appliedAction?.Invoke(target);
 
+    /// <summary>Provides the OnPersistingProperty member.</summary>
+    /// <param name="target">The target object.</param>
+    /// <param name="property">The property value.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>The result.</returns>
     private bool OnPersistingProperty(object target, string property, ref object? value)
     {
         var args = new PropertyOperationData(property, value);
@@ -647,5 +649,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return !args.Cancel;
     }
 
+    /// <summary>Provides the OnStatePersisted member.</summary>
+    /// <param name="target">The target object.</param>
     private void OnStatePersisted(object target) => _persistedAction?.Invoke(target);
 }

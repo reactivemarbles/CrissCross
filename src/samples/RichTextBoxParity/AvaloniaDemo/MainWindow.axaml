@@ -1,0 +1,130 @@
+<Window
+    x:Class="RichTextBoxParity.AvaloniaDemo.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="using:CrissCross.Avalonia.UI.Controls"
+    Title="Avalonia RichTextBox Parity Demo"
+    Width="1080"
+    Height="760"
+    MinWidth="820"
+    MinHeight="600">
+    <Window.Styles>
+        <Style Selector="Button.toolbar-button">
+            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="Margin" Value="0,0,6,6" />
+            <Setter Property="Padding" Value="10,5" />
+        </Style>
+        <Style Selector="TextBlock.state-label">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <Style Selector="Border.state-panel">
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="BorderBrush" Value="#D0D7DE" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="#F6F8FA" />
+            <Setter Property="TextElement.Foreground" Value="#111827" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="16">
+        <StackPanel Grid.Row="0" Spacing="4">
+            <TextBlock FontSize="22" FontWeight="SemiBold" Text="Avalonia RichTextBox parity harness" />
+            <TextBlock Text="Use the buttons, keyboard shortcuts, clipboard, and drag/drop area to compare behavior with the native WPF reference harness." />
+        </StackPanel>
+
+        <WrapPanel Grid.Row="1" Margin="0,14,0,8">
+            <Button Name="BoldButton" Classes="toolbar-button" Content="Bold" />
+            <Button Name="ItalicButton" Classes="toolbar-button" Content="Italic" />
+            <Button Name="UnderlineButton" Classes="toolbar-button" Content="Underline" />
+            <Button Name="StrikeButton" Classes="toolbar-button" Content="Strike" />
+            <Button Name="ClearFormattingButton" Classes="toolbar-button" Content="Clear fmt" />
+            <Button Name="UndoButton" Classes="toolbar-button" Content="Undo" />
+            <Button Name="RedoButton" Classes="toolbar-button" Content="Redo" />
+            <Button Name="CutButton" Classes="toolbar-button" Content="Cut" />
+            <Button Name="CopyButton" Classes="toolbar-button" Content="Copy" />
+            <Button Name="PasteButton" Classes="toolbar-button" Content="Paste" />
+            <Button Name="SelectAllButton" Classes="toolbar-button" Content="Select all" />
+            <Button Name="ResetButton" Classes="toolbar-button" Content="Reset text" />
+        </WrapPanel>
+
+        <Grid Grid.Row="2" ColumnDefinitions="2*,*" ColumnSpacing="14">
+            <ui:RichTextBox
+                Name="Editor"
+                AcceptsReturn="True"
+                AcceptsTab="True"
+                EditMode="Edit"
+                FontSize="15"
+                HorizontalScrollBarVisibility="Disabled"
+                IsDragDropEnabled="True"
+                IsFormattingEnabled="True"
+                IsImageDropEnabled="True"
+                IsImagePasteEnabled="True"
+                IsRichClipboardEnabled="True"
+                MinHeight="360"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Auto"
+                Watermark="Type, paste, select, format, or drop text here." />
+
+            <StackPanel Grid.Column="1" Spacing="10">
+                <Border Classes="state-panel">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontSize="16" FontWeight="SemiBold" Text="Live state" />
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Text:" />
+                            <TextBlock Name="TextStateText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Selection:" />
+                            <TextBlock Name="SelectionStateText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Commands:" />
+                            <TextBlock Name="CommandStateText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Clipboard:" />
+                            <TextBlock Name="ClipboardStateText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Drop:" />
+                            <TextBlock Name="DropStateText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBlock Classes="state-label" Text="Last action:" />
+                            <TextBlock Name="LastActionText" TextWrapping="Wrap" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="state-panel">
+                    <StackPanel Spacing="8">
+                        <TextBlock FontSize="16" FontWeight="SemiBold" Text="Manual probes" />
+                        <Button Name="SeedClipboardButton" HorizontalAlignment="Stretch" Content="Seed clipboard text" />
+                        <Button Name="SimulateDropButton" HorizontalAlignment="Stretch" Content="Simulate text drop" />
+                        <Button Name="InsertHtmlButton" HorizontalAlignment="Stretch" Content="Insert HTML sample" />
+                        <Border
+                            Name="DragSource"
+                            Padding="10"
+                            Background="#E5E7EB"
+                            BorderBrush="#9CA3AF"
+                            BorderThickness="1">
+                            <TextBlock Foreground="#111827" Text="Drag sample text" />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <TextBox
+            Grid.Row="3"
+            Name="SelectedTextPreview"
+            Margin="0,12,0,0"
+            AcceptsReturn="True"
+            IsReadOnly="True"
+            PlaceholderText="Selected text preview"
+            TextWrapping="Wrap"
+            Text="" />
+    </Grid>
+</Window>

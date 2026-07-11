@@ -1,26 +1,19 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
 namespace CrissCross.WPF.Test;
 
-/// <summary>
-/// BrowserViewModel.
-/// </summary>
+/// <summary>BrowserViewModel member.</summary>
 /// <seealso cref="CrissCross.RxObject" />
 public class BrowserViewModel : RxObject
 {
-    private string _WebUrl = string.Empty;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BrowserViewModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="BrowserViewModel"/> class.</summary>
     public BrowserViewModel() =>
         this.BuildComplete(() =>
         {
@@ -38,35 +31,26 @@ public class BrowserViewModel : RxObject
             WebUrl = "https://www.aicsolutions.com";
         });
 
-    /// <summary>
-    /// Gets or sets the web URL.
-    /// </summary>
+    /// <summary>Gets or sets the web URL.</summary>
     /// <value>
     /// The web URL.
     /// </value>
-    public string WebUrl { get => _WebUrl; set => this.RaiseAndSetIfChanged(ref _WebUrl, value); }
+    public string WebUrl { get => field; set => this.RaiseAndSetIfChanged(ref field, value); }
+= string.Empty;
 
-    /// <summary>
-    /// Gets the goto main.
-    /// </summary>
+    /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
     public ICommand? GotoMain { get; private set; }
 
-    /// <summary>
-    /// Gets the goto first.
-    /// </summary>
+    /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
     public ICommand? GotoFirst { get; private set; }
 
-    /// <summary>
-    /// WhenNavigatedTo.
-    /// </summary>
-    /// <param name="e"></param>
-    /// <param name="disposables"></param>
+    /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
@@ -79,10 +63,7 @@ public class BrowserViewModel : RxObject
         base.WhenNavigatedTo(e, disposables);
     }
 
-    /// <summary>
-    /// WhenNavigatedFrom.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigatedFrom member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
@@ -95,10 +76,7 @@ public class BrowserViewModel : RxObject
         base.WhenNavigatedFrom(e);
     }
 
-    /// <summary>
-    /// WhenNavigating.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigating member.</summary>
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {

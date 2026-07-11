@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -8,35 +8,21 @@ using Avalonia.Data.Converters;
 
 namespace CrissCross.Avalonia.UI.Converters;
 
-/// <summary>
-/// Converts an enum value to a boolean based on parameter comparison.
-/// </summary>
+/// <summary>Converts an enum value to a boolean based on parameter comparison.</summary>
 public class EnumToBoolConverter : IValueConverter
 {
-    /// <summary>
-    /// Gets the default instance of this converter.
-    /// </summary>
+    /// <summary>Gets the default instance of this converter.</summary>
     public static EnumToBoolConverter Instance { get; } = new();
 
     /// <inheritdoc/>
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is null || parameter is null)
-        {
-            return false;
-        }
-
-        return value.Equals(parameter);
+        return value is null || parameter is null ? false : value.Equals(parameter);
     }
 
     /// <inheritdoc/>
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is true && parameter is not null)
-        {
-            return parameter;
-        }
-
-        return BindingOperations.DoNothing;
+        return value is true && parameter is not null ? parameter : BindingOperations.DoNothing;
     }
 }

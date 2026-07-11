@@ -1,11 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,30 +26,34 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
+    /// <summary>Stores the wpf plot1 value.</summary>
     private WpfPlot? _wpfPlot1;
 
+    /// <summary>Stores the selected setting value.</summary>
     [Reactive]
     private ChartObjects? _selectedSetting;
 
+    /// <summary>Stores the right property visibility value.</summary>
     [Reactive]
     private Visibility _rightPropertyVisibility = Visibility.Collapsed;
 
+    /// <summary>Stores the cross hair enabled value.</summary>
     [Reactive]
     private bool _crossHairEnabled;
 
+    /// <summary>Stores the is menu expanded value.</summary>
     [Reactive]
     private bool _isMenuExpanded;
 
+    /// <summary>Stores the title value.</summary>
     [Reactive]
     private string _title = " ";
 
+    /// <summary>Stores the legend position value.</summary>
     [Reactive]
     private LegendPosition _legendPosition = LegendPosition.Top;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiveChartViewModel"/> class and sets up the chart view within the specified grid.
-    /// container.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="LiveChartViewModel"/> class and sets up the chart view within the specified grid. container.</summary>
     /// <remarks>This constructor configures chart axes, UI collections, and command bindings required for
     /// interactive chart functionality. The chart view is added to the provided grid and initialized with default
     /// settings. If the grid is not null, its child elements are cleared before adding the chart view.</remarks>
@@ -61,9 +61,9 @@ public partial class LiveChartViewModel : RxObject
     public LiveChartViewModel(Grid grid)
     {
         // INITIALIZATION
-        if (WpfPlot1vm == null)
+        if (WpfPlot1vm is null)
         {
-            WpfPlot1vm = new WpfPlot()
+            WpfPlot1vm = new()
             {
                 Name = grid?.Name + "WpfPlot"
             };
@@ -81,7 +81,7 @@ public partial class LiveChartViewModel : RxObject
         LabelCollection = [];
         Axes = [];
         LeftPanelVisibility = Visibility.Visible;
-        MouseCoordinatesObservable = new Subject<Coordinates>();
+        MouseCoordinatesObservable = new();
 
         YAxisList = [];
         XAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
@@ -114,22 +114,18 @@ public partial class LiveChartViewModel : RxObject
             ClearAxisCrosshairs();
         });
 
-        ExpandMenuBtn = ReactiveCommand.Create(() =>
-        {
-            IsMenuExpanded = !IsMenuExpanded;
-        }).DisposeWith(Disposables);
+        ExpandMenuBtn = ReactiveCommand.Create(ToggleMenuExpansion);
+        _ = ExpandMenuBtn.DisposeWith(Disposables);
 
         AxesSetup(); // axes colors setup
 
         Initializations2();
 
-        LinePropCommand = ReactiveCommand.Create(() =>
-        {
-            RightPropertyVisibility = Visibility.Collapsed;
-        }).DisposeWith(Disposables);
+        LinePropCommand = ReactiveCommand.Create(CollapseRightPropertyPanel);
+        _ = LinePropCommand.DisposeWith(Disposables);
 
         // update plottables when this changes
-        this.WhenAnyValue(x => x.NumberPointsPlotted).Subscribe(x =>
+        _ = this.WhenAnyValue(x => x.NumberPointsPlotted).Subscribe(x =>
         {
             foreach (var item in PlotLinesCollectionUI)
             {
@@ -137,7 +133,7 @@ public partial class LiveChartViewModel : RxObject
             }
         }).DisposeWith(Disposables);
 
-        this.WhenAnyValue(x => x.UseFixedNumberOfPoints).Subscribe(x =>
+        _ = this.WhenAnyValue(x => x.UseFixedNumberOfPoints).Subscribe(x =>
         {
             foreach (var item in PlotLinesCollectionUI)
             {
@@ -146,22 +142,18 @@ public partial class LiveChartViewModel : RxObject
         }).DisposeWith(Disposables);
     }
 
-    /// <summary>
-    /// Gets or sets the collection of Y-axis objects used for plotting data on the chart.
-    /// </summary>
-    /// <remarks>The collection supports up to four Y-axes, allowing advanced charting scenarios such as
-    /// multiple scales or overlaying different data series. Modifying this property updates the axes displayed on the
-    /// chart. The order of axes in the collection determines their placement and association with data
-    /// series.</remarks>
+/// <summary>Gets or sets the collection of Y-axis objects used for plotting data on the chart.</summary>
+/// <remarks>The collection supports up to four Y-axes, allowing advanced charting scenarios such as
+/// multiple scales or overlaying different data series. Modifying this property updates the axes displayed on the
+/// chart. The order of axes in the collection determines their placement and association with data
+/// series.</remarks>
 #if NET6_0_OR_GREATER
     public QuaternaryList<IYAxis> Axes { get; set; }
 #else
     public ReactiveList<IAxis> Axes { get; set; }
 #endif
 
-    /// <summary>
-    /// Gets the collection of axes used for plotting data in the chart.
-    /// </summary>
+    /// <summary>Gets the collection of axes used for plotting data in the chart.</summary>
     /// <remarks>Each axis in the collection defines a coordinate system for the chart. Modifying this
     /// collection allows customization of axis types, scales, and appearance. Changes to the collection may affect how
     /// data is rendered and interpreted.</remarks>
@@ -171,54 +163,44 @@ public partial class LiveChartViewModel : RxObject
     public ReactiveList<IPlottableUI> PlotLinesCollectionUI { get; }
 #endif
 
-    /// <summary>
-    /// Gets the collection of plot line UI elements displayed in the chart.
-    /// </summary>
-    /// <remarks>The collection is reactive, allowing dynamic updates to the chart's plot lines in response to
-    /// changes. Modifying this collection will automatically update the chart's visual representation. Thread safety is
-    /// not guaranteed; access from multiple threads should be synchronized.</remarks>
+/// <summary>Gets the collection of plot line UI elements displayed in the chart.</summary>
+/// <remarks>The collection is reactive, allowing dynamic updates to the chart's plot lines in response to
+/// changes. Modifying this collection will automatically update the chart's visual representation. Thread safety is
+/// not guaranteed; access from multiple threads should be synchronized.</remarks>
 #if NET6_0_OR_GREATER
     public QuaternaryList<ChartObjects> ControlMenu { get; }
 #else
     public ReactiveList<ChartObjects> ControlMenu { get; }
 #endif
 
-    /// <summary>
-    /// Gets the collection of chart objects that represent the controls available in the menu interface.
-    /// </summary>
+/// <summary>Gets the collection of chart objects that represent the controls available in the menu interface.</summary>
 #if NET6_0_OR_GREATER
     public QuaternaryList<AxisLinesUI> AxisLinesUI { get; }
 #else
     public ReactiveList<AxisLinesUI> AxisLinesUI { get; }
 #endif
 
-    /// <summary>
-    /// Gets the collection of axis line UI elements associated with the control.
-    /// </summary>
-    /// <remarks>The returned list is reactive, allowing dynamic updates to the axis lines in response to
-    /// changes in the underlying data or user interactions. Modifications to this collection will be reflected in the
-    /// UI automatically.</remarks>
+/// <summary>Gets the collection of axis line UI elements associated with the control.</summary>
+/// <remarks>The returned list is reactive, allowing dynamic updates to the axis lines in response to
+/// changes in the underlying data or user interactions. Modifications to this collection will be reflected in the
+/// UI automatically.</remarks>
 #if NET6_0_OR_GREATER
     public QuaternaryList<Crosshair_UI> CrosshairCollection { get; }
 #else
     public ReactiveList<Crosshair_UI> CrosshairCollection { get; }
 #endif
 
-    /// <summary>
-    /// Gets the collection of crosshair UI elements currently managed by the control.
-    /// </summary>
-    /// <remarks>The collection is reactive, allowing observers to track changes such as additions or removals
-    /// of crosshair elements in real time. This property is read-only; to modify the collection, use the methods
-    /// provided by the underlying ReactiveList.</remarks>
+/// <summary>Gets the collection of crosshair UI elements currently managed by the control.</summary>
+/// <remarks>The collection is reactive, allowing observers to track changes such as additions or removals
+/// of crosshair elements in real time. This property is read-only; to modify the collection, use the methods
+/// provided by the underlying ReactiveList.</remarks>
 #if NET6_0_OR_GREATER
     public QuaternaryList<(Marker marker, Text text)> LabelCollection { get; }
 #else
     public ReactiveList<(Marker marker, Text text)> LabelCollection { get; }
 #endif
 
-    /// <summary>
-    /// Gets or sets the collection of marker and text label pairs displayed on the plot.
-    /// </summary>
+    /// <summary>Gets or sets the collection of marker and text label pairs displayed on the plot.</summary>
     /// <remarks>The collection is reactive and updates automatically when items are added or removed. Each
     /// tuple contains a marker and its associated text label, allowing for dynamic annotation of the plot.</remarks>
     public WpfPlot? WpfPlot1vm
@@ -227,78 +209,58 @@ public partial class LiveChartViewModel : RxObject
         set => this.RaiseAndSetIfChanged(ref _wpfPlot1, value);
     }
 
-    /// <summary>
-    /// Gets or sets the observable stream for mouse coordinate updates.
-    /// </summary>
+    /// <summary>Gets or sets the observable stream for mouse coordinate updates.</summary>
     /// <remarks>Subscribers to this observable receive notifications whenever the mouse coordinates change.
     /// The stream emits values of type <see cref="Coordinates"/> representing the current mouse position.</remarks>
-    public ISubject<Coordinates> MouseCoordinatesObservable { get; set; }
+    public Signal<Coordinates> MouseCoordinatesObservable { get; set; }
 
-    /// <summary>
-    /// Gets the command that is executed when the graph is locked, preventing further modifications.
-    /// </summary>
+    /// <summary>Gets the command that is executed when the graph is locked, preventing further modifications.</summary>
     /// <remarks>Use this command to signal that the graph should enter a locked state. While the graph is
     /// locked, operations that modify its structure or data may be disabled or ignored. The command completes when the
     /// lock is applied.</remarks>
     public ReactiveCommand<Unit, Unit>? GraphLocked { get; }
 
-    /// <summary>
-    /// Gets the command that enables the marker button in the user interface.
-    /// </summary>
+    /// <summary>Gets the command that enables the marker button in the user interface.</summary>
     /// <remarks>The command can be bound to UI elements to control the enabled state of the marker button.
     /// The command is reactive and may be null if the marker button is not available in the current context.</remarks>
     public ReactiveCommand<Unit, Unit>? EnableMarkerBtn { get; }
 
-    /// <summary>
-    /// Gets the command that adds a crosshair to the current context when executed.
-    /// </summary>
+    /// <summary>Gets the command that adds a crosshair to the current context when executed.</summary>
     /// <remarks>The command is typically bound to a user interface element, such as a button, to enable users
     /// to add a crosshair interactively. The command is disabled if adding a crosshair is not currently
     /// permitted.</remarks>
     public ReactiveCommand<Unit, Unit>? AddCrosshairBtn { get; }
 
-    /// <summary>
-    /// Gets the command that removes all labels from the current selection.
-    /// </summary>
+    /// <summary>Gets the command that removes all labels from the current selection.</summary>
     /// <remarks>The command is enabled only when labels can be removed from the selection. Use this property
     /// to bind UI elements, such as a button, to the label removal functionality.</remarks>
     public ReactiveCommand<Unit, Unit>? RemoveLabelsBtn { get; }
 
-    /// <summary>
-    /// Gets the command that expands the menu when executed.
-    /// </summary>
+    /// <summary>Gets the command that expands the menu when executed.</summary>
     /// <remarks>The command can be bound to UI elements to trigger menu expansion. The property may be null
     /// if the command is not available in the current context.</remarks>
     public ReactiveCommand<Unit, Unit>? ExpandMenuBtn { get; }
 
-    /// <summary>
-    /// Gets or sets the visibility state of the left panel.
-    /// </summary>
+    /// <summary>Gets or sets the visibility state of the left panel.</summary>
     public Visibility LeftPanelVisibility { get; set; }
 
-    /// <summary>
-    /// Gets the command that executes the line property action.
-    /// </summary>
+    /// <summary>Gets the command that executes the line property action.</summary>
     /// <remarks>This command can be used to trigger logic related to line property changes, typically in
     /// response to user interaction. The command does not require input parameters and does not produce a result value.
     /// It is intended for use in reactive UI scenarios where command binding is supported.</remarks>
     public ReactiveCommand<Unit, Unit> LinePropCommand { get; }
 
-    /// <summary>
-    /// Gets or sets the collection of Y-axis objects used for plotting data.
-    /// </summary>
-    /// <remarks>Use this property to configure multiple Y-axes for advanced charting scenarios. The
-    /// collection supports up to four Y-axis instances, allowing for complex visualizations with multiple scales or
-    /// units.</remarks>
+/// <summary>Gets or sets the collection of Y-axis objects used for plotting data.</summary>
+/// <remarks>Use this property to configure multiple Y-axes for advanced charting scenarios. The
+/// collection supports up to four Y-axis instances, allowing for complex visualizations with multiple scales or
+/// units.</remarks>
 #if NET6_0_OR_GREATER
     public QuaternaryList<IYAxis> YAxisList { get; set; }
 #else
     public ReactiveList<IYAxis> YAxisList { get; set; }
 #endif
 
-    /// <summary>
-    /// Gets or sets the collection of Y-axis definitions used for plotting data on the chart.
-    /// </summary>
+    /// <summary>Gets or sets the collection of Y-axis definitions used for plotting data on the chart.</summary>
     /// <remarks>Each item in the collection represents a separate Y-axis. Modifying the collection affects
     /// how data series are mapped to Y-axes in the chart. The order of axes in the list determines their display
     /// sequence.</remarks>
@@ -314,10 +276,7 @@ public partial class LiveChartViewModel : RxObject
     public static Action<RenderPack> AutoScaleX(IXAxis xaxis) =>
         rp => rp.Plot.Axes.AutoScaleX(xaxis);
 
-    /// <summary>
-    /// Creates an action that automatically adjusts the Y-axis range of a plot to fit its data within the specified
-    /// <see cref="RenderPack"/>.
-    /// </summary>
+    /// <summary>Creates an action that automatically adjusts the Y-axis range of a plot to fit its data within the specified <see cref="RenderPack"/>.</summary>
     /// <remarks>This method is useful for ensuring that all data points are visible along the Y-axis after
     /// data changes or updates. The X-axis range is not affected by this action.</remarks>
     /// <returns>An <see cref="Action{RenderPack}"/> that, when invoked, rescales the Y-axis of the plot contained in the
@@ -325,9 +284,7 @@ public partial class LiveChartViewModel : RxObject
     public static Action<RenderPack> AutoScaleY() =>
         rp => rp.Plot.Axes.AutoScaleY();
 
-    /// <summary>
-    /// Creates an action that automatically adjusts all axes in a plot to fit the current data.
-    /// </summary>
+    /// <summary>Creates an action that automatically adjusts all axes in a plot to fit the current data.</summary>
     /// <remarks>Use this action to ensure that all plot axes are scaled to include the full range of data.
     /// This is useful after adding, removing, or modifying data in the plot to guarantee that all content is
     /// visible.</remarks>
@@ -336,9 +293,7 @@ public partial class LiveChartViewModel : RxObject
     public static Action<RenderPack> AutoScaleAll() =>
         rp => rp.Plot.Axes.AutoScale();
 
-    /// <summary>
-    /// Hides all Y-axis elements by setting their visibility to false.
-    /// </summary>
+    /// <summary>Hides all Y-axis elements by setting their visibility to false.</summary>
     /// <remarks>Call this method to remove all Y-axis visuals from the chart or plot. This affects only the
     /// visibility of the Y-axis elements; it does not remove or alter the underlying axis data.</remarks>
     public void HideAllYAxis()
@@ -367,9 +322,7 @@ public partial class LiveChartViewModel : RxObject
         SetXAxisColour();
     }
 
-    /// <summary>
-    /// Configures the plot axes and grid to hide tick labels, remove tick marks, and display the plot without a frame.
-    /// </summary>
+    /// <summary>Configures the plot axes and grid to hide tick labels, remove tick marks, and display the plot without a frame.</summary>
     /// <remarks>Call this method to create a minimal plot appearance by disabling axis tick labels, hiding
     /// major and minor tick marks, and removing the grid's major lines and plot frame. This is useful for scenarios
     /// where a clean, frameless visualization is desired.</remarks>
@@ -387,9 +340,7 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm!.Plot!.Layout.Frameless();
     }
 
-    /// <summary>
-    /// Removes the existing bottom axis from the plot and creates a new bottom axis with updated settings.
-    /// </summary>
+    /// <summary>Removes the existing bottom axis from the plot and creates a new bottom axis with updated settings.</summary>
     /// <remarks>Call this method to reset the bottom axis of the plot, typically when axis configuration or
     /// appearance needs to be refreshed. The method also updates the axis color to match the current settings. If the
     /// plot view model is not initialized, the method does nothing.</remarks>
@@ -400,9 +351,7 @@ public partial class LiveChartViewModel : RxObject
         SetXAxisColour();
     }
 
-    /// <summary>
-    /// Sets the colors for the X-axis labels, ticks, and frame to predefined values for improved visual clarity.
-    /// </summary>
+    /// <summary>Sets the colors for the X-axis labels, ticks, and frame to predefined values for improved visual clarity.</summary>
     /// <remarks>This method updates the color scheme of the X-axis elements, including label text, tick
     /// marks, and frame lines. Call this method to apply a consistent color style to the X-axis in the chart. This
     /// operation does not affect other axes or chart elements.</remarks>
@@ -418,14 +367,12 @@ public partial class LiveChartViewModel : RxObject
         XAxis1.MinorTickStyle.Color = baseColor;
     }
 
-    /// <summary>
-    /// Removes all label markers and associated text from the plot and clears the label collection.
-    /// </summary>
+    /// <summary>Removes all label markers and associated text from the plot and clears the label collection.</summary>
     /// <remarks>This method updates the plot by removing all labels currently stored in the label collection
     /// and then refreshes the display. If there are no labels to clear, the method has no effect.</remarks>
     public void ClearLabels()
     {
-        if (LabelCollection == null)
+        if (LabelCollection is null)
         {
             return;
         }
@@ -437,8 +384,8 @@ public partial class LiveChartViewModel : RxObject
 
         foreach (var (marker, text) in LabelCollection)
         {
-            WpfPlot1vm!.Plot.PlottableList.Remove(marker!);
-            WpfPlot1vm!.Plot.PlottableList.Remove(text!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(marker!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(text!);
         }
 
         LabelCollection.Clear();
@@ -446,15 +393,13 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm!.Refresh();
     }
 
-    /// <summary>
-    /// Removes all axis-related crosshair lines and markers from the plot and clears the crosshair collection.
-    /// </summary>
+    /// <summary>Removes all axis-related crosshair lines and markers from the plot and clears the crosshair collection.</summary>
     /// <remarks>This method disposes of each crosshair item and removes its associated visual elements from
     /// the plot. After clearing, the plot is refreshed to reflect the changes. Calling this method when no crosshair
     /// items are present has no effect.</remarks>
     public void ClearAxisCrosshairs()
     {
-        if (CrosshairCollection == null)
+        if (CrosshairCollection is null)
         {
             return;
         }
@@ -466,10 +411,10 @@ public partial class LiveChartViewModel : RxObject
 
         foreach (var item in CrosshairCollection)
         {
-            WpfPlot1vm!.Plot.PlottableList.Remove(item.PlotLine!);
-            WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.Crosshair!);
-            WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.Marker!);
-            WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.MarkerText!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(item.PlotLine!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.Crosshair!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.Marker!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(item.ChartSettings.MarkerText!);
             item.Dispose();
         }
 
@@ -478,14 +423,12 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm!.Refresh();
     }
 
-    /// <summary>
-    /// Removes all axis lines from the plot and disposes of their associated resources.
-    /// </summary>
+    /// <summary>Removes all axis lines from the plot and disposes of their associated resources.</summary>
     /// <remarks>This method clears the collection of axis line UI elements and removes their corresponding
     /// plottables from the plot. If there are no axis lines present, the method performs no action.</remarks>
     public void ClearAxisLines()
     {
-        if (AxisLinesUI == null)
+        if (AxisLinesUI is null)
         {
             return;
         }
@@ -497,16 +440,14 @@ public partial class LiveChartViewModel : RxObject
 
         foreach (var item in AxisLinesUI)
         {
-            WpfPlot1vm!.Plot.PlottableList.Remove(item.AxisLine!);
+            _ = WpfPlot1vm!.Plot.PlottableList.Remove(item.AxisLine!);
             item.Dispose();
         }
 
         AxisLinesUI.Clear();
     }
 
-    /// <summary>
-    /// Removes all plot data, controls, and labels from the current view, releasing associated resources.
-    /// </summary>
+    /// <summary>Removes all plot data, controls, and labels from the current view, releasing associated resources.</summary>
     /// <remarks>Call this method to reset the plot and related UI elements to an empty state. Any disposable
     /// resources associated with plot lines and controls are released. After calling this method, the plot and UI
     /// collections will be empty, and all labels will be cleared.</remarks>
@@ -540,15 +481,8 @@ public partial class LiveChartViewModel : RxObject
         ClearLabels();
     }
 
-    /// <summary>
-    /// Configures the Y-axes of the plot using the specified axis names and colors. Existing Y-axes are removed and
-    /// replaced with new right-side axes corresponding to the provided data.
-    /// </summary>
-    /// <remarks>The method always hides the left Y-axis and creates new right-side axes for each entry in the
-    /// provided lists. Each axis label is assigned the corresponding color from the hexColors list. If the input lists
-    /// differ in length, only pairs up to the shortest list are used.</remarks>
-    /// <param name="data">A tuple containing the list of Y-axis names and the list of hexadecimal color strings to apply to each axis
-    /// label. Both lists must have the same number of elements.</param>
+    /// <summary>Configures the Y-axes of the plot using the specified axis names and colors. Existing Y-axes are removed and replaced with new right-side axes corresponding to the provided data.</summary>
+    /// <param name="data">The data value.</param>
     public void YAxesSetup((IList<string> yNames, IList<string> hexColors) data)
     {
         var baseColor = Color.FromHex("#D0D0D0");
@@ -581,9 +515,7 @@ public partial class LiveChartViewModel : RxObject
         }
     }
 
-    /// <summary>
-    /// Sets the Y-axis limits of all axes in the plot to the range 0 to 100.
-    /// </summary>
+    /// <summary>Sets the Y-axis limits of all axes in the plot to the range 0 to 100.</summary>
     /// <remarks>This method applies the specified Y-axis range to each axis in the collection and refreshes
     /// the plot to reflect the changes. Use this method to manually reset the Y-axis scaling when automatic scaling is
     /// not desired.</remarks>
@@ -597,9 +529,7 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm?.Refresh();
     }
 
-    /// <summary>
-    /// Selects a color name from a predefined set based on the number of items in the provided legend collection.
-    /// </summary>
+    /// <summary>Selects a color name from a predefined set based on the number of items in the provided legend collection.</summary>
     /// <remarks>The returned color is chosen by computing the remainder of the legend's item count divided by
     /// the number of available colors. If the legend is empty, the first color in the set is returned.</remarks>
     /// <typeparam name="T">The type of elements contained in the legend collection.</typeparam>
@@ -628,13 +558,11 @@ public partial class LiveChartViewModel : RxObject
                     ];
 
         // add data
-        var n = (int)(legend.Count() % colors.Count);
+        var n = legend.Count() % colors.Count;
         return colors[n];
     }
 
-    /// <summary>
-    /// Configures the appearance and labeling of the plot axes, including colors and units for both X and Y axes.
-    /// </summary>
+    /// <summary>Configures the appearance and labeling of the plot axes, including colors and units for both X and Y axes.</summary>
     /// <remarks>This method sets up the left axis, customizes the X axis color scheme, and adds three right Y
     /// axes with distinct labels and colors for phase, displacement, and temperature. It should be called during plot
     /// initialization to ensure axes are correctly styled and labeled before displaying data.</remarks>
@@ -675,6 +603,12 @@ public partial class LiveChartViewModel : RxObject
         AxisStyle();
     }
 
+    /// <summary>Toggles the menu expansion state.</summary>
+    private void ToggleMenuExpansion() => IsMenuExpanded = !IsMenuExpanded;
+
+    /// <summary>Collapses the right property panel.</summary>
+    private void CollapseRightPropertyPanel() => RightPropertyVisibility = Visibility.Collapsed;
+
     /// <summary>
     /// Hides the left axis of the plot by setting its foreground and tick colors to a background color, and updates the
     /// axis frame color.
@@ -693,31 +627,8 @@ public partial class LiveChartViewModel : RxObject
         l.MinorTickStyle.Color = backColour;
     }
 
-    /// <summary>
-    /// Sets the X-axis limits of the plot to display data from the past 60 minutes up to the current time.
-    /// </summary>
-    /// <remarks>Refreshes the plot after updating the axis limits. This method has no effect if the plot view
-    /// model is null.</remarks>
-    private void ManualScaleX()
-    {
-        var now = DateTime.Now;
-        var doublenow = now.ToOADate();
-        var limits = now.Add(TimeSpan.FromMinutes(-60));
-        var doublelimits = limits.ToOADate();
-        WpfPlot1vm?.Plot.Axes.SetLimitsX(doublelimits, doublenow, XAxis1);
-        WpfPlot1vm?.Refresh();
-    }
-
-    /// <summary>
-    /// Applies a dark mode color scheme to the plot, updating background, axis, grid, and legend colors for improved
-    /// visibility in low-light environments.
-    /// </summary>
-    /// <remarks>This method sets multiple visual elements of the plot to colors suitable for dark mode,
-    /// including the figure background, data background, axes, grid lines, and legend. The palette is also updated to
-    /// match the dark theme. Use this method to enhance readability and reduce eye strain when displaying plots in
-    /// dark-themed applications.</remarks>
-    /// <param name="backgroundColorHex">A hexadecimal color string that specifies the background color to use for the plot. Defaults to "#252526" if not
-    /// provided. Must be a valid hex color code.</param>
+    /// <summary>Applies a dark mode color scheme to the plot, updating background, axis, grid, and legend colors for improved visibility in low-light environments.</summary>
+    /// <param name="backgroundColorHex">The backgroundColorHex value.</param>
     private void UseDarkMode(string backgroundColorHex = "#252526")
     {
         var color = Color.FromHex(backgroundColorHex);

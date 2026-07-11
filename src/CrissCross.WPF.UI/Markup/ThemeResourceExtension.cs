@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
 
 namespace CrissCross.WPF.UI.Markup;
 
-/// <summary>
-/// Class for Xaml markup extension for static resource references.
-/// </summary>
+/// <summary>Class for Xaml markup extension for static resource references.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:Button
@@ -25,17 +23,12 @@ namespace CrissCross.WPF.UI.Markup;
 [MarkupExtensionReturnType(typeof(object))]
 public class ThemeResourceExtension : DynamicResourceExtension
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ThemeResourceExtension"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ThemeResourceExtension"/> class.</summary>
     public ThemeResourceExtension() => ResourceKey = nameof(ThemeResource.ApplicationBackgroundBrush);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ThemeResourceExtension" /> class.
-    /// Takes the resource key that this is a static reference to.
-    /// </summary>
-    /// <param name="resourceKey">The resource key.</param>
+    /// <summary>Initializes a new instance of the <see cref="ThemeResourceExtension" /> class. Takes the resource key that this is a static reference to.</summary>
     /// <exception cref="ArgumentNullException">resourceKey.</exception>
+    /// <param name="resourceKey">The resource key.</param>
     public ThemeResourceExtension(ThemeResource resourceKey)
     {
         if (resourceKey == ThemeResource.Unknown)

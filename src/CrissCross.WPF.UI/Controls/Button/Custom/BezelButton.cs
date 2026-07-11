@@ -1,17 +1,13 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// GenericButton.
-/// </summary>
+/// <summary>Represents GenericButton.</summary>
 public class BezelButton : CommonButtonBase
 {
-    /// <summary>
-    /// The glare opacity mask property.
-    /// </summary>
+    /// <summary>The glare opacity mask property.</summary>
     public static readonly DependencyProperty GlareOpacityMaskProperty =
         DependencyProperty.Register(
             nameof(GlareOpacityMask),
@@ -19,9 +15,7 @@ public class BezelButton : CommonButtonBase
             typeof(BezelButton),
             new PropertyMetadata(null));
 
-    /// <summary>
-    /// The pressed brush property.
-    /// </summary>
+    /// <summary>The pressed brush property.</summary>
     public static readonly DependencyProperty PressedBrushProperty =
         DependencyProperty.Register(
             nameof(PressedBrush),
@@ -29,18 +23,14 @@ public class BezelButton : CommonButtonBase
             typeof(BezelButton),
             new PropertyMetadata(null));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BezelButton"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="BezelButton"/> class.</summary>
     public BezelButton()
         : base("CrissCross.WPF.UI.Controls.BezelButton")
     {
     }
 
     // Properties
-    /// <summary>
-    /// Gets or sets the glare opacity mask.
-    /// </summary>
+    /// <summary>Gets or sets the glare opacity mask.</summary>
     /// <value>
     /// The glare opacity mask.
     /// </value>
@@ -50,9 +40,7 @@ public class BezelButton : CommonButtonBase
         set => SetValue(GlareOpacityMaskProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the pressed brush.
-    /// </summary>
+    /// <summary>Gets or sets the pressed brush.</summary>
     /// <value>
     /// The pressed brush.
     /// </value>

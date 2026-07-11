@@ -1,14 +1,12 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// NotifyableColor.
-/// </summary>
+/// <summary>Represents NotifyableColor.</summary>
 /// <seealso cref="RxObject" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="NotifyableColor"/> class.
@@ -16,9 +14,7 @@ namespace CrissCross.WPF.UI;
 /// <param name="colorStateStorage">The color state storage.</param>
 public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
 {
-    /// <summary>
-    /// Gets or sets a.
-    /// </summary>
+    /// <summary>Gets or sets a.</summary>
     /// <value>
     /// a.
     /// </value>
@@ -33,9 +29,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the RGB r.
-    /// </summary>
+    /// <summary>Gets or sets the RGB r.</summary>
     /// <value>
     /// The RGB r.
     /// </value>
@@ -50,9 +44,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the RGB g.
-    /// </summary>
+    /// <summary>Gets or sets the RGB g.</summary>
     /// <value>
     /// The RGB g.
     /// </value>
@@ -67,9 +59,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the RGB b.
-    /// </summary>
+    /// <summary>Gets or sets the RGB b.</summary>
     /// <value>
     /// The RGB b.
     /// </value>
@@ -84,9 +74,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV h.
-    /// </summary>
+    /// <summary>Gets or sets the HSV h.</summary>
     /// <value>
     /// The HSV h.
     /// </value>
@@ -101,9 +89,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV s.
-    /// </summary>
+    /// <summary>Gets or sets the HSV s.</summary>
     /// <value>
     /// The HSV s.
     /// </value>
@@ -118,9 +104,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV v.
-    /// </summary>
+    /// <summary>Gets or sets the HSV v.</summary>
     /// <value>
     /// The HSV v.
     /// </value>
@@ -135,9 +119,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL h.
-    /// </summary>
+    /// <summary>Gets or sets the HSL h.</summary>
     /// <value>
     /// The HSL h.
     /// </value>
@@ -152,9 +134,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL s.
-    /// </summary>
+    /// <summary>Gets or sets the HSL s.</summary>
     /// <value>
     /// The HSL s.
     /// </value>
@@ -169,9 +149,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL l.
-    /// </summary>
+    /// <summary>Gets or sets the HSL l.</summary>
     /// <value>
     /// The HSL l.
     /// </value>
@@ -186,61 +164,34 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
         }
     }
 
-    /// <summary>
-    /// Updates the everything.
-    /// </summary>
+    /// <summary>Updates the everything.</summary>
     /// <param name="oldValue">The old value.</param>
     public void UpdateEverything(ColorState oldValue)
     {
         var currentValue = colorStateStorage.ColorState;
-        if (currentValue.A != oldValue.A)
+        RaiseIfChanged(currentValue.A, oldValue.A, nameof(A));
+        RaiseIfChanged(currentValue.RGB_R, oldValue.RGB_R, nameof(RGB_R));
+        RaiseIfChanged(currentValue.RGB_G, oldValue.RGB_G, nameof(RGB_G));
+        RaiseIfChanged(currentValue.RGB_B, oldValue.RGB_B, nameof(RGB_B));
+        RaiseIfChanged(currentValue.HSV_H, oldValue.HSV_H, nameof(HSV_H));
+        RaiseIfChanged(currentValue.HSV_S, oldValue.HSV_S, nameof(HSV_S));
+        RaiseIfChanged(currentValue.HSV_V, oldValue.HSV_V, nameof(HSV_V));
+        RaiseIfChanged(currentValue.HSL_H, oldValue.HSL_H, nameof(HSL_H));
+        RaiseIfChanged(currentValue.HSL_S, oldValue.HSL_S, nameof(HSL_S));
+        RaiseIfChanged(currentValue.HSL_L, oldValue.HSL_L, nameof(HSL_L));
+    }
+
+    /// <summary>Raises a property change when the color component changed.</summary>
+    /// <param name="currentValue">The current component value.</param>
+    /// <param name="oldValue">The previous component value.</param>
+    /// <param name="propertyName">The property name.</param>
+    private void RaiseIfChanged(double currentValue, double oldValue, string propertyName)
+    {
+        if (currentValue == oldValue)
         {
-            this.RaisePropertyChanged(nameof(A));
+            return;
         }
 
-        if (currentValue.RGB_R != oldValue.RGB_R)
-        {
-            this.RaisePropertyChanged(nameof(RGB_R));
-        }
-
-        if (currentValue.RGB_G != oldValue.RGB_G)
-        {
-            this.RaisePropertyChanged(nameof(RGB_G));
-        }
-
-        if (currentValue.RGB_B != oldValue.RGB_B)
-        {
-            this.RaisePropertyChanged(nameof(RGB_B));
-        }
-
-        if (currentValue.HSV_H != oldValue.HSV_H)
-        {
-            this.RaisePropertyChanged(nameof(HSV_H));
-        }
-
-        if (currentValue.HSV_S != oldValue.HSV_S)
-        {
-            this.RaisePropertyChanged(nameof(HSV_S));
-        }
-
-        if (currentValue.HSV_V != oldValue.HSV_V)
-        {
-            this.RaisePropertyChanged(nameof(HSV_V));
-        }
-
-        if (currentValue.HSL_H != oldValue.HSL_H)
-        {
-            this.RaisePropertyChanged(nameof(HSL_H));
-        }
-
-        if (currentValue.HSL_S != oldValue.HSL_S)
-        {
-            this.RaisePropertyChanged(nameof(HSL_S));
-        }
-
-        if (currentValue.HSL_L != oldValue.HSL_L)
-        {
-            this.RaisePropertyChanged(nameof(HSL_L));
-        }
+        this.RaisePropertyChanged(propertyName);
     }
 }

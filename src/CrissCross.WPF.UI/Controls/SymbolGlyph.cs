@@ -1,27 +1,19 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Set of static methods to operate on <see cref="SymbolRegular"/> and <see cref="SymbolFilled"/>.
-/// </summary>
+/// <summary>Set of static methods to operate on <see cref="SymbolRegular"/> and <see cref="SymbolFilled"/>.</summary>
 public static class SymbolGlyph
 {
-    /// <summary>
-    /// If the icon is not found in some places, this one will be displayed.
-    /// </summary>
+    /// <summary>If the icon is not found in some places, this one will be displayed.</summary>
     public const SymbolRegular DefaultIcon = SymbolRegular.BorderNone24;
 
-    /// <summary>
-    /// If the filled icon is not found in some places, this one will be displayed.
-    /// </summary>
+    /// <summary>If the filled icon is not found in some places, this one will be displayed.</summary>
     public const SymbolFilled DefaultFilledIcon = SymbolFilled.BorderNone24;
 
-    /// <summary>
-    /// Finds icon based on name.
-    /// </summary>
+    /// <summary>Finds icon based on name.</summary>
     /// <param name="name">Name of the icon.</param>
     /// <returns>Symbol Regular.</returns>
     public static SymbolRegular Parse(string name)
@@ -33,7 +25,7 @@ public static class SymbolGlyph
 
         try
         {
-            return (SymbolRegular)Enum.Parse(typeof(SymbolRegular), name);
+            return Enum.Parse<SymbolRegular>(name);
         }
         catch (Exception)
         {
@@ -45,9 +37,7 @@ public static class SymbolGlyph
         }
     }
 
-    /// <summary>
-    /// Finds icon based on name.
-    /// </summary>
+    /// <summary>Finds icon based on name.</summary>
     /// <param name="name">Name of the icon.</param>
     /// <returns>Symbol Regular.</returns>
     public static SymbolFilled ParseFilled(string name)
@@ -59,7 +49,7 @@ public static class SymbolGlyph
 
         try
         {
-            return (SymbolFilled)Enum.Parse(typeof(SymbolFilled), name);
+            return Enum.Parse<SymbolFilled>(name);
         }
         catch (Exception)
         {

@@ -1,45 +1,36 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.Hardware;
 
-/// <summary>
-/// Provides access to various DPI-related methods.
-/// </summary>
+/// <summary>Provides access to various DPI-related methods.</summary>
 internal static class DpiHelper
 {
-    /// <summary>
-    /// Default DPI value.
-    /// </summary>
+    /// <summary>Default DPI value.</summary>
     internal const int DefaultDpi = 96;
 
+    /// <summary>Stores the _transformToDevice value.</summary>
     [ThreadStatic]
     private static Matrix _transformToDevice;
 
+    /// <summary>Stores the _transformToDip value.</summary>
     [ThreadStatic]
     private static Matrix _transformToDip;
 
-    /// <summary>
-    /// Gets DPI of the selected <see cref="Window"/>.
-    /// </summary>
+    /// <summary>Gets DPI of the selected <see cref="Window"/>.</summary>
     /// <param name="window">The window that you want to get information about.</param>
+    /// <returns>The result.</returns>
     public static DisplayDpi GetWindowDpi(Window? window)
     {
-        if (window is null)
-        {
-            return new DisplayDpi(DefaultDpi, DefaultDpi);
-        }
-
-        return GetWindowDpi(new WindowInteropHelper(window).Handle);
+        return window is null ? new DisplayDpi(DefaultDpi, DefaultDpi) : GetWindowDpi(new WindowInteropHelper(window).Handle);
     }
 
-    /// <summary>
-    /// Gets DPI of the selected <see cref="Window"/> based on it's handle.
-    /// </summary>
+    /// <summary>Gets DPI of the selected <see cref="Window"/> based on it's handle.</summary>
     /// <param name="windowHandle">Handle of the window that you want to get information about.</param>
+    /// <returns>The result.</returns>
     public static DisplayDpi GetWindowDpi(IntPtr windowHandle)
     {
         if (windowHandle == IntPtr.Zero || !UnsafeNativeMethods.IsValidWindow(windowHandle))
@@ -52,9 +43,7 @@ internal static class DpiHelper
         return new DisplayDpi(windowDpi, windowDpi);
     }
 
-    /// <summary>
-    /// Gets the DPI values from <see cref="SystemParameters"/>.
-    /// </summary>
+    /// <summary>Gets the DPI values from <see cref="SystemParameters"/>.</summary>
     /// <returns>The DPI values from <see cref="SystemParameters"/>. If the property cannot be accessed, the default value <see langword="96"/> is returned.</returns>
     public static DisplayDpi GetSystemDpi()
     {
@@ -62,7 +51,7 @@ internal static class DpiHelper
             "DpiX",
             BindingFlags.NonPublic | BindingFlags.Static);
 
-        if (dpiXProperty == null)
+        if (dpiXProperty is null)
         {
             return new DisplayDpi(DefaultDpi, DefaultDpi);
         }
@@ -71,19 +60,12 @@ internal static class DpiHelper
             "Dpi",
             BindingFlags.NonPublic | BindingFlags.Static);
 
-        if (dpiYProperty == null)
-        {
-            return new DisplayDpi(DefaultDpi, DefaultDpi);
-        }
-
-        return new DisplayDpi(
+        return dpiYProperty is null ? new DisplayDpi(DefaultDpi, DefaultDpi) : new DisplayDpi(
             (int)dpiXProperty.GetValue(null, null)!,
             (int)dpiYProperty.GetValue(null, null)!);
     }
 
-    /// <summary>
-    /// Convert a point in device independent pixels (1/96") to a point in the system coordinates.
-    /// </summary>
+    /// <summary>Convert a point in device independent pixels (1/96") to a point in the system coordinates.</summary>
     /// <param name="logicalPoint">A point in the logical coordinate system.</param>
     /// <param name="dpiScaleX">Horizontal DPI scale.</param>
     /// <param name="dpiScaleY">Vertical DPI scale.</param>
@@ -96,9 +78,10 @@ internal static class DpiHelper
         return _transformToDevice.Transform(logicalPoint);
     }
 
-    /// <summary>
-    /// Convert a point in system coordinates to a point in device independent pixels (1/96").
-    /// </summary>
+    /// <summary>Convert a point in system coordinates to a point in device independent pixels (1/96").</summary>
+    /// <param name="devicePoint">The devicePoint value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
     /// <returns>Returns the parameter converted to the device independent coordinate system.</returns>
     public static Point DevicePixelsToLogical(Point devicePoint, double dpiScaleX, double dpiScaleY)
     {
@@ -108,6 +91,11 @@ internal static class DpiHelper
         return _transformToDip.Transform(devicePoint);
     }
 
+    /// <summary>Provides the LogicalRectToDevice member.</summary>
+    /// <param name="logicalRectangle">The logicalRectangle value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
+    /// <returns>The result.</returns>
     public static Rect LogicalRectToDevice(Rect logicalRectangle, double dpiScaleX, double dpiScaleY)
     {
         var topLeft = LogicalPixelsToDevice(
@@ -122,6 +110,11 @@ internal static class DpiHelper
         return new Rect(topLeft, bottomRight);
     }
 
+    /// <summary>Provides the DeviceRectToLogical member.</summary>
+    /// <param name="deviceRectangle">The deviceRectangle value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
+    /// <returns>The result.</returns>
     public static Rect DeviceRectToLogical(Rect deviceRectangle, double dpiScaleX, double dpiScaleY)
     {
         var topLeft = DevicePixelsToLogical(
@@ -136,6 +129,11 @@ internal static class DpiHelper
         return new Rect(topLeft, bottomRight);
     }
 
+    /// <summary>Provides the LogicalSizeToDevice member.</summary>
+    /// <param name="logicalSize">The logicalSize value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
+    /// <returns>The result.</returns>
     public static Size LogicalSizeToDevice(Size logicalSize, double dpiScaleX, double dpiScaleY)
     {
         var pt = LogicalPixelsToDevice(
@@ -146,6 +144,11 @@ internal static class DpiHelper
         return new Size { Width = pt.X, Height = pt.Y };
     }
 
+    /// <summary>Provides the DeviceSizeToLogical member.</summary>
+    /// <param name="deviceSize">The deviceSize value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
+    /// <returns>The result.</returns>
     public static Size DeviceSizeToLogical(Size deviceSize, double dpiScaleX, double dpiScaleY)
     {
         var pt = DevicePixelsToLogical(
@@ -156,6 +159,11 @@ internal static class DpiHelper
         return new Size(pt.X, pt.Y);
     }
 
+    /// <summary>Provides the LogicalThicknessToDevice member.</summary>
+    /// <param name="logicalThickness">The logicalThickness value.</param>
+    /// <param name="dpiScaleX">The dpiScaleX value.</param>
+    /// <param name="dpiScaleY">The dpiScaleY value.</param>
+    /// <returns>The result.</returns>
     public static Thickness LogicalThicknessToDevice(
         Thickness logicalThickness,
         double dpiScaleX,

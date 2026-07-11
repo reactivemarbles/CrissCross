@@ -1,19 +1,15 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Extensions;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Tries to convert <see cref="SymbolRegular"/> and <seealso cref="SymbolFilled"/>  to <see cref="SymbolRegular"/>.
-/// </summary>
+/// <summary>Tries to convert <see cref="SymbolRegular"/> and <seealso cref="SymbolFilled"/>  to <see cref="SymbolRegular"/>.</summary>
 public class IconElementConverter : TypeConverter
 {
-    /// <summary>
-    /// Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
-    /// </summary>
+    /// <summary>Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.</summary>
     /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
     /// <param name="sourceType">A <see cref="T:System.Type" /> that represents the type you want to convert from.</param>
     /// <returns>
@@ -21,22 +17,10 @@ public class IconElementConverter : TypeConverter
     /// </returns>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
-        if (sourceType == typeof(SymbolRegular))
-        {
-            return true;
-        }
-
-        if (sourceType == typeof(SymbolFilled))
-        {
-            return true;
-        }
-
-        return false;
+        return sourceType == typeof(SymbolRegular) || sourceType == typeof(SymbolFilled);
     }
 
-    /// <summary>
-    /// Returns whether this converter can convert the object to the specified type, using the specified context.
-    /// </summary>
+    /// <summary>Returns whether this converter can convert the object to the specified type, using the specified context.</summary>
     /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
     /// <param name="destinationType">A <see cref="T:System.Type" /> that represents the type you want to convert to.</param>
     /// <returns>
@@ -44,9 +28,7 @@ public class IconElementConverter : TypeConverter
     /// </returns>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => false;
 
-    /// <summary>
-    /// Converts the given object to the type of this converter, using the specified context and culture information.
-    /// </summary>
+    /// <summary>Converts the given object to the type of this converter, using the specified context and culture information.</summary>
     /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
     /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo" /> to use as the current culture.</param>
     /// <param name="value">The <see cref="T:System.Object" /> to convert.</param>
@@ -64,9 +46,7 @@ public class IconElementConverter : TypeConverter
             _ => null
         };
 
-    /// <summary>
-    /// Converts the given value object to the specified type, using the specified context and culture information.
-    /// </summary>
+    /// <summary>Converts the given value object to the specified type, using the specified context and culture information.</summary>
     /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
     /// <param name="culture">A <see cref="T:System.Globalization.CultureInfo" />. If null is passed, the current culture is assumed.</param>
     /// <param name="value">The <see cref="T:System.Object" /> to convert.</param>

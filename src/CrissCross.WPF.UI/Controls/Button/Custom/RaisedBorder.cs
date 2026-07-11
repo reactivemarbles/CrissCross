@@ -1,59 +1,41 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// AICSBorder.
-/// </summary>
+/// <summary>Represents AICSBorder.</summary>
 /// <seealso cref="System.Windows.Controls.ContentControl" />
 public class RaisedBorder : ContentControl
 {
-    /// <summary>
-    /// The corner radius1 property.
-    /// </summary>
+    /// <summary>The corner radius1 property.</summary>
     public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register("CornerRadius1", typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(10.0)));
 
-    /// <summary>
-    /// The corner radius2 property.
-    /// </summary>
+    /// <summary>The corner radius2 property.</summary>
     public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register("CornerRadius2", typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(20.0)));
 
-    /// <summary>
-    /// The glare brush property.
-    /// </summary>
+    /// <summary>The glare brush property.</summary>
     public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register("GlareBrush", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
-    /// <summary>
-    /// The glare opacity mask property.
-    /// </summary>
+    /// <summary>The glare opacity mask property.</summary>
     public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register("GlareOpacityMask", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
-    /// <summary>
-    /// The minor border brush1 property.
-    /// </summary>
+    /// <summary>The minor border brush1 property.</summary>
     public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register("MinorBorderBrush1", typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
 
-    /// <summary>
-    /// The minor border thickness1 property.
-    /// </summary>
+    /// <summary>The minor border thickness1 property.</summary>
     public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register("MinorBorderThickness1", typeof(Thickness), typeof(RaisedBorder), new PropertyMetadata(new Thickness(0.0)));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RaisedBorder"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="RaisedBorder"/> class.</summary>
     public RaisedBorder()
     {
         CreateControlTemplate();
         ClipToBounds = true;
     }
 
-    /// <summary>
-    /// Gets or sets the corner radius1.
-    /// </summary>
+    /// <summary>Gets or sets the corner radius1.</summary>
     /// <value>
     /// The corner radius1.
     /// </value>
@@ -63,9 +45,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(CornerRadius1Property, value);
     }
 
-    /// <summary>
-    /// Gets or sets the corner radius2.
-    /// </summary>
+    /// <summary>Gets or sets the corner radius2.</summary>
     /// <value>
     /// The corner radius2.
     /// </value>
@@ -75,9 +55,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(CornerRadius2Property, value);
     }
 
-    /// <summary>
-    /// Gets or sets the glare brush.
-    /// </summary>
+    /// <summary>Gets or sets the glare brush.</summary>
     /// <value>
     /// The glare brush.
     /// </value>
@@ -87,9 +65,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(GlareBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the glare opacity mask.
-    /// </summary>
+    /// <summary>Gets or sets the glare opacity mask.</summary>
     /// <value>
     /// The glare opacity mask.
     /// </value>
@@ -99,9 +75,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(GlareOpacityMaskProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the minor border brush1.
-    /// </summary>
+    /// <summary>Gets or sets the minor border brush1.</summary>
     /// <value>
     /// The minor border brush1.
     /// </value>
@@ -111,9 +85,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(MinorBorderBrush1Property, value);
     }
 
-    /// <summary>
-    /// Gets or sets the minor border thickness1.
-    /// </summary>
+    /// <summary>Gets or sets the minor border thickness1.</summary>
     /// <value>
     /// The minor border thickness1.
     /// </value>
@@ -123,9 +95,7 @@ public class RaisedBorder : ContentControl
         set => SetValue(MinorBorderThickness1Property, value);
     }
 
-    /// <summary>
-    /// Invoked whenever the effective value of any dependency property on this <see cref="T:System.Windows.FrameworkElement" /> has been updated. The specific dependency property that changed is reported in the arguments parameter. Overrides <see cref="M:System.Windows.DependencyObject.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)" />.
-    /// </summary>
+    /// <summary>Invoked whenever the effective value of any dependency property on this <see cref="T:System.Windows.FrameworkElement" /> has been updated. The specific dependency property that changed is reported in the arguments parameter. Overrides <see cref="M:System.Windows.DependencyObject.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)" />.</summary>
     /// <param name="e">The event data that describes the property that changed, as well as old and new values.</param>
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -133,13 +103,11 @@ public class RaisedBorder : ContentControl
         InvalidateVisual();
     }
 
-    /// <summary>
-    /// When overridden in a derived class, participates in rendering operations that are directed by the layout system. The rendering instructions for this element are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.
-    /// </summary>
+    /// <summary>When overridden in a derived class, participates in rendering operations that are directed by the layout system. The rendering instructions for this element are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.</summary>
     /// <param name="drawingContext">The drawing instructions for a specific element. This context is provided to the layout system.</param>
     protected override void OnRender(DrawingContext drawingContext)
     {
-        if (drawingContext == null)
+        if (drawingContext is null)
         {
             throw new ArgumentNullException(nameof(drawingContext));
         }
@@ -161,15 +129,15 @@ public class RaisedBorder : ContentControl
         drawingContext.DrawGeometry(BorderBrush, pen, group);
 
         var pen2 = new Pen(MinorBorderBrush1, 0.5);
-        group = new GeometryGroup();
+        group = new();
         group.Children.Add(geometry2);
         group.Children.Add(geometry3);
         drawingContext.DrawGeometry(MinorBorderBrush1, pen2, group);
 
         var border = Template.FindName("PART_MainBorder", this) as Border;
-        if (border != null)
+        if (border is not null)
         {
-            border.Padding = new Thickness(
+            border.Padding = new(
                 borderThickness.Left + Padding.Left,
                 borderThickness.Top + Padding.Top,
                 borderThickness.Right + Padding.Right,
@@ -180,199 +148,104 @@ public class RaisedBorder : ContentControl
         base.OnRender(drawingContext);
     }
 
-    /// <summary>
-    /// Returns a value that indicates whether serialization processes should serialize the value for the provided dependency property.
-    /// </summary>
+    /// <summary>Returns a value that indicates whether serialization processes should serialize the value for the provided dependency property.</summary>
     /// <param name="dp">The identifier for the dependency property that should be serialized.</param>
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
     /// </returns>
     protected override bool ShouldSerializeProperty(DependencyProperty dp)
     {
-        if (dp == StyleProperty)
-        {
-            return false;
-        }
-
-        return base.ShouldSerializeProperty(dp);
+        return dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
     }
 
+    /// <summary>Provides the CreateGeometryForPath member.</summary>
+    /// <param name="width">The width value.</param>
+    /// <param name="height">The height value.</param>
+    /// <param name="cornerRadius">The cornerRadius value.</param>
+    /// <returns>The result.</returns>
     private static PathGeometry CreateGeometryForPath(double width, double height, CornerRadius cornerRadius) => CreateGeometryForPath(width, height, cornerRadius, new Thickness(0));
 
+    /// <summary>Provides the CreateGeometryForPath member.</summary>
+    /// <param name="actualWidth">The actualWidth value.</param>
+    /// <param name="actualHeight">The actualHeight value.</param>
+    /// <param name="cornerRadius">The cornerRadius value.</param>
+    /// <param name="borderThickness">The borderThickness value.</param>
+    /// <returns>The result.</returns>
     private static PathGeometry CreateGeometryForPath(double actualWidth, double actualHeight, CornerRadius cornerRadius, Thickness borderThickness)
     {
+        var bounds = new Rect(
+            borderThickness.Left,
+            borderThickness.Top,
+            Math.Max(0, actualWidth - borderThickness.Left - borderThickness.Right),
+            Math.Max(0, actualHeight - borderThickness.Top - borderThickness.Bottom));
+        var radius = NormalizeCornerRadius(cornerRadius, bounds.Width, bounds.Height);
+        var figure = new PathFigure
+        {
+            StartPoint = new(bounds.Left + radius.TopLeft, bounds.Top),
+            IsClosed = true
+        };
+
+        AddLine(figure, new(bounds.Right - radius.TopRight, bounds.Top));
+        AddArc(figure, new(bounds.Right, bounds.Top + radius.TopRight), radius.TopRight);
+        AddLine(figure, new(bounds.Right, bounds.Bottom - radius.BottomRight));
+        AddArc(figure, new(bounds.Right - radius.BottomRight, bounds.Bottom), radius.BottomRight);
+        AddLine(figure, new(bounds.Left + radius.BottomLeft, bounds.Bottom));
+        AddArc(figure, new(bounds.Left, bounds.Bottom - radius.BottomLeft), radius.BottomLeft);
+        AddLine(figure, new(bounds.Left, bounds.Top + radius.TopLeft));
+        AddArc(figure, new(bounds.Left + radius.TopLeft, bounds.Top), radius.TopLeft);
+
         var geometry = new PathGeometry();
-        var figure = new PathFigure();
-        double x = 0;
-        var num2 = actualWidth - borderThickness.Right - borderThickness.Left;
-        double y = 0;
-        var num4 = actualHeight - borderThickness.Bottom - borderThickness.Top;
-        var num5 = num2 - x;
-        var num6 = num4 - y;
-        Point point;
-        var num7 = cornerRadius.TopLeft + cornerRadius.TopRight;
-        var point2 = new Point((cornerRadius.TopLeft / num7) * num5, y);
-        if (double.IsNaN(point2.X))
-        {
-            point2.X = 0;
-        }
-
-        if (point2.X > cornerRadius.TopLeft)
-        {
-            point2 = new Point(cornerRadius.TopLeft, y);
-        }
-
-        var point3 = new Point(point2.X, y);
-        point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-        figure.StartPoint = point;
-        point3 = new Point((cornerRadius.TopRight / num7) * num5, y);
-        if (double.IsNaN(point3.X))
-        {
-            point3.X = 0;
-        }
-
-        point3.X = num5 - point3.X;
-        if (point3.X <= x + num5 - cornerRadius.TopRight)
-        {
-            point3 = new Point(num5 - cornerRadius.TopRight, y);
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment = new LineSegment(point, false);
-            figure.Segments.Add(segment);
-        }
-
-        var size = default(Size);
-        var num8 = cornerRadius.BottomRight + cornerRadius.TopRight;
-        if (cornerRadius.TopRight != 0)
-        {
-            size.Width = Math.Min(cornerRadius.TopRight, Math.Max(0, num5 - point3.X));
-            point3 = new Point(num2, (cornerRadius.TopRight / num8) * num6);
-            if (double.IsNaN(point3.Y))
-            {
-                point3.Y = 0;
-            }
-
-            if (point3.Y > cornerRadius.TopRight)
-            {
-                point3 = new Point(num2, cornerRadius.TopRight);
-                size.Height = cornerRadius.TopRight;
-            }
-            else
-            {
-                point3.Y = point3.Y;
-                size.Height = Math.Max(0, point3.Y);
-            }
-
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment2 = new ArcSegment(point, size, 0, false, SweepDirection.Clockwise, false);
-            figure.Segments.Add(segment2);
-        }
-
-        if (point3.Y < num6 - cornerRadius.BottomRight)
-        {
-            point3 = new Point(num2, num6 - cornerRadius.BottomRight);
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment3 = new LineSegment(point, false);
-            figure.Segments.Add(segment3);
-        }
-
-        var num9 = cornerRadius.BottomRight + cornerRadius.BottomLeft;
-        if (cornerRadius.BottomRight != 0)
-        {
-            size.Height = Math.Min(cornerRadius.BottomRight, Math.Max(0, num6 - point3.Y));
-            point3 = new Point((cornerRadius.BottomRight / num9) * num5, num4);
-            if (double.IsNaN(point3.X))
-            {
-                point3.X = 0;
-            }
-
-            if (point3.X > cornerRadius.BottomRight)
-            {
-                point3 = new Point(num5 - cornerRadius.BottomRight, num4);
-                size.Width = cornerRadius.BottomRight;
-            }
-            else
-            {
-                point3 = new Point(num5 - point3.X, num4);
-                size.Width = Math.Max(0, num5 - point3.X);
-            }
-
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment4 = new ArcSegment(point, size, 0, false, SweepDirection.Clockwise, false);
-            figure.Segments.Add(segment4);
-        }
-
-        if (point3.X > cornerRadius.BottomLeft)
-        {
-            point3 = new Point(x + cornerRadius.BottomLeft, num4);
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment5 = new LineSegment(point, false);
-            figure.Segments.Add(segment5);
-        }
-
-        var num10 = cornerRadius.BottomLeft + cornerRadius.TopLeft;
-        if (cornerRadius.BottomLeft != 0)
-        {
-            size.Width = Math.Min(cornerRadius.BottomLeft, Math.Max(0, point3.X));
-            point3 = new Point(x, (cornerRadius.BottomLeft / num10) * num6);
-            if (double.IsNaN(point3.Y))
-            {
-                point3.Y = 0;
-            }
-
-            if (point3.Y > cornerRadius.BottomLeft)
-            {
-                point3 = new Point(x, num6 - cornerRadius.BottomLeft);
-                size.Height = cornerRadius.BottomLeft;
-            }
-            else
-            {
-                point3 = new Point(x, num6 - point3.Y);
-                size.Height = Math.Max(0, num6 - point3.Y);
-            }
-
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment6 = new ArcSegment(point, size, 0, false, SweepDirection.Clockwise, false);
-            figure.Segments.Add(segment6);
-        }
-
-        if (point3.Y > cornerRadius.TopLeft)
-        {
-            point3 = new Point(x, y + cornerRadius.TopLeft);
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment7 = new LineSegment(point, false);
-            figure.Segments.Add(segment7);
-        }
-
-        if (cornerRadius.TopLeft != 0)
-        {
-            size.Height = Math.Min(cornerRadius.TopLeft, Math.Max(0, point3.Y));
-            point3 = new Point((cornerRadius.TopLeft / num7) * num5, y);
-            if (double.IsNaN(point3.X))
-            {
-                point3.X = 0;
-            }
-
-            if (point3.X > cornerRadius.TopLeft)
-            {
-                point3 = new Point(cornerRadius.TopLeft, y);
-                size.Width = cornerRadius.TopLeft;
-            }
-            else
-            {
-                point3 = new Point(point3.X, y);
-                size.Width = Math.Max(0, point3.X);
-            }
-
-            point = new Point(point3.X + borderThickness.Left, point3.Y + borderThickness.Top);
-            var segment8 = new ArcSegment(point, size, 0, false, SweepDirection.Clockwise, false);
-            figure.Segments.Add(segment8);
-        }
-
-        figure.IsClosed = true;
         geometry.Figures.Add(figure);
         return geometry;
     }
 
+    /// <summary>Adds an arc segment when radius is greater than zero.</summary>
+    /// <param name="figure">The path figure.</param>
+    /// <param name="point">The end point.</param>
+    /// <param name="radius">The radius.</param>
+    private static void AddArc(PathFigure figure, Point point, double radius)
+    {
+        if (radius <= 0)
+        {
+            AddLine(figure, point);
+            return;
+        }
+
+        figure.Segments.Add(new ArcSegment(point, new(radius, radius), 0, false, SweepDirection.Clockwise, false));
+    }
+
+    /// <summary>Adds a line segment.</summary>
+    /// <param name="figure">The path figure.</param>
+    /// <param name="point">The end point.</param>
+    private static void AddLine(PathFigure figure, Point point) =>
+        figure.Segments.Add(new LineSegment(point, false));
+
+    /// <summary>Calculates a scale factor for adjacent corner radii.</summary>
+    /// <param name="length">The available length.</param>
+    /// <param name="radiusSum">The combined radii.</param>
+    /// <returns>The scale factor.</returns>
+    private static double GetRadiusScale(double length, double radiusSum) =>
+        radiusSum > 0 && radiusSum > length ? length / radiusSum : 1;
+
+    /// <summary>Normalizes corner radii so adjacent corners fit the bounds.</summary>
+    /// <param name="cornerRadius">The requested corner radii.</param>
+    /// <param name="width">The available width.</param>
+    /// <param name="height">The available height.</param>
+    /// <returns>The normalized corner radii.</returns>
+    private static CornerRadius NormalizeCornerRadius(CornerRadius cornerRadius, double width, double height)
+    {
+        var scale = Math.Min(
+            Math.Min(GetRadiusScale(width, cornerRadius.TopLeft + cornerRadius.TopRight), GetRadiusScale(width, cornerRadius.BottomLeft + cornerRadius.BottomRight)),
+            Math.Min(GetRadiusScale(height, cornerRadius.TopLeft + cornerRadius.BottomLeft), GetRadiusScale(height, cornerRadius.TopRight + cornerRadius.BottomRight)));
+
+        return new(
+            Math.Max(0, cornerRadius.TopLeft * scale),
+            Math.Max(0, cornerRadius.TopRight * scale),
+            Math.Max(0, cornerRadius.BottomRight * scale),
+            Math.Max(0, cornerRadius.BottomLeft * scale));
+    }
+
+    /// <summary>Provides the CreateControlTemplate member.</summary>
     private void CreateControlTemplate()
     {
         var template = new ControlTemplate(GetType());
@@ -389,18 +262,18 @@ public class RaisedBorder : ContentControl
         factory.AppendChild(child);
 
         var factory3 = new FrameworkElementFactory(typeof(ContentPresenter));
-        extension = new TemplateBindingExtension(HorizontalContentAlignmentProperty);
+        extension = new(HorizontalContentAlignmentProperty);
         factory3.SetValue(HorizontalAlignmentProperty, extension);
-        extension = new TemplateBindingExtension(VerticalContentAlignmentProperty);
+        extension = new(VerticalContentAlignmentProperty);
         factory3.SetValue(VerticalAlignmentProperty, extension);
-        extension = new TemplateBindingExtension(ContentProperty);
+        extension = new(ContentProperty);
         factory3.SetValue(ContentPresenter.ContentProperty, extension);
         child.AppendChild(factory3);
 
         var factory4 = new FrameworkElementFactory(typeof(Border), "PART_GlareBorder");
-        extension = new TemplateBindingExtension(GlareBrushProperty);
+        extension = new(GlareBrushProperty);
         factory4.SetValue(Border.BackgroundProperty, extension);
-        extension = new TemplateBindingExtension(GlareOpacityMaskProperty);
+        extension = new(GlareOpacityMaskProperty);
         factory4.SetValue(OpacityMaskProperty, extension);
         factory4.SetValue(IsHitTestVisibleProperty, false);
         child.AppendChild(factory4);

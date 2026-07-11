@@ -1,43 +1,68 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
+/// <summary>Provides the CancellationExtensions member.</summary>
 internal static class CancellationExtensions
 {
-    public static async Task WithCancellationToken(this Task task, CancellationToken cancellationToken) => await Task.WhenAny(task, cancellationToken.WhenCanceled());
-
-    public static async Task<T> WithCancellationToken<T>(this Task<T> task, CancellationToken cancellationToken)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="cancellationToken">The cancellationToken value.</param>
+    extension(CancellationToken cancellationToken)
     {
-        var firstTaskToFinish = await Task.WhenAny(task, cancellationToken.WhenCanceled());
-        if (firstTaskToFinish == task)
+        /// <summary>Provides the WhenCanceled member.</summary>
+        /// <returns>The result.</returns>
+        public Task WhenCanceled()
         {
-            return await task;
+            var tcs = new TaskCompletionSource<int>();
+            var registration = default(CancellationTokenRegistration);
+            registration = cancellationToken.Register(
+                o =>
+            {
+                if (o is TaskCompletionSource<int> tcs)
+                {
+                    _ = tcs.TrySetCanceled();
+                }
+
+                // ReSharper disable once AccessToModifiedClosure
+                registration.Dispose();
+            },
+                tcs);
+            return tcs.Task;
         }
-
-        await firstTaskToFinish;
-
-        // Will never be reached because the previous statement will throw, but necessary to satisfy the compiler
-        throw new OperationCanceledException(cancellationToken);
     }
 
-    public static Task WhenCanceled(this CancellationToken cancellationToken)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="task">The task value.</param>
+    extension(Task task)
     {
-        var tcs = new TaskCompletionSource<int>();
-        var registration = default(CancellationTokenRegistration);
-        registration = cancellationToken.Register(
-            o =>
+        /// <summary>Provides the WithCancellationToken member.</summary>
+        /// <param name="cancellationToken">The cancellationToken value.</param>
+        /// <returns>The result.</returns>
+        public async Task WithCancellationToken(CancellationToken cancellationToken) => await Task.WhenAny(task, cancellationToken.WhenCanceled());
+    }
+
+    /// <summary>Provides extension members.</summary>
+    /// <typeparam name="T">The type.</typeparam>
+    /// <param name="task">The task value.</param>
+    extension<T>(Task<T> task)
+    {
+        /// <summary>Provides the WithCancellationToken member.</summary>
+        /// <param name="cancellationToken">The cancellationToken value.</param>
+        /// <returns>The result.</returns>
+        public async Task<T> WithCancellationToken(CancellationToken cancellationToken)
         {
-            if (o is TaskCompletionSource<int> tcs)
+            var firstTaskToFinish = await Task.WhenAny(task, cancellationToken.WhenCanceled());
+            if (firstTaskToFinish == task)
             {
-                tcs.TrySetCanceled();
+                return await task;
             }
 
-            // ReSharper disable once AccessToModifiedClosure
-            registration.Dispose();
-        },
-            tcs);
-        return tcs.Task;
+            await firstTaskToFinish;
+
+            // Will never be reached because the previous statement will throw, but necessary to satisfy the compiler
+            throw new OperationCanceledException(cancellationToken);
+        }
     }
 }

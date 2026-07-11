@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -7,20 +7,16 @@ using System.Collections.Generic;
 
 namespace CrissCross;
 
-/// <summary>
-/// Provides platform-neutral navigation journal operations for controls that expose back and forward navigation.
-/// </summary>
+/// <summary>Provides platform-neutral navigation journal operations for controls that expose back and forward navigation.</summary>
 public static class NavigationJournal
 {
-    /// <summary>
-    /// Gets a value indicating whether the journal can move to a previous entry.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the journal can move to a previous entry.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
     /// <returns><see langword="true"/> when a previous entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool CanGoBack(IReadOnlyList<string> journal, int currentIndex)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }
@@ -28,15 +24,13 @@ public static class NavigationJournal
         return journal.Count > 0 && currentIndex > 0 && currentIndex < journal.Count;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the journal can move to a later entry.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the journal can move to a later entry.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
     /// <returns><see langword="true"/> when a later entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool CanGoForward(IReadOnlyList<string> journal, int currentIndex)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }
@@ -44,23 +38,18 @@ public static class NavigationJournal
         return currentIndex >= 0 && currentIndex < journal.Count - 1;
     }
 
-    /// <summary>
-    /// Records a new navigation entry and discards any forward entries after the current index.
-    /// </summary>
+    /// <summary>Records a new navigation entry and discards any forward entries after the current index.</summary>
     /// <param name="journal">The mutable ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index, updated to the recorded entry.</param>
     /// <param name="entryId">The navigation entry identifier to record.</param>
     public static void Record(IList<string> journal, ref int currentIndex, string entryId)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }
 
-        if (string.IsNullOrWhiteSpace(entryId))
-        {
-            throw new ArgumentException("The navigation entry identifier cannot be null, empty, or white space.", nameof(entryId));
-        }
+        ThrowHelper.ThrowIfNullOrWhiteSpace(entryId, nameof(entryId));
 
         if (currentIndex < journal.Count - 1)
         {
@@ -75,9 +64,7 @@ public static class NavigationJournal
         currentIndex = journal.Count - 1;
     }
 
-    /// <summary>
-    /// Calculates the previous journal entry without mutating the journal.
-    /// </summary>
+    /// <summary>Calculates the previous journal entry without mutating the journal.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
     /// <param name="nextIndex">The index of the previous entry when one exists; otherwise, the supplied current index.</param>
@@ -89,7 +76,7 @@ public static class NavigationJournal
         out int nextIndex,
         out string? entryId)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }
@@ -106,9 +93,7 @@ public static class NavigationJournal
         return true;
     }
 
-    /// <summary>
-    /// Calculates the next journal entry without mutating the journal.
-    /// </summary>
+    /// <summary>Calculates the next journal entry without mutating the journal.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
     /// <param name="nextIndex">The index of the next entry when one exists; otherwise, the supplied current index.</param>
@@ -120,7 +105,7 @@ public static class NavigationJournal
         out int nextIndex,
         out string? entryId)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }
@@ -137,14 +122,12 @@ public static class NavigationJournal
         return true;
     }
 
-    /// <summary>
-    /// Clears all entries and resets the current index to an empty-journal state.
-    /// </summary>
+    /// <summary>Clears all entries and resets the current index to an empty-journal state.</summary>
     /// <param name="journal">The mutable ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index, reset to <c>-1</c>.</param>
     public static void Clear(ICollection<string> journal, ref int currentIndex)
     {
-        if (journal == null)
+        if (journal is null)
         {
             throw new ArgumentNullException(nameof(journal));
         }

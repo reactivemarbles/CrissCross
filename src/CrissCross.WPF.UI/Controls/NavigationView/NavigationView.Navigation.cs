@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -7,33 +7,30 @@ using CrissCross;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// NavigationView.
-/// </summary>
+/// <summary>Represents NavigationView.</summary>
 /// <seealso cref="System.Windows.Controls.Control" />
 /// <seealso cref="INavigationView" />
 public partial class NavigationView
 {
-    /// <summary>
-    /// The journal.
-    /// </summary>
+    /// <summary>The journal.</summary>
     private readonly List<string> _journal = new(50);
 
-    /// <summary>
-    /// The navigation stack.
-    /// </summary>
+    /// <summary>The navigation stack.</summary>
     private readonly ObservableCollection<INavigationViewItem> _navigationStack = [];
 
+    /// <summary>Stores the _cache value.</summary>
     private readonly NavigationCache _cache = new();
 
-    private readonly Dictionary<
-        INavigationViewItem,
-        List<INavigationViewItem?[]>
-    > _complexNavigationStackHistory = [];
+    /// <summary>Stores the complex navigation stack history.</summary>
+    private readonly Dictionary<INavigationViewItem, List<INavigationViewItem?[]>> _complexNavigationStackHistory = [];
 
+    /// <summary>Stores the _serviceProvider value.</summary>
     private IServiceProvider? _serviceProvider;
+
+    /// <summary>Stores the _pageService value.</summary>
     private IPageService? _pageService;
 
+    /// <summary>Stores the _currentIndexInJournal value.</summary>
     private int _currentIndexInJournal = -1;
 
     /// <inheritdoc />
@@ -51,55 +48,39 @@ public partial class NavigationView
     /// <inheritdoc />
     public virtual bool Navigate(Type pageType, object? dataContext = null)
     {
-        if (!_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
-        {
-            return TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext);
-        }
-
-        return NavigateInternal(navigationViewItem, dataContext);
+        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext) : NavigateInternal(navigationViewItem, dataContext);
     }
 
     /// <inheritdoc />
     public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext = null)
     {
-        if (
-            !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(
+        return !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(
                 pageIdOrTargetTag,
-                out var navigationViewItem))
-        {
-            return false;
-        }
-
-        return NavigateInternal(navigationViewItem, dataContext);
+                out var navigationViewItem) ? false : NavigateInternal(navigationViewItem, dataContext);
     }
 
     /// <inheritdoc />
     public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext = null)
     {
-        if (!_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem))
-        {
-            return TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext);
-        }
-
-        return NavigateInternal(navigationViewItem, dataContext, true);
+        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem) ? TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext) : NavigateInternal(navigationViewItem, dataContext, true);
     }
 
     /// <inheritdoc />
     public virtual bool ReplaceContent(Type? pageTypeToEmbed)
     {
-        if (pageTypeToEmbed == null)
+        if (pageTypeToEmbed is null)
         {
             return false;
         }
 
-        if (_serviceProvider != null)
+        if (_serviceProvider is not null)
         {
             UpdateContent(_serviceProvider.GetService(pageTypeToEmbed));
 
             return true;
         }
 
-        if (_pageService == null)
+        if (_pageService is null)
         {
             return false;
         }
@@ -120,12 +101,7 @@ public partial class NavigationView
     /// <inheritdoc />
     public virtual bool GoForward()
     {
-        if (!NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId) || itemId is null)
-        {
-            return false;
-        }
-
-        return _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
+        return !NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId) || itemId is null ? false : _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem) &&
             NavigateInternal(navigationViewItem, null, false, false, true, nextIndex);
     }
 
@@ -149,16 +125,26 @@ public partial class NavigationView
         _complexNavigationStackHistory.Clear();
     }
 
+    /// <summary>Provides the ApplyAttachedProperties member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
+    /// <param name="pageInstance">The pageInstance value.</param>
     private static void ApplyAttachedProperties(INavigationViewItem viewItem, object pageInstance)
     {
         if (
-            pageInstance is FrameworkElement frameworkElement
-            && GetHeaderContent(frameworkElement) is { } headerContent)
+            pageInstance is not FrameworkElement frameworkElement
+            || !(GetHeaderContent(frameworkElement) is { } headerContent))
         {
-            viewItem.Content = headerContent;
+            return;
         }
+
+        viewItem.Content = headerContent;
     }
 
+    /// <summary>Provides the TryToNavigateWithoutINavigationViewItem member.</summary>
+    /// <param name="pageType">The pageType value.</param>
+    /// <param name="addToNavigationStack">The addToNavigationStack value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
+    /// <returns>The result.</returns>
     private bool TryToNavigateWithoutINavigationViewItem(
         Type pageType,
         bool addToNavigationStack,
@@ -177,6 +163,14 @@ public partial class NavigationView
         return true;
     }
 
+    /// <summary>Provides the NavigateInternal member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
+    /// <param name="addToNavigationStack">The addToNavigationStack value.</param>
+    /// <param name="isBackwardsNavigated">The isBackwardsNavigated value.</param>
+    /// <param name="isJournalNavigation">The isJournalNavigation value.</param>
+    /// <param name="journalIndex">The journalIndex value.</param>
+    /// <returns>The result.</returns>
     private bool NavigateInternal(
         INavigationViewItem viewItem,
         object? dataContext = null,
@@ -223,15 +217,21 @@ public partial class NavigationView
         AddToNavigationStack(viewItem, addToNavigationStack, isBackwardsNavigated);
         AddToJournal(viewItem, isJournalNavigation, journalIndex);
 
-        if (_navigationStack.Count > 0 && SelectedItem != _navigationStack[0] && _navigationStack[0].IsMenuElement)
+        if (_navigationStack.Count == 0 || SelectedItem == _navigationStack[0] || !_navigationStack[0].IsMenuElement)
         {
-            SelectedItem = _navigationStack[0];
-            OnSelectionChanged();
+            return true;
         }
+
+        SelectedItem = _navigationStack[0];
+        OnSelectionChanged();
 
         return true;
     }
 
+    /// <summary>Provides the AddToJournal member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
+    /// <param name="isJournalNavigation">The isJournalNavigation value.</param>
+    /// <param name="journalIndex">The journalIndex value.</param>
     private void AddToJournal(INavigationViewItem viewItem, bool isJournalNavigation, int journalIndex)
     {
         if (isJournalNavigation)
@@ -248,13 +248,13 @@ public partial class NavigationView
 #if DEBUG
         System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL INDEX {_currentIndexInJournal}");
 
-        if (_journal.Count > 0)
-        {
-            System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages, $"JOURNAL LAST ELEMENT {_journal[^1]}");
-        }
+        System.Diagnostics.Debug.WriteLineIf(EnableDebugMessages && _journal.Count > 0, $"JOURNAL LAST ELEMENT {_journal[^1]}");
 #endif
     }
 
+    /// <summary>Provides the GetNavigationItemInstance member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
+    /// <returns>The result.</returns>
     private object GetNavigationItemInstance(INavigationViewItem viewItem)
     {
         if (viewItem.TargetPageType is null)
@@ -262,64 +262,56 @@ public partial class NavigationView
             throw new ArgumentNullException(nameof(viewItem.TargetPageType));
         }
 
-        if (_serviceProvider is not null)
+        return (_serviceProvider, _pageService) switch
         {
-            return _serviceProvider.GetService(viewItem.TargetPageType)
-                ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
-        }
-
-        if (_pageService is not null)
-        {
-            return _pageService.GetPage(viewItem.TargetPageType)
-                ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null");
-        }
-
-        return _cache.Remember(
+            ({ } serviceProvider, _) => serviceProvider.GetService(viewItem.TargetPageType)
+                ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null"),
+            (_, { } pageService) => pageService.GetPage(viewItem.TargetPageType)
+                ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null"),
+            _ => _cache.Remember(
                 viewItem.TargetPageType,
                 viewItem.NavigationCacheMode,
                 ComputeCachedNavigationInstance)
-            ?? throw new ArgumentNullException(
-                $"Unable to get or create instance of {viewItem.TargetPageType} from cache.");
-
+                ?? throw new ArgumentNullException(
+                    $"Unable to get or create instance of {viewItem.TargetPageType} from cache."),
+        };
         object? ComputeCachedNavigationInstance() => GetPageInstanceFromCache(viewItem.TargetPageType);
     }
 
+    /// <summary>Provides the GetPageInstanceFromCache member.</summary>
+    /// <param name="targetPageType">The targetPageType value.</param>
+    /// <returns>The result.</returns>
     private object? GetPageInstanceFromCache(Type? targetPageType)
     {
-        if (targetPageType is null)
-        {
-            return default;
-        }
+        return targetPageType is null ? default : ResolvePageInstance(targetPageType);
 
-        if (_serviceProvider is not null)
+        object ResolvePageInstance(Type pageType)
         {
+            return (_serviceProvider, _pageService) switch
+            {
+                ({ } serviceProvider, _) => GetPageFromServiceProvider(serviceProvider),
+                (_, { } pageService) => pageService.GetPage(pageType)
+                    ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null"),
+                _ => NavigationViewActivator.CreateInstance(pageType)
+                    ?? throw new ArgumentException("Failed to create instance of the page"),
+            };
+
+            object GetPageFromServiceProvider(IServiceProvider serviceProvider)
+            {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine(
-                $"Getting {targetPageType} from cache using IServiceProvider.");
+                System.Diagnostics.Debug.WriteLine(
+                    $"Getting {targetPageType} from cache using IServiceProvider.");
 #endif
 
-            return _serviceProvider.GetService(targetPageType)
-                ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
+                return serviceProvider.GetService(pageType)
+                    ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
+            }
         }
-
-        if (_pageService is not null)
-        {
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine($"Getting {targetPageType} from cache using IPageService.");
-#endif
-
-            return _pageService.GetPage(targetPageType)
-                ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null");
-        }
-
-#if DEBUG
-        System.Diagnostics.Debug.WriteLine($"Getting {targetPageType} from cache using reflection.");
-#endif
-
-        return NavigationViewActivator.CreateInstance(targetPageType)
-            ?? throw new ArgumentException("Failed to create instance of the page");
     }
 
+    /// <summary>Provides the UpdateContent member.</summary>
+    /// <param name="content">The content value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
     private void UpdateContent(object? content, object? dataContext = null)
     {
         if (dataContext is not null && content is FrameworkElement frameworkViewContent)
@@ -327,9 +319,12 @@ public partial class NavigationView
             frameworkViewContent.DataContext = dataContext;
         }
 
-        NavigationViewContentPresenter.Navigate(content);
+        _ = NavigationViewContentPresenter.Navigate(content);
     }
 
+    /// <summary>Provides the OnNavigationViewContentPresenterNavigated member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnNavigationViewContentPresenterNavigated(
         object sender,
         System.Windows.Navigation.NavigationEventArgs e)
@@ -342,6 +337,10 @@ public partial class NavigationView
         _ = frame.RemoveBackEntry();
     }
 
+    /// <summary>Provides the AddToNavigationStack member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
+    /// <param name="addToNavigationStack">The addToNavigationStack value.</param>
+    /// <param name="isBackwardsNavigated">The isBackwardsNavigated value.</param>
     private void AddToNavigationStack(
         INavigationViewItem viewItem,
         bool addToNavigationStack,
@@ -366,6 +365,8 @@ public partial class NavigationView
         ClearNavigationStack(viewItem);
     }
 
+    /// <summary>Provides the UpdateCurrentNavigationStackItem member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
     private void UpdateCurrentNavigationStackItem(INavigationViewItem viewItem)
     {
         if (_navigationStack.Contains(viewItem))
@@ -391,6 +392,8 @@ public partial class NavigationView
         ClearNavigationStack(1);
     }
 
+    /// <summary>Provides the RecreateNavigationStackFromHistory member.</summary>
+    /// <param name="item">The item value.</param>
     private void RecreateNavigationStackFromHistory(INavigationViewItem item)
     {
         if (!_complexNavigationStackHistory.TryGetValue(item, out var historyList) || historyList.Count == 0)
@@ -407,17 +410,12 @@ public partial class NavigationView
             ReplaceFirstElementInNavigationStack(latestHistory[0]!);
         }
 
-        for (var i = startIndex; i < latestHistory.Length; i++)
+        for (var i = startIndex; i < latestHistory.Length && latestHistory[i] is not null; i++)
         {
-            if (latestHistory[i] is null)
-            {
-                break;
-            }
-
             AddToNavigationStack(latestHistory[i]!, true, false);
         }
 
-        historyList.Remove(latestHistory);
+        _ = historyList.Remove(latestHistory);
         /*if (historyList.Count == 0)
             _complexNavigationStackHistory.Remove(item);
         */
@@ -429,6 +427,8 @@ public partial class NavigationView
         AddToNavigationStack(item, true, false);
     }
 
+    /// <summary>Provides the AddToNavigationStackHistory member.</summary>
+    /// <param name="viewItem">The viewItem value.</param>
     private void AddToNavigationStackHistory(INavigationViewItem viewItem)
     {
         var lastItem = _navigationStack[^1];
@@ -441,15 +441,14 @@ public partial class NavigationView
 
         if (!_complexNavigationStackHistory.TryGetValue(lastItem, out var historyList))
         {
-            historyList = new List<INavigationViewItem?[]>(5);
+            historyList = new(5);
             _complexNavigationStackHistory.Add(lastItem, historyList);
         }
 
         var arrayLength = _navigationStack.Count - 1 - startIndex;
         INavigationViewItem[] array;
 
-        //// Initializing an array every time well... not an ideal
-
+//// Initializing an array every time well... not an ideal
 #if NET6_0_OR_GREATER
         array = System.Buffers.ArrayPool<INavigationViewItem>.Shared.Rent(arrayLength);
 #else
@@ -468,12 +467,16 @@ public partial class NavigationView
         }
 
         // Ensure unused slots are null when using pooled arrays to avoid stale references
-        if (i < latestHistory.Length)
+        if (i >= latestHistory.Length)
         {
-            System.Array.Clear(latestHistory, i, latestHistory.Length - i);
+            return;
         }
+
+        System.Array.Clear(latestHistory, i, latestHistory.Length - i);
     }
 
+    /// <summary>Provides the ClearNavigationStack member.</summary>
+    /// <param name="navigationStackItemIndex">The navigationStackItemIndex value.</param>
     private void ClearNavigationStack(int navigationStackItemIndex)
     {
         var navigationStackCount = _navigationStack.Count;
@@ -486,10 +489,12 @@ public partial class NavigationView
 
         for (var j = navigationStackCount - 1; j >= navigationStackCount - length; j--)
         {
-            _navigationStack.Remove(_navigationStack[j]);
+            _ = _navigationStack.Remove(_navigationStack[j]);
         }
     }
 
+    /// <summary>Provides the ClearNavigationStack member.</summary>
+    /// <param name="item">The item value.</param>
     private void ClearNavigationStack(INavigationViewItem item)
     {
         var navigationStackCount = _navigationStack.Count;
@@ -508,6 +513,8 @@ public partial class NavigationView
         ClearNavigationStack(++index);
     }
 
+    /// <summary>Provides the ReplaceFirstElementInNavigationStack member.</summary>
+    /// <param name="newItem">The newItem value.</param>
     private void ReplaceFirstElementInNavigationStack(INavigationViewItem newItem)
     {
         _navigationStack[0].Deactivate(this);

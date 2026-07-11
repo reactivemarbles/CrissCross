@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Extensions;
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>
-/// Allows updating the accents used by controls in the application by swapping dynamic resources.
-/// </summary>
+/// <summary>Allows updating the accents used by controls in the application by swapping dynamic resources.</summary>
 /// <example>
 /// <code lang="csharp">
 /// ApplicationAccentColorManager.Apply(
@@ -27,106 +25,66 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class ApplicationAccentColorManager
 {
-    /// <summary>
-    /// The maximum value of the background HSV brightness after which the text on the accent will be turned dark.
-    /// </summary>
+    /// <summary>The maximum value of the background HSV brightness after which the text on the accent will be turned dark.</summary>
     private const double BackgroundBrightnessThresholdValue = 80d;
 
-    /// <summary>
-    /// Gets the SystemAccentColor.
-    /// </summary>
+    /// <summary>Gets the SystemAccentColor.</summary>
     public static Color SystemAccent
     {
         get
         {
             var resource = UiApplication.Current.Resources["SystemAccentColor"];
 
-            if (resource is Color color)
-            {
-                return color;
-            }
-
-            return Colors.Transparent;
+            return resource is Color color ? color : Colors.Transparent;
         }
     }
 
-    /// <summary>
-    /// Gets the <see cref="Brush"/> of the SystemAccentColor.
-    /// </summary>
+    /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColor.</summary>
     public static Brush SystemAccentBrush => new SolidColorBrush(SystemAccent);
 
-    /// <summary>
-    /// Gets the SystemAccentColorPrimary.
-    /// </summary>
+    /// <summary>Gets the SystemAccentColorPrimary.</summary>
     public static Color PrimaryAccent
     {
         get
         {
             var resource = UiApplication.Current.Resources["SystemAccentColorPrimary"];
 
-            if (resource is Color color)
-            {
-                return color;
-            }
-
-            return Colors.Transparent;
+            return resource is Color color ? color : Colors.Transparent;
         }
     }
 
-    /// <summary>
-    /// Gets the <see cref="Brush"/> of the SystemAccentColorPrimary.
-    /// </summary>
+    /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorPrimary.</summary>
     public static Brush PrimaryAccentBrush => new SolidColorBrush(PrimaryAccent);
 
-    /// <summary>
-    /// Gets the SystemAccentColorSecondary.
-    /// </summary>
+    /// <summary>Gets the SystemAccentColorSecondary.</summary>
     public static Color SecondaryAccent
     {
         get
         {
             var resource = UiApplication.Current.Resources["SystemAccentColorSecondary"];
 
-            if (resource is Color color)
-            {
-                return color;
-            }
-
-            return Colors.Transparent;
+            return resource is Color color ? color : Colors.Transparent;
         }
     }
 
-    /// <summary>
-    /// Gets the <see cref="Brush"/> of the SystemAccentColorSecondary.
-    /// </summary>
+    /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorSecondary.</summary>
     public static Brush SecondaryAccentBrush => new SolidColorBrush(SecondaryAccent);
 
-    /// <summary>
-    /// Gets the SystemAccentColorTertiary.
-    /// </summary>
+    /// <summary>Gets the SystemAccentColorTertiary.</summary>
     public static Color TertiaryAccent
     {
         get
         {
             var resource = UiApplication.Current.Resources["SystemAccentColorTertiary"];
 
-            if (resource is Color color)
-            {
-                return color;
-            }
-
-            return Colors.Transparent;
+            return resource is Color color ? color : Colors.Transparent;
         }
     }
 
-    /// <summary>
-    /// Gets the <see cref="Brush"/> of the SystemAccentColorTertiary.
-    /// </summary>
+    /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorTertiary.</summary>
     public static Brush TertiaryAccentBrush => new SolidColorBrush(TertiaryAccent);
 
-    /// <summary>
-    /// Changes the color accents of the application based on the color entered.
-    /// </summary>
+    /// <summary>Changes the color accents of the application based on the color entered.</summary>
     /// <param name="systemAccent">Primary accent color.</param>
     /// <param name="applicationTheme">If <see cref="ApplicationTheme.Dark"/>, the colors will be different.</param>
     /// <param name="systemGlassColor">If the color is taken from the Glass Color System, its brightness will be increased with the help of the operations on HSV space.</param>
@@ -161,9 +119,7 @@ public static class ApplicationAccentColorManager
         UpdateColorResources(systemAccent, primaryAccent, secondaryAccent, tertiaryAccent);
     }
 
-    /// <summary>
-    /// Changes the color accents of the application based on the entered colors.
-    /// </summary>
+    /// <summary>Changes the color accents of the application based on the entered colors.</summary>
     /// <param name="systemAccent">Primary color.</param>
     /// <param name="primaryAccent">Alternative light or dark color.</param>
     /// <param name="secondaryAccent">Second alternative light or dark color (most used).</param>
@@ -174,21 +130,18 @@ public static class ApplicationAccentColorManager
         Color secondaryAccent,
         Color tertiaryAccent) => UpdateColorResources(systemAccent, primaryAccent, secondaryAccent, tertiaryAccent);
 
-    /// <summary>
-    /// Applies system accent color to the application.
-    /// </summary>
+    /// <summary>Applies system accent color to the application.</summary>
     public static void ApplySystemAccent() => Apply(GetColorizationColor(), ApplicationThemeManager.GetAppTheme());
 
-    /// <summary>
-    /// Gets current Desktop Window Manager colorization color.
-    /// <para>It should be the color defined in the system Personalization.</para>
-    /// </summary>
+    /// <summary>Gets current Desktop Window Manager colorization color. <para>It should be the color defined in the system Personalization.</para></summary>
     /// <returns>A color.</returns>
     public static Color GetColorizationColor() => UnsafeNativeMethods.GetDwmColor();
 
-    /// <summary>
-    /// Updates application resources.
-    /// </summary>
+    /// <summary>Updates application resources.</summary>
+    /// <param name="systemAccent">The systemAccent value.</param>
+    /// <param name="primaryAccent">The primaryAccent value.</param>
+    /// <param name="secondaryAccent">The secondaryAccent value.</param>
+    /// <param name="tertiaryAccent">The tertiaryAccent value.</param>
     private static void UpdateColorResources(
         Color systemAccent,
         Color primaryAccent,

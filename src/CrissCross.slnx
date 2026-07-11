@@ -64,6 +64,8 @@
     <Project Path="CrissCross.WPF.WebView2.Test/CrissCross.WPF.WebView2.Example.csproj">
       <Build Solution="Release|Any CPU" Project="false" />
     </Project>
+    <Project Path="samples/RichTextBoxParity/AvaloniaDemo/RichTextBoxParity.AvaloniaDemo.csproj" />
+    <Project Path="samples/RichTextBoxParity/WpfDemo/WpfDemo.csproj" />
   </Folder>
   <Folder Name="/SolutionSettings/">
     <File Path="../.editorconfig" />

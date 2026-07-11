@@ -1,58 +1,62 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Shapes;
-using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// PersonPicture.
-/// </summary>
+/// <summary>Represents PersonPicture.</summary>
 /// <seealso cref="Control" />
 public partial class PersonPicture : Control, IDisposable
 {
+    /// <summary>Provides the ResourceAccessor member.</summary>
     private static readonly ResourceAccessor ResourceAccessor = new(typeof(PersonPicture));
+
+    /// <summary>Stores the _m_initialsTextBlock value.</summary>
     private TextBlock? _m_initialsTextBlock;
+
+    /// <summary>Stores the _m_badgeNumberTextBlock value.</summary>
     private TextBlock? _m_badgeNumberTextBlock;
+
+    /// <summary>Stores the _m_badgeGlyphIcon value.</summary>
     private FontIcon? _m_badgeGlyphIcon;
+
+    /// <summary>Stores the _m_badgeImageBrush value.</summary>
     private ImageBrush? _m_badgeImageBrush;
+
+    /// <summary>Stores the _m_badgingEllipse value.</summary>
     private Ellipse? _m_badgingEllipse;
+
+    /// <summary>Stores the _m_badgingBackgroundEllipse value.</summary>
     private Ellipse? _m_badgingBackgroundEllipse;
+
+    /// <summary>Stores the _m_displayNameInitials value.</summary>
     private string? _m_displayNameInitials;
-    private CompositeDisposable? _disposables;
+
+    /// <summary>Stores the _disposed value.</summary>
     private bool _disposed;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PersonPicture"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="PersonPicture"/> class.</summary>
     public PersonPicture()
     {
-        TemplateSettings = new PersonPictureTemplateSettings();
+        TemplateSettings = new();
 
-        _disposables = new CompositeDisposable();
-        this.Events().Unloaded.Subscribe(OnUnloaded).DisposeWith(_disposables);
-        this.Events().SizeChanged.Subscribe(OnSizeChanged).DisposeWith(_disposables);
+        Unloaded += OnUnloaded;
+        SizeChanged += OnSizeChanged;
     }
 
-    /// <summary>
-    /// Disposes resources.
-    /// </summary>
+    /// <summary>Disposes resources.</summary>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// When template applied.
-    /// </summary>
+    /// <summary>When template applied.</summary>
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -67,15 +71,11 @@ public partial class PersonPicture : Control, IDisposable
         UpdateIfReady();
     }
 
-    /// <summary>
-    /// Returns class-specific automation peer.
-    /// </summary>
+    /// <summary>Returns class-specific automation peer.</summary>
     /// <returns>The automation peer.</returns>
     protected override AutomationPeer OnCreateAutomationPeer() => new PersonPictureAutomationPeer(this);
 
-    /// <summary>
-    /// Core dispose logic.
-    /// </summary>
+    /// <summary>Core dispose logic.</summary>
     /// <param name="disposing">True when called from Dispose.</param>
     protected virtual void Dispose(bool disposing)
     {
@@ -86,54 +86,53 @@ public partial class PersonPicture : Control, IDisposable
 
         if (disposing)
         {
-            _disposables?.Dispose();
-            _disposables = null;
+            Unloaded -= OnUnloaded;
+            SizeChanged -= OnSizeChanged;
         }
 
         _disposed = true;
     }
 
-    // static helper after fields / ctor per SA12 series preference for fields, ctors, methods
+    /// <summary>Static helper after fields / ctor per SA12 series preference for fields, ctors, methods.</summary>
+    /// <param name="numericValue">The numericvalue.</param>
+    /// <returns>The localized badge text for the numeric value.</returns>
     private static string? GetLocalizedPluralBadgeItemStringResource(int numericValue)
     {
         var valueMod10 = numericValue % 10;
-        if (numericValue == 1)
+        var resourceName = numericValue switch
         {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemSingular);
-        }
-        else if (numericValue == 2)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural7);
-        }
-        else if (numericValue == 3 || numericValue == 4)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural2);
-        }
-        else if (numericValue >= 5 && numericValue <= 10)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural5);
-        }
-        else if (numericValue >= 11 && numericValue <= 19)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural6);
-        }
-        else if (valueMod10 == 1)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural1);
-        }
-        else if (valueMod10 >= 2 && valueMod10 <= 4)
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural3);
-        }
-        else
-        {
-            return ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemPlural4);
-        }
+            1 => ResourceAccessor.BadgeItemSingular,
+            2 => ResourceAccessor.BadgeItemPlural7,
+            3 or 4 => ResourceAccessor.BadgeItemPlural2,
+            >= 5 and <= 10 => ResourceAccessor.BadgeItemPlural5,
+            >= 11 and <= 19 => ResourceAccessor.BadgeItemPlural6,
+            _ when valueMod10 == 1 => ResourceAccessor.BadgeItemPlural1,
+            _ when valueMod10 is >= 2 and <= 4 => ResourceAccessor.BadgeItemPlural3,
+            _ => ResourceAccessor.BadgeItemPlural4
+        };
+
+        return ResourceAccessor.GetLocalizedStringResource(resourceName);
     }
 
-    /// <summary>
-    /// Helper to determine the initials that should be shown.
-    /// </summary>
+    /// <summary>Gets the square size required after a size change.</summary>
+    /// <param name="args">The size changed event arguments.</param>
+    /// <returns>The square size, or <see langword="null"/> when neither dimension changed.</returns>
+    private static double? GetSquareSize(SizeChangedEventArgs args)
+    {
+        var widthChanged = args.NewSize.Width != args.PreviousSize.Width;
+        var heightChanged = args.NewSize.Height != args.PreviousSize.Height;
+
+        return (widthChanged, heightChanged) switch
+        {
+            (true, true) => Math.Min(args.NewSize.Width, args.NewSize.Height),
+            (true, false) => args.NewSize.Width,
+            (false, true) => args.NewSize.Height,
+            _ => null
+        };
+    }
+
+    /// <summary>Helper to determine the initials that should be shown.</summary>
+    /// <returns>The result.</returns>
     private string? GetInitials()
     {
         if (!string.IsNullOrEmpty(Initials))
@@ -150,14 +149,11 @@ public partial class PersonPicture : Control, IDisposable
         }
     }
 
-    /// <summary>
-    /// Helper to determine the image source that should be shown.
-    /// </summary>
+    /// <summary>Helper to determine the image source that should be shown.</summary>
+    /// <returns>The result.</returns>
     private ImageSource? GetImageSource() => ProfilePicture;
 
-    /// <summary>
-    /// Updates Control elements, if available, with the latest values.
-    /// </summary>
+    /// <summary>Updates Control elements, if available, with the latest values.</summary>
     private void UpdateIfReady()
     {
         var initials = GetInitials();
@@ -165,10 +161,10 @@ public partial class PersonPicture : Control, IDisposable
 
         var templateSettings = TemplateSettings;
         templateSettings.ActualInitials = initials;
-        if (imageSrc != null)
+        if (imageSrc is not null)
         {
             var imageBrush = templateSettings.ActualImageBrush;
-            if (imageBrush == null)
+            if (imageBrush is null)
             {
                 imageBrush = new ImageBrush
                 {
@@ -188,30 +184,28 @@ public partial class PersonPicture : Control, IDisposable
         // When IsGroup evaluates to false, we will restore state.
         if (IsGroup)
         {
-            VisualStateManager.GoToState(this, "Group", false);
+            _ = VisualStateManager.GoToState(this, "Group", false);
         }
-        else if (imageSrc != null)
+        else if (imageSrc is not null)
         {
-            VisualStateManager.GoToState(this, "Photo", false);
+            _ = VisualStateManager.GoToState(this, "Photo", false);
         }
         else if (!string.IsNullOrEmpty(initials))
         {
-            VisualStateManager.GoToState(this, "Initials", false);
+            _ = VisualStateManager.GoToState(this, "Initials", false);
         }
         else
         {
-            VisualStateManager.GoToState(this, "NoPhotoOrInitials", false);
+            _ = VisualStateManager.GoToState(this, "NoPhotoOrInitials", false);
         }
 
         UpdateAutomationName();
     }
 
-    /// <summary>
-    /// Updates the state of the Badging element.
-    /// </summary>
+    /// <summary>Updates the state of the Badging element.</summary>
     private void UpdateBadge()
     {
-        if (BadgeImageSource != null)
+        if (BadgeImageSource is not null)
         {
             UpdateBadgeImageSource();
         }
@@ -225,16 +219,16 @@ public partial class PersonPicture : Control, IDisposable
         }
         else
         {// No badge properties set, so clear the badge XAML
-            VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, "NoBadge", false);
 
             var badgeNumberTextBlock = _m_badgeNumberTextBlock;
-            if (badgeNumberTextBlock != null)
+            if (badgeNumberTextBlock is not null)
             {
                 badgeNumberTextBlock.Text = string.Empty;
             }
 
             var badgeGlyphIcon = _m_badgeGlyphIcon;
-            if (badgeGlyphIcon != null)
+            if (badgeGlyphIcon is not null)
             {
                 badgeGlyphIcon.Glyph = string.Empty;
             }
@@ -243,12 +237,10 @@ public partial class PersonPicture : Control, IDisposable
         UpdateAutomationName();
     }
 
-    /// <summary>
-    /// Updates Badging Number text element.
-    /// </summary>
+    /// <summary>Updates Badging Number text element.</summary>
     private void UpdateBadgeNumber()
     {
-        if (_m_badgingEllipse == null || _m_badgeNumberTextBlock == null)
+        if (_m_badgingEllipse is null || _m_badgeNumberTextBlock is null)
         {
             return;
         }
@@ -257,13 +249,13 @@ public partial class PersonPicture : Control, IDisposable
 
         if (badgeNumber <= 0)
         {
-            VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, "NoBadge", false);
             _m_badgeNumberTextBlock.Text = string.Empty;
             return;
         }
 
         // should have badging number to show if we are here
-        VisualStateManager.GoToState(this, "BadgeWithoutImageSource", false);
+        _ = VisualStateManager.GoToState(this, "BadgeWithoutImageSource", false);
 
         if (badgeNumber <= 99)
         {
@@ -275,12 +267,10 @@ public partial class PersonPicture : Control, IDisposable
         }
     }
 
-    /// <summary>
-    /// Updates Badging Glyph element.
-    /// </summary>
+    /// <summary>Updates Badging Glyph element.</summary>
     private void UpdateBadgeGlyph()
     {
-        if (_m_badgingEllipse == null || _m_badgeGlyphIcon == null)
+        if (_m_badgingEllipse is null || _m_badgeGlyphIcon is null)
         {
             return;
         }
@@ -289,114 +279,82 @@ public partial class PersonPicture : Control, IDisposable
 
         if (string.IsNullOrEmpty(badgeGlyph))
         {
-            VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, "NoBadge", false);
             _m_badgeGlyphIcon.Glyph = string.Empty;
             return;
         }
 
         // should have badging Glyph to show if we are here
-        VisualStateManager.GoToState(this, "BadgeWithoutImageSource", false);
+        _ = VisualStateManager.GoToState(this, "BadgeWithoutImageSource", false);
 
         _m_badgeGlyphIcon.Glyph = badgeGlyph;
     }
 
-    /// <summary>
-    /// Updates Badging Image element.
-    /// </summary>
+    /// <summary>Updates Badging Image element.</summary>
     private void UpdateBadgeImageSource()
     {
         _m_badgeImageBrush ??= GetTemplateChild("BadgeImageBrush") as ImageBrush;
 
-        if (_m_badgingEllipse == null || _m_badgeImageBrush == null)
+        if (_m_badgingEllipse is null || _m_badgeImageBrush is null)
         {
             return;
         }
 
         _m_badgeImageBrush.ImageSource = BadgeImageSource;
 
-        if (BadgeImageSource != null)
+        if (BadgeImageSource is not null)
         {
-            VisualStateManager.GoToState(this, "BadgeWithImageSource", false);
+            _ = VisualStateManager.GoToState(this, "BadgeWithImageSource", false);
         }
         else
         {
-            VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, "NoBadge", false);
         }
     }
 
-    /// <summary>
-    /// Sets the UI Automation name for the control based on contact name and badge state.
-    /// </summary>
+    /// <summary>Sets the UI Automation name for the control based on contact name and badge state.</summary>
     private void UpdateAutomationName()
     {
-        string? automationName;
-        string? contactName;
-
         // The AutomationName for the control is in the format: PersonName, BadgeInformation.
         // PersonName is set based on the name / initial properties in the order below.
         // if none exist, it defaults to "Person"
-        if (IsGroup)
+        var contactName = IsGroup switch
         {
-            contactName = ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_GroupName);
-        }
-        else if (!string.IsNullOrEmpty(DisplayName))
-        {
-            contactName = DisplayName;
-        }
-        else if (!string.IsNullOrEmpty(Initials))
-        {
-            contactName = Initials;
-        }
-        else
-        {
-            contactName = ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_PersonName);
-        }
+            true => ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.GroupName),
+            _ when !string.IsNullOrEmpty(DisplayName) => DisplayName,
+            _ when !string.IsNullOrEmpty(Initials) => Initials,
+            _ => ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.PersonName)
+        };
 
         // BadgeInformation portion of the AutomationName is set to 'n items' if there is a BadgeNumber,
         // or 'icon' for BadgeGlyph or BadgeImageSource. If BadgeText is specified, it will override
         // the string 'items' or 'icon'
-        if (BadgeNumber > 0)
+        var automationName = BadgeNumber switch
         {
-            if (!string.IsNullOrEmpty(BadgeText))
-            {
-                automationName = string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeItemTextOverride)!,
+            > 0 when !string.IsNullOrEmpty(BadgeText) => string.Format(
+                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeItemTextOverride)!,
                     contactName,
                     BadgeNumber,
-                    BadgeText);
-            }
-            else
-            {
-                automationName = string.Format(
+                    BadgeText),
+            > 0 => string.Format(
                     GetLocalizedPluralBadgeItemStringResource(BadgeNumber)!,
                     contactName,
-                    BadgeNumber);
-            }
-        }
-        else if (!string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource != null)
-        {
-            if (!string.IsNullOrEmpty(BadgeText))
-            {
-                automationName = string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeIconTextOverride)!,
+                    BadgeNumber),
+            _ when (!string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource is not null) && !string.IsNullOrEmpty(BadgeText) => string.Format(
+                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIconTextOverride)!,
                     contactName,
-                    BadgeText);
-            }
-            else
-            {
-                automationName = string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.SR_BadgeIcon)!,
-                    contactName);
-            }
-        }
-        else
-        {
-            automationName = contactName;
-        }
+                    BadgeText),
+            _ when !string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource is not null => string.Format(
+                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIcon)!,
+                    contactName),
+            _ => contactName
+        };
 
         AutomationProperties.SetName(this, automationName);
     }
 
+    /// <summary>Provides the PrivateOnPropertyChanged member.</summary>
+    /// <param name="args">The event arguments.</param>
     private void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs args)
     {
         var property = args.Property;
@@ -423,44 +381,27 @@ public partial class PersonPicture : Control, IDisposable
         }
     }
 
-    // DependencyProperty changed event handlers
+    /// <summary>DependencyProperty changed event handlers.</summary>
     private void OnDisplayNameChanged()
     {
-        _m_displayNameInitials = InitialsGenerator.InitialsFromDisplayName(DisplayName);
+        _m_displayNameInitials = InitialsGeneratorExtensions.InitialsFromDisplayName(DisplayName);
 
         UpdateIfReady();
     }
 
-    // Event handlers
-    private void OnSizeChanged(SizeChangedEventArgs args)
+    /// <summary>Event handlers.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
+    private void OnSizeChanged(object sender, SizeChangedEventArgs args)
     {
+        var squareSize = GetSquareSize(args);
+        if (squareSize is null)
         {
-            var widthChanged = args.NewSize.Width != args.PreviousSize.Width;
-            var heightChanged = args.NewSize.Height != args.PreviousSize.Height;
-            double newSize;
-
-            if (widthChanged && heightChanged)
-            {
-                // Maintain circle by enforcing the new size on both Width and Height.
-                // To do so, we will use the minimum value.
-                newSize = (args.NewSize.Width < args.NewSize.Height) ? args.NewSize.Width : args.NewSize.Height;
-            }
-            else if (widthChanged)
-            {
-                newSize = args.NewSize.Width;
-            }
-            else if (heightChanged)
-            {
-                newSize = args.NewSize.Height;
-            }
-            else
-            {
-                return;
-            }
-
-            Height = newSize;
-            Width = newSize;
+            return;
         }
+
+        Height = squareSize.Value;
+        Width = squareSize.Value;
 
         // Calculate the FontSize of the control's text. Design guidelines have specified the
         // font size to be 42% of the container. Since it's circular, 42% of either Width or Height.
@@ -469,27 +410,42 @@ public partial class PersonPicture : Control, IDisposable
         var fontSize = Math.Max(1.0, Width * .42);
 
         var initialsTextBlock = _m_initialsTextBlock;
-        if (initialsTextBlock != null)
+        if (initialsTextBlock is not null)
         {
             initialsTextBlock.FontSize = fontSize;
         }
 
-        if (_m_badgingEllipse != null && _m_badgingBackgroundEllipse != null && _m_badgeNumberTextBlock != null && _m_badgeGlyphIcon != null)
-        {
-            // Maintain badging circle and font size by enforcing the new size on both Width and Height.
-            // Design guidelines have specified the font size to be 60% of the badging plate, and we want to keep
-            // badging plate to be about 50% of the control so that don't block the initial/profile picture.
-            var newSize = (args.NewSize.Width < args.NewSize.Height) ? args.NewSize.Width : args.NewSize.Height;
-            _m_badgingEllipse.Height = newSize * 0.5;
-            _m_badgingEllipse.Width = newSize * 0.5;
-            _m_badgingBackgroundEllipse.Height = newSize * 0.5;
-            _m_badgingBackgroundEllipse.Width = newSize * 0.5;
-            _m_badgeNumberTextBlock.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
-            _m_badgeGlyphIcon.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
-        }
+        UpdateBadgeSize(args.NewSize);
     }
 
-    private void OnUnloaded(RoutedEventArgs e)
+    /// <summary>Updates the badge visual size for the control size.</summary>
+    /// <param name="newControlSize">The new control size.</param>
+    private void UpdateBadgeSize(Size newControlSize)
+    {
+        if (_m_badgingEllipse is null ||
+            _m_badgingBackgroundEllipse is null ||
+            _m_badgeNumberTextBlock is null ||
+            _m_badgeGlyphIcon is null)
+        {
+            return;
+        }
+
+        // Maintain badging circle and font size by enforcing the new size on both Width and Height.
+        // Design guidelines have specified the font size to be 60% of the badging plate, and we want to keep
+        // badging plate to be about 50% of the control so that don't block the initial/profile picture.
+        var newSize = Math.Min(newControlSize.Width, newControlSize.Height);
+        _m_badgingEllipse.Height = newSize * 0.5;
+        _m_badgingEllipse.Width = newSize * 0.5;
+        _m_badgingBackgroundEllipse.Height = newSize * 0.5;
+        _m_badgingBackgroundEllipse.Width = newSize * 0.5;
+        _m_badgeNumberTextBlock.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
+        _m_badgeGlyphIcon.FontSize = Math.Max(1.0, _m_badgingEllipse.Height * 0.6);
+    }
+
+    /// <summary>Provides the OnUnloaded member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
+    private void OnUnloaded(object sender, RoutedEventArgs e)
     {
         Dispose();
     }

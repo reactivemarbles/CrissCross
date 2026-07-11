@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using BenchmarkDotNet.Configs;
@@ -7,19 +7,15 @@ using BenchmarkDotNet.Running;
 
 namespace CrissCross.WPF.Benchmarks
 {
-    /// <summary>
-    /// Entry point for running WPF benchmarks.
-    /// </summary>
+    /// <summary>Entry point for running WPF benchmarks.</summary>
     public static class Program
     {
-        /// <summary>
-        /// Main entry point for BenchmarkDotNet.
-        /// </summary>
+        /// <summary>Main entry point for BenchmarkDotNet.</summary>
         /// <param name="args">Command-line arguments.</param>
         public static void Main(string[] args)
         {
             var config = ManualConfig.CreateEmpty();
-            BenchmarkRunner.Run<ViewModelRoutedViewHostBenchmark>(config);
+            _ = BenchmarkRunner.Run<ViewModelRoutedViewHostBenchmark>(config);
         }
     }
 }

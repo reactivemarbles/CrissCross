@@ -1,21 +1,15 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Linq;
-using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Test.Views.Pages;
 
-/// <summary>
-/// Interaction logic for LoginView.xaml.
-/// </summary>
+/// <summary>Interaction logic for LoginView.xaml.</summary>
 public partial class LoginPage
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LoginPage" /> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="LoginPage" /> class.</summary>
     /// <param name="loginViewModel">The login view model.</param>
     public LoginPage(LoginViewModel loginViewModel)
     {
@@ -23,15 +17,21 @@ public partial class LoginPage
         ViewModel = loginViewModel;
 
         // Bind the password
-        ViewModel.WhenAnyValue(x => x.Password).Subscribe(password => Password.Password = password ?? string.Empty);
-        Password.Events().PasswordChanged.Select(_ => Password.Password).BindTo(ViewModel, x => x.Password);
+        _ = ViewModel.WhenAnyValue(x => x.Password).Subscribe(password => Password.Password = password ?? string.Empty);
+        _ = EventSignal
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => Password.PasswordChanged += handler, handler => Password.PasswordChanged -= handler)
+            .Select(_ => Password.Password)
+            .BindTo(ViewModel, x => x.Password);
 
         // Bind the username
-        ViewModel.WhenAnyValue(x => x.Username).Subscribe(x => UserName.Text = x);
-        UserName.Events().TextChanged.Select(_ => UserName.Text).BindTo(ViewModel, x => x.Username);
+        _ = ViewModel.WhenAnyValue(x => x.Username).Subscribe(x => UserName.Text = x);
+        _ = EventSignal
+            .From<TextChangedEventHandler, TextChangedEventArgs>(handler => UserName.TextChanged += handler, handler => UserName.TextChanged -= handler)
+            .Select(_ => UserName.Text)
+            .BindTo(ViewModel, x => x.Username);
 
         LoginButton.Command = ViewModel.LoginCommand;
-        UserName.Focus();
+        _ = UserName.Focus();
     }
 
     /// <summary>

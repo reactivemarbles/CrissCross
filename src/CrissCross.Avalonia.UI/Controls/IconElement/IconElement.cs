@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -8,34 +8,28 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Represents the base class for an icon UI element.
-/// </summary>
+/// <summary>Represents the base class for an icon UI element.</summary>
 public abstract class IconElement : Control
 {
-    /// <summary>
-    /// Property for <see cref="Foreground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Foreground"/>.</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty = AvaloniaProperty.Register<IconElement, IBrush?>(
-        nameof(Foreground), defaultValue: Brushes.Black);
+        nameof(Foreground),
+        defaultValue: Brushes.Black);
 
+    /// <summary>Provides the IconElement member.</summary>
     static IconElement()
     {
         FocusableProperty.OverrideDefaultValue<IconElement>(false);
     }
 
-    /// <summary>
-    /// Gets or sets the foreground brush.
-    /// </summary>
+    /// <summary>Gets or sets the foreground brush.</summary>
     public IBrush? Foreground
     {
         get => GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
     }
 
-    /// <summary>
-    /// Coerces the value of an Icon dependency property, allowing the use of either IconElement or IconSourceElement.
-    /// </summary>
+    /// <summary>Coerces the value of an Icon dependency property, allowing the use of either IconElement or IconSourceElement.</summary>
     /// <param name="o">The dependency object.</param>
     /// <param name="baseValue">The value to be coerced.</param>
     /// <returns>An IconElement, either directly or derived from an IconSourceElement.</returns>

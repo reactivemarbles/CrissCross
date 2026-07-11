@@ -12,10 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
-    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
   </ItemGroup>
 

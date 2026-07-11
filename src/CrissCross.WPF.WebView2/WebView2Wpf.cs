@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -14,31 +14,13 @@ using Microsoft.Web.WebView2.Wpf;
 
 namespace CrissCross.WPF;
 
-/// <summary>
-/// Navigation Web View.
-/// </summary>
+/// <summary>Navigation Web View.</summary>
 /// <seealso cref="ContentControl" />
 /// <seealso cref="IDisposable" />
 [ToolboxItem(true)]
 public class WebView2Wpf : ContentControl, IWebView2
 {
-    private static readonly DependencyPropertyKey CanGoBackPropertyKey = DependencyProperty.RegisterReadOnly(
-        nameof(CanGoBack),
-        typeof(bool),
-        typeof(WebView2Wpf),
-        new PropertyMetadata(false));
-
-    private static readonly DependencyPropertyKey CanGoForwardPropertyKey = DependencyProperty.RegisterReadOnly(
-        nameof(CanGoForward),
-        typeof(bool),
-        typeof(WebView2Wpf),
-        new PropertyMetadata(false));
-
-#pragma warning disable SA1202 // Elements should be ordered by access
-
-    /// <summary>
-    /// The automatic dispose property.
-    /// </summary>
+    /// <summary>The automatic dispose property.</summary>
     public static readonly DependencyProperty AutoDisposeProperty =
         DependencyProperty.Register(
             nameof(AutoDispose),
@@ -46,172 +28,158 @@ public class WebView2Wpf : ContentControl, IWebView2
             typeof(WebView2Wpf),
             new PropertyMetadata(true, AutoDisposePropertyChanged));
 
-    /// <summary>
-    /// The allow external drop property.
-    /// </summary>
+    /// <summary>The allow external drop property.</summary>
     public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
             nameof(AllowExternalDrop),
             typeof(bool),
             typeof(WebView2Wpf),
             new PropertyMetadata(true, AllowExternalDropPropertyChanged));
 
-    /// <summary>
-    /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.
-    /// </summary>
-    public static readonly DependencyProperty CanGoBackProperty = CanGoBackPropertyKey!.DependencyProperty;
+    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.</summary>
+    public static readonly DependencyProperty CanGoBackProperty;
 
-    /// <summary>
-    /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoForward property.
-    /// </summary>
-    public static readonly DependencyProperty CanGoForwardProperty = CanGoForwardPropertyKey!.DependencyProperty;
+    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoForward property.</summary>
+    public static readonly DependencyProperty CanGoForwardProperty;
 
-    /// <summary>
-    /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CreationProperties property.
-    /// </summary>
+    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CreationProperties property.</summary>
     public static readonly DependencyProperty CreationPropertiesProperty = DependencyProperty.Register(
         nameof(CreationProperties),
         typeof(CoreWebView2CreationProperties),
         typeof(WebView2Wpf),
         new PropertyMetadata(CreationPropertiesChanged));
 
-    /// <summary>
-    /// The navigate back is enabled property.
-    /// </summary>
+    /// <summary>The navigate back is enabled property.</summary>
     public static new readonly DependencyProperty ContentProperty = DependencyProperty.Register(
         nameof(Content),
         typeof(object),
         typeof(WebView2Wpf),
         new PropertyMetadata(null, ContentChanged));
 
-    /// <summary>
-    /// The default background color property.
-    /// </summary>
+    /// <summary>The default background color property.</summary>
     public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
             nameof(DefaultBackgroundColor),
             typeof(System.Drawing.Color),
             typeof(WebView2Wpf),
             new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
 
-    /// <summary>
-    /// The design mode foreground color property.
-    /// </summary>
+    /// <summary>The design mode foreground color property.</summary>
     public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
         nameof(DesignModeForegroundColor),
         typeof(System.Drawing.Color),
         typeof(WebView2Wpf),
         new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
 
-    /// <summary>
-    /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.Source property.
-    /// </summary>
+    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.Source property.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(Uri),
         typeof(WebView2Wpf),
         new PropertyMetadata(SourcePropertyChanged));
 
-    /// <summary>
-    /// The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.ZoomFactor property.
-    /// </summary>
+    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.ZoomFactor property.</summary>
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
         typeof(WebView2Wpf),
         new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
 
-#pragma warning restore SA1202 // Elements should be ordered by access
+    /// <summary>The WPF DependencyProperty key which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.</summary>
+    private static readonly DependencyPropertyKey CanGoBackPropertyKey;
 
-    private readonly WebView2 _WebBrowser;
-    private readonly RoutedEventHandler _unloadedHandler; // Added handler field
+    /// <summary>The WPF DependencyProperty key which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoForward property.</summary>
+    private static readonly DependencyPropertyKey CanGoForwardPropertyKey;
+
+    /// <summary>Stores the web browser.</summary>
+    private readonly WebView2 _webBrowser;
+
+    /// <summary>Stores the window Host value.</summary>
     private WindowHost<Window>? _windowHost;
+
+    /// <summary>Stores the disposed value.</summary>
     private bool _disposedValue;
+
+    /// <summary>Stores the parent Window value.</summary>
     private Window? _parentWindow;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WebView2Wpf"/> class.
-    /// </summary>
+    /// <summary>Initializes static members of the <see cref="WebView2Wpf"/> class.</summary>
+    static WebView2Wpf()
+    {
+        CanGoBackPropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(CanGoBack),
+            typeof(bool),
+            typeof(WebView2Wpf),
+            new PropertyMetadata(false));
+
+        CanGoForwardPropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(CanGoForward),
+            typeof(bool),
+            typeof(WebView2Wpf),
+            new PropertyMetadata(false));
+
+        CanGoBackProperty = CanGoBackPropertyKey.DependencyProperty;
+        CanGoForwardProperty = CanGoForwardPropertyKey.DependencyProperty;
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="WebView2Wpf"/> class.</summary>
     public WebView2Wpf()
     {
-        _WebBrowser = new()
+        _webBrowser = new()
         {
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
         };
-        _unloadedHandler = (s, e) =>
-        {
-            if (AutoDispose)
-            {
-                Dispose();
-            }
-        };
     }
 
-    /// <summary>
-    /// Occurs when [content loading].
-    /// </summary>
+    /// <summary>Occurs when [content loading].</summary>
     public event EventHandler<CoreWebView2ContentLoadingEventArgs> ContentLoading
     {
-        add => _WebBrowser.ContentLoading += value;
-        remove => _WebBrowser.ContentLoading -= value;
+        add => _webBrowser.ContentLoading += value;
+        remove => _webBrowser.ContentLoading -= value;
     }
 
-    /// <summary>
-    /// Occurs when [core web view2 initialization completed].
-    /// </summary>
+    /// <summary>Occurs when [core web view2 initialization completed].</summary>
     public event EventHandler<CoreWebView2InitializationCompletedEventArgs> CoreWebView2InitializationCompleted
     {
-        add => _WebBrowser.CoreWebView2InitializationCompleted += value;
-        remove => _WebBrowser.CoreWebView2InitializationCompleted -= value;
+        add => _webBrowser.CoreWebView2InitializationCompleted += value;
+        remove => _webBrowser.CoreWebView2InitializationCompleted -= value;
     }
 
-    /// <summary>
-    /// Occurs when [navigation completed].
-    /// </summary>
+    /// <summary>Occurs when [navigation completed].</summary>
     public event EventHandler<CoreWebView2NavigationCompletedEventArgs> NavigationCompleted
     {
-        add => _WebBrowser.NavigationCompleted += value;
-        remove => _WebBrowser.NavigationCompleted -= value;
+        add => _webBrowser.NavigationCompleted += value;
+        remove => _webBrowser.NavigationCompleted -= value;
     }
 
-    /// <summary>
-    /// Occurs when [navigation starting].
-    /// </summary>
+    /// <summary>Occurs when [navigation starting].</summary>
     public event EventHandler<CoreWebView2NavigationStartingEventArgs> NavigationStarting
     {
-        add => _WebBrowser.NavigationStarting += value;
-        remove => _WebBrowser.NavigationStarting -= value;
+        add => _webBrowser.NavigationStarting += value;
+        remove => _webBrowser.NavigationStarting -= value;
     }
 
-    /// <summary>
-    /// Occurs when [source changed].
-    /// </summary>
+    /// <summary>Occurs when [source changed].</summary>
     public event EventHandler<CoreWebView2SourceChangedEventArgs> SourceChanged
     {
-        add => _WebBrowser.SourceChanged += value;
-        remove => _WebBrowser.SourceChanged -= value;
+        add => _webBrowser.SourceChanged += value;
+        remove => _webBrowser.SourceChanged -= value;
     }
 
-    /// <summary>
-    /// Occurs when [web message received].
-    /// </summary>
+    /// <summary>Occurs when [web message received].</summary>
     public event EventHandler<CoreWebView2WebMessageReceivedEventArgs> WebMessageReceived
     {
-        add => _WebBrowser.WebMessageReceived += value;
-        remove => _WebBrowser.WebMessageReceived -= value;
+        add => _webBrowser.WebMessageReceived += value;
+        remove => _webBrowser.WebMessageReceived -= value;
     }
 
-    /// <summary>
-    /// Occurs when [zoom factor changed].
-    /// </summary>
+    /// <summary>Occurs when [zoom factor changed].</summary>
     public event EventHandler<EventArgs> ZoomFactorChanged
     {
-        add => _WebBrowser.ZoomFactorChanged += value;
-        remove => _WebBrowser.ZoomFactorChanged -= value;
+        add => _webBrowser.ZoomFactorChanged += value;
+        remove => _webBrowser.ZoomFactorChanged -= value;
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [allow external drop].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [allow external drop].</summary>
     /// <value>
     ///   <c>true</c> if [allow external drop]; otherwise, <c>false</c>.
     /// </value>
@@ -233,7 +201,7 @@ public class WebView2Wpf : ContentControl, IWebView2
     ///   <c>true</c> if this instance can go back; otherwise, <c>false</c>.
     /// </value>
     [Browsable(false)]
-    public bool CanGoBack => _WebBrowser.CanGoBack;
+    public bool CanGoBack => _webBrowser.CanGoBack;
 
     /// <summary>
     /// Gets a value indicating whether this instance can go forward.
@@ -246,17 +214,15 @@ public class WebView2Wpf : ContentControl, IWebView2
     ///   <c>true</c> if this instance can go forward; otherwise, <c>false</c>.
     /// </value>
     [Browsable(false)]
-    public bool CanGoForward => _WebBrowser.CanGoForward;
+    public bool CanGoForward => _webBrowser.CanGoForward;
 
-    /// <summary>
-    /// Gets the context menu.
-    /// </summary>
+    /// <summary>Gets the context menu.</summary>
     /// <value>
     /// The context menu.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new ContextMenu ContextMenu => _WebBrowser.ContextMenu;
+    public new ContextMenu ContextMenu => _webBrowser.ContextMenu;
 
     /// <summary>
     /// Gets accesses the complete functionality of the underlying Microsoft.Web.WebView2.Core.CoreWebView2
@@ -267,11 +233,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// The core web view2.
     /// </value>
     [Browsable(false)]
-    public CoreWebView2 CoreWebView2 => _WebBrowser.CoreWebView2;
+    public CoreWebView2 CoreWebView2 => _webBrowser.CoreWebView2;
 
-    /// <summary>
-    /// Gets or sets the creation properties.
-    /// </summary>
+    /// <summary>Gets or sets the creation properties.</summary>
     /// <value>
     /// The creation properties.
     /// </value>
@@ -282,9 +246,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(CreationPropertiesProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default color of the background.
-    /// </summary>
+    /// <summary>Gets or sets the default color of the background.</summary>
     /// <value>
     /// The default color of the background.
     /// </value>
@@ -295,9 +257,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(DefaultBackgroundColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the color of the design mode foreground.
-    /// </summary>
+    /// <summary>Gets or sets the color of the design mode foreground.</summary>
     /// <value>
     /// The color of the design mode foreground.
     /// </value>
@@ -308,59 +268,47 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(DesignModeForegroundColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets the effect.
-    /// </summary>
+    /// <summary>Gets the effect.</summary>
     /// <value>
     /// The effect.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new Effect Effect => _WebBrowser.Effect;
+    public new Effect Effect => _webBrowser.Effect;
 
-    /// <summary>
-    /// Gets the focus visual style.
-    /// </summary>
+    /// <summary>Gets the focus visual style.</summary>
     /// <value>
     /// The focus visual style.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new Style FocusVisualStyle => _WebBrowser.FocusVisualStyle;
+    public new Style FocusVisualStyle => _webBrowser.FocusVisualStyle;
 
-    /// <summary>
-    /// Gets the input scope.
-    /// </summary>
+    /// <summary>Gets the input scope.</summary>
     /// <value>
     /// The input scope.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new InputScope InputScope => _WebBrowser.InputScope;
+    public new InputScope InputScope => _webBrowser.InputScope;
 
-    /// <summary>
-    /// Gets the opacity.
-    /// </summary>
+    /// <summary>Gets the opacity.</summary>
     /// <value>
     /// The opacity.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new double Opacity => _WebBrowser.Opacity;
+    public new double Opacity => _webBrowser.Opacity;
 
-    /// <summary>
-    /// Gets the opacity mask.
-    /// </summary>
+    /// <summary>Gets the opacity mask.</summary>
     /// <value>
     /// The opacity mask.
     /// </value>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public new System.Windows.Media.Brush OpacityMask => _WebBrowser.OpacityMask;
+    public new System.Windows.Media.Brush OpacityMask => _webBrowser.OpacityMask;
 
-    /// <summary>
-    /// Gets or sets the source.
-    /// </summary>
+    /// <summary>Gets or sets the source.</summary>
     /// <value>
     /// The source.
     /// </value>
@@ -371,9 +319,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(SourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [zoom factor].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [zoom factor].</summary>
     /// <value>
     ///   <c>true</c> if [zoom factor]; otherwise, <c>false</c>.
     /// </value>
@@ -384,9 +330,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(ZoomFactorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the content of the XAML overlay />.
-    /// </summary>
+    /// <summary>Gets or sets the content of the XAML overlay />.</summary>
     [Bindable(true)]
     [Category("Content")]
     public new object Content
@@ -395,9 +339,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(ContentProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [automatic dispose].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [automatic dispose].</summary>
     /// <value>
     ///   <c>true</c> if [automatic dispose]; otherwise, <c>false</c>.
     /// </value>
@@ -407,28 +349,22 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(AutoDisposeProperty, value);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
+    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     public void Dispose()
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Ensures the core web view2 asynchronous.
-    /// </summary>
+    /// <summary>Ensures the core web view2 asynchronous.</summary>
     /// <param name="environment">The environment.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
     ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
     ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
-    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) => _WebBrowser.EnsureCoreWebView2Async(environment);
+    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) => _webBrowser.EnsureCoreWebView2Async(environment);
 
-    /// <summary>
-    /// Ensures the core web view2 asynchronous.
-    /// </summary>
+    /// <summary>Ensures the core web view2 asynchronous.</summary>
     /// <param name="environment">The environment.</param>
     /// <param name="controllerOptions">The controller options.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
@@ -436,7 +372,7 @@ public class WebView2Wpf : ContentControl, IWebView2
     ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
     public Task EnsureCoreWebView2Async(CoreWebView2Environment? environment = null, CoreWebView2ControllerOptions? controllerOptions = null) =>
-        _WebBrowser.EnsureCoreWebView2Async(environment, controllerOptions);
+        _webBrowser.EnsureCoreWebView2Async(environment, controllerOptions);
 
     /// <summary>
     /// Executes JavaScript code from the javaScript parameter in the current top level
@@ -445,21 +381,21 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// </summary>
     /// <param name="javaScript">The java script.</param>
     /// <returns>A string.</returns>
-    public async Task<string> ExecuteScriptAsync(string javaScript) => await _WebBrowser.ExecuteScriptAsync(javaScript);
+    public Task<string> ExecuteScriptAsync(string javaScript) => _webBrowser.ExecuteScriptAsync(javaScript);
 
     /// <summary>
     /// Navigates the WebView to the previous page in the navigation history. Equivalent
     ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
-    public void GoBack() => _WebBrowser?.GoBack();
+    public void GoBack() => _webBrowser?.GoBack();
 
     /// <summary>
     /// Navigates the WebView to the next page in the navigation history. Equivalent
     ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoForward on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
-    public void GoForward() => _WebBrowser?.GoForward();
+    public void GoForward() => _webBrowser?.GoForward();
 
     /// <summary>
     /// Initiates a navigation to htmlContent as source HTML of a new document. Equivalent
@@ -467,152 +403,191 @@ public class WebView2Wpf : ContentControl, IWebView2
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
     /// <param name="htmlContent">Content of the HTML.</param>
-    public void NavigateToString(string htmlContent) => _WebBrowser?.NavigateToString(htmlContent);
+    public void NavigateToString(string htmlContent) => _webBrowser?.NavigateToString(htmlContent);
 
     /// <summary>
     /// Reloads the current page. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.Reload
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
-    public void Reload() => _WebBrowser?.Reload();
+    public void Reload() => _webBrowser?.Reload();
 
     /// <summary>
     /// Stops all navigations and pending resource fetches. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.Stop
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
-    public void Stop() => _WebBrowser?.Stop();
+    public void Stop() => _webBrowser?.Stop();
 
-    /// <summary>
-    /// Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" /> internally.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" /> internally.</summary>
     /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
-        try
-        {
-            _parentWindow = Window.GetWindow(this);
-        }
-        catch
-        {
-        }
+        _parentWindow = Window.GetWindow(this);
 
-        if (_parentWindow == null || _parentWindow.IsLoaded)
-        {
-            _windowHost = new(Name);
-            _windowHost.Window.HorizontalAlignment = HorizontalAlignment;
-            _windowHost.Window.VerticalAlignment = VerticalAlignment;
-            _windowHost.Window.Content = Content;
-            var layoutRoot = new Grid();
-            layoutRoot.Children.Add(_WebBrowser);
-            layoutRoot.Children.Add(_windowHost);
-            base.Content = layoutRoot;
-            AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
-        }
-        else
+        if (_parentWindow?.IsLoaded == false)
         {
             _parentWindow.Loaded += ParentWindow_Loaded;
+            return;
         }
+
+        LoadHostedContent();
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                _WebBrowser.Dispose();
-                _windowHost?.Close();
-                _windowHost?.Dispose();
-            }
-
-            _disposedValue = true;
+            return;
         }
+
+        if (disposing)
+        {
+            _webBrowser.Dispose();
+            _windowHost?.Close();
+            _windowHost?.Dispose();
+        }
+
+        _disposedValue = true;
     }
 
-    private static void DefaultBackgroundColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the default Background Color Property Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void DefaultBackgroundColorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is System.Drawing.Color color)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not System.Drawing.Color color)
         {
-            browser._WebBrowser.DefaultBackgroundColor = color;
+            return;
         }
+
+        browser._webBrowser.DefaultBackgroundColor = color;
     }
 
-    private static void ZoomFactorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the zoom Factor Property Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void ZoomFactorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is double zoom)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not double zoom)
         {
-            browser._WebBrowser.ZoomFactor = zoom;
+            return;
         }
+
+        browser._webBrowser.ZoomFactor = zoom;
     }
 
-    private static void AllowExternalDropPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the allow External Drop Property Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void AllowExternalDropPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is bool allowDrop)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not bool allowDrop)
         {
-            browser._WebBrowser.AllowExternalDrop = allowDrop;
+            return;
         }
+
+        browser._webBrowser.AllowExternalDrop = allowDrop;
     }
 
-    private static void DesignModeForegroundColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the design Mode Foreground Color Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void DesignModeForegroundColorChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is System.Drawing.Color color)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not System.Drawing.Color color)
         {
-            browser._WebBrowser.DesignModeForegroundColor = color;
+            return;
         }
+
+        browser._webBrowser.DesignModeForegroundColor = color;
     }
 
-    private static void CreationPropertiesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the creation Properties Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void CreationPropertiesChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is CoreWebView2CreationProperties creationProperties)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not CoreWebView2CreationProperties creationProperties)
         {
-            browser._WebBrowser.CreationProperties = creationProperties;
+            return;
         }
+
+        browser._webBrowser.CreationProperties = creationProperties;
     }
 
-    private static void SourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the source Property Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void SourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && e.NewValue is Uri source)
+        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not Uri source)
         {
-            browser._WebBrowser.Source = source;
+            return;
         }
+
+        browser._webBrowser.Source = source;
     }
 
-    private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the content Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void ContentChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser && browser._windowHost?.Window is not null)
+        if (dependencyObject is not WebView2Wpf browser || browser._windowHost?.Window is null)
         {
-            browser._windowHost.Window.Content = e.NewValue;
+            return;
         }
+
+        browser._windowHost.Window.Content = args.NewValue;
     }
 
-    private static void AutoDisposePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>Runs the auto Dispose Property Changed operation.</summary>
+    /// <param name="dependencyObject">The dependency object.</param>
+    /// <param name="args">The dependency property changed event arguments.</param>
+    private static void AutoDisposePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (d is WebView2Wpf browser)
+        if (dependencyObject is not WebView2Wpf browser)
         {
-            // Always ensure previous subscription is removed before (re)adding
-            browser._WebBrowser.Unloaded -= browser._unloadedHandler;
-            if (browser.AutoDispose)
-            {
-                browser._WebBrowser.Unloaded += browser._unloadedHandler;
-            }
+            return;
         }
+
+        // Always ensure previous subscription is removed before (re)adding.
+        browser._webBrowser.Unloaded -= browser.OnWebBrowserUnloaded;
+        if (!browser.AutoDispose)
+        {
+            return;
+        }
+
+        browser._webBrowser.Unloaded += browser.OnWebBrowserUnloaded;
     }
 
+    /// <summary>Runs the parent Window Loaded operation.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The routed event arguments.</param>
     private void ParentWindow_Loaded(object? sender, RoutedEventArgs e)
     {
         _parentWindow!.Loaded -= ParentWindow_Loaded;
+        LoadHostedContent();
+    }
+
+    /// <summary>Loads the hosted window content.</summary>
+    private void LoadHostedContent()
+    {
         _windowHost = new(Name);
         _windowHost.Window.HorizontalAlignment = HorizontalAlignment;
         _windowHost.Window.VerticalAlignment = VerticalAlignment;
         _windowHost.Window.Content = Content;
         var layoutRoot = new Grid();
-        layoutRoot.Children.Add(_WebBrowser);
-        layoutRoot.Children.Add(_windowHost);
+        _ = layoutRoot.Children.Add(_webBrowser);
+        _ = layoutRoot.Children.Add(_windowHost);
         base.Content = layoutRoot;
         AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
     }
+
+    /// <summary>Runs the web browser unloaded operation.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The routed event arguments.</param>
+    private void OnWebBrowserUnloaded(object sender, RoutedEventArgs e) => Dispose();
 }

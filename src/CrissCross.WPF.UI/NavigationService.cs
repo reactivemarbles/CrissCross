@@ -1,26 +1,20 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// A service that provides methods related to navigation.
-/// </summary>
+/// <summary>A service that provides methods related to navigation.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="NavigationService"/> class.
 /// </remarks>
 /// <param name="serviceProvider">Service provider providing page instances.</param>
 public class NavigationService(IServiceProvider serviceProvider) : INavigationService
 {
-    /// <summary>
-    /// Control representing navigation.
-    /// </summary>
+    /// <summary>Control representing navigation.</summary>
     private INavigationView? _navigationControl;
 
-    /// <summary>
-    /// Locally attached page service.
-    /// </summary>
+    /// <summary>Locally attached page service.</summary>
     private IPageService? _pageService;
 
     /// <inheritdoc />
@@ -32,7 +26,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     {
         _navigationControl = navigation;
 
-        if (_pageService != null)
+        if (_pageService is not null)
         {
             _navigationControl.SetPageService(_pageService);
 
@@ -45,7 +39,7 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
     /// <inheritdoc />
     public void SetPageService(IPageService pageService)
     {
-        if (_navigationControl == null)
+        if (_navigationControl is null)
         {
             _pageService = pageService;
 
@@ -121,27 +115,27 @@ public class NavigationService(IServiceProvider serviceProvider) : INavigationSe
         return _navigationControl!.NavigateWithHierarchy(pageType, dataContext);
     }
 
-    /// <summary>
-    /// Throws if navigation control is null.
-    /// </summary>
+    /// <summary>Throws if navigation control is null.</summary>
     /// <exception cref="ArgumentNullException">Navigation control.</exception>
     protected void ThrowIfNavigationControlIsNull()
     {
-        if (_navigationControl is null)
+        if (_navigationControl is not null)
         {
-            throw new ArgumentNullException(nameof(_navigationControl));
+            return;
         }
+
+        throw new ArgumentNullException(nameof(_navigationControl));
     }
 
-    /// <summary>
-    /// Throws if page service is null.
-    /// </summary>
+    /// <summary>Throws if page service is null.</summary>
     /// <exception cref="ArgumentNullException">_pageService.</exception>
     protected void ThrowIfPageServiceIsNull()
     {
-        if (_pageService is null)
+        if (_pageService is not null)
         {
-            throw new ArgumentNullException(nameof(_pageService));
+            return;
         }
+
+        throw new ArgumentNullException(nameof(_pageService));
     }
 }

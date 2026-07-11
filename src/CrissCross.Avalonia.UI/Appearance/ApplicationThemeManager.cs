@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -8,28 +8,26 @@ using Avalonia.Styling;
 
 namespace CrissCross.Avalonia.UI.Appearance;
 
-/// <summary>
-/// Allows to manage the application theme.
-/// </summary>
+/// <summary>Allows to manage the application theme.</summary>
 public static class ApplicationThemeManager
 {
+    /// <summary>Provides the _cachedApplicationTheme member.</summary>
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
+
+    /// <summary>Provides the _accentColor member.</summary>
     private static Color _accentColor = Colors.CornflowerBlue;
 
-    /// <summary>
-    /// Event triggered when the application's theme is changed.
-    /// </summary>
-    public static event ThemeChangedEvent? Changed;
+    /// <summary>Event triggered when the application's theme is changed.</summary>
+    public static event EventHandler<ThemeChangedEventArgs>? Changed;
 
-    /// <summary>
-    /// Gets a value that indicates whether the application is currently using the high contrast theme.
-    /// </summary>
+    /// <summary>Gets a value that indicates whether the application is currently using the high contrast theme.</summary>
     /// <returns><see langword="true"/> if application uses high contrast theme.</returns>
-    public static bool IsHighContrast() => _cachedApplicationTheme == ApplicationTheme.HighContrast;
+    public static bool IsHighContrast => _cachedApplicationTheme == ApplicationTheme.HighContrast;
 
-    /// <summary>
-    /// Gets the current application theme.
-    /// </summary>
+    /// <summary>Gets the current accent color.</summary>
+    public static Color AccentColor => _accentColor;
+
+    /// <summary>Gets the current application theme.</summary>
     /// <returns>The current <see cref="ApplicationTheme"/>.</returns>
     public static ApplicationTheme GetAppTheme()
     {
@@ -41,15 +39,7 @@ public static class ApplicationThemeManager
         return _cachedApplicationTheme;
     }
 
-    /// <summary>
-    /// Gets the current accent color.
-    /// </summary>
-    /// <returns>The current accent <see cref="Color"/>.</returns>
-    public static Color GetAccentColor() => _accentColor;
-
-    /// <summary>
-    /// Changes the current application theme.
-    /// </summary>
+    /// <summary>Changes the current application theme.</summary>
     /// <param name="applicationTheme">Theme to set.</param>
     /// <param name="accentColor">Optional accent color.</param>
     public static void Apply(ApplicationTheme applicationTheme, Color? accentColor = null)
@@ -77,12 +67,10 @@ public static class ApplicationThemeManager
             };
         }
 
-        Changed?.Invoke(_cachedApplicationTheme, _accentColor);
+        Changed?.Invoke(null, new ThemeChangedEventArgs(_cachedApplicationTheme, _accentColor));
     }
 
-    /// <summary>
-    /// Applies the system theme to the application.
-    /// </summary>
+    /// <summary>Applies the system theme to the application.</summary>
     public static void ApplySystemTheme()
     {
         var systemTheme = SystemThemeManager.GetSystemTheme();
@@ -97,9 +85,7 @@ public static class ApplicationThemeManager
         Apply(themeToSet);
     }
 
-    /// <summary>
-    /// Gets a value that indicates whether the application is matching the system theme.
-    /// </summary>
+    /// <summary>Gets a value that indicates whether the application is matching the system theme.</summary>
     /// <returns><see langword="true"/> if the application has the same theme as the system.</returns>
     public static bool IsAppMatchesSystem()
     {
@@ -115,28 +101,23 @@ public static class ApplicationThemeManager
         };
     }
 
-    /// <summary>
-    /// Checks if the application is currently using a dark theme.
-    /// </summary>
+    /// <summary>Checks if the application is currently using a dark theme.</summary>
     /// <returns><see langword="true"/> if using dark theme.</returns>
     public static bool IsDark() => _cachedApplicationTheme == ApplicationTheme.Dark;
 
-    /// <summary>
-    /// Checks if the application is currently using a light theme.
-    /// </summary>
+    /// <summary>Checks if the application is currently using a light theme.</summary>
     /// <returns><see langword="true"/> if using light theme.</returns>
     public static bool IsLight() => _cachedApplicationTheme == ApplicationTheme.Light;
 
-    /// <summary>
-    /// Sets the accent color.
-    /// </summary>
+    /// <summary>Sets the accent color.</summary>
     /// <param name="color">The accent color to set.</param>
     public static void SetAccentColor(Color color)
     {
         _accentColor = color;
-        Changed?.Invoke(_cachedApplicationTheme, _accentColor);
+        Changed?.Invoke(null, new ThemeChangedEventArgs(_cachedApplicationTheme, _accentColor));
     }
 
+    /// <summary>Provides the FetchApplicationTheme member.</summary>
     private static void FetchApplicationTheme()
     {
         if (Application.Current is null)

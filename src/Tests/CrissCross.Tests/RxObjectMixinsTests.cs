@@ -1,9 +1,7 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using ReactiveUI;
 using ReactiveUI.Builder;
@@ -11,27 +9,16 @@ using Splat;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Tests for RxObjectMixins class.
-/// </summary>
+/// <summary>Tests for RxObjectMixins class.</summary>
 public class RxObjectMixinsTests
 {
+    /// <summary>Provides the InitializeReactiveUI member.</summary>
     [Before(HookType.Class)]
+
     public static void InitializeReactiveUI() => Locator.CurrentMutable.CreateReactiveUIBuilder().WithCoreServices().BuildApp();
 
-    private class TestReactiveObject : ReactiveObject
-    {
-        private string? _testProperty;
-
-        public string? TestProperty
-        {
-            get => _testProperty;
-            set => this.RaiseAndSetIfChanged(ref _testProperty, value);
-        }
-    }
-
-    private class TestRxObject : RxObject;
-
+    /// <summary>Provides the SetupComplete_RaisesBuildCompleteSignal member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SetupComplete_RaisesBuildCompleteSignal()
     {
@@ -55,6 +42,8 @@ public class RxObjectMixinsTests
         testObject.Dispose();
     }
 
+    /// <summary>Provides the BuildComplete_ExecutesActionWhenSetupComplete member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task BuildComplete_ExecutesActionWhenSetupComplete()
     {
@@ -76,6 +65,8 @@ public class RxObjectMixinsTests
         testObject.Dispose();
     }
 
+    /// <summary>Provides the BuildCompleteDisposable_ReturnsDisposable member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task BuildCompleteDisposable_ReturnsDisposable()
     {
@@ -94,6 +85,8 @@ public class RxObjectMixinsTests
         testObject.Dispose();
     }
 
+    /// <summary>Provides the BuildCompleteDisposable_CanBeDisposed member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task BuildCompleteDisposable_CanBeDisposed()
     {
@@ -118,6 +111,8 @@ public class RxObjectMixinsTests
         testObject.Dispose();
     }
 
+    /// <summary>Provides the ToListOfObservables_ConvertsListToObservables member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ToListOfObservables_ConvertsListToObservables()
     {
@@ -125,7 +120,7 @@ public class RxObjectMixinsTests
         var obj1 = new TestReactiveObject { TestProperty = "Value1" };
         var obj2 = new TestReactiveObject { TestProperty = "Value2" };
         var list = new List<TestReactiveObject> { obj1, obj2 };
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         // Act
         var result = subject.ToListOfObservables(x => x.TestProperty);
@@ -143,13 +138,15 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the ToListOfObservables_UpdatesWhenSourceChanges member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ToListOfObservables_UpdatesWhenSourceChanges()
     {
         // Arrange
         var obj1 = new TestReactiveObject { TestProperty = "Value1" };
         var list = new List<TestReactiveObject> { obj1 };
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = new List<IObservable<string?>>();
         var result = subject.ToListOfObservables(x => x.TestProperty);
@@ -173,6 +170,8 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the AnyMatch_ReturnsTrueWhenPredicateMatches member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AnyMatch_ReturnsTrueWhenPredicateMatches()
     {
@@ -180,7 +179,7 @@ public class RxObjectMixinsTests
         var obj1 = new TestReactiveObject { TestProperty = "Match" };
         var obj2 = new TestReactiveObject { TestProperty = "NoMatch" };
         var list = new List<TestReactiveObject> { obj1, obj2 };
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
         var anyMatch = observableList.AnyMatch(x => x == "Match");
@@ -198,6 +197,8 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the AnyMatch_ReturnsFalseWhenPredicateDoesNotMatch member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AnyMatch_ReturnsFalseWhenPredicateDoesNotMatch()
     {
@@ -205,7 +206,7 @@ public class RxObjectMixinsTests
         var obj1 = new TestReactiveObject { TestProperty = "NoMatch1" };
         var obj2 = new TestReactiveObject { TestProperty = "NoMatch2" };
         var list = new List<TestReactiveObject> { obj1, obj2 };
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
         var anyMatch = observableList.AnyMatch(x => x == "Match");
@@ -223,13 +224,15 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the AnyMatch_UpdatesWhenObservableChanges member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AnyMatch_UpdatesWhenObservableChanges()
     {
         // Arrange
         var obj1 = new TestReactiveObject { TestProperty = "NoMatch" };
         var list = new List<TestReactiveObject> { obj1 };
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
         var anyMatch = observableList.AnyMatch(x => x == "Match");
@@ -253,11 +256,13 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the ToListOfObservables_HandlesNullSource member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ToListOfObservables_HandlesNullSource()
     {
         // Arrange
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>?>(null);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>?>(null);
         var result = subject.ToListOfObservables(x => x.TestProperty)!;
 
         var receivedValue = false;
@@ -273,12 +278,14 @@ public class RxObjectMixinsTests
         subject.Dispose();
     }
 
+    /// <summary>Provides the ToListOfObservables_HandlesEmptySource member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ToListOfObservables_HandlesEmptySource()
     {
         // Arrange
         var list = new List<TestReactiveObject>();
-        var subject = new BehaviorSubject<IEnumerable<TestReactiveObject>>(list);
+        var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
         var result = subject.ToListOfObservables(x => x.TestProperty);
 
         var observableList = new List<IObservable<string?>>();
@@ -293,4 +300,18 @@ public class RxObjectMixinsTests
         subscription.Dispose();
         subject.Dispose();
     }
+
+    /// <summary>Gets or sets the value.</summary>
+    private sealed class TestReactiveObject : ReactiveObject
+    {
+        /// <summary>Gets or sets the value.</summary>
+        public string? TestProperty
+        {
+            get => field;
+            set => this.RaiseAndSetIfChanged(ref field, value);
+        }
+    }
+
+    /// <summary>Provides the TestRxObject member.</summary>
+    private sealed class TestRxObject : RxObject;
 }

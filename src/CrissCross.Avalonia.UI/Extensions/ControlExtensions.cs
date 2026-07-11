@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -8,93 +8,82 @@ using Avalonia.VisualTree;
 
 namespace CrissCross.Avalonia.UI.Extensions;
 
-/// <summary>
-/// Extension methods for <see cref="Control"/>.
-/// </summary>
+/// <summary>Extension methods for <see cref="Control"/>.</summary>
 public static class ControlExtensions
 {
-    /// <summary>
-    /// Finds a parent of the given type.
-    /// </summary>
-    /// <typeparam name="T">The type of parent to find.</typeparam>
+    /// <summary>Provides extension members for <see cref="Control"/>.</summary>
     /// <param name="control">The control to start from.</param>
-    /// <returns>The parent of the specified type, or null if not found.</returns>
-    public static T? FindParent<T>(this Control control)
-        where T : Control
+    extension(Control control)
     {
-        ArgumentNullException.ThrowIfNull(control);
-
-        var parent = control.Parent;
-        while (parent is not null)
+        /// <summary>Finds a parent of the given type.</summary>
+        /// <typeparam name="T">The type of parent to find.</typeparam>
+        /// <returns>The parent of the specified type, or null if not found.</returns>
+        public T? FindParent<T>()
+            where T : Control
         {
-            if (parent is T typedParent)
+            ArgumentNullException.ThrowIfNull(control);
+
+            var parent = control.Parent;
+            while (parent is not null)
             {
-                return typedParent;
+                if (parent is T typedParent)
+                {
+                    return typedParent;
+                }
+
+                parent = parent.Parent;
             }
 
-            parent = parent.Parent;
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Finds a child of the given type.
-    /// </summary>
-    /// <typeparam name="T">The type of child to find.</typeparam>
-    /// <param name="control">The control to start from.</param>
-    /// <returns>The child of the specified type, or null if not found.</returns>
-    public static T? FindChild<T>(this Control control)
-        where T : Control
-    {
-        ArgumentNullException.ThrowIfNull(control);
-
-        if (control is not Panel panel)
-        {
             return null;
         }
 
-        foreach (var child in panel.Children)
+        /// <summary>Finds a child of the given type.</summary>
+        /// <typeparam name="T">The type of child to find.</typeparam>
+        /// <returns>The child of the specified type, or null if not found.</returns>
+        public T? FindChild<T>()
+            where T : Control
         {
-            if (child is T typedChild)
+            ArgumentNullException.ThrowIfNull(control);
+
+            if (control is not Panel panel)
             {
-                return typedChild;
+                return null;
             }
 
-            if (child is Control childControl)
+            foreach (var child in panel.Children)
             {
-                var result = childControl.FindChild<T>();
-                if (result is not null)
+                if (child is T typedChild)
                 {
-                    return result;
+                    return typedChild;
+                }
+
+                if (child is Control childControl)
+                {
+                    var result = childControl.FindChild<T>();
+                    if (result is not null)
+                    {
+                        return result;
+                    }
                 }
             }
+
+            return null;
         }
 
-        return null;
-    }
-
-    /// <summary>
-    /// Gets the bounds of the control relative to the root visual.
-    /// </summary>
-    /// <param name="control">The control.</param>
-    /// <returns>The bounds in screen coordinates.</returns>
-    public static Rect GetBoundsRelativeToRoot(this Control control)
-    {
-        ArgumentNullException.ThrowIfNull(control);
-
-        var root = control.GetSelfAndVisualAncestors().LastOrDefault();
-        if (root is null)
+        /// <summary>Gets the bounds of the control relative to the root visual.</summary>
+        /// <returns>The bounds in screen coordinates.</returns>
+        public Rect GetBoundsRelativeToRoot()
         {
-            return default;
-        }
+            ArgumentNullException.ThrowIfNull(control);
 
-        var transform = control.TransformToVisual((Visual)root);
-        if (transform.HasValue)
-        {
-            return new Rect(control.Bounds.Size).TransformToAABB(transform.Value);
-        }
+            var root = control.GetSelfAndVisualAncestors().LastOrDefault();
+            if (root is null)
+            {
+                return default;
+            }
 
-        return default;
+            var transform = control.TransformToVisual((Visual)root);
+            return transform.HasValue ? new Rect(control.Bounds.Size).TransformToAABB(transform.Value) : default;
+        }
     }
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.Avalonia.UI;
@@ -16,78 +16,56 @@ namespace CrissCross.Avalonia.UI;
 /// UI.</remarks>
 public interface INavigationService
 {
-    /// <summary>
-    /// Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.
-    /// </summary>
-    /// <param name="pageType"><see langword="Type"/> of the page.</param>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.</summary>
+    /// <param name="pageType">The page type.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType);
 
-    /// <summary>
-    /// Lets you navigate to the selected page based on it's type, Should be used with <see cref="IPageService"/>.
-    /// </summary>
-    /// <param name="pageType"><see langword="Type"/> of the page.</param>
-    /// <param name="dataContext">DataContext <see cref="object"/>.</param>
+    /// <summary>Lets you navigate to the selected page based on it's type, Should be used with <see cref="IPageService"/>.</summary>
+    /// <param name="pageType">The page type.</param>
+    /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType, object? dataContext);
 
-    /// <summary>
-    /// Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.
-    /// </summary>
-    /// <param name="pageIdOrTargetTag">Id or tag of the page.</param>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <param name="pageIdOrTargetTag">The page id or target tag.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag);
 
-    /// <summary>
-    /// Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.
-    /// </summary>
-    /// <param name="pageIdOrTargetTag">Id or tag of the page.</param>
-    /// <param name="dataContext">DataContext <see cref="object"/>.</param>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <param name="pageIdOrTargetTag">The page id or target tag.</param>
+    /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag, object? dataContext);
 
-    /// <summary>
-    /// Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.
-    /// </summary>
-    /// <param name="pageType">Type of control to be synchronously added to the navigation stack.</param>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <param name="pageType">The page type.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool NavigateWithHierarchy(Type pageType);
 
-    /// <summary>
-    /// Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.
-    /// </summary>
-    /// <param name="pageType">Type of control to be synchronously added to the navigation stack.</param>
-    /// <param name="dataContext">DataContext <see cref="object"/>.</param>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <param name="pageType">The page type.</param>
+    /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool NavigateWithHierarchy(Type pageType, object? dataContext);
 
-    /// <summary>
-    /// Provides direct access to the control responsible for navigation.
-    /// </summary>
+    /// <summary>Provides direct access to the control responsible for navigation.</summary>
     /// <returns>Instance of the <see cref="Controls.INavigationView"/> control.</returns>
     Controls.INavigationView GetNavigationControl();
 
-    /// <summary>
-    /// Lets you attach the control that represents the <see cref="Controls.INavigationView"/>.
-    /// </summary>
-    /// <param name="navigation">Instance of the <see cref="Controls.INavigationView"/>.</param>
+    /// <summary>Lets you attach the control that represents the <see cref="Controls.INavigationView"/>.</summary>
+    /// <param name="navigation">The navigation control.</param>
     void SetNavigationControl(Controls.INavigationView navigation);
 
-    /// <summary>
-    /// Lets you attach the service that delivers page instances to <see cref="Controls.INavigationView"/>.
-    /// </summary>
-    /// <param name="pageService">Instance of the <see cref="IPageService"/>.</param>
+    /// <summary>Lets you attach the service that delivers page instances to <see cref="Controls.INavigationView"/>.</summary>
+    /// <param name="pageService">The page service.</param>
     void SetPageService(IPageService pageService);
 
-    /// <summary>
-    /// Navigates the NavigationView to the previous journal entry.
-    /// </summary>
+    /// <summary>Navigates the NavigationView to the previous journal entry.</summary>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool GoBack();
 
-    /// <summary>
-    /// Navigates the NavigationView to the next journal entry.
-    /// </summary>
+    /// <summary>Navigates the NavigationView to the next journal entry.</summary>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool GoForward();
 }

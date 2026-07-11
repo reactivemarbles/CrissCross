@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -7,9 +7,7 @@ using ReactiveUI;
 
 namespace CrissCross;
 
-/// <summary>
-/// Describes a typed resolved ViewModel/View navigation pair.
-/// </summary>
+/// <summary>Describes a typed resolved ViewModel/View navigation pair.</summary>
 /// <typeparam name="TViewModel">The resolved view model type.</typeparam>
 /// <typeparam name="TView">The resolved view type.</typeparam>
 /// <remarks>
@@ -24,28 +22,18 @@ public sealed class NavigationResolution<TViewModel, TView>(TViewModel viewModel
     where TViewModel : class, IRxObject
     where TView : class, IViewFor<TViewModel>
 {
-    /// <summary>
-    /// Gets the resolved view model.
-    /// </summary>
+    /// <summary>Gets the resolved view model.</summary>
     public TViewModel ViewModel { get; } = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
 
-    /// <summary>
-    /// Gets the resolved view.
-    /// </summary>
+    /// <summary>Gets the resolved view.</summary>
     public TView View { get; } = view ?? throw new ArgumentNullException(nameof(view));
 
-    /// <summary>
-    /// Gets the normalized navigation contract.
-    /// </summary>
+    /// <summary>Gets the normalized navigation contract.</summary>
     public string? Contract { get; } = NavigationContract.Normalize(contract);
 
-    /// <summary>
-    /// Gets the optional navigation parameter.
-    /// </summary>
+    /// <summary>Gets the optional navigation parameter.</summary>
     public object? Parameter { get; } = parameter;
 
-    /// <summary>
-    /// Gets the requested navigation operation type.
-    /// </summary>
+    /// <summary>Gets the requested navigation operation type.</summary>
     public NavigationType NavigationType { get; } = navigationType;
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -15,10 +15,15 @@ using AvaloniaHorizontalAlignment = Avalonia.Layout.HorizontalAlignment;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
+/// <summary>Provides the HtmlContentParser member.</summary>
 internal static class HtmlContentParser
 {
+    /// <summary>Provides the BrowsingContext member.</summary>
     private static readonly IBrowsingContext BrowsingContext = AngleSharp.BrowsingContext.New(Configuration.Default);
 
+    /// <summary>Provides the Parse member.</summary>
+    /// <param name="html">The html value.</param>
+    /// <returns>The result.</returns>
     public static IReadOnlyList<TextSegment> Parse(string? html)
     {
         if (string.IsNullOrWhiteSpace(html))
@@ -42,6 +47,9 @@ internal static class HtmlContentParser
         return writer.Build();
     }
 
+    /// <summary>Provides the ToPlainText member.</summary>
+    /// <param name="html">The html value.</param>
+    /// <returns>The result.</returns>
     public static string ToPlainText(string? html)
     {
         if (string.IsNullOrWhiteSpace(html))
@@ -53,6 +61,10 @@ internal static class HtmlContentParser
         return (document.Body ?? document.DocumentElement)?.TextContent?.Trim() ?? string.Empty;
     }
 
+    /// <summary>Provides the ProcessNode member.</summary>
+    /// <param name="node">The node value.</param>
+    /// <param name="context">The context value.</param>
+    /// <param name="writer">The writer value.</param>
     private static void ProcessNode(INode node, FormattingContext context, SegmentWriter writer)
     {
         switch (node)
@@ -60,20 +72,28 @@ internal static class HtmlContentParser
             case IComment:
                 return;
             case IText textNode:
-                writer.AppendText(NormalizeWhitespace(textNode.Data), context);
-                return;
+                {
+                    writer.AppendText(NormalizeWhitespace(textNode.Data), context);
+                    return;
+                }
+
             case IHtmlBreakRowElement:
-                writer.AppendLineBreak();
-                return;
+                {
+                    writer.AppendLineBreak();
+                    return;
+                }
+
             case IHtmlImageElement imageElement:
-                var imageAlignmentContext = context.WithImageAlignment(ParseAlignment(imageElement));
-                var imageSource = imageElement.GetAttribute("src") ?? imageElement.Source ?? string.Empty;
-                writer.AppendImage(
-                    imageSource,
-                    imageAlignmentContext.ImageAlignment,
-                    ParseLengthAttribute(imageElement, "width"),
-                    ParseLengthAttribute(imageElement, "height"));
-                return;
+                {
+                    var imageAlignmentContext = context.WithImageAlignment(ParseAlignment(imageElement));
+                    var imageSource = imageElement.GetAttribute("src") ?? imageElement.Source ?? string.Empty;
+                    writer.AppendImage(
+                        imageSource,
+                        imageAlignmentContext.ImageAlignment,
+                        ParseLengthAttribute(imageElement, "width"),
+                        ParseLengthAttribute(imageElement, "height"));
+                    return;
+                }
         }
 
         if (node is not IElement element)
@@ -90,7 +110,7 @@ internal static class HtmlContentParser
 
         if (element is IHtmlListItemElement)
         {
-            writer.AppendText("• ", scopedContext);
+            writer.AppendText("ï¿½ ", scopedContext);
         }
 
         foreach (var child in element.ChildNodes)
@@ -98,12 +118,17 @@ internal static class HtmlContentParser
             ProcessNode(child, scopedContext, writer);
         }
 
-        if (IsParagraphElement(element))
+        if (!IsParagraphElement(element))
         {
-            writer.AppendParagraphBreak(scopedContext.ParagraphAlignment);
+            return;
         }
+
+        writer.AppendParagraphBreak(scopedContext.ParagraphAlignment);
     }
 
+    /// <summary>Provides the NormalizeWhitespace member.</summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result.</returns>
     private static string NormalizeWhitespace(string value)
     {
         if (string.IsNullOrEmpty(value))
@@ -120,13 +145,13 @@ internal static class HtmlContentParser
             {
                 if (!previousWasWhitespace)
                 {
-                    builder.Append(' ');
+                    _ = builder.Append(' ');
                     previousWasWhitespace = true;
                 }
             }
             else
             {
-                builder.Append(ch);
+                _ = builder.Append(ch);
                 previousWasWhitespace = false;
             }
         }
@@ -134,6 +159,9 @@ internal static class HtmlContentParser
         return builder.ToString();
     }
 
+    /// <summary>Provides the ParseAlignment member.</summary>
+    /// <param name="element">The element value.</param>
+    /// <returns>The result.</returns>
     private static AvaloniaHorizontalAlignment ParseAlignment(IElement element)
     {
         var alignAttribute = element.GetAttribute("align");
@@ -154,6 +182,10 @@ internal static class HtmlContentParser
         return AvaloniaHorizontalAlignment.Left;
     }
 
+    /// <summary>Provides the ParseLengthAttribute member.</summary>
+    /// <param name="element">The element value.</param>
+    /// <param name="attributeName">The attributeName value.</param>
+    /// <returns>The result.</returns>
     private static double? ParseLengthAttribute(IElement element, string attributeName)
     {
         var attributeValue = element.GetAttribute(attributeName);
@@ -175,12 +207,19 @@ internal static class HtmlContentParser
         return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : null;
     }
 
+    /// <summary>Provides the IsParagraphElement member.</summary>
+    /// <param name="element">The element value.</param>
+    /// <returns>The result.</returns>
     private static bool IsParagraphElement(IElement element)
     {
         var tag = element.TagName?.ToUpperInvariant();
         return tag is "P" or "DIV" or "LI" or "H1" or "H2" or "H3" or "H4" or "H5" or "H6";
     }
 
+    /// <summary>Provides the TryParseColor member.</summary>
+    /// <param name="input">The input value.</param>
+    /// <param name="brush">The brush value.</param>
+    /// <returns>The result.</returns>
     private static bool TryParseColor(string? input, out IBrush? brush)
     {
         brush = null;
@@ -190,15 +229,18 @@ internal static class HtmlContentParser
         }
 
         var value = input.Trim();
-        if (global::Avalonia.Media.Color.TryParse(value, out var color))
+        if (!global::Avalonia.Media.Color.TryParse(value, out var color))
         {
-            brush = new SolidColorBrush(color);
-            return true;
+            return false;
         }
 
-        return false;
+        brush = new SolidColorBrush(color);
+        return true;
     }
 
+    /// <summary>Provides the ParseStyles member.</summary>
+    /// <param name="declaration">The declaration value.</param>
+    /// <returns>The result.</returns>
     private static IEnumerable<(string Name, string Value)> ParseStyles(string? declaration)
     {
         if (string.IsNullOrWhiteSpace(declaration))
@@ -206,8 +248,7 @@ internal static class HtmlContentParser
             yield break;
         }
 
-        var parts = declaration.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        foreach (var part in parts)
+        foreach (var part in declaration.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             var tokens = part.Split(':', 2, StringSplitOptions.TrimEntries);
             if (tokens.Length == 2)
@@ -217,6 +258,17 @@ internal static class HtmlContentParser
         }
     }
 
+    /// <summary>Gets the value.</summary>
+    /// <param name="Bold">The Bold value.</param>
+    /// <param name="Italic">The Italic value.</param>
+    /// <param name="Underline">The Underline value.</param>
+    /// <param name="Strikethrough">The Strikethrough value.</param>
+    /// <param name="Foreground">The foreground brush.</param>
+    /// <param name="Background">The background brush.</param>
+    /// <param name="FontSize">The font size.</param>
+    /// <param name="FontFamily">The font family.</param>
+    /// <param name="ImageAlignment">The image alignment.</param>
+    /// <param name="ParagraphAlignment">The paragraph alignment.</param>
     private readonly record struct FormattingContext(
         bool Bold,
         bool Italic,
@@ -229,62 +281,85 @@ internal static class HtmlContentParser
         AvaloniaHorizontalAlignment ImageAlignment,
         TextAlignment? ParagraphAlignment)
     {
+        /// <summary>Gets the default formatting context.</summary>
         public static FormattingContext Default => new(false, false, false, false, null, null, null, null, AvaloniaHorizontalAlignment.Left, null);
 
+        /// <summary>Provides the WithElement member.</summary>
+        /// <param name="element">The element value.</param>
+        /// <returns>The result.</returns>
         public FormattingContext WithElement(IElement element)
         {
-            var result = this;
             var tagName = element.TagName?.ToUpperInvariant();
-
-            switch (tagName)
-            {
-                case "B" or "STRONG":
-                    result = result with { Bold = true };
-                    break;
-                case "I" or "EM":
-                    result = result with { Italic = true };
-                    break;
-                case "U":
-                    result = result with { Underline = true };
-                    break;
-                case "S" or "DEL" or "STRIKE":
-                    result = result with { Strikethrough = true };
-                    break;
-                case "A":
-                    result = result with { Underline = true };
-                    break;
-                case "P" or "DIV":
-                    result = result with { ParagraphAlignment = ParseParagraphAlignment(element) };
-                    break;
-            }
-
-            if (tagName is not null && tagName.StartsWith("H", StringComparison.Ordinal) && tagName.Length == 2 && char.IsDigit(tagName[1]))
-            {
-                result = result with { Bold = true, FontSize = GetHeadingSize(tagName) };
-            }
+            var result = ApplyTag(this, element, tagName);
+            result = ApplyHeading(result, tagName);
 
             foreach (var style in ParseStyles(element.GetAttribute("style")))
             {
-                result = style.Name.ToLowerInvariant() switch
-                {
-                    "font-weight" when style.Value.Equals("bold", StringComparison.OrdinalIgnoreCase) => result with { Bold = true },
-                    "font-style" when style.Value.Equals("italic", StringComparison.OrdinalIgnoreCase) => result with { Italic = true },
-                    "text-decoration" when style.Value.Contains("underline", StringComparison.OrdinalIgnoreCase) => result with { Underline = true },
-                    "text-decoration" when style.Value.Contains("line-through", StringComparison.OrdinalIgnoreCase) => result with { Strikethrough = true },
-                    "color" when TryParseColor(style.Value, out var fg) => result with { Foreground = fg },
-                    "background-color" when TryParseColor(style.Value, out var bg) => result with { Background = bg },
-                    "font-size" => result with { FontSize = ParseFontSize(style.Value, result.FontSize) },
-                    "font-family" => result with { FontFamily = new FontFamily(style.Value) },
-                    "text-align" when Enum.TryParse<TextAlignment>(style.Value, true, out var align) => result with { ParagraphAlignment = align },
-                    _ => result
-                };
+                result = ApplyStyle(result, style);
             }
 
             return result;
         }
 
+        /// <summary>Provides the WithImageAlignment member.</summary>
+        /// <param name="alignment">The alignment value.</param>
+        /// <returns>The result.</returns>
         public FormattingContext WithImageAlignment(AvaloniaHorizontalAlignment alignment) => this with { ImageAlignment = alignment };
 
+        /// <summary>Applies formatting implied by an element tag.</summary>
+        /// <param name="context">The current context.</param>
+        /// <param name="element">The element.</param>
+        /// <param name="tagName">The normalized tag name.</param>
+        /// <returns>The updated context.</returns>
+        private static FormattingContext ApplyTag(FormattingContext context, IElement element, string? tagName) => tagName switch
+        {
+            "B" or "STRONG" => context with { Bold = true },
+            "I" or "EM" => context with { Italic = true },
+            "U" => context with { Underline = true },
+            "S" or "DEL" or "STRIKE" => context with { Strikethrough = true },
+            "A" => context with { Underline = true },
+            "P" or "DIV" => context with { ParagraphAlignment = ParseParagraphAlignment(element) },
+            _ => context
+        };
+
+        /// <summary>Applies heading formatting.</summary>
+        /// <param name="context">The current context.</param>
+        /// <param name="tagName">The normalized tag name.</param>
+        /// <returns>The updated context.</returns>
+        private static FormattingContext ApplyHeading(FormattingContext context, string? tagName)
+        {
+            return IsHeadingTag(tagName) ? context with { Bold = true, FontSize = GetHeadingSize(tagName!) } : context;
+        }
+
+        /// <summary>Determines whether a tag is a heading tag.</summary>
+        /// <param name="tagName">The normalized tag name.</param>
+        /// <returns><see langword="true"/> when the tag is a heading.</returns>
+        private static bool IsHeadingTag(string? tagName) =>
+            tagName?.StartsWith("H", StringComparison.Ordinal) == true &&
+            tagName.Length == 2 &&
+            char.IsDigit(tagName[1]);
+
+        /// <summary>Applies one style declaration.</summary>
+        /// <param name="context">The current context.</param>
+        /// <param name="style">The style declaration.</param>
+        /// <returns>The updated context.</returns>
+        private static FormattingContext ApplyStyle(FormattingContext context, (string Name, string Value) style) => style.Name.ToLowerInvariant() switch
+        {
+            "font-weight" when style.Value.Equals("bold", StringComparison.OrdinalIgnoreCase) => context with { Bold = true },
+            "font-style" when style.Value.Equals("italic", StringComparison.OrdinalIgnoreCase) => context with { Italic = true },
+            "text-decoration" when style.Value.Contains("underline", StringComparison.OrdinalIgnoreCase) => context with { Underline = true },
+            "text-decoration" when style.Value.Contains("line-through", StringComparison.OrdinalIgnoreCase) => context with { Strikethrough = true },
+            "color" when TryParseColor(style.Value, out var foreground) => context with { Foreground = foreground },
+            "background-color" when TryParseColor(style.Value, out var background) => context with { Background = background },
+            "font-size" => context with { FontSize = ParseFontSize(style.Value, context.FontSize) },
+            "font-family" => context with { FontFamily = new(style.Value) },
+            "text-align" when Enum.TryParse<TextAlignment>(style.Value, true, out var alignment) => context with { ParagraphAlignment = alignment },
+            _ => context
+        };
+
+        /// <summary>Provides the ParseParagraphAlignment member.</summary>
+        /// <param name="element">The element value.</param>
+        /// <returns>The result.</returns>
         private static TextAlignment? ParseParagraphAlignment(IElement element)
         {
             var alignAttr = element.GetAttribute("align");
@@ -305,6 +380,10 @@ internal static class HtmlContentParser
             return null;
         }
 
+        /// <summary>Provides the ParseFontSize member.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="current">The current value.</param>
+        /// <returns>The result.</returns>
         private static double? ParseFontSize(string value, double? current)
         {
             var trimmed = value.Trim().ToLowerInvariant();
@@ -330,6 +409,9 @@ internal static class HtmlContentParser
             return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var px) ? px : current;
         }
 
+        /// <summary>Provides the GetHeadingSize member.</summary>
+        /// <param name="tag">The tag value.</param>
+        /// <returns>The result.</returns>
         private static double? GetHeadingSize(string tag) => tag switch
         {
             "H1" => 32,
@@ -342,11 +424,18 @@ internal static class HtmlContentParser
         };
     }
 
+    /// <summary>Provides the SegmentWriter member.</summary>
     private sealed class SegmentWriter
     {
+        /// <summary>Provides the _segments member.</summary>
         private readonly List<TextSegment> _segments = new();
+
+        /// <summary>Provides the _offset member.</summary>
         private int _offset;
 
+        /// <summary>Provides the AppendText member.</summary>
+        /// <param name="text">The text value.</param>
+        /// <param name="context">The context value.</param>
         public void AppendText(string? text, FormattingContext context)
         {
             if (string.IsNullOrEmpty(text))
@@ -370,14 +459,22 @@ internal static class HtmlContentParser
             _offset += text.Length;
         }
 
+        /// <summary>Provides the AppendLineBreak member.</summary>
         public void AppendLineBreak()
         {
             _segments.Add(TextSegment.CreateLineBreak(_offset));
             _offset += Environment.NewLine.Length;
         }
 
+        /// <summary>Provides the AppendParagraphBreak member.</summary>
+        /// <param name="alignment">The alignment value.</param>
         public void AppendParagraphBreak(TextAlignment? alignment) => _segments.Add(TextSegment.CreateParagraphBreak(_offset, alignment));
 
+        /// <summary>Provides the AppendImage member.</summary>
+        /// <param name="source">The source value.</param>
+        /// <param name="alignment">The alignment value.</param>
+        /// <param name="width">The width value.</param>
+        /// <param name="height">The height value.</param>
         public void AppendImage(string source, AvaloniaHorizontalAlignment alignment, double? width, double? height)
         {
             if (string.IsNullOrWhiteSpace(source))
@@ -389,6 +486,8 @@ internal static class HtmlContentParser
             _offset++;
         }
 
-        public IReadOnlyList<TextSegment> Build() => _segments;
+        /// <summary>Provides the Build member.</summary>
+        /// <returns>The result.</returns>
+        public List<TextSegment> Build() => _segments;
     }
 }

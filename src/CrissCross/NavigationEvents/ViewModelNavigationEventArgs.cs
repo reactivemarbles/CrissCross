@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Serialization;
@@ -7,9 +7,7 @@ using ReactiveUI;
 
 namespace CrissCross;
 
-/// <summary>
-/// View Model Navigation EventArgs.
-/// </summary>
+/// <summary>View Model Navigation EventArgs.</summary>
 [DataContract]
 public class ViewModelNavigationEventArgs : ViewModelNavigationBaseEventArgs, IViewModelNavigationEventArgs
 {
@@ -30,25 +28,19 @@ public class ViewModelNavigationEventArgs : ViewModelNavigationBaseEventArgs, IV
         HostName = hostName;
     }
 
-    /// <summary>
-    /// Gets or sets the name of the host.
-    /// </summary>
+    /// <summary>Gets or sets the name of the host.</summary>
     /// <value>
     /// The name of the host.
     /// </value>
     [DataMember]
     public string? HostName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the type of the navigation.
-    /// </summary>
+    /// <summary>Gets the type of the navigation.</summary>
     /// <value>The type of the navigation.</value>
     [DataMember]
     public NavigationType NavigationType { get; protected set; }
 
-    /// <summary>
-    /// Gets or sets the view.
-    /// </summary>
+    /// <summary>Gets or sets the view.</summary>
     /// <value>The view.</value>
     [DataMember]
     public IViewFor? View { get; set; }

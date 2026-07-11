@@ -1,17 +1,13 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Extended <see cref="System.Windows.Controls.TreeViewItem"/> with <see cref="SymbolRegular"/> properties.
-/// </summary>
+/// <summary>Extended <see cref="System.Windows.Controls.TreeViewItem"/> with <see cref="SymbolRegular"/> properties.</summary>
 public class TreeViewItem : System.Windows.Controls.TreeViewItem
 {
-    /// <summary>
-    /// Property for <see cref="Icon"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
@@ -33,9 +29,7 @@ public class TreeViewItem : System.Windows.Controls.TreeViewItem
         typeof(TreeViewItem),
         new PropertyMetadata(Visibility.Collapsed));
 
-    /// <summary>
-    /// Gets or sets displayed <see cref="IconElement"/>.
-    /// </summary>
+    /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     [Bindable(true)]
     [Category("Appearance")]
     public IconElement? Icon
@@ -43,14 +37,12 @@ public class TreeViewItem : System.Windows.Controls.TreeViewItem
         get => (IconElement?)GetValue(IconProperty);
         set
         {
-            SetValue(IconVisibilityProperty, value == null ? Visibility.Collapsed : Visibility.Visible);
+            SetValue(IconVisibilityProperty, value is null ? Visibility.Collapsed : Visibility.Visible);
             SetValue(IconProperty, value);
         }
     }
 
-    /// <summary>
-    /// Gets or sets the visibility of the icon associated with the control.
-    /// </summary>
+    /// <summary>Gets or sets the visibility of the icon associated with the control.</summary>
     /// <remarks>A value of <see cref="Visibility.Visible"/> displays the icon, while <see
     /// cref="Visibility.Collapsed"/> hides it. Changing this property may affect the layout of the control.</remarks>
     public Visibility IconVisibility
@@ -65,11 +57,16 @@ public class TreeViewItem : System.Windows.Controls.TreeViewItem
     /// <inheritdoc/>
     protected override bool IsItemItsOwnContainerOverride(object item) => item is TreeViewItem;
 
+    /// <summary>Provides the IconPropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void IconPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is TreeViewItem item)
+        if (d is not TreeViewItem item)
         {
-            item.IconVisibility = e.NewValue == null ? Visibility.Collapsed : Visibility.Visible;
+            return;
         }
+
+        item.IconVisibility = e.NewValue is null ? Visibility.Collapsed : Visibility.Visible;
     }
 }

@@ -37,16 +37,14 @@
 
   <ItemGroup>
     <!-- Core dependencies -->
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" />
+    <PackageReference Include="CP.Extensions.Hosting.Avalonia" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
-    <PackageReference Include="ReactiveList" />
     <PackageReference Include="AngleSharp" />
     <PackageReference Include="Markdig" />
     <!-- Source generators / analyzers isolated from consumers -->
-    <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
   </ItemGroup>
 

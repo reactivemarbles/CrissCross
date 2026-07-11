@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -17,7 +15,7 @@ namespace CrissCross.WPF.Plot;
 /// Provides a Windows UI component for plotting and streaming time-series signal data, supporting real-time updates,
 /// autoscaling, and interactive features. Nice for historical data (performance).
 /// </summary>
-/// <remarks>SignalUI integrates with ScottPlot and Rx.NET to visualize data streams in WPF applications. It
+/// <remarks>SignalUI integrates with ScottPlot and ReactiveUI.Primitives to visualize data streams in WPF applications. It
 /// manages plot appearance, data buffering, and user interaction such as crosshair and marker updates based on mouse
 /// coordinates. The class supports both automatic and manual scaling, and can limit the number of displayed points for
 /// performance. Thread safety is maintained for UI updates via scheduler usage. SignalUI is intended for use on Windows
@@ -25,28 +23,44 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class SignalUI : RxObject, IPlottableUI
 {
+    /// <summary>Stores the time set value.</summary>
     private readonly HashSet<double> _timeSet = [];
+
+    /// <summary>Stores the unique data buffer value.</summary>
     private readonly List<double> _uniqueDataBuffer = [];
+
+    /// <summary>Stores the unique time buffer value.</summary>
     private readonly List<double> _uniqueTimeBuffer = [];
 
+    /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects _chartSettings;
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the manual scale value.</summary>
     [Reactive]
     private bool _manualScale;
+
+    /// <summary>Stores the mode value.</summary>
     [Reactive]
     private int _mode;
+
+    /// <summary>Stores the number points plotted value.</summary>
     [Reactive]
     private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
     [Reactive]
     private bool _useFixedNumberOfPoints;
+
+    /// <summary>Stores the ticks value.</summary>
     [Reactive]
     private bool _ticks;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SignalUI" /> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="SignalUI" /> class.</summary>
     /// <param name="plot">The plot.</param>
     /// <param name="observable">The observable.</param>
     /// <param name="coordinatesObs">The coordinates obs.</param>
@@ -78,7 +92,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         CreateDataLogger(color);
 
         // Set name from first emission of the observable
-        observable
+        _ = observable
             .Take(1)
             .Where(d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -89,7 +103,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         ChartSettings.CreateCursorValues(Plot, color);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
 
-        MouseCoordinatesObs = coordinatesObs.Retry().Subscribe(x =>
+        MouseCoordinatesObs = coordinatesObs.Retry(int.MaxValue).Subscribe(x =>
         {
             var coordinates = PlotLine?.Data?.Coordinates;
             if (coordinates is null || coordinates.Count == 0)
@@ -103,36 +117,28 @@ public partial class SignalUI : RxObject, IPlottableUI
             ChartSettings.Crosshair!.Position = closestCoordinate;
             ChartSettings.Marker!.Position = closestCoordinate;
             ChartSettings.MarkerText!.Location = closestCoordinate;
-            ChartSettings.MarkerText!.LabelText = _ticks ?
-                $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}" :
-                $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
+            ChartSettings.MarkerText!.LabelText = _ticks
+                ? $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}"
+                : $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
 
             Plot?.Refresh();
         }).DisposeWith(Disposables);
     }
 
-    /// <summary>
-    /// Gets or sets the WpfPlot control used for rendering interactive plots within the application.
-    /// </summary>
+    /// <summary>Gets or sets the WpfPlot control used for rendering interactive plots within the application.</summary>
     /// <remarks>Assigning a new WpfPlot instance replaces the current plot displayed. This property is
     /// typically used to embed or update plot visuals in WPF-based user interfaces.</remarks>
     public WpfPlot Plot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the data logger used for plotting line data.
-    /// </summary>
+    /// <summary>Gets or sets the data logger used for plotting line data.</summary>
     public DataLogger? PlotLine { get; set; }
 
-    /// <summary>
-    /// Gets or sets an observable subscription for mouse coordinate updates.
-    /// </summary>
+    /// <summary>Gets or sets an observable subscription for mouse coordinate updates.</summary>
     /// <remarks>Dispose the returned object to unsubscribe from mouse coordinate notifications and release
     /// resources. The property may be null if no subscription is active.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
-    /// <summary>
-    /// Clears plotted coordinates and duplicate-time tracking so subsequent updates can reuse prior X values.
-    /// </summary>
+    /// <summary>Clears plotted coordinates and duplicate-time tracking so subsequent updates can reuse prior X values.</summary>
     public void ClearData()
     {
         PlotLine!.Data.Coordinates.Clear();
@@ -141,14 +147,8 @@ public partial class SignalUI : RxObject, IPlottableUI
         _uniqueTimeBuffer.Clear();
     }
 
-    /// <summary>
-    /// Initializes a new data logger line on the plot and sets its color using the specified hex value.
-    /// </summary>
-    /// <remarks>The data logger line is configured with a fixed line width and disables automatic axis limit
-    /// management. The view is adjusted to display the most recent 100 data points. If the color string is not a valid
-    /// hex code, an exception may be thrown by the color conversion method.</remarks>
-    /// <param name="color">A string representing the color of the data logger line in hexadecimal format (e.g., "#FF0000" for red). Must be
-    /// a valid hex color code.</param>
+    /// <summary>Initializes a new data logger line on the plot and sets its color using the specified hex value.</summary>
+    /// <param name="color">The color value.</param>
     public void CreateDataLogger(string color)
     {
         PlotLine = Plot.Plot.Add.DataLogger();
@@ -159,19 +159,11 @@ public partial class SignalUI : RxObject, IPlottableUI
         PlotLine.ViewSlide(100);
     }
 
-    /// <summary>
-    /// Subscribes to an observable sequence of signal data and updates the plot with new values as they arrive.
-    /// </summary>
-    /// <remarks>The method processes incoming signal data, filters for valid entries, and updates the plot in
-    /// real time. Data points with duplicate time values are ignored, and the plot is refreshed unless the chart is
-    /// paused. If a fixed number of points is configured, older points are removed to maintain the limit. The method is
-    /// thread-safe and uses background scheduling for data processing and main thread scheduling for UI
-    /// updates.</remarks>
-    /// <param name="observable">An observable sequence that provides tuples containing the signal name, value list, date/time list, and axis
-    /// identifier. The value and date/time lists must be non-null, non-empty, and of equal length.</param>
+    /// <summary>Subscribes to an observable sequence of signal data and updates the plot with new values as they arrive.</summary>
+    /// <param name="observable">The observable value.</param>
     public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) => observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
-        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value != null && d.DateTime != null && d.Value.Count > 0 && d.DateTime.Count > 0 && d.Value.Count == d.DateTime.Count)
+        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value is not null && d.DateTime is not null && d.Value.Count > 0 && d.DateTime.Count > 0 && d.Value.Count == d.DateTime.Count)
         .Select(data =>
         {
             var dateTimeList = data.DateTime;
@@ -200,7 +192,7 @@ public partial class SignalUI : RxObject, IPlottableUI
 
             return (valueList, datetime, data.Name);
         })
-        .Retry()
+        .Retry(int.MaxValue)
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
@@ -238,57 +230,45 @@ public partial class SignalUI : RxObject, IPlottableUI
                 PlotLine!.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - NumberPointsPlotted);
             }
 
-            try
-            {
-                // Use ToArray since ScottPlot DataLogger doesn't have Span overload
-                PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
-            }
-            catch
-            {
-            }
+            // Use ToArray since ScottPlot DataLogger doesn't have Span overload
+            PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
 
             PlotLine!.ManageAxisLimits = false;
 
-            //// UPDATE IF IS NOT PAUSED
-            if (!ChartSettings.IsPaused)
+            if (ChartSettings.IsPaused)
             {
-                try
-                {
-                    Plot.Refresh();
-                }
-                catch
-                {
-                }
+                return;
             }
+
+            Plot.Refresh();
         }).DisposeWith(Disposables);
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        if (!disposing)
         {
-            ChartSettings.Dispose();
-            MouseCoordinatesObs?.Dispose();
-            _timeSet.Clear();
-            _uniqueDataBuffer.Clear();
-            _uniqueTimeBuffer.Clear();
+            base.Dispose(disposing);
+            return;
         }
+
+        ChartSettings.Dispose();
+        MouseCoordinatesObs?.Dispose();
+        _timeSet.Clear();
+        _uniqueDataBuffer.Clear();
+        _uniqueTimeBuffer.Clear();
+        base.Dispose(disposing);
     }
 
-    /// <summary>
-    /// Finds the coordinate in the specified collection whose X value is closest to the given target X value.
-    /// </summary>
+    /// <summary>Finds the coordinate in the specified collection whose X value is closest to the given target X value.</summary>
     /// <remarks>If multiple coordinates are equally close to the target X value, the first such coordinate in
     /// the collection is returned. The method does not perform any validation on the input collection; callers should
     /// ensure it is not empty.</remarks>
     /// <param name="coordinates">The collection of coordinates to search. Must contain at least one element.</param>
     /// <param name="targetX">The target X value to compare against each coordinate's X value.</param>
     /// <returns>The coordinate whose X value is nearest to the specified target X value.</returns>
-    private static Coordinates FindClosestCoordinate(IList<Coordinates> coordinates, double targetX)
+    private static Coordinates FindClosestCoordinate(List<Coordinates> coordinates, double targetX)
     {
         var closest = coordinates[0];
         var minDistance = Math.Abs(closest.X - targetX);
@@ -306,9 +286,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         return closest;
     }
 
-    /// <summary>
-    /// Sorts the internal time and data buffers in ascending order of time values.
-    /// </summary>
+    /// <summary>Sorts the internal time and data buffers in ascending order of time values.</summary>
     /// <remarks>This method ensures that the time and corresponding data buffers remain synchronized and
     /// ordered by time. It is intended for use with small datasets and assumes that the buffers are typically already
     /// sorted. Calling this method is necessary before performing operations that require the buffers to be in

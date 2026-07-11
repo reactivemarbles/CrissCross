@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -9,33 +9,25 @@ using CrissCross.WPF.UI.Animations;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// NavigationViewContentPresenter.
-/// </summary>
+/// <summary>Represents NavigationViewContentPresenter.</summary>
 /// <seealso cref="Frame" />
 public class NavigationViewContentPresenter : Frame
 {
-    /// <summary>
-    /// Property for <see cref="TransitionDuration"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TransitionDuration"/>.</summary>
     public static readonly DependencyProperty TransitionDurationProperty = DependencyProperty.Register(
         nameof(TransitionDuration),
         typeof(int),
         typeof(NavigationViewContentPresenter),
         new FrameworkPropertyMetadata(200));
 
-    /// <summary>
-    /// Property for <see cref="Transition"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Transition"/>.</summary>
     public static readonly DependencyProperty TransitionProperty = DependencyProperty.Register(
         nameof(Transition),
         typeof(Transition),
         typeof(NavigationViewContentPresenter),
         new FrameworkPropertyMetadata(Transition.FadeInWithSlide));
 
-    /// <summary>
-    /// Property for <see cref="IsDynamicScrollViewerEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsDynamicScrollViewerEnabled"/>.</summary>
     public static readonly DependencyProperty IsDynamicScrollViewerEnabledProperty =
         DependencyProperty.Register(
             nameof(IsDynamicScrollViewerEnabled),
@@ -43,6 +35,7 @@ public class NavigationViewContentPresenter : Frame
             typeof(NavigationViewContentPresenter),
             new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
+    /// <summary>Provides the NavigationViewContentPresenter member.</summary>
     static NavigationViewContentPresenter()
     {
         DefaultStyleKeyProperty.OverrideMetadata(
@@ -66,9 +59,7 @@ public class NavigationViewContentPresenter : Frame
             new FrameworkPropertyMetadata(true));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewContentPresenter"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewContentPresenter"/> class.</summary>
     public NavigationViewContentPresenter()
     {
         Navigating += static (sender, eventArgs) =>
@@ -95,9 +86,7 @@ public class NavigationViewContentPresenter : Frame
         };
     }
 
-    /// <summary>
-    /// Gets or sets the duration of the transition.
-    /// </summary>
+    /// <summary>Gets or sets the duration of the transition.</summary>
     /// <value>
     /// The duration of the transition.
     /// </value>
@@ -109,27 +98,21 @@ public class NavigationViewContentPresenter : Frame
         set => SetValue(TransitionDurationProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets type of <see cref="NavigationViewContentPresenter"/> transitions during navigation.
-    /// </summary>
+    /// <summary>Gets or sets type of <see cref="NavigationViewContentPresenter"/> transitions during navigation.</summary>
     public Transition Transition
     {
         get => (Transition)GetValue(TransitionProperty);
         set => SetValue(TransitionProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the dynamic scroll viewer is enabled.
-    /// </summary>
+    /// <summary>Gets the Gets or sets a value indicating whether the dynamic scroll viewer is enabled. value.</summary>
     public bool IsDynamicScrollViewerEnabled
     {
         get => (bool)GetValue(IsDynamicScrollViewerEnabledProperty);
         protected set => SetValue(IsDynamicScrollViewerEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:Initialized" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:Initialized" /> event.</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
@@ -138,16 +121,16 @@ public class NavigationViewContentPresenter : Frame
         // I didn't understand something, but why is it necessary?
         Unloaded += static (sender, _) =>
         {
-            if (sender is NavigationViewContentPresenter navigator)
+            if (sender is not NavigationViewContentPresenter navigator)
             {
-                NotifyContentAboutNavigatingFrom(navigator.Content);
+                return;
             }
+
+            NotifyContentAboutNavigatingFrom(navigator.Content);
         };
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:MouseDown" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:MouseDown" /> event.</summary>
     /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
@@ -159,9 +142,7 @@ public class NavigationViewContentPresenter : Frame
         base.OnMouseDown(e);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:Navigating" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:Navigating" /> event.</summary>
     /// <param name="eventArgs">The <see cref="System.Windows.Navigation.NavigatingCancelEventArgs"/> instance containing the event data.</param>
     protected virtual void OnNavigating(System.Windows.Navigation.NavigatingCancelEventArgs eventArgs)
     {
@@ -175,9 +156,7 @@ public class NavigationViewContentPresenter : Frame
         NotifyContentAboutNavigatingFrom(navigator.Content);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:Navigated" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:Navigated" /> event.</summary>
     /// <param name="eventArgs">The <see cref="NavigationEventArgs"/> instance containing the event data.</param>
     protected virtual void OnNavigated(NavigationEventArgs eventArgs)
     {
@@ -191,6 +170,8 @@ public class NavigationViewContentPresenter : Frame
         IsDynamicScrollViewerEnabled = ScrollViewer.GetCanContentScroll(dependencyObject);
     }
 
+    /// <summary>Provides the NotifyContentAboutNavigatingTo member.</summary>
+    /// <param name="content">The content value.</param>
     private static void NotifyContentAboutNavigatingTo(object? content)
     {
         if (content is INavigationAware navigationAwareNavigationContent)
@@ -207,12 +188,16 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigableViewViewModel.OnNavigatedTo();
         }
 
-        if (content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent })
+        if (!(content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent }))
         {
-            navigationAwareCurrentContent.OnNavigatedTo();
+            return;
         }
+
+        navigationAwareCurrentContent.OnNavigatedTo();
     }
 
+    /// <summary>Provides the NotifyContentAboutNavigatingFrom member.</summary>
+    /// <param name="content">The content value.</param>
     private static void NotifyContentAboutNavigatingFrom(object content)
     {
         if (content is INavigationAware navigationAwareNavigationContent)
@@ -229,19 +214,23 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigableViewViewModel.OnNavigatedFrom();
         }
 
-        if (content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent })
-        {
-            navigationAwareCurrentContent.OnNavigatedFrom();
-        }
-    }
-
-    private void ApplyTransitionEffectToNavigatedPage(object? content)
-    {
-        if (content == null || TransitionDuration < 1)
+        if (!(content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent }))
         {
             return;
         }
 
-        TransitionAnimationProvider.ApplyTransition(content, Transition, TransitionDuration);
+        navigationAwareCurrentContent.OnNavigatedFrom();
+    }
+
+    /// <summary>Provides the ApplyTransitionEffectToNavigatedPage member.</summary>
+    /// <param name="content">The content value.</param>
+    private void ApplyTransitionEffectToNavigatedPage(object? content)
+    {
+        if (content is null || TransitionDuration < 1)
+        {
+            return;
+        }
+
+        _ = TransitionAnimationProvider.ApplyTransition(content, Transition, TransitionDuration);
     }
 }

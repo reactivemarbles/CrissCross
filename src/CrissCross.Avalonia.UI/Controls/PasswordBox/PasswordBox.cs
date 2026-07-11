@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
@@ -8,109 +8,89 @@ using AvaloniaInteractivity = global::Avalonia.Interactivity;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set to true, PasswordProperty always contains raw password.
-/// </summary>
+/// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set to true, PasswordProperty always contains raw password.</summary>
 public class PasswordBox : TextBox
 {
-    /// <summary>
-    /// Property for <see cref="Password"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Password"/>.</summary>
     public static readonly StyledProperty<string> PasswordProperty = AvaloniaProperty.Register<PasswordBox, string>(
-        nameof(Password), string.Empty);
+        nameof(Password),
+        string.Empty);
 
-    /// <summary>
-    /// Property for <see cref="PasswordChar"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="PasswordChar"/>.</summary>
     public static readonly StyledProperty<char> PasswordCharProperty = AvaloniaProperty.Register<PasswordBox, char>(
-        nameof(PasswordChar), '•');
+        nameof(PasswordChar),
+        'ï¿½');
 
-    /// <summary>
-    /// Property for <see cref="IsPasswordRevealed"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsPasswordRevealed"/>.</summary>
     public static readonly StyledProperty<bool> IsPasswordRevealedProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(IsPasswordRevealed), false);
+        nameof(IsPasswordRevealed),
+        false);
 
-    /// <summary>
-    /// Property for <see cref="RevealButtonEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="RevealButtonEnabled"/>.</summary>
     public static readonly StyledProperty<bool> RevealButtonEnabledProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(RevealButtonEnabled), true);
+        nameof(RevealButtonEnabled),
+        true);
 
-    /// <summary>
-    /// Property for <see cref="RevealPassword"/> (alias for IsPasswordRevealed for XAML compatibility).
-    /// </summary>
+    /// <summary>Property for <see cref="RevealPassword"/> (alias for IsPasswordRevealed for XAML compatibility).</summary>
     public static readonly StyledProperty<bool> RevealPasswordProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(RevealPassword), false);
+        nameof(RevealPassword),
+        false);
 
-    /// <summary>
-    /// Event for "Password has changed".
-    /// </summary>
+    /// <summary>Event for "Password has changed".</summary>
     public static readonly AvaloniaInteractivity.RoutedEvent<AvaloniaInteractivity.RoutedEventArgs> PasswordChangedEvent =
         AvaloniaInteractivity.RoutedEvent.Register<PasswordBox, AvaloniaInteractivity.RoutedEventArgs>(
             nameof(PasswordChanged),
             AvaloniaInteractivity.RoutingStrategies.Bubble);
 
+    /// <summary>Provides the _passwordHelper member.</summary>
     private readonly PasswordHelper _passwordHelper;
+
+    /// <summary>Provides the _lockUpdatingContents member.</summary>
     private bool _lockUpdatingContents;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PasswordBox"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="PasswordBox"/> class.</summary>
     public PasswordBox()
     {
         _lockUpdatingContents = false;
         _passwordHelper = new(this);
     }
 
-    /// <summary>
-    /// Event fired from this text box when its inner content has been changed.
-    /// </summary>
+    /// <summary>Event fired from this text box when its inner content has been changed.</summary>
     public event EventHandler<AvaloniaInteractivity.RoutedEventArgs>? PasswordChanged
     {
         add => AddHandler(PasswordChangedEvent, value);
         remove => RemoveHandler(PasswordChangedEvent, value);
     }
 
-    /// <summary>
-    /// Gets or sets currently typed text represented by asterisks.
-    /// </summary>
+    /// <summary>Gets or sets currently typed text represented by asterisks.</summary>
     public string Password
     {
         get => GetValue(PasswordProperty);
         set => SetValue(PasswordProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets character used to mask the password.
-    /// </summary>
+    /// <summary>Gets or sets character used to mask the password.</summary>
     public char PasswordChar
     {
         get => GetValue(PasswordCharProperty);
         set => SetValue(PasswordCharProperty, value);
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the password is revealed.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the password is revealed.</summary>
     public bool IsPasswordRevealed
     {
         get => GetValue(IsPasswordRevealedProperty);
         private set => SetValue(IsPasswordRevealedProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to reveal the password (XAML-friendly alias).
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether to reveal the password (XAML-friendly alias).</summary>
     public bool RevealPassword
     {
         get => GetValue(RevealPasswordProperty);
         set => SetValue(RevealPasswordProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to display the reveal password button.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether to display the reveal password button.</summary>
     public bool RevealButtonEnabled
     {
         get => GetValue(RevealButtonEnabledProperty);
@@ -161,14 +141,10 @@ public class PasswordBox : TextBox
         }
     }
 
-    /// <summary>
-    /// Is called when <see cref="Password"/> property is changing.
-    /// </summary>
+    /// <summary>Is called when <see cref="Password"/> property is changing.</summary>
     protected virtual void OnPasswordChanged() => UpdateTextContents(false);
 
-    /// <summary>
-    /// Is called when <see cref="PasswordChar"/> property is changing.
-    /// </summary>
+    /// <summary>Is called when <see cref="PasswordChar"/> property is changing.</summary>
     protected virtual void OnPasswordCharChanged()
     {
         // If password is currently revealed, do not replace displayed text with asterisks
@@ -178,13 +154,11 @@ public class PasswordBox : TextBox
         }
 
         _lockUpdatingContents = true;
-        Text = new string(PasswordChar, Password.Length);
+        Text = new(PasswordChar, Password.Length);
         _lockUpdatingContents = false;
     }
 
-    /// <summary>
-    /// Called when password reveal mode changed.
-    /// </summary>
+    /// <summary>Called when password reveal mode changed.</summary>
     protected virtual void OnPasswordRevealModeChanged()
     {
         _lockUpdatingContents = true;
@@ -192,9 +166,7 @@ public class PasswordBox : TextBox
         _lockUpdatingContents = false;
     }
 
-    /// <summary>
-    /// Triggered by clicking a button in the control template.
-    /// </summary>
+    /// <summary>Triggered by clicking a button in the control template.</summary>
     /// <param name="parameter">Additional parameters.</param>
     protected override void OnTemplateButtonClick(string? parameter)
     {
@@ -203,17 +175,24 @@ public class PasswordBox : TextBox
         switch (parameter)
         {
             case "reveal":
-                IsPasswordRevealed = !IsPasswordRevealed;
-                RevealPassword = IsPasswordRevealed;
-                Focus();
-                CaretIndex = (Text ?? string.Empty).Length;
-                break;
+                {
+                    IsPasswordRevealed = !IsPasswordRevealed;
+                    RevealPassword = IsPasswordRevealed;
+                    _ = Focus();
+                    CaretIndex = (Text ?? string.Empty).Length;
+                    break;
+                }
+
             default:
-                base.OnTemplateButtonClick(parameter);
-                break;
+                {
+                    base.OnTemplateButtonClick(parameter);
+                    break;
+                }
         }
     }
 
+    /// <summary>Provides the UpdateTextContents member.</summary>
+    /// <param name="isTriggeredByTextInput">The isTriggeredByTextInput value.</param>
     private void UpdateTextContents(bool isTriggeredByTextInput)
     {
         if (_lockUpdatingContents)
@@ -223,28 +202,41 @@ public class PasswordBox : TextBox
 
         if (IsPasswordRevealed)
         {
-            if (Password == Text)
-            {
-                return;
-            }
-
-            _lockUpdatingContents = true;
-
-            if (isTriggeredByTextInput)
-            {
-                Password = Text ?? string.Empty;
-            }
-            else
-            {
-                Text = Password;
-                CaretIndex = (Text ?? string.Empty).Length;
-            }
-
-            RaiseEvent(new AvaloniaInteractivity.RoutedEventArgs(PasswordChangedEvent));
-            _lockUpdatingContents = false;
+            UpdateRevealedTextContents(isTriggeredByTextInput);
             return;
         }
 
+        UpdateMaskedTextContents(isTriggeredByTextInput);
+    }
+
+    /// <summary>Synchronizes text and password while the password is visible.</summary>
+    /// <param name="isTriggeredByTextInput">Whether a text input change triggered the update.</param>
+    private void UpdateRevealedTextContents(bool isTriggeredByTextInput)
+    {
+        if (Password == Text)
+        {
+            return;
+        }
+
+        _lockUpdatingContents = true;
+        if (isTriggeredByTextInput)
+        {
+            Password = Text ?? string.Empty;
+        }
+        else
+        {
+            Text = Password;
+            CaretIndex = (Text ?? string.Empty).Length;
+        }
+
+        RaiseEvent(new AvaloniaInteractivity.RoutedEventArgs(PasswordChangedEvent));
+        _lockUpdatingContents = false;
+    }
+
+    /// <summary>Synchronizes masked text with the stored password.</summary>
+    /// <param name="isTriggeredByTextInput">Whether a text input change triggered the update.</param>
+    private void UpdateMaskedTextContents(bool isTriggeredByTextInput)
+    {
         var caretIndex = CaretIndex;
         var newPasswordValue = _passwordHelper.GetPassword();
 
@@ -255,7 +247,7 @@ public class PasswordBox : TextBox
 
         _lockUpdatingContents = true;
 
-        Text = new string(PasswordChar, newPasswordValue?.Length ?? 0);
+        Text = new(PasswordChar, newPasswordValue?.Length ?? 0);
         Password = newPasswordValue ?? string.Empty;
         CaretIndex = caretIndex;
 
@@ -263,12 +255,21 @@ public class PasswordBox : TextBox
         _lockUpdatingContents = false;
     }
 
+    /// <summary>Provides the PasswordHelper member.</summary>
+    /// <param name="passwordBox">The passwordBox value.</param>
     private sealed class PasswordHelper(PasswordBox passwordBox)
     {
+        /// <summary>Provides the _currentText member.</summary>
         private string _currentText = string.Empty;
+
+        /// <summary>Provides the _newPasswordValue member.</summary>
         private string _newPasswordValue = string.Empty;
+
+        /// <summary>Provides the _currentPassword member.</summary>
         private string _currentPassword = string.Empty;
 
+        /// <summary>Provides the GetNewPassword member.</summary>
+        /// <returns>The result.</returns>
         public string GetNewPassword()
         {
             _currentPassword = GetPassword();
@@ -332,8 +333,13 @@ public class PasswordBox : TextBox
             return _newPasswordValue;
         }
 
+        /// <summary>Provides the GetPassword member.</summary>
+        /// <returns>The result.</returns>
         public string GetPassword() => passwordBox.Password ?? string.Empty;
 
+        /// <summary>Provides the UpdatePasswordWithInputCharacter member.</summary>
+        /// <param name="insertIndex">The insertIndex value.</param>
+        /// <param name="insertValue">The insertvalue.</param>
         private void UpdatePasswordWithInputCharacter(int insertIndex, string insertValue)
         {
             Debug.Assert(_currentText == (passwordBox.Text ?? string.Empty), "_currentText == passwordBox.Text");
@@ -349,6 +355,8 @@ public class PasswordBox : TextBox
             }
         }
 
+        /// <summary>Provides the IsDeleteOption member.</summary>
+        /// <returns>The result.</returns>
         private bool IsDeleteOption()
         {
             Debug.Assert(_currentText == (passwordBox.Text ?? string.Empty), "_currentText == passwordBox.Text");

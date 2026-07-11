@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -17,11 +17,9 @@ namespace CrissCross.Avalonia.Test.IOS;
 /// </summary>
 /// <seealso cref="AvaloniaAppDelegate&lt;App&gt;" />
 [Register("AppDelegate")]
-public partial class AppDelegate : AvaloniaAppDelegate<App>
+public class AppDelegate : AvaloniaAppDelegate<App>
 {
-    /// <summary>
-    /// Customizes the application builder.
-    /// </summary>
+    /// <summary>Customizes the application builder.</summary>
     /// <param name="builder">The builder.</param>
     /// <returns>A App Builder.</returns>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder) =>

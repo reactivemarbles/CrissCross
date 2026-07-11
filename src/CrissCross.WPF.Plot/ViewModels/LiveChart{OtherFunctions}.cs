@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
@@ -19,9 +19,7 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class LiveChartViewModel : RxObject
 {
-    /// <summary>
-    /// Gets the axis line located under the specified mouse coordinates, if any.
-    /// </summary>
+    /// <summary>Gets the axis line located under the specified mouse coordinates, if any.</summary>
     /// <remarks>This method checks for both horizontal and vertical axis lines near the given coordinates.
     /// The search uses a small radius to determine proximity. If multiple axis lines overlap, the first one found is
     /// returned.</remarks>

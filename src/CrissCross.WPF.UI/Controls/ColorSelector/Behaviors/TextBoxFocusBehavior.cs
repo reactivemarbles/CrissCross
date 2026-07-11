@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -7,8 +7,10 @@ using Microsoft.Xaml.Behaviors;
 
 namespace CrissCross.WPF.UI.Behaviors;
 
-internal class TextBoxFocusBehavior : Behavior<TextBox>
+/// <summary>Provides the TextBoxFocusBehavior member.</summary>
+internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
 {
+    /// <summary>Provides the SelectOnMouseClickProperty member.</summary>
     public static readonly DependencyProperty SelectOnMouseClickProperty =
         DependencyProperty.Register(
             nameof(SelectOnMouseClick),
@@ -16,6 +18,7 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
             typeof(TextBoxFocusBehavior),
             new PropertyMetadata(true));
 
+    /// <summary>Provides the ConfirmOnEnterProperty member.</summary>
     public static readonly DependencyProperty ConfirmOnEnterProperty =
         DependencyProperty.Register(
             nameof(ConfirmOnEnter),
@@ -23,6 +26,7 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
             typeof(TextBoxFocusBehavior),
             new PropertyMetadata(true));
 
+    /// <summary>Provides the DeselectOnFocusLossProperty member.</summary>
     public static readonly DependencyProperty DeselectOnFocusLossProperty =
         DependencyProperty.Register(
             nameof(DeselectOnFocusLoss),
@@ -30,18 +34,21 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
             typeof(TextBoxFocusBehavior),
             new PropertyMetadata(true));
 
+    /// <summary>Gets or sets SelectOnMouseClick.</summary>
     public bool SelectOnMouseClick
     {
         get => (bool)GetValue(SelectOnMouseClickProperty);
         set => SetValue(SelectOnMouseClickProperty, value);
     }
 
+    /// <summary>Gets or sets ConfirmOnEnter.</summary>
     public bool ConfirmOnEnter
     {
         get => (bool)GetValue(ConfirmOnEnterProperty);
         set => SetValue(ConfirmOnEnterProperty, value);
     }
 
+    /// <summary>Gets or sets DeselectOnFocusLoss.</summary>
     public bool DeselectOnFocusLoss
     {
         get => (bool)GetValue(DeselectOnFocusLossProperty);
@@ -68,7 +75,9 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
         AssociatedObject.KeyUp -= AssociatedObject_KeyUp;
     }
 
-    // Converts number to proper format if enter is clicked and moves focus to next object
+    /// <summary>Converts number to proper format if enter is clicked and moves focus to next object.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void AssociatedObject_KeyUp(object sender, KeyEventArgs e)
     {
         if (e.Key != Key.Enter || !ConfirmOnEnter)
@@ -79,12 +88,13 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
         RemoveFocus();
     }
 
+    /// <summary>Provides the RemoveFocus member.</summary>
     private void RemoveFocus()
     {
         var scope = FocusManager.GetFocusScope(AssociatedObject);
         var parent = (FrameworkElement)AssociatedObject.Parent;
 
-        while (parent != null && parent is IInputElement element && !element.Focusable)
+        while (parent is not null && parent is IInputElement element && !element.Focusable)
         {
             parent = (FrameworkElement)parent.Parent;
         }
@@ -93,34 +103,52 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
         Keyboard.ClearFocus();
     }
 
+    /// <summary>Provides the AssociatedObjectGotKeyboardFocus member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void AssociatedObjectGotKeyboardFocus(
         object sender,
         KeyboardFocusChangedEventArgs e)
     {
-        if (SelectOnMouseClick || e.KeyboardDevice.IsKeyDown(Key.Tab))
+        if (!SelectOnMouseClick && !e.KeyboardDevice.IsKeyDown(Key.Tab))
         {
-            AssociatedObject.SelectAll();
+            return;
         }
+
+        AssociatedObject.SelectAll();
     }
 
+    /// <summary>Provides the AssociatedObjectGotMouseCapture member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void AssociatedObjectGotMouseCapture(
         object sender,
         MouseEventArgs e)
     {
-        if (SelectOnMouseClick)
+        if (!SelectOnMouseClick)
         {
-            AssociatedObject.SelectAll();
+            return;
         }
+
+        AssociatedObject.SelectAll();
     }
 
+    /// <summary>Provides the AssociatedObject_LostFocus member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void AssociatedObject_LostFocus(object sender, RoutedEventArgs e)
     {
-        if (DeselectOnFocusLoss)
+        if (!DeselectOnFocusLoss)
         {
-            AssociatedObject.Select(0, 0);
+            return;
         }
+
+        AssociatedObject.Select(0, 0);
     }
 
+    /// <summary>Provides the AssociatedObjectPreviewMouseLeftButtonDown member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void AssociatedObjectPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (!SelectOnMouseClick)
@@ -128,10 +156,12 @@ internal class TextBoxFocusBehavior : Behavior<TextBox>
             return;
         }
 
-        if (!AssociatedObject.IsKeyboardFocusWithin)
+        if (AssociatedObject.IsKeyboardFocusWithin)
         {
-            AssociatedObject.Focus();
-            e.Handled = true;
+            return;
         }
+
+        _ = AssociatedObject.Focus();
+        e.Handled = true;
     }
 }

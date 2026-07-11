@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -15,36 +15,28 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 public class VirtualizingGridView : ListView
 {
-    /// <summary>
-    /// Property for <see cref="Orientation"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Orientation"/>.</summary>
     public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
         nameof(Orientation),
         typeof(Orientation),
         typeof(VirtualizingGridView),
         new PropertyMetadata(Orientation.Vertical));
 
-    /// <summary>
-    /// Property for <see cref="SpacingMode"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SpacingMode"/>.</summary>
     public static readonly DependencyProperty SpacingModeProperty = DependencyProperty.Register(
         nameof(SpacingMode),
         typeof(SpacingMode),
         typeof(VirtualizingGridView),
         new PropertyMetadata(SpacingMode.Uniform));
 
-    /// <summary>
-    /// Property for <see cref="StretchItems"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="StretchItems"/>.</summary>
     public static readonly DependencyProperty StretchItemsProperty = DependencyProperty.Register(
         nameof(StretchItems),
         typeof(bool),
         typeof(VirtualizingGridView),
         new PropertyMetadata(false));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VirtualizingGridView"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="VirtualizingGridView"/> class.</summary>
     public VirtualizingGridView()
     {
         VirtualizingPanel.SetCacheLengthUnit(this, VirtualizationCacheLengthUnit.Page);
@@ -52,27 +44,21 @@ public class VirtualizingGridView : ListView
         VirtualizingPanel.SetIsVirtualizingWhenGrouping(this, true);
     }
 
-    /// <summary>
-    /// Gets or sets a value that specifies the orientation in which items are arranged. The default value is <see cref="Orientation.Vertical"/>.
-    /// </summary>
+    /// <summary>Gets or sets a value that specifies the orientation in which items are arranged. The default value is <see cref="Orientation.Vertical"/>.</summary>
     public Orientation Orientation
     {
         get => (Orientation)GetValue(OrientationProperty);
         set => SetValue(OrientationProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the spacing mode used when arranging the items. The default value is <see cref="SpacingMode.Uniform"/>.
-    /// </summary>
+    /// <summary>Gets or sets the spacing mode used when arranging the items. The default value is <see cref="SpacingMode.Uniform"/>.</summary>
     public SpacingMode SpacingMode
     {
         get => (SpacingMode)GetValue(SpacingModeProperty);
         set => SetValue(SpacingModeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that specifies if the items get stretched to fill up remaining space. The default value is false.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that specifies if the items get stretched to fill up remaining space. The default value is false.</summary>
     /// <remarks>
     /// The MaxWidth and MaxHeight properties of the ItemContainerStyle can be used to limit the stretching.
     /// In this case the use of the remaining space will be determined by the SpacingMode property.
@@ -83,9 +69,7 @@ public class VirtualizingGridView : ListView
         set => SetValue(StretchItemsProperty, value);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:Initialized" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:Initialized" /> event.</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
@@ -94,9 +78,7 @@ public class VirtualizingGridView : ListView
         InitializeItemsPanel();
     }
 
-    /// <summary>
-    /// Initializes the <see cref="ItemsControl.ItemsPanel"/> with <see cref="VirtualizingWrapPanel"/>.
-    /// </summary>
+    /// <summary>Initializes the <see cref="ItemsControl.ItemsPanel"/> with <see cref="VirtualizingWrapPanel"/>.</summary>
     protected virtual void InitializeItemsPanel()
     {
         var factory = new FrameworkElementFactory(typeof(VirtualizingWrapPanel));
@@ -106,7 +88,7 @@ public class VirtualizingGridView : ListView
             new Binding
             {
                 Source = this,
-                Path = new PropertyPath(nameof(Orientation)),
+                Path = new(nameof(Orientation)),
                 Mode = BindingMode.OneWay
             });
         factory.SetBinding(
@@ -114,7 +96,7 @@ public class VirtualizingGridView : ListView
             new Binding
             {
                 Source = this,
-                Path = new PropertyPath(nameof(SpacingMode)),
+                Path = new(nameof(SpacingMode)),
                 Mode = BindingMode.OneWay
             });
         factory.SetBinding(
@@ -122,10 +104,10 @@ public class VirtualizingGridView : ListView
             new Binding
             {
                 Source = this,
-                Path = new PropertyPath(nameof(StretchItems)),
+                Path = new(nameof(StretchItems)),
                 Mode = BindingMode.OneWay
             });
 
-        ItemsPanel = new ItemsPanelTemplate(factory);
+        ItemsPanel = new(factory);
     }
 }

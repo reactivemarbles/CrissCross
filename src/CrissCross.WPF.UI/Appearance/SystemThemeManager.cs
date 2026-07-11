@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.Win32;
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>
-/// Provides information about Windows system themes.
-/// </summary>
+/// <summary>Provides information about Windows system themes.</summary>
 /// <example>
 /// <code lang="csharp">
 /// var currentWindowTheme = SystemThemeManager.GetCachedSystemTheme();
@@ -20,21 +18,32 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class SystemThemeManager
 {
+    /// <summary>Maps Windows theme file names to system themes.</summary>
+    private static readonly (string ThemeFile, SystemTheme Theme)[] _themeFileMappings =
+    [
+        ("basic.theme", SystemTheme.Light),
+        ("aero.theme", SystemTheme.Light),
+        ("dark.theme", SystemTheme.Dark),
+        ("hcblack.theme", SystemTheme.HCBlack),
+        ("hcwhite.theme", SystemTheme.HCWhite),
+        ("hc1.theme", SystemTheme.HC1),
+        ("hc2.theme", SystemTheme.HC2),
+        ("themea.theme", SystemTheme.Glow),
+        ("themeb.theme", SystemTheme.CapturedMotion),
+        ("themec.theme", SystemTheme.Sunrise),
+        ("themed.theme", SystemTheme.Flow)
+    ];
+
+    /// <summary>Stores the _cachedTheme value.</summary>
     private static SystemTheme _cachedTheme = SystemTheme.Unknown;
 
-    /// <summary>
-    /// Gets the Windows glass color.
-    /// </summary>
+    /// <summary>Gets the Windows glass color.</summary>
     public static Color GlassColor => SystemParameters.WindowGlassColor;
 
-    /// <summary>
-    /// Gets a value indicating whether the system is currently using the high contrast theme.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the system is currently using the high contrast theme.</summary>
     public static bool HighContrast => SystemParameters.HighContrast;
 
-    /// <summary>
-    /// Returns the Windows theme retrieved from the registry. If it has not been cached before, invokes the <see cref="UpdateSystemThemeCache"/> and then returns the currently obtained theme.
-    /// </summary>
+    /// <summary>Returns the Windows theme retrieved from the registry. If it has not been cached before, invokes the <see cref="UpdateSystemThemeCache"/> and then returns the currently obtained theme.</summary>
     /// <returns>Currently cached Windows theme.</returns>
     public static SystemTheme GetCachedSystemTheme()
     {
@@ -48,93 +57,54 @@ public static class SystemThemeManager
         return _cachedTheme;
     }
 
-    /// <summary>
-    /// Refreshes the currently saved system theme.
-    /// </summary>
+    /// <summary>Refreshes the currently saved system theme.</summary>
     public static void UpdateSystemThemeCache() => _cachedTheme = GetCurrentSystemTheme();
 
+    /// <summary>Provides the GetCurrentSystemTheme member.</summary>
+    /// <returns>The result.</returns>
     private static SystemTheme GetCurrentSystemTheme()
     {
         var currentTheme =
-            Registry.GetValue(
+            (Registry.GetValue(
                 "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes",
                 "CurrentTheme",
-                "aero.theme") as string
+                "aero.theme") as string)
             ?? string.Empty;
 
         if (!string.IsNullOrEmpty(currentTheme))
         {
-            currentTheme = currentTheme.ToLower().Trim();
-
-            // This may be changed in the next versions, check the Insider previews
-            if (currentTheme.Contains("basic.theme"))
+            var mappedTheme = GetThemeFromPath(currentTheme);
+            if (mappedTheme != SystemTheme.Unknown)
             {
-                return SystemTheme.Light;
-            }
-
-            if (currentTheme.Contains("aero.theme"))
-            {
-                return SystemTheme.Light;
-            }
-
-            if (currentTheme.Contains("dark.theme"))
-            {
-                return SystemTheme.Dark;
-            }
-
-            if (currentTheme.Contains("hcblack.theme"))
-            {
-                return SystemTheme.HCBlack;
-            }
-
-            if (currentTheme.Contains("hcwhite.theme"))
-            {
-                return SystemTheme.HCWhite;
-            }
-
-            if (currentTheme.Contains("hc1.theme"))
-            {
-                return SystemTheme.HC1;
-            }
-
-            if (currentTheme.Contains("hc2.theme"))
-            {
-                return SystemTheme.HC2;
-            }
-
-            if (currentTheme.Contains("themea.theme"))
-            {
-                return SystemTheme.Glow;
-            }
-
-            if (currentTheme.Contains("themeb.theme"))
-            {
-                return SystemTheme.CapturedMotion;
-            }
-
-            if (currentTheme.Contains("themec.theme"))
-            {
-                return SystemTheme.Sunrise;
-            }
-
-            if (currentTheme.Contains("themed.theme"))
-            {
-                return SystemTheme.Flow;
+                return mappedTheme;
             }
         }
 
+        return GetThemeFromPersonalization();
+    }
+
+    /// <summary>Gets a system theme from a Windows theme path.</summary>
+    /// <param name="currentTheme">The current theme path.</param>
+    /// <returns>The mapped system theme, or <see cref="SystemTheme.Unknown"/>.</returns>
+    private static SystemTheme GetThemeFromPath(string currentTheme)
+    {
+        var normalizedTheme = currentTheme.ToLower().Trim();
+        var mapping = _themeFileMappings.FirstOrDefault(item => normalizedTheme.Contains(item.ThemeFile));
+        return mapping.Theme;
+    }
+
+    /// <summary>Gets a system theme from personalization registry values.</summary>
+    /// <returns>The system theme.</returns>
+    private static SystemTheme GetThemeFromPersonalization()
+    {
         var rawAppsUseLightTheme = Registry.GetValue(
             "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
             "AppsUseLightTheme",
             1);
 
-        if (rawAppsUseLightTheme is 0)
+        if (rawAppsUseLightTheme is 0 or 1)
         {
-            return SystemTheme.Dark;
-        }
-        else if (rawAppsUseLightTheme is 1)
-        {
-            return SystemTheme.Light;
+            return rawAppsUseLightTheme is 0 ? SystemTheme.Dark : SystemTheme.Light;
         }
 
         var rawSystemUsesLightTheme =

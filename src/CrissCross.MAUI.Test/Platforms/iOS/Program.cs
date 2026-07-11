@@ -1,18 +1,18 @@
-﻿// Copyright (c) Chris Pulman. All rights reserved.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+// Copyright (c) Chris Pulman. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using UIKit;
 
 namespace CrissCross.MAUI.Test
 {
-    /// <summary>
-    /// Program.
-    /// </summary>
+    /// <summary>Program member.</summary>
     public static class Program
     {
-        /// <summary>
-        /// Defines the entry point of the application.
-        /// </summary>
+        /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
         private static void Main(string[] args)
         {

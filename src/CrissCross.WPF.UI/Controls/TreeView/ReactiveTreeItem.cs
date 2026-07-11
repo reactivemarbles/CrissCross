@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CP.Reactive.Collections;
@@ -7,46 +7,37 @@ using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Reactive Tree Item.
-/// </summary>
+/// <summary>Reactive Tree Item.</summary>
 /// <seealso cref="RxObject" />
 public abstract partial class ReactiveTreeItem : RxObject
 {
+    /// <summary>Stores the _parent value.</summary>
     private ReactiveTreeItem? _parent;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is expanded.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is expanded.</summary>
     /// <value>
     ///   <c>true</c> if this instance is expanded; otherwise, <c>false</c>.
     /// </value>
     [Reactive]
     private bool _isExpanded;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is selected.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is selected.</summary>
     /// <value>
     ///   <c>true</c> if this instance is selected; otherwise, <c>false</c>.
     /// </value>
     [Reactive]
     private bool _isSelected;
 
-    /// <summary>
-    /// Gets or sets displayed <see cref="IconElement"/>.
-    /// </summary>
+    /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     [Reactive]
     private IconElement? _icon;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ReactiveTreeItem"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ReactiveTreeItem"/> class.</summary>
     /// <param name="children">The children.</param>
     protected ReactiveTreeItem(IEnumerable<ReactiveTreeItem>? children = null)
     {
         Children = [];
-        if (children == null)
+        if (children is null)
         {
             return;
         }
@@ -61,29 +52,23 @@ public abstract partial class ReactiveTreeItem : RxObject
         });
     }
 
-    /// <summary>
-    /// Gets the view model.
-    /// </summary>
+    /// <summary>Gets the view model.</summary>
     /// <value>
     /// The view model.
     /// </value>
     public abstract object ViewModel { get; }
 
-    /// <summary>
-    /// Gets the children.
-    /// </summary>
+    /// <summary>Gets the children.</summary>
     /// <value>
     /// The children.
     /// </value>
     public ReactiveList<ReactiveTreeItem> Children { get; }
 
-    /// <summary>
-    /// Adds the child.
-    /// </summary>
+    /// <summary>Adds the child.</summary>
     /// <param name="child">The child.</param>
     public void AddChild(ReactiveTreeItem child)
     {
-        if (child == null)
+        if (child is null)
         {
             throw new ArgumentNullException(nameof(child));
         }
@@ -92,37 +77,25 @@ public abstract partial class ReactiveTreeItem : RxObject
         Children.Add(child);
     }
 
-    /// <summary>
-    /// Removes the selected child and its children.
-    /// </summary>
+    /// <summary>Removes the selected child and its children.</summary>
     public void RemoveChild() => _parent?.Children.Remove(this);
 
-    /// <summary>
-    /// Expands the path.
-    /// </summary>
+    /// <summary>Expands the path.</summary>
     public void ExpandPath()
     {
         IsExpanded = true;
         _parent?.ExpandPath();
     }
 
-    /// <summary>
-    /// Collapses the path.
-    /// </summary>
+    /// <summary>Collapses the path.</summary>
     public void CollapsePath()
     {
         IsExpanded = false;
         _parent?.CollapsePath();
     }
 
-    /// <summary>
-    /// Releases the resources used by the current instance of the class.
-    /// </summary>
-    /// <remarks>This method is called when disposing the object or during finalization. When <paramref
-    /// name="disposing"/> is <see langword="true"/>, managed resources are disposed in addition to unmanaged
-    /// resources.</remarks>
-    /// <param name="disposing">A value indicating whether to release both managed and unmanaged resources. Specify <see langword="true"/> to
-    /// release managed resources; <see langword="false"/> to release only unmanaged resources.</param>
+    /// <summary>Releases the resources used by the current instance of the class.</summary>
+    /// <param name="disposing">A value indicating whether to release managed resources.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)

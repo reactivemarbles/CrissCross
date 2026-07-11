@@ -1,30 +1,23 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>
-/// Default reactive plot binder that owns source subscriptions, lifecycle state, validation, batching, and UI marshalling.
-/// </summary>
+/// <summary>Default reactive plot binder that owns source subscriptions, lifecycle state, validation, batching, and UI marshalling.</summary>
 public sealed class ReactivePlotBinder : IReactivePlotBinder
 {
+    /// <summary>Stores the adapter factory value.</summary>
     private readonly IReactivePlotAdapterFactory? _adapterFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ReactivePlotBinder"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ReactivePlotBinder"/> class.</summary>
     public ReactivePlotBinder()
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ReactivePlotBinder"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ReactivePlotBinder"/> class.</summary>
     /// <param name="adapterFactory">The adapter factory used by pure binder tests and non-WPF hosts.</param>
     public ReactivePlotBinder(IReactivePlotAdapterFactory adapterFactory)
     {
@@ -47,9 +40,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         return BindCore(sources, new WpfReactivePlotAdapterFactory(chart), options);
     }
 
-    /// <summary>
-    /// Binds the supplied sources using the adapter factory supplied to the constructor.
-    /// </summary>
+    /// <summary>Binds the supplied sources using the adapter factory supplied to the constructor.</summary>
     /// <param name="sources">The sources to bind.</param>
     /// <param name="options">Optional binding options.</param>
     /// <returns>An owned connection.</returns>
@@ -63,7 +54,12 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         return BindCore(sources, _adapterFactory, options);
     }
 
-    private static IReactivePlotConnection BindCore(IEnumerable<IReactivePlotSource> sources, IReactivePlotAdapterFactory adapterFactory, ReactivePlotBindingOptions? options)
+    /// <summary>Handles the BindCore operation.</summary>
+    /// <param name="sources">The sources value.</param>
+    /// <param name="adapterFactory">The adapterFactory value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result.</returns>
+    private static ReactivePlotConnection BindCore(IEnumerable<IReactivePlotSource> sources, IReactivePlotAdapterFactory adapterFactory, ReactivePlotBindingOptions? options)
     {
         if (sources is null)
         {
@@ -110,10 +106,12 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
                 () =>
                 {
                     completed++;
-                    if (completed == sourceArray.Length && connection.CurrentState != ReactivePlotConnectionState.Faulted)
+                    if (completed != sourceArray.Length || connection.CurrentState == ReactivePlotConnectionState.Faulted)
                     {
-                        connection.MarkCompleted();
+                        return;
                     }
+
+                    connection.MarkCompleted();
                 });
             subscriptions.Add(subscription);
         }
@@ -121,21 +119,23 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         return connection;
     }
 
+    /// <summary>Handles the ApplyBatching operation.</summary>
+    /// <param name="updates">The updates value.</param>
+    /// <param name="options">The options value.</param>
+    /// <returns>The result.</returns>
     private static IObservable<ReactivePlotUpdate> ApplyBatching(IObservable<ReactivePlotUpdate> updates, ReactivePlotBindingOptions options)
     {
         if (options.BatchWindow is { } batchWindow && batchWindow > TimeSpan.Zero)
         {
-            return updates.Buffer(batchWindow, Math.Max(1, options.MaxBatchSize)).Where(batch => batch.Count > 0).SelectMany(AggregateBatch);
+            return updates.Buffer(batchWindow, options.SourceScheduler ?? RxSchedulers.TaskpoolScheduler).Where(batch => batch.Count > 0).SelectMany(AggregateBatch);
         }
 
-        if (options.MaxBatchSize > 1)
-        {
-            return updates.Buffer(options.MaxBatchSize).Where(batch => batch.Count > 0).SelectMany(AggregateBatch);
-        }
-
-        return updates;
+        return options.MaxBatchSize > 1 ? updates.Buffer(options.MaxBatchSize).Where(batch => batch.Count > 0).SelectMany(AggregateBatch) : updates;
     }
 
+    /// <summary>Handles the AggregateBatch operation.</summary>
+    /// <param name="batch">The batch value.</param>
+    /// <returns>The result.</returns>
     private static IEnumerable<ReactivePlotUpdate> AggregateBatch(IList<ReactivePlotUpdate> batch)
     {
         if (batch.Count == 1)
@@ -147,15 +147,8 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         ReactivePlotUpdate? pendingAppend = null;
         foreach (var update in batch)
         {
-            if (pendingAppend is not null && CanAggregateAppend(pendingAppend, update))
+            if (TryAggregateAppend(ref pendingAppend, update))
             {
-                pendingAppend = pendingAppend with
-                {
-                    X = pendingAppend.X.Concat(update.X).ToArray(),
-                    Y = pendingAppend.Y.Concat(update.Y).ToArray(),
-                    Sequence = update.Sequence,
-                    MaxPoints = update.MaxPoints ?? pendingAppend.MaxPoints,
-                };
                 continue;
             }
 
@@ -175,12 +168,39 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             }
         }
 
-        if (pendingAppend is not null)
+        if (pendingAppend is null)
         {
-            yield return pendingAppend;
+            yield break;
         }
+
+        yield return pendingAppend;
     }
 
+    /// <summary>Attempts to aggregate an append update into a pending append update.</summary>
+    /// <param name="pendingAppend">The pending append update.</param>
+    /// <param name="update">The next update.</param>
+    /// <returns><see langword="true"/> when aggregation was applied; otherwise, <see langword="false"/>.</returns>
+    private static bool TryAggregateAppend(ref ReactivePlotUpdate? pendingAppend, ReactivePlotUpdate update)
+    {
+        if (pendingAppend is null || !CanAggregateAppend(pendingAppend, update))
+        {
+            return false;
+        }
+
+        pendingAppend = pendingAppend with
+        {
+            X = pendingAppend.X.Concat(update.X).ToArray(),
+            Y = pendingAppend.Y.Concat(update.Y).ToArray(),
+            Sequence = update.Sequence,
+            MaxPoints = update.MaxPoints ?? pendingAppend.MaxPoints,
+        };
+        return true;
+    }
+
+    /// <summary>Handles the CanAggregateAppend operation.</summary>
+    /// <param name="pending">The pending value.</param>
+    /// <param name="next">The next value.</param>
+    /// <returns>The result.</returns>
     private static bool CanAggregateAppend(ReactivePlotUpdate pending, ReactivePlotUpdate next) =>
         pending.Kind == ReactivePlotUpdateKind.Append &&
         next.Kind == ReactivePlotUpdateKind.Append &&
@@ -190,6 +210,9 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         IsAppendPayloadValid(pending) &&
         IsAppendPayloadValid(next);
 
+    /// <summary>Handles the IsAppendPayloadValid operation.</summary>
+    /// <param name="update">The update value.</param>
+    /// <returns>The result.</returns>
     private static bool IsAppendPayloadValid(ReactivePlotUpdate update) =>
         update.X is not null &&
         update.Y is not null &&
@@ -197,6 +220,14 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         update.Y.Count > 0 &&
         update.X.Count == update.Y.Count;
 
+    /// <summary>Handles the ApplyUpdate operation.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="adapterFactory">The adapterFactory value.</param>
+    /// <param name="adapters">The adapters value.</param>
+    /// <param name="retained">The retained value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
     private static void ApplyUpdate(
         ReactivePlotUpdate update,
         ReactivePlotBindingOptions options,
@@ -224,12 +255,20 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         }
 
         adapter.Apply(boundedUpdate);
-        if (connection.CurrentState is ReactivePlotConnectionState.Connecting)
+        if (connection.CurrentState is not ReactivePlotConnectionState.Connecting)
         {
-            connection.SetState(ReactivePlotConnectionState.Active);
+            return;
         }
+
+        connection.SetState(ReactivePlotConnectionState.Active);
     }
 
+    /// <summary>Handles the Validate operation.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
+    /// <returns>The result.</returns>
     private static bool Validate(ReactivePlotUpdate update, ReactivePlotBindingOptions options, HashSet<PlotSeriesKey> stoppedSeries, ReactivePlotConnection connection)
     {
         if (update.Key.Axis < 0 || update.Key.Axis >= options.MaxAxisCount)
@@ -252,14 +291,16 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             return SurfaceValidationError(update, options, stoppedSeries, connection, "Reactive plot update must contain at least one X and Y value.");
         }
 
-        if (update.X.Count != update.Y.Count)
-        {
-            return SurfaceValidationError(update, options, stoppedSeries, connection, "Reactive plot update X and Y collections must have matching counts.");
-        }
-
-        return true;
+        return update.X.Count != update.Y.Count ? SurfaceValidationError(update, options, stoppedSeries, connection, "Reactive plot update X and Y collections must have matching counts.") : true;
     }
 
+    /// <summary>Handles the SurfaceValidationError operation.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
+    /// <param name="message">The message value.</param>
+    /// <returns>The result.</returns>
     private static bool SurfaceValidationError(ReactivePlotUpdate update, ReactivePlotBindingOptions options, HashSet<PlotSeriesKey> stoppedSeries, ReactivePlotConnection connection, string message)
     {
         if (options.ErrorMode == ReactivePlotErrorMode.IgnoreInvalidUpdates)
@@ -268,25 +309,40 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         }
 
         connection.AddError(new InvalidOperationException($"{message} Series='{update.Key.Name}', PlotType='{update.PlotType}'."));
-        if (options.ErrorMode == ReactivePlotErrorMode.SurfaceAndStopSeries)
+        if (options.ErrorMode != ReactivePlotErrorMode.SurfaceAndStopSeries)
         {
-            stoppedSeries.Add(update.Key);
-            connection.SetState(ReactivePlotConnectionState.Faulted);
+            return false;
         }
+
+        _ = stoppedSeries.Add(update.Key);
+        connection.SetState(ReactivePlotConnectionState.Faulted);
 
         return false;
     }
 
+    /// <summary>Handles the HandleSourceError operation.</summary>
+    /// <param name="source">The source value.</param>
+    /// <param name="error">The error value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
     private static void HandleSourceError(IReactivePlotSource source, Exception error, ReactivePlotBindingOptions options, HashSet<PlotSeriesKey> stoppedSeries, ReactivePlotConnection connection)
     {
         connection.AddError(error);
-        if (options.ErrorMode == ReactivePlotErrorMode.SurfaceAndStopSeries)
+        if (options.ErrorMode != ReactivePlotErrorMode.SurfaceAndStopSeries)
         {
-            stoppedSeries.Add(source.Key);
-            connection.SetState(ReactivePlotConnectionState.Faulted);
+            return;
         }
+
+        _ = stoppedSeries.Add(source.Key);
+        connection.SetState(ReactivePlotConnectionState.Faulted);
     }
 
+    /// <summary>Handles the ApplyRetention operation.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="retained">The retained value.</param>
+    /// <returns>The result.</returns>
     private static ReactivePlotUpdate ApplyRetention(ReactivePlotUpdate update, ReactivePlotBindingOptions options, Dictionary<PlotSeriesKey, RetainedSeries> retained)
     {
         if (update.Kind == ReactivePlotUpdateKind.Clear)
@@ -312,7 +368,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
 
         if (!retained.TryGetValue(update.Key, out var series) || update.Kind == ReactivePlotUpdateKind.Replace)
         {
-            series = new RetainedSeries();
+            series = new();
             retained[update.Key] = series;
         }
 
@@ -320,12 +376,20 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         return update with { X = series.X.ToArray(), Y = series.Y.ToArray(), MaxPoints = visiblePoints };
     }
 
+    /// <summary>Provides the <see cref="RetainedSeries"/> type.</summary>
     private sealed class RetainedSeries
     {
+        /// <summary>Gets the retained X values.</summary>
         public List<double> X { get; } = [];
 
+        /// <summary>Gets the retained Y values.</summary>
         public List<double> Y { get; } = [];
 
+        /// <summary>Handles the Append operation.</summary>
+        /// <param name="x">The x value.</param>
+        /// <param name="y">The y value.</param>
+        /// <param name="maxVisiblePoints">The maxVisiblePoints value.</param>
+        /// <param name="overflowStrategy">The overflowStrategy value.</param>
         public void Append(IReadOnlyList<double> x, IReadOnlyList<double> y, int maxVisiblePoints, ReactivePlotOverflowStrategy overflowStrategy)
         {
             if (overflowStrategy == ReactivePlotOverflowStrategy.DropNewest && X.Count >= maxVisiblePoints)
@@ -354,6 +418,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             }
         }
 
+        /// <summary>Handles the Clear operation.</summary>
         public void Clear()
         {
             X.Clear();

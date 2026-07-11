@@ -1,11 +1,13 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.UIExtensions;
 
-internal class HslColorSlider : PreviewColorSlider
+/// <summary>Provides the HslColorSlider member.</summary>
+internal sealed class HslColorSlider : PreviewColorSlider
 {
+    /// <summary>Provides the SliderHslTypeProperty member.</summary>
     public static readonly DependencyProperty SliderHslTypeProperty =
         DependencyProperty.Register(
             nameof(SliderHslType),
@@ -13,6 +15,7 @@ internal class HslColorSlider : PreviewColorSlider
             typeof(HslColorSlider),
             new PropertyMetadata(string.Empty));
 
+    /// <summary>Gets or sets SliderHslType.</summary>
     public string SliderHslType
     {
         get => (string)GetValue(SliderHslTypeProperty);
@@ -55,19 +58,20 @@ internal class HslColorSlider : PreviewColorSlider
             return;
         }
 
-        {
-            var colorStart = GetColorForSelectedArgb(0);
-            var colorEnd = GetColorForSelectedArgb(255);
-            LeftCapColor.Color = colorStart;
-            RightCapColor.Color = colorEnd;
-            BackgroundGradient =
-            [
-                new GradientStop(colorStart, 0.0),
-                new GradientStop(colorEnd, 1)
-            ];
-        }
+        var fallbackColorStart = GetColorForSelectedArgb(0);
+        var fallbackColorEnd = GetColorForSelectedArgb(255);
+        LeftCapColor.Color = fallbackColorStart;
+        RightCapColor.Color = fallbackColorEnd;
+        BackgroundGradient =
+        [
+            new GradientStop(fallbackColorStart, 0.0),
+            new GradientStop(fallbackColorEnd, 1)
+        ];
     }
 
+    /// <summary>Provides the GetColorForSelectedArgb member.</summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result.</returns>
     private Color GetColorForSelectedArgb(int value)
     {
         switch (SliderHslType)
@@ -75,21 +79,27 @@ internal class HslColorSlider : PreviewColorSlider
             case "H":
                 {
                     var rgbtuple = ColorSpaceHelper.HslToRgb(value, CurrentColorState.HSL_S, CurrentColorState.HSL_L);
-                    double r = rgbtuple.Item1, g = rgbtuple.Item2, b = rgbtuple.Item3;
+                    double r = rgbtuple.Item1;
+                    double g = rgbtuple.Item2;
+                    double b = rgbtuple.Item3;
                     return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
                 }
 
             case "S":
                 {
                     var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, value / 255.0, CurrentColorState.HSL_L);
-                    double r = rgbtuple.Item1, g = rgbtuple.Item2, b = rgbtuple.Item3;
+                    double r = rgbtuple.Item1;
+                    double g = rgbtuple.Item2;
+                    double b = rgbtuple.Item3;
                     return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
                 }
 
             case "L":
                 {
                     var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, CurrentColorState.HSL_S, value / 255.0);
-                    double r = rgbtuple.Item1, g = rgbtuple.Item2, b = rgbtuple.Item3;
+                    double r = rgbtuple.Item1;
+                    double g = rgbtuple.Item2;
+                    double b = rgbtuple.Item3;
                     return Color.FromArgb((byte)(CurrentColorState.A * 255), (byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
                 }
 

@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>
-/// Facilitates the management of the window background.
-/// </summary>
+/// <summary>Facilitates the management of the window background.</summary>
 /// <example>
 /// <code lang="csharp">
 /// WindowBackgroundManager.UpdateBackground(
@@ -21,9 +19,7 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class WindowBackgroundManager
 {
-    /// <summary>
-    /// Tries to apply dark theme to <see cref="Window" />.
-    /// </summary>
+    /// <summary>Tries to apply dark theme to <see cref="Window" />.</summary>
     /// <param name="window">The window.</param>
     public static void ApplyDarkThemeToWindow(Window? window)
     {
@@ -40,9 +36,7 @@ public static class WindowBackgroundManager
         window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as Window);
     }
 
-    /// <summary>
-    /// Tries to remove dark theme from <see cref="Window" />.
-    /// </summary>
+    /// <summary>Tries to remove dark theme from <see cref="Window" />.</summary>
     /// <param name="window">The window.</param>
     public static void RemoveDarkThemeFromWindow(Window? window)
     {
@@ -59,9 +53,7 @@ public static class WindowBackgroundManager
         window.Loaded += (sender, _) => UnsafeNativeMethods.RemoveWindowDarkMode(sender as Window);
     }
 
-    /// <summary>
-    /// Forces change to application background. Required if custom background effect was previously applied.
-    /// </summary>
+    /// <summary>Forces change to application background. Required if custom background effect was previously applied.</summary>
     /// <param name="window">The window.</param>
     /// <param name="applicationTheme">The application theme.</param>
     /// <param name="backdrop">The backdrop.</param>

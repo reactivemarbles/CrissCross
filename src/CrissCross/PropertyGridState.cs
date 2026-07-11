@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -8,14 +8,10 @@ using System.Linq;
 
 namespace CrissCross;
 
-/// <summary>
-/// Represents platform-neutral state for a descriptor-driven property inspector.
-/// </summary>
+/// <summary>Represents platform-neutral state for a descriptor-driven property inspector.</summary>
 public sealed class PropertyGridState
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyGridState"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="PropertyGridState"/> class.</summary>
     /// <param name="descriptors">The property descriptors.</param>
     /// <param name="searchText">The optional search text.</param>
     /// <param name="isCommitting">A value indicating whether a commit operation is active.</param>
@@ -34,84 +30,52 @@ public sealed class PropertyGridState
             .ToArray();
     }
 
-    /// <summary>
-    /// Gets the property descriptors.
-    /// </summary>
+    /// <summary>Gets the property descriptors.</summary>
     public IReadOnlyList<PropertyDescriptorModel> Descriptors { get; }
 
-    /// <summary>
-    /// Gets the optional search text.
-    /// </summary>
+    /// <summary>Gets the optional search text.</summary>
     public string? SearchText { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether a commit operation is active.
-    /// </summary>
+    /// <summary>Gets a value indicating whether a commit operation is active.</summary>
     public bool IsCommitting { get; }
 
-    /// <summary>
-    /// Gets the descriptors visible after search filtering.
-    /// </summary>
+    /// <summary>Gets the descriptors visible after search filtering.</summary>
     public IReadOnlyList<PropertyDescriptorModel> VisibleDescriptors { get; }
 
-    /// <summary>
-    /// Gets the visible descriptors grouped by category.
-    /// </summary>
+    /// <summary>Gets the visible descriptors grouped by category.</summary>
     public IReadOnlyList<PropertyDescriptorGroup> Categories { get; }
 
-    /// <summary>
-    /// Gets the total descriptor count.
-    /// </summary>
+    /// <summary>Gets the total descriptor count.</summary>
     public int DescriptorCount => Descriptors.Count;
 
-    /// <summary>
-    /// Gets the visible descriptor count after search filtering.
-    /// </summary>
+    /// <summary>Gets the visible descriptor count after search filtering.</summary>
     public int VisibleDescriptorCount => VisibleDescriptors.Count;
 
-    /// <summary>
-    /// Gets the editable descriptor count.
-    /// </summary>
+    /// <summary>Gets the editable descriptor count.</summary>
     public int EditableDescriptorCount => Descriptors.Count(static descriptor => descriptor.CanEdit);
 
-    /// <summary>
-    /// Gets the modified descriptor count.
-    /// </summary>
+    /// <summary>Gets the modified descriptor count.</summary>
     public int ModifiedDescriptorCount => Descriptors.Count(static descriptor => descriptor.IsModified);
 
-    /// <summary>
-    /// Gets the invalid descriptor count.
-    /// </summary>
+    /// <summary>Gets the invalid descriptor count.</summary>
     public int InvalidDescriptorCount => Descriptors.Count(static descriptor => descriptor.IsInvalid);
 
-    /// <summary>
-    /// Gets a value indicating whether search text is active.
-    /// </summary>
+    /// <summary>Gets a value indicating whether search text is active.</summary>
     public bool HasSearch => !string.IsNullOrWhiteSpace(SearchText);
 
-    /// <summary>
-    /// Gets a value indicating whether any descriptor is modified.
-    /// </summary>
+    /// <summary>Gets a value indicating whether any descriptor is modified.</summary>
     public bool HasModifications => ModifiedDescriptorCount > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether any descriptor has blocking validation.
-    /// </summary>
+    /// <summary>Gets a value indicating whether any descriptor has blocking validation.</summary>
     public bool HasValidationErrors => InvalidDescriptorCount > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether modified descriptors can be committed.
-    /// </summary>
+    /// <summary>Gets a value indicating whether modified descriptors can be committed.</summary>
     public bool CanCommit => HasModifications && !HasValidationErrors && !IsCommitting;
 
-    /// <summary>
-    /// Gets a value indicating whether at least one descriptor can be reset.
-    /// </summary>
+    /// <summary>Gets a value indicating whether at least one descriptor can be reset.</summary>
     public bool CanReset => Descriptors.Any(static descriptor => descriptor.CanReset) && !IsCommitting;
 
-    /// <summary>
-    /// Gets a compact inspector summary.
-    /// </summary>
+    /// <summary>Gets a compact inspector summary.</summary>
     public string SummaryText
     {
         get
@@ -126,24 +90,33 @@ public sealed class PropertyGridState
                 return string.Format(CultureInfo.InvariantCulture, "{0} properties, {1} invalid", DescriptorCount, InvalidDescriptorCount);
             }
 
-            if (HasModifications)
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0} properties, {1} modified", DescriptorCount, ModifiedDescriptorCount);
-            }
-
-            return string.Format(CultureInfo.InvariantCulture, "{0} properties", DescriptorCount);
+            return HasModifications
+                ? string.Format(CultureInfo.InvariantCulture, "{0} properties, {1} modified", DescriptorCount, ModifiedDescriptorCount)
+                : string.Format(CultureInfo.InvariantCulture, "{0} properties", DescriptorCount);
         }
     }
 
-    /// <summary>
-    /// Finds a descriptor by stable key.
-    /// </summary>
+    /// <summary>Finds a descriptor by stable key.</summary>
     /// <param name="key">The descriptor key.</param>
     /// <returns>The descriptor when present; otherwise, <c>null</c>.</returns>
     public PropertyDescriptorModel? GetDescriptor(string key) => Descriptors.FirstOrDefault(descriptor => descriptor.Key == key);
 
-    private static bool Contains(string source, string value) => source.IndexOf(value, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    /// <summary>Determines whether one string contains another using ordinal-ignore-case comparison.</summary>
+    /// <param name="source">The source text.</param>
+    /// <param name="value">The value to find.</param>
+    /// <returns><c>true</c> when the source contains the value; otherwise, <c>false</c>.</returns>
+    private static bool Contains(string source, string value)
+    {
+#if NET8_0_OR_GREATER
+        return source.Contains(value, System.StringComparison.OrdinalIgnoreCase);
+#else
+        return source.IndexOf(value, System.StringComparison.OrdinalIgnoreCase) >= 0;
+#endif
+    }
 
+    /// <summary>Determines whether a descriptor matches the current search text.</summary>
+    /// <param name="descriptor">The descriptor.</param>
+    /// <returns><c>true</c> when the descriptor matches; otherwise, <c>false</c>.</returns>
     private bool MatchesSearch(PropertyDescriptorModel descriptor)
     {
         if (string.IsNullOrWhiteSpace(SearchText))

@@ -1,58 +1,101 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Reactive.Linq;
 using System.Windows.Data;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
-/// <summary>
-/// AllControlsViewModel provides a searchable, data-driven list of control demos.
-/// </summary>
-public partial class AllControlsViewModel : RxObject
+/// <summary>AllControlsViewModel provides a searchable, data-driven list of control demos.</summary>
+public class AllControlsViewModel : RxObject
 {
+    /// <summary>Stores the available control demos.</summary>
     private readonly ObservableCollection<ControlItem> _controls;
-    private string _filterText = string.Empty;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AllControlsViewModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="AllControlsViewModel"/> class.</summary>
     public AllControlsViewModel()
     {
         _controls = [];
 
-        this.WhenAnyValue(vm => vm.ButtonsCommand)
-            .Take(1)
-            .Subscribe(_ => Populate());
+        ButtonsCommand = ReactiveCommand.Create(Buttons);
+        CheckBoxCommand = ReactiveCommand.Create(CheckBox);
+        ComboBoxCommand = ReactiveCommand.Create(ComboBox);
+        DatePickerCommand = ReactiveCommand.Create(DatePicker);
+        ImageCommand = ReactiveCommand.Create(Image);
+        NumericPushButtonCommand = ReactiveCommand.Create(NumericPushButton);
+        PasswordBoxCommand = ReactiveCommand.Create(PasswordBox);
+        RadioButtonCommand = ReactiveCommand.Create(RadioButton);
+        SliderCommand = ReactiveCommand.Create(Slider);
+        TextBlockCommand = ReactiveCommand.Create(TextBlock);
+        TextBoxCommand = ReactiveCommand.Create(TextBox);
+        ToggleButtonCommand = ReactiveCommand.Create(ToggleButton);
+        ColorPickerCommand = ReactiveCommand.Create(ColorPicker);
 
         FilteredControls = CollectionViewSource.GetDefaultView(_controls);
         FilteredControls.Filter = FilterPredicate;
 
-        this.WhenAnyValue(x => x.FilterText)
+        Populate();
+
+        _ = this.WhenAnyValue(x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(150))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => FilteredControls.Refresh());
     }
 
-    /// <summary>
-    /// Gets or sets filter text entered by the user.
-    /// </summary>
+    /// <summary>Gets or sets filter text entered by the user.</summary>
     public string FilterText
     {
-        get => _filterText;
-        set => this.RaiseAndSetIfChanged(ref _filterText, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
+= string.Empty;
 
-    /// <summary>
-    /// Gets the collection view over all controls applying the current filter.
-    /// </summary>
+    /// <summary>Gets the collection view over all controls applying the current filter.</summary>
     public ICollectionView FilteredControls { get; }
 
+    /// <summary>Gets the command that navigates to the button demos.</summary>
+    public ReactiveCommand<Unit, Unit> ButtonsCommand { get; }
+
+    /// <summary>Gets the command that navigates to the check box demos.</summary>
+    public ReactiveCommand<Unit, Unit> CheckBoxCommand { get; }
+
+    /// <summary>Gets the command that navigates to the combo box demos.</summary>
+    public ReactiveCommand<Unit, Unit> ComboBoxCommand { get; }
+
+    /// <summary>Gets the command that navigates to the date picker demos.</summary>
+    public ReactiveCommand<Unit, Unit> DatePickerCommand { get; }
+
+    /// <summary>Gets the command that navigates to the image demos.</summary>
+    public ReactiveCommand<Unit, Unit> ImageCommand { get; }
+
+    /// <summary>Gets the command that navigates to the numeric input demos.</summary>
+    public ReactiveCommand<Unit, Unit> NumericPushButtonCommand { get; }
+
+    /// <summary>Gets the command that navigates to the password box demos.</summary>
+    public ReactiveCommand<Unit, Unit> PasswordBoxCommand { get; }
+
+    /// <summary>Gets the command that navigates to the radio button demos.</summary>
+    public ReactiveCommand<Unit, Unit> RadioButtonCommand { get; }
+
+    /// <summary>Gets the command that navigates to the slider demos.</summary>
+    public ReactiveCommand<Unit, Unit> SliderCommand { get; }
+
+    /// <summary>Gets the command that navigates to the text block demos.</summary>
+    public ReactiveCommand<Unit, Unit> TextBlockCommand { get; }
+
+    /// <summary>Gets the command that navigates to the text box demos.</summary>
+    public ReactiveCommand<Unit, Unit> TextBoxCommand { get; }
+
+    /// <summary>Gets the command that navigates to the toggle button demos.</summary>
+    public ReactiveCommand<Unit, Unit> ToggleButtonCommand { get; }
+
+    /// <summary>Gets the command that navigates to the color picker demos.</summary>
+    public ReactiveCommand<Unit, Unit> ColorPickerCommand { get; }
+
+    /// <summary>Populates the control demo collection.</summary>
     private void Populate()
     {
         if (_controls.Count > 0)
@@ -75,6 +118,9 @@ public partial class AllControlsViewModel : RxObject
         _controls.Add(new ControlItem { Name = "ColorPicker", Icon = "/Assets/ControlImages/ColorPicker.png", Command = ColorPickerCommand, Description = "Color selection variants." });
     }
 
+    /// <summary>Filters a control item by the current search text.</summary>
+    /// <param name="obj">The item to filter.</param>
+    /// <returns>true when the item is visible.</returns>
     private bool FilterPredicate(object obj)
     {
         if (obj is not ControlItem item)
@@ -82,52 +128,46 @@ public partial class AllControlsViewModel : RxObject
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(FilterText))
-        {
-            return true;
-        }
-
-        return item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
+        return string.IsNullOrWhiteSpace(FilterText) ? true : item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
                (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
-    // Navigation Commands (ReactiveUI Source Generator)
-    [ReactiveCommand]
+    /// <summary>Navigates to the buttons demo.</summary>
     private void Buttons() => MainWindow.Navigation?.NavigateTo<ButtonsViewModel>(breadcrumbItemContent: "Buttons");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the check box demo.</summary>
     private void CheckBox() => MainWindow.Navigation?.NavigateTo<CheckBoxViewModel>(breadcrumbItemContent: "CheckBox");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the combo box demo.</summary>
     private void ComboBox() => MainWindow.Navigation?.NavigateTo<ComboBoxViewModel>(breadcrumbItemContent: "ComboBox");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the date picker demo.</summary>
     private void DatePicker() => MainWindow.Navigation?.NavigateTo<DatePickerViewModel>(breadcrumbItemContent: "DatePicker");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the image demo.</summary>
     private void Image() => MainWindow.Navigation?.NavigateTo<ImageViewModel>(breadcrumbItemContent: "Image");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the numeric push button demo.</summary>
     private void NumericPushButton() => MainWindow.Navigation?.NavigateTo<NumericPushButtonViewModel>(breadcrumbItemContent: "NumericPushButton");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the password box demo.</summary>
     private void PasswordBox() => MainWindow.Navigation?.NavigateTo<PasswordBoxViewModel>(breadcrumbItemContent: "PasswordBox");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the radio button demo.</summary>
     private void RadioButton() => MainWindow.Navigation?.NavigateTo<RadioButtonViewModel>(breadcrumbItemContent: "RadioButton");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the slider demo.</summary>
     private void Slider() => MainWindow.Navigation?.NavigateTo<SliderViewModel>(breadcrumbItemContent: "Slider");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the text block demo.</summary>
     private void TextBlock() => MainWindow.Navigation?.NavigateTo<TextBlockViewModel>(breadcrumbItemContent: "TextBlock");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the text box demo.</summary>
     private void TextBox() => MainWindow.Navigation?.NavigateTo<TextBoxViewModel>(breadcrumbItemContent: "TextBox");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the toggle button demo.</summary>
     private void ToggleButton() => MainWindow.Navigation?.NavigateTo<ToggleButtonViewModel>(breadcrumbItemContent: "ToggleButton");
 
-    [ReactiveCommand]
+    /// <summary>Navigates to the color picker demo.</summary>
     private void ColorPicker() => MainWindow.Navigation?.NavigateTo<ColorPickersViewModel>(breadcrumbItemContent: "ColorPicker");
 }

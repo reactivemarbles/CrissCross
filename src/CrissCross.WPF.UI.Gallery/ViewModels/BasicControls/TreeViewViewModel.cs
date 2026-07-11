@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using CP.Reactive.Collections;
 using CrissCross.WPF.UI.Controls;
 using ReactiveUI;
@@ -20,16 +17,7 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 /// notifications.</remarks>
 public class TreeViewViewModel : RxObject
 {
-    private ReactiveTreeItem? _selectedItem;
-    private string? _newName;
-    private string? _petName;
-    private string? _selectedElement;
-    private string? _lastSelectedElement;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TreeViewViewModel"/> class with a default family tree and sets up commands for.
-    /// managing tree items.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="TreeViewViewModel"/> class with a default family tree and sets up commands for. managing tree items.</summary>
     /// <remarks>This constructor creates an initial family tree structure and configures reactive commands
     /// for adding persons or pets, expanding or collapsing tree nodes, and removing items. It also establishes
     /// subscriptions to update selection-related properties based on user interactions. The default tree includes two
@@ -37,19 +25,19 @@ public class TreeViewViewModel : RxObject
     public TreeViewViewModel()
     {
         var cliffordPulman = new Person("Clifford Pulman", [new Pet("Kitty")]);
-        cliffordPulman.DisposeWith(Disposables);
+        _ = cliffordPulman.DisposeWith(Disposables);
         var clifford = new Person("Clifford", [cliffordPulman]);
-        clifford.DisposeWith(Disposables);
+        _ = clifford.DisposeWith(Disposables);
         var clarencePulman = new Person("Clarence Pulman");
-        clarencePulman.DisposeWith(Disposables);
+        _ = clarencePulman.DisposeWith(Disposables);
         var clarence = new Person("Clarence", [clarencePulman]);
-        clarence.DisposeWith(Disposables);
-        Family = new ReactiveList<ReactiveTreeItem>([clifford, clarence]);
+        _ = clarence.DisposeWith(Disposables);
+        Family = new([clifford, clarence]);
 
         AddPerson = ReactiveCommand.Create(() => { });
-        AddPerson.Subscribe(_ =>
+        _ = AddPerson.Subscribe(_ =>
         {
-            if (SelectedItem == null)
+            if (SelectedItem is null)
             {
                 return;
             }
@@ -60,9 +48,9 @@ public class TreeViewViewModel : RxObject
             p.ExpandPath();
         });
         AddPet = ReactiveCommand.Create(() => { });
-        AddPet.Subscribe(_ =>
+        _ = AddPet.Subscribe(_ =>
         {
-            if (SelectedItem == null)
+            if (SelectedItem is null)
             {
                 return;
             }
@@ -73,11 +61,11 @@ public class TreeViewViewModel : RxObject
             p.ExpandPath();
         });
         Collapse = ReactiveCommand.Create(() => { });
-        Collapse.Subscribe(_ => SelectedItem?.CollapsePath());
+        _ = Collapse.Subscribe(_ => SelectedItem?.CollapsePath());
         Expand = ReactiveCommand.Create(() => { });
-        Expand.Subscribe(_ => SelectedItem?.ExpandPath());
+        _ = Expand.Subscribe(_ => SelectedItem?.ExpandPath());
         Remove = ReactiveCommand.Create(() => { });
-        Remove.Subscribe(_ => SelectedItem?.RemoveChild());
+        _ = Remove.Subscribe(_ => SelectedItem?.RemoveChild());
         var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(
             rti =>
             {
@@ -94,7 +82,7 @@ public class TreeViewViewModel : RxObject
                     return rti.WhenAnyValue(vs => vs.IsSelected).Select(x => (x, (string?)"NoName"));
                 }
             });
-        isAnimalOrPerson.Subscribe(x =>
+        _ = isAnimalOrPerson.Subscribe(x =>
         {
             if (x.x)
             {
@@ -107,117 +95,93 @@ public class TreeViewViewModel : RxObject
         });
     }
 
-    /// <summary>
-    /// Gets a read-only collection containing the child items related to this tree node.
-    /// </summary>
+    /// <summary>Gets a read-only collection containing the child items related to this tree node.</summary>
     /// <remarks>The collection reflects changes to the underlying set of child items in real time.
     /// Modifications to the collection must be performed through the appropriate methods on the parent object; direct
     /// changes to the collection are not permitted.</remarks>
     public ReactiveList<ReactiveTreeItem> Family { get; }
 
-    /// <summary>
-    /// Gets the add person.
-    /// </summary>
+    /// <summary>Gets the add person.</summary>
     /// <value>
     /// The add person.
     /// </value>
     public ReactiveCommand<Unit, Unit> AddPerson { get; }
 
-    /// <summary>
-    /// Gets the add pet.
-    /// </summary>
+    /// <summary>Gets the add pet.</summary>
     /// <value>
     /// The add pet.
     /// </value>
     public ReactiveCommand<Unit, Unit> AddPet { get; }
 
-    /// <summary>
-    /// Gets the remove.
-    /// </summary>
+    /// <summary>Gets the remove.</summary>
     /// <value>
     /// The remove.
     /// </value>
     public ReactiveCommand<Unit, Unit> Remove { get; }
 
-    /// <summary>
-    /// Gets the collapse.
-    /// </summary>
+    /// <summary>Gets the collapse.</summary>
     /// <value>
     /// The collapse.
     /// </value>
     public ReactiveCommand<Unit, Unit> Collapse { get; }
 
-    /// <summary>
-    /// Gets the expand.
-    /// </summary>
+    /// <summary>Gets the expand.</summary>
     /// <value>
     /// The expand.
     /// </value>
     public ReactiveCommand<Unit, Unit> Expand { get; }
 
-    /// <summary>
-    /// Gets or sets creates new name.
-    /// </summary>
+    /// <summary>Gets or sets creates new name.</summary>
     /// <value>
     /// The new name.
     /// </value>
     public string? NewName
     {
-        get => _newName;
-        set => this.RaiseAndSetIfChanged(ref _newName, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets or sets the name of the pet.
-    /// </summary>
+    /// <summary>Gets or sets the name of the pet.</summary>
     /// <value>
     /// The name of the pet.
     /// </value>
     public string? PetName
     {
-        get => _petName;
-        set => this.RaiseAndSetIfChanged(ref _petName, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selected element.
-    /// </summary>
+    /// <summary>Gets or sets the selected element.</summary>
     /// <value>
     /// The selected element.
     /// </value>
     public string? SelectedElement
     {
-        get => _selectedElement;
-        set => this.RaiseAndSetIfChanged(ref _selectedElement, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets or sets the last selected element.
-    /// </summary>
+    /// <summary>Gets or sets the last selected element.</summary>
     /// <value>
     /// The last selected element.
     /// </value>
     public string? LastSelectedElement
     {
-        get => _lastSelectedElement;
-        set => this.RaiseAndSetIfChanged(ref _lastSelectedElement, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selected item.
-    /// </summary>
+    /// <summary>Gets or sets the selected item.</summary>
     /// <value>
     /// The selected item.
     /// </value>
     public ReactiveTreeItem? SelectedItem
     {
-        get => _selectedItem;
-        set => this.RaiseAndSetIfChanged(ref _selectedItem, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Releases the unmanaged resources used by the control and optionally releases the managed resources.
-    /// </summary>
+    /// <summary>Releases the unmanaged resources used by the control and optionally releases the managed resources.</summary>
     /// <remarks>This method overrides Dispose to ensure that all managed resources associated with the
     /// control are properly disposed when disposing is true. Call this method when you are finished using the control
     /// to free resources promptly.</remarks>

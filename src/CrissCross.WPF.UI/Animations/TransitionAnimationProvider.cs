@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
 
 namespace CrissCross.WPF.UI.Animations;
 
-/// <summary>
-/// Provides tools for <see cref="FrameworkElement"/> animation.
-/// </summary>
+/// <summary>Provides tools for <see cref="FrameworkElement"/> animation.</summary>
 /// <example>
 /// <code lang="csharp">
 /// TransitionAnimationProvider.ApplyTransition(MyFrameworkElement, Transition.FadeIn, 500);
@@ -16,11 +14,10 @@ namespace CrissCross.WPF.UI.Animations;
 /// </example>
 public static class TransitionAnimationProvider
 {
-    private const double DecelerationRatio = 0.7D;
+    /// <summary>Provides the default deceleration ratio.</summary>
+    private const double DefaultDecelerationRatio = 0.7D;
 
-    /// <summary>
-    /// Attempts to apply an animation effect while adding content to the frame.
-    /// </summary>
+    /// <summary>Attempts to apply an animation effect while adding content to the frame.</summary>
     /// <param name="element">Currently rendered element.</param>
     /// <param name="type">Selected transition type.</param>
     /// <param name="duration">Transition duration.</param>
@@ -48,9 +45,9 @@ public static class TransitionAnimationProvider
             return false;
         }
 
-        if (duration > 10000)
+        if (duration > 10_000)
         {
-            duration = 10000;
+            duration = 10_000;
         }
 
         var timespanDuration = new Duration(TimeSpan.FromMilliseconds(duration));
@@ -58,24 +55,34 @@ public static class TransitionAnimationProvider
         switch (type)
         {
             case Transition.FadeIn:
-                FadeInTransition(uiElement, timespanDuration);
-                break;
+                {
+                    FadeInTransition(uiElement, timespanDuration);
+                    break;
+                }
 
             case Transition.FadeInWithSlide:
-                FadeInWithSlideTransition(uiElement, timespanDuration);
-                break;
+                {
+                    FadeInWithSlideTransition(uiElement, timespanDuration);
+                    break;
+                }
 
             case Transition.SlideBottom:
-                SlideBottomTransition(uiElement, timespanDuration);
-                break;
+                {
+                    SlideBottomTransition(uiElement, timespanDuration);
+                    break;
+                }
 
             case Transition.SlideRight:
-                SlideRightTransition(uiElement, timespanDuration);
-                break;
+                {
+                    SlideRightTransition(uiElement, timespanDuration);
+                    break;
+                }
 
             case Transition.SlideLeft:
-                SlideLeftTransition(uiElement, timespanDuration);
-                break;
+                {
+                    SlideLeftTransition(uiElement, timespanDuration);
+                    break;
+                }
 
             default:
                 return false;
@@ -84,12 +91,15 @@ public static class TransitionAnimationProvider
         return true;
     }
 
+    /// <summary>Provides the FadeInTransition member.</summary>
+    /// <param name="animatedUiElement">The animatedUiElement value.</param>
+    /// <param name="duration">The duration value.</param>
     private static void FadeInTransition(UIElement animatedUiElement, Duration duration)
     {
         var opacityDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = 0.0,
             To = 1.0,
         };
@@ -97,12 +107,15 @@ public static class TransitionAnimationProvider
         animatedUiElement.BeginAnimation(UIElement.OpacityProperty, opacityDoubleAnimation);
     }
 
+    /// <summary>Provides the FadeInWithSlideTransition member.</summary>
+    /// <param name="animatedUiElement">The animatedUiElement value.</param>
+    /// <param name="duration">The duration value.</param>
     private static void FadeInWithSlideTransition(UIElement animatedUiElement, Duration duration)
     {
         var translateDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = 30,
             To = 0,
         };
@@ -126,7 +139,7 @@ public static class TransitionAnimationProvider
         var opacityDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = 0.0,
             To = 1.0,
         };
@@ -134,12 +147,15 @@ public static class TransitionAnimationProvider
         animatedUiElement.BeginAnimation(UIElement.OpacityProperty, opacityDoubleAnimation);
     }
 
+    /// <summary>Provides the SlideBottomTransition member.</summary>
+    /// <param name="animatedUiElement">The animatedUiElement value.</param>
+    /// <param name="duration">The duration value.</param>
     private static void SlideBottomTransition(UIElement animatedUiElement, Duration duration)
     {
         var translateDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = 30,
             To = 0,
         };
@@ -161,12 +177,15 @@ public static class TransitionAnimationProvider
             translateDoubleAnimation);
     }
 
+    /// <summary>Provides the SlideRightTransition member.</summary>
+    /// <param name="animatedUiElement">The animatedUiElement value.</param>
+    /// <param name="duration">The duration value.</param>
     private static void SlideRightTransition(UIElement animatedUiElement, Duration duration)
     {
         var translateDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = 50,
             To = 0,
         };
@@ -188,12 +207,15 @@ public static class TransitionAnimationProvider
             translateDoubleAnimation);
     }
 
+    /// <summary>Provides the SlideLeftTransition member.</summary>
+    /// <param name="animatedUiElement">The animatedUiElement value.</param>
+    /// <param name="duration">The duration value.</param>
     private static void SlideLeftTransition(UIElement animatedUiElement, Duration duration)
     {
         var translateDoubleAnimation = new DoubleAnimation
         {
             Duration = duration,
-            DecelerationRatio = DecelerationRatio,
+            DecelerationRatio = DefaultDecelerationRatio,
             From = -50,
             To = 0,
         };

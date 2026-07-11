@@ -1,27 +1,27 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// NumericPushButtonExtensions.
-/// </summary>
+/// <summary>Represents NumericPushButtonExtensions.</summary>
 public static class NumericPushButtonExtensions
 {
-    /// <summary>
-    /// Updates the content of the spin button.
-    /// </summary>
-    /// <param name="this">The @this.</param>
-    /// <returns>A Value.</returns>
-    public static NumericPushButton? UpdateSpinButtonContent(this NumericPushButton? @this)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="this">The extension value.</param>
+    extension(NumericPushButton? @this)
     {
-        if (@this != null)
+        /// <summary>Updates the content of the spin button.</summary>
+        /// <returns>A Value.</returns>
+        public NumericPushButton? UpdateSpinButtonContent()
         {
-            var breakLine = @this.UnitsOnNewLine ? "\r\n" : " ";
-            @this.Content = $"{Math.Round(@this.Value, @this.DecimalPlaces)}{breakLine}{@this.Units}";
-        }
+            if (@this is not null)
+            {
+                var breakLine = @this.UnitsOnNewLine ? "\r\n" : " ";
+                @this.Content = $"{Math.Round(@this.Value, @this.DecimalPlaces)}{breakLine}{@this.Units}";
+            }
 
-        return @this;
+            return @this;
+        }
     }
 }

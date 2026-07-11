@@ -1,17 +1,13 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross;
 
-/// <summary>
-/// IView Model Navigating EventArgs.
-/// </summary>
+/// <summary>IView Model Navigating EventArgs.</summary>
 public interface IViewModelNavigatingEventArgs : IViewModelNavigationEventArgs
 {
-    /// <summary>
-    /// Gets or sets a value indicating whether this <see cref="IViewModelNavigatingEventArgs"/> is cancel.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this <see cref="IViewModelNavigatingEventArgs"/> is cancel.</summary>
     /// <value>
     ///   <c>true</c> if cancel; otherwise, <c>false</c>.
     /// </value>

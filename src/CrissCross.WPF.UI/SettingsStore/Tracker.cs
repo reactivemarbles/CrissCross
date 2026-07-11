@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
@@ -15,14 +15,13 @@ namespace CrissCross.WPF.UI;
 /// <param name="store">The factory that will create an IStore for each tracked object's data.</param>
 public class Tracker(IStore store)
 {
-    // configurations for types
+    /// <summary>Configurations for types.</summary>
     private readonly Dictionary<Type, TrackingConfiguration> _typeConfigurations = [];
 
-    // Weak reference dictionary
+    /// <summary>Weak reference dictionary.</summary>
     private readonly ConditionalWeakTable<object, TrackingConfiguration> _configurationsDict = new();
 
-    // Workaround:
-    // ConditionalWeakTable does not support getting a list of all keys, which we need for a global persist
+    /// <summary>Workaround: ConditionalWeakTable does not support getting a list of all keys, which we need for a global persist.</summary>
     private readonly List<WeakReference> _trackedObjects = [];
 
     /// <summary>
@@ -34,13 +33,10 @@ public class Tracker(IStore store)
     {
     }
 
-    /// <summary>
-    /// Gets or sets the object that is used to store and retrieve tracked data.
-    /// </summary>
+    /// <summary>Gets or sets the object that is used to store and retrieve tracked data.</summary>
     public IStore Store { get; set; } = store;
 
     // todo: allow caller to configure via action argument
-
     /// <summary>
     /// Track a target object. This will apply any previously stored state to the target and
     /// start listening for events that indicate persisting new data is required.
@@ -48,28 +44,20 @@ public class Tracker(IStore store)
     /// <param name="target">The target.</param>
     public void Track(object target) => Track(target, Configure(target));
 
-    /// <summary>
-    /// Apply any previously stored data to the target object.
-    /// </summary>
+    /// <summary>Apply any previously stored data to the target object.</summary>
     /// <param name="target">The target.</param>
     public void Apply(object target) => Configure(target).Apply(target);
 
-    /// <summary>
-    /// Apply specified defaults to the tracked properties of the target object.
-    /// </summary>
+    /// <summary>Apply specified defaults to the tracked properties of the target object.</summary>
     /// <param name="target">The target.</param>
     public void ApplyDefaults(object target) => Configure(target)
             .ApplyDefaults(target);
 
-    /// <summary>
-    /// Forget any saved state for the object with the specified id.
-    /// </summary>
+    /// <summary>Forget any saved state for the object with the specified id.</summary>
     /// <param name="id">The identifier.</param>
     public void Forget(string id) => Store.ClearData(id);
 
-    /// <summary>
-    /// Forget any saved state for the target object.
-    /// </summary>
+    /// <summary>Forget any saved state for the target object.</summary>
     /// <param name="target">The target.</param>
     public void Forget(object target)
     {
@@ -77,19 +65,15 @@ public class Tracker(IStore store)
         Forget(id);
     }
 
-    /// <summary>
-    /// Forget all saved state.
-    /// </summary>
+    /// <summary>Forget all saved state.</summary>
     public void ForgetAll() => Store.ClearAll();
 
-    /// <summary>
-    /// Gets or creates a tracking configuration for the target object.
-    /// </summary>
+    /// <summary>Gets or creates a tracking configuration for the target object.</summary>
     /// <param name="target">The target.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration Configure(object target)
     {
-        if (target == null)
+        if (target is null)
         {
             throw new ArgumentNullException(nameof(target));
         }
@@ -106,7 +90,7 @@ public class Tracker(IStore store)
             // if the object or the caller want to customize the config for this type, copy the config so they don't mess with the config for the type
             if (target is ITrackingAware)
             {
-                config = new TrackingConfiguration(config, target.GetType());
+                config = new(config, target.GetType());
 
                 // allow the object to adjust the configuration
                 if (target is ITrackingAware ita)
@@ -139,31 +123,18 @@ public class Tracker(IStore store)
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration Configure(Type type)
     {
-        if (type == null)
+        if (type is null)
         {
             throw new ArgumentNullException(nameof(type));
         }
 
-        TrackingConfiguration configuration;
-        if (_typeConfigurations.TryGetValue(type, out var value))
-        {
-            // if a config for this exact type exists return it
-            configuration = value;
-        }
-        else
+        if (!_typeConfigurations.TryGetValue(type, out var configuration))
         {
             // todo: we should make a config for each base type recursively, in case at a later point we add config for a base type
             // tbd : should configurations delegate work to base classes, rather than copying their config data?
             // if a config for this exact type does not exist, copy from base type's config or create a blank one
             var baseConfig = FindConfiguration(type);
-            if (baseConfig != null)
-            {
-                configuration = new TrackingConfiguration(baseConfig, type);
-            }
-            else
-            {
-                configuration = new TrackingConfiguration(this, type);
-            }
+            configuration = baseConfig is not null ? new(baseConfig, type) : new(this, type);
 
             _typeConfigurations[type] = configuration;
         }
@@ -180,21 +151,19 @@ public class Tracker(IStore store)
     /// <param name="target">The target.</param>
     public void StopTracking(object target)
     {
-        if (_configurationsDict.TryGetValue(target, out var cfg))
+        if (!_configurationsDict.TryGetValue(target, out var cfg))
         {
-            cfg.StopTracking(target);
+            return;
         }
+
+        cfg.StopTracking(target);
     }
 
-    /// <summary>
-    /// Persists the tracked properties of the target object.
-    /// </summary>
+    /// <summary>Persists the tracked properties of the target object.</summary>
     /// <param name="target">The target.</param>
     public void Persist(object target) => Configure(target).Persist(target);
 
-    /// <summary>
-    /// Runs a global persist for all objects that are still alive and tracked. Waits for finalizers to complete first.
-    /// </summary>
+    /// <summary>Runs a global persist for all objects that are still alive and tracked. Waits for finalizers to complete first.</summary>
     public void PersistAll()
     {
         GC.WaitForPendingFinalizers();
@@ -208,11 +177,12 @@ public class Tracker(IStore store)
         }
     }
 
-    // this is internal to allow TrackingConfiguration to call it so
-    // we can avoid the extra lookup (finding the configuration)
+    /// <summary>This is internal to allow TrackingConfiguration to call it so we can avoid the extra lookup (finding the configuration).</summary>
+    /// <param name="target">The target object.</param>
+    /// <param name="config">The config value.</param>
     internal void Track(object target, TrackingConfiguration config)
     {
-        if (target == null)
+        if (target is null)
         {
             throw new ArgumentNullException(nameof(target));
         }
@@ -227,13 +197,17 @@ public class Tracker(IStore store)
         _trackedObjects.Add(new WeakReference(target));
     }
 
-    // allows the tracking configuration to remove an object from the lists (so that it's not hit by global persist)
+    /// <summary>Allows the tracking configuration to remove an object from the lists (so that it's not hit by global persist).</summary>
+    /// <param name="target">The target object.</param>
     internal void RemoveFromList(object target)
     {
-        _configurationsDict.Remove(target);
-        _trackedObjects.RemoveAll(t => t.Target == target);
+        _ = _configurationsDict.Remove(target);
+        _ = _trackedObjects.RemoveAll(t => t.Target == target);
     }
 
+    /// <summary>Provides the FindConfiguration member.</summary>
+    /// <param name="type">The type value.</param>
+    /// <returns>The result.</returns>
     private TrackingConfiguration? FindConfiguration(Type type)
     {
         if (_typeConfigurations.TryGetValue(type, out var value))
@@ -241,11 +215,6 @@ public class Tracker(IStore store)
             return value;
         }
 
-        if (type == typeof(object) || type.BaseType == null)
-        {
-            return null;
-        }
-
-        return FindConfiguration(type.BaseType);
+        return type == typeof(object) || type.BaseType is null ? null : FindConfiguration(type.BaseType);
     }
 }

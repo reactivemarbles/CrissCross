@@ -1,21 +1,17 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// ColorDisplay.
-/// </summary>
+/// <summary>Represents ColorDisplay.</summary>
 /// <seealso cref="DualPickerControlBase" />
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
 public partial class ColorDisplay : DualPickerControlBase
 {
-    /// <summary>
-    /// The corner radius property.
-    /// </summary>
+    /// <summary>The corner radius property.</summary>
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(
             nameof(CornerRadius),
@@ -23,14 +19,10 @@ public partial class ColorDisplay : DualPickerControlBase
             typeof(ColorDisplay),
             new PropertyMetadata(0d));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ColorDisplay"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ColorDisplay"/> class.</summary>
     public ColorDisplay() => InitializeComponent();
 
-    /// <summary>
-    /// Gets or sets the corner radius.
-    /// </summary>
+    /// <summary>Gets or sets the corner radius.</summary>
     /// <value>
     /// The corner radius.
     /// </value>
@@ -40,7 +32,13 @@ public partial class ColorDisplay : DualPickerControlBase
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    private void SwapButton_Click(object sender, RoutedEventArgs e) => SwapColors();
+    /// <summary>Provides the SwapButton_Click member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
+    protected void SwapButton_Click(object sender, RoutedEventArgs e) => SwapColors();
 
+    /// <summary>Provides the HintColor_OnMouseLeftButtonDown member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void HintColor_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => SetMainColorFromHintColor();
 }

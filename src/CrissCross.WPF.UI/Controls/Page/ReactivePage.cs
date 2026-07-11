@@ -1,14 +1,12 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// A <see cref="Page"/> that is reactive.
-/// </summary>
+/// <summary>A <see cref="Page"/> that is reactive.</summary>
 /// <remarks>
 /// <para>
 /// This class is a <see cref="Page"/> that is also reactive. That is, it implements <see cref="IViewFor{TViewModel}"/>.
@@ -42,9 +40,7 @@ public class ReactivePage<TViewModel> :
     Page, IViewFor<TViewModel>
     where TViewModel : class
 {
-    /// <summary>
-    /// The view model dependency property.
-    /// </summary>
+    /// <summary>The view model dependency property.</summary>
     public static readonly DependencyProperty ViewModelProperty =
         DependencyProperty.Register(
                                     nameof(ViewModel),
@@ -52,9 +48,7 @@ public class ReactivePage<TViewModel> :
                                     typeof(ReactivePage<TViewModel>),
                                     new PropertyMetadata(null));
 
-    /// <summary>
-    /// Gets the binding root view model.
-    /// </summary>
+    /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;
 
     /// <inheritdoc/>

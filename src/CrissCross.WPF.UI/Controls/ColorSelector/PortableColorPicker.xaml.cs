@@ -1,18 +1,14 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// PortableColorPicker.
-/// </summary>
+/// <summary>Represents PortableColorPicker.</summary>
 /// <seealso cref="DualPickerControlBase" />
 public partial class PortableColorPicker : DualPickerControlBase
 {
-    /// <summary>
-    /// The small change property.
-    /// </summary>
+    /// <summary>The small change property.</summary>
     public static readonly DependencyProperty SmallChangeProperty =
         DependencyProperty.Register(
             nameof(SmallChange),
@@ -20,9 +16,7 @@ public partial class PortableColorPicker : DualPickerControlBase
             typeof(PortableColorPicker),
             new PropertyMetadata(1.0));
 
-    /// <summary>
-    /// The show alpha property.
-    /// </summary>
+    /// <summary>The show alpha property.</summary>
     public static readonly DependencyProperty ShowAlphaProperty =
         DependencyProperty.Register(
             nameof(ShowAlpha),
@@ -30,9 +24,7 @@ public partial class PortableColorPicker : DualPickerControlBase
             typeof(PortableColorPicker),
             new PropertyMetadata(true));
 
-    /// <summary>
-    /// The picker type property.
-    /// </summary>
+    /// <summary>The picker type property.</summary>
     public static readonly DependencyProperty PickerTypeProperty
         = DependencyProperty.Register(
             nameof(PickerType),
@@ -40,14 +32,10 @@ public partial class PortableColorPicker : DualPickerControlBase
             typeof(PortableColorPicker),
             new PropertyMetadata(PickerType.HSV));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PortableColorPicker"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="PortableColorPicker"/> class.</summary>
     public PortableColorPicker() => InitializeComponent();
 
-    /// <summary>
-    /// Gets or sets the small change.
-    /// </summary>
+    /// <summary>Gets or sets the small change.</summary>
     /// <value>
     /// The small change.
     /// </value>
@@ -57,9 +45,7 @@ public partial class PortableColorPicker : DualPickerControlBase
         set => SetValue(SmallChangeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [show alpha].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [show alpha].</summary>
     /// <value>
     ///   <c>true</c> if [show alpha]; otherwise, <c>false</c>.
     /// </value>
@@ -69,9 +55,7 @@ public partial class PortableColorPicker : DualPickerControlBase
         set => SetValue(ShowAlphaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the type of the picker.
-    /// </summary>
+    /// <summary>Gets or sets the type of the picker.</summary>
     /// <value>
     /// The type of the picker.
     /// </value>

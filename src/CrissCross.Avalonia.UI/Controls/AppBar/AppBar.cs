@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -13,116 +13,86 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// A bottom application bar that can show and hide with animation, containing left and right content areas.
-/// </summary>
+/// <summary>A bottom application bar that can show and hide with animation, containing left and right content areas.</summary>
 public class AppBar : TemplatedControl
 {
-    /// <summary>
-    /// Property for <see cref="AppBarEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AppBarEnabled"/>.</summary>
     public static readonly StyledProperty<bool> AppBarEnabledProperty =
         AvaloniaProperty.Register<AppBar, bool>(nameof(AppBarEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="AppBarIsSticky"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AppBarIsSticky"/>.</summary>
     public static readonly StyledProperty<bool> AppBarIsStickyProperty =
         AvaloniaProperty.Register<AppBar, bool>(nameof(AppBarIsSticky));
 
-    /// <summary>
-    /// Property for <see cref="AppBarLeft"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AppBarLeft"/>.</summary>
     public static readonly StyledProperty<ObservableCollection<Control>> AppBarLeftProperty =
         AvaloniaProperty.Register<AppBar, ObservableCollection<Control>>(nameof(AppBarLeft));
 
-    /// <summary>
-    /// Property for <see cref="AppBarRight"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AppBarRight"/>.</summary>
     public static readonly StyledProperty<ObservableCollection<Control>> AppBarRightProperty =
         AvaloniaProperty.Register<AppBar, ObservableCollection<Control>>(nameof(AppBarRight));
 
-    /// <summary>
-    /// Property for <see cref="AppBarHeight"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AppBarHeight"/>.</summary>
     public static readonly StyledProperty<double> AppBarHeightProperty =
         AvaloniaProperty.Register<AppBar, double>(nameof(AppBarHeight), 88.0);
 
-    /// <summary>
-    /// Property for <see cref="IsOpen"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsOpen"/>.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<AppBar, bool>(nameof(IsOpen));
 
-    private Border? _rootBorder;
+    /// <summary>Provides the _isPointerOver member.</summary>
     private bool _isPointerOver;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AppBar"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="AppBar"/> class.</summary>
     public AppBar()
     {
         AppBarLeft = [];
         AppBarRight = [];
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the application bar is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the application bar is enabled.</summary>
     public bool AppBarEnabled
     {
         get => GetValue(AppBarEnabledProperty);
         set => SetValue(AppBarEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the application bar stays open until explicitly closed.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the application bar stays open until explicitly closed.</summary>
     public bool AppBarIsSticky
     {
         get => GetValue(AppBarIsStickyProperty);
         set => SetValue(AppBarIsStickyProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the left-aligned content items.
-    /// </summary>
+    /// <summary>Gets or sets the left-aligned content items.</summary>
     public ObservableCollection<Control> AppBarLeft
     {
         get => GetValue(AppBarLeftProperty);
         set => SetValue(AppBarLeftProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the right-aligned content items.
-    /// </summary>
+    /// <summary>Gets or sets the right-aligned content items.</summary>
     public ObservableCollection<Control> AppBarRight
     {
         get => GetValue(AppBarRightProperty);
         set => SetValue(AppBarRightProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the height of the application bar when expanded.
-    /// </summary>
+    /// <summary>Gets or sets the height of the application bar when expanded.</summary>
     public double AppBarHeight
     {
         get => GetValue(AppBarHeightProperty);
         set => SetValue(AppBarHeightProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the application bar is open.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the application bar is open.</summary>
     public bool IsOpen
     {
         get => GetValue(IsOpenProperty);
         set => SetValue(IsOpenProperty, value);
     }
 
-    /// <summary>
-    /// Shows the application bar.
-    /// </summary>
+    /// <summary>Shows the application bar.</summary>
     /// <param name="isSticky">If set to <c>true</c>, the bar stays open until explicitly closed.</param>
     public void ShowAppBar(bool isSticky = false)
     {
@@ -136,18 +106,8 @@ public class AppBar : TemplatedControl
         IsOpen = true;
     }
 
-    /// <summary>
-    /// Hides the application bar.
-    /// </summary>
+    /// <summary>Hides the application bar.</summary>
     public void HideAppBar() => IsOpen = false;
-
-    /// <inheritdoc/>
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        ArgumentNullException.ThrowIfNull(e);
-        base.OnApplyTemplate(e);
-        _rootBorder = e.NameScope.Find<Border>("PART_RootBorder");
-    }
 
     /// <inheritdoc/>
     protected override void OnPointerEntered(PointerEventArgs e)
@@ -168,9 +128,11 @@ public class AppBar : TemplatedControl
     {
         base.OnPointerPressed(e);
 
-        if (!_isPointerOver && IsOpen && !AppBarIsSticky)
+        if (_isPointerOver || !IsOpen || AppBarIsSticky)
         {
-            HideAppBar();
+            return;
         }
+
+        HideAppBar();
     }
 }

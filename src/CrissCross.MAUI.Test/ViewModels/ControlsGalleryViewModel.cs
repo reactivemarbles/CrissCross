@@ -1,52 +1,59 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReactiveUI;
 
 namespace CrissCross.MAUI.Test;
 
-/// <summary>
-/// Reactive manual-QA view model for the gallery feature playground.
-/// </summary>
+/// <summary>Reactive manual-QA view model for the gallery feature playground.</summary>
 public sealed class ControlsGalleryViewModel : RxObject
 {
+    /// <summary>Provides the _isOperationRunning member.</summary>
     private readonly ObservableAsPropertyHelper<bool> _isOperationRunning;
-    private string? _searchText = "pump alarm";
-    private SearchQueryState _searchState;
-    private BusyOperation? _currentOperation;
-    private CommandButtonState _commandState;
-    private double? _commandProgress;
-    private PaginationState _paginationState;
-    private DateTimeRange _currentRange;
-    private SegmentedSelectionState _segmentState;
-    private ChipGroupState _chipGroupState;
-    private StepperState _stepperState;
-    private ThemeChoice _selectedTheme = ThemeChoice.System;
-    private ThemePreferenceState _themeState;
-    private string _activationLog = "Not activated yet.";
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ControlsGalleryViewModel"/> class.
-    /// </summary>
+    /// <summary>Provides the _searchText member.</summary>
+    private string? _searchText = "pump alarm";
+
+    /// <summary>Provides the _searchState member.</summary>
+    private SearchQueryState _searchState;
+
+    /// <summary>Provides the _paginationState member.</summary>
+    private PaginationState _paginationState;
+
+    /// <summary>Provides the _currentRange member.</summary>
+    private DateTimeRange _currentRange;
+
+    /// <summary>Provides the _segmentState member.</summary>
+    private SegmentedSelectionState _segmentState;
+
+    /// <summary>Provides the _chipGroupState member.</summary>
+    private ChipGroupState _chipGroupState;
+
+    /// <summary>Provides the _stepperState member.</summary>
+    private StepperState _stepperState;
+
+    /// <summary>Provides the _selectedTheme member.</summary>
+    private ThemeChoice _selectedTheme = ThemeChoice.System;
+
+    /// <summary>Provides the _themeState member.</summary>
+    private ThemePreferenceState _themeState;
+
+    /// <summary>Initializes a new instance of the <see cref="ControlsGalleryViewModel"/> class.</summary>
     public ControlsGalleryViewModel()
     {
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
-        _paginationState = new PaginationState(1, 10, 42);
+        _paginationState = new(1, 10, 42);
         _currentRange = CreateRange(DateTimeOffset.Now);
-        _segmentState = new SegmentedSelectionState(CreateSegments(), "table");
-        _chipGroupState = new ChipGroupState(CreateChips("alarms"), ChipGroupSelectionMode.Multiple);
-        _stepperState = new StepperState(CreateSteps("review"), "review", StepperOrientation.Horizontal);
-        _themeState = new ThemePreferenceState(_selectedTheme, ThemeChoice.Dark, supportsHighContrast: true);
+        _segmentState = new(CreateSegments(), "table");
+        _chipGroupState = new(CreateChips("alarms"), ChipGroupSelectionMode.Multiple);
+        _stepperState = new(CreateSteps("review"), "review", StepperOrientation.Horizontal);
+        _themeState = new(_selectedTheme, ThemeChoice.Dark, supportsHighContrast: true);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
         SearchCommand = ReactiveCommand.CreateFromTask<string>(SearchAsync);
@@ -62,54 +69,34 @@ public sealed class ControlsGalleryViewModel : RxObject
             .ToProperty(this, nameof(IsOperationRunning), scheduler: RxSchedulers.MainThreadScheduler);
     }
 
-    /// <summary>
-    /// Gets the async command used by the command button and busy overlay demos.
-    /// </summary>
+    /// <summary>Gets the async command used by the command button and busy overlay demos.</summary>
     public ReactiveCommand<Unit, Unit> RunImportCommand { get; }
 
-    /// <summary>
-    /// Gets the search submit command.
-    /// </summary>
+    /// <summary>Gets the search submit command.</summary>
     public ReactiveCommand<string, Unit> SearchCommand { get; }
 
-    /// <summary>
-    /// Gets the search clear command.
-    /// </summary>
+    /// <summary>Gets the search clear command.</summary>
     public ReactiveCommand<Unit, Unit> ClearSearchCommand { get; }
 
-    /// <summary>
-    /// Gets the page request command used by DataPager.
-    /// </summary>
+    /// <summary>Gets the page request command used by DataPager.</summary>
     public ReactiveCommand<PageRequest, Unit> PageRequestCommand { get; }
 
-    /// <summary>
-    /// Gets the date range command.
-    /// </summary>
+    /// <summary>Gets the date range command.</summary>
     public ReactiveCommand<DateTimeRange, Unit> RangeChangedCommand { get; }
 
-    /// <summary>
-    /// Gets the segmented selection command.
-    /// </summary>
+    /// <summary>Gets the segmented selection command.</summary>
     public ReactiveCommand<string, Unit> SegmentChangedCommand { get; }
 
-    /// <summary>
-    /// Gets the chip selection command.
-    /// </summary>
+    /// <summary>Gets the chip selection command.</summary>
     public ReactiveCommand<string, Unit> ChipChangedCommand { get; }
 
-    /// <summary>
-    /// Gets the workflow step command.
-    /// </summary>
+    /// <summary>Gets the workflow step command.</summary>
     public ReactiveCommand<string, Unit> StepRequestedCommand { get; }
 
-    /// <summary>
-    /// Gets the theme changed command.
-    /// </summary>
+    /// <summary>Gets the theme changed command.</summary>
     public ReactiveCommand<ThemeChoice, Unit> ThemeChangedCommand { get; }
 
-    /// <summary>
-    /// Gets or sets the search text.
-    /// </summary>
+    /// <summary>Gets or sets the search text.</summary>
     public string? SearchText
     {
         get => _searchText;
@@ -120,100 +107,78 @@ public sealed class ControlsGalleryViewModel : RxObject
                 return;
             }
 
-            this.RaiseAndSetIfChanged(ref _searchText, value);
+            _ = this.RaiseAndSetIfChanged(ref _searchText, value);
             SearchState = CreateSearchState(value, false);
         }
     }
 
-    /// <summary>
-    /// Gets the aggregate search state.
-    /// </summary>
+    /// <summary>Gets the aggregate search state.</summary>
     public SearchQueryState SearchState
     {
         get => _searchState;
         private set => this.RaiseAndSetIfChanged(ref _searchState, value);
     }
 
-    /// <summary>
-    /// Gets the active busy operation, when any.
-    /// </summary>
+    /// <summary>Gets the active busy operation, when any.</summary>
     public BusyOperation? CurrentOperation
     {
-        get => _currentOperation;
-        private set => this.RaiseAndSetIfChanged(ref _currentOperation, value);
+        get => field;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the async import command is executing.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the async import command is executing.</summary>
     public bool IsOperationRunning => _isOperationRunning.Value;
 
-    /// <summary>
-    /// Gets the command button visual state.
-    /// </summary>
+    /// <summary>Gets the command button visual state.</summary>
     public CommandButtonState CommandState
     {
-        get => _commandState;
-        private set => this.RaiseAndSetIfChanged(ref _commandState, value);
+        get => field;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets normalized command progress.
-    /// </summary>
+    /// <summary>Gets normalized command progress.</summary>
     public double? CommandProgress
     {
-        get => _commandProgress;
-        private set => this.RaiseAndSetIfChanged(ref _commandProgress, value);
+        get => field;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets current pagination state.
-    /// </summary>
+    /// <summary>Gets current pagination state.</summary>
     public PaginationState PaginationState
     {
         get => _paginationState;
         private set => this.RaiseAndSetIfChanged(ref _paginationState, value);
     }
 
-    /// <summary>
-    /// Gets the current date/time range.
-    /// </summary>
+    /// <summary>Gets the current date/time range.</summary>
     public DateTimeRange CurrentRange
     {
         get => _currentRange;
         private set => this.RaiseAndSetIfChanged(ref _currentRange, value);
     }
 
-    /// <summary>
-    /// Gets the segmented control state.
-    /// </summary>
+    /// <summary>Gets the segmented control state.</summary>
     public SegmentedSelectionState SegmentState
     {
         get => _segmentState;
         private set => this.RaiseAndSetIfChanged(ref _segmentState, value);
     }
 
-    /// <summary>
-    /// Gets the chip group state.
-    /// </summary>
+    /// <summary>Gets the chip group state.</summary>
     public ChipGroupState ChipGroupState
     {
         get => _chipGroupState;
         private set => this.RaiseAndSetIfChanged(ref _chipGroupState, value);
     }
 
-    /// <summary>
-    /// Gets the stepper workflow state.
-    /// </summary>
+    /// <summary>Gets the stepper workflow state.</summary>
     public StepperState StepperState
     {
         get => _stepperState;
         private set => this.RaiseAndSetIfChanged(ref _stepperState, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selected theme.
-    /// </summary>
+    /// <summary>Gets or sets the selected theme.</summary>
     public ThemeChoice SelectedTheme
     {
         get => _selectedTheme;
@@ -224,33 +189,28 @@ public sealed class ControlsGalleryViewModel : RxObject
                 return;
             }
 
-            this.RaiseAndSetIfChanged(ref _selectedTheme, value);
-            ThemeState = new ThemePreferenceState(value, ThemeChoice.Dark, supportsHighContrast: true);
+            _ = this.RaiseAndSetIfChanged(ref _selectedTheme, value);
+            ThemeState = new(value, ThemeChoice.Dark, supportsHighContrast: true);
         }
     }
 
-    /// <summary>
-    /// Gets the current theme state.
-    /// </summary>
+    /// <summary>Gets the current theme state.</summary>
     public ThemePreferenceState ThemeState
     {
         get => _themeState;
         private set => this.RaiseAndSetIfChanged(ref _themeState, value);
     }
 
-    /// <summary>
-    /// Gets deterministic platform notes for manual QA.
-    /// </summary>
-    public string PlatformNotes { get; } = OperatingSystem.IsAndroid() ? "Android: touch-first layout, Material handlers, compact spacing." : OperatingSystem.IsWindows() ? "Windows: desktop windowing with pointer and keyboard QA." : OperatingSystem.IsIOS() ? "iOS: safe-area and touch interaction QA." : "MAUI: platform-specific handlers are active for the current device.";
+    /// <summary>Gets deterministic platform notes for manual QA.</summary>
+    public string PlatformNotes { get; } = GetPlatformNotes();
 
-    /// <summary>
-    /// Gets activation/disposal trace text.
-    /// </summary>
+    /// <summary>Gets activation/disposal trace text.</summary>
     public string ActivationLog
     {
-        get => _activationLog;
-        private set => this.RaiseAndSetIfChanged(ref _activationLog, value);
+        get => field;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
+= "Not activated yet.";
 
     /// <inheritdoc/>
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
@@ -259,7 +219,7 @@ public sealed class ControlsGalleryViewModel : RxObject
         ArgumentNullException.ThrowIfNull(disposables);
 
         ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
-        Observable.Interval(TimeSpan.FromSeconds(5), RxSchedulers.TaskpoolScheduler)
+        _ = Observable.Interval(TimeSpan.FromSeconds(5), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
             .DisposeWith(disposables);
@@ -276,20 +236,48 @@ public sealed class ControlsGalleryViewModel : RxObject
         base.Dispose(disposing);
     }
 
+    /// <summary>Gets platform-specific notes for the current device.</summary>
+    /// <returns>The platform notes.</returns>
+    private static string GetPlatformNotes()
+    {
+        if (OperatingSystem.IsAndroid())
+        {
+            return "Android: touch-first layout, Material handlers, compact spacing.";
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            return "Windows: desktop windowing with pointer and keyboard QA.";
+        }
+
+        return OperatingSystem.IsIOS()
+            ? "iOS: safe-area and touch interaction QA."
+            : "MAUI: platform-specific handlers are active for the current device.";
+    }
+
+    /// <summary>Provides the CreateSearchState member.</summary>
+    /// <param name="text">The text value.</param>
+    /// <param name="isSearching">The isSearching value.</param>
+    /// <returns>The result.</returns>
     private static SearchQueryState CreateSearchState(string? text, bool isSearching) => new(
         text,
         debouncedText: text?.Trim(),
         submittedText: text?.Trim(),
         isSearching: isSearching,
         resultCount: string.IsNullOrWhiteSpace(text) ? 42 : 7,
-        filters: new[]
-        {
+        filters:
+        [
             new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
             new FilterToken("status", FilterOperator.NotEquals, "closed", "Status: Active")
-        });
+        ]);
 
+    /// <summary>Provides the CreateRange member.</summary>
+    /// <param name="now">The now value.</param>
+    /// <returns>The result.</returns>
     private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(-4), now, DateTimeRangePreset.Custom, "Last four hours");
 
+    /// <summary>Provides the CreateSegments member.</summary>
+    /// <returns>The result.</returns>
     private static IReadOnlyList<SegmentItem> CreateSegments() =>
     [
         new SegmentItem("table", "Table"),
@@ -297,6 +285,9 @@ public sealed class ControlsGalleryViewModel : RxObject
         new SegmentItem("timeline", "Timeline")
     ];
 
+    /// <summary>Provides the CreateChips member.</summary>
+    /// <param name="selectedKey">The selectedKey value.</param>
+    /// <returns>The result.</returns>
     private static IReadOnlyList<ChipModel> CreateChips(string selectedKey) =>
     [
         new ChipModel("alarms", "Alarms", isSelected: selectedKey == "alarms"),
@@ -304,6 +295,9 @@ public sealed class ControlsGalleryViewModel : RxObject
         new ChipModel("quality", "Quality", isSelected: selectedKey == "quality")
     ];
 
+    /// <summary>Provides the CreateSteps member.</summary>
+    /// <param name="currentKey">The currentKey value.</param>
+    /// <returns>The result.</returns>
     private static IReadOnlyList<StepDescriptor> CreateSteps(string currentKey) =>
     [
         new StepDescriptor("connect", "Connect", currentKey == "connect" ? StepStatus.Active : StepStatus.Completed),
@@ -312,21 +306,28 @@ public sealed class ControlsGalleryViewModel : RxObject
         new StepDescriptor("publish", "Publish", StepStatus.Pending, canEnter: currentKey == "review")
     ];
 
+    /// <summary>Provides the RunImportAsync member.</summary>
+    /// <param name="cancellationToken">The cancellationToken value.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task RunImportAsync(CancellationToken cancellationToken)
     {
         CommandState = CommandButtonState.Executing;
         CommandProgress = 0.35;
-        CurrentOperation = new BusyOperation("Loading deterministic sample data", "Simulates a cancellable import without network access.", CommandProgress, ClearSearchCommand);
+        CurrentOperation = new("Loading deterministic sample data", "Simulates a cancellable import without network access.", CommandProgress, ClearSearchCommand);
 
         await Task.Delay(250, cancellationToken).ConfigureAwait(true);
 
         CommandProgress = 1.0;
         CurrentOperation = null;
         CommandState = CommandButtonState.Succeeded;
-        PaginationState = new PaginationState(0, 10, 42);
+        PaginationState = new(0, 10, 42);
         SearchState = CreateSearchState(SearchText, false);
     }
 
+    /// <summary>Provides the SearchAsync member.</summary>
+    /// <param name="submittedText">The submittedText value.</param>
+    /// <param name="cancellationToken">The cancellationToken value.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task SearchAsync(string submittedText, CancellationToken cancellationToken)
     {
         SearchText = submittedText;
@@ -335,21 +336,34 @@ public sealed class ControlsGalleryViewModel : RxObject
         SearchState = CreateSearchState(SearchText, false);
     }
 
+    /// <summary>Provides the ClearSearch member.</summary>
     private void ClearSearch()
     {
         SearchText = string.Empty;
         SearchState = CreateSearchState(SearchText, false);
     }
 
-    private void ApplyPageRequest(PageRequest request) => PaginationState = new PaginationState(request.PageIndex, request.PageSize, 42);
+    /// <summary>Provides the ApplyPageRequest member.</summary>
+    /// <param name="request">The request value.</param>
+    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, 42);
 
+    /// <summary>Provides the ApplyRange member.</summary>
+    /// <param name="range">The range value.</param>
     private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(DateTimeOffset.Now);
 
-    private void ApplySegment(string key) => SegmentState = new SegmentedSelectionState(CreateSegments(), key);
+    /// <summary>Provides the ApplySegment member.</summary>
+    /// <param name="key">The key value.</param>
+    private void ApplySegment(string key) => SegmentState = new(CreateSegments(), key);
 
-    private void ApplyChip(string key) => ChipGroupState = new ChipGroupState(CreateChips(key), ChipGroupSelectionMode.Multiple);
+    /// <summary>Provides the ApplyChip member.</summary>
+    /// <param name="key">The key value.</param>
+    private void ApplyChip(string key) => ChipGroupState = new(CreateChips(key), ChipGroupSelectionMode.Multiple);
 
-    private void ApplyStep(string key) => StepperState = new StepperState(CreateSteps(key), key, StepperOrientation.Horizontal);
+    /// <summary>Provides the ApplyStep member.</summary>
+    /// <param name="key">The key value.</param>
+    private void ApplyStep(string key) => StepperState = new(CreateSteps(key), key, StepperOrientation.Horizontal);
 
+    /// <summary>Provides the ApplyTheme member.</summary>
+    /// <param name="choice">The choice value.</param>
     private void ApplyTheme(ThemeChoice choice) => SelectedTheme = choice;
 }

@@ -1,26 +1,21 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// A Fluent Window with integrated navigation support.
-/// </summary>
+/// <summary>A Fluent Window with integrated navigation support.</summary>
 public class FluentNavigationWindow : FluentWindow
 {
-    /// <summary>
-    /// Property for <see cref="NavigationView"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="NavigationView"/>.</summary>
     public static readonly StyledProperty<NavigationView?> NavigationViewProperty =
         AvaloniaProperty.Register<FluentNavigationWindow, NavigationView?>(
-            nameof(NavigationView), null);
+            nameof(NavigationView),
+            null);
 
-    /// <summary>
-    /// Gets or sets the navigation view for this window.
-    /// </summary>
+    /// <summary>Gets or sets the navigation view for this window.</summary>
     public NavigationView? NavigationView
     {
         get => GetValue(NavigationViewProperty);

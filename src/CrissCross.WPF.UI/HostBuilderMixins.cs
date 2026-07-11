@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.Extensions.Configuration;
@@ -10,46 +10,43 @@ using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// HostBuilderMixins.
-/// </summary>
+/// <summary>Represents HostBuilderMixins.</summary>
 public static class HostBuilderMixins
 {
-    /// <summary>
-    /// Configures CrissSCross for Page Navigation.
-    /// </summary>
-    /// <typeparam name="TWindow">The type of the window.</typeparam>
-    /// <typeparam name="TPage">The type of the page.</typeparam>
-    /// <param name="hostBuilder">The host builder.</param>
-    /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-    public static IHostBuilder ConfigureCrissCrossForPageNavigation<TWindow, TPage>(this IHostBuilder hostBuilder)
-        where TWindow : Window, INavigationWindow
-        where TPage : Page => hostBuilder
-        .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-        .ConfigureServices(
-        services =>
-            services.AddHostedService<ApplicationHostService<TWindow, TPage>>() // App Host
-            .AddSingleton<IPageService, PageService>() // Page resolver service
-            .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
-            .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
-            .AddSingleton<INavigationService, NavigationService>() // Service containing navigation, same as INavigationWindow... but without window
-            .AddSingleton<INavigationWindow, TWindow>());
+    /// <summary>Provides extension members.</summary>
+    /// <param name="hostBuilder">The hostBuilder value.</param>
+    extension(IHostBuilder hostBuilder)
+    {
+        /// <summary>Configures CrissSCross for Page Navigation.</summary>
+        /// <typeparam name="TWindow">The type of the window.</typeparam>
+        /// <typeparam name="TPage">The TPage type.</typeparam>
+        /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
+        public IHostBuilder ConfigureCrissCrossForPageNavigation<TWindow, TPage>()
+            where TWindow : Window, INavigationWindow
+            where TPage : Page => hostBuilder
+            .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+            .ConfigureServices(
+            services =>
+                services.AddHostedService<ApplicationHostService<TWindow, TPage>>() // App Host
+                .AddSingleton<IPageService, PageService>() // Page resolver service
+                .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
+                .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
+                .AddSingleton<INavigationService, NavigationService>() // Service containing navigation, same as INavigationWindow... but without window
+                .AddSingleton<INavigationWindow, TWindow>());
 
-    /// <summary>
-    /// Configures the criss cross for view model navigation.
-    /// </summary>
-    /// <typeparam name="TWindow">The type of the window.</typeparam>
-    /// <typeparam name="TViewModel">The type of the ViewModel.</typeparam>
-    /// <param name="hostBuilder">The host builder.</param>
-    /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-    public static IHostBuilder ConfigureCrissCrossForViewModelNavigation<TWindow, TViewModel>(this IHostBuilder hostBuilder)
-        where TWindow : NavigationWindow
-        where TViewModel : class, IRxObject, new() => hostBuilder
-        .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-        .ConfigureServices(
-        services =>
-            services.AddHostedService<ApplicationVMHostService<TWindow, TViewModel>>() // App Host
-            .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
-            .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
-            .AddSingleton<NavigationWindow, TWindow>());
+        /// <summary>Configures the criss cross for view model navigation.</summary>
+        /// <typeparam name="TWindow">The type of the window.</typeparam>
+        /// <typeparam name="TViewModel">The TViewModel type.</typeparam>
+        /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
+        public IHostBuilder ConfigureCrissCrossForViewModelNavigation<TWindow, TViewModel>()
+            where TWindow : NavigationWindow
+            where TViewModel : class, IRxObject, new() => hostBuilder
+            .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+            .ConfigureServices(
+            services =>
+                services.AddHostedService<ApplicationVMHostService<TWindow, TViewModel>>() // App Host
+                .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
+                .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
+                .AddSingleton<NavigationWindow, TWindow>());
+    }
 }

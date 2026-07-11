@@ -1,35 +1,27 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>
-/// Specifies the available plot types for visualizing data in the plotting library.
-/// </summary>
+/// <summary>Specifies the available plot types for visualizing data in the plotting library.</summary>
 /// <remarks>Use this enumeration to select the style of plot to render, such as signal, scatter, data logger,
 /// streamer, or signal XY. The choice of plot type determines how data points are displayed and which features are
 /// available for interaction and analysis.</remarks>
 public enum PlotType
 {
-    /// <summary>
-    /// The signal.
-    /// </summary>
+    /// <summary>The signal.</summary>
     Signal,
-    /// <summary>
-    /// The scatter.
-    /// </summary>
+
+    /// <summary>The scatter.</summary>
     Scatter,
-    /// <summary>
-    /// The data logger.
-    /// </summary>
+
+    /// <summary>The data logger.</summary>
     DataLogger,
-    /// <summary>
-    /// The streamer.
-    /// </summary>
+
+    /// <summary>The streamer.</summary>
     Streamer,
-    /// <summary>
-    /// The signal xy.
-    /// </summary>
+
+    /// <summary>The signal xy.</summary>
     SignalXY
 }

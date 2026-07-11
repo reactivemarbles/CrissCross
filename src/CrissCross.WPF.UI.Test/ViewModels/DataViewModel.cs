@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media;
@@ -8,31 +8,24 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Test.ViewModels;
 
-/// <summary>
-/// DataViewModel.
-/// </summary>
+/// <summary>DataViewModel member.</summary>
 /// <seealso cref="RxObject" />
 /// <seealso cref="INavigationAware" />
 public class DataViewModel : RxObject, INavigationAware
 {
     private bool _isInitialized;
-    private IEnumerable<DataColor>? _colors;
 
-    /// <summary>
-    /// Gets or sets the colors.
-    /// </summary>
+    /// <summary>Gets or sets the colors.</summary>
     /// <value>
     /// The colors.
     /// </value>
     public IEnumerable<DataColor>? Colors
     {
-        get => _colors;
-        set => this.RaiseAndSetIfChanged(ref _colors, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Method triggered when the class is navigated.
-    /// </summary>
+    /// <summary>Method triggered when the class is navigated.</summary>
     public void OnNavigatedTo()
     {
         if (!_isInitialized)
@@ -41,9 +34,7 @@ public class DataViewModel : RxObject, INavigationAware
         }
     }
 
-    /// <summary>
-    /// Method triggered when the navigation leaves the current class.
-    /// </summary>
+    /// <summary>Method triggered when the navigation leaves the current class.</summary>
     public void OnNavigatedFrom()
     {
     }

@@ -1,40 +1,30 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Test.ViewModels;
 
-/// <summary>
-/// DashboardViewModel.
-/// </summary>
+/// <summary>DashboardViewModel member.</summary>
 /// <seealso cref="RxObject" />
 public class DashboardViewModel : RxObject, IControlAppBar
 {
-    private int _counter;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DashboardViewModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="DashboardViewModel"/> class.</summary>
     public DashboardViewModel() => CounterIncrementCommand = ReactiveCommand.Create(OnCounterIncrement);
 
-    /// <summary>
-    /// Gets or sets the counter.
-    /// </summary>
+    /// <summary>Gets or sets the counter.</summary>
     /// <value>
     /// The counter.
     /// </value>
     public int Counter
     {
-        get => _counter;
-        set => this.RaiseAndSetIfChanged(ref _counter, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Gets the counter increment.
-    /// </summary>
+    /// <summary>Gets the counter increment.</summary>
     /// <value>
     /// The counter increment.
     /// </value>

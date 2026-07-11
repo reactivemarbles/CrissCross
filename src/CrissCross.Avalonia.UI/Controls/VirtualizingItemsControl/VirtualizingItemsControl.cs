@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -16,15 +16,12 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// and the configuration of related properties.</remarks>
 public class VirtualizingItemsControl : global::Avalonia.Controls.ItemsControl
 {
-    /// <summary>
-    /// Property for <see cref="CacheLengthUnit"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="CacheLengthUnit"/>.</summary>
     public static readonly StyledProperty<bool> CacheLengthUnitProperty = AvaloniaProperty.Register<VirtualizingItemsControl, bool>(
-        nameof(CacheLengthUnit), false);
+        nameof(CacheLengthUnit),
+        false);
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the cache length unit is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the cache length unit is enabled.</summary>
     public bool CacheLengthUnit
     {
         get => GetValue(CacheLengthUnitProperty);

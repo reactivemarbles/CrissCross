@@ -1,18 +1,19 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
 
 namespace CrissCross.WPF.Plot.Tests;
 
-/// <summary>
-/// Static coverage tests for reactive WPF plot example and public control binding surface.
-/// </summary>
+/// <summary>Static coverage tests for reactive WPF plot example and public control binding surface.</summary>
 public sealed class ReactivePlotExampleCoverageTests
 {
+    /// <summary>Stores the source root.</summary>
     private static readonly string SourceRoot = LocateSourceRoot();
 
+    /// <summary>Verifies the WPF plot example demonstrates observable-first sources for every chart type.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WpfPlotExample_DemonstratesObservableFirstSourcesForEveryChartType()
     {
@@ -37,16 +38,20 @@ public sealed class ReactivePlotExampleCoverageTests
         await Assert.That(documentation).Contains("ReactivePlotBindingOptions");
     }
 
+    /// <summary>Verifies LiveChart disposes the reactive plot connection on activation teardown and unload.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task LiveChart_DisposesReactivePlotConnectionOnActivationTeardownAndUnload()
     {
         var control = ReadSource("CrissCross.WPF.Plot", "Views", "LiveChart.xaml.cs");
 
         await Assert.That(control).Contains("DisposeReactivePlotConnection");
-        await Assert.That(control).Contains("Disposable.Create(DisposeReactivePlotConnection).DisposeWith(d)");
+        await Assert.That(control).Contains("new ActionDisposable(DisposeReactivePlotConnection).DisposeWith(d)");
         await Assert.That(control).Contains("UnloadedObservable");
     }
 
+    /// <summary>Verifies WPF adapters document retention and clear state reset contracts.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WpfAdapters_DocumentRetentionAndClearStateResetContracts()
     {
@@ -61,6 +66,9 @@ public sealed class ReactivePlotExampleCoverageTests
         await Assert.That(signal).Contains("public void ClearData()");
     }
 
+    /// <summary>Reads a repository file.</summary>
+    /// <param name="relativeSegments">The relative path segments.</param>
+    /// <returns>The file content.</returns>
     private static string ReadRepositoryFile(params string[] relativeSegments)
     {
         var path = Path.GetFullPath(Path.Combine(new[] { SourceRoot, ".." }.Concat(relativeSegments).ToArray()));
@@ -72,6 +80,9 @@ public sealed class ReactivePlotExampleCoverageTests
         return File.ReadAllText(path);
     }
 
+    /// <summary>Reads a source file.</summary>
+    /// <param name="relativeSegments">The relative path segments.</param>
+    /// <returns>The file content.</returns>
     private static string ReadSource(params string[] relativeSegments)
     {
         var path = Path.Combine(new[] { SourceRoot }.Concat(relativeSegments).ToArray());
@@ -83,6 +94,8 @@ public sealed class ReactivePlotExampleCoverageTests
         return File.ReadAllText(path);
     }
 
+    /// <summary>Locates the source root.</summary>
+    /// <returns>The source root path.</returns>
     private static string LocateSourceRoot()
     {
         var current = new DirectoryInfo(Directory.GetCurrentDirectory());

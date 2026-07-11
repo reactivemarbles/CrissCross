@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,77 +12,96 @@ using CP.WPF.Controls;
 using ReactiveUI;
 using ScottPlot;
 using ScottPlot.Plottables;
+using PlotColor = ScottPlot.Color;
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>
-/// Interaction logic for WPF Chart AICS.
-/// </summary>
+/// <summary>Interaction logic for WPF Chart AICS.</summary>
 [SupportedOSPlatform("windows")]
-public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewModel>
+public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 {
+    /// <summary>Stores the dd value.</summary>
     private readonly CompositeDisposable _dd = [];
+
+    /// <summary>Stores the reactive plot connection value.</summary>
     private IReactivePlotConnection? _reactivePlotConnection;
+
+    /// <summary>Stores the crosshair disposable value.</summary>
     private IDisposable? _crosshairDisposable;
+
+    /// <summary>Stores the need lock value.</summary>
     private bool _needLock;
+
+    /// <summary>Stores the need auto scale value.</summary>
     private bool _needAutoScale = true;
+
+    /// <summary>Stores the need cross hair off value.</summary>
     private bool _needCrossHairOff = true;
+
+    /// <summary>Stores the auto scaled value.</summary>
     private bool _autoScaled;
+
+    /// <summary>Stores the locked value.</summary>
     private bool _locked = true;
+
+    /// <summary>Stores the crosshair off value.</summary>
     private bool _crosshairOff;
+
+    /// <summary>Stores the plottable being dragged value.</summary>
     private AxisLine? _plottableBeingDragged;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LiveChart"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="LiveChart"/> class.</summary>
     public LiveChart()
     {
         InitializeComponent();
         First = false;
-        ViewModel = new(MainChartGrid) { UseFixedNumberOfPoints = UseFixedNumberOfPoints, NumberPointsPlotted = NumberPointsPlotted };
+        var useFixedNumberOfPoints = UseFixedNumberOfPoints;
+        var numberPointsPlotted = NumberPointsPlotted;
+        ViewModel = new(MainChartGrid) { UseFixedNumberOfPoints = useFixedNumberOfPoints, NumberPointsPlotted = numberPointsPlotted };
         DataContext = ViewModel;
-        ViewModel.ThrownExceptions.Subscribe(ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}")).DisposeWith(_dd);
+        _ = ViewModel.ThrownExceptions.Subscribe(ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}")).DisposeWith(_dd);
         ExecuteLockUnlock();
         ExecuteManAutoScale();
         InitializeButtons();
-        this.WhenActivated(ElementBinding1);
+        _ = this.WhenActivated(ElementBinding1);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets the update.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets the update.</summary>
     /// <value>
     /// The update.
     /// </value>
     public bool First { get; set; } = true;
 
+    /// <summary>Handles the ElementBinding1 operation.</summary>
+    /// <param name="d">The d value.</param>
     private void ElementBinding1(CompositeDisposable d)
     {
-        Disposable.Create(DisposeReactivePlotConnection).DisposeWith(d);
-        UnloadedObservable()
+        _ = new ActionDisposable(DisposeReactivePlotConnection).DisposeWith(d);
+        _ = UnloadedObservable()
             .Subscribe(_ => DisposeReactivePlotConnection())
             .DisposeWith(d);
 
-        this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn).DisposeWith(d);
-        this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
-        this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn).DisposeWith(d);
-        this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
-        this.BindCommand(ViewModel, vm => vm.AddCrosshairBtn, v => v.AddCrosshairBtn).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.AddCrosshairBtn, v => v.AddCrosshairBtn).DisposeWith(d);
 
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.LiveHistoryBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.EnableMarkerBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.AddCrosshairBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.RemoveLabelBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.EnableMarkerBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.AddCrosshairBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.LiveHistoryBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.EnableMarkerBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.AddCrosshairBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.RemoveLabelBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.EnableMarkerBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.IsMenuExpanded, v => v.AddCrosshairBtn.Visibility, x => x ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
 
-        this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings).DisposeWith(d);
+        _ = this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings).DisposeWith(d);
 
-        this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility).DisposeWith(d);
 
         // Populate form when selection changes (one-way to avoid conflicts)
-        this.WhenAnyValue(x => x.ViewModel!.SelectedSetting)
-            .WhereNotNull()
+        _ = this.WhenAnyValue(x => x.ViewModel!.SelectedSetting)
+            .Where(static settings => settings is not null)
+            .Select(static settings => settings!)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(settings =>
             {
@@ -97,48 +113,42 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
                 RightProperties.ViewModel!.SelectedSetting = settings;
             }).DisposeWith(d);
 
-        this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Visibility, x => x == " " ? Visibility.Collapsed : Visibility.Visible).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.RightLegend.Visibility, x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
-        this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.TopLegend.Visibility, x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Visibility, x => x == " " ? Visibility.Collapsed : Visibility.Visible).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.RightLegend.Visibility, x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
+        _ = this.OneWayBind(ViewModel, vm => vm.LegendPosition, v => v.TopLegend.Visibility, x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed).DisposeWith(d);
 
         // Bind other scalar settings directly
-        this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.UseFixedNumberOfPoints).DisposeWith(d);
-        this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted).DisposeWith(d);
+        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.UseFixedNumberOfPoints).DisposeWith(d);
+        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted).DisposeWith(d);
     }
 
+    /// <summary>Handles the IndexText_MouseUp operation.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void IndexText_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        // make sure text block was clicked
-        if (sender is TextBlock textBlock)
+        if (sender is not TextBlock { DataContext: IPlottableUI item })
         {
-            // read clicked data context and current data context
-            var dataContext = textBlock.DataContext;
-
-            // is data context is other
-            if (dataContext != null)
-            {
-                // if dataContext is IPlottable
-                if (dataContext is IPlottableUI item)
-                {
-                    var setting = item.ChartSettings;
-                    if (ViewModel!.SelectedSetting == setting)
-                    {
-                        ViewModel!.SelectedSetting = null;
-                        RightProperties.Visibility = Visibility.Collapsed;
-                        ViewModel!.RightPropertyVisibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        ViewModel!.SelectedSetting = setting;
-                        RightProperties.Visibility = Visibility.Visible;
-                        ViewModel!.RightPropertyVisibility = Visibility.Visible;
-                    }
-                }
-            }
+            return;
         }
+
+        var setting = item.ChartSettings;
+        if (ViewModel!.SelectedSetting == setting)
+        {
+            ViewModel!.SelectedSetting = null;
+            RightProperties.Visibility = Visibility.Collapsed;
+            ViewModel!.RightPropertyVisibility = Visibility.Collapsed;
+            return;
+        }
+
+        ViewModel!.SelectedSetting = setting;
+        RightProperties.Visibility = Visibility.Visible;
+        ViewModel!.RightPropertyVisibility = Visibility.Visible;
     }
 
+    /// <summary>Handles the ChangeReactivePlotSources operation.</summary>
+    /// <param name="sources">The sources value.</param>
     private void ChangeReactivePlotSources(IEnumerable<IReactivePlotSource>? sources)
     {
         DisposeReactivePlotConnection();
@@ -154,7 +164,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel.ClearContent();
-        var sourceArray = sources as IReactivePlotSource[] ?? sources.ToArray();
+        var sourceArray = (sources as IReactivePlotSource[]) ?? sources.ToArray();
         ConfigureReactivePlotXAxis(sourceArray);
         _reactivePlotConnection = new ReactivePlotBinder().Bind(
             ViewModel,
@@ -162,21 +172,26 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             new ReactivePlotBindingOptions
             {
                 UiScheduler = RxSchedulers.MainThreadScheduler,
-                MaxVisiblePoints = UseFixedNumberOfPoints ? NumberPointsPlotted : null,
+                MaxVisiblePoints = (UseFixedNumberOfPoints ? NumberPointsPlotted : null),
                 MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
             });
         ViewModel.InitializeAxisLines();
     }
 
+    /// <summary>Handles the DisposeReactivePlotConnection operation.</summary>
     private void DisposeReactivePlotConnection()
     {
         _reactivePlotConnection?.Dispose();
         _reactivePlotConnection = null;
     }
 
-    private IObservable<System.Reactive.EventPattern<RoutedEventArgs>> UnloadedObservable() =>
+    /// <summary>Handles the UnloadedObservable operation.</summary>
+    /// <returns>The result.</returns>
+    private IObservable<EventPattern<RoutedEventArgs>> UnloadedObservable() =>
         Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(handler => Unloaded += handler, handler => Unloaded -= handler);
 
+    /// <summary>Handles the ChangeScatterObserver operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeScatterObserver(ScatterEnumObsPoints input)
     {
         _needLock = true;
@@ -190,6 +205,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeScatterObserver operation.</summary>
     private void ChangeScatterObserver()
     {
         _needLock = true;
@@ -203,6 +219,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalObserver operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeSignalObserver(SignalEnumObsTicks input)
     {
         _needLock = true;
@@ -218,6 +236,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
     }
 
+    /// <summary>Handles the ChangeSignalObserver operation.</summary>
     private void ChangeSignalObserver()
     {
         _needLock = true;
@@ -233,6 +252,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
     }
 
+    /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeDataLoggerObserver(DataLoggerEnumObsPoints input)
     {
         _needLock = true;
@@ -246,6 +267,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
     private void ChangeDataLoggerObserver()
     {
         _needLock = true;
@@ -259,6 +281,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalData operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeSignalData(SignalXYTimestamp input)
     {
         _needLock = true;
@@ -272,6 +296,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalData operation.</summary>
     private void ChangeSignalData()
     {
         _needLock = true;
@@ -285,6 +310,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeSignalDataWithPoints(SignalXYPoints input)
     {
         _needLock = true;
@@ -299,6 +326,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
     private void ChangeSignalDataWithPoints()
     {
         _needLock = true;
@@ -313,6 +341,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeSignalsDataWithPoints(SignalXYEnumPoints input)
     {
         _needLock = true;
@@ -328,6 +358,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
     private void ChangeSignalsDataWithPoints()
     {
         _needLock = true;
@@ -343,6 +374,8 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeSignalDataObserverWithPoints(StreamerEnumObsPoints input)
     {
         _needLock = true;
@@ -351,11 +384,12 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ExecuteManAutoScale();
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
-        ViewModel?.InitializeLinesForSignalObservablesPoints(input.Data, fs: (int)Frequency, nSamples: (uint)NSamples);
+        ViewModel?.InitializeLinesForSignalObservablesPoints(input.Data, fs: Frequency, sampleCount: Convert.ToUInt32(NSamples));
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
     private void ChangeSignalDataObserverWithPoints()
     {
         _needLock = true;
@@ -364,11 +398,13 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ExecuteManAutoScale();
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
-        ViewModel?.InitializeLinesForSignalObservablesPoints(SignalObservablesWithPoints, fs: (int)Frequency, nSamples: (uint)NSamples);
+        ViewModel?.InitializeLinesForSignalObservablesPoints(SignalObservablesWithPoints, fs: Frequency, sampleCount: Convert.ToUInt32(NSamples));
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
     private void ChangeScatterDataWithPoints(ScatterPoints input)
     {
         _needLock = true;
@@ -383,6 +419,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
     private void ChangeScatterDataWithPoints()
     {
         _needLock = true;
@@ -397,6 +434,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         _crosshairDisposable?.Dispose();
     }
 
+    /// <summary>Handles the InitializeButtons operation.</summary>
     private void InitializeButtons()
     {
         // BY DEFAULT: LOCKED AND AUTOSCALED
@@ -412,30 +450,20 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
 
         // AUTO-SCALE BUTON
         ViewModel?.ExpandMenuBtn?
-            .ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(_ =>
-            {
-                if (ViewModel.LeftPanelVisibility == Visibility.Hidden)
-                {
-                    ViewModel.LeftPanelVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    ViewModel.LeftPanelVisibility = Visibility.Hidden;
-                }
-            }).DisposeWith(_dd);
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(_ => ToggleLeftPanelVisibility())
+            .DisposeWith(_dd);
     }
 
+    /// <summary>Handles the ExecuteMarkerOnOff operation.</summary>
     private void ExecuteMarkerOnOff()
     {
-        if (_needCrossHairOff)
+        if (_needCrossHairOff && !_crosshairOff)
         {
-            if (!_crosshairOff)
-            {
-                ViewModel!.CrossHairEnabled = false;
-                _crosshairOff = true;
-            }
+            ViewModel!.CrossHairEnabled = false;
+            _crosshairOff = true;
         }
-        else if (_crosshairOff)
+        else if (!_needCrossHairOff && _crosshairOff)
         {
             ViewModel!.CrossHairEnabled = true;
             _crosshairOff = false;
@@ -447,16 +475,13 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 
+    /// <summary>Handles the ExecuteLockUnlock operation.</summary>
     private void ExecuteLockUnlock()
     {
         if (_needLock)
         {
             LockedPlotSetup();
-            if (!_autoScaled)
-            {
-                _needAutoScale = true;
-                ExecuteManAutoScale();
-            }
+            EnsureAutoScaleAfterLock();
         }
         else
         {
@@ -469,6 +494,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 
+    /// <summary>Handles the ExecuteManAutoScale operation.</summary>
     private void ExecuteManAutoScale()
     {
         if (_needAutoScale)
@@ -490,65 +516,64 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 
-    /// <summary>
-    /// Lockeds the plot setup.
-    /// </summary>
+    /// <summary>Lockeds the plot setup.</summary>
     private void LockedPlotSetup()
-    {
-        if (!_locked)
-        {
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
-            ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
-            _locked = true;
-        }
-    }
-
-    /// <summary>
-    /// Unockeds the plot setup.
-    /// </summary>
-    private void UnockedPlotSetup()
     {
         if (_locked)
         {
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
-            ViewModel!.WpfPlot1vm?.UserInputProcessor.Enable();
-            _locked = false;
+            return;
         }
+
+        ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
+        ViewModel!.WpfPlot1vm?.UserInputProcessor.Disable();
+        _locked = true;
     }
 
-    /// <summary>
-    /// Manuals the scaled setup.
-    /// </summary>
-    private void ManualScaledSetup()
+    /// <summary>Unockeds the plot setup.</summary>
+    private void UnockedPlotSetup()
     {
-        if (_autoScaled)
+        if (!_locked)
         {
-            ////ViewModel!.ManualScaleY();
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
-            foreach (var yAxe in ViewModel.YAxisList)
-            {
-                ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-50, 50, yAxe);
-            }
-
-            ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleX(xaxis: ViewModel!.XAxis1);
-
-            _autoScaled = false;
+            return;
         }
+
+        ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = false;
+        ViewModel!.WpfPlot1vm?.UserInputProcessor.Enable();
+        _locked = false;
     }
 
-    /// <summary>
-    /// Automatics the scaled setup.
-    /// </summary>
-    private void AutoScaledSetup()
+    /// <summary>Manuals the scaled setup.</summary>
+    private void ManualScaledSetup()
     {
         if (!_autoScaled)
         {
-            ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
-            ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleAll();
-            _autoScaled = true;
+            return;
         }
+
+        ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
+        foreach (var verticalAxis in ViewModel.YAxisList)
+        {
+            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-50, 50, verticalAxis);
+        }
+
+        ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleX(xaxis: ViewModel!.XAxis1);
+        _autoScaled = false;
     }
 
+    /// <summary>Automatics the scaled setup.</summary>
+    private void AutoScaledSetup()
+    {
+        if (_autoScaled)
+        {
+            return;
+        }
+
+        ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
+        ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleAll();
+        _autoScaled = true;
+    }
+
+    /// <summary>Handles the YAxisSetup operation.</summary>
     private void YAxisSetup()
     {
         var (yNames, hexColors) = YAxisName;
@@ -560,9 +585,11 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel.YAxesSetup(YAxisName);
     }
 
+    /// <summary>Handles the ConfigureReactivePlotXAxis operation.</summary>
+    /// <param name="sources">The sources value.</param>
     private void ConfigureReactivePlotXAxis(IEnumerable<IReactivePlotSource> sources)
     {
-        var xAxisKinds = sources
+        var axisKinds = sources
             .OfType<ReactivePlotSource>()
             .Select(source => source.XAxisKind)
             .Where(kind => kind is not null)
@@ -570,7 +597,7 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
             .Distinct()
             .ToArray();
 
-        if (xAxisKinds.Length == 1 && xAxisKinds[0] is PlotXAxisKind.OADate or PlotXAxisKind.Ticks)
+        if (axisKinds.Length == 1 && axisKinds[0] is PlotXAxisKind.OADate or PlotXAxisKind.Ticks)
         {
             ViewModel!.CreateAxisWithTimeStamp();
             return;
@@ -579,79 +606,79 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel!.CreateAxisWithPoints();
     }
 
+    /// <summary>Handles the MainChartGrid_MouseDown operation.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void MainChartGrid_MouseDown(object sender, MouseEventArgs e)
     {
         if (e.LeftButton == MouseButtonState.Pressed && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
         {
-            // MOUSE EVENT
-            var position = e.GetPosition(MainChartGrid);
-
-            // Obtener el DPI Scaling del Grid actual
-            var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
-            var dpiScaleX = dpiInfo.DpiScaleX;
-            var dpiScaleY = dpiInfo.DpiScaleY;
-
-            // Ajustar las coordenadas para que sean precisas
-            var adjustedX = position.X * dpiScaleX;
-            var adjustedY = position.Y * dpiScaleY;
-
-            //// determine where the mouse is and send the coordinates
-            Pixel mousePixel = new(adjustedX, adjustedY);
-            var mouseLocation = ViewModel!.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
-            var xAxe = mouseLocation.X;
-            var yAxe = mouseLocation.Y;
-
-            // Create a crosshair to highlight the point under the cursor
-            string? text;
-            if (ViewModel.IsXAxisDateTime)
-            {
-                text = "X : " + DateTime.FromOADate(xAxe).ToLongTimeString() + "\nY : " + yAxe.ToString("F2");
-            }
-            else
-            {
-                text = "X : " + xAxe.ToString("F2") + "\nY : " + yAxe.ToString("F2");
-            }
-
-            var marker = ViewModel.WpfPlot1vm.Plot.Add.Marker(mouseLocation);
-            var markerText = ViewModel.WpfPlot1vm.Plot.Add.Text(text, mouseLocation);
-            markerText.OffsetX = 7;
-            markerText.OffsetY = -7;
-            markerText!.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName("White"));
-            marker.Axes.XAxis = ViewModel!.WpfPlot1vm!.Plot.Axes.Bottom;
-            marker.Axes.YAxis = ViewModel.YAxisList[0];
-            markerText.Axes.XAxis = ViewModel!.WpfPlot1vm!.Plot.Axes.Bottom;
-            markerText.Axes.YAxis = ViewModel.YAxisList[0];
-            ViewModel.LabelCollection.Add((marker, markerText));
+            AddCoordinateMarker(e);
+            return;
         }
-        else
-        {
-            // MOUSE EVENT
-            var position = e.GetPosition(MainChartGrid);
 
-            // Obtener el DPI Scaling del Grid actual
-            var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
-            var dpiScaleX = dpiInfo.DpiScaleX;
-            var dpiScaleY = dpiInfo.DpiScaleY;
-
-            // Ajustar las coordenadas para que sean precisas
-            var adjustedX = position.X * dpiScaleX;
-            var adjustedY = position.Y * dpiScaleY;
-
-            //// determine where the mouse is and send the coordinates
-            ////Pixel mousePixel = new(adjustedX, adjustedY);
-            ////var mouseLocation = ViewModel.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
-            ////var xAxe = mouseLocation.X;
-            ////var yAxe = mouseLocation.Y;
-
-            var lineUnderMouse = ViewModel?.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
-            if (lineUnderMouse is not null)
-            {
-                _plottableBeingDragged = lineUnderMouse;
-                ViewModel!.WpfPlot1vm!.UserInputProcessor.Disable(); // disable panning while dragging
-            }
-        }
+        BeginAxisLineDrag(e);
     }
 
+    /// <summary>Toggles the left panel visibility.</summary>
+    private void ToggleLeftPanelVisibility() =>
+        ViewModel!.LeftPanelVisibility = ViewModel.LeftPanelVisibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
+
+    /// <summary>Enables autoscale after locking if needed.</summary>
+    private void EnsureAutoScaleAfterLock()
+    {
+        if (_autoScaled)
+        {
+            return;
+        }
+
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+    }
+
+    /// <summary>Adds a coordinate marker at the current mouse position.</summary>
+    /// <param name="e">The mouse event arguments.</param>
+    private void AddCoordinateMarker(MouseEventArgs e)
+    {
+        var (adjustedX, adjustedY) = GetAdjustedMousePosition(e);
+        Pixel mousePixel = new(adjustedX, adjustedY);
+        var mouseLocation = ViewModel!.WpfPlot1vm!.Plot.GetCoordinates(mousePixel, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
+        var horizontalCoordinate = mouseLocation.X;
+        var verticalCoordinate = mouseLocation.Y;
+        var text = ViewModel.IsXAxisDateTime
+            ? "X : " + DateTime.FromOADate(horizontalCoordinate).ToLongTimeString() + "\nY : " + verticalCoordinate.ToString("F2")
+            : "X : " + horizontalCoordinate.ToString("F2") + "\nY : " + verticalCoordinate.ToString("F2");
+
+        var marker = ViewModel.WpfPlot1vm.Plot.Add.Marker(mouseLocation);
+        var markerText = ViewModel.WpfPlot1vm.Plot.Add.Text(text, mouseLocation);
+        markerText.OffsetX = 7;
+        markerText.OffsetY = -7;
+        markerText!.LabelFontColor = PlotColor.FromColor(System.Drawing.Color.FromName("White"));
+        marker.Axes.XAxis = ViewModel!.WpfPlot1vm!.Plot.Axes.Bottom;
+        marker.Axes.YAxis = ViewModel.YAxisList[0];
+        markerText.Axes.XAxis = ViewModel!.WpfPlot1vm!.Plot.Axes.Bottom;
+        markerText.Axes.YAxis = ViewModel.YAxisList[0];
+        ViewModel.LabelCollection.Add((marker, markerText));
+    }
+
+    /// <summary>Begins dragging an axis line when one is under the mouse pointer.</summary>
+    /// <param name="e">The mouse event arguments.</param>
+    private void BeginAxisLineDrag(MouseEventArgs e)
+    {
+        var (adjustedX, adjustedY) = GetAdjustedMousePosition(e);
+        var lineUnderMouse = ViewModel?.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
+        if (lineUnderMouse is null)
+        {
+            return;
+        }
+
+        _plottableBeingDragged = lineUnderMouse;
+        ViewModel!.WpfPlot1vm!.UserInputProcessor.Disable();
+    }
+
+    /// <summary>Handles the MainChartGrid_MouseUp operation.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void MainChartGrid_MouseUp(object sender, MouseEventArgs e)
     {
         ViewModel!.WpfPlot1vm!.UserInputProcessor.Enable(); // enable panning again
@@ -660,43 +687,66 @@ public partial class LiveChart : ReactiveUI.ReactiveUserControl<LiveChartViewMod
         ViewModel!.WpfPlot1vm!.Refresh();
     }
 
+    /// <summary>Handles the MainChartGrid_MouseMove operation.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void MainChartGrid_MouseMove(object sender, MouseEventArgs e)
     {
-        var position = e.GetPosition(MainChartGrid);
-        var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
-        var adjustedX = position.X * dpiInfo.DpiScaleX;
-        var adjustedY = position.Y * dpiInfo.DpiScaleY;
+        var (adjustedX, adjustedY) = GetAdjustedMousePosition(e);
         var rect = ViewModel!.WpfPlot1vm!.Plot.GetCoordinateRect((float)adjustedX, (float)adjustedY, radius: 5, ViewModel!.XAxis1, ViewModel.YAxisList[0]);
         if (_plottableBeingDragged is null)
         {
-            var lineUnderMouse = ViewModel.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
-            if (lineUnderMouse is null)
-            {
-                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
-            }
-            else if (lineUnderMouse.IsDraggable && lineUnderMouse is VerticalLine)
-            {
-                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.SizeWE;
-            }
-            else if (lineUnderMouse.IsDraggable && lineUnderMouse is HorizontalLine)
-            {
-                System.Windows.Input.Mouse.OverrideCursor = System.Windows.Input.Cursors.SizeNS;
-            }
+            UpdateMouseCursor(adjustedX, adjustedY);
+            return;
         }
-        else
-        {
-            if (_plottableBeingDragged is HorizontalLine hl)
-            {
-                hl.Y = rect.VerticalCenter;
-                hl.Text = $"{hl.Y:0.00}";
-            }
-            else if (_plottableBeingDragged is VerticalLine vl)
-            {
-                vl.X = rect.HorizontalCenter;
-                vl.Text = ViewModel.IsXAxisDateTime ? DateTime.FromOADate(Convert.ToDouble(vl.X)).ToLongTimeString() : $"{vl.X:0.00}";
-            }
 
-            ViewModel!.WpfPlot1vm!.Refresh();
+        if (_plottableBeingDragged is HorizontalLine horizontalLine)
+        {
+            horizontalLine.Y = rect.VerticalCenter;
+            horizontalLine.Text = $"{horizontalLine.Y:0.00}";
         }
+        else if (_plottableBeingDragged is VerticalLine verticalLine)
+        {
+            verticalLine.X = rect.HorizontalCenter;
+            verticalLine.Text = ViewModel.IsXAxisDateTime ? DateTime.FromOADate(Convert.ToDouble(verticalLine.X)).ToLongTimeString() : $"{verticalLine.X:0.00}";
+        }
+
+        ViewModel!.WpfPlot1vm!.Refresh();
+    }
+
+    /// <summary>Gets the DPI-adjusted mouse position.</summary>
+    /// <param name="e">The mouse event arguments.</param>
+    /// <returns>The adjusted position.</returns>
+    private (double X, double Y) GetAdjustedMousePosition(MouseEventArgs e)
+    {
+        var position = e.GetPosition(MainChartGrid);
+        var dpiInfo = VisualTreeHelper.GetDpi(MainChartGrid);
+        return (position.X * dpiInfo.DpiScaleX, position.Y * dpiInfo.DpiScaleY);
+    }
+
+    /// <summary>Updates the mouse cursor for the line under the pointer.</summary>
+    /// <param name="adjustedX">The adjusted X coordinate.</param>
+    /// <param name="adjustedY">The adjusted Y coordinate.</param>
+    private void UpdateMouseCursor(double adjustedX, double adjustedY)
+    {
+        var lineUnderMouse = ViewModel!.GetLineUnderMouse((float)adjustedX, (float)adjustedY);
+        if (lineUnderMouse is null)
+        {
+            Mouse.OverrideCursor = Cursors.Arrow;
+            return;
+        }
+
+        if (lineUnderMouse.IsDraggable && lineUnderMouse is VerticalLine)
+        {
+            Mouse.OverrideCursor = Cursors.SizeWE;
+            return;
+        }
+
+        if (!lineUnderMouse.IsDraggable || lineUnderMouse is not HorizontalLine)
+        {
+            return;
+        }
+
+        Mouse.OverrideCursor = Cursors.SizeNS;
     }
 }

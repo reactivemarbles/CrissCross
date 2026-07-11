@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Point = System.Windows.Point;
@@ -7,9 +7,7 @@ using Size = System.Windows.Size;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Control that draws a symmetrical arc with rounded edges.
-/// </summary>
+/// <summary>Control that draws a symmetrical arc with rounded edges.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:Arc
@@ -43,54 +41,42 @@ public class Arc : System.Windows.Shapes.Shape
         typeof(Arc),
         new PropertyMetadata(SweepDirection.Clockwise, PropertyChangedCallback));
 
+    /// <summary>Stores the _rootLayout value.</summary>
     private System.Windows.Controls.Viewbox? _rootLayout;
 
-    /// <summary>
-    /// Initializes static members of the <see cref="Arc"/> class.
-    /// Modify the metadata of the StrokeStartLineCap dependency property.
-    /// </summary>
+    /// <summary>Initializes static members of the <see cref="Arc"/> class. Modify the metadata of the StrokeStartLineCap dependency property.</summary>
     static Arc() => StrokeStartLineCapProperty.OverrideMetadata(
             typeof(Arc),
             new FrameworkPropertyMetadata(PenLineCap.Round, PropertyChangedCallback));
 
-    /// <summary>
-    /// Gets or sets the initial angle from which the arc will be drawn.
-    /// </summary>
+    /// <summary>Gets or sets the initial angle from which the arc will be drawn.</summary>
     public double StartAngle
     {
         get => (double)GetValue(StartAngleProperty);
         set => SetValue(StartAngleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the final angle from which the arc will be drawn.
-    /// </summary>
+    /// <summary>Gets or sets the final angle from which the arc will be drawn.</summary>
     public double EndAngle
     {
         get => (double)GetValue(EndAngleProperty);
         set => SetValue(EndAngleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the direction to where the arc will be drawn.
-    /// </summary>
+    /// <summary>Gets or sets the direction to where the arc will be drawn.</summary>
     public SweepDirection SweepDirection
     {
         get => (SweepDirection)GetValue(SweepDirectionProperty);
         set => SetValue(SweepDirectionProperty, value);
     }
 
-    /// <summary>
-    /// Gets a value indicating whether one of the two larger arc sweeps is chosen; otherwise, if is <see langword="false"/>, one of the smaller arc sweeps is chosen.
-    /// </summary>
+    /// <summary>Gets a value indicating whether one of the two larger arc sweeps is chosen; otherwise, if is <see langword="false"/>, one of the smaller arc sweeps is chosen.</summary>
     public bool IsLargeArc { get; internal set; }
 
     /// <inheritdoc />
     protected override Geometry DefiningGeometry => DefinedGeometry();
 
-    /// <summary>
-    /// Event triggered when one of the key parameters is changed. Forces the geometry to be redrawn.
-    /// </summary>
+    /// <summary>Event triggered when one of the key parameters is changed. Forces the geometry to be redrawn.</summary>
     /// <param name="d">The d.</param>
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     protected static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -151,12 +137,12 @@ public class Arc : System.Windows.Shapes.Shape
             }
 
             var radAngle = angle * (Math.PI / 180);
-            var xRadius = (RenderSize.Width - StrokeThickness) / 2;
-            var yRadius = (RenderSize.Height - StrokeThickness) / 2;
+            var horizontalRadius = (RenderSize.Width - StrokeThickness) / 2;
+            var verticalRadius = (RenderSize.Height - StrokeThickness) / 2;
 
             return new Point(
-                xRadius + (xRadius * Math.Cos(radAngle)),
-                yRadius - (yRadius * Math.Sin(radAngle)));
+                horizontalRadius + (horizontalRadius * Math.Cos(radAngle)),
+                verticalRadius - (verticalRadius * Math.Sin(radAngle)));
         }
         else
         {
@@ -168,23 +154,21 @@ public class Arc : System.Windows.Shapes.Shape
             }
 
             var radAngle = angle * (Math.PI / 180);
-            var xRadius = (RenderSize.Width - StrokeThickness) / 2;
-            var yRadius = (RenderSize.Height - StrokeThickness) / 2;
+            var horizontalRadius = (RenderSize.Width - StrokeThickness) / 2;
+            var verticalRadius = (RenderSize.Height - StrokeThickness) / 2;
 
             return new Point(
-                xRadius + (xRadius * Math.Cos(-radAngle)),
-                yRadius - (yRadius * Math.Sin(-radAngle)));
+                horizontalRadius + (horizontalRadius * Math.Cos(-radAngle)),
+                verticalRadius - (verticalRadius * Math.Sin(-radAngle)));
         }
     }
 
-    /// <summary>
-    /// Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, and returns a child at the specified index from a collection of child elements.
-    /// </summary>
+    /// <summary>Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, and returns a child at the specified index from a collection of child elements.</summary>
+    /// <exception cref="System.ArgumentOutOfRangeException">index - Arc should have only 1 child.</exception>
     /// <param name="index">The zero-based index of the requested child element in the collection.</param>
     /// <returns>
     /// The requested child element. This should not return null; if the provided index is out of range, an exception is thrown.
     /// </returns>
-    /// <exception cref="System.ArgumentOutOfRangeException">index - Arc should have only 1 child.</exception>
     protected override Visual? GetVisualChild(int index)
     {
         if (index != 0)
@@ -197,24 +181,20 @@ public class Arc : System.Windows.Shapes.Shape
         return _rootLayout;
     }
 
-    /// <summary>
-    /// When overridden in a derived class, measures the size in layout required for child elements and determines a size for the <see cref="T:System.Windows.FrameworkElement" />-derived class.
-    /// </summary>
-    /// <param name="availableSize">The available size that this element can give to child elements. Infinity can be specified as a value to indicate that the element will size to whatever content is available.</param>
+    /// <summary>When overridden in a derived class, measures the size in layout required for child elements and determines a size for the <see cref="T:System.Windows.FrameworkElement" />-derived class.</summary>
+    /// <param name="constraint">The available size that this element can give to child elements. Infinity can be specified as a value to indicate that the element will size to whatever content is available.</param>
     /// <returns>
     /// The size that this element determines it needs during layout, based on its calculations of child element sizes.
     /// </returns>
-    protected override Size MeasureOverride(Size availableSize)
+    protected override Size MeasureOverride(Size constraint)
     {
         EnsureRootLayout();
 
-        _rootLayout!.Measure(availableSize);
+        _rootLayout!.Measure(constraint);
         return _rootLayout.DesiredSize;
     }
 
-    /// <summary>
-    /// Arranges a <see cref="T:System.Windows.Shapes.Shape" /> by evaluating its <see cref="P:System.Windows.Shapes.Shape.RenderedGeometry" /> and <see cref="P:System.Windows.Shapes.Shape.Stretch" /> properties.
-    /// </summary>
+    /// <summary>Arranges a <see cref="T:System.Windows.Shapes.Shape" /> by evaluating its <see cref="P:System.Windows.Shapes.Shape.RenderedGeometry" /> and <see cref="P:System.Windows.Shapes.Shape.Stretch" /> properties.</summary>
     /// <param name="finalSize">The final evaluated size of the <see cref="T:System.Windows.Shapes.Shape" />.</param>
     /// <returns>
     /// The final size of the arranged <see cref="T:System.Windows.Shapes.Shape" /> element.
@@ -232,7 +212,7 @@ public class Arc : System.Windows.Shapes.Shape
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
-        if (drawingContext == null)
+        if (drawingContext is null)
         {
             throw new ArgumentNullException(nameof(drawingContext));
         }
@@ -247,9 +227,10 @@ public class Arc : System.Windows.Shapes.Shape
         drawingContext.DrawGeometry(Stroke, pen, DefinedGeometry());
     }
 
+    /// <summary>Provides the EnsureRootLayout member.</summary>
     private void EnsureRootLayout()
     {
-        if (_rootLayout != null)
+        if (_rootLayout is not null)
         {
             return;
         }

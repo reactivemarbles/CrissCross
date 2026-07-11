@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -21,10 +20,7 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class RightPropertiesView
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RightPropertiesView"/> class and sets up data bindings between the view and its.
-    /// associated ViewModel.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="RightPropertiesView"/> class and sets up data bindings between the view and its. associated ViewModel.</summary>
     /// <remarks>This constructor configures the view to activate its bindings when displayed, enabling
     /// editing and saving of configuration properties through the user interface. The view's controls are bound to
     /// corresponding properties in the ViewModel, allowing for real-time updates and command execution. This setup is
@@ -34,16 +30,20 @@ public partial class RightPropertiesView
     {
         InitializeComponent();
 
-        this.WhenActivated(d =>
-        {
-            DataContext = ViewModel = new();
-            this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(d);
+        _ = this.WhenActivated(BindViewModel);
+    }
 
-            // Bind form fields to ViewModel properties for editing
-            this.Bind(ViewModel, vm => vm.ItemName, v => v.textbox1.Text).DisposeWith(d);
-            this.Bind(ViewModel, vm => vm.LineWidth, v => v.LineWidth.Value).DisposeWith(d);
-            this.Bind(ViewModel, vm => vm.LineColor, v => v.colorsComboBox.SelectedItem).DisposeWith(d);
-            this.Bind(ViewModel, vm => vm.ItemVisibility, v => v.visibilityComboBox.SelectedItem).DisposeWith(d);
-        });
+    /// <summary>Binds the view model to the view controls.</summary>
+    /// <param name="disposables">The activation disposables.</param>
+    private void BindViewModel(CompositeDisposable disposables)
+    {
+        ViewModel = new();
+        DataContext = ViewModel;
+        _ = this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(disposables);
+
+        _ = this.Bind(ViewModel, vm => vm.ItemName, v => v.textbox1.Text).DisposeWith(disposables);
+        _ = this.Bind(ViewModel, vm => vm.LineWidth, v => v.LineWidth.Value).DisposeWith(disposables);
+        _ = this.Bind(ViewModel, vm => vm.LineColor, v => v.colorsComboBox.SelectedItem).DisposeWith(disposables);
+        _ = this.Bind(ViewModel, vm => vm.ItemVisibility, v => v.visibilityComboBox.SelectedItem).DisposeWith(disposables);
     }
 }

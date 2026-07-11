@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -8,56 +8,56 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Represents a slider for selecting hue values from 0-360.
-/// </summary>
+/// <summary>Represents a slider for selecting hue values from 0-360.</summary>
 public class HueSlider : RangeBase
 {
-    /// <summary>
-    /// Property for <see cref="SelectedHue"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SelectedHue"/>.</summary>
     public static readonly StyledProperty<double> SelectedHueProperty =
         AvaloniaProperty.Register<HueSlider, double>(nameof(SelectedHue), 0.0);
 
-    /// <summary>
-    /// Property for <see cref="SelectedColor"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SelectedColor"/>.</summary>
     public static readonly StyledProperty<Color> SelectedColorProperty =
         AvaloniaProperty.Register<HueSlider, Color>(nameof(SelectedColor), Colors.Red);
 
+    /// <summary>Provides the HueSlider member.</summary>
     static HueSlider()
     {
         MinimumProperty.OverrideDefaultValue<HueSlider>(0.0);
         MaximumProperty.OverrideDefaultValue<HueSlider>(360.0);
-        ValueProperty.Changed.AddClassHandler<HueSlider>((x, _) => x.OnValueChanged());
-        SelectedHueProperty.Changed.AddClassHandler<HueSlider>((x, e) => x.OnSelectedHueChanged(e));
+        _ = ValueProperty.Changed.AddClassHandler<HueSlider>((x, _) => x.OnValueChanged());
+        _ = SelectedHueProperty.Changed.AddClassHandler<HueSlider>((x, e) => x.OnSelectedHueChanged(e));
     }
 
-    /// <summary>
-    /// Gets or sets the selected hue (0-360).
-    /// </summary>
+    /// <summary>Gets or sets the selected hue (0-360).</summary>
     public double SelectedHue
     {
         get => GetValue(SelectedHueProperty);
         set => SetValue(SelectedHueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selected color based on hue.
-    /// </summary>
+    /// <summary>Gets or sets the selected color based on hue.</summary>
     public Color SelectedColor
     {
         get => GetValue(SelectedColorProperty);
         set => SetValue(SelectedColorProperty, value);
     }
 
+    /// <summary>Provides the HslToRgb member.</summary>
+    /// <param name="h">The h value.</param>
+    /// <param name="s">The s value.</param>
+    /// <param name="l">The l value.</param>
+    /// <returns>The result.</returns>
     private static Color HslToRgb(double h, double s, double l)
     {
-        double r, g, b;
+        double r;
+        double g;
+        double b;
 
         if (s == 0)
         {
-            r = g = b = l;
+            r = l;
+            g = l;
+            b = l;
         }
         else
         {
@@ -71,6 +71,11 @@ public class HueSlider : RangeBase
         return Color.FromRgb((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
     }
 
+    /// <summary>Provides the HueToRgb member.</summary>
+    /// <param name="p">The p value.</param>
+    /// <param name="q">The q value.</param>
+    /// <param name="t">The t value.</param>
+    /// <returns>The result.</returns>
     private static double HueToRgb(double p, double q, double t)
     {
         if (t < 0)
@@ -93,26 +98,25 @@ public class HueSlider : RangeBase
             return q;
         }
 
-        if (t < 240)
-        {
-            return p + ((q - p) * (240 - t) / 60);
-        }
-
-        return p;
+        return t < 240 ? p + ((q - p) * (240 - t) / 60) : p;
     }
 
+    /// <summary>Provides the OnValueChanged member.</summary>
     private void OnValueChanged()
     {
         SelectedHue = Value;
         UpdateSelectedColor();
     }
 
+    /// <summary>Provides the OnSelectedHueChanged member.</summary>
+    /// <param name="e">The e value.</param>
     private void OnSelectedHueChanged(AvaloniaPropertyChangedEventArgs e)
     {
         Value = (double)e.NewValue!;
         UpdateSelectedColor();
     }
 
+    /// <summary>Provides the UpdateSelectedColor member.</summary>
     private void UpdateSelectedColor()
     {
         SelectedColor = HslToRgb(SelectedHue, 1.0, 0.5);

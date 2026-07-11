@@ -1,16 +1,16 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Tests for platform-neutral application control state models shared by UI stacks.
-/// </summary>
+/// <summary>Tests for platform-neutral application control state models shared by UI stacks.</summary>
 public class ApplicationControlStateTests
 {
+    /// <summary>Provides the CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError()
     {
@@ -22,6 +22,8 @@ public class ApplicationControlStateTests
         await Assert.That(status.HasError).IsFalse();
     }
 
+    /// <summary>Provides the CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute()
     {
@@ -34,6 +36,8 @@ public class ApplicationControlStateTests
         await Assert.That(status.IsInteractive).IsTrue();
     }
 
+    /// <summary>Provides the BusyOperation_DeterminateProgress_IsActiveDeterminateAndCancellable member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task BusyOperation_DeterminateProgress_IsActiveDeterminateAndCancellable()
     {
@@ -46,6 +50,8 @@ public class ApplicationControlStateTests
         await Assert.That(operation.Progress).IsEqualTo(0.42);
     }
 
+    /// <summary>Provides the EmptyStateModel_WithPrimaryAction_ReportsActionAvailability member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task EmptyStateModel_WithPrimaryAction_ReportsActionAvailability()
     {
@@ -62,6 +68,8 @@ public class ApplicationControlStateTests
         await Assert.That(model.Variant).IsEqualTo(EmptyStateVariant.NoResults);
     }
 
+    /// <summary>Provides the SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount()
     {
@@ -80,6 +88,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.ResultSummary).IsEqualTo("12 results");
     }
 
+    /// <summary>Provides the FilterToken_RemovableToken_UsesDisplayTextAndStableKey member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FilterToken_RemovableToken_UsesDisplayTextAndStableKey()
     {
@@ -90,6 +100,8 @@ public class ApplicationControlStateTests
         await Assert.That(token.IsRemovable).IsTrue();
     }
 
+    /// <summary>Provides the ChipModel_RemovableSelectedChip_ExposesInteractionStateAndStableKey member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ChipModel_RemovableSelectedChip_ExposesInteractionStateAndStableKey()
     {
@@ -109,6 +121,8 @@ public class ApplicationControlStateTests
         await Assert.That(chip.CanRemove).IsTrue();
     }
 
+    /// <summary>Provides the ChipGroupState_MultipleSelection_ReportsSelectedAndRemovableChips member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ChipGroupState_MultipleSelection_ReportsSelectedAndRemovableChips()
     {
@@ -128,6 +142,8 @@ public class ApplicationControlStateTests
         await Assert.That(group.GetChip("open")?.Text).IsEqualTo("Open");
     }
 
+    /// <summary>Provides the SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems()
     {
@@ -146,6 +162,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.GetItem("list")?.HasIcon).IsTrue();
     }
 
+    /// <summary>Provides the ValidationMessage_Error_IsBlockingAndUsesExplicitDisplayText member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ValidationMessage_Error_IsBlockingAndUsesExplicitDisplayText()
     {
@@ -162,6 +180,8 @@ public class ApplicationControlStateTests
         await Assert.That(message.DisplayText).IsEqualTo("Email address: Enter a valid email address.");
     }
 
+    /// <summary>Provides the ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages()
     {
@@ -185,6 +205,8 @@ public class ApplicationControlStateTests
         await Assert.That(emailMessages[0].Message).IsEqualTo("Required");
     }
 
+    /// <summary>Provides the PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability()
     {
@@ -201,6 +223,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.SummaryText).IsEqualTo("51-75 of 103");
     }
 
+    /// <summary>Provides the PaginationState_EmptyCollection_ClampsToSingleDisplayPage member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PaginationState_EmptyCollection_ClampsToSingleDisplayPage()
     {
@@ -214,6 +238,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.SummaryText).IsEqualTo("No items");
     }
 
+    /// <summary>Provides the PageRequest_WithSearchAndFilters_CapturesStableDataQuerySnapshot member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PageRequest_WithSearchAndFilters_CapturesStableDataQuerySnapshot()
     {
@@ -232,6 +258,8 @@ public class ApplicationControlStateTests
         await Assert.That(request.FilterSnapshotKey).IsEqualTo("status:Equals:open");
     }
 
+    /// <summary>Provides the StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState()
     {
@@ -257,6 +285,8 @@ public class ApplicationControlStateTests
         await Assert.That(step.CanLeave).IsFalse();
     }
 
+    /// <summary>Provides the StepperState_CurrentMiddleStep_ReportsNavigationAndBlockingCounts member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task StepperState_CurrentMiddleStep_ReportsNavigationAndBlockingCounts()
     {
@@ -268,7 +298,7 @@ public class ApplicationControlStateTests
                 "review",
                 "Review",
                 StepStatus.Error,
-                validationMessages: new[] { new ValidationMessage("review", "Review", "Resolve duplicate columns", ValidationSeverity.Error) }),
+                validationMessages: [new ValidationMessage("review", "Review", "Resolve duplicate columns", ValidationSeverity.Error)]),
             new StepDescriptor("finish", "Finish", StepStatus.Pending, isEnabled: false)
         };
         var state = new StepperState(steps, "mapping", StepperOrientation.Vertical);
@@ -283,6 +313,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.GetStep("source")?.IsComplete).IsTrue();
     }
 
+    /// <summary>Provides the DateTimeRange_ReversedCustomRange_IsInvalidAndReportsDuration member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DateTimeRange_ReversedCustomRange_IsInvalidAndReportsDuration()
     {
@@ -297,6 +329,8 @@ public class ApplicationControlStateTests
         await Assert.That(range.DisplayText).IsEqualTo("Manual: invalid range");
     }
 
+    /// <summary>Provides the DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime()
     {
@@ -311,6 +345,8 @@ public class ApplicationControlStateTests
         await Assert.That(range.DisplayText).IsEqualTo("Last 7 days: 2026-05-06 09:30 - 2026-05-13 09:30");
     }
 
+    /// <summary>Provides the ThemePreferenceState_SystemPreference_UsesSystemChoiceAsEffectiveTheme member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ThemePreferenceState_SystemPreference_UsesSystemChoiceAsEffectiveTheme()
     {
@@ -325,6 +361,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.DisplayText).IsEqualTo("System (Dark)");
     }
 
+    /// <summary>Provides the ThemePreferenceState_UnsupportedHighContrast_FallsBackToSystemChoice member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ThemePreferenceState_UnsupportedHighContrast_FallsBackToSystemChoice()
     {
@@ -336,6 +374,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.DisplayText).IsEqualTo("High contrast (using Light)");
     }
 
+    /// <summary>Provides the FilterDescriptor_EnumDescriptor_CreatesStableDisplayToken member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FilterDescriptor_EnumDescriptor_CreatesStableDisplayToken()
     {
@@ -343,8 +383,8 @@ public class ApplicationControlStateTests
             "status",
             "Status",
             FilterEditorKind.Enum,
-            new[] { FilterOperator.Equals, FilterOperator.NotEquals },
-            new[] { "Open", "Closed" });
+            [FilterOperator.Equals, FilterOperator.NotEquals],
+            ["Open", "Closed"]);
 
         var token = descriptor.CreateToken("Open");
 
@@ -355,14 +395,16 @@ public class ApplicationControlStateTests
         await Assert.That(token.DisplayText).IsEqualTo("Status equals Open");
     }
 
+    /// <summary>Provides the DataFilterPanelState_ActiveExpressions_ProjectsTokensAndSearchState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DataFilterPanelState_ActiveExpressions_ProjectsTokensAndSearchState()
     {
         var descriptors = new[]
         {
-            new FilterDescriptor("status", "Status", FilterEditorKind.Enum, new[] { FilterOperator.Equals }, new[] { "Open", "Closed" }),
-            new FilterDescriptor("created", "Created", FilterEditorKind.DateRange, new[] { FilterOperator.Between }),
-            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, new[] { FilterOperator.Contains })
+            new FilterDescriptor("status", "Status", FilterEditorKind.Enum, [FilterOperator.Equals], ["Open", "Closed"]),
+            new FilterDescriptor("created", "Created", FilterEditorKind.DateRange, [FilterOperator.Between]),
+            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, [FilterOperator.Contains])
         };
         var expressions = new[]
         {
@@ -386,6 +428,8 @@ public class ApplicationControlStateTests
         await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(2);
     }
 
+    /// <summary>Provides the PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState()
     {
@@ -413,6 +457,8 @@ public class ApplicationControlStateTests
         await Assert.That(descriptor.CanReset).IsTrue();
     }
 
+    /// <summary>Provides the PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors()
     {
@@ -427,8 +473,8 @@ public class ApplicationControlStateTests
                 PropertyEditorKind.Enum,
                 "Manual",
                 "Automatic",
-                choices: new[] { "Automatic", "Manual" },
-                validationMessages: new[] { new ValidationMessage("mode", "Mode", "Manual mode is unavailable", ValidationSeverity.Error) })
+                choices: ["Automatic", "Manual"],
+                validationMessages: [new ValidationMessage("mode", "Mode", "Manual mode is unavailable", ValidationSeverity.Error)])
         };
 
         var state = new PropertyGridState(descriptors, "connection");
@@ -444,12 +490,19 @@ public class ApplicationControlStateTests
         await Assert.That(state.GetDescriptor("timeout")?.IsModified).IsTrue();
     }
 
+    /// <summary>Provides the TestCommand member.</summary>
     private sealed class TestCommand : ICommand
     {
+        /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;
 
+        /// <summary>Provides the CanExecute member.</summary>
+        /// <param name="parameter">The parameter value.</param>
+        /// <returns>The result.</returns>
         public bool CanExecute(object? parameter) => true;
 
+        /// <summary>Provides the Execute member.</summary>
+        /// <param name="parameter">The parameter value.</param>
         public void Execute(object? parameter) => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

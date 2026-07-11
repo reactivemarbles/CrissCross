@@ -1,19 +1,15 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Test.ViewModels;
 
 namespace CrissCross.WPF.UI.Test.Views.Pages;
 
-/// <summary>
-/// Interaction logic for SettingsPage.xaml.
-/// </summary>
+/// <summary>Interaction logic for SettingsPage.xaml.</summary>
 public partial class SettingsPage : INavigableView<SettingsViewModel>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SettingsPage"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="SettingsPage"/> class.</summary>
     /// <param name="viewModel">The view model.</param>
     public SettingsPage(SettingsViewModel viewModel)
     {

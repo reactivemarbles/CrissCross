@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Input;
@@ -7,11 +7,11 @@ using CrissCross.Avalonia.UI.Controls;
 
 namespace CrissCross.NavigationView.Tests;
 
-/// <summary>
-/// Regression tests for RichTextBox document offsets and core editing behavior.
-/// </summary>
+/// <summary>Regression tests for RichTextBox document offsets and core editing behavior.</summary>
 public sealed class RichTextBoxCoreTests
 {
+    /// <summary>Provides the FlowDocument_UsesRenderedOffsetsForFormattedHtml member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FlowDocument_UsesRenderedOffsetsForFormattedHtml()
     {
@@ -24,6 +24,8 @@ public sealed class RichTextBoxCoreTests
         await Assert.That(selected).IsEqualTo("Hello");
     }
 
+    /// <summary>Provides the FlowDocument_Replace_UsesRenderedOffsetsWithoutCorruptingMarkup member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FlowDocument_Replace_UsesRenderedOffsetsWithoutCorruptingMarkup()
     {
@@ -32,10 +34,12 @@ public sealed class RichTextBoxCoreTests
         document.SetText("<strong>Hello</strong> world");
         document.Replace(6, 5, "Avalonia");
 
-        await Assert.That(document.GetPlainText()).IsEqualTo("Hello Avalonia");
-        await Assert.That(document.GetText()).IsEqualTo("<strong>Hello</strong> Avalonia");
+        await Assert.That(document.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(document.Text).IsEqualTo("<strong>Hello</strong> Avalonia");
     }
 
+    /// <summary>Provides the RichTextBox_SelectedText_UsesRenderedOffsets member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_SelectedText_UsesRenderedOffsets()
     {
@@ -48,6 +52,8 @@ public sealed class RichTextBoxCoreTests
         await Assert.That(richTextBox.SelectedText).IsEqualTo("Hello");
     }
 
+    /// <summary>Provides the RichTextBox_ReplaceSelection_UsesRenderedOffsetsAndPlainTextCaret member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_ReplaceSelection_UsesRenderedOffsetsAndPlainTextCaret()
     {
@@ -57,10 +63,13 @@ public sealed class RichTextBoxCoreTests
         richTextBox.Select(6, 5);
         richTextBox.ReplaceSelection("Avalonia");
 
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello Avalonia");
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("<strong>Hello</strong> Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo("<strong>Hello</strong> Avalonia");
         await Assert.That(richTextBox.CaretIndex).IsEqualTo(14);
     }
+
+    /// <summary>Provides the RichTextBox_ToggleBold_AppliesFormattingToRenderedSelection member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_ToggleBold_AppliesFormattingToRenderedSelection()
     {
@@ -70,10 +79,12 @@ public sealed class RichTextBoxCoreTests
         richTextBox.Select(6, 5);
         richTextBox.ToggleBold();
 
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("<strong>Hello</strong> <strong>world</strong>");
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello world");
+        await Assert.That(richTextBox.Html).IsEqualTo("<strong>Hello</strong> <strong>world</strong>");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello world");
     }
 
+    /// <summary>Provides the RichTextBox_ToggleBoldCommand_UsesSamePipelineAsPublicMethod member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_ToggleBoldCommand_UsesSamePipelineAsPublicMethod()
     {
@@ -91,10 +102,12 @@ public sealed class RichTextBoxCoreTests
         commandDriven.ToggleBoldCommand.Execute(null);
         methodDriven.ToggleBold();
 
-        await Assert.That(commandDriven.GetHtml()).IsEqualTo(methodDriven.GetHtml());
-        await Assert.That(commandDriven.GetHtml()).IsEqualTo("Hello <strong>world</strong>");
+        await Assert.That(commandDriven.Html).IsEqualTo(methodDriven.Html);
+        await Assert.That(commandDriven.Html).IsEqualTo("Hello <strong>world</strong>");
     }
 
+    /// <summary>Provides the RichTextBox_UndoRedo_RestoresReplacementAndFormattingTransactions member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_UndoRedo_RestoresReplacementAndFormattingTransactions()
     {
@@ -108,20 +121,22 @@ public sealed class RichTextBoxCoreTests
         await Assert.That(richTextBox.CanRedo).IsFalse();
 
         richTextBox.Undo();
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("Hello world");
+        await Assert.That(richTextBox.Html).IsEqualTo("Hello world");
         await Assert.That(richTextBox.CanRedo).IsTrue();
 
         richTextBox.Redo();
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo("Hello Avalonia");
 
         richTextBox.Select(6, 8);
         richTextBox.ToggleItalic();
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("Hello <em>Avalonia</em>");
+        await Assert.That(richTextBox.Html).IsEqualTo("Hello <em>Avalonia</em>");
 
         richTextBox.Undo();
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo("Hello Avalonia");
     }
 
+    /// <summary>Provides the RichTextBox_ReadOnly_BlocksMutationCommandsButAllowsSelectionAndCopy member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_ReadOnly_BlocksMutationCommandsButAllowsSelectionAndCopy()
     {
@@ -144,10 +159,12 @@ public sealed class RichTextBoxCoreTests
         richTextBox.Paste();
 
         await Assert.That(clipboard.PlainText).IsEqualTo("Hello");
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo("Hello world");
+        await Assert.That(richTextBox.Html).IsEqualTo("Hello world");
         await Assert.That(richTextBox.SelectedText).IsEqualTo("Hello");
     }
 
+    /// <summary>Provides the RichTextBox_ClipboardAdapter_CutAndPasteUsePlainAndHtmlFallbacks member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_ClipboardAdapter_CutAndPasteUsePlainAndHtmlFallbacks()
     {
@@ -160,17 +177,19 @@ public sealed class RichTextBoxCoreTests
 
         await Assert.That(clipboard.PlainText).IsEqualTo("Hello");
         await Assert.That(clipboard.HtmlText).Contains("Hello");
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo(" world");
+        await Assert.That(richTextBox.Html).IsEqualTo(" world");
 
         clipboard.HtmlText = "<em>Avalonia</em>";
         clipboard.PlainText = "ignored";
         richTextBox.Select(richTextBox.Document.Length, 0);
         richTextBox.Paste();
 
-        await Assert.That(richTextBox.GetHtml()).IsEqualTo(" world<em>Avalonia</em>");
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo(" worldAvalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo(" world<em>Avalonia</em>");
+        await Assert.That(richTextBox.PlainText).IsEqualTo(" worldAvalonia");
     }
 
+    /// <summary>Provides the RichTextBox_KeyboardShortcuts_RouteEditingCommandsThroughCommandPipeline member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RichTextBox_KeyboardShortcuts_RouteEditingCommandsThroughCommandPipeline()
     {
@@ -184,24 +203,27 @@ public sealed class RichTextBoxCoreTests
         await Assert.That(clipboard.PlainText).IsEqualTo("world");
 
         richTextBox.SendKey(Key.X);
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello ");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello ");
         await Assert.That(clipboard.PlainText).IsEqualTo("world");
 
         clipboard.PlainText = "Avalonia";
         clipboard.HtmlText = null;
         richTextBox.Select(richTextBox.Document.Length, 0);
         richTextBox.SendKey(Key.V);
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
 
         richTextBox.SendKey(Key.Z);
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello ");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello ");
 
         richTextBox.SendKey(Key.Y);
-        await Assert.That(richTextBox.GetPlainText()).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
     }
 
+    /// <summary>Provides the TestableRichTextBox member.</summary>
     private sealed class TestableRichTextBox : RichTextBox
     {
+        /// <summary>Provides the SendKey member.</summary>
+        /// <param name="key">The key value.</param>
         public void SendKey(Key key)
         {
             var args = new KeyEventArgs
@@ -214,24 +236,37 @@ public sealed class RichTextBoxCoreTests
         }
     }
 
+    /// <summary>Provides the FakeRichTextClipboardAdapter member.</summary>
     private sealed class FakeRichTextClipboardAdapter : IRichTextClipboardAdapter
     {
+        /// <summary>Gets or sets the plain text.</summary>
         public string? PlainText { get; set; }
 
+        /// <summary>Gets or sets the HTML text.</summary>
         public string? HtmlText { get; set; }
 
+        /// <summary>Gets or sets the image source.</summary>
         public string? ImageSource { get; set; }
 
+        /// <summary>Gets a value indicating whether plain text is available.</summary>
         public bool ContainsPlainText => !string.IsNullOrEmpty(PlainText);
 
+        /// <summary>Gets a value indicating whether HTML text is available.</summary>
         public bool ContainsHtml => !string.IsNullOrEmpty(HtmlText);
 
+        /// <summary>Gets a value indicating whether an image is available.</summary>
         public bool ContainsImage => !string.IsNullOrEmpty(ImageSource);
 
+        /// <summary>Provides the SetPlainText member.</summary>
+        /// <param name="text">The text value.</param>
         public void SetPlainText(string? text) => PlainText = text;
 
+        /// <summary>Provides the SetHtml member.</summary>
+        /// <param name="html">The html value.</param>
         public void SetHtml(string? html) => HtmlText = html;
 
+        /// <summary>Provides the SetImage member.</summary>
+        /// <param name="imageSource">The imageSource value.</param>
         public void SetImage(string? imageSource) => ImageSource = imageSource;
     }
 }

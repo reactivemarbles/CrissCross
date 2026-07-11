@@ -1,22 +1,25 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
+/// <summary>Provides the ColorSpaceHelper member.</summary>
 internal static class ColorSpaceHelper
 {
-    /// <summary>
-    /// Converts RGB to HSV, returns -1 for undefined channels.
-    /// </summary>
+    /// <summary>Converts RGB to HSV, returns -1 for undefined channels.</summary>
     /// <param name="r">Red channel.</param>
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Value (0-1).</returns>
     public static Tuple<double, double, double> RgbToHsv(double r, double g, double b)
     {
-        double min, max, delta;
-        double h, s, v;
+        double min;
+        double max;
+        double delta;
+        double h;
+        double s;
+        double v;
 
         min = Math.Min(r, Math.Min(g, b));
         max = Math.Max(r, Math.Max(g, b));
@@ -34,21 +37,12 @@ internal static class ColorSpaceHelper
             return new Tuple<double, double, double>(h, s, v);
         }
 
-        if (r == max)
+        h = max switch
         {
-            // between yellow & magenta
-            h = (g - b) / delta;
-        }
-        else if (g == max)
-        {
-            // between cyan & yellow
-            h = 2 + ((b - r) / delta);
-        }
-        else
-        {
-            // between magenta & cyan
-            h = 4 + ((r - g) / delta);
-        }
+            _ when r == max => (g - b) / delta,
+            _ when g == max => 2 + ((b - r) / delta),
+            _ => 4 + ((r - g) / delta)
+        };
 
         h *= 60;
         if (h < 0)
@@ -65,16 +59,16 @@ internal static class ColorSpaceHelper
         return new Tuple<double, double, double>(h, s, v);
     }
 
-    /// <summary>
-    /// Converts RGB to HSL, returns -1 for undefined channels.
-    /// </summary>
+    /// <summary>Converts RGB to HSL, returns -1 for undefined channels.</summary>
     /// <param name="r">Red channel.</param>
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Lightness (0-1).</returns>
     public static Tuple<double, double, double> RgbToHsl(double r, double g, double b)
     {
-        double h, s, l;
+        double h;
+        double s;
+        double l;
 
         var min = Math.Min(Math.Min(r, g), b);
         var max = Math.Max(Math.Max(r, g), b);
@@ -96,18 +90,12 @@ internal static class ColorSpaceHelper
         // magic
         s = l <= 0.5 ? delta / (max + min) : delta / (2 - max - min);
 
-        if (r == max)
+        h = max switch
         {
-            h = (g - b) / 6 / delta;
-        }
-        else if (g == max)
-        {
-            h = (1.0f / 3) + ((b - r) / 6 / delta);
-        }
-        else
-        {
-            h = (2.0f / 3) + ((r - g) / 6 / delta);
-        }
+            _ when r == max => (g - b) / 6 / delta,
+            _ when g == max => (1.0f / 3) + ((b - r) / 6 / delta),
+            _ => (2.0f / 3) + ((r - g) / 6 / delta)
+        };
 
         if (h < 0)
         {
@@ -124,9 +112,7 @@ internal static class ColorSpaceHelper
         return new Tuple<double, double, double>(h, s, l);
     }
 
-    /// <summary>
-    /// Converts HSV to RGB.
-    /// </summary>
+    /// <summary>Converts HSV to RGB.</summary>
     /// <param name="h">Hue, 0-360.</param>
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
@@ -162,9 +148,7 @@ internal static class ColorSpaceHelper
         };
     }
 
-    /// <summary>
-    /// Converts HSV to HSL.
-    /// </summary>
+    /// <summary>Converts HSV to HSL.</summary>
     /// <param name="h">Hue, 0-360.</param>
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
@@ -172,22 +156,12 @@ internal static class ColorSpaceHelper
     public static Tuple<double, double, double> HsvToHsl(double h, double s, double v)
     {
         var hsl_l = v * (1 - (s / 2));
-        double hsl_s;
-        if (hsl_l == 0 || hsl_l == 1)
-        {
-            hsl_s = -1;
-        }
-        else
-        {
-            hsl_s = (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
-        }
+        var hsl_s = hsl_l == 0 || hsl_l == 1 ? -1 : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
 
         return new Tuple<double, double, double>(h, hsl_s, hsl_l);
     }
 
-    /// <summary>
-    /// Converts HSL to RGB.
-    /// </summary>
+    /// <summary>Converts HSL to RGB.</summary>
     /// <param name="h">Hue, 0-360.</param>
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
@@ -212,9 +186,7 @@ internal static class ColorSpaceHelper
         };
     }
 
-    /// <summary>
-    /// Converts HSL to HSV.
-    /// </summary>
+    /// <summary>Converts HSL to HSV.</summary>
     /// <param name="h">Hue, 0-360.</param>
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
@@ -222,15 +194,7 @@ internal static class ColorSpaceHelper
     public static Tuple<double, double, double> HslToHsv(double h, double s, double l)
     {
         var hsv_v = l + (s * Math.Min(l, 1 - l));
-        double hsv_s;
-        if (hsv_v == 0)
-        {
-            hsv_s = -1;
-        }
-        else
-        {
-            hsv_s = 2 * (1 - (l / hsv_v));
-        }
+        var hsv_s = hsv_v == 0 ? -1 : 2 * (1 - (l / hsv_v));
 
         return new Tuple<double, double, double>(h, hsv_s, hsv_v);
     }

@@ -1,66 +1,71 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Windows;
 using ReactiveUI;
 using Splat;
 
 namespace CrissCross.WPF;
 
-/// <summary>
-/// View Model Routed View Host.
-/// </summary>
+/// <summary>View Model Routed View Host.</summary>
 /// <seealso cref="RoutedViewHost" />
 public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRoutedViewHost, IDisposable
 {
-    /// <summary>
-    /// The navigate back is enabled property.
-    /// </summary>
+    /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty CanNavigateBackProperty = DependencyProperty.Register(nameof(CanNavigateBack), typeof(bool?), typeof(ViewModelRoutedViewHost), new PropertyMetadata(false));
 
-    /// <summary>
-    /// The host name property.
-    /// </summary>
+    /// <summary>The host name property.</summary>
     public static readonly DependencyProperty HostNameProperty = DependencyProperty.Register(nameof(HostName), typeof(string), typeof(ViewModelRoutedViewHost), new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// The navigate back is enabled property.
-    /// </summary>
+    /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(nameof(NavigateBackIsEnabled), typeof(bool?), typeof(ViewModelRoutedViewHost), new PropertyMetadata(true));
 
-    private readonly Subject<bool?> _canNavigateBackSubject = new();
-    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
-    private IRxObject? __currentViewModel;
+    /// <summary>Stores the can Navigate Back Subject value.</summary>
+    private readonly Signal<bool?> _canNavigateBackSubject = new();
+
+    /// <summary>Stores the current View Model value.</summary>
+    private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
+
+    /// <summary>Stores the active View Model value.</summary>
+    private IRxObject? _activeViewModel;
+
+    /// <summary>Stores the current View value.</summary>
     private IViewFor? _currentView;
+
+    /// <summary>Stores the last View value.</summary>
     private IViewFor? _lastView;
+
+    /// <summary>Stores the navigate Back value.</summary>
     private bool _navigateBack;
+
+    /// <summary>Stores the reset Stack value.</summary>
     private bool _resetStack;
+
+    /// <summary>Stores the to View Model value.</summary>
     private IRxObject? _toViewModel;
+
+    /// <summary>Stores the disposed value.</summary>
     private bool _disposedValue;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.</summary>
     public ViewModelRoutedViewHost()
     {
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
         VerticalContentAlignment = VerticalAlignment.Stretch;
         ViewLocator = AppLocator.Current.GetService<IViewLocator>();
-        CurrentViewModel.Subscribe(vm =>
+        _ = CurrentViewModel.Subscribe(vm =>
         {
             if (vm is IRxObject && !_navigateBack)
             {
-                __currentViewModel = vm as IRxObject;
-                NavigationStack.Add(__currentViewModel?.GetType());
+                _activeViewModel = vm as IRxObject;
+                NavigationStack.Add(_activeViewModel?.GetType());
             }
 
-            if (_currentView != null)
+            if (_currentView is not null)
             {
                 Content = _currentView;
             }
@@ -70,17 +75,13 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         });
     }
 
-    /// <summary>
-    /// Gets or sets the view  AppLocator.
-    /// </summary>
+    /// <summary>Gets or sets the view  AppLocator.</summary>
     /// <value>
     /// The view  AppLocator.
     /// </value>
     public IViewLocator? ViewLocator { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [navigate back is enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value><c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.</value>
     public bool? CanNavigateBack
     {
@@ -88,25 +89,19 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         set => SetValue(CanNavigateBackProperty, value);
     }
 
-    /// <summary>
-    /// Gets the can navigate back observable.
-    /// </summary>
+    /// <summary>Gets the can navigate back observable.</summary>
     /// <value>
     /// The can navigate back observable.
     /// </value>
     public IObservable<bool?> CanNavigateBackObservable => _canNavigateBackSubject;
 
-    /// <summary>
-    /// Gets the current view model.
-    /// </summary>
+    /// <summary>Gets the current view model.</summary>
     /// <value>
     /// The current view model.
     /// </value>
     public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Publish().RefCount();
 
-    /// <summary>
-    /// Gets or sets the name of the host.
-    /// </summary>
+    /// <summary>Gets or sets the name of the host.</summary>
     /// <value>
     /// The name of the host.
     /// </value>
@@ -116,9 +111,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         set => SetValue(HostNameProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [navigate back is enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
     ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
@@ -128,48 +121,36 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         set => SetValue(NavigateBackIsEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets the navigation stack.
-    /// </summary>
+    /// <summary>Gets the navigation stack.</summary>
     /// <value>
     /// The navigation stack.
     /// </value>
     public ObservableCollection<Type?> NavigationStack { get; } = [];
 
-    /// <summary>
-    /// Gets a value indicating whether [requires setup].
-    /// </summary>
+    /// <summary>Gets a value indicating whether [requires setup].</summary>
     /// <value>
     /// <c>true</c> if [requires setup]; otherwise, <c>false</c>.
     /// </value>
     public bool RequiresSetup => false;
 
-    /// <summary>
-    /// Clears the history.
-    /// </summary>
+    /// <summary>Clears the history.</summary>
     public void ClearHistory() => NavigationStack.Clear();
 
-    /// <summary>
-    /// Navigates the ViewModel contract.
-    /// </summary>
+    /// <summary>Navigates the ViewModel contract.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate<T>(string? contract = null, object? parameter = null)
         where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
-    /// <summary>
-    /// Navigates the ViewModel contract.
-    /// </summary>
+    /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
-    /// <summary>
-    /// Navigates and resets.
-    /// </summary>
+    /// <summary>Navigates and resets.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
@@ -180,9 +161,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         InternalNavigate<T>(contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates the and reset.
-    /// </summary>
+    /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
@@ -192,9 +171,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         InternalNavigate(viewModel, contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates back.
-    /// </summary>
+    /// <summary>Navigates back.</summary>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
     public IRxObject? NavigateBack(object? parameter = null)
@@ -207,7 +184,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
             var count = NavigationStack.Count - 2;
             _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
-            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
+            var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
             if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
                 ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -230,55 +207,57 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         base.OnApplyTemplate();
     }
 
-    /// <summary>
-    /// Refreshes this instance.
-    /// </summary>
+    /// <summary>Refreshes this instance.</summary>
     public void Refresh()
     {
         // Keep existing view
-        if (Content == null && _currentView != null)
+        if (Content is null && _currentView is not null)
         {
             Content = _currentView;
         }
 
-        if (NavigateBackIsEnabled == false)
+        if (NavigateBackIsEnabled != false)
         {
-            // cleanup while Navigation Back is disabled
-            while (NavigationStack.Count > 1)
-            {
-                NavigationStack.RemoveAt(0);
-            }
+            return;
+        }
+
+        // cleanup while Navigation Back is disabled
+        while (NavigationStack.Count > 1)
+        {
+            NavigationStack.RemoveAt(0);
         }
     }
 
-    /// <summary>
-    /// Setups this instance.
-    /// </summary>
+    /// <summary>Setups this instance.</summary>
     /// <exception cref="ArgumentNullException">Navigation Host Name not set.</exception>
     public void Setup()
     {
+#if NET8_0_OR_GREATER
+        ArgumentException.ThrowIfNullOrWhiteSpace(HostName);
+#else
         if (string.IsNullOrWhiteSpace(HostName))
         {
-            throw new ArgumentNullException(HostName, "Navigation Host Name not set");
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(HostName));
         }
+#endif
 
         // requested should return result here
-        ViewModelRoutedViewHostMixins.ResultNavigating[HostName].DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
+        _ = ViewModelRoutedViewHostMixins.ResultNavigating[HostName].DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
-            if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
+            if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating is null)
             {
                 // No view is setup for reciving navigation notifications.
-                __currentViewModel?.WhenNavigating(e);
+                _activeViewModel?.WhenNavigating(e);
             }
 
             if (!e.Cancel)
             {
-                var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
+                var nea = new ViewModelNavigationEventArgs(_activeViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
                 var toView = e.View as INotifiyNavigation;
-                var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
-                var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
-                var cvm = __currentViewModel;
+                var callVmNavTo = toView is null || !toView!.ISetupNavigatedTo;
+                var callVmNavFrom = fromView is null || !fromView!.ISetupNavigatedTo;
+                var cvm = _activeViewModel;
                 _toViewModel ??= e.View?.ViewModel as IRxObject;
                 var tvm = _toViewModel;
 
@@ -286,7 +265,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
                 {
                     // Remove the current
                     NavigationStack.RemoveAt(NavigationStack.Count - 1);
-                    if (_toViewModel != null)
+                    if (_toViewModel is not null)
                     {
                         _currentView = ViewLocator?.ResolveView(_toViewModel);
                         _currentViewModel.OnNext(_toViewModel);
@@ -296,12 +275,12 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
                         }
                     }
                 }
-                else if (_toViewModel != null && _resetStack)
+                else if (_toViewModel is not null && _resetStack)
                 {
                     NavigationStack.Clear();
                     _currentViewModel.OnNext(_toViewModel);
                 }
-                else if (_toViewModel != null && _currentView != null)
+                else if (_toViewModel is not null && _currentView is not null)
                 {
                     _currentViewModel.OnNext(_toViewModel);
                 }
@@ -329,9 +308,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         });
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -339,24 +316,28 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Disposes the specified disposing.
-    /// </summary>
+    /// <summary>Disposes the specified disposing.</summary>
     /// <param name="disposing">if set to <c>true</c> [disposing].</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                _canNavigateBackSubject.Dispose();
-                _currentViewModel.Dispose();
-            }
-
-            _disposedValue = true;
+            return;
         }
+
+        if (disposing)
+        {
+            _canNavigateBackSubject.Dispose();
+            _currentViewModel.Dispose();
+        }
+
+        _disposedValue = true;
     }
 
+    /// <summary>Runs the internal Navigate operation.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="contract">The navigation contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
     private void InternalNavigate<T>(string? contract, object? parameter)
         where T : class, IRxObject
     {
@@ -366,7 +347,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -377,6 +358,10 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         }
     }
 
+    /// <summary>Runs the internal Navigate operation.</summary>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The navigation contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
         _toViewModel = viewModel;
@@ -385,7 +370,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IViewModelRo
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);

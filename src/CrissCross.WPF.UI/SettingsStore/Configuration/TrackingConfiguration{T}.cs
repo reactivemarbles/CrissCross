@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Configuration;
@@ -16,49 +16,38 @@ namespace CrissCross.WPF.UI.Configuration;
 /// </remarks>
 public sealed class TrackingConfiguration<T> : ITrackingConfiguration
 {
+    /// <summary>Stores the _inner value.</summary>
     private readonly TrackingConfiguration _inner;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TrackingConfiguration{T}"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration{T}"/> class.</summary>
     /// <param name="inner">The inner.</param>
     internal TrackingConfiguration(TrackingConfiguration inner) => _inner = inner;
 
-    /// <summary>
-    /// Gets the tracker.
-    /// </summary>
+    /// <summary>Gets the tracker.</summary>
     /// <value>
     /// The tracker.
     /// </value>
     public Tracker? Tracker => _inner.Tracker;
 
-    /// <summary>
-    /// Gets the persist triggers.
-    /// </summary>
+    /// <summary>Gets the persist triggers.</summary>
     /// <value>
     /// The persist triggers.
     /// </value>
     public List<Trigger> PersistTriggers => _inner.PersistTriggers;
 
-    /// <summary>
-    /// Gets or sets the stop tracking trigger.
-    /// </summary>
+    /// <summary>Gets or sets the stop tracking trigger.</summary>
     /// <value>
     /// The stop tracking trigger.
     /// </value>
     public Trigger? StopTrackingTrigger { get => _inner.StopTrackingTrigger; set => _inner.StopTrackingTrigger = value; }
 
-    /// <summary>
-    /// Gets the type of the target.
-    /// </summary>
+    /// <summary>Gets the type of the target.</summary>
     /// <value>
     /// The type of the target.
     /// </value>
     public Type? TargetType => _inner.TargetType;
 
-    /// <summary>
-    /// Gets the tracked properties.
-    /// </summary>
+    /// <summary>Gets the tracked properties.</summary>
     /// <value>
     /// The tracked properties.
     /// </value>
@@ -72,96 +61,80 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     public void Track(T target)
         => _inner.Tracker?.Track(target!, _inner);
 
-    /// <summary>
-    /// Allows value conversion and cancellation when applying a stored value to a property.
-    /// </summary>
+    /// <summary>Allows value conversion and cancellation when applying a stored value to a property.</summary>
     /// <param name="action">The action.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> WhenApplyingProperty(Action<T, PropertyOperationData> action)
     {
-        _inner.WhenApplyingProperty((obj, prop) => action((T)obj, prop));
+        _ = _inner.WhenApplyingProperty((obj, prop) => action((T)obj, prop));
         return this;
     }
 
-    /// <summary>
-    /// Allows supplying a callback that will be called when all saved state is applied to a target object.
-    /// </summary>
+    /// <summary>Allows supplying a callback that will be called when all saved state is applied to a target object.</summary>
     /// <param name="action">The action.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> WhenAppliedState(Action<T> action)
     {
-        _inner.WhenAppliedState(obj => action((T)obj));
+        _ = _inner.WhenAppliedState(obj => action((T)obj));
         return this;
     }
 
-    /// <summary>
-    /// Allows value conversion and cancellation when persisting a property of the target object.
-    /// </summary>
+    /// <summary>Allows value conversion and cancellation when persisting a property of the target object.</summary>
     /// <param name="action">The action.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> WhenPersistingProperty(Action<T, PropertyOperationData> action)
     {
-        _inner.WhenPersistingProperty((obj, prop) => action((T)obj, prop));
+        _ = _inner.WhenPersistingProperty((obj, prop) => action((T)obj, prop));
         return this;
     }
 
-    /// <summary>
-    /// Whens the persisted.
-    /// </summary>
+    /// <summary>Whens the persisted.</summary>
     /// <param name="action">The action.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> WhenPersisted(Action<T> action)
     {
-        _inner.WhenPersisted(obj => action((T)obj));
+        _ = _inner.WhenPersisted(obj => action((T)obj));
         return this;
     }
 
-    /// <summary>
-    /// Identifiers the specified identifier function.
-    /// </summary>
+    /// <summary>Identifiers the specified identifier function.</summary>
     /// <param name="idFunc">The provided function will be used to get an identifier for a target object in order to identify the data that belongs to it.</param>
     /// <param name="namespace">Serves to distinguish objects with the same ids that are used in different contexts.</param>
     /// <param name="includeType">If true, the name of the type will be included in the id. This prevents id clashes with different types.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> Id(Func<T, string> idFunc, object? @namespace = null, bool includeType = true)
     {
-        _inner.Id(t => idFunc((T)t), @namespace, includeType);
+        _ = _inner.Id(t => idFunc((T)t), @namespace, includeType);
         return this;
     }
 
-    /// <summary>
-    /// Determines whether this instance can persist the specified can persist function.
-    /// </summary>
+    /// <summary>Determines whether this instance can persist the specified can persist function.</summary>
     /// <param name="canPersistFunc">The provided function will be used to get an identifier for a target object in order to identify the data that belongs to it.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> CanPersist(Func<T, bool> canPersistFunc)
     {
-        _inner.CanPersist(t => canPersistFunc((T)t));
+        _ = _inner.CanPersist(t => canPersistFunc((T)t));
         return this;
     }
 
-    /// <summary>
-    /// Registers the specified event of the target object as a trigger that will cause the target's data to be persisted.
-    /// </summary>
-    /// <param name="eventNames">The names of the events that will cause the target object's data to be persisted.</param>
-    /// <returns>
-    /// Tracking Configuration.
-    /// </returns>
+    /// <summary>Registers the specified event of the target object as a trigger that will cause the target's data to be persisted.</summary>
     /// <remarks>
     /// Automatically persist a target object when it fires the specified name.
     /// </remarks>
     /// <example>
     /// For a Window object, "LocationChanged" and/or "SizeChanged" would be appropriate.
     /// </example>
+    /// <param name="eventNames">The names of the events that will cause the target object's data to be persisted.</param>
+    /// <returns>
+    /// Tracking Configuration.
+    /// </returns>
     public TrackingConfiguration<T> PersistOn(params Func<T, string>[] eventNames)
     {
-        _inner.PersistOn([.. eventNames.Select(x => x(default!))]);
+        _ = _inner.PersistOn([.. eventNames.Select(x => x(default!))]);
         return this;
     }
 
-    /// <summary>
-    /// Automatically persist a target object when the specified eventSourceObject fires the specified event.
-    /// </summary>
+    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSourceObject">If not provided.</param>
     /// <returns>Tracking Configuration.</returns>
@@ -172,13 +145,11 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
             throw new ArgumentNullException(nameof(eventName));
         }
 
-        _inner.PersistOn(eventName(default!), eventSourceObject);
+        _ = _inner.PersistOn(eventName(default!), eventSourceObject);
         return this;
     }
 
-    /// <summary>
-    /// Automatically persist a target object when the specified eventSourceObject fires the specified event.
-    /// </summary>
+    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
     /// <param name="eventName">The name of the event that should trigger persisting stete.</param>
     /// <param name="eventSourceGetter">The event source getter.</param>
     /// <returns>Tracking Configuration.</returns>
@@ -189,13 +160,11 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
             throw new ArgumentNullException(nameof(eventName));
         }
 
-        _inner.PersistOn(eventName(default!), t => eventSourceGetter((T)t));
+        _ = _inner.PersistOn(eventName(default!), t => eventSourceGetter((T)t));
         return this;
     }
 
-    /// <summary>
-    /// Stop tracking the target when it fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when it fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> StopTrackingOn(Func<T, string> eventName)
@@ -205,13 +174,11 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
             throw new ArgumentNullException(nameof(eventName));
         }
 
-        _inner.StopTrackingOn(eventName(default!));
+        _ = _inner.StopTrackingOn(eventName(default!));
         return this;
     }
 
-    /// <summary>
-    /// Stop tracking the target when the specified eventSource object fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSource">The event source.</param>
     /// <returns>Tracking Configuration.</returns>
@@ -222,13 +189,11 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
             throw new ArgumentNullException(nameof(eventName));
         }
 
-        _inner.StopTrackingOn(eventName(default!), eventSource);
+        _ = _inner.StopTrackingOn(eventName(default!), eventSource);
         return this;
     }
 
-    /// <summary>
-    /// Stop tracking the target when the specified eventSource object fires the specified event.
-    /// </summary>
+    /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSourceGetter">The event source getter.</param>
     /// <returns>Tracking Configuration.</returns>
@@ -239,13 +204,11 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
             throw new ArgumentNullException(nameof(eventName));
         }
 
-        _inner.StopTrackingOn(eventName(default!), t => eventSourceGetter((T)t));
+        _ = _inner.StopTrackingOn(eventName(default!), t => eventSourceGetter((T)t));
         return this;
     }
 
-    /// <summary>
-    /// Set up tracking for the specified property.
-    /// </summary>
+    /// <summary>Set up tracking for the specified property.</summary>
     /// <typeparam name="TResult">The type.</typeparam>
     /// <param name="propertyAccessExpression">The property access expression.</param>
     /// <param name="name">The name.</param>
@@ -254,9 +217,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// </returns>
     public TrackingConfiguration<T> Property<TResult>(Expression<Func<T, TResult?>> propertyAccessExpression, string? name = null) => Property(name, propertyAccessExpression, false, default);
 
-    /// <summary>
-    /// Set up tracking for the specified property.
-    /// </summary>
+    /// <summary>Set up tracking for the specified property.</summary>
     /// <typeparam name="TProperty">The type of the property.</typeparam>
     /// <param name="propertyAccessExpression">The expression that points to the specified property. Can navigate multiple levels.</param>
     /// <param name="defaultValue">If there is no value in the store for the property, the defaultValue will be used.</param>
@@ -264,20 +225,16 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> Property<TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression, TProperty defaultValue, string? name = null) => Property(name, propertyAccessExpression, true, defaultValue);
 
-    /// <summary>
-    /// Set up tracking for one or more properties.
-    /// </summary>
+    /// <summary>Set up tracking for one or more properties.</summary>
     /// <param name="projection">Describes which properties of the target object to track by returning an anonymous type projection (e.g. x =&gt; new { x.MyProp1, x.MyProp2 }).</param>
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> Properties(Expression<Func<T, object>> projection)
     {
-        _inner.Properties(projection);
+        _ = _inner.Properties(projection);
         return this;
     }
 
-    /// <summary>
-    /// Determines whether this instance can persist the specified can persist function.
-    /// </summary>
+    /// <summary>Determines whether this instance can persist the specified can persist function.</summary>
     /// <param name="canPersistFunc">The can persist function.</param>
     /// <returns>
     /// ITracking Configuration.
@@ -285,9 +242,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     public ITrackingConfiguration CanPersist(Func<object, bool> canPersistFunc)
         => _inner.CanPersist(canPersistFunc);
 
-    /// <summary>
-    /// Gets the store identifier.
-    /// </summary>
+    /// <summary>Gets the store identifier.</summary>
     /// <param name="target">The target.</param>
     /// <returns>
     /// A string.
@@ -295,158 +250,143 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     public string GetStoreId(object target)
         => _inner.GetStoreId(target);
 
-    /// <summary>
-    /// Identifiers the specified identifier function.
-    /// </summary>
-    /// <param name="idFunc">The identifier function.</param>
-    /// <param name="namespace">The namespace.</param>
-    /// <param name="includeType">if set to <c>true</c> [include type].</param>
+    /// <summary>Identifiers the specified identifier function.</summary>
+    /// <param name="idFunc">The idFunc value.</param>
+    /// <param name="namespace">The namespace value.</param>
+    /// <param name="includeType">The includeType value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.Id(Func<object, string> idFunc, object? @namespace, bool includeType)
     {
-        _inner.Id(idFunc, @namespace, includeType);
+        _ = _inner.Id(idFunc, @namespace, includeType);
         return this;
     }
 
-    /// <summary>
-    /// Persists the on.
-    /// </summary>
-    /// <param name="eventNames">The event names.</param>
+    /// <summary>Persists the on.</summary>
+    /// <param name="eventNames">The eventNames value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.PersistOn(params string[] eventNames)
     {
-        _inner.PersistOn(eventNames);
+        _ = _inner.PersistOn(eventNames);
         return this;
     }
 
-    /// <summary>
-    /// Persists the on.
-    /// </summary>
-    /// <param name="eventName">Name of the event.</param>
-    /// <param name="eventSourceGetter">The event source getter.</param>
+    /// <summary>Persists the on.</summary>
+    /// <param name="eventName">The eventName value.</param>
+    /// <param name="eventSourceGetter">The eventSourceGetter value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.PersistOn(string eventName, Func<object, object> eventSourceGetter)
     {
-        _inner.PersistOn(eventName, eventSourceGetter);
+        _ = _inner.PersistOn(eventName, eventSourceGetter);
         return this;
     }
 
-    /// <summary>
-    /// Persists the on.
-    /// </summary>
-    /// <param name="eventName">Name of the event.</param>
-    /// <param name="eventSourceObject">The event source object.</param>
+    /// <summary>Persists the on.</summary>
+    /// <param name="eventName">The eventName value.</param>
+    /// <param name="eventSourceObject">The eventSourceObject value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.PersistOn(string eventName, object eventSourceObject)
     {
-        _inner.PersistOn(eventName, eventSourceObject);
+        _ = _inner.PersistOn(eventName, eventSourceObject);
         return this;
     }
 
-    /// <summary>
-    /// Stops the tracking on.
-    /// </summary>
-    /// <param name="eventName">Name of the event.</param>
+    /// <summary>Stops the tracking on.</summary>
+    /// <param name="eventName">The eventName value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.StopTrackingOn(string eventName)
     {
-        _inner.StopTrackingOn(eventName);
+        _ = _inner.StopTrackingOn(eventName);
         return this;
     }
 
-    /// <summary>
-    /// Stops the tracking on.
-    /// </summary>
-    /// <param name="eventName">Name of the event.</param>
-    /// <param name="eventSourceGetter">The event source getter.</param>
+    /// <summary>Stops the tracking on.</summary>
+    /// <param name="eventName">The eventName value.</param>
+    /// <param name="eventSourceGetter">The eventSourceGetter value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.StopTrackingOn(string eventName, Func<object, object> eventSourceGetter)
     {
-        _inner.StopTrackingOn(eventName, eventSourceGetter);
+        _ = _inner.StopTrackingOn(eventName, eventSourceGetter);
         return this;
     }
 
-    /// <summary>
-    /// Stops the tracking on.
-    /// </summary>
-    /// <param name="eventName">Name of the event.</param>
-    /// <param name="eventSource">The event source.</param>
+    /// <summary>Stops the tracking on.</summary>
+    /// <param name="eventName">The eventName value.</param>
+    /// <param name="eventSource">The eventSource value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.StopTrackingOn(string eventName, object eventSource)
     {
-        _inner.StopTrackingOn(eventName, eventSource);
+        _ = _inner.StopTrackingOn(eventName, eventSource);
         return this;
     }
 
-    /// <summary>
-    /// Whens the state of the applied.
-    /// </summary>
-    /// <param name="action">The action.</param>
+    /// <summary>Whens the state of the applied.</summary>
+    /// <param name="action">The action value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.WhenAppliedState(Action<object> action)
     {
-        _inner.WhenAppliedState(action);
+        _ = _inner.WhenAppliedState(action);
         return this;
     }
 
-    /// <summary>
-    /// Whens the applying property.
-    /// </summary>
-    /// <param name="action">The action.</param>
+    /// <summary>Whens the applying property.</summary>
+    /// <param name="action">The action value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.WhenApplyingProperty(Action<object, PropertyOperationData> action)
     {
-        _inner.WhenApplyingProperty(action);
+        _ = _inner.WhenApplyingProperty(action);
         return this;
     }
 
-    /// <summary>
-    /// Whens the persisted.
-    /// </summary>
-    /// <param name="action">The action.</param>
+    /// <summary>Whens the persisted.</summary>
+    /// <param name="action">The action value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.WhenPersisted(Action<object> action)
     {
-        _inner.WhenPersisted(action);
+        _ = _inner.WhenPersisted(action);
         return this;
     }
 
-    /// <summary>
-    /// Whens the persisting property.
-    /// </summary>
-    /// <param name="action">The action.</param>
+    /// <summary>Whens the persisting property.</summary>
+    /// <param name="action">The action value.</param>
     /// <returns>
     /// ITracking Configuration.
     /// </returns>
     ITrackingConfiguration ITrackingConfiguration.WhenPersistingProperty(Action<object, PropertyOperationData> action)
     {
-        _inner.WhenPersistingProperty(action);
+        _ = _inner.WhenPersistingProperty(action);
         return this;
     }
 
+    /// <summary>Provides the Property member.</summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="propertyAccessExpression">The propertyAccessExpression value.</param>
+    /// <param name="defaultSpecified">The defaultSpecified value.</param>
+    /// <param name="defaultValue">The defaultvalue.</param>
+    /// <typeparam name="TProperty">The type.</typeparam>
+    /// <returns>The result.</returns>
     private TrackingConfiguration<T> Property<TProperty>(string? name, Expression<Func<T, TProperty?>> propertyAccessExpression, bool defaultSpecified, TProperty defaultValue)
     {
-        _inner.Property(name, propertyAccessExpression, defaultSpecified, defaultValue);
+        _ = _inner.Property(name, propertyAccessExpression, defaultSpecified, defaultValue);
         return this;
     }
 }

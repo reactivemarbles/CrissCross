@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
 using System.Runtime.Versioning;
 using CP.Reactive.Collections;
 using ReactiveUI;
@@ -10,9 +9,7 @@ using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>
-/// Represents the view model for managing and editing properties of chart objects in the right properties panel.
-/// </summary>
+/// <summary>Represents the view model for managing and editing properties of chart objects in the right properties panel.</summary>
 /// <remarks>This class provides properties and commands for interacting with chart object settings, such as line
 /// color, line width, item name, and visibility. It is intended for use in Windows 10.0.19041 or later environments.
 /// The view model exposes collections of available line colors and visibility options, and provides a command to save
@@ -21,14 +18,23 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class RightPropertiesViewModel : RxObject
 {
+    /// <summary>Stores the selected setting value.</summary>
     [Reactive]
     private ChartObjects? _selectedSetting;
+
+    /// <summary>Stores the line width value.</summary>
     [Reactive]
     private double _lineWidth;
+
+    /// <summary>Stores the line color value.</summary>
     [Reactive]
     private string? _lineColor;
+
+    /// <summary>Stores the item name value.</summary>
     [Reactive]
     private string? _itemName;
+
+    /// <summary>Stores the item visibility value.</summary>
     [Reactive]
     private string? _itemVisibility;
 
@@ -58,40 +64,27 @@ public partial class RightPropertiesViewModel : RxObject
 
         SaveConfiguration = ReactiveCommand.Create(() =>
         {
-            if (SelectedSetting != null)
+            if (SelectedSetting is null)
             {
-                // Apply all pending changes to the selected setting
-                if (!string.IsNullOrEmpty(ItemName))
-                {
-                    SelectedSetting.ItemName = ItemName;
-                }
-
-                SelectedSetting.LineWidth = LineWidth;
-
-                if (!string.IsNullOrEmpty(LineColor))
-                {
-                    SelectedSetting.Color = LineColor;
-                }
-
-                if (!string.IsNullOrEmpty(ItemVisibility))
-                {
-                    SelectedSetting.Visibility = ItemVisibility;
-                }
+                return;
             }
+
+            ApplyIfSpecified(ItemName, value => SelectedSetting.ItemName = value);
+
+            SelectedSetting.LineWidth = LineWidth;
+
+            ApplyIfSpecified(LineColor, value => SelectedSetting.Color = value);
+            ApplyIfSpecified(ItemVisibility, value => SelectedSetting.Visibility = value);
         });
     }
 
-    /// <summary>
-    /// Gets the command that saves the current configuration settings.
-    /// </summary>
+    /// <summary>Gets the command that saves the current configuration settings.</summary>
     /// <remarks>This command can be executed to persist any changes made to the configuration. The command
     /// completes when the save operation finishes. Typically used in UI scenarios to trigger saving from a button or
     /// menu item.</remarks>
     public ReactiveCommand<Unit, Unit> SaveConfiguration { get; }
 
-    /// <summary>
-    /// Gets or sets the collection of colors used for lines in the chart or visualization.
-    /// </summary>
+    /// <summary>Gets or sets the collection of colors used for lines in the chart or visualization.</summary>
     /// <remarks>The list contains up to four color values, which are applied in order to the lines rendered.
     /// If fewer than four colors are specified, default colors may be used for remaining lines. Modifying this property
     /// allows customization of line appearance.</remarks>
@@ -101,9 +94,7 @@ public partial class RightPropertiesViewModel : RxObject
     public ReactiveList<string> LineColors { get; set; }
 #endif
 
-    /// <summary>
-    /// Gets or sets the collection of colors used to render individual lines in the chart or visualization.
-    /// </summary>
+    /// <summary>Gets or sets the collection of colors used to render individual lines in the chart or visualization.</summary>
     /// <remarks>The order of colors in the collection determines which color is applied to each line.
     /// Modifying this collection updates the appearance of the corresponding lines. The property is observable; changes
     /// to the collection will automatically propagate to any listeners.</remarks>
@@ -112,4 +103,17 @@ public partial class RightPropertiesViewModel : RxObject
 #else
     public ReactiveList<string> Visibilities { get; set; }
 #endif
+
+    /// <summary>Applies a text value when it has content.</summary>
+    /// <param name="value">The text value.</param>
+    /// <param name="apply">The update action.</param>
+    private static void ApplyIfSpecified(string? value, Action<string> apply)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        apply(value);
+    }
 }

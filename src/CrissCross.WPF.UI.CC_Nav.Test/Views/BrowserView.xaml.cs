@@ -1,26 +1,20 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using ReactiveUI;
 using Splat;
 
 namespace CrissCross.WPF.UI.CC_Nav.Test.Views;
 
-/// <summary>
-/// Interaction logic for MainView.xaml.
-/// </summary>
-public partial class BrowserView : IUseHostedNavigation
+/// <summary>Interaction logic for MainView.xaml.</summary>
+public class BrowserView : IUseHostedNavigation
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BrowserView"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="BrowserView"/> class.</summary>
     public BrowserView()
     {
-        InitializeComponent();
-        this.WhenActivated(d =>
+        _ = InitializeComponent();
+        _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
             this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);

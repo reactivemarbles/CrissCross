@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -21,333 +21,263 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = "RangeIndicatorLight", Type = typeof(Ellipse))]
 public sealed class CircularGauge : Control
 {
-    /// <summary>
-    /// Dependency property to Get/Set the Above Optimal Range Color.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Above Optimal Range Color.</summary>
     public static readonly DependencyProperty AboveOptimalRangeColorProperty =
         DependencyProperty.Register(nameof(AboveOptimalRangeColor), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(Brushes.Transparent));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Below Optimal Range Color.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Below Optimal Range Color.</summary>
     public static readonly DependencyProperty BelowOptimalRangeColorProperty =
         DependencyProperty.Register(nameof(BelowOptimalRangeColor), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(Brushes.Transparent));
 
-    /// <summary>
-    /// The decimals property.
-    /// </summary>
+    /// <summary>The decimals property.</summary>
     public static readonly DependencyProperty DecimalsProperty =
        DependencyProperty.Register(nameof(Decimals), typeof(int), typeof(CircularGauge), new PropertyMetadata(2));
 
-    /// <summary>
-    /// The detection time out property.
-    /// </summary>
+    /// <summary>The detection time out property.</summary>
     public static readonly DependencyProperty DetectionTimeOutProperty =
         DependencyProperty.Register(nameof(DetectionTimeOut), typeof(int), typeof(CircularGauge), new PropertyMetadata(1));
 
-    /// <summary>
-    /// The detect value or error property.
-    /// </summary>
+    /// <summary>The detect value or error property.</summary>
     public static readonly DependencyProperty DetectValueOrErrorProperty =
         DependencyProperty.Register(nameof(DetectValueOrError), typeof(bool), typeof(CircularGauge), new PropertyMetadata(false, OnDetectValueOrErrorPropertyChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Dial Text Font Size.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Dial Text Font Size.</summary>
     public static readonly DependencyProperty DialTextFontSizeProperty =
         DependencyProperty.Register(nameof(DialTextFontSize), typeof(double), typeof(CircularGauge), new PropertyMetadata(14d));
 
-    /// <summary>
-    /// The value text font size property.
-    /// </summary>
+    /// <summary>The value text font size property.</summary>
     public static readonly DependencyProperty ValueTextFontSizeProperty =
         DependencyProperty.Register(nameof(ValueTextFontSize), typeof(double), typeof(CircularGauge), new PropertyMetadata(14d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Dial Text Offset.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Dial Text Offset.</summary>
     public static readonly DependencyProperty DialTextOffsetProperty =
         DependencyProperty.Register(nameof(DialTextOffset), typeof(double), typeof(CircularGauge), new PropertyMetadata(-40d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Dial Text.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Dial Text.</summary>
     public static readonly DependencyProperty DialTextProperty =
         DependencyProperty.Register(nameof(DialText), typeof(string), typeof(CircularGauge), new PropertyMetadata("CrissCross"));
 
-    /// <summary>
-    /// The display alignment property.
-    /// </summary>
+    /// <summary>The display alignment property.</summary>
     public static readonly DependencyProperty DisplayAlignmentProperty =
         DependencyProperty.Register(nameof(DisplayAlignment), typeof(TextAlignment), typeof(CircularGauge), new PropertyMetadata(TextAlignment.Center));
 
-    /// <summary>
-    /// The display border colour property.
-    /// </summary>
+    /// <summary>The display border colour property.</summary>
     public static readonly DependencyProperty DisplayBorderColourProperty =
       DependencyProperty.Register(nameof(DisplayBorderColour), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(null));
 
-    /// <summary>
-    /// The display value property.
-    /// </summary>
+    /// <summary>The display value property.</summary>
     public static readonly DependencyProperty DisplayValueProperty =
         DependencyProperty.Register(nameof(DisplayValue), typeof(Visibility), typeof(CircularGauge), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The error property.
-    /// </summary>
+    /// <summary>The error property.</summary>
     public static readonly DependencyProperty ErrorProperty =
         DependencyProperty.Register(nameof(Error), typeof(bool), typeof(CircularGauge), new PropertyMetadata(false));
 
-    /// <summary>
-    /// Dependency property to Get/Set the image offset.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the image offset.</summary>
     public static readonly DependencyProperty ImageOffsetProperty =
         DependencyProperty.Register(nameof(ImageOffset), typeof(double), typeof(CircularGauge), new PropertyMetadata(-50d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the image Size.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the image Size.</summary>
     public static readonly DependencyProperty ImageSizeProperty =
         DependencyProperty.Register(nameof(ImageSize), typeof(Size), typeof(CircularGauge), new PropertyMetadata(new Size(40, 50)));
 
-    /// <summary>
-    /// Dependency property to Get/Set the image source.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the image source.</summary>
     public static readonly DependencyProperty ImageSourceProperty =
         DependencyProperty.Register(nameof(ImageSource), typeof(ImageSource), typeof(CircularGauge), null);
 
-    /// <summary>
-    /// Dependency property to Get/Set the number of major divisions on the scale.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the number of major divisions on the scale.</summary>
     public static readonly DependencyProperty MajorDivisionsCountProperty =
         DependencyProperty.Register(nameof(MajorDivisionsCount), typeof(double), typeof(CircularGauge), new PropertyMetadata(10d, AMajorValueHasChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Major Tick Size.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Major Tick Size.</summary>
     public static readonly DependencyProperty MajorTickSizeProperty =
         DependencyProperty.Register(nameof(MajorTickSize), typeof(Size), typeof(CircularGauge), new PropertyMetadata(new Size(10, 3)));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Maximum Value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Maximum Value.</summary>
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(nameof(MaxValue), typeof(double), typeof(CircularGauge), new PropertyMetadata(1000d, AMajorValueHasChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the number of minor divisions on the scale.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the number of minor divisions on the scale.</summary>
     public static readonly DependencyProperty MinorDivisionsCountProperty =
         DependencyProperty.Register(nameof(MinorDivisionsCount), typeof(double), typeof(CircularGauge), new PropertyMetadata(5d, AMajorValueHasChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Minor Tick Size.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Minor Tick Size.</summary>
     public static readonly DependencyProperty MinorTickSizeProperty =
         DependencyProperty.Register(nameof(MinorTickSize), typeof(Size), typeof(CircularGauge), new PropertyMetadata(new Size(3, 1)));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Minimum Value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Minimum Value.</summary>
     public static readonly DependencyProperty MinValueProperty =
         DependencyProperty.Register(nameof(MinValue), typeof(double), typeof(CircularGauge), new PropertyMetadata(0d, AMajorValueHasChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Optimal Range Color.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Optimal Range Color.</summary>
     public static readonly DependencyProperty OptimalRangeColorProperty =
         DependencyProperty.Register(nameof(OptimalRangeColor), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(Brushes.Transparent));
 
-    /// <summary>
-    /// Dependency property to Get/Set Optimal Range End Value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set Optimal Range End Value.</summary>
     public static readonly DependencyProperty OptimalRangeEndValueProperty =
         DependencyProperty.Register(nameof(OptimalRangeEndValue), typeof(double), typeof(CircularGauge), new PropertyMetadata(0.9d, OnOptimalRangeEndValuePropertyChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set Optimal Range Start Value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set Optimal Range Start Value.</summary>
     public static readonly DependencyProperty OptimalRangeStartValueProperty =
         DependencyProperty.Register(nameof(OptimalRangeStartValue), typeof(double), typeof(CircularGauge), new PropertyMetadata(0.1d, OnOptimalRangeStartValuePropertyChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Pointer cap Radius.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Pointer cap Radius.</summary>
     public static readonly DependencyProperty PointerCapRadiusProperty =
         DependencyProperty.Register(nameof(PointerCapRadius), typeof(double), typeof(CircularGauge), new PropertyMetadata(35d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the pointer length.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the pointer length.</summary>
     public static readonly DependencyProperty PointerLengthProperty =
         DependencyProperty.Register(nameof(PointerLength), typeof(double), typeof(CircularGauge), new PropertyMetadata(85d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Pointer Thickness.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Pointer Thickness.</summary>
     public static readonly DependencyProperty PointerThicknessProperty =
         DependencyProperty.Register(nameof(PointerThickness), typeof(double), typeof(CircularGauge), new PropertyMetadata(16d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Radius of the gauge.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Radius of the gauge.</summary>
     public static readonly DependencyProperty RadiusProperty =
         DependencyProperty.Register(nameof(Radius), typeof(double), typeof(CircularGauge), new PropertyMetadata(150d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the range indicator light offset.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the range indicator light offset.</summary>
     public static readonly DependencyProperty RangeIndicatorLightOffsetProperty =
         DependencyProperty.Register(nameof(RangeIndicatorLightOffset), typeof(double), typeof(CircularGauge), new PropertyMetadata(80d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Range Indicator light Radius.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Range Indicator light Radius.</summary>
     public static readonly DependencyProperty RangeIndicatorLightRadiusProperty =
         DependencyProperty.Register(nameof(RangeIndicatorLightRadius), typeof(double), typeof(CircularGauge), new PropertyMetadata(10d));
 
-    /// <summary>
-    /// The range indicator light visible property.
-    /// </summary>
+    /// <summary>The range indicator light visible property.</summary>
     public static readonly DependencyProperty RangeIndicatorLightVisibleProperty =
         DependencyProperty.Register(nameof(RangeIndicatorLightVisible), typeof(Visibility), typeof(CircularGauge), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Range Indicator Radius.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Range Indicator Radius.</summary>
     public static readonly DependencyProperty RangeIndicatorRadiusProperty =
         DependencyProperty.Register(nameof(RangeIndicatorRadius), typeof(double), typeof(CircularGauge), new PropertyMetadata(120d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Range Indicator Thickness.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Range Indicator Thickness.</summary>
     public static readonly DependencyProperty RangeIndicatorThicknessProperty =
         DependencyProperty.Register(nameof(RangeIndicatorThickness), typeof(double), typeof(CircularGauge), new PropertyMetadata(8d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the an option to reset the pointer on start up to the
-    /// minimum value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the an option to reset the pointer on start up to the minimum value.</summary>
     public static readonly DependencyProperty ResetPointerOnStartUpProperty =
         DependencyProperty.Register(nameof(ResetPointerOnStartUp), typeof(bool), typeof(CircularGauge), new PropertyMetadata(true));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Scale Label Foreground.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Scale Label Foreground.</summary>
     public static readonly DependencyProperty ScaleForegroundProperty =
         DependencyProperty.Register(nameof(ScaleForeground), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(ForegroundProperty.DefaultMetadata.DefaultValue, ScalePropertyChanged));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Scale Label FontSize.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Scale Label FontSize.</summary>
     public static readonly DependencyProperty ScaleLabelFontSizeProperty =
         DependencyProperty.Register(nameof(ScaleLabelFontSize), typeof(double), typeof(CircularGauge), new PropertyMetadata(10d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the scale label Radius.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the scale label Radius.</summary>
     public static readonly DependencyProperty ScaleLabelRadiusProperty =
         DependencyProperty.Register(nameof(ScaleLabelRadius), typeof(double), typeof(CircularGauge), new PropertyMetadata(90d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Scale Label Size.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Scale Label Size.</summary>
     public static readonly DependencyProperty ScaleLabelSizeProperty =
         DependencyProperty.Register(nameof(ScaleLabelSize), typeof(Size), typeof(CircularGauge), new PropertyMetadata(new Size(40, 20)));
 
-    /// <summary>
-    /// Dependency property to Get/Set the scale Radius.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the scale Radius.</summary>
     public static readonly DependencyProperty ScaleRadiusProperty =
         DependencyProperty.Register(nameof(ScaleRadius), typeof(double), typeof(CircularGauge), new PropertyMetadata(110d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the starting angle of scale.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the starting angle of scale.</summary>
     public static readonly DependencyProperty ScaleStartAngleProperty =
         DependencyProperty.Register(nameof(ScaleStartAngle), typeof(double), typeof(CircularGauge), new PropertyMetadata(120d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the sweep angle of scale.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the sweep angle of scale.</summary>
     public static readonly DependencyProperty ScaleSweepAngleProperty =
         DependencyProperty.Register(nameof(ScaleSweepAngle), typeof(double), typeof(CircularGauge), new PropertyMetadata(300d));
 
-    /// <summary>
-    /// Dependency property to Get/Set the Scale Value Precision.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the Scale Value Precision.</summary>
     public static readonly DependencyProperty ScaleValuePrecisionProperty =
         DependencyProperty.Register(nameof(ScaleValuePrecision), typeof(int), typeof(CircularGauge), new PropertyMetadata(5));
 
-    /// <summary>
-    /// The show error property.
-    /// </summary>
+    /// <summary>The show error property.</summary>
     public static readonly DependencyProperty ShowErrorProperty =
         DependencyProperty.Register(nameof(ShowError), typeof(Visibility), typeof(CircularGauge), new PropertyMetadata(Visibility.Collapsed));
 
-    /// <summary>
-    /// The unit property.
-    /// </summary>
+    /// <summary>The unit property.</summary>
     public static readonly DependencyProperty UnitProperty =
          DependencyProperty.Register(nameof(Unit), typeof(string), typeof(CircularGauge), new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// The value background property.
-    /// </summary>
+    /// <summary>The value background property.</summary>
     public static readonly DependencyProperty ValueBackgroundProperty =
         DependencyProperty.Register(nameof(ValueBackground), typeof(Brush), typeof(CircularGauge), new PropertyMetadata(null));
 
-    /// <summary>
-    /// Dependency property to Get/Set the value.
-    /// </summary>
+    /// <summary>Dependency property to Get/Set the value.</summary>
     public static readonly DependencyProperty ValueProperty =
         DependencyProperty.Register(nameof(Value), typeof(double), typeof(CircularGauge), new PropertyMetadata(0d, OnValuePropertyChanged));
 
+    /// <summary>Provides the AnimatingSpeedFactor member.</summary>
     private const int AnimatingSpeedFactor = 6;
+
+    /// <summary>Stores the _ht value.</summary>
     private readonly Hashtable _ht = [];
+
+    /// <summary>Stores the _lockObject value.</summary>
     private readonly object _lockObject = new();
+
+    /// <summary>Stores the _arcradius1 value.</summary>
     private double _arcradius1;
+
+    /// <summary>Stores the _arcradius2 value.</summary>
     private double _arcradius2;
+
+    /// <summary>Stores the _detectValuesChanging value.</summary>
     private bool _detectValuesChanging;
+
+    /// <summary>Stores the _lightIndicator value.</summary>
     private Ellipse? _lightIndicator;
+
+    /// <summary>Stores the _numberOfMinorpoints value.</summary>
     private int _numberOfMinorpoints;
+
+    /// <summary>Stores the _numberOfpoints value.</summary>
     private int _numberOfpoints;
+
+    /// <summary>Stores the _oldcurrRealworldunit value.</summary>
     private double _oldcurrRealworldunit;
+
+    /// <summary>Stores the _pointer value.</summary>
     private Path? _pointer;
+
+    /// <summary>Stores the _pointerCap value.</summary>
     private Ellipse? _pointerCap;
+
+    /// <summary>Stores the _rangeIndicator1 value.</summary>
     private Path? _rangeIndicator1;
+
+    /// <summary>Stores the _rangeIndicator2 value.</summary>
     private Path? _rangeIndicator2;
+
+    /// <summary>Stores the _rangeIndicator3 value.</summary>
     private Path? _rangeIndicator3;
+
+    /// <summary>Stores the _rootGrid value.</summary>
     private Grid? _rootGrid;
+
+    /// <summary>Stores the _valueChanged value.</summary>
     private bool _valueChanged;
 
-    /// <summary>
-    /// Initializes static members of the <see cref="CircularGauge"/> class.
-    /// </summary>
+    /// <summary>Initializes static members of the <see cref="CircularGauge"/> class.</summary>
     static CircularGauge() => DefaultStyleKeyProperty.OverrideMetadata(typeof(CircularGauge), new FrameworkPropertyMetadata(typeof(CircularGauge)));
 
-    /// <summary>
-    /// Gets or sets /Sets Above Optimal Range Color.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Above Optimal Range Color.</summary>
     [Description("Gets/Sets Above Optimal Range Color")]
     public Brush AboveOptimalRangeColor
     {
         get => (Brush)GetValue(AboveOptimalRangeColorProperty); set => SetValue(AboveOptimalRangeColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Below Optimal Range Color.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Below Optimal Range Color.</summary>
     [Description("Gets/Sets Below Optimal Range Color")]
     public Brush BelowOptimalRangeColor
     {
         get => (Brush)GetValue(BelowOptimalRangeColorProperty); set => SetValue(BelowOptimalRangeColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the decimals.
-    /// </summary>
+    /// <summary>Gets or sets the decimals.</summary>
     /// <value>The decimals.</value>
     [Description("Gets or sets the decimals.")]
     [Category("CrissCross Important")]
@@ -356,9 +286,7 @@ public sealed class CircularGauge : Control
         get => (int)GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the detection time out.
-    /// </summary>
+    /// <summary>Gets or sets the detection time out.</summary>
     /// <value>The detection timeout.</value>
     [Description("Gets or sets the detection time out, so the value hasn't changed for a period and thus an error will show.")]
     [Category("CrissCross Detection")]
@@ -367,9 +295,7 @@ public sealed class CircularGauge : Control
         get => (int)GetValue(DetectionTimeOutProperty); set => SetValue(DetectionTimeOutProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [detect value or error].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [detect value or error].</summary>
     /// <value><c>true</c> if [detect value or error]; otherwise, <c>false</c>.</value>
     [Description("Gets or sets a value indicating whether to start checking if the value is changing or it has an error.")]
     [Category("CrissCross Detection")]
@@ -378,9 +304,7 @@ public sealed class CircularGauge : Control
         get => (bool)GetValue(DetectValueOrErrorProperty); set => SetValue(DetectValueOrErrorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Dial Text.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Dial Text.</summary>
     [Description("Gets/Sets Dial Text")]
     [Category("CrissCross Dial Text")]
     public string DialText
@@ -388,9 +312,7 @@ public sealed class CircularGauge : Control
         get => (string)GetValue(DialTextProperty); set => SetValue(DialTextProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Dial Text Font Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Dial Text Font Size.</summary>
     [Description("Gets/Sets Dial Text Font Size")]
     [Category("CrissCross Dial Text")]
     public double DialTextFontSize
@@ -398,9 +320,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(DialTextFontSizeProperty); set => SetValue(DialTextFontSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Dial Text Font Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Dial Text Font Size.</summary>
     [Description("Gets/Sets Value Text Font Size")]
     [Category("CrissCross Dial Text")]
     public double ValueTextFontSize
@@ -408,9 +328,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ValueTextFontSizeProperty); set => SetValue(ValueTextFontSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Dial Text Offset.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Dial Text Offset.</summary>
     [Description("Gets/Sets Dial Text Offset")]
     [Category("CrissCross Dial Text")]
     public double DialTextOffset
@@ -418,9 +336,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(DialTextOffsetProperty); set => SetValue(DialTextOffsetProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the display alignment.
-    /// </summary>
+    /// <summary>Gets or sets the display alignment.</summary>
     /// <value>The display alignment.</value>
     [Description("Gets or sets the display alignment.")]
     [Category("CrissCross Important")]
@@ -429,9 +345,7 @@ public sealed class CircularGauge : Control
         get => (TextAlignment)GetValue(DisplayAlignmentProperty); set => SetValue(DisplayAlignmentProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the display border colour.
-    /// </summary>
+    /// <summary>Gets or sets the display border colour.</summary>
     /// <value>The display border colour.</value>
     [Description("Gets or sets the display border colour.")]
     public Brush DisplayBorderColour
@@ -439,9 +353,7 @@ public sealed class CircularGauge : Control
         get => (Brush)GetValue(DisplayBorderColourProperty); set => SetValue(DisplayBorderColourProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [display value].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [display value].</summary>
     /// <value><c>true</c> if [display value]; otherwise, <c>false</c>.</value>
     [Description("Gets or sets a value indicating whether [display value].")]
     [Category("CrissCross Important")]
@@ -450,9 +362,7 @@ public sealed class CircularGauge : Control
         get => (Visibility)GetValue(DisplayValueProperty); set => SetValue(DisplayValueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets the error.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets the error.</summary>
     /// <value>The error.</value>
     [Description("Gets or sets the error")]
     [Category("CrissCross")]
@@ -461,9 +371,7 @@ public sealed class CircularGauge : Control
         get => (bool)GetValue(ErrorProperty); set => SetValue(ErrorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Image offset.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Image offset.</summary>
     [Description("Gets/Sets the Image offset")]
     [Category("CrissCross Image")]
     public double ImageOffset
@@ -471,9 +379,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ImageOffsetProperty); set => SetValue(ImageOffsetProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Image width and height.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Image width and height.</summary>
     [Description("Gets/Sets the Image width and height")]
     [Category("CrissCross Image")]
     public Size ImageSize
@@ -481,9 +387,7 @@ public sealed class CircularGauge : Control
         get => (Size)GetValue(ImageSizeProperty); set => SetValue(ImageSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Gauge image source.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Gauge image source.</summary>
     [Description("Gets/Sets the Gauge image source")]
     [Category("CrissCross Image")]
     public ImageSource ImageSource
@@ -491,9 +395,7 @@ public sealed class CircularGauge : Control
         get => (ImageSource)GetValue(ImageSourceProperty); set => SetValue(ImageSourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the number of major divisions on the scale.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the number of major divisions on the scale.</summary>
     [Description("Gets/Sets the number of major divisions on the scale")]
     [Category("CrissCross")]
     public double MajorDivisionsCount
@@ -501,9 +403,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(MajorDivisionsCountProperty); set => SetValue(MajorDivisionsCountProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Major Tick Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Major Tick Size.</summary>
     [Description("Gets/Sets the Major Tick Size")]
     [Category("CrissCross")]
     public Size MajorTickSize
@@ -511,9 +411,7 @@ public sealed class CircularGauge : Control
         get => (Size)GetValue(MajorTickSizeProperty); set => SetValue(MajorTickSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Maximum Value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Maximum Value.</summary>
     [Description("Gets/Sets the Maximum Value")]
     [Category("CrissCross Important")]
     public double MaxValue
@@ -521,9 +419,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(MaxValueProperty); set => SetValue(MaxValueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the number of minor divisions on the scale.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the number of minor divisions on the scale.</summary>
     [Description("Gets/Sets the number of minor divisions on the scale")]
     [Category("CrissCross")]
     public double MinorDivisionsCount
@@ -531,9 +427,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(MinorDivisionsCountProperty); set => SetValue(MinorDivisionsCountProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Minor Tick Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Minor Tick Size.</summary>
     [Description("Gets/Sets the Minor Tick Size")]
     [Category("CrissCross")]
     public Size MinorTickSize
@@ -541,9 +435,7 @@ public sealed class CircularGauge : Control
         get => (Size)GetValue(MinorTickSizeProperty); set => SetValue(MinorTickSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Minimum Value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Minimum Value.</summary>
     [Description("Gets/Sets the Minimum Value")]
     [Category("CrissCross Important")]
     public double MinValue
@@ -555,18 +447,14 @@ public sealed class CircularGauge : Control
         }
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Optimal Range Color.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Optimal Range Color.</summary>
     [Description("Gets/Sets Optimal Range Color")]
     public Brush OptimalRangeColor
     {
         get => (Brush)GetValue(OptimalRangeColorProperty); set => SetValue(OptimalRangeColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Optimal range end value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Optimal range end value.</summary>
     [Description("Gets/Sets the Optimal range end value")]
     [Category("CrissCross Important")]
     public double OptimalRangeEndValue
@@ -574,9 +462,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(OptimalRangeEndValueProperty); set => SetValue(OptimalRangeEndValueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Optimal Range Start Value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Optimal Range Start Value.</summary>
     [Description("Gets/Sets the Optimal Range Start Value")]
     [Category("CrissCross Important")]
     public double OptimalRangeStartValue
@@ -584,9 +470,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(OptimalRangeStartValueProperty); set => SetValue(OptimalRangeStartValueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Pointer cap radius.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Pointer cap radius.</summary>
     [Description("Gets/Sets the Pointer cap radius")]
     [Category("CrissCross Pointer")]
     public double PointerCapRadius
@@ -594,9 +478,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(PointerCapRadiusProperty); set => SetValue(PointerCapRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Pointer Length.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Pointer Length.</summary>
     [Description("Gets/Sets the Pointer Length")]
     [Category("CrissCross Pointer")]
     public double PointerLength
@@ -604,9 +486,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(PointerLengthProperty); set => SetValue(PointerLengthProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Pointer Thickness.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Pointer Thickness.</summary>
     [Description("Gets/Sets the Pointer Thickness")]
     [Category("CrissCross Pointer")]
     public double PointerThickness
@@ -614,9 +494,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(PointerThicknessProperty); set => SetValue(PointerThicknessProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Minimum Value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Minimum Value.</summary>
     [Description("Gets/Sets the Minimum Value")]
     [Category("CrissCross")]
     public double Radius
@@ -624,9 +502,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(RadiusProperty); set => SetValue(RadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Range Indicator Light offset.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Range Indicator Light offset.</summary>
     [Description("Gets/Sets the Range Indicator Light offset")]
     [Category("CrissCross")]
     public double RangeIndicatorLightOffset
@@ -634,9 +510,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(RangeIndicatorLightOffsetProperty); set => SetValue(RangeIndicatorLightOffsetProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets Range Indicator Light Radius.
-    /// </summary>
+    /// <summary>Gets or sets /Sets Range Indicator Light Radius.</summary>
     [Description("Gets/Sets Range Indicator Light Radius")]
     [Category("CrissCross")]
     public double RangeIndicatorLightRadius
@@ -644,9 +518,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(RangeIndicatorLightRadiusProperty); set => SetValue(RangeIndicatorLightRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the range indicator light visible.
-    /// </summary>
+    /// <summary>Gets or sets the range indicator light visible.</summary>
     /// <value>The range indicator light visible.</value>
     [Description("Gets/Sets the Range Indicator Light Visible value")]
     [Category("CrissCross")]
@@ -655,9 +527,7 @@ public sealed class CircularGauge : Control
         get => (Visibility)GetValue(RangeIndicatorLightVisibleProperty); set => SetValue(RangeIndicatorLightVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Range Indicator Radius.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Range Indicator Radius.</summary>
     [Description("Gets/Sets the Range Indicator Radius")]
     [Category("CrissCross")]
     public double RangeIndicatorRadius
@@ -665,9 +535,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(RangeIndicatorRadiusProperty); set => SetValue(RangeIndicatorRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Range Indicator Thickness.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Range Indicator Thickness.</summary>
     [Description("Gets/Sets the Range Indicator Thickness")]
     [Category("CrissCross")]
     public double RangeIndicatorThickness
@@ -675,9 +543,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(RangeIndicatorThicknessProperty); set => SetValue(RangeIndicatorThicknessProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets/Sets option to reset the pointer to minimum on start up, Default is true.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets/Sets option to reset the pointer to minimum on start up, Default is true.</summary>
     [Description("Gets/Sets option to reset the pointer to minimum on start up, Default is true")]
     [Category("CrissCross Pointer")]
     public bool ResetPointerOnStartUp
@@ -685,18 +551,14 @@ public sealed class CircularGauge : Control
         get => (bool)GetValue(ResetPointerOnStartUpProperty); set => SetValue(ResetPointerOnStartUpProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Scale Label Foreground.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Scale Label Foreground.</summary>
     [Description("Gets/Sets the Scale Label Foreground")]
     public Brush ScaleForeground
     {
         get => (Brush)GetValue(ScaleForegroundProperty); set => SetValue(ScaleForegroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Scale Label Font Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Scale Label Font Size.</summary>
     [Description("Gets/Sets the Scale Label Font Size")]
     [Category("CrissCross Scale")]
     public double ScaleLabelFontSize
@@ -704,9 +566,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ScaleLabelFontSizeProperty); set => SetValue(ScaleLabelFontSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Scale Label Radius.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Scale Label Radius.</summary>
     [Description("Gets/Sets the Scale Label Radius")]
     [Category("CrissCross Scale")]
     public double ScaleLabelRadius
@@ -714,9 +574,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ScaleLabelRadiusProperty); set => SetValue(ScaleLabelRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Scale Label Size.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Scale Label Size.</summary>
     [Description("Gets/Sets the Scale Label Size")]
     [Category("CrissCross Scale")]
     public Size ScaleLabelSize
@@ -724,9 +582,7 @@ public sealed class CircularGauge : Control
         get => (Size)GetValue(ScaleLabelSizeProperty); set => SetValue(ScaleLabelSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the Scale radius.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the Scale radius.</summary>
     [Description("Gets/Sets the Scale radius")]
     [Category("CrissCross Scale")]
     public double ScaleRadius
@@ -734,9 +590,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ScaleRadiusProperty); set => SetValue(ScaleRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the scale start angle.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the scale start angle.</summary>
     [Description("Gets/Sets the scale start angle")]
     [Category("CrissCross Scale")]
     public double ScaleStartAngle
@@ -744,9 +598,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ScaleStartAngleProperty); set => SetValue(ScaleStartAngleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the scale sweep angle.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the scale sweep angle.</summary>
     [Description("Gets/Sets the scale sweep angle")]
     [Category("CrissCross Scale")]
     public double ScaleSweepAngle
@@ -754,9 +606,7 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ScaleSweepAngleProperty); set => SetValue(ScaleSweepAngleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets scale value precision.
-    /// </summary>
+    /// <summary>Gets or sets /Sets scale value precision.</summary>
     [Description("Gets/Sets scale value precision")]
     [Category("CrissCross Scale")]
     public int ScaleValuePrecision
@@ -764,9 +614,7 @@ public sealed class CircularGauge : Control
         get => (int)GetValue(ScaleValuePrecisionProperty); set => SetValue(ScaleValuePrecisionProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the show error.
-    /// </summary>
+    /// <summary>Gets or sets the show error.</summary>
     /// <value>The show error.</value>
     [Description("Gets or sets the show error red cross")]
     [Category("CrissCross")]
@@ -775,9 +623,7 @@ public sealed class CircularGauge : Control
         get => (Visibility)GetValue(ShowErrorProperty); set => SetValue(ShowErrorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the unit.
-    /// </summary>
+    /// <summary>Gets or sets the unit.</summary>
     /// <value>The unit.</value>
     [Description("Gets or sets the unit")]
     [Category("CrissCross Important")]
@@ -786,9 +632,7 @@ public sealed class CircularGauge : Control
         get => (string)GetValue(UnitProperty); set => SetValue(UnitProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets /Sets the current value.
-    /// </summary>
+    /// <summary>Gets or sets /Sets the current value.</summary>
     [Description("Gets/Sets the current value")]
     [Category("CrissCross Important")]
     public double Value
@@ -796,18 +640,14 @@ public sealed class CircularGauge : Control
         get => (double)GetValue(ValueProperty); set => SetValue(ValueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the value background.
-    /// </summary>
+    /// <summary>Gets or sets the value background.</summary>
     /// <value>The value background.</value>
     public Brush ValueBackground
     {
         get => (Brush)GetValue(ValueBackgroundProperty); set => SetValue(ValueBackgroundProperty, value);
     }
 
-    /// <summary>
-    /// Load the visualization template.
-    /// </summary>
+    /// <summary>Load the visualization template.</summary>
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -824,22 +664,20 @@ public sealed class CircularGauge : Control
 
         // Set Z index of pointer and pointer cap to a really high number so that it stays on top
         // of the scale and the range indicator
-        Panel.SetZIndex(_pointer, 100000);
-        Panel.SetZIndex(_pointerCap, 100001);
+        Panel.SetZIndex(_pointer, 100_000);
+        Panel.SetZIndex(_pointerCap, 100_001);
 
         // Reset Pointer
-        if (ResetPointerOnStartUp)
+        if (!ResetPointerOnStartUp)
         {
-            MovePointer(ScaleStartAngle);
+            return;
         }
+
+        MovePointer(ScaleStartAngle);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:ValueChanged"/> event.
-    /// </summary>
-    /// <param name="e">
-    /// The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <summary>Raises the <see cref="E:ValueChanged"/> event.</summary>
+    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     public void OnValueChanged(DependencyPropertyChangedEventArgs e)
     {
         // Validate and set the new value
@@ -854,26 +692,26 @@ public sealed class CircularGauge : Control
             newValue = MinValue;
         }
 
-        if (_pointer != null)
+        if (_pointer is null)
         {
-            var range = MaxValue - MinValue;
-            var proccessValue = (newValue - MinValue) / range;
-            var newcurrRealworldunit = proccessValue * ScaleSweepAngle;
-
-            if (newcurrRealworldunit.Equals(double.NaN))
-            {
-                newcurrRealworldunit = 0;
-            }
-
-            // Animate the pointer from the old value to the new value
-            AnimatePointer(ScaleStartAngle + _oldcurrRealworldunit, ScaleStartAngle + newcurrRealworldunit);
-            _oldcurrRealworldunit = newcurrRealworldunit;
+            return;
         }
+
+        var range = MaxValue - MinValue;
+        var proccessValue = (newValue - MinValue) / range;
+        var newcurrRealworldunit = proccessValue * ScaleSweepAngle;
+
+        if (newcurrRealworldunit.Equals(double.NaN))
+        {
+            newcurrRealworldunit = 0;
+        }
+
+        // Animate the pointer from the old value to the new value
+        AnimatePointer(ScaleStartAngle + _oldcurrRealworldunit, ScaleStartAngle + newcurrRealworldunit);
+        _oldcurrRealworldunit = newcurrRealworldunit;
     }
 
-    /// <summary>
-    /// Refreshes the dial range.
-    /// </summary>
+    /// <summary>Refreshes the dial range.</summary>
     public void RefreshDialRange()
     {
         try
@@ -894,71 +732,72 @@ public sealed class CircularGauge : Control
             _ht.Clear();
             DrawScale();
         }
-        catch
+        catch (Exception exception)
         {
+            Debug.WriteLine(exception);
         }
     }
 
-    /// <summary>
-    /// Refreshes the range indicator.
-    /// </summary>
+    /// <summary>Refreshes the range indicator.</summary>
     public void RefreshRangeIndicator()
     {
         try
         {
-            if (_rangeIndicator1 != null && _rootGrid != null)
+            if (_rangeIndicator1 is not null && _rootGrid is not null)
             {
                 _rootGrid.Children.Remove(_rangeIndicator1);
             }
 
-            if (_rangeIndicator2 != null && _rootGrid != null)
+            if (_rangeIndicator2 is not null && _rootGrid is not null)
             {
                 _rootGrid.Children.Remove(_rangeIndicator2);
             }
 
-            if (_rangeIndicator3 != null && _rootGrid != null)
+            if (_rangeIndicator3 is not null && _rootGrid is not null)
             {
                 _rootGrid.Children.Remove(_rangeIndicator3);
             }
 
             DrawRangeIndicator();
         }
-        catch
+        catch (Exception exception)
         {
+            Debug.WriteLine(exception);
         }
     }
 
-    /// <summary>
-    /// as the major value has changed.
-    /// </summary>
-    /// <param name="d">The d.</param>
-    /// <param name="e">
-    /// The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <summary>Handles major value changes.</summary>
+    /// <param name="d">The dependency object.</param>
+    /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     private static void AMajorValueHasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is CircularGauge gauge)
+        if (d is not CircularGauge gauge)
         {
-            gauge.RefreshDialRange();
-            gauge.RefreshRangeIndicator();
-            lock (gauge._lockObject)
-            {
-                var g = gauge.Value;
-                gauge.AnimatePointer(gauge.ScaleStartAngle + gauge._oldcurrRealworldunit, gauge.ScaleStartAngle);
-                gauge._oldcurrRealworldunit = gauge.ScaleStartAngle;
+            return;
+        }
 
-                gauge.Value = gauge.MinValue;
-                gauge.Value = g;
-            }
+        gauge.RefreshDialRange();
+        gauge.RefreshRangeIndicator();
+        lock (gauge._lockObject)
+        {
+            var g = gauge.Value;
+            gauge.AnimatePointer(gauge.ScaleStartAngle + gauge._oldcurrRealworldunit, gauge.ScaleStartAngle);
+            gauge._oldcurrRealworldunit = gauge.ScaleStartAngle;
+
+            gauge.Value = gauge.MinValue;
+            gauge.Value = g;
         }
     }
 
-    private static GradientBrush GetRangeIndicatorGradEffect(Brush gradientColor)
+    /// <summary>Provides the GetRangeIndicatorGradEffect member.</summary>
+    /// <param name="gradientColor">The gradientColor value.</param>
+    /// <returns>The result.</returns>
+    private static LinearGradientBrush GetRangeIndicatorGradEffect(Brush gradientColor)
     {
         var gradient = new LinearGradientBrush
         {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(1, 1)
+            StartPoint = new(0, 0),
+            EndPoint = new(1, 1)
         };
 
         var color1 = new GradientStop { Offset = 0.2, Color = gradientColor == Brushes.Transparent ? Colors.Transparent : Colors.LightGray };
@@ -968,6 +807,9 @@ public sealed class CircularGauge : Control
         return gradient;
     }
 
+    /// <summary>Provides the OnDetectValueOrErrorPropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static async void OnDetectValueOrErrorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var gauge = d as CircularGauge;
@@ -983,88 +825,115 @@ public sealed class CircularGauge : Control
         }
     }
 
+    /// <summary>Provides the OnOptimalRangeEndValuePropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnOptimalRangeEndValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         // Get access to the instance of CircularGaugeConrol whose property value changed
-        if (d is CircularGauge gauge)
+        if (d is not CircularGauge gauge)
         {
-            if ((double)e.NewValue > gauge.MaxValue)
-            {
-                gauge.OptimalRangeEndValue = gauge.MaxValue;
-            }
-
-            if ((double)e.NewValue < gauge.OptimalRangeStartValue)
-            {
-                gauge.OptimalRangeEndValue = Math.Min(gauge.OptimalRangeStartValue, gauge.MaxValue);
-            }
-
-            gauge.RefreshRangeIndicator();
+            return;
         }
+
+        if ((double)e.NewValue > gauge.MaxValue)
+        {
+            gauge.OptimalRangeEndValue = gauge.MaxValue;
+        }
+
+        if ((double)e.NewValue < gauge.OptimalRangeStartValue)
+        {
+            gauge.OptimalRangeEndValue = Math.Min(gauge.OptimalRangeStartValue, gauge.MaxValue);
+        }
+
+        gauge.RefreshRangeIndicator();
     }
 
+    /// <summary>Provides the OnOptimalRangeStartValuePropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnOptimalRangeStartValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         // Get access to the instance of CircularGaugeConrol whose property value changed
-        if (d is CircularGauge gauge)
+        if (d is not CircularGauge gauge)
         {
-            if ((double)e.NewValue < gauge.MinValue)
-            {
-                gauge.OptimalRangeStartValue = gauge.MinValue;
-            }
-            else if ((double)e.NewValue > gauge.OptimalRangeEndValue)
-            {
-                gauge.OptimalRangeStartValue = gauge.OptimalRangeEndValue;
-            }
-            else
-            {
-                gauge.OptimalRangeStartValue = (double)e.NewValue;
-            }
-
-            gauge.RefreshRangeIndicator();
+            return;
         }
+
+        if ((double)e.NewValue < gauge.MinValue)
+        {
+            gauge.OptimalRangeStartValue = gauge.MinValue;
+        }
+        else if ((double)e.NewValue > gauge.OptimalRangeEndValue)
+        {
+            gauge.OptimalRangeStartValue = gauge.OptimalRangeEndValue;
+        }
+        else
+        {
+            gauge.OptimalRangeStartValue = (double)e.NewValue;
+        }
+
+        gauge.RefreshRangeIndicator();
     }
 
+    /// <summary>Provides the OnValuePropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         // Get access to the instance of CircularGauge whose property value changed
-        if (d is CircularGauge gauge)
+        if (d is not CircularGauge gauge)
         {
-            lock (gauge._lockObject)
-            {
-                gauge._valueChanged = true;
-                gauge.OnValueChanged(e);
-            }
+            return;
+        }
+
+        lock (gauge._lockObject)
+        {
+            gauge._valueChanged = true;
+            gauge.OnValueChanged(e);
         }
     }
 
+    /// <summary>Provides the ScalePropertyChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void ScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is CircularGauge gauge)
+        if (d is not CircularGauge gauge)
         {
-            gauge.RefreshDialRange();
+            return;
         }
+
+        gauge.RefreshDialRange();
     }
 
+    /// <summary>Provides the AnimatePointer member.</summary>
+    /// <param name="oldValueAngle">The oldValueAngle value.</param>
+    /// <param name="newValueAngle">The newValueAngle value.</param>
     private void AnimatePointer(double oldValueAngle, double newValueAngle)
     {
-        if (_pointer != null && newValueAngle != oldValueAngle)
+        if (_pointer is null || newValueAngle == oldValueAngle)
         {
-            var da = new DoubleAnimation
-            {
-                From = oldValueAngle,
-                To = newValueAngle,
-                Duration = new Duration(TimeSpan.FromMilliseconds(Math.Abs(oldValueAngle - newValueAngle) * AnimatingSpeedFactor))
-            };
-
-            var sb = new Storyboard();
-            sb.Completed += Sb_Completed;
-            sb.Children.Add(da);
-            Storyboard.SetTarget(da, _pointer);
-            Storyboard.SetTargetProperty(da, new PropertyPath("(Path.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
-            sb.Begin();
+            return;
         }
+
+        var da = new DoubleAnimation
+        {
+            From = oldValueAngle,
+            To = newValueAngle,
+            Duration = new(TimeSpan.FromMilliseconds(Math.Abs(oldValueAngle - newValueAngle) * AnimatingSpeedFactor))
+        };
+
+        var sb = new Storyboard();
+        sb.Completed += Sb_Completed;
+        sb.Children.Add(da);
+        Storyboard.SetTarget(da, _pointer);
+        Storyboard.SetTargetProperty(da, new PropertyPath("(Path.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
+        sb.Begin();
     }
 
+    /// <summary>Provides the DetectectingThread member.</summary>
+    /// <returns>The result.</returns>
     private async Task DetectectingThread()
     {
         _detectValuesChanging = true;
@@ -1091,9 +960,7 @@ public sealed class CircularGauge : Control
         }
     }
 
-    /// <summary>
-    /// Draw the range indicator.
-    /// </summary>
+    /// <summary>Draw the range indicator.</summary>
     private void DrawRangeIndicator()
     {
         var realworldunit = ScaleSweepAngle / (MaxValue - MinValue);
@@ -1167,12 +1034,10 @@ public sealed class CircularGauge : Control
                                                 AboveOptimalRangeColor);
     }
 
-    /// <summary>
-    /// Drawing the scale with the Scale Radius.
-    /// </summary>
+    /// <summary>Drawing the scale with the Scale Radius.</summary>
     private void DrawScale()
     {
-        if (_rootGrid == null)
+        if (_rootGrid is null)
         {
             return;
         }
@@ -1192,22 +1057,22 @@ public sealed class CircularGauge : Control
             majortickgp.Children.Add(new RotateTransform { Angle = i });
 
             // Obtaining the angle in radians for calculating the points
-            var iRadian = (i * Math.PI) / 180;
+            var indicatorRadians = i * Math.PI / 180;
 
             // Finding the point on the Scale where the major ticks are drawn here drawing the
             // points with center as (0,0)
             var majorticktt = new TranslateTransform
             {
-                X = (int)(ScaleRadius * Math.Cos(iRadian)),
-                Y = (int)(ScaleRadius * Math.Sin(iRadian))
+                X = (int)(ScaleRadius * Math.Cos(indicatorRadians)),
+                Y = (int)(ScaleRadius * Math.Sin(indicatorRadians))
             };
 
             // Points for the text block which hold the scale value here drawing the points with
             // center as (0,0)
             var majorscalevaluett = new TranslateTransform
             {
-                X = (int)(ScaleLabelRadius * Math.Cos(iRadian)),
-                Y = (int)(ScaleLabelRadius * Math.Sin(iRadian))
+                X = (int)(ScaleLabelRadius * Math.Cos(indicatorRadians)),
+                Y = (int)(ScaleLabelRadius * Math.Sin(indicatorRadians))
             };
 
             // Defining the properties of the scale value text box
@@ -1244,29 +1109,29 @@ public sealed class CircularGauge : Control
                 Height = MajorTickSize.Height,
                 Width = MajorTickSize.Width,
                 Fill = ScaleForeground,
-                RenderTransformOrigin = new Point(0.5, 0.5),
+                RenderTransformOrigin = new(0.5, 0.5),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 RenderTransform = majortickgp
             };
-            _rootGrid.Children.Add(majortickrect);
-            _rootGrid.Children.Add(tb);
+            _ = _rootGrid.Children.Add(majortickrect);
+            _ = _rootGrid.Children.Add(tb);
 
             // Drawing the minor axis ticks
-            var onedegree = ((i + majorTickUnitAngle) - i) / MinorDivisionsCount;
+            var onedegree = (i + majorTickUnitAngle - i) / MinorDivisionsCount;
             if ((i < (ScaleStartAngle + ScaleSweepAngle)) && (Math.Round(minvalue, ScaleValuePrecision) <= Math.Round(MaxValue, ScaleValuePrecision)))
             {
                 // Drawing the minor scale
                 for (var mi = i + onedegree; mi < (i + majorTickUnitAngle); mi += onedegree)
                 {
                     // Obtaining the angle in radians for calculating the points
-                    var miRadian = (mi * Math.PI) / 180;
+                    var minorTickRadians = mi * Math.PI / 180;
 
                     // Finding the point on the Scale where the minor ticks are drawn
                     var minorticktt = new TranslateTransform
                     {
-                        X = (int)(ScaleRadius * Math.Cos(miRadian)),
-                        Y = (int)(ScaleRadius * Math.Sin(miRadian))
+                        X = (int)(ScaleRadius * Math.Cos(minorTickRadians)),
+                        Y = (int)(ScaleRadius * Math.Sin(minorTickRadians))
                     };
                     var minortickgp = new TransformGroup();
                     minortickgp.Children.Add(new RotateTransform { Angle = mi });
@@ -1280,10 +1145,10 @@ public sealed class CircularGauge : Control
                         Fill = ScaleForeground,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
-                        RenderTransformOrigin = new Point(0.5, 0.5),
+                        RenderTransformOrigin = new(0.5, 0.5),
                         RenderTransform = minortickgp
                     };
-                    _rootGrid.Children.Add(mr);
+                    _ = _rootGrid.Children.Add(mr);
                     _ht.Add("mr_" + _numberOfpoints + "_" + _numberOfMinorpoints, mr);
                     _numberOfMinorpoints++;
                 }
@@ -1295,9 +1160,7 @@ public sealed class CircularGauge : Control
         }
     }
 
-    /// <summary>
-    /// Drawing the segment with two arc and two line.
-    /// </summary>
+    /// <summary>Drawing the segment with two arc and two line.</summary>
     /// <param name="p1">The p1.</param>
     /// <param name="p2">The p2.</param>
     /// <param name="p3">The p3.</param>
@@ -1313,12 +1176,12 @@ public sealed class CircularGauge : Control
                 new LineSegment { Point = p2 },
                 new ArcSegment
                 {
-                    Size = new Size(_arcradius2, _arcradius2),
+                    Size = new(_arcradius2, _arcradius2),
                     Point = p3, SweepDirection = SweepDirection.Clockwise, IsLargeArc = reflexangle
                 },
                 new LineSegment { Point = p4 }, new ArcSegment
                 {
-                    Size = new Size(_arcradius1, _arcradius1),
+                    Size = new(_arcradius1, _arcradius1),
                     Point = p1, SweepDirection = SweepDirection.Counterclockwise, IsLargeArc = reflexangle
                 }
             };
@@ -1359,22 +1222,33 @@ public sealed class CircularGauge : Control
         return range;
     }
 
+    /// <summary>Provides the GetCircumferencePoint member.</summary>
+    /// <param name="angle">The angle value.</param>
+    /// <param name="radius">The radius value.</param>
+    /// <returns>The result.</returns>
     private Point GetCircumferencePoint(double angle, double radius)
     {
-        var angleRadian = (angle * Math.PI) / 180;
+        var angleRadian = angle * Math.PI / 180;
 
         // Radius-- is the Radius of the gauge
         return new Point(Radius + (radius * Math.Cos(angleRadian)), Radius + (radius * Math.Sin(angleRadian)));
     }
 
+    /// <summary>Provides the MovePointer member.</summary>
+    /// <param name="angleValue">The anglevalue.</param>
     private void MovePointer(double angleValue)
     {
-        if (_pointer?.RenderTransform is TransformGroup transformGroup && transformGroup.Children[0] is RotateTransform rotateTransform)
+        if (_pointer?.RenderTransform is not TransformGroup transformGroup || transformGroup.Children[0] is not RotateTransform rotateTransform)
         {
-            rotateTransform.Angle = angleValue;
+            return;
         }
+
+        rotateTransform.Angle = angleValue;
     }
 
+    /// <summary>Provides the Sb_Completed member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void Sb_Completed(object? sender, EventArgs e)
     {
         if (Value > OptimalRangeEndValue)

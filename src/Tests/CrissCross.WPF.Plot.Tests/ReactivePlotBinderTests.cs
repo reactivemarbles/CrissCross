@@ -1,20 +1,16 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using CrissCross.WPF.Plot;
 
 namespace CrissCross.WPF.Plot.Tests;
 
-/// <summary>
-/// Tests for IObservable-first WPF plot source adapters and binder lifecycle behavior.
-/// </summary>
+/// <summary>Tests for IObservable-first WPF plot source adapters and binder lifecycle behavior.</summary>
 public sealed class ReactivePlotBinderTests
 {
+    /// <summary>Verifies SignalTicksAdapter EmitsAppendUpdateWithTicksXAxisKind.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SignalTicksAdapter_EmitsAppendUpdateWithTicksXAxisKind()
     {
@@ -33,6 +29,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(update.Y.Count).IsEqualTo(2);
     }
 
+    /// <summary>Verifies SignalPointsAdapter EmitsAppendUpdateWithNumericXAxisKind.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SignalPointsAdapter_EmitsAppendUpdateWithNumericXAxisKind()
     {
@@ -52,10 +50,12 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(update.Y).IsEquivalentTo([1.0, 2.0]);
     }
 
+    /// <summary>Verifies SignalXyAdapter SupportsObservableReplaceUpdates.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SignalXyAdapter_SupportsObservableReplaceUpdates()
     {
-        var snapshots = new Subject<(string? Name, IList<double>? Y, IList<double> X, int Axis)>();
+        var snapshots = new Signal<(string? Name, IList<double>? Y, IList<double> X, int Axis)>();
         var source = ReactivePlotSource.FromSignalXyPoints(snapshots);
         var updates = new List<ReactivePlotUpdate>();
 
@@ -68,6 +68,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(updates.All(x => x.Kind == ReactivePlotUpdateKind.Replace)).IsTrue();
     }
 
+    /// <summary>Verifies ScatterPointsAdapter RejectsMismatchedXAndYCounts.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ScatterPointsAdapter_RejectsMismatchedXAndYCounts()
     {
@@ -86,6 +88,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(connection.CurrentState).IsEqualTo(ReactivePlotConnectionState.Faulted);
     }
 
+    /// <summary>Verifies Bind ReturnsConnectionThatDisposesSourceSubscription.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_ReturnsConnectionThatDisposesSourceSubscription()
     {
@@ -93,7 +97,7 @@ public sealed class ReactivePlotBinderTests
         var source = new ReactivePlotSource(
             new PlotSeriesKey("Signal", 0),
             PlotType.Signal,
-            Observable.Create<ReactivePlotUpdate>(_ => Disposable.Create(() => disposed = true)));
+            Observable.Create<ReactivePlotUpdate>(_ => new ActionDisposable(() => disposed = true)));
         var binder = new ReactivePlotBinder(new RecordingReactivePlotAdapterFactory());
         var states = new List<ReactivePlotConnectionState>();
 
@@ -106,6 +110,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(connection.CurrentState).IsEqualTo(ReactivePlotConnectionState.Disposed);
     }
 
+    /// <summary>Verifies Bind UsesSingleSubscriptionPerSource.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_UsesSingleSubscriptionPerSource()
     {
@@ -118,7 +124,7 @@ public sealed class ReactivePlotBinderTests
             {
                 subscriptions++;
                 observer.OnNext(update);
-                return Disposable.Empty;
+                return EmptyDisposable.Instance;
             }));
 
         using var connection = new ReactivePlotBinder(new RecordingReactivePlotAdapterFactory())
@@ -127,6 +133,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(subscriptions).IsEqualTo(1);
     }
 
+    /// <summary>Verifies Bind CompletionEmitsCompletedStateWithoutDisposingAdapters.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_CompletionEmitsCompletedStateWithoutDisposingAdapters()
     {
@@ -143,6 +151,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Adapters.Single().IsDisposed).IsFalse();
     }
 
+    /// <summary>Verifies Bind SourceErrorEmitsFaultedStateAndError.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_SourceErrorEmitsFaultedStateAndError()
     {
@@ -161,6 +171,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Adapters.Single().Updates).Count().IsEqualTo(1);
     }
 
+    /// <summary>Verifies Bind MarshalsAdapterMutationToConfiguredUiScheduler.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_MarshalsAdapterMutationToConfiguredUiScheduler()
     {
@@ -177,11 +189,13 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Adapters.Single().Updates.Single()).IsEqualTo(update);
     }
 
+    /// <summary>Verifies Bind LiveSourceEmitsImmediatelyWhenNoBatchWindowIsConfigured.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_LiveSourceEmitsImmediatelyWhenNoBatchWindowIsConfigured()
     {
         var factory = new RecordingReactivePlotAdapterFactory();
-        var updates = new Subject<ReactivePlotUpdate>();
+        var updates = new Signal<ReactivePlotUpdate>();
         var update = CreateUpdate("Live", PlotType.Signal, 0, ReactivePlotUpdateKind.Append, [1.0], [2.0]);
 
         using var connection = new ReactivePlotBinder(factory).Bind(
@@ -193,6 +207,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(connection.CurrentState).IsEqualTo(ReactivePlotConnectionState.Active);
     }
 
+    /// <summary>Verifies Bind BatchesHighFrequencyUpdatesBeforeUiScheduler.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_BatchesHighFrequencyUpdatesBeforeUiScheduler()
     {
@@ -208,9 +224,11 @@ public sealed class ReactivePlotBinderTests
 
         var adapter = factory.Adapters.Single();
         await Assert.That(adapter.ApplyCallCount).IsLessThan(1_000);
-        await Assert.That(adapter.Updates.Last().Sequence).IsEqualTo(999);
+        await Assert.That(adapter.Updates[^1].Sequence).IsEqualTo(999);
     }
 
+    /// <summary>Verifies Bind DropOldestOverflowKeepsLatestVisiblePoints.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_DropOldestOverflowKeepsLatestVisiblePoints()
     {
@@ -222,12 +240,14 @@ public sealed class ReactivePlotBinderTests
             [ReactivePlotSource.FromUpdates(new PlotSeriesKey("Bounded", 0), PlotType.Signal, updates.ToObservable())],
             new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance, MaxVisiblePoints = 100 });
 
-        var retained = factory.Adapters.Single().Updates.Last();
+        var retained = factory.Adapters.Single().Updates[^1];
         await Assert.That(retained.X[0]).IsEqualTo(400.0);
         await Assert.That(retained.Y[retained.Y.Count - 1]).IsEqualTo(499.0);
         await Assert.That(retained.X.Count).IsEqualTo(100);
     }
 
+    /// <summary>Verifies DataLoggerAdapter PreservesLegacyMaxPointCount.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DataLoggerAdapter_PreservesLegacyMaxPointCount()
     {
@@ -241,6 +261,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(maxPoints).IsEqualTo(25);
     }
 
+    /// <summary>Verifies Bind BatchingPreservesMixedSeriesKeys.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_BatchingPreservesMixedSeriesKeys()
     {
@@ -261,6 +283,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Find(secondKey).Updates.Single().Y).IsEquivalentTo([20.0]);
     }
 
+    /// <summary>Verifies Bind BatchingPreservesReplaceAndClearBoundaries.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_BatchingPreservesReplaceAndClearBoundaries()
     {
@@ -281,6 +305,8 @@ public sealed class ReactivePlotBinderTests
             .IsEquivalentTo([ReactivePlotUpdateKind.Append, ReactivePlotUpdateKind.Clear, ReactivePlotUpdateKind.Replace]);
     }
 
+    /// <summary>Verifies Bind BatchingDoesNotHideInvalidAppendUpdates.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_BatchingDoesNotHideInvalidAppendUpdates()
     {
@@ -300,6 +326,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Adapters).IsEmpty();
     }
 
+    /// <summary>Verifies Bind ClearResetsPerUpdateRetainedPoints.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_ClearResetsPerUpdateRetainedPoints()
     {
@@ -316,15 +344,17 @@ public sealed class ReactivePlotBinderTests
             [ReactivePlotSource.FromUpdates(key, PlotType.Signal, updates.ToObservable())],
             new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance });
 
-        await Assert.That(factory.Find(key).Updates.Last().Y).IsEquivalentTo([2.0]);
+        await Assert.That(factory.Find(key).Updates[^1].Y).IsEquivalentTo([2.0]);
     }
 
+    /// <summary>Verifies SurfaceAndStopSeries StopsOnlyFaultedSeries.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SurfaceAndStopSeries_StopsOnlyFaultedSeries()
     {
         var factory = new RecordingReactivePlotAdapterFactory();
-        var first = new Subject<ReactivePlotUpdate>();
-        var second = new Subject<ReactivePlotUpdate>();
+        var first = new Signal<ReactivePlotUpdate>();
+        var second = new Signal<ReactivePlotUpdate>();
         var firstKey = new PlotSeriesKey("Faulted", 0);
         var secondKey = new PlotSeriesKey("Healthy", 1);
 
@@ -344,6 +374,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Find(secondKey).Updates.Single().Y).IsEquivalentTo([2.0]);
     }
 
+    /// <summary>Verifies Bind CreatesAdapterForEveryPlotType.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_CreatesAdapterForEveryPlotType()
     {
@@ -360,12 +392,14 @@ public sealed class ReactivePlotBinderTests
             .IsEquivalentTo(Enum.GetValues<PlotType>().OrderBy(x => x.ToString()).ToArray());
     }
 
+    /// <summary>Verifies Bind DoesNotReinitializeUnchangedSeries.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_DoesNotReinitializeUnchangedSeries()
     {
         var factory = new RecordingReactivePlotAdapterFactory();
-        var first = new Subject<ReactivePlotUpdate>();
-        var second = new Subject<ReactivePlotUpdate>();
+        var first = new Signal<ReactivePlotUpdate>();
+        var second = new Signal<ReactivePlotUpdate>();
         var firstKey = new PlotSeriesKey("A", 0);
         var secondKey = new PlotSeriesKey("B", 1);
 
@@ -385,6 +419,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Find(secondKey).Updates).Count().IsEqualTo(1);
     }
 
+    /// <summary>Verifies Bind ClearUpdateClearsOnlyTargetSeries.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Bind_ClearUpdateClearsOnlyTargetSeries()
     {
@@ -406,6 +442,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Find(secondKey).ClearCount).IsEqualTo(0);
     }
 
+    /// <summary>Verifies InvalidAxisIndex EmitsValidationErrorBeforeUiMutation.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task InvalidAxisIndex_EmitsValidationErrorBeforeUiMutation()
     {
@@ -421,6 +459,8 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(errors).Count().IsEqualTo(1);
     }
 
+    /// <summary>Verifies NullOrEmptySeriesData IsIgnoredOrFaultedAccordingToOptions.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task NullOrEmptySeriesData_IsIgnoredOrFaultedAccordingToOptions()
     {
@@ -441,11 +481,13 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(faultedFactory.Adapters).IsEmpty();
     }
 
+    /// <summary>Verifies SurfaceAndStopSeries DoesNotMutateAfterValidationFault.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SurfaceAndStopSeries_DoesNotMutateAfterValidationFault()
     {
         var factory = new RecordingReactivePlotAdapterFactory();
-        var updates = new Subject<ReactivePlotUpdate>();
+        var updates = new Signal<ReactivePlotUpdate>();
         var bad = CreateUpdate("Faulted", PlotType.Signal, 0, ReactivePlotUpdateKind.Append, [], []);
         var good = CreateUpdate("Faulted", PlotType.Signal, 0, ReactivePlotUpdateKind.Append, [1.0], [2.0]);
 
@@ -459,6 +501,15 @@ public sealed class ReactivePlotBinderTests
         await Assert.That(factory.Adapters).IsEmpty();
     }
 
+    /// <summary>Creates a normalized plot update for binder tests.</summary>
+    /// <param name="name">The series name.</param>
+    /// <param name="plotType">The plot type.</param>
+    /// <param name="axis">The axis index.</param>
+    /// <param name="kind">The update kind.</param>
+    /// <param name="x">The X values.</param>
+    /// <param name="y">The Y values.</param>
+    /// <param name="sequence">The sequence number.</param>
+    /// <returns>The plot update.</returns>
     private static ReactivePlotUpdate CreateUpdate(
         string name,
         PlotType plotType,

@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -9,14 +9,10 @@ using System.Linq;
 
 namespace CrissCross;
 
-/// <summary>
-/// Immutable aggregate validation state for form summary controls and submit gating.
-/// </summary>
+/// <summary>Immutable aggregate validation state for form summary controls and submit gating.</summary>
 public sealed class ValidationSummaryState
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ValidationSummaryState"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ValidationSummaryState"/> class.</summary>
     /// <param name="messages">The validation messages to summarize.</param>
     public ValidationSummaryState(IEnumerable<ValidationMessage>? messages)
     {
@@ -26,59 +22,37 @@ public sealed class ValidationSummaryState
         PendingCount = Messages.Count(message => message.Severity == ValidationSeverity.Pending);
     }
 
-    /// <summary>
-    /// Gets the summarized validation messages.
-    /// </summary>
+    /// <summary>Gets the summarized validation messages.</summary>
     public IReadOnlyList<ValidationMessage> Messages { get; }
 
-    /// <summary>
-    /// Gets the number of blocking validation errors.
-    /// </summary>
+    /// <summary>Gets the number of blocking validation errors.</summary>
     public int ErrorCount { get; }
 
-    /// <summary>
-    /// Gets the number of non-blocking warnings.
-    /// </summary>
+    /// <summary>Gets the number of non-blocking warnings.</summary>
     public int WarningCount { get; }
 
-    /// <summary>
-    /// Gets the number of pending async validation checks.
-    /// </summary>
+    /// <summary>Gets the number of pending async validation checks.</summary>
     public int PendingCount { get; }
 
-    /// <summary>
-    /// Gets the number of messages that block form submission.
-    /// </summary>
+    /// <summary>Gets the number of messages that block form submission.</summary>
     public int BlockingCount => ErrorCount;
 
-    /// <summary>
-    /// Gets a value indicating whether the summary has blocking validation errors.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the summary has blocking validation errors.</summary>
     public bool HasErrors => ErrorCount > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether the summary has validation warnings.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the summary has validation warnings.</summary>
     public bool HasWarnings => WarningCount > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether the summary has validation work in progress.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the summary has validation work in progress.</summary>
     public bool IsPending => PendingCount > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether the summary is valid and has no pending validation work.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the summary is valid and has no pending validation work.</summary>
     public bool IsValid => !HasErrors && !IsPending;
 
-    /// <summary>
-    /// Gets the first blocking error, if one exists.
-    /// </summary>
+    /// <summary>Gets the first blocking error, if one exists.</summary>
     public ValidationMessage? FirstError => Messages.FirstOrDefault(message => message.Severity == ValidationSeverity.Error);
 
-    /// <summary>
-    /// Gets a compact summary string suitable for validation summary headers.
-    /// </summary>
+    /// <summary>Gets a compact summary string suitable for validation summary headers.</summary>
     public string SummaryText
     {
         get
@@ -91,16 +65,14 @@ public sealed class ValidationSummaryState
         }
     }
 
-    /// <summary>
-    /// Gets validation messages associated with a stable field key.
-    /// </summary>
+    /// <summary>Gets validation messages associated with a stable field key.</summary>
     /// <param name="fieldKey">The field key to match.</param>
     /// <returns>The messages associated with the field.</returns>
     public IReadOnlyList<ValidationMessage> GetMessagesForField(string fieldKey)
     {
         if (string.IsNullOrWhiteSpace(fieldKey))
         {
-            return Array.Empty<ValidationMessage>();
+            return [];
         }
 
         var normalized = fieldKey.Trim();
@@ -109,7 +81,11 @@ public sealed class ValidationSummaryState
             .ToList();
     }
 
-    private static void AddCount(ICollection<string> parts, int count, string singular)
+    /// <summary>Adds a labeled count to the summary parts.</summary>
+    /// <param name="parts">The summary parts.</param>
+    /// <param name="count">The count to add.</param>
+    /// <param name="singular">The singular label.</param>
+    private static void AddCount(List<string> parts, int count, string singular)
     {
         if (count == 0)
         {

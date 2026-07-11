@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -17,63 +17,45 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// Avalonia applications.</remarks>
 public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIconControl
 {
-    /// <summary>
-    /// Property for <see cref="Icon"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<Button, object?>(
-        nameof(Icon), coerce: IconElement.Coerce);
+        nameof(Icon),
+        coerce: IconElement.Coerce);
 
-    /// <summary>
-    /// Property for <see cref="Appearance"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Appearance"/>.</summary>
     public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<Button, ControlAppearance>(
-        nameof(Appearance), ControlAppearance.Primary);
+        nameof(Appearance),
+        ControlAppearance.Primary);
 
-    /// <summary>
-    /// Property for <see cref="MouseOverBackground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MouseOverBackground"/>.</summary>
     public static readonly StyledProperty<IBrush?> MouseOverBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(MouseOverBackground));
 
-    /// <summary>
-    /// Property for <see cref="MouseOverBorderBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MouseOverBorderBrush"/>.</summary>
     public static readonly StyledProperty<IBrush?> MouseOverBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(MouseOverBorderBrush));
 
-    /// <summary>
-    /// Property for <see cref="MouseOverForeground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MouseOverForeground"/>.</summary>
     public static readonly StyledProperty<IBrush?> MouseOverForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(MouseOverForeground));
 
-    /// <summary>
-    /// Property for <see cref="PressedForeground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="PressedForeground"/>.</summary>
     public static readonly StyledProperty<IBrush?> PressedForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedForeground));
 
-    /// <summary>
-    /// Property for <see cref="PressedBackground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="PressedBackground"/>.</summary>
     public static readonly StyledProperty<IBrush?> PressedBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedBackground));
 
-    /// <summary>
-    /// Property for <see cref="PressedBorderBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="PressedBorderBrush"/>.</summary>
     public static readonly StyledProperty<IBrush?> PressedBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
         nameof(PressedBorderBrush));
 
-    /// <summary>
-    /// Property for <see cref="CornerRadius"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="CornerRadius"/>.</summary>
     public static readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<Button, CornerRadius>(
         nameof(CornerRadius));
 
-    /// <summary>
-    /// Gets or sets displayed <see cref="IconElement"/>.
-    /// </summary>
+    /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     public object? Icon
     {
         get => GetValue(IconProperty);
@@ -87,63 +69,49 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
         set => SetValue(AppearanceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets background brush when the user interacts with an element with a pointing device.
-    /// </summary>
+    /// <summary>Gets or sets background brush when the user interacts with an element with a pointing device.</summary>
     public IBrush? MouseOverBackground
     {
         get => GetValue(MouseOverBackgroundProperty);
         set => SetValue(MouseOverBackgroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets border brush when the user interacts with an element with a pointing device.
-    /// </summary>
+    /// <summary>Gets or sets border brush when the user interacts with an element with a pointing device.</summary>
     public IBrush? MouseOverBorderBrush
     {
         get => GetValue(MouseOverBorderBrushProperty);
         set => SetValue(MouseOverBorderBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets foreground brush when the user interacts with an element with a pointing device.
-    /// </summary>
+    /// <summary>Gets or sets foreground brush when the user interacts with an element with a pointing device.</summary>
     public IBrush? MouseOverForeground
     {
         get => GetValue(MouseOverForegroundProperty);
         set => SetValue(MouseOverForegroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets foreground when pressed.
-    /// </summary>
+    /// <summary>Gets or sets foreground when pressed.</summary>
     public IBrush? PressedForeground
     {
         get => GetValue(PressedForegroundProperty);
         set => SetValue(PressedForegroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets background brush when the user clicks the button.
-    /// </summary>
+    /// <summary>Gets or sets background brush when the user clicks the button.</summary>
     public IBrush? PressedBackground
     {
         get => GetValue(PressedBackgroundProperty);
         set => SetValue(PressedBackgroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets border brush when the user clicks the button.
-    /// </summary>
+    /// <summary>Gets or sets border brush when the user clicks the button.</summary>
     public IBrush? PressedBorderBrush
     {
         get => GetValue(PressedBorderBrushProperty);
         set => SetValue(PressedBorderBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value that represents the degree to which the corners are rounded.
-    /// </summary>
+    /// <summary>Gets or sets a value that represents the degree to which the corners are rounded.</summary>
     public CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);

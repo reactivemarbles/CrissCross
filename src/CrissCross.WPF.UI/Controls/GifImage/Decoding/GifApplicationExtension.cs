@@ -1,30 +1,39 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Controls.Extensions;
 
 namespace CrissCross.WPF.UI.Controls.Decoding;
 
-// label 0xFF
-internal class GifApplicationExtension : GifExtension
+/// <summary>Label 0xFF.</summary>
+internal sealed class GifApplicationExtension : GifExtension
 {
+    /// <summary>Provides the ExtensionLabel member.</summary>
     internal const int ExtensionLabel = 0xFF;
 
+    /// <summary>Initializes a new instance of the <see cref="GifApplicationExtension"/> class.</summary>
     private GifApplicationExtension()
     {
     }
 
+    /// <summary>Gets the BlockSize value.</summary>
     public int BlockSize { get; private set; }
 
+    /// <summary>Gets the ApplicationIdentifier value.</summary>
     public string? ApplicationIdentifier { get; private set; }
 
+    /// <summary>Gets the AuthenticationCode value.</summary>
     public byte[]? AuthenticationCode { get; private set; }
 
+    /// <summary>Gets the Data value.</summary>
     public byte[]? Data { get; private set; }
 
     internal override GifBlockKind Kind => GifBlockKind.SpecialPurpose;
 
+    /// <summary>Provides the ReadAsync member.</summary>
+    /// <param name="stream">The stream value.</param>
+    /// <returns>The result.</returns>
     internal static async Task<GifApplicationExtension> ReadAsync(Stream stream)
     {
         var ext = new GifApplicationExtension();
@@ -32,6 +41,9 @@ internal class GifApplicationExtension : GifExtension
         return ext;
     }
 
+    /// <summary>Provides the ReadInternalAsync member.</summary>
+    /// <param name="stream">The stream value.</param>
+    /// <returns>The result.</returns>
     private async Task ReadInternalAsync(Stream stream)
     {
         // Note: at this point, the label (0xFF) has already been read

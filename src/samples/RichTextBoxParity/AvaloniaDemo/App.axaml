@@ -1,0 +1,11 @@
+<Application
+    x:Class="RichTextBoxParity.AvaloniaDemo.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedThemeVariant="Default">
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://CrissCross.Avalonia/Themes/Index.axaml" />
+        <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Index.axaml" />
+    </Application.Styles>
+</Application>

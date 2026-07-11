@@ -1,12 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Provides event data for the <see cref="AutoSuggestBox.QuerySubmitted"/> event.
-/// </summary>
+/// <summary>Provides event data for the <see cref="AutoSuggestBox.QuerySubmitted"/> event.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="AutoSuggestBoxQuerySubmittedEventArgs"/> class.
 /// </remarks>
@@ -15,9 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 public sealed class AutoSuggestBoxQuerySubmittedEventArgs(RoutedEvent eventArgs, object sender)
     : RoutedEventArgs(eventArgs, sender)
 {
-    /// <summary>
-    /// Gets the query text.
-    /// </summary>
+    /// <summary>Gets the query text.</summary>
     /// <value>
     /// The query text.
     /// </value>

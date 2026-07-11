@@ -1,0 +1,174 @@
+<Window
+    x:Class="RichTextBoxParity.WpfDemo.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="WPF RichTextBox Parity Demo"
+    Width="1100"
+    Height="760"
+    MinWidth="860"
+    MinHeight="620">
+    <DockPanel Background="#F3F4F6">
+        <Border
+            DockPanel.Dock="Top"
+            Padding="12"
+            Background="#FFFFFF"
+            BorderBrush="#D1D5DB"
+            BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Native WPF RichTextBox parity demo" />
+                <TextBlock
+                    Margin="0,2,0,0"
+                    Foreground="#4B5563"
+                    Text="Use the editor, toolbar, clipboard, and drag/drop area to compare observable behavior with another RichTextBox implementation." />
+            </StackPanel>
+        </Border>
+
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="170" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="360" />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,0,10"
+                Padding="10"
+                Background="#FFFFFF"
+                BorderBrush="#D1D5DB"
+                BorderThickness="1">
+                <WrapPanel>
+                    <Button Click="ToolbarButtonClick" CommandParameter="Bold" Content="Bold" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Italic" Content="Italic" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Underline" Content="Underline" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Strike" Content="Strike" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="ClearFormatting" Content="Clear fmt" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Undo" Content="Undo" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Redo" Content="Redo" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Cut" Content="Cut" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Copy" Content="Copy" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Paste" Content="Paste" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="SelectAll" Content="Select all" />
+                    <Button Click="ToolbarButtonClick" CommandParameter="Reset" Content="Reset text" />
+                    <Button
+                        PreviewMouseLeftButtonDown="DragSourceMouseLeftButtonDown"
+                        Content="Drag sample text" />
+                </WrapPanel>
+            </Border>
+
+            <Border
+                Grid.Row="1"
+                Grid.Column="0"
+                Padding="8"
+                Background="#FFFFFF"
+                BorderBrush="#D1D5DB"
+                BorderThickness="1">
+                <RichTextBox
+                    x:Name="Editor"
+                    AcceptsTab="True"
+                    AllowDrop="True"
+                    DragEnter="EditorDragEnter"
+                    DragLeave="EditorDragLeave"
+                    Drop="EditorDrop"
+                    GotKeyboardFocus="EditorFocusChanged"
+                    LostKeyboardFocus="EditorFocusChanged"
+                    PreviewDragOver="EditorPreviewDragOver"
+                    SelectionChanged="EditorSelectionChanged"
+                    TextChanged="EditorTextChanged"
+                    VerticalScrollBarVisibility="Auto">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Run FontWeight="Bold" Text="WPF RichTextBox baseline" />
+                        </Paragraph>
+                        <Paragraph>
+                            <Run Text="Select text, apply formatting, cut/copy/paste, undo/redo, or drop text/files here. The side panel reports the observable state used for parity checks." />
+                        </Paragraph>
+                        <Paragraph>
+                            <Run Text="Plain text drop inserts text at the current selection. Supported image file drops render inline; other file drops report the file count in the drop state." />
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+            </Border>
+
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                Padding="12"
+                Background="#FFFFFF"
+                BorderBrush="#D1D5DB"
+                BorderThickness="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,0,0,8"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="Live state" />
+                        <TextBlock x:Name="FocusStateText" />
+                        <TextBlock x:Name="TextStateText" Margin="0,6,0,0" />
+                        <TextBlock x:Name="SelectionStateText" Margin="0,6,0,0" />
+                        <TextBlock x:Name="FormattingStateText" Margin="0,6,0,0" />
+                        <TextBlock x:Name="UndoStateText" Margin="0,6,0,0" />
+                        <TextBlock x:Name="ClipboardStateText" Margin="0,6,0,0" />
+                        <TextBlock x:Name="DropStateText" Margin="0,6,0,0" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Border
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="0,10,0,0"
+                Padding="10"
+                Background="#FFFFFF"
+                BorderBrush="#D1D5DB"
+                BorderThickness="1">
+                <StackPanel>
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="Drop target" />
+                    <TextBlock
+                        Margin="0,4,0,8"
+                        Foreground="#4B5563"
+                        Text="Drop text or files anywhere on the editor. This panel mirrors the latest drag/drop state." />
+                    <TextBox
+                        x:Name="DropMirrorText"
+                        Height="82"
+                        IsReadOnly="True"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
+            </Border>
+
+            <Border
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="10,10,0,0"
+                Padding="10"
+                Background="#FFFFFF"
+                BorderBrush="#D1D5DB"
+                BorderThickness="1">
+                <StackPanel>
+                    <TextBlock
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="Interaction log" />
+                    <ListBox
+                        x:Name="InteractionLog"
+                        Height="116"
+                        Margin="0,6,0,0" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

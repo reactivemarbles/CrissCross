@@ -1,19 +1,15 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Interactivity;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// BreadcrumbBarItemClickedEventArgs.
-/// </summary>
+/// <summary>BreadcrumbBarItemClickedEventArgs member.</summary>
 public sealed class BreadcrumbBarItemClickedEventArgs : RoutedEventArgs
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BreadcrumbBarItemClickedEventArgs"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="BreadcrumbBarItemClickedEventArgs"/> class.</summary>
     /// <param name="routedEvent">The routed event.</param>
     /// <param name="source">The source.</param>
     /// <param name="item">The item.</param>
@@ -25,13 +21,9 @@ public sealed class BreadcrumbBarItemClickedEventArgs : RoutedEventArgs
         Index = index;
     }
 
-    /// <summary>
-    /// Gets the Content property value of the BreadcrumbBarItem that is clicked.
-    /// </summary>
+    /// <summary>Gets the Content property value of the BreadcrumbBarItem that is clicked.</summary>
     public object Item { get; }
 
-    /// <summary>
-    /// Gets the index of the item that was clicked.
-    /// </summary>
+    /// <summary>Gets the index of the item that was clicked.</summary>
     public int Index { get; }
 }

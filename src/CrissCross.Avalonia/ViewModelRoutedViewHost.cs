@@ -1,10 +1,8 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -13,55 +11,60 @@ using Splat;
 
 namespace CrissCross.Avalonia;
 
-/// <summary>
-/// ViewModelRoutedViewHost.
-/// </summary>
+/// <summary>Hosts routed view model navigation content.</summary>
 public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IViewModelRoutedViewHost
 {
-    /// <summary>
-    /// The can navigate back property.
-    /// </summary>
+    /// <summary>The can navigate back property.</summary>
     public static readonly StyledProperty<bool?> CanNavigateBackProperty =
         AvaloniaProperty.Register<ViewModelRoutedViewHost, bool?>(nameof(CanNavigateBack));
 
-    /// <summary>
-    /// The host name property.
-    /// </summary>
+    /// <summary>The host name property.</summary>
     public static readonly StyledProperty<string?> HostNameProperty =
         AvaloniaProperty.Register<ViewModelRoutedViewHost, string?>(nameof(HostName));
 
-    /// <summary>
-    /// The navigate back is enabled property.
-    /// </summary>
+    /// <summary>The navigate back is enabled property.</summary>
     public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty =
         AvaloniaProperty.Register<ViewModelRoutedViewHost, bool?>(nameof(NavigateBackIsEnabled));
 
-    private readonly Subject<bool?> _canNavigateBackSubject = new();
-    private readonly Subject<INotifiyRoutableViewModel> _currentViewModel = new();
-    private IRxObject? __currentViewModel;
+    /// <summary>Stores the can Navigate Back Subject value.</summary>
+    private readonly Signal<bool?> _canNavigateBackSubject = new();
+
+    /// <summary>Stores the current View Model value.</summary>
+    private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
+
+    /// <summary>Stores the active View Model value.</summary>
+    private IRxObject? _activeViewModel;
+
+    /// <summary>Stores the current View value.</summary>
     private IViewFor? _currentView;
+
+    /// <summary>Stores the last View value.</summary>
     private IViewFor? _lastView;
+
+    /// <summary>Stores the navigate Back value.</summary>
     private bool _navigateBack;
+
+    /// <summary>Stores the reset Stack value.</summary>
     private bool _resetStack;
+
+    /// <summary>Stores the to View Model value.</summary>
     private IRxObject? _toViewModel;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.</summary>
     public ViewModelRoutedViewHost()
     {
         HorizontalContentAlignment = HorizontalAlignment.Stretch;
         VerticalContentAlignment = VerticalAlignment.Stretch;
         ViewLocator = AppLocator.Current.GetService<IViewLocator>();
-        CurrentViewModel.Subscribe(vm =>
+        _ = CurrentViewModel.Subscribe(vm =>
         {
             if (vm is IRxObject && !_navigateBack)
             {
-                __currentViewModel = vm as IRxObject;
-                NavigationStack.Add(__currentViewModel?.GetType());
+                _activeViewModel = vm as IRxObject;
+                NavigationStack.Add(_activeViewModel?.GetType());
             }
 
-            if (_currentView != null)
+            if (_currentView is not null)
             {
                 Content = _currentView;
             }
@@ -71,17 +74,13 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         });
     }
 
-    /// <summary>
-    /// Gets or sets the view  AppLocator.
-    /// </summary>
+    /// <summary>Gets or sets the view  AppLocator.</summary>
     /// <value>
     /// The view  AppLocator.
     /// </value>
     public IViewLocator? ViewLocator { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [navigate back is enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value><c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.</value>
     public bool? CanNavigateBack
     {
@@ -89,25 +88,19 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         set => SetValue(CanNavigateBackProperty, value);
     }
 
-    /// <summary>
-    /// Gets the can navigate back observable.
-    /// </summary>
+    /// <summary>Gets the can navigate back observable.</summary>
     /// <value>
     /// The can navigate back observable.
     /// </value>
     public IObservable<bool?> CanNavigateBackObservable => _canNavigateBackSubject;
 
-    /// <summary>
-    /// Gets the current view model.
-    /// </summary>
+    /// <summary>Gets the current view model.</summary>
     /// <value>
     /// The current view model.
     /// </value>
     public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Publish().RefCount();
 
-    /// <summary>
-    /// Gets or sets the name of the host.
-    /// </summary>
+    /// <summary>Gets or sets the name of the host.</summary>
     /// <value>
     /// The name of the host.
     /// </value>
@@ -117,9 +110,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         set => SetValue(HostNameProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the name of the styled element.
-    /// </summary>
+    /// <summary>Gets or sets the name of the styled element.</summary>
     /// <remarks>
     /// An element's name is used to uniquely identify an element within the element's name
     /// scope. Once the element is added to a logical tree, its name cannot be changed.
@@ -130,9 +121,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         set => base.Name = value;
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [navigate back is enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
     ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
@@ -142,25 +131,19 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         set => SetValue(NavigateBackIsEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets the navigation stack.
-    /// </summary>
+    /// <summary>Gets the navigation stack.</summary>
     /// <value>
     /// The navigation stack.
     /// </value>
     public ObservableCollection<Type?> NavigationStack { get; } = [];
 
-    /// <summary>
-    /// Gets a value indicating whether [requires setup].
-    /// </summary>
+    /// <summary>Gets a value indicating whether [requires setup].</summary>
     /// <value>
     /// <c>true</c> if [requires setup]; otherwise, <c>false</c>.
     /// </value>
     public bool RequiresSetup => true;
 
-    /// <summary>
-    /// Gets the type by which the element is styled.
-    /// </summary>
+    /// <summary>Gets the type by which the element is styled.</summary>
     /// <remarks>
     /// Usually controls are styled by their own type, but there are instances where you want
     /// an element to be styled by its base type, e.g. creating SpecialButton that
@@ -170,32 +153,24 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
     /// </remarks>
     protected override Type StyleKeyOverride => typeof(ReactiveTransitioningContentControl);
 
-    /// <summary>
-    /// Clears the history.
-    /// </summary>
+    /// <summary>Clears the history.</summary>
     public void ClearHistory() => NavigationStack.Clear();
 
-    /// <summary>
-    /// Navigates the ViewModel contract.
-    /// </summary>
+    /// <summary>Navigates the ViewModel contract.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate<T>(string? contract = null, object? parameter = null)
         where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
 
-    /// <summary>
-    /// Navigates the ViewModel contract.
-    /// </summary>
+    /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
         => InternalNavigate(viewModel, contract, parameter);
 
-    /// <summary>
-    /// Navigates and resets.
-    /// </summary>
+    /// <summary>Navigates and resets.</summary>
     /// <typeparam name="T">The Type.</typeparam>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
@@ -206,9 +181,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         InternalNavigate<T>(contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates the and reset.
-    /// </summary>
+    /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
@@ -218,9 +191,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         InternalNavigate(viewModel, contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates back.
-    /// </summary>
+    /// <summary>Navigates back.</summary>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
     public IRxObject? NavigateBack(object? parameter = null)
@@ -234,7 +205,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
             var count = NavigationStack.Count - 2;
             _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
-            var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.Back, _lastView, hostName, parameter);
+            var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.Back, _lastView, hostName, parameter);
             if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
                 ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -250,30 +221,28 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         return _toViewModel;
     }
 
-    /// <summary>
-    /// Refreshes this instance.
-    /// </summary>
+    /// <summary>Refreshes this instance.</summary>
     public void Refresh()
     {
         // Keep existing view
-        if (Content == null && _currentView != null)
+        if (Content is null && _currentView is not null)
         {
             Content = _currentView;
         }
 
-        if (NavigateBackIsEnabled == false)
+        if (NavigateBackIsEnabled != false)
         {
-            // cleanup while Navigation Back is disabled
-            while (NavigationStack.Count > 1)
-            {
-                NavigationStack.RemoveAt(0);
-            }
+            return;
+        }
+
+        // cleanup while Navigation Back is disabled
+        while (NavigationStack.Count > 1)
+        {
+            NavigationStack.RemoveAt(0);
         }
     }
 
-    /// <summary>
-    /// Setups this instance.
-    /// </summary>
+    /// <summary>Setups this instance.</summary>
     /// <exception cref="ArgumentNullException">Navigation Host Name not set.</exception>
     public void Setup()
     {
@@ -285,45 +254,42 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
             return;
         }
 
-        resultNavigating.DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
+        _ = resultNavigating.DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
         {
             var fromView = _currentView as INotifiyNavigation;
-            if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating == null)
+            if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating is null)
             {
                 // No view is setup for reciving navigation notifications.
-                __currentViewModel?.WhenNavigating(e);
+                _activeViewModel?.WhenNavigating(e);
             }
 
             if (!e.Cancel)
             {
-                var nea = new ViewModelNavigationEventArgs(__currentViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, hostName, e.NavigationParameter);
+                var nea = new ViewModelNavigationEventArgs(_activeViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, hostName, e.NavigationParameter);
                 var toView = e.View as INotifiyNavigation;
-                var callVmNavTo = toView == null || !toView!.ISetupNavigatedTo;
-                var callVmNavFrom = fromView == null || !fromView!.ISetupNavigatedTo;
-                var cvm = __currentViewModel;
+                var callVmNavTo = toView is null || !toView!.ISetupNavigatedTo;
+                var callVmNavFrom = fromView is null || !fromView!.ISetupNavigatedTo;
+                var cvm = _activeViewModel;
                 _toViewModel ??= e.View?.ViewModel as IRxObject;
                 var tvm = _toViewModel;
 
-                if (_navigateBack)
+                if (_navigateBack && _toViewModel is not null)
                 {
                     // Remove the current
                     NavigationStack.RemoveAt(NavigationStack.Count - 1);
-                    if (_toViewModel != null)
+                    _currentView = ViewLocator?.ResolveView(_toViewModel);
+                    _currentViewModel.OnNext(_toViewModel);
+                    foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values.Where(x => x.Name != hostName))
                     {
-                        _currentView = ViewLocator?.ResolveView(_toViewModel);
-                        _currentViewModel.OnNext(_toViewModel);
-                        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values.Where(x => x.Name != hostName))
-                        {
-                            host.Refresh();
-                        }
+                        host.Refresh();
                     }
                 }
-                else if (_toViewModel != null && _resetStack)
+                else if (_toViewModel is not null && _resetStack)
                 {
                     NavigationStack.Clear();
                     _currentViewModel.OnNext(_toViewModel);
                 }
-                else if (_toViewModel != null && _currentView != null)
+                else if (_toViewModel is not null && _currentView is not null)
                 {
                     _currentViewModel.OnNext(_toViewModel);
                 }
@@ -357,20 +323,24 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         });
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-        if (disposing)
+        if (!disposing)
         {
-            _canNavigateBackSubject.Dispose();
-            _currentViewModel.Dispose();
+            return;
         }
+
+        _canNavigateBackSubject.Dispose();
+        _currentViewModel.Dispose();
     }
 
+    /// <summary>Runs the internal Navigate operation.</summary>
+    /// <typeparam name="T">The view model type.</typeparam>
+    /// <param name="contract">The optional navigation contract.</param>
+    /// <param name="parameter">The optional navigation parameter.</param>
     private void InternalNavigate<T>(string? contract, object? parameter)
         where T : class, IRxObject
     {
@@ -381,7 +351,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -392,6 +362,10 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         }
     }
 
+    /// <summary>Runs the internal Navigate operation.</summary>
+    /// <param name="viewModel">The view model.</param>
+    /// <param name="contract">The optional navigation contract.</param>
+    /// <param name="parameter">The optional navigation parameter.</param>
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
         _toViewModel = viewModel;
@@ -401,7 +375,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(__currentViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, hostName, parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -412,6 +386,8 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
         }
     }
 
+    /// <summary>Runs the resolve Host Name operation.</summary>
+    /// <returns>The resolved host name.</returns>
     private string ResolveHostName()
     {
         if (string.IsNullOrWhiteSpace(HostName))
@@ -419,10 +395,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IVie
             HostName = Name;
         }
 
-        if (string.IsNullOrWhiteSpace(HostName))
-        {
-            throw new ArgumentNullException(HostName, "Navigation Host Name not set");
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(HostName);
 
         return HostName!;
     }

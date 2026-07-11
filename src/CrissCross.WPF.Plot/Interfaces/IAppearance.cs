@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
 using ReactiveUI;
 using ScottPlot;
 using ScottPlot.WPF;
@@ -19,98 +18,73 @@ namespace CrissCross.WPF.Plot;
 /// or interactive visualization. Thread safety and specific behavior depend on the implementing class.</remarks>
 public interface IAppearance
 {
-    /// <summary>
-    /// Gets or sets the color CheckBox.
-    /// </summary>
+    /// <summary>Gets or sets the color CheckBox.</summary>
     /// <value>
     /// The color CheckBox.
     /// </value>
     string Color { get; set; }
 
-    /// <summary>
-    /// Gets or sets the color text.
-    /// </summary>
+    /// <summary>Gets or sets the color text.</summary>
     /// <value>
     /// The color text.
     /// </value>
     string? ColorText { get; set; }
 
-    /// <summary>
-    /// Gets or sets the displayed value.
-    /// </summary>
+    /// <summary>Gets or sets the displayed value.</summary>
     /// <value>
     /// The displayed value.
     /// </value>
     int DisplayedValue { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is checked.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is checked.</summary>
     /// <value>
     ///   <c>true</c> if this instance is checked; otherwise, <c>false</c>.
     /// </value>
     bool IsChecked { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is paused.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is paused.</summary>
     /// <value>
     ///   <c>true</c> if this instance is paused; otherwise, <c>false</c>.
     /// </value>
     bool IsPaused { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is visible.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is visible.</summary>
     /// <value>
     ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
     /// </value>
     bool IsVisible { get; set; }
 
-    /// <summary>
-    /// Gets or sets the name of the item.
-    /// </summary>
+    /// <summary>Gets or sets the name of the item.</summary>
     /// <value>
     /// The name of the item.
     /// </value>
     string? ItemName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the width of the line.
-    /// </summary>
+    /// <summary>Gets or sets the width of the line.</summary>
     /// <value>
     /// The width of the line.
     /// </value>
     double LineWidth { get; set; }
 
-    /// <summary>
-    /// Gets or sets the opacity CheckBox.
-    /// </summary>
+    /// <summary>Gets or sets the opacity CheckBox.</summary>
     /// <value>
     /// The opacity CheckBox.
     /// </value>
     string? OpacityCheckBox { get; set; }
 
-    /// <summary>
-    /// Gets or sets the is checked command.
-    /// </summary>
+    /// <summary>Gets or sets the is checked command.</summary>
     /// <value>
     /// The is checked command.
     /// </value>
     ReactiveCommand<Unit, Unit>? IsCheckedCmd { get; set; }
 
-    /// <summary>
-    /// Subscribes to crosshair events, enabling the receiver to respond to crosshair interactions.
-    /// </summary>
+    /// <summary>Subscribes to crosshair events, enabling the receiver to respond to crosshair interactions.</summary>
     void CrosshairSubscription();
 
-    /// <summary>
-    /// Configures appearance-related subscriptions for the specified plottable on the given plot.
-    /// </summary>
-    /// <typeparam name="T">The type of the plottable to configure. Must implement <see cref="IHasLine"/>, <see cref="IHasMarker"/>, and
-    /// <see cref="ScottPlot.IPlottable"/>.</typeparam>
-    /// <param name="plot">The plot on which the appearance subscriptions will be configured.</param>
-    /// <param name="plotable">The plottable object whose appearance subscriptions are to be set up.</param>
+    /// <summary>Configures appearance-related subscriptions for the specified plottable on the given plot.</summary>
+    /// <typeparam name="T">The type of the plottable to configure.</typeparam>
+    /// <param name="plot">The plot that owns the plottable.</param>
+    /// <param name="plotable">The plottable whose appearance should follow these settings.</param>
     void AppearanceSubsriptions<T>(WpfPlot plot, T plotable)
-        where T : IHasLine, IHasMarker, ScottPlot.IPlottable;
+        where T : IHasLine, IHasMarker, IPlottable;
 }

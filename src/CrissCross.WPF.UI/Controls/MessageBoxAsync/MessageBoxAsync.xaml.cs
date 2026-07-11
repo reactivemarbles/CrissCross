@@ -1,53 +1,80 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using System.Reactive;
 using System.Windows.Input;
 using CP.BBCode.WPF;
-using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// Interaction logic for MessageBox.xaml.
-/// </summary>
+/// <summary>Interaction logic for MessageBox.xaml.</summary>
 public partial class MessageBoxAsync : IListenForMessages
 {
-    /// <summary>
-    /// Identifies the Buttons dependency property.
-    /// </summary>
+    /// <summary>Identifies the Buttons dependency property.</summary>
     public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
         nameof(Buttons),
         typeof(ObservableCollection<Button>),
         typeof(MessageBoxAsync));
 
+    /// <summary>Stores the _closeOkCommand value.</summary>
     private readonly ReactiveCommand<Unit, MessageBoxResult>? _closeOkCommand;
+
+    /// <summary>Stores the _custom0Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom0Command;
+
+    /// <summary>Stores the _custom1Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom1Command;
+
+    /// <summary>Stores the _custom2Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom2Command;
+
+    /// <summary>Stores the _custom3Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom3Command;
+
+    /// <summary>Stores the _custom4Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom4Command;
+
+    /// <summary>Stores the _custom5Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom5Command;
+
+    /// <summary>Stores the _custom6Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom6Command;
+
+    /// <summary>Stores the _custom7Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom7Command;
+
+    /// <summary>Stores the _custom8Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom8Command;
+
+    /// <summary>Stores the _custom9Command value.</summary>
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom9Command;
+
+    /// <summary>Stores the _customMessageBoxResult value.</summary>
     private CustomMessageBoxResult _customMessageBoxResult = CustomMessageBoxResult.None;
+
+    /// <summary>Stores the _messageBoxResult value.</summary>
     private MessageBoxResult _messageBoxResult = MessageBoxResult.None;
+
+    /// <summary>Stores the _cancelButton value.</summary>
     private Button? _cancelButton;
+
+    /// <summary>Stores the _closeButton value.</summary>
     private Button? _closeButton;
+
+    /// <summary>Stores the _noButton value.</summary>
     private Button? _noButton;
+
+    /// <summary>Stores the _okbutton value.</summary>
     private Button? _okbutton;
+
+    /// <summary>Stores the _yesButton value.</summary>
     private Button? _yesButton;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessageBoxAsync"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="MessageBoxAsync"/> class.</summary>
     public MessageBoxAsync()
     {
         InitializeComponent();
@@ -69,13 +96,13 @@ public partial class MessageBoxAsync : IListenForMessages
 
         Buttons = new([CloseButton]);
         ButtonsSource.ItemsSource = Buttons;
-        this.Events().Loaded.Subscribe(_ =>
+        Loaded += (_, _) =>
         {
             // Set up magic functions
             this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
             this.ListenForCustomMessages(
-                async message =>
-                await MessageBoxShow(
+                message =>
+                MessageBoxShow(
                                      message.Item1,
                                      message.Item2,
                                      message.Item3,
@@ -86,122 +113,82 @@ public partial class MessageBoxAsync : IListenForMessages
                                      message.Rest.Item1,
                                      message.Rest.Item2,
                                      message.Rest.Item3,
-                                     message.Rest.Item4).ConfigureAwait(false));
-        });
+                                     message.Rest.Item4));
+        };
     }
 
-    /// <summary>
-    /// Gets or sets the dialog buttons.
-    /// </summary>
+    /// <summary>Gets or sets the dialog buttons.</summary>
     public ObservableCollection<Button> Buttons
     {
         get => (ObservableCollection<Button>)GetValue(ButtonsProperty);
         set => SetValue(ButtonsProperty, value);
     }
 
-    /// <summary>
-    /// Gets the close window command that sets the dialog result to a null value.
-    /// </summary>
+    /// <summary>Gets the close window command that sets the dialog result to a null value.</summary>
     public ICommand CloseCommand { get; }
 
-    /// <summary>
-    /// Gets the close window command that sets the dialog result to false.
-    /// </summary>
+    /// <summary>Gets the close window command that sets the dialog result to false.</summary>
     public ICommand CloseFalseCommand { get; }
 
-    /// <summary>
-    /// Gets the close window command that sets the dialog result to True.
-    /// </summary>
+    /// <summary>Gets the close window command that sets the dialog result to True.</summary>
     public ICommand CloseTrueCommand { get; }
 
-    /// <summary>
-    /// Gets the Cancel button.
-    /// </summary>
+    /// <summary>Gets the Cancel button.</summary>
     public Button CancelButton => _cancelButton ??= CreateDialogButton("Cancel", false, true, CloseCommand);
 
-    /// <summary>
-    /// Gets the Close button.
-    /// </summary>
+    /// <summary>Gets the Close button.</summary>
     public Button CloseButton => _closeButton ??= CreateDialogButton("Close", true, false, CloseCommand);
 
-    /// <summary>
-    /// Gets the Yes button.
-    /// </summary>
+    /// <summary>Gets the Yes button.</summary>
     public Button YesButton => _yesButton ??= CreateDialogButton("Yes", true, false, CloseTrueCommand);
 
-    /// <summary>
-    /// Gets the No button.
-    /// </summary>
+    /// <summary>Gets the No button.</summary>
     public Button NoButton => _noButton ??= CreateDialogButton("No", false, true, CloseFalseCommand);
 
-    /// <summary>
-    /// Gets the OK button.
-    /// </summary>
+    /// <summary>Gets the OK button.</summary>
     public Button OkButton => _okbutton ??= CreateDialogButton("Ok", true, false, _closeOkCommand);
 
-    /// <summary>
-    /// Gets the custom button0.
-    /// </summary>
+    /// <summary>Gets the custom button0.</summary>
     /// <value>The custom button0.</value>
     public Button? CustomButton0 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button1.
-    /// </summary>
+    /// <summary>Gets the custom button1.</summary>
     /// <value>The custom button1.</value>
     public Button? CustomButton1 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button2.
-    /// </summary>
+    /// <summary>Gets the custom button2.</summary>
     /// <value>The custom button2.</value>
     public Button? CustomButton2 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button3.
-    /// </summary>
+    /// <summary>Gets the custom button3.</summary>
     /// <value>The custom button3.</value>
     public Button? CustomButton3 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button4.
-    /// </summary>
+    /// <summary>Gets the custom button4.</summary>
     /// <value>The custom button4.</value>
     public Button? CustomButton4 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button5.
-    /// </summary>
+    /// <summary>Gets the custom button5.</summary>
     /// <value>The custom button5.</value>
     public Button? CustomButton5 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button6.
-    /// </summary>
+    /// <summary>Gets the custom button6.</summary>
     /// <value>The custom button6.</value>
     public Button? CustomButton6 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button7.
-    /// </summary>
+    /// <summary>Gets the custom button7.</summary>
     /// <value>The custom button7.</value>
     public Button? CustomButton7 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button8.
-    /// </summary>
+    /// <summary>Gets the custom button8.</summary>
     /// <value>The custom button8.</value>
     public Button? CustomButton8 { get; private set; }
 
-    /// <summary>
-    /// Gets the custom button9.
-    /// </summary>
+    /// <summary>Gets the custom button9.</summary>
     /// <value>The custom button9.</value>
     public Button? CustomButton9 { get; private set; }
 
-    /// <summary>
-    /// Creates the dialog button.
-    /// </summary>
+    /// <summary>Creates the dialog button.</summary>
     /// <param name="content">The content.</param>
     /// <param name="isDefault">if set to <c>true</c> [is default].</param>
     /// <param name="isCancel">if set to <c>true</c> [is cancel].</param>
@@ -215,12 +202,10 @@ public partial class MessageBoxAsync : IListenForMessages
         IsCancel = isCancel,
         MinHeight = 21,
         MinWidth = 65,
-        Margin = new Thickness(4, 0, 0, 0)
+        Margin = new(4, 0, 0, 0)
     };
 
-    /// <summary>
-    /// Messages the box show.
-    /// </summary>
+    /// <summary>Messages the box show.</summary>
     /// <param name="bbcode">The bbcode.</param>
     /// <param name="title">The title.</param>
     /// <param name="custom0">The custom0.</param>
@@ -236,7 +221,7 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <returns>A Value.</returns>
     private async Task<CustomMessageBoxResult> MessageBoxShow(string bbcode, string title, string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
     {
-        if (custom0 == null)
+        if (custom0 is null)
         {
             throw new ArgumentNullException(nameof(custom0));
         }
@@ -250,7 +235,7 @@ public partial class MessageBoxAsync : IListenForMessages
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
+            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, 8) };
             Buttons.Clear();
             foreach (var button in GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9))
             {
@@ -264,21 +249,21 @@ public partial class MessageBoxAsync : IListenForMessages
         _customMessageBoxResult = CustomMessageBoxResult.None;
 
         // Wait for response
-        while (_customMessageBoxResult == CustomMessageBoxResult.None)
+        var customMessageBoxResult = GetCustomMessageBoxResult();
+        while (customMessageBoxResult == CustomMessageBoxResult.None)
         {
             await Task.Delay(100).ConfigureAwait(true);
+            customMessageBoxResult = GetCustomMessageBoxResult();
         }
 
         await Dispatcher.InvokeAsync(() =>
 
         // hide the message box and return result
         Visibility = Visibility.Collapsed);
-        return _customMessageBoxResult;
+        return customMessageBoxResult;
     }
 
-    /// <summary>
-    /// Displays a dismiss-able message-box. Click outside of the message area to dismiss.
-    /// </summary>
+    /// <summary>Displays a dismiss-able message-box. Click outside of the message area to dismiss.</summary>
     /// <param name="bbcode">The text. Use BBCode to style the text.</param>
     /// <param name="title">The title.</param>
     /// <param name="button">The buttons to show.</param>
@@ -294,7 +279,7 @@ public partial class MessageBoxAsync : IListenForMessages
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new Thickness(0, 0, 0, 8) };
+            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, 8) };
             Buttons.Clear();
             foreach (var button in GetButtons(button))
             {
@@ -308,74 +293,63 @@ public partial class MessageBoxAsync : IListenForMessages
         _messageBoxResult = MessageBoxResult.None;
 
         // Wait for response
-        while (_messageBoxResult == MessageBoxResult.None)
+        var messageBoxResult = GetMessageBoxResult();
+        while (messageBoxResult == MessageBoxResult.None)
         {
             await Task.Delay(100).ConfigureAwait(true);
+            messageBoxResult = GetMessageBoxResult();
         }
 
         // hide the message box and return result
         await Dispatcher.InvokeAsync(() => Visibility = Visibility.Collapsed);
-        return _messageBoxResult;
+        return messageBoxResult;
     }
 
+    /// <summary>Provides the GetButtons member.</summary>
+    /// <param name="custom0">The custom0 value.</param>
+    /// <param name="custom1">The custom1 value.</param>
+    /// <param name="custom2">The custom2 value.</param>
+    /// <param name="custom3">The custom3 value.</param>
+    /// <param name="custom4">The custom4 value.</param>
+    /// <param name="custom5">The custom5 value.</param>
+    /// <param name="custom6">The custom6 value.</param>
+    /// <param name="custom7">The custom7 value.</param>
+    /// <param name="custom8">The custom8 value.</param>
+    /// <param name="custom9">The custom9 value.</param>
+    /// <returns>The result.</returns>
     private List<Button> GetButtons(string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
     {
         var result = new List<Button>();
-        var owner = this;
-        owner.CustomButton0 = CreateDialogButton(custom0, true, false, _custom0Command);
-        result.Add(owner.CustomButton0);
-        if (custom1 != null)
+        var buttonDefinitions = new (string? Text, ICommand? Command, Action<Button> Assign)[]
         {
-            owner.CustomButton1 = CreateDialogButton(custom1, false, false, _custom1Command);
-            result.Add(owner.CustomButton1);
-            if (custom2 != null)
+            (custom0, _custom0Command, button => CustomButton0 = button),
+            (custom1, _custom1Command, button => CustomButton1 = button),
+            (custom2, _custom2Command, button => CustomButton2 = button),
+            (custom3, _custom3Command, button => CustomButton3 = button),
+            (custom4, _custom4Command, button => CustomButton4 = button),
+            (custom5, _custom5Command, button => CustomButton5 = button),
+            (custom6, _custom6Command, button => CustomButton6 = button),
+            (custom7, _custom7Command, button => CustomButton7 = button),
+            (custom8, _custom8Command, button => CustomButton8 = button),
+            (custom9, _custom9Command, button => CustomButton9 = button)
+        };
+
+        foreach (var (text, command, assign) in buttonDefinitions)
+        {
+            if (text is null)
             {
-                owner.CustomButton2 = CreateDialogButton(custom2, false, false, _custom2Command);
-                result.Add(owner.CustomButton2);
-                if (custom3 != null)
-                {
-                    owner.CustomButton3 = CreateDialogButton(custom3, false, false, _custom3Command);
-                    result.Add(owner.CustomButton3);
-                    if (custom4 != null)
-                    {
-                        owner.CustomButton4 = CreateDialogButton(custom4, false, false, _custom4Command);
-                        result.Add(owner.CustomButton4);
-                        if (custom5 != null)
-                        {
-                            owner.CustomButton5 = CreateDialogButton(custom5, false, false, _custom5Command);
-                            result.Add(owner.CustomButton5);
-                            if (custom6 != null)
-                            {
-                                owner.CustomButton6 = CreateDialogButton(custom6, false, false, _custom6Command);
-                                result.Add(owner.CustomButton6);
-                                if (custom7 != null)
-                                {
-                                    owner.CustomButton7 = CreateDialogButton(custom7, false, false, _custom7Command);
-                                    result.Add(owner.CustomButton7);
-                                    if (custom8 != null)
-                                    {
-                                        owner.CustomButton8 = CreateDialogButton(custom8, false, false, _custom8Command);
-                                        result.Add(owner.CustomButton8);
-                                        if (custom9 != null)
-                                        {
-                                            owner.CustomButton9 = CreateDialogButton(custom9, false, false, _custom9Command);
-                                            result.Add(owner.CustomButton9);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                break;
             }
+
+            var button = CreateDialogButton(text, result.Count == 0, false, command);
+            assign(button);
+            result.Add(button);
         }
 
         return result;
     }
 
-    /// <summary>
-    /// Gets the buttons.
-    /// </summary>
+    /// <summary>Gets the buttons.</summary>
     /// <param name="button">The button.</param>
     /// <returns>A IEnumerable of Buttons.</returns>
     private List<Button> GetButtons(MessageBoxButton button)
@@ -385,26 +359,42 @@ public partial class MessageBoxAsync : IListenForMessages
         switch (button)
         {
             case MessageBoxButton.OK:
-                result.Add(owner.OkButton);
-                break;
+                {
+                    result.Add(owner.OkButton);
+                    break;
+                }
 
             case MessageBoxButton.OKCancel:
-                result.Add(owner.OkButton);
-                result.Add(owner.CancelButton);
-                break;
+                {
+                    result.Add(owner.OkButton);
+                    result.Add(owner.CancelButton);
+                    break;
+                }
 
             case MessageBoxButton.YesNo:
-                result.Add(owner.YesButton);
-                result.Add(owner.NoButton);
-                break;
+                {
+                    result.Add(owner.YesButton);
+                    result.Add(owner.NoButton);
+                    break;
+                }
 
             case MessageBoxButton.YesNoCancel:
-                result.Add(owner.YesButton);
-                result.Add(owner.NoButton);
-                result.Add(owner.CancelButton);
-                break;
+                {
+                    result.Add(owner.YesButton);
+                    result.Add(owner.NoButton);
+                    result.Add(owner.CancelButton);
+                    break;
+                }
         }
 
         return result;
     }
+
+    /// <summary>Gets the current custom message box result.</summary>
+    /// <returns>The current custom message box result.</returns>
+    private CustomMessageBoxResult GetCustomMessageBoxResult() => _customMessageBoxResult;
+
+    /// <summary>Gets the current message box result.</summary>
+    /// <returns>The current message box result.</returns>
+    private MessageBoxResult GetMessageBoxResult() => _messageBoxResult;
 }

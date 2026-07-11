@@ -1,18 +1,32 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Buffer = System.Buffer;
 
 namespace CrissCross.WPF.UI.Controls.Decompression;
 
-internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLength) : Stream
+/// <summary>Provides the LzwDecompressStream member.</summary>
+/// <param name="compressedBuffer">The compressedBuffer value.</param>
+/// <param name="minimumCodeLength">The minimumCodeLength value.</param>
+internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLength) : Stream
 {
+    /// <summary>Provides the MaxCodeLength member.</summary>
     private const int MaxCodeLength = 12;
+
+    /// <summary>Stores the _reader value.</summary>
     private readonly BitReader _reader = new(compressedBuffer);
+
+    /// <summary>Stores the _codeTable value.</summary>
     private readonly CodeTable _codeTable = new(minimumCodeLength);
+
+    /// <summary>Stores the _prevCode value.</summary>
     private int _prevCode = -1;
+
+    /// <summary>Stores the _remainingBytes value.</summary>
     private byte[]? _remainingBytes;
+
+    /// <summary>Stores the _endOfStream value.</summary>
     private bool _endOfStream;
 
     public override bool CanRead => true;
@@ -66,6 +80,13 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
 
     public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
+    /// <summary>Provides the CopySequenceToBuffer member.</summary>
+    /// <param name="sequence">The sequence value.</param>
+    /// <param name="buffer">The buffer value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <param name="count">The count value.</param>
+    /// <param name="read">The read value.</param>
+    /// <returns>The result.</returns>
     private static byte[]? CopySequenceToBuffer(byte[]? sequence, byte[] buffer, int offset, int count, ref int read)
     {
         var bytesToRead = Math.Min(sequence!.Length, count - read);
@@ -82,10 +103,14 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
         return remainingBytes;
     }
 
+    /// <summary>Provides the ValidateReadArgs member.</summary>
+    /// <param name="buffer">The buffer value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <param name="count">The count value.</param>
     [Conditional("DISABLED")]
     private static void ValidateReadArgs(byte[] buffer, int offset, int count)
     {
-        if (buffer == null)
+        if (buffer is null)
         {
             throw new ArgumentNullException(nameof(buffer));
         }
@@ -100,27 +125,44 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             throw new ArgumentOutOfRangeException(nameof(count), "Count can't be negative");
         }
 
-        if (offset + count > buffer.Length)
+        if (offset + count <= buffer.Length)
         {
-            throw new ArgumentException("Buffer is to small to receive the requested data");
+            return;
         }
+
+        throw new ArgumentException("Buffer is to small to receive the requested data");
     }
 
+    /// <summary>Provides the InitCodeTable member.</summary>
     private void InitCodeTable()
     {
         _codeTable.Reset();
         _prevCode = -1;
     }
 
+    /// <summary>Provides the FlushRemainingBytes member.</summary>
+    /// <param name="buffer">The buffer value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <param name="count">The count value.</param>
+    /// <param name="read">The read value.</param>
     private void FlushRemainingBytes(byte[] buffer, int offset, int count, ref int read)
     {
-        // If we read too many bytes last time, copy them first;
-        if (_remainingBytes != null)
+        // If we read too many bytes last time, copy them first.
+        if (_remainingBytes is null)
         {
-            _remainingBytes = CopySequenceToBuffer(_remainingBytes, buffer, offset, count, ref read);
+            return;
         }
+
+        _remainingBytes = CopySequenceToBuffer(_remainingBytes, buffer, offset, count, ref read);
     }
 
+    /// <summary>Provides the ProcessCode member.</summary>
+    /// <param name="code">The code value.</param>
+    /// <param name="buffer">The buffer value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <param name="count">The count value.</param>
+    /// <param name="read">The read value.</param>
+    /// <returns>The result.</returns>
     private bool ProcessCode(int code, byte[] buffer, int offset, int count, ref int read)
     {
         if (code < _codeTable.Count)
@@ -157,11 +199,17 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
         return true;
     }
 
-    private struct Sequence
+    /// <summary>Provides the Sequence member.</summary>
+    private readonly struct Sequence
     {
+        /// <summary>Initializes a new instance of the <see cref="Sequence"/> struct.</summary>
+        /// <param name="bytes">The bytes value.</param>
         public Sequence(byte[] bytes)
             : this() => Bytes = bytes;
 
+        /// <summary>Initializes a new instance of the <see cref="Sequence"/> struct.</summary>
+        /// <param name="isClearCode">The isClearCode value.</param>
+        /// <param name="isStopCode">The isStopCode value.</param>
         private Sequence(bool isClearCode, bool isStopCode)
             : this()
         {
@@ -169,17 +217,25 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             IsStopCode = isStopCode;
         }
 
+        /// <summary>Gets the ClearCode value.</summary>
         public static Sequence ClearCode { get; } = new Sequence(true, false);
 
+        /// <summary>Gets the StopCode value.</summary>
         public static Sequence StopCode { get; } = new Sequence(false, true);
 
+        /// <summary>Gets the Bytes value.</summary>
         public byte[]? Bytes { get; }
 
+        /// <summary>Gets the IsClearCode value.</summary>
         public bool IsClearCode { get; }
 
+        /// <summary>Gets the IsStopCode value.</summary>
         public bool IsStopCode { get; }
 
-        public Sequence Append(byte b)
+        /// <summary>Provides the Append member.</summary>
+        /// <param name="b">The b value.</param>
+        /// <returns>The result.</returns>
+        public readonly Sequence Append(byte b)
         {
             var bytes = new byte[Bytes!.Length + 1];
             Bytes.CopyTo(bytes, 0);
@@ -188,13 +244,23 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
         }
     }
 
-    private class CodeTable
+    /// <summary>Provides the CodeTable member.</summary>
+    private sealed class CodeTable
     {
+        /// <summary>Stores the _minimumCodeLength value.</summary>
         private readonly int _minimumCodeLength;
+
+        /// <summary>Stores the _table value.</summary>
         private readonly Sequence[] _table;
+
+        /// <summary>Stores the _count value.</summary>
         private int _count;
+
+        /// <summary>Stores the _codeLength value.</summary>
         private int _codeLength;
 
+        /// <summary>Initializes a new instance of the <see cref="CodeTable"/> class.</summary>
+        /// <param name="minimumCodeLength">The minimumCodeLength value.</param>
         public CodeTable(int minimumCodeLength)
         {
             _minimumCodeLength = minimumCodeLength;
@@ -203,19 +269,21 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             _table = new Sequence[1 << MaxCodeLength];
             for (var i = 0; i < initialEntries; i++)
             {
-                _table[_count++] = new Sequence(new[] { (byte)i });
+                _table[_count++] = new([(byte)i]);
             }
 
             Add(Sequence.ClearCode);
             Add(Sequence.StopCode);
         }
 
+        /// <summary>Gets Count.</summary>
         public int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _count;
         }
 
+        /// <summary>Gets CodeLength.</summary>
         public int CodeLength
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -228,6 +296,7 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             get => _table[index];
         }
 
+        /// <summary>Provides the Reset member.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset()
         {
@@ -235,6 +304,8 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             _codeLength = _minimumCodeLength + 1;
         }
 
+        /// <summary>Provides the Add member.</summary>
+        /// <param name="sequence">The sequence value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(Sequence sequence)
         {
@@ -245,10 +316,12 @@ internal class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLengt
             }
 
             _table[_count++] = sequence;
-            if ((_count & (_count - 1)) == 0 && _codeLength < MaxCodeLength)
+            if ((_count & (_count - 1)) != 0 || _codeLength >= MaxCodeLength)
             {
-                _codeLength++;
+                return;
             }
+
+            _codeLength++;
         }
     }
 }

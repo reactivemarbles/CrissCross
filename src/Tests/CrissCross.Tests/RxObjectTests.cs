@@ -1,24 +1,14 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-using System.Reactive.Disposables;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Tests for RxObject class.
-/// </summary>
+/// <summary>Tests for RxObject class.</summary>
 public class RxObjectTests
 {
-    /// <summary>
-    /// Test implementation of RxObject.
-    /// </summary>
-    private class TestRxObject : RxObject
-    {
-        public CompositeDisposable GetDisposables() => Disposables;
-    }
-
+    /// <summary>Provides the Name_ReturnsFullTypeName member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Name_ReturnsFullTypeName()
     {
@@ -32,12 +22,14 @@ public class RxObjectTests
         await Assert.That(name).IsEqualTo(typeof(TestRxObject).FullName);
     }
 
+    /// <summary>Provides the DisplayName_CanBeSetAndRetrieved member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DisplayName_CanBeSetAndRetrieved()
     {
         // Arrange
         var rxObject = new TestRxObject();
-        var expectedDisplayName = "Test Display Name";
+        const string expectedDisplayName = "Test Display Name";
 
         // Act
         rxObject.DisplayName = expectedDisplayName;
@@ -46,6 +38,8 @@ public class RxObjectTests
         await Assert.That(rxObject.DisplayName).IsEqualTo(expectedDisplayName);
     }
 
+    /// <summary>Provides the DisplayName_IsNullByDefault member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DisplayName_IsNullByDefault()
     {
@@ -56,6 +50,8 @@ public class RxObjectTests
         await Assert.That(rxObject.DisplayName).IsNull();
     }
 
+    /// <summary>Provides the IsDisposed_IsFalseByDefault member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task IsDisposed_IsFalseByDefault()
     {
@@ -66,6 +62,8 @@ public class RxObjectTests
         await Assert.That(rxObject.IsDisposed).IsFalse();
     }
 
+    /// <summary>Provides the IsDisposed_IsTrueAfterDispose member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task IsDisposed_IsTrueAfterDispose()
     {
@@ -79,6 +77,8 @@ public class RxObjectTests
         await Assert.That(rxObject.IsDisposed).IsTrue();
     }
 
+    /// <summary>Provides the Dispose_CanBeCalledMultipleTimes member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Dispose_CanBeCalledMultipleTimes()
     {
@@ -93,13 +93,15 @@ public class RxObjectTests
         await Assert.That(rxObject.IsDisposed).IsTrue();
     }
 
+    /// <summary>Provides the Disposables_AreDisposedWhenObjectIsDisposed member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task Disposables_AreDisposedWhenObjectIsDisposed()
     {
         // Arrange
         var rxObject = new TestRxObject();
         var wasDisposed = false;
-        var disposable = Disposable.Create(() => wasDisposed = true);
+        var disposable = new ActionDisposable(() => wasDisposed = true);
         rxObject.GetDisposables().Add(disposable);
 
         // Act
@@ -109,6 +111,8 @@ public class RxObjectTests
         await Assert.That(wasDisposed).IsTrue();
     }
 
+    /// <summary>Provides the WhenNavigatedFrom_CanBeCalled member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WhenNavigatedFrom_CanBeCalled()
     {
@@ -127,6 +131,8 @@ public class RxObjectTests
         await Assert.That(true).IsTrue();
     }
 
+    /// <summary>Provides the WhenNavigatedTo_CanBeCalled member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WhenNavigatedTo_CanBeCalled()
     {
@@ -146,6 +152,8 @@ public class RxObjectTests
         await Assert.That(true).IsTrue();
     }
 
+    /// <summary>Provides the WhenNavigating_CanBeCalled member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WhenNavigating_CanBeCalled()
     {
@@ -164,6 +172,8 @@ public class RxObjectTests
         await Assert.That(true).IsTrue();
     }
 
+    /// <summary>Provides the PropertyChanged_IsRaisedWhenDisplayNameChanges member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     [Skip("DisplayName is an auto-property and doesn't raise PropertyChanged - would need to use RaiseAndSetIfChanged")]
     public async Task PropertyChanged_IsRaisedWhenDisplayNameChanges()
@@ -173,10 +183,12 @@ public class RxObjectTests
         var propertyChangedRaised = false;
         rxObject.PropertyChanged += (sender, e) =>
         {
-            if (e.PropertyName == nameof(RxObject.DisplayName))
+            if (e.PropertyName != nameof(RxObject.DisplayName))
             {
-                propertyChangedRaised = true;
+                return;
             }
+
+            propertyChangedRaised = true;
         };
 
         // Act
@@ -186,6 +198,8 @@ public class RxObjectTests
         await Assert.That(propertyChangedRaised).IsTrue();
     }
 
+    /// <summary>Provides the RxObject_ImplementsIRxObject member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RxObject_ImplementsIRxObject()
     {
@@ -196,6 +210,8 @@ public class RxObjectTests
         await Assert.That(rxObject).IsAssignableTo<IRxObject>();
     }
 
+    /// <summary>Provides the RxObject_ImplementsIDisposable member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task RxObject_ImplementsIDisposable()
     {
@@ -204,5 +220,13 @@ public class RxObjectTests
 
         // Assert
         await Assert.That(rxObject).IsAssignableTo<IDisposable>();
+    }
+
+    /// <summary>Test implementation of RxObject.</summary>
+    private sealed class TestRxObject : RxObject
+    {
+        /// <summary>Provides the GetDisposables member.</summary>
+        /// <returns>The result.</returns>
+        public CompositeDisposable GetDisposables() => Disposables;
     }
 }

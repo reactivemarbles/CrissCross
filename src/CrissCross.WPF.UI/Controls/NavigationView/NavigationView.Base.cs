@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -9,36 +9,65 @@ using System.Windows.Input;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents a container that enables navigation of app content. It has a header, a view for the main content, and a menu pane for navigation commands.
-/// </summary>
+/// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main content, and a menu pane for navigation commands.</summary>
 [ToolboxItem(true)]
 [System.Drawing.ToolboxBitmap(typeof(NavigationView), "NavigationView.bmp")]
 public partial class NavigationView : System.Windows.Controls.Control, INavigationView
 {
+    /// <summary>The header content property.</summary>
+    public static readonly DependencyProperty HeaderContentProperty = DependencyProperty.RegisterAttached(
+        "HeaderContent",
+        typeof(object),
+        typeof(FrameworkElement),
+        new FrameworkPropertyMetadata(null));
+
+    /// <summary>Provides the titleBarPaneOpenMargin member.</summary>
     private static readonly Thickness titleBarPaneOpenMargin = new(35, 0, 0, 0);
+
+    /// <summary>Provides the titleBarPaneCompactMargin member.</summary>
     private static readonly Thickness titleBarPaneCompactMargin = new(55, 0, 0, 0);
+
+    /// <summary>Provides the autoSuggestBoxMargin member.</summary>
     private static readonly Thickness autoSuggestBoxMargin = new(8, 8, 8, 16);
+
+    /// <summary>Provides the frameMargin member.</summary>
     private static readonly Thickness frameMargin = new(0, 50, 0, 0);
 
-    /// <summary>
-    /// The page identifier or target tag navigation views dictionary.
-    /// </summary>
+    /// <summary>Provides the MenuItemsPropertyKey member.</summary>
+    private static readonly DependencyPropertyKey MenuItemsPropertyKey;
+
+    /// <summary>Provides the FooterMenuItemsPropertyKey member.</summary>
+    private static readonly DependencyPropertyKey FooterMenuItemsPropertyKey;
+
+    /// <summary>The page identifier or target tag navigation views dictionary.</summary>
     private readonly Dictionary<string, INavigationViewItem> _pageIdOrTargetTagNavigationViewsDictionary = [];
 
-    /// <summary>
-    /// The page type navigation views dictionary.
-    /// </summary>
+    /// <summary>The page type navigation views dictionary.</summary>
     private readonly Dictionary<Type, INavigationViewItem> _pageTypeNavigationViewsDictionary = [];
 
+    /// <summary>Stores the _autoSuggestBoxItems value.</summary>
     private readonly ObservableCollection<string> _autoSuggestBoxItems = [];
+
+    /// <summary>Stores the _breadcrumbBarItems value.</summary>
     private readonly ObservableCollection<NavigationViewBreadcrumbItem> _breadcrumbBarItems = [];
 
-    /// <summary>
-    /// Initializes static members of the <see cref="NavigationView"/> class.
-    /// </summary>
+    /// <summary>Initializes static members of the <see cref="NavigationView"/> class.</summary>
     static NavigationView()
     {
+        MenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(MenuItems),
+            typeof(ObservableCollection<object>),
+            typeof(NavigationView),
+            new PropertyMetadata(null));
+        MenuItemsProperty = MenuItemsPropertyKey.DependencyProperty;
+
+        FooterMenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(FooterMenuItems),
+            typeof(ObservableCollection<object>),
+            typeof(NavigationView),
+            new PropertyMetadata(null));
+        FooterMenuItemsProperty = FooterMenuItemsPropertyKey.DependencyProperty;
+
         DefaultStyleKeyProperty.OverrideMetadata(
             typeof(NavigationView),
             new FrameworkPropertyMetadata(typeof(NavigationView)));
@@ -47,9 +76,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             new FrameworkPropertyMetadata(new Thickness(0, 0, 0, 0)));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationView"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationView"/> class.</summary>
     public NavigationView()
     {
         NavigationParent = this;
@@ -71,26 +98,34 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <inheritdoc/>
     public INavigationViewItem? SelectedItem { get; protected set; }
 
-    ////internal void ToggleAllExpands()
-    ////{
-    ////    // TODO: When shift clicked on navigationviewitem
-    ////}
+    /// <summary>Gets the content of the header.</summary>
+    /// <param name="target">The target.</param>
+    /// <returns>An object.</returns>
+    public static object? GetHeaderContent(FrameworkElement target) => target?.GetValue(HeaderContentProperty);
 
+    /// <summary>Sets the content of the header.</summary>
+    /// <param name="target">The target.</param>
+    /// <param name="headerContent">Content of the header.</param>
+    public static void SetHeaderContent(FrameworkElement target, object headerContent) =>
+        target?.SetValue(HeaderContentProperty, headerContent);
+
+    ////internal void ToggleAllExpands()
+    ////    // TODO: When shift clicked on navigationviewitem
+    /// <summary>Provides the OnNavigationViewItemClick member.</summary>
+    /// <param name="navigationViewItem">The navigationViewItem value.</param>
     internal void OnNavigationViewItemClick(NavigationViewItem navigationViewItem)
     {
         OnItemInvoked();
 
-        NavigateInternal(navigationViewItem);
+        _ = NavigateInternal(navigationViewItem);
     }
 
-    /// <summary>
-    /// Updates the state of the visual.
-    /// </summary>
+    /// <summary>Updates the state of the visual.</summary>
     /// <param name="navigationView">The navigation view.</param>
     protected static void UpdateVisualState(NavigationView navigationView)
     {
         // Skip display modes that don't have multiple states
-        if (navigationView == null || navigationView.PaneDisplayMode is
+        if (navigationView is null || navigationView.PaneDisplayMode is
             NavigationViewPaneDisplayMode.LeftFluent or
             NavigationViewPaneDisplayMode.Top or
             NavigationViewPaneDisplayMode.Bottom)
@@ -117,9 +152,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         AddItemsToDictionaries();
     }
 
-    /// <summary>
-    /// This virtual method is called when this element is detached form a loaded tree.
-    /// </summary>
+    /// <summary>This virtual method is called when this element is detached form a loaded tree.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnUnloaded(object sender, RoutedEventArgs e)
@@ -166,31 +199,29 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             BackButton.Click -= OnToggleButtonClick;
         }
 
-        if (AutoSuggestBoxSymbolButton is not null)
+        if (AutoSuggestBoxSymbolButton is null)
         {
-            AutoSuggestBoxSymbolButton.Click -= AutoSuggestBoxSymbolButtonOnClick;
+            return;
         }
+
+        AutoSuggestBoxSymbolButton.Click -= AutoSuggestBoxSymbolButtonOnClick;
     }
 
-    /// <summary>
-    /// Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />�attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.
-    /// </summary>
+    /// <summary>Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />�attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</summary>
     /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data. This event data reports details about the mouse button that was pressed and the handled state.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         // Back button
         if (e?.ChangedButton is MouseButton.XButton1)
         {
-            GoBack();
+            _ = GoBack();
             e.Handled = true;
         }
 
         base.OnMouseDown(e);
     }
 
-    /// <summary>
-    /// This virtual method is called when ActualWidth or ActualHeight (or both) changed.
-    /// </summary>
+    /// <summary>This virtual method is called when ActualWidth or ActualHeight (or both) changed.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="SizeChangedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -198,23 +229,17 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         // TODO: Update reveal
     }
 
-    /// <summary>
-    /// This virtual method is called when <see cref="BackButton" /> is clicked.
-    /// </summary>
+    /// <summary>This virtual method is called when <see cref="BackButton" /> is clicked.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnBackButtonClick(object sender, RoutedEventArgs e) => GoBack();
 
-    /// <summary>
-    /// This virtual method is called when <see cref="ToggleButton" /> is clicked.
-    /// </summary>
+    /// <summary>This virtual method is called when <see cref="ToggleButton" /> is clicked.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnToggleButtonClick(object sender, RoutedEventArgs e) => IsPaneOpen = !IsPaneOpen;
 
-    /// <summary>
-    /// This virtual method is called when <see cref="AutoSuggestBoxSymbolButton" /> is clicked.
-    /// </summary>
+    /// <summary>This virtual method is called when <see cref="AutoSuggestBoxSymbolButton" /> is clicked.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
     protected virtual void AutoSuggestBoxSymbolButtonOnClick(object sender, RoutedEventArgs e)
@@ -223,32 +248,28 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         AutoSuggestBox?.Focus();
     }
 
-    /// <summary>
-    /// This virtual method is called when <see cref="PaneDisplayMode"/> is changed.
-    /// </summary>
+    /// <summary>This virtual method is called when <see cref="PaneDisplayMode"/> is changed.</summary>
     protected virtual void OnPaneDisplayModeChanged()
     {
         switch (PaneDisplayMode)
         {
             case NavigationViewPaneDisplayMode.LeftFluent:
-                IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
-                IsPaneToggleVisible = false;
-                break;
+                {
+                    IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
+                    IsPaneToggleVisible = false;
+                    break;
+                }
         }
     }
 
-    /// <summary>
-    /// This virtual method is called when <see cref="ItemTemplate"/> is changed.
-    /// </summary>
+    /// <summary>This virtual method is called when <see cref="ItemTemplate"/> is changed.</summary>
     protected virtual void OnItemTemplateChanged() => UpdateMenuItemsTemplate();
 
-    /// <summary>
-    /// Breadcrumbs the bar on item clicked.
-    /// </summary>
+    /// <summary>Breadcrumbs the bar on item clicked.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="BreadcrumbBarItemClickedEventArgs"/> instance containing the event data.</param>
     protected virtual void BreadcrumbBarOnItemClicked(
-        BreadcrumbBar sender,
+        object? sender,
         BreadcrumbBarItemClickedEventArgs e)
     {
         if (e?.Item is not NavigationViewBreadcrumbItem item)
@@ -256,12 +277,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return;
         }
 
-        Navigate(item.PageId);
+        _ = Navigate(item.PageId);
     }
 
-    /// <summary>
-    /// Adds the items to dictionaries.
-    /// </summary>
+    /// <summary>Adds the items to dictionaries.</summary>
     /// <param name="list">The list.</param>
     protected virtual void AddItemsToDictionaries(IEnumerable list)
     {
@@ -306,18 +325,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
-    /// <summary>
-    /// Adds the items to dictionaries.
-    /// </summary>
+    /// <summary>Adds the items to dictionaries.</summary>
     protected virtual void AddItemsToDictionaries()
     {
         AddItemsToDictionaries(MenuItems);
         AddItemsToDictionaries(FooterMenuItems);
     }
 
-    /// <summary>
-    /// Adds the items to automatic suggest box items.
-    /// </summary>
+    /// <summary>Adds the items to automatic suggest box items.</summary>
     /// <param name="list">The list.</param>
     protected virtual void AddItemsToAutoSuggestBoxItems(IEnumerable list)
     {
@@ -342,18 +357,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
-    /// <summary>
-    /// Adds the items to automatic suggest box items.
-    /// </summary>
+    /// <summary>Adds the items to automatic suggest box items.</summary>
     protected virtual void AddItemsToAutoSuggestBoxItems()
     {
         AddItemsToAutoSuggestBoxItems(MenuItems);
         AddItemsToAutoSuggestBoxItems(FooterMenuItems);
     }
 
-    /// <summary>
-    /// Navigates to menu item from automatic suggest box.
-    /// </summary>
+    /// <summary>Navigates to menu item from automatic suggest box.</summary>
     /// <param name="list">The list.</param>
     /// <param name="selectedSuggestBoxItem">The selected suggest box item.</param>
     /// <returns>A bool.</returns>
@@ -368,9 +379,9 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         {
             if (singleNavigationViewItem.Content is string content && content == selectedSuggestBoxItem)
             {
-                NavigateInternal(singleNavigationViewItem);
+                _ = NavigateInternal(singleNavigationViewItem);
                 singleNavigationViewItem.BringIntoView();
-                singleNavigationViewItem.Focus(); // TODO: Element or content?
+                _ = singleNavigationViewItem.Focus(); // TODO: Element or content?
 
                 return true;
             }
@@ -384,9 +395,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         return false;
     }
 
-    /// <summary>
-    /// Updates the menu items template.
-    /// </summary>
+    /// <summary>Updates the menu items template.</summary>
     /// <param name="list">The list.</param>
     protected virtual void UpdateMenuItemsTemplate(IList list)
     {
@@ -411,18 +420,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
-    /// <summary>
-    /// Updates the menu items template.
-    /// </summary>
+    /// <summary>Updates the menu items template.</summary>
     protected virtual void UpdateMenuItemsTemplate()
     {
         UpdateMenuItemsTemplate(MenuItems);
         UpdateMenuItemsTemplate(FooterMenuItems);
     }
 
-    /// <summary>
-    /// Closes the navigation view item menus.
-    /// </summary>
+    /// <summary>Closes the navigation view item menus.</summary>
     protected virtual void CloseNavigationViewItemMenus()
     {
         if (_journal.Count == 0 || IsPaneOpen)
@@ -444,9 +449,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         currentItem.NavigationViewItemParent?.Activate(this);
     }
 
-    /// <summary>
-    /// Deactivates the menu items.
-    /// </summary>
+    /// <summary>Deactivates the menu items.</summary>
     /// <param name="list">The list.</param>
     protected void DeactivateMenuItems(IEnumerable list)
     {
@@ -464,6 +467,9 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         }
     }
 
+    /// <summary>Provides the OnLoaded member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         // ensure handlers are attached when reloaded
@@ -486,9 +492,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         UpdateVisualState((NavigationView)sender);
     }
 
+    /// <summary>Provides the UpdateAutoSuggestBoxSuggestions member.</summary>
     private void UpdateAutoSuggestBoxSuggestions()
     {
-        if (AutoSuggestBox == null)
+        if (AutoSuggestBox is null)
         {
             return;
         }
@@ -498,14 +505,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         AddItemsToAutoSuggestBoxItems();
     }
 
-    /// <summary>
-    /// Navigate to the page after its name is selected in <see cref="AutoSuggestBox"/>.
-    /// </summary>
+    /// <summary>Navigate to the page after its name is selected in <see cref="AutoSuggestBox"/>.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
     private void AutoSuggestBoxOnSuggestionChosen(
-        AutoSuggestBox sender,
+        object? sender,
         AutoSuggestBoxSuggestionChosenEventArgs args)
     {
-        if (sender.IsSuggestionListOpen)
+        if (sender is not AutoSuggestBox autoSuggestBox || autoSuggestBox.IsSuggestionListOpen)
         {
             return;
         }
@@ -520,11 +527,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return;
         }
 
-        NavigateToMenuItemFromAutoSuggestBox(FooterMenuItems, selectedSuggestBoxItem);
+        _ = NavigateToMenuItemFromAutoSuggestBox(FooterMenuItems, selectedSuggestBoxItem);
     }
 
+    /// <summary>Provides the AutoSuggestBoxOnQuerySubmitted member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
     private void AutoSuggestBoxOnQuerySubmitted(
-        AutoSuggestBox sender,
+        object? sender,
         AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         var suggestions = new List<string>();
@@ -560,30 +570,45 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return;
         }
 
-        NavigateToMenuItemFromAutoSuggestBox(FooterMenuItems, element);
+        _ = NavigateToMenuItemFromAutoSuggestBox(FooterMenuItems, element);
     }
 
+    /// <summary>Provides the NavigationStackOnCollectionChanged member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     [DebuggerStepThrough]
     private void NavigationStackOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                _breadcrumbBarItems.Add(
-                    new NavigationViewBreadcrumbItem((INavigationViewItem)e.NewItems![0]!));
-                break;
+                {
+                    _breadcrumbBarItems.Add(
+                                    new NavigationViewBreadcrumbItem((INavigationViewItem)e.NewItems![0]!));
+                    break;
+                }
+
             case NotifyCollectionChangedAction.Remove:
-                _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
-                break;
+                {
+                    _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
+                    break;
+                }
+
             case NotifyCollectionChangedAction.Replace:
-                _breadcrumbBarItems[0] = new NavigationViewBreadcrumbItem(
-                    (INavigationViewItem)e.NewItems![0]!);
-                break;
+                {
+                    _breadcrumbBarItems[0] = new(
+                                    (INavigationViewItem)e.NewItems![0]!);
+                    break;
+                }
+
             case NotifyCollectionChangedAction.Move:
                 break;
             case NotifyCollectionChangedAction.Reset:
-                _breadcrumbBarItems.Clear();
-                break;
+                {
+                    _breadcrumbBarItems.Clear();
+                    break;
+                }
+
             default:
                 throw new ArgumentOutOfRangeException();
         }
