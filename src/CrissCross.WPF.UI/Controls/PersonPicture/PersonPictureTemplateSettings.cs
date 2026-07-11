@@ -1,46 +1,36 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// PersonPictureTemplateSettings.
-/// </summary>
+/// <summary>Represents PersonPictureTemplateSettings.</summary>
 /// <seealso cref="DependencyObject" />
 public sealed class PersonPictureTemplateSettings : DependencyObject
 {
-    private static readonly DependencyPropertyKey ActualImageBrushPropertyKey =
+    /// <summary>Provides the ActualImageBrushPropertyKey member.</summary>
+    public static readonly DependencyPropertyKey ActualImageBrushPropertyKey =
         DependencyProperty.RegisterReadOnly(
             nameof(ActualImageBrush),
             typeof(ImageBrush),
             typeof(PersonPictureTemplateSettings),
             null);
 
-    private static readonly DependencyPropertyKey ActualInitialsPropertyKey =
+    /// <summary>Provides the ActualInitialsPropertyKey member.</summary>
+    public static readonly DependencyPropertyKey ActualInitialsPropertyKey =
         DependencyProperty.RegisterReadOnly(
             nameof(ActualInitials),
             typeof(string),
             typeof(PersonPictureTemplateSettings),
             new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// The actual image brush property.
-    /// </summary>
-#pragma warning disable SA1202 // Elements should be ordered by access
-    public static readonly DependencyProperty ActualImageBrushProperty =
-        ActualImageBrushPropertyKey!.DependencyProperty;
+    /// <summary>The actual image brush property.</summary>
+    public static readonly DependencyProperty ActualImageBrushProperty = ActualImageBrushPropertyKey.DependencyProperty;
 
-    /// <summary>
-    /// The actual initials property.
-    /// </summary>
-    public static readonly DependencyProperty ActualInitialsProperty =
-        ActualInitialsPropertyKey!.DependencyProperty;
-#pragma warning restore SA1202 // Elements should be ordered by access
+    /// <summary>The actual initials property.</summary>
+    public static readonly DependencyProperty ActualInitialsProperty = ActualInitialsPropertyKey.DependencyProperty;
 
-    /// <summary>
-    /// Gets the actual image brush.
-    /// </summary>
+    /// <summary>Gets the actual image brush.</summary>
     /// <value>
     /// The actual image brush.
     /// </value>
@@ -50,9 +40,7 @@ public sealed class PersonPictureTemplateSettings : DependencyObject
         internal set => SetValue(ActualImageBrushPropertyKey, value);
     }
 
-    /// <summary>
-    /// Gets the actual initials.
-    /// </summary>
+    /// <summary>Gets the actual initials.</summary>
     /// <value>
     /// The actual initials.
     /// </value>

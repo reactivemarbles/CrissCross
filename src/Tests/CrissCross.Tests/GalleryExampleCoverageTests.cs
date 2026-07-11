@@ -1,18 +1,19 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Coverage tests for gallery/example projects that double as manual QA documentation.
-/// </summary>
+/// <summary>Coverage tests for gallery/example projects that double as manual QA documentation.</summary>
 public class GalleryExampleCoverageTests
 {
+    /// <summary>Provides the SourceRoot member.</summary>
     private static readonly string SourceRoot = LocateSourceRoot();
 
+    /// <summary>Provides the WpfGallery_IncludesCompleteReactiveFeaturePlayground member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WpfGallery_IncludesCompleteReactiveFeaturePlayground()
     {
@@ -33,6 +34,8 @@ public class GalleryExampleCoverageTests
         await Assert.That(navigation).Contains("FeaturePlaygroundViewModel");
     }
 
+    /// <summary>Provides the AvaloniaGallery_IncludesCompleteReactiveFeaturePlayground member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGallery_IncludesCompleteReactiveFeaturePlayground()
     {
@@ -53,6 +56,8 @@ public class GalleryExampleCoverageTests
         await Assert.That(navigation).Contains("GotoFeaturePlayground");
     }
 
+    /// <summary>Provides the AvaloniaGallery_RichTextBoxDemo_ShowcasesFullControlSurface member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGallery_RichTextBoxDemo_ShowcasesFullControlSurface()
     {
@@ -94,6 +99,8 @@ public class GalleryExampleCoverageTests
         await Assert.That(documentation).Contains("serialization/import/export");
     }
 
+    /// <summary>Provides the MauiExample_IncludesUiGalleryWithSharedStylesAndPlatformNotes member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task MauiExample_IncludesUiGalleryWithSharedStylesAndPlatformNotes()
     {
@@ -118,6 +125,8 @@ public class GalleryExampleCoverageTests
         await Assert.That(project).Contains("CrissCross.Maui.UI.csproj");
     }
 
+    /// <summary>Provides the GalleryDocumentation_ExplainsRunCommandsAndManualQaCoverage member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task GalleryDocumentation_ExplainsRunCommandsAndManualQaCoverage()
     {
@@ -133,6 +142,9 @@ public class GalleryExampleCoverageTests
         await Assert.That(documentation).Contains("/mnt/c/Program Files/dotnet/dotnet.exe");
     }
 
+    /// <summary>Provides the ReadSource member.</summary>
+    /// <param name="relativeSegments">The relativeSegments value.</param>
+    /// <returns>The result.</returns>
     private static string ReadSource(params string[] relativeSegments)
     {
         var path = Path.Combine(new[] { SourceRoot }.Concat(relativeSegments).ToArray());
@@ -144,6 +156,8 @@ public class GalleryExampleCoverageTests
         return File.ReadAllText(path);
     }
 
+    /// <summary>Provides the LocateSourceRoot member.</summary>
+    /// <returns>The result.</returns>
     private static string LocateSourceRoot()
     {
         var current = new DirectoryInfo(Directory.GetCurrentDirectory());

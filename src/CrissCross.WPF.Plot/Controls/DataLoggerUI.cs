@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -25,35 +23,43 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class DataLoggerUI : RxObject, IPlottableUI
 {
+    /// <summary>The maximum number of points retained by the data logger.</summary>
+    private const int MaximumLoggedPointCount = 100_000_000;
+
+    /// <summary>Stores the value buffer value.</summary>
     private double[]? _valueBuffer;
 
+    /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects _chartSettings;
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the manual scale value.</summary>
     [Reactive]
     private bool _manualScale;
+
+    /// <summary>Stores the mode value.</summary>
     [Reactive]
     private int _mode;
+
+    /// <summary>Stores the number points plotted value.</summary>
     [Reactive]
     private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DataLoggerUI"/> class, configuring a data logger visualization for a WpfPlot.
-    /// using data from an observable sequence.
-    /// </summary>
-    /// <remarks>The constructor subscribes to the observable to set the logger's item name from the first
-    /// available emission. Appearance settings are applied to the plot upon initialization. Thread safety is ensured by
-    /// observing on the main thread scheduler.</remarks>
-    /// <param name="plot">The WpfPlot control where the data logger visualization will be rendered.</param>
-    /// <param name="observable">An observable sequence providing data points and metadata for the logger. The first emission with a non-empty
-    /// name sets the logger's item name.</param>
-    /// <param name="color">The color used for the data logger's plot line and appearance.</param>
-    /// <param name="autoscale">true to automatically scale the plot axes to fit incoming data; otherwise, false.</param>
-    /// <param name="manualscale">true to enable manual axis scaling; otherwise, false.</param>
-    /// <param name="points">true to display individual data points on the plot; otherwise, false.</param>
+    /// <summary>Initializes a new instance of the <see cref="DataLoggerUI"/> class, configuring a data logger visualization for a WpfPlot. using data from an observable sequence.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    /// <param name="points">The points value.</param>
     public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
     {
         ChartSettings = new(color: color);
@@ -64,7 +70,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         CreateDataLogger(color);
 
         // Set name from first emission of the observable
-        observable
+        _ = observable
             .Take(1)
             .Where(d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -74,20 +80,13 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DataLoggerUI"/> class, configuring the plot and data logger to visualize.
-    /// observable data streams with customizable appearance and scaling options.
-    /// </summary>
-    /// <remarks>The constructor subscribes to the observable to set the chart's item name from the first
-    /// valid emission and configures appearance and scaling according to the provided parameters. Thread safety is
-    /// ensured by observing on the main thread scheduler.</remarks>
-    /// <param name="plot">The WpfPlot control used to display the data visualization.</param>
-    /// <param name="observable">An observable sequence providing data points and metadata to be visualized. The first emission with a non-empty
-    /// name sets the chart's item name.</param>
-    /// <param name="color">The color used for the data logger's plot line and appearance.</param>
-    /// <param name="autoscale">true to enable automatic axis scaling based on incoming data; otherwise, false.</param>
-    /// <param name="manualscale">true to enable manual axis scaling; otherwise, false.</param>
-    /// <param name="points">true to display individual data points on the plot; otherwise, false.</param>
+    /// <summary>Initializes a new instance of the <see cref="DataLoggerUI"/> class, configuring the plot and data logger to visualize. observable data streams with customizable appearance and scaling options.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    /// <param name="points">The points value.</param>
     public DataLoggerUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, int Axis, int nPoints)> observable, string color, bool autoscale = true, bool manualscale = false, bool points = false)
     {
         ChartSettings = new(color: color);
@@ -98,7 +97,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         CreateDataLogger(color);
 
         // Set name from first emission of the observable
-        observable
+        _ = observable
             .Take(1)
             .Where(d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -109,24 +108,14 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
-    /// <summary>
-    /// Gets or sets the WPF plot control used to display graphical data within the application.
-    /// </summary>
+    /// <summary>Gets or sets the WPF plot control used to display graphical data within the application.</summary>
     public WpfPlot Plot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the data logger used for recording plot line information.
-    /// </summary>
+    /// <summary>Gets or sets the data logger used for recording plot line information.</summary>
     public DataLogger? PlotLine { get; set; }
 
-    /// <summary>
-    /// Initializes a new data logger line on the plot and sets its color using the specified hex value.
-    /// </summary>
-    /// <remarks>The data logger line is configured with a fixed line width and axis limits are not managed
-    /// automatically. The color is applied using the provided hex code. If the color string is not a valid hex code,
-    /// the resulting color may be unpredictable.</remarks>
-    /// <param name="color">A string representing the color of the data logger line in hexadecimal format (e.g., "#FF0000" for red). Must be
-    /// a valid hex color code.</param>
+    /// <summary>Initializes a new data logger line on the plot and sets its color using the specified hex value.</summary>
+    /// <param name="color">The color value.</param>
     public void CreateDataLogger(string color)
     {
         PlotLine = Plot.Plot.Add.DataLogger();
@@ -136,80 +125,60 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
         PlotLine.Color = Color.FromHex(color);
     }
 
-    /// <summary>
-    /// Subscribes to an observable sequence of data points and updates the data logger plot with incoming values.
-    /// </summary>
-    /// <remarks>The method filters out invalid data points and ensures that only the most recent nPoints are
-    /// retained in the plot. Data updates are processed on background and main thread schedulers to optimize
-    /// responsiveness. If the chart is not paused, the plot is refreshed automatically after each update.</remarks>
-    /// <param name="observable">An observable sequence providing tuples containing the data point name, value list, axis index, and the number
-    /// of points to retain. The value list must not be null or empty, and nPoints must be greater than zero.</param>
+    /// <summary>Subscribes to an observable sequence of data points and updates the data logger plot with incoming values.</summary>
+    /// <param name="observable">The observable value.</param>
     public void UpdateDataLogger(IObservable<(string? Name, IList<double>? Value, int Axis, int nPoints)> observable) => observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
-        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value != null && d.Value.Count > 0 && d.nPoints > 0)
-        .Select(data => (data.Value!, Math.Min(data.nPoints, 100_000_000)))
-        .Retry()
+        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value?.Count > 0 && d.nPoints > 0)
+        .Select(data => (data.Value!, Math.Min(data.nPoints, MaximumLoggedPointCount)))
+        .Retry(int.MaxValue)
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
             var (valueList, nPoints) = d;
             var count = valueList.Count;
 
-            try
+            // Reuse or grow buffer to avoid allocations
+            if (_valueBuffer is null || _valueBuffer.Length < count)
             {
-                // Reuse or grow buffer to avoid allocations
-                if (_valueBuffer == null || _valueBuffer.Length < count)
-                {
-                    _valueBuffer = new double[count];
-                }
-
-                // Copy values to buffer
-                for (var i = 0; i < count; i++)
-                {
-                    _valueBuffer[i] = valueList[i];
-                }
-
-                // Use ArraySegment since ScottPlot DataLogger doesn't support Span
-                if (count == _valueBuffer.Length)
-                {
-                    PlotLine!.Add(_valueBuffer);
-                }
-                else
-                {
-                    var values = new double[count];
-                    Array.Copy(_valueBuffer, values, count);
-                    PlotLine!.Add(values);
-                }
-
-                if (PlotLine!.Data.Coordinates.Count > nPoints)
-                {
-                    PlotLine.Data.Coordinates.RemoveRange(0, PlotLine.Data.Coordinates.Count - nPoints);
-                }
-            }
-            catch
-            {
+                _valueBuffer = new double[count];
             }
 
-            PlotLine!.ManageAxisLimits = false;
-
-            //// UPDATE IF IS NOT PAUSED
-            if (!ChartSettings.IsPaused)
+            // Copy values to buffer
+            for (var i = 0; i < count; i++)
             {
-                try
-                {
-                    Plot.Refresh();
-                }
-                catch
-                {
-                }
+                _valueBuffer[i] = valueList[i];
             }
+
+            // Use ArraySegment since ScottPlot DataLogger doesn't support Span
+            if (count == _valueBuffer.Length)
+            {
+                PlotLine!.Add(_valueBuffer);
+            }
+            else
+            {
+                var values = new double[count];
+                Array.Copy(_valueBuffer, values, count);
+                PlotLine!.Add(values);
+            }
+
+            if (PlotLine!.Data.Coordinates.Count > nPoints)
+            {
+                PlotLine.Data.Coordinates.RemoveRange(0, PlotLine.Data.Coordinates.Count - nPoints);
+            }
+
+            PlotLine.ManageAxisLimits = false;
+
+            if (ChartSettings.IsPaused)
+            {
+                return;
+            }
+
+            Plot.Refresh();
         }).DisposeWith(Disposables);
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)

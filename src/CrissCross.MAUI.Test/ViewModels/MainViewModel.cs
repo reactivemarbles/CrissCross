@@ -1,23 +1,18 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
 namespace CrissCross.MAUI.Test;
 
-/// <summary>
-/// MainViewModel.
-/// </summary>
+/// <summary>MainViewModel member.</summary>
 /// <seealso cref="RxObject" />
 public class MainViewModel : RxObject
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainViewModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="MainViewModel"/> class.</summary>
     public MainViewModel()
     {
         GotoFirst = ReactiveCommand.Create(() => this.NavigateToView<FirstViewModel>());
@@ -27,39 +22,29 @@ public class MainViewModel : RxObject
         GotoMain = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
     }
 
-    /// <summary>
-    /// Gets the goto first.
-    /// </summary>
+    /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
     public ICommand? GotoFirst { get; }
 
-    /// <summary>
-    /// Gets the goto controls gallery command.
-    /// </summary>
+    /// <summary>Gets the goto controls gallery command.</summary>
     /// <value>
     /// The goto controls gallery command.
     /// </value>
     public ICommand? GotoControlsGallery { get; }
 
-    /// <summary>
-    /// Gets the goto main.
-    /// </summary>
+    /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
     public ICommand? GotoMain { get; }
 
-    /// <summary>
-    /// WhenNavigatedTo.
-    /// </summary>
-    /// <param name="e"></param>
-    /// <param name="disposables"></param>
+    /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }
@@ -68,14 +53,11 @@ public class MainViewModel : RxObject
         base.WhenNavigatedTo(e, disposables);
     }
 
-    /// <summary>
-    /// WhenNavigatedFrom.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigatedFrom member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }
@@ -84,14 +66,11 @@ public class MainViewModel : RxObject
         base.WhenNavigatedFrom(e);
     }
 
-    /// <summary>
-    /// WhenNavigating.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigating member.</summary>
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e == null)
+        if (e is null)
         {
             throw new ArgumentNullException(nameof(e));
         }

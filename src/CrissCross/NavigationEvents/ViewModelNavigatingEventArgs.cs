@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Serialization;
@@ -7,9 +7,7 @@ using ReactiveUI;
 
 namespace CrissCross;
 
-/// <summary>
-/// View Model Navigating Event Args.
-/// </summary>
+/// <summary>View Model Navigating Event Args.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="ViewModelNavigatingEventArgs" /> class.
 /// </remarks>
@@ -22,10 +20,7 @@ namespace CrissCross;
 [DataContract]
 public class ViewModelNavigatingEventArgs(IRxObject? from, IRxObject? to, NavigationType navType, IViewFor? view, string? hostName, object? parameter = null) : ViewModelNavigationEventArgs(from, to, navType, view, hostName, parameter), IViewModelNavigatingEventArgs
 {
-    /// <summary>
-    /// Gets or sets a value indicating whether this <see cref="ViewModelNavigatingEventArgs"/>
-    /// is canceled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this <see cref="ViewModelNavigatingEventArgs"/> is canceled.</summary>
     /// <value><c>true</c> if cancel; otherwise, <c>false</c>.</value>
     [DataMember]
     public bool Cancel { get; set; }

@@ -1,33 +1,25 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-using System.Reactive.Linq;
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>
-/// Default implementation and factory methods for observable-first plot sources.
-/// </summary>
+/// <summary>Default implementation and factory methods for observable-first plot sources.</summary>
 /// <param name="Key">The stable series key.</param>
 /// <param name="PlotType">The chart type rendered by the source.</param>
 /// <param name="Updates">The normalized update stream.</param>
 public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IObservable<ReactivePlotUpdate> Updates) : IReactivePlotSource
 {
-    /// <summary>
-    /// Gets the X-axis interpretation used by updates emitted from this source when it is known upfront.
-    /// </summary>
+    /// <summary>Gets the X-axis interpretation used by updates emitted from this source when it is known upfront.</summary>
     public PlotXAxisKind? XAxisKind { get; init; }
 
-    /// <summary>
-    /// Creates a source from an already-normalized update stream.
-    /// </summary>
+    /// <summary>Creates a source from an already-normalized update stream.</summary>
     /// <param name="key">The stable series key.</param>
     /// <param name="plotType">The chart type.</param>
     /// <param name="updates">The update stream.</param>
-    /// <param name="xAxisKind">The X-axis interpretation used by the source when known upfront.</param>
+    /// <param name="axisKind">The X-axis interpretation used by the source when known upfront.</param>
     /// <returns>A reactive plot source.</returns>
-    public static IReactivePlotSource FromUpdates(PlotSeriesKey key, PlotType plotType, IObservable<ReactivePlotUpdate> updates, PlotXAxisKind? xAxisKind = null)
+    public static IReactivePlotSource FromUpdates(PlotSeriesKey key, PlotType plotType, IObservable<ReactivePlotUpdate> updates, PlotXAxisKind? axisKind = null)
     {
         if (updates is null)
         {
@@ -36,13 +28,11 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
 
         return new ReactivePlotSource(key, plotType, updates)
         {
-            XAxisKind = xAxisKind,
+            XAxisKind = axisKind,
         };
     }
 
-    /// <summary>
-    /// Adapts legacy signal tick observables to append updates.
-    /// </summary>
+    /// <summary>Adapts legacy signal tick observables to append updates.</summary>
     /// <param name="updates">The legacy signal stream.</param>
     /// <returns>A reactive signal source.</returns>
     public static IReactivePlotSource FromSignalTicks(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> updates)
@@ -69,9 +59,7 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts legacy signal point observables to append updates with numeric X-axis values.
-    /// </summary>
+    /// <summary>Adapts legacy signal point observables to append updates with numeric X-axis values.</summary>
     /// <param name="updates">The legacy signal point stream.</param>
     /// <returns>A reactive signal source.</returns>
     public static IReactivePlotSource FromSignalPoints(IObservable<(string? Name, IList<double>? Value, IList<double> X, int Axis)> updates)
@@ -98,9 +86,7 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts legacy scatter point observables to replace updates.
-    /// </summary>
+    /// <summary>Adapts legacy scatter point observables to replace updates.</summary>
     /// <param name="updates">The legacy scatter stream.</param>
     /// <returns>A reactive scatter source.</returns>
     public static IReactivePlotSource FromScatterPoints(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> updates)
@@ -127,9 +113,7 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts legacy data logger observables to append updates.
-    /// </summary>
+    /// <summary>Adapts legacy data logger observables to append updates.</summary>
     /// <param name="updates">The legacy data logger stream.</param>
     /// <returns>A reactive data logger source.</returns>
     public static IReactivePlotSource FromDataLoggerPoints(IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)> updates)
@@ -153,9 +137,7 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts legacy streamer observables to append updates.
-    /// </summary>
+    /// <summary>Adapts legacy streamer observables to append updates.</summary>
     /// <param name="updates">The legacy streamer stream.</param>
     /// <returns>A reactive streamer source.</returns>
     public static IReactivePlotSource FromStreamerPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> updates)
@@ -182,9 +164,7 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts SignalXY observable snapshots to replace updates.
-    /// </summary>
+    /// <summary>Adapts SignalXY observable snapshots to replace updates.</summary>
     /// <param name="updates">The SignalXY snapshot stream.</param>
     /// <returns>A reactive SignalXY source.</returns>
     public static IReactivePlotSource FromSignalXyPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> updates)
@@ -211,14 +191,23 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         };
     }
 
-    /// <summary>
-    /// Adapts a SignalXY snapshot to a single replace update.
-    /// </summary>
+    /// <summary>Adapts a SignalXY snapshot to a single replace update.</summary>
     /// <param name="data">The SignalXY snapshot.</param>
     /// <returns>A reactive SignalXY source.</returns>
     public static IReactivePlotSource FromSignalXySnapshot((string? Name, IList<double>? Y, IList<double> X, int Axis) data) =>
         FromSignalXyPoints(Observable.Return(data));
 
+    /// <summary>Handles the CreateUpdate operation.</summary>
+    /// <param name="name">The name value.</param>
+    /// <param name="axis">The axis value.</param>
+    /// <param name="plotType">The plotType value.</param>
+    /// <param name="kind">The kind value.</param>
+    /// <param name="x">The x value.</param>
+    /// <param name="y">The y value.</param>
+    /// <param name="axisKind">The X-axis kind value.</param>
+    /// <param name="sequence">The sequence value.</param>
+    /// <param name="maxPoints">The maxPoints value.</param>
+    /// <returns>The result.</returns>
     private static ReactivePlotUpdate CreateUpdate(
         string? name,
         int axis,
@@ -226,15 +215,18 @@ public sealed record ReactivePlotSource(PlotSeriesKey Key, PlotType PlotType, IO
         ReactivePlotUpdateKind kind,
         IEnumerable<double>? x,
         IEnumerable<double>? y,
-        PlotXAxisKind xAxisKind,
+        PlotXAxisKind axisKind,
         long sequence,
         int? maxPoints = null)
     {
         var key = new PlotSeriesKey(string.IsNullOrWhiteSpace(name) ? plotType.ToString() : name!, axis);
-        return new ReactivePlotUpdate(key, plotType, kind, x?.ToArray() ?? [], y?.ToArray() ?? [], xAxisKind, sequence, maxPoints);
+        return new ReactivePlotUpdate(key, plotType, kind, x?.ToArray() ?? [], y?.ToArray() ?? [], axisKind, sequence, maxPoints);
     }
 
-    private static IReadOnlyList<double> CreateOrdinalX(int count)
+    /// <summary>Handles the CreateOrdinalX operation.</summary>
+    /// <param name="count">The count value.</param>
+    /// <returns>The result.</returns>
+    private static double[] CreateOrdinalX(int count)
     {
         if (count <= 0)
         {

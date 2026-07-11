@@ -1,18 +1,16 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
-#pragma warning disable CA1812
-/// <summary>
-/// Service that provides pages for navigation.
-/// </summary>
+
+/// <summary>Service that provides pages for navigation.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="PageService" /> class.
 /// Creates new instance and attaches the <see cref="IServiceProvider" />.
 /// </remarks>
 /// <param name="serviceProvider">The service provider.</param>
-internal class PageService(IServiceProvider serviceProvider) : IPageService
+public sealed class PageService(IServiceProvider serviceProvider) : IPageService
 {
     /// <inheritdoc />
     public T? GetPage<T>()
@@ -22,6 +20,9 @@ internal class PageService(IServiceProvider serviceProvider) : IPageService
     public FrameworkElement? GetPage(Type pageType) =>
         serviceProvider.GetService(CheckIsFrameworkElement(pageType)) as FrameworkElement;
 
+    /// <summary>Provides the CheckIsFrameworkElement member.</summary>
+    /// <param name="pageType">The pageType value.</param>
+    /// <returns>The result.</returns>
     private static Type CheckIsFrameworkElement(Type pageType)
     {
         if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
@@ -32,4 +33,3 @@ internal class PageService(IServiceProvider serviceProvider) : IPageService
         return pageType;
     }
 }
-#pragma warning restore CA1812

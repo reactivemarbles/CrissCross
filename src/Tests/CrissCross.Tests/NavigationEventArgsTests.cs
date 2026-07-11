@@ -1,37 +1,28 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Tests for Navigation Event Args classes.
-/// </summary>
+/// <summary>Tests for Navigation Event Args classes.</summary>
 public class NavigationEventArgsTests
 {
-    private class TestRxObject : RxObject;
+    /// <summary>Provides the expected enum value for refresh navigation.</summary>
+    private const int RefreshNavigationTypeValue = 2;
 
-    private class TestView : IViewFor
-    {
-        public TestView(object? viewModel = null)
-        {
-            ViewModel = viewModel;
-        }
-
-        public object? ViewModel { get; set; }
-    }
-
+    /// <summary>Provides the ViewModelNavigationEventArgs_Constructor_SetsProperties member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_Constructor_SetsProperties()
     {
         // Arrange
         var from = new TestRxObject();
         var to = new TestRxObject();
-        var navType = NavigationType.New;
+        const NavigationType navType = NavigationType.New;
         var view = new TestView();
-        var hostName = "TestHost";
+        const string hostName = "TestHost";
         var parameter = new object();
 
         // Act
@@ -46,6 +37,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationParameter).IsEqualTo(parameter);
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_Constructor_AllowsNullValues member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_Constructor_AllowsNullValues()
     {
@@ -60,6 +53,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationParameter).IsNull();
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_HostName_CanBeModified member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_HostName_CanBeModified()
     {
@@ -73,6 +68,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.HostName).IsEqualTo("Modified");
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_View_CanBeModified member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_View_CanBeModified()
     {
@@ -88,6 +85,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.View).IsEqualTo(view2);
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_NavigationType_New_IsSet member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_NavigationType_New_IsSet()
     {
@@ -98,6 +97,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.New);
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_NavigationType_Back_IsSet member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_NavigationType_Back_IsSet()
     {
@@ -108,6 +109,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.Back);
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_NavigationType_Refresh_IsSet member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_NavigationType_Refresh_IsSet()
     {
@@ -118,15 +121,17 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.Refresh);
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_Constructor_SetsProperties member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_Constructor_SetsProperties()
     {
         // Arrange
         var from = new TestRxObject();
         var to = new TestRxObject();
-        var navType = NavigationType.New;
+        const NavigationType navType = NavigationType.New;
         var view = new TestView();
-        var hostName = "TestHost";
+        const string hostName = "TestHost";
         var parameter = new object();
 
         // Act
@@ -141,6 +146,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationParameter).IsEqualTo(parameter);
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_Cancel_IsFalseByDefault member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_Cancel_IsFalseByDefault()
     {
@@ -151,6 +158,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.Cancel).IsFalse();
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_Cancel_CanBeSet member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_Cancel_CanBeSet()
     {
@@ -164,6 +173,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.Cancel).IsTrue();
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_InheritsFromViewModelNavigationEventArgs member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_InheritsFromViewModelNavigationEventArgs()
     {
@@ -174,6 +185,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs).IsAssignableTo<ViewModelNavigationEventArgs>();
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_ImplementsIViewModelNavigatingEventArgs member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_ImplementsIViewModelNavigatingEventArgs()
     {
@@ -184,6 +197,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigatingEventArgs>();
     }
 
+    /// <summary>Provides the ViewModelNavigationEventArgs_ImplementsIViewModelNavigationEventArgs member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationEventArgs_ImplementsIViewModelNavigationEventArgs()
     {
@@ -194,6 +209,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigationEventArgs>();
     }
 
+    /// <summary>Provides the ViewModelNavigationBaseEventArgs_ImplementsIViewModelNavigationBaseEventArgs member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationBaseEventArgs_ImplementsIViewModelNavigationBaseEventArgs()
     {
@@ -204,15 +221,19 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigationBaseEventArgs>();
     }
 
+    /// <summary>Provides the NavigationType_Enum_HasCorrectValues member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task NavigationType_Enum_HasCorrectValues()
     {
         // Assert
         await Assert.That((int)NavigationType.New).IsEqualTo(0);
         await Assert.That((int)NavigationType.Back).IsEqualTo(1);
-        await Assert.That((int)NavigationType.Refresh).IsEqualTo(2);
+        await Assert.That((int)NavigationType.Refresh).IsEqualTo(RefreshNavigationTypeValue);
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_AllowsNullParameters member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_AllowsNullParameters()
     {
@@ -227,6 +248,8 @@ public class NavigationEventArgsTests
         await Assert.That(eventArgs.NavigationParameter).IsNull();
     }
 
+    /// <summary>Provides the ViewModelNavigatingEventArgs_WithParameter_PreservesParameter member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigatingEventArgs_WithParameter_PreservesParameter()
     {
@@ -238,5 +261,16 @@ public class NavigationEventArgsTests
 
         // Assert
         await Assert.That(eventArgs.NavigationParameter).IsEqualTo(parameter);
+    }
+
+    /// <summary>Provides the TestRxObject member.</summary>
+    private sealed class TestRxObject : RxObject;
+
+    /// <summary>Provides the TestView member.</summary>
+    /// <param name="viewModel">The viewModel value.</param>
+    private sealed class TestView(object? viewModel = null) : IViewFor
+    {
+        /// <summary>Gets or sets the value.</summary>
+        public object? ViewModel { get; set; } = viewModel;
     }
 }

@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -8,24 +8,21 @@ using System.Windows.Data;
 
 namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
 
-/// <summary>
-/// Converts radius to diameter.
-/// </summary>
+/// <summary>Converts radius to diameter.</summary>
 public class RadiusToDiameterConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts a value.
-    /// </summary>
+    /// <summary>Provides the diameter multiplier.</summary>
+    private const double DiameterMultiplier = 2.0;
+
+    /// <summary>Converts a value.</summary>
     /// <param name="value">The value produced by the binding source.</param>
     /// <param name="targetType">The type of the binding target property.</param>
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * 2;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => (double)value * DiameterMultiplier;
 
-    /// <summary>
-    /// Converts a value.
-    /// </summary>
+    /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>
     /// <param name="targetType">The type to convert to.</param>
     /// <param name="parameter">The converter parameter to use.</param>

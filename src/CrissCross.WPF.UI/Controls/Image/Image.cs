@@ -1,20 +1,15 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents an image with additional properties for Borders and Rounded corners.
-/// </summary>
+/// <summary>Represents an image with additional properties for Borders and Rounded corners.</summary>
 public class Image : Control
 {
-    /// <summary>
-    /// Gets/Sets the Source on this Image.
-    /// The Source property is the ImageSource that holds the actual image drawn.
-    /// </summary>
+    /// <summary>Gets/Sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(ImageSource),
@@ -26,18 +21,14 @@ public class Image : Control
             null),
         null);
 
-    /// <summary>
-    /// DependencyProperty for CornerRadius property.
-    /// </summary>
+    /// <summary>DependencyProperty for CornerRadius property.</summary>
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(Image),
         new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged)));
 
-    /// <summary>
-    /// DependencyProperty for StretchDirection property.
-    /// </summary>
+    /// <summary>DependencyProperty for StretchDirection property.</summary>
     /// <seealso cref="Viewbox.Stretch" />
     public static readonly DependencyProperty StretchProperty = DependencyProperty.Register(
         nameof(Stretch),
@@ -48,9 +39,7 @@ public class Image : Control
             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
         null);
 
-    /// <summary>
-    /// DependencyProperty for Stretch property.
-    /// </summary>
+    /// <summary>DependencyProperty for Stretch property.</summary>
     public static readonly DependencyProperty StretchDirectionProperty = DependencyProperty.Register(
         nameof(StretchDirection),
         typeof(StretchDirection),
@@ -60,9 +49,7 @@ public class Image : Control
             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
         null);
 
-    /// <summary>
-    /// DependencyPropertyKey for InnerCornerRadius property.
-    /// </summary>
+    /// <summary>DependencyPropertyKey for InnerCornerRadius property.</summary>
     public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
         DependencyProperty.RegisterReadOnly(
             nameof(InnerCornerRadius),
@@ -70,26 +57,21 @@ public class Image : Control
             typeof(Image),
             new PropertyMetadata(new CornerRadius(0)));
 
-    /// <summary>
-    /// DependencyProperty for InnerCornerRadius property.
-    /// </summary>
+    /// <summary>DependencyProperty for InnerCornerRadius property.</summary>
     public static readonly DependencyProperty InnerCornerRadiusProperty =
         InnerCornerRadiusPropertyKey.DependencyProperty;
 
-    /// <summary>
-    /// Gets or sets the Source on this Image.
-    /// The Source property is the ImageSource that holds the actual image drawn.
-    /// </summary>
+    /// <summary>Divisor used to offset corner radius by half of the border thickness.</summary>
+    private const double CornerRadiusThicknessDivisor = 2.0;
+
+    /// <summary>Gets or sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
     public ImageSource Source
     {
         get => (ImageSource)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Stretch on this Image.
-    /// The Stretch property determines how large the Image will be drawn.
-    /// </summary>
+    /// <summary>Gets or sets the Stretch on this Image. The Stretch property determines how large the Image will be drawn.</summary>
     public Stretch Stretch
     {
         get => (Stretch)GetValue(StretchProperty);
@@ -119,11 +101,12 @@ public class Image : Control
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets the CornerRadius for the inner image's Mask.
-    /// </summary>
+    /// <summary>Gets the CornerRadius for the inner image's Mask.</summary>
     internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
 
+    /// <summary>Provides the OnCornerRadiusChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var thickness = (Thickness)d.GetValue(BorderThicknessProperty);
@@ -132,9 +115,9 @@ public class Image : Control
         d.SetValue(
             InnerCornerRadiusPropertyKey,
             new CornerRadius(
-                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / 2), 0)),
-                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / 2), 0)),
-                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / 2), 0)),
-                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / 2), 0))));
+                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / CornerRadiusThicknessDivisor), 0)),
+                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / CornerRadiusThicknessDivisor), 0)),
+                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / CornerRadiusThicknessDivisor), 0)),
+                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / CornerRadiusThicknessDivisor), 0))));
     }
 }

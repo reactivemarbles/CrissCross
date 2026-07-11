@@ -1,16 +1,91 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
 
 namespace CrissCross.Tests;
 
-/// <summary>
-/// Tests for platform-neutral application control state models shared by UI stacks.
-/// </summary>
+/// <summary>Tests for platform-neutral application control state models shared by UI stacks.</summary>
 public class ApplicationControlStateTests
 {
+    /// <summary>Provides the determinate progress value.</summary>
+    private const double DeterminateProgress = 0.42;
+
+    /// <summary>Provides the priority filter threshold.</summary>
+    private const int PriorityFilterThreshold = 2;
+
+    /// <summary>Provides the expected active filter count.</summary>
+    private const int ExpectedActiveFilterCount = 2;
+
+    /// <summary>Provides the expected selected chip count.</summary>
+    private const int ExpectedSelectedChipCount = 2;
+
+    /// <summary>Provides the expected removable chip count.</summary>
+    private const int ExpectedRemovableChipCount = 2;
+
+    /// <summary>Provides the expected enabled segment count.</summary>
+    private const int ExpectedEnabledSegmentCount = 2;
+
+    /// <summary>Provides the middle page index.</summary>
+    private const int MiddlePageIndex = 2;
+
+    /// <summary>Provides the middle page size.</summary>
+    private const int MiddlePageSize = 25;
+
+    /// <summary>Provides the middle page total item count.</summary>
+    private const int MiddlePageTotalItemCount = 103;
+
+    /// <summary>Provides the expected middle page number.</summary>
+    private const int ExpectedMiddlePageNumber = 3;
+
+    /// <summary>Provides the expected middle page total pages.</summary>
+    private const int ExpectedMiddlePageTotalPages = 5;
+
+    /// <summary>Provides the expected first item number.</summary>
+    private const int ExpectedMiddlePageFirstItemNumber = 51;
+
+    /// <summary>Provides the expected last item number.</summary>
+    private const int ExpectedMiddlePageLastItemNumber = 75;
+
+    /// <summary>Provides the page request page size.</summary>
+    private const int PageRequestPageSize = 50;
+
+    /// <summary>Provides the reversed range hour offset.</summary>
+    private const int ReversedRangeHourOffset = -2;
+
+    /// <summary>Provides the last seven days offset.</summary>
+    private const int LastSevenDaysOffset = -7;
+
+    /// <summary>Provides the expected theme choice count.</summary>
+    private const int ExpectedThemeChoiceCount = 3;
+
+    /// <summary>Provides the expected descriptor count.</summary>
+    private const int ExpectedDescriptorCount = 3;
+
+    /// <summary>Provides the expected visible descriptor count.</summary>
+    private const int ExpectedVisibleDescriptorCount = 2;
+
+    /// <summary>Provides the expected active token count.</summary>
+    private const int ExpectedActiveTokenCount = 2;
+
+    /// <summary>Provides the modified property value.</summary>
+    private const int ModifiedPropertyValue = 5;
+
+    /// <summary>Provides the original property value.</summary>
+    private const int OriginalPropertyValue = 3;
+
+    /// <summary>Provides the expected modified descriptor count.</summary>
+    private const int ExpectedModifiedDescriptorCount = 2;
+
+    /// <summary>Gets a symbol for email display-name assertions.</summary>
+    private static string Email => nameof(Email);
+
+    /// <summary>Gets a symbol for timeout display-name assertions.</summary>
+    private static string Timeout => nameof(Timeout);
+
+    /// <summary>Provides the CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError()
     {
@@ -22,6 +97,8 @@ public class ApplicationControlStateTests
         await Assert.That(status.HasError).IsFalse();
     }
 
+    /// <summary>Provides the CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute()
     {
@@ -34,18 +111,22 @@ public class ApplicationControlStateTests
         await Assert.That(status.IsInteractive).IsTrue();
     }
 
+    /// <summary>Provides the BusyOperation_DeterminateProgress_IsActiveDeterminateAndCancellable member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task BusyOperation_DeterminateProgress_IsActiveDeterminateAndCancellable()
     {
         var cancelCommand = new TestCommand();
-        var operation = new BusyOperation("Importing", "42 items", 0.42, cancelCommand);
+        var operation = new BusyOperation("Importing", "42 items", DeterminateProgress, cancelCommand);
 
         await Assert.That(operation.IsActive).IsTrue();
         await Assert.That(operation.IsDeterminate).IsTrue();
         await Assert.That(operation.IsCancellable).IsTrue();
-        await Assert.That(operation.Progress).IsEqualTo(0.42);
+        await Assert.That(operation.Progress).IsEqualTo(DeterminateProgress);
     }
 
+    /// <summary>Provides the EmptyStateModel_WithPrimaryAction_ReportsActionAvailability member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task EmptyStateModel_WithPrimaryAction_ReportsActionAvailability()
     {
@@ -62,13 +143,15 @@ public class ApplicationControlStateTests
         await Assert.That(model.Variant).IsEqualTo(EmptyStateVariant.NoResults);
     }
 
+    /// <summary>Provides the SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount()
     {
         var filters = new[]
         {
             new FilterToken("status", FilterOperator.Equals, "open", "Status: Open"),
-            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, 2, "Priority >= 2")
+            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, PriorityFilterThreshold, "Priority >= 2")
         };
 
         var state = new SearchQueryState("  pump fault  ", "pump", "pump fault", isSearching: true, resultCount: 12, filters: filters);
@@ -76,10 +159,12 @@ public class ApplicationControlStateTests
         await Assert.That(state.NormalizedText).IsEqualTo("pump fault");
         await Assert.That(state.HasQuery).IsTrue();
         await Assert.That(state.IsFiltered).IsTrue();
-        await Assert.That(state.ActiveFilterCount).IsEqualTo(2);
+        await Assert.That(state.ActiveFilterCount).IsEqualTo(ExpectedActiveFilterCount);
         await Assert.That(state.ResultSummary).IsEqualTo("12 results");
     }
 
+    /// <summary>Provides the FilterToken_RemovableToken_UsesDisplayTextAndStableKey member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FilterToken_RemovableToken_UsesDisplayTextAndStableKey()
     {
@@ -90,6 +175,8 @@ public class ApplicationControlStateTests
         await Assert.That(token.IsRemovable).IsTrue();
     }
 
+    /// <summary>Provides the ChipModel_RemovableSelectedChip_ExposesInteractionStateAndStableKey member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ChipModel_RemovableSelectedChip_ExposesInteractionStateAndStableKey()
     {
@@ -109,6 +196,8 @@ public class ApplicationControlStateTests
         await Assert.That(chip.CanRemove).IsTrue();
     }
 
+    /// <summary>Provides the ChipGroupState_MultipleSelection_ReportsSelectedAndRemovableChips member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ChipGroupState_MultipleSelection_ReportsSelectedAndRemovableChips()
     {
@@ -123,11 +212,13 @@ public class ApplicationControlStateTests
 
         await Assert.That(group.HasSelection).IsTrue();
         await Assert.That(group.CanSelectMultiple).IsTrue();
-        await Assert.That(group.SelectedChips).Count().IsEqualTo(2);
-        await Assert.That(group.RemovableChips).Count().IsEqualTo(2);
+        await Assert.That(group.SelectedChips).Count().IsEqualTo(ExpectedSelectedChipCount);
+        await Assert.That(group.RemovableChips).Count().IsEqualTo(ExpectedRemovableChipCount);
         await Assert.That(group.GetChip("open")?.Text).IsEqualTo("Open");
     }
 
+    /// <summary>Provides the SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems()
     {
@@ -142,10 +233,12 @@ public class ApplicationControlStateTests
 
         await Assert.That(state.SelectedItem?.Key).IsEqualTo("grid");
         await Assert.That(state.HasSelection).IsTrue();
-        await Assert.That(state.EnabledItems).Count().IsEqualTo(2);
+        await Assert.That(state.EnabledItems).Count().IsEqualTo(ExpectedEnabledSegmentCount);
         await Assert.That(state.GetItem("list")?.HasIcon).IsTrue();
     }
 
+    /// <summary>Provides the ValidationMessage_Error_IsBlockingAndUsesExplicitDisplayText member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ValidationMessage_Error_IsBlockingAndUsesExplicitDisplayText()
     {
@@ -162,12 +255,14 @@ public class ApplicationControlStateTests
         await Assert.That(message.DisplayText).IsEqualTo("Email address: Enter a valid email address.");
     }
 
+    /// <summary>Provides the ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages()
     {
         var messages = new[]
         {
-            new ValidationMessage("email", "Email", "Required", ValidationSeverity.Error),
+            new ValidationMessage("email", nameof(Email), "Required", ValidationSeverity.Error),
             new ValidationMessage("password", "Password", "Weak", ValidationSeverity.Warning),
             new ValidationMessage("profile", "Profile", "Checking availability", ValidationSeverity.Pending)
         };
@@ -185,22 +280,26 @@ public class ApplicationControlStateTests
         await Assert.That(emailMessages[0].Message).IsEqualTo("Required");
     }
 
+    /// <summary>Provides the PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability()
     {
-        var state = new PaginationState(pageIndex: 2, pageSize: 25, totalItemCount: 103);
+        var state = new PaginationState(pageIndex: MiddlePageIndex, pageSize: MiddlePageSize, totalItemCount: MiddlePageTotalItemCount);
 
-        await Assert.That(state.PageNumber).IsEqualTo(3);
-        await Assert.That(state.TotalPages).IsEqualTo(5);
+        await Assert.That(state.PageNumber).IsEqualTo(ExpectedMiddlePageNumber);
+        await Assert.That(state.TotalPages).IsEqualTo(ExpectedMiddlePageTotalPages);
         await Assert.That(state.CanGoFirst).IsTrue();
         await Assert.That(state.CanGoPrevious).IsTrue();
         await Assert.That(state.CanGoNext).IsTrue();
         await Assert.That(state.CanGoLast).IsTrue();
-        await Assert.That(state.FirstItemNumber).IsEqualTo(51);
-        await Assert.That(state.LastItemNumber).IsEqualTo(75);
+        await Assert.That(state.FirstItemNumber).IsEqualTo(ExpectedMiddlePageFirstItemNumber);
+        await Assert.That(state.LastItemNumber).IsEqualTo(ExpectedMiddlePageLastItemNumber);
         await Assert.That(state.SummaryText).IsEqualTo("51-75 of 103");
     }
 
+    /// <summary>Provides the PaginationState_EmptyCollection_ClampsToSingleDisplayPage member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PaginationState_EmptyCollection_ClampsToSingleDisplayPage()
     {
@@ -214,6 +313,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.SummaryText).IsEqualTo("No items");
     }
 
+    /// <summary>Provides the PageRequest_WithSearchAndFilters_CapturesStableDataQuerySnapshot member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PageRequest_WithSearchAndFilters_CapturesStableDataQuerySnapshot()
     {
@@ -222,16 +323,18 @@ public class ApplicationControlStateTests
             new FilterToken("status", FilterOperator.Equals, "open", "Status: Open")
         };
         var query = new SearchQueryState(" alarm ", submittedText: "alarm", filters: filters);
-        var request = new PageRequest(pageIndex: 1, pageSize: 50, sortKey: "created", sortDescending: true, queryState: query);
+        var request = new PageRequest(pageIndex: 1, pageSize: PageRequestPageSize, sortKey: "created", sortDescending: true, queryState: query);
 
         await Assert.That(request.PageIndex).IsEqualTo(1);
-        await Assert.That(request.Offset).IsEqualTo(50);
+        await Assert.That(request.Offset).IsEqualTo(PageRequestPageSize);
         await Assert.That(request.HasSort).IsTrue();
         await Assert.That(request.HasQuery).IsTrue();
         await Assert.That(request.ActiveFilters).Count().IsEqualTo(1);
         await Assert.That(request.FilterSnapshotKey).IsEqualTo("status:Equals:open");
     }
 
+    /// <summary>Provides the StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState()
     {
@@ -257,6 +360,8 @@ public class ApplicationControlStateTests
         await Assert.That(step.CanLeave).IsFalse();
     }
 
+    /// <summary>Provides the StepperState_CurrentMiddleStep_ReportsNavigationAndBlockingCounts member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task StepperState_CurrentMiddleStep_ReportsNavigationAndBlockingCounts()
     {
@@ -268,7 +373,7 @@ public class ApplicationControlStateTests
                 "review",
                 "Review",
                 StepStatus.Error,
-                validationMessages: new[] { new ValidationMessage("review", "Review", "Resolve duplicate columns", ValidationSeverity.Error) }),
+                validationMessages: [new ValidationMessage("review", "Review", "Resolve duplicate columns", ValidationSeverity.Error)]),
             new StepDescriptor("finish", "Finish", StepStatus.Pending, isEnabled: false)
         };
         var state = new StepperState(steps, "mapping", StepperOrientation.Vertical);
@@ -283,11 +388,13 @@ public class ApplicationControlStateTests
         await Assert.That(state.GetStep("source")?.IsComplete).IsTrue();
     }
 
+    /// <summary>Provides the DateTimeRange_ReversedCustomRange_IsInvalidAndReportsDuration member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DateTimeRange_ReversedCustomRange_IsInvalidAndReportsDuration()
     {
         var start = new DateTimeOffset(2026, 5, 13, 12, 0, 0, TimeSpan.Zero);
-        var end = start.AddHours(-2);
+        var end = start.AddHours(ReversedRangeHourOffset);
         var range = new DateTimeRange(start, end, DateTimeRangePreset.Custom, "Manual");
 
         await Assert.That(range.IsValid).IsFalse();
@@ -297,6 +404,8 @@ public class ApplicationControlStateTests
         await Assert.That(range.DisplayText).IsEqualTo("Manual: invalid range");
     }
 
+    /// <summary>Provides the DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime()
     {
@@ -305,12 +414,14 @@ public class ApplicationControlStateTests
         var range = preset.CreateRange(reference);
 
         await Assert.That(range.Preset).IsEqualTo(DateTimeRangePreset.LastSevenDays);
-        await Assert.That(range.Start).IsEqualTo(reference.AddDays(-7));
+        await Assert.That(range.Start).IsEqualTo(reference.AddDays(LastSevenDaysOffset));
         await Assert.That(range.End).IsEqualTo(reference);
         await Assert.That(range.IsValid).IsTrue();
         await Assert.That(range.DisplayText).IsEqualTo("Last 7 days: 2026-05-06 09:30 - 2026-05-13 09:30");
     }
 
+    /// <summary>Provides the ThemePreferenceState_SystemPreference_UsesSystemChoiceAsEffectiveTheme member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ThemePreferenceState_SystemPreference_UsesSystemChoiceAsEffectiveTheme()
     {
@@ -321,10 +432,12 @@ public class ApplicationControlStateTests
         await Assert.That(state.EffectiveChoice).IsEqualTo(ThemeChoice.Dark);
         await Assert.That(state.IsSystemSelected).IsTrue();
         await Assert.That(state.SupportsChoice(ThemeChoice.HighContrast)).IsFalse();
-        await Assert.That(state.AvailableChoices).Count().IsEqualTo(3);
+        await Assert.That(state.AvailableChoices).Count().IsEqualTo(ExpectedThemeChoiceCount);
         await Assert.That(state.DisplayText).IsEqualTo("System (Dark)");
     }
 
+    /// <summary>Provides the ThemePreferenceState_UnsupportedHighContrast_FallsBackToSystemChoice member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ThemePreferenceState_UnsupportedHighContrast_FallsBackToSystemChoice()
     {
@@ -336,6 +449,8 @@ public class ApplicationControlStateTests
         await Assert.That(state.DisplayText).IsEqualTo("High contrast (using Light)");
     }
 
+    /// <summary>Provides the FilterDescriptor_EnumDescriptor_CreatesStableDisplayToken member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FilterDescriptor_EnumDescriptor_CreatesStableDisplayToken()
     {
@@ -343,8 +458,8 @@ public class ApplicationControlStateTests
             "status",
             "Status",
             FilterEditorKind.Enum,
-            new[] { FilterOperator.Equals, FilterOperator.NotEquals },
-            new[] { "Open", "Closed" });
+            [FilterOperator.Equals, FilterOperator.NotEquals],
+            ["Open", "Closed"]);
 
         var token = descriptor.CreateToken("Open");
 
@@ -355,14 +470,16 @@ public class ApplicationControlStateTests
         await Assert.That(token.DisplayText).IsEqualTo("Status equals Open");
     }
 
+    /// <summary>Provides the DataFilterPanelState_ActiveExpressions_ProjectsTokensAndSearchState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DataFilterPanelState_ActiveExpressions_ProjectsTokensAndSearchState()
     {
         var descriptors = new[]
         {
-            new FilterDescriptor("status", "Status", FilterEditorKind.Enum, new[] { FilterOperator.Equals }, new[] { "Open", "Closed" }),
-            new FilterDescriptor("created", "Created", FilterEditorKind.DateRange, new[] { FilterOperator.Between }),
-            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, new[] { FilterOperator.Contains })
+            new FilterDescriptor("status", "Status", FilterEditorKind.Enum, [FilterOperator.Equals], ["Open", "Closed"]),
+            new FilterDescriptor("created", "Created", FilterEditorKind.DateRange, [FilterOperator.Between]),
+            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, [FilterOperator.Contains])
         };
         var expressions = new[]
         {
@@ -374,18 +491,20 @@ public class ApplicationControlStateTests
         var state = new DataFilterPanelState(descriptors, expressions, isDirty: true);
         var queryState = state.ToSearchQueryState(" alarm ", resultCount: 4);
 
-        await Assert.That(state.DescriptorCount).IsEqualTo(3);
-        await Assert.That(state.ActiveFilterCount).IsEqualTo(2);
+        await Assert.That(state.DescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.ActiveFilterCount).IsEqualTo(ExpectedActiveFilterCount);
         await Assert.That(state.CanApply).IsTrue();
         await Assert.That(state.CanClear).IsTrue();
-        await Assert.That(state.ActiveTokens).Count().IsEqualTo(2);
+        await Assert.That(state.ActiveTokens).Count().IsEqualTo(ExpectedActiveTokenCount);
         await Assert.That(state.ActiveTokens[0].DisplayText).IsEqualTo("Status equals Open");
         await Assert.That(state.GetDescriptor("created")?.EditorKind).IsEqualTo(FilterEditorKind.DateRange);
         await Assert.That(queryState.NormalizedText).IsEqualTo("alarm");
         await Assert.That(queryState.ResultSummary).IsEqualTo("4 results");
-        await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(2);
+        await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(ExpectedActiveFilterCount);
     }
 
+    /// <summary>Provides the PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState()
     {
@@ -399,8 +518,8 @@ public class ApplicationControlStateTests
             "Retry count",
             "Connection",
             PropertyEditorKind.Number,
-            value: 5,
-            originalValue: 3,
+            value: ModifiedPropertyValue,
+            originalValue: OriginalPropertyValue,
             isReadOnly: false,
             resetCommand: resetCommand,
             validationMessages: messages);
@@ -413,13 +532,15 @@ public class ApplicationControlStateTests
         await Assert.That(descriptor.CanReset).IsTrue();
     }
 
+    /// <summary>Provides the PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors()
     {
         var descriptors = new[]
         {
             new PropertyDescriptorModel("endpoint", "Endpoint", "Connection", PropertyEditorKind.Text, "opc.tcp://localhost", "opc.tcp://localhost"),
-            new PropertyDescriptorModel("timeout", "Timeout", "Connection", PropertyEditorKind.Number, 5, 3),
+            new PropertyDescriptorModel("timeout", nameof(Timeout), "Connection", PropertyEditorKind.Number, ModifiedPropertyValue, OriginalPropertyValue),
             new PropertyDescriptorModel(
                 "mode",
                 "Mode",
@@ -427,16 +548,16 @@ public class ApplicationControlStateTests
                 PropertyEditorKind.Enum,
                 "Manual",
                 "Automatic",
-                choices: new[] { "Automatic", "Manual" },
-                validationMessages: new[] { new ValidationMessage("mode", "Mode", "Manual mode is unavailable", ValidationSeverity.Error) })
+                choices: ["Automatic", "Manual"],
+                validationMessages: [new ValidationMessage("mode", "Mode", "Manual mode is unavailable", ValidationSeverity.Error)])
         };
 
         var state = new PropertyGridState(descriptors, "connection");
 
-        await Assert.That(state.DescriptorCount).IsEqualTo(3);
-        await Assert.That(state.VisibleDescriptorCount).IsEqualTo(2);
-        await Assert.That(state.EditableDescriptorCount).IsEqualTo(3);
-        await Assert.That(state.ModifiedDescriptorCount).IsEqualTo(2);
+        await Assert.That(state.DescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.VisibleDescriptorCount).IsEqualTo(ExpectedVisibleDescriptorCount);
+        await Assert.That(state.EditableDescriptorCount).IsEqualTo(ExpectedDescriptorCount);
+        await Assert.That(state.ModifiedDescriptorCount).IsEqualTo(ExpectedModifiedDescriptorCount);
         await Assert.That(state.InvalidDescriptorCount).IsEqualTo(1);
         await Assert.That(state.CanCommit).IsFalse();
         await Assert.That(state.Categories).Count().IsEqualTo(1);
@@ -444,12 +565,19 @@ public class ApplicationControlStateTests
         await Assert.That(state.GetDescriptor("timeout")?.IsModified).IsTrue();
     }
 
+    /// <summary>Provides the TestCommand member.</summary>
     private sealed class TestCommand : ICommand
     {
+        /// <summary>Provides the CanExecuteChanged member.</summary>
         public event EventHandler? CanExecuteChanged;
 
+        /// <summary>Provides the CanExecute member.</summary>
+        /// <param name="parameter">The parameter value.</param>
+        /// <returns>The result.</returns>
         public bool CanExecute(object? parameter) => true;
 
+        /// <summary>Provides the Execute member.</summary>
+        /// <param name="parameter">The parameter value.</param>
         public void Execute(object? parameter) => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

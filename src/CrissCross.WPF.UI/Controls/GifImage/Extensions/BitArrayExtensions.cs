@@ -1,21 +1,29 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
 
 namespace CrissCross.WPF.UI.Controls.Extensions;
 
+/// <summary>Provides the BitArrayExtensions member.</summary>
 internal static class BitArrayExtensions
 {
-    public static short ToInt16(this BitArray bitArray)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="bitArray">The bitArray value.</param>
+    extension(BitArray bitArray)
     {
-        short n = 0;
-        for (var i = bitArray.Length - 1; i >= 0; i--)
+        /// <summary>Provides the ToInt16 member.</summary>
+        /// <returns>The result.</returns>
+        public short ToInt16()
         {
-            n = (short)((n << 1) + (bitArray[i] ? 1 : 0));
-        }
+            short n = 0;
+            for (var i = bitArray.Length - 1; i >= 0; i--)
+            {
+                n = (short)((n << 1) + (bitArray[i] ? 1 : 0));
+            }
 
-        return n;
+            return n;
+        }
     }
 }

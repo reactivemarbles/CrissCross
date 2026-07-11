@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -7,65 +7,41 @@ using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents the container for an item in a NavigationView control.
-/// </summary>
+/// <summary>Represents the container for an item in a NavigationView control.</summary>
 public interface INavigationViewItem
 {
-    /// <summary>
-    /// Add / Remove ClickEvent handler.
-    /// </summary>
+    /// <summary>Add / Remove ClickEvent handler.</summary>
     [Category("Behavior")]
     event RoutedEventHandler Click;
 
-    /// <summary>
-    /// Gets unique identifier that allows the item to be located in the navigation.
-    /// </summary>
+    /// <summary>Gets unique identifier that allows the item to be located in the navigation.</summary>
     string Id { get; }
 
-    /// <summary>
-    /// Gets or sets get or sets content.
-    /// </summary>
+    /// <summary>Gets or sets get or sets content.</summary>
     object Content { get; set; }
 
-    /// <summary>
-    /// Gets or sets the icon displayed in the MenuItem object.
-    /// </summary>
+    /// <summary>Gets or sets the icon displayed in the MenuItem object.</summary>
     IconElement? Icon { get; set; }
 
-    /// <summary>
-    /// Gets the collection of menu items displayed in the NavigationView.
-    /// </summary>
+    /// <summary>Gets the collection of menu items displayed in the NavigationView.</summary>
     IList MenuItems { get; }
 
-    /// <summary>
-    /// Gets or sets an object source used to generate the content of the NavigationView menu.
-    /// </summary>
+    /// <summary>Gets or sets an object source used to generate the content of the NavigationView menu.</summary>
     object? MenuItemsSource { get; set; }
 
-    /// <summary>
-    /// Gets a value indicating whether gets information whether the current element is active.
-    /// </summary>
+    /// <summary>Gets a value indicating whether gets information whether the current element is active.</summary>
     bool IsActive { get; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets information whether the sub-<see cref="MenuItems"/> are expanded.
-    /// </summary>
+    /// <summary>Gets the Gets or sets a value indicating whether gets information whether the sub-<see cref="MenuItems"/> are expanded. value.</summary>
     bool IsExpanded { get; internal set; }
 
-    /// <summary>
-    /// Gets or sets a unique tag used by the parent navigation system for the purpose of searching and navigating.
-    /// </summary>
+    /// <summary>Gets or sets a unique tag used by the parent navigation system for the purpose of searching and navigating.</summary>
     string TargetPageTag { get; set; }
 
-    /// <summary>
-    /// Gets or sets the type of the page to be navigated. (Should be derived from <see cref="FrameworkElement"/>).
-    /// </summary>
+    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="FrameworkElement"/>).</summary>
     Type? TargetPageType { get; set; }
 
-    /// <summary>
-    /// Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.
-    /// </summary>
+    /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.</summary>
     Type? TargetViewModelType { get; set; }
 
     /// <summary>
@@ -74,46 +50,32 @@ public interface INavigationViewItem
     /// </summary>
     string? TargetHostName { get; set; }
 
-    /// <summary>
-    /// Gets or sets the information badge.
-    /// </summary>
+    /// <summary>Gets or sets the information badge.</summary>
     /// <value>
     /// The information badge.
     /// </value>
     InfoBadge? InfoBadge { get; set; }
 
-    /// <summary>
-    /// Gets or sets specifies caching characteristics for a page involved in a navigation.
-    /// </summary>
+    /// <summary>Gets or sets specifies caching characteristics for a page involved in a navigation.</summary>
     NavigationCacheMode NavigationCacheMode { get; set; }
 
-    /// <summary>
-    /// Gets or sets template Property.
-    /// </summary>
+    /// <summary>Gets or sets template Property.</summary>
     ControlTemplate? Template { get; set; }
 
-    /// <summary>
-    /// Gets or sets parent if in <see cref="MenuItems"/> collection.
-    /// </summary>
+    /// <summary>Gets the Gets or sets parent if in <see cref="MenuItems"/> collection. value.</summary>
     INavigationViewItem? NavigationViewItemParent { get; internal set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this instance is menu element.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether this instance is menu element.</summary>
     /// <value>
     ///   <c>true</c> if this instance is menu element; otherwise, <c>false</c>.
     /// </value>
     internal bool IsMenuElement { get; set; }
 
-    /// <summary>
-    /// Correctly activates.
-    /// </summary>
-    /// <param name="navigationView">The navigation view.</param>
+    /// <summary>Correctly activates.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
     void Activate(INavigationView navigationView);
 
-    /// <summary>
-    /// Correctly deactivates.
-    /// </summary>
-    /// <param name="navigationView">The navigation view.</param>
+    /// <summary>Correctly deactivates.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
     void Deactivate(INavigationView navigationView);
 }

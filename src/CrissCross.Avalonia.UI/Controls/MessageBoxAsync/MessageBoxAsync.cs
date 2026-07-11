@@ -1,19 +1,13 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-using Avalonia.Controls;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// MessageBoxAsync provides static methods to show message boxes asynchronously.
-/// </summary>
+/// <summary>MessageBoxAsync provides static methods to show message boxes asynchronously.</summary>
 public static class MessageBoxAsync
 {
-    /// <summary>
-    /// Shows a message box with the specified text.
-    /// </summary>
+    /// <summary>Shows a message box with the specified text.</summary>
     /// <param name="text">The text to display.</param>
     /// <param name="title">The title.</param>
     /// <param name="buttons">The buttons to show.</param>
@@ -36,25 +30,36 @@ public static class MessageBoxAsync
         return messageBox.ShowDialogAsync(owner);
     }
 
+    /// <summary>Provides the ConfigureButtons member.</summary>
+    /// <param name="messageBox">The messageBox value.</param>
+    /// <param name="buttons">The buttons value.</param>
     private static void ConfigureButtons(MessageBox messageBox, MessageBoxButton buttons)
     {
         switch (buttons)
         {
             case MessageBoxButton.Primary:
-                messageBox.PrimaryButtonText = "OK";
-                messageBox.SecondaryButtonText = string.Empty;
-                messageBox.CloseButtonText = string.Empty;
-                break;
+                {
+                    messageBox.PrimaryButtonText = "OK";
+                    messageBox.SecondaryButtonText = string.Empty;
+                    messageBox.CloseButtonText = string.Empty;
+                    break;
+                }
+
             case MessageBoxButton.Secondary:
-                messageBox.PrimaryButtonText = string.Empty;
-                messageBox.SecondaryButtonText = "Cancel";
-                messageBox.CloseButtonText = string.Empty;
-                break;
+                {
+                    messageBox.PrimaryButtonText = string.Empty;
+                    messageBox.SecondaryButtonText = "Cancel";
+                    messageBox.CloseButtonText = string.Empty;
+                    break;
+                }
+
             case MessageBoxButton.Close:
-                messageBox.PrimaryButtonText = string.Empty;
-                messageBox.SecondaryButtonText = string.Empty;
-                messageBox.CloseButtonText = "Close";
-                break;
+                {
+                    messageBox.PrimaryButtonText = string.Empty;
+                    messageBox.SecondaryButtonText = string.Empty;
+                    messageBox.CloseButtonText = "Close";
+                    break;
+                }
         }
     }
 }

@@ -1,61 +1,40 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
 
 namespace CrissCross.WPF.UI.CC_Nav.Test;
 
-/// <summary>
-/// FirstViewModel.
-/// </summary>
+/// <summary>FirstViewModel member.</summary>
 /// <seealso cref="RxObject" />
 public class FirstViewModel : RxObject
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FirstViewModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
     public FirstViewModel() =>
         this.BuildComplete(() =>
             {
                 DisplayName = "First View";
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: "First View");
-                    ////this.NavigateToView<FirstViewModel>("secondWindow");
-                });
+                GotoMain = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: "First View"));
 
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    ////this.NavigateToView<MainViewModel>("secondWindow");
-                    MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: DisplayName);
-                });
+                GotoFirst = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: DisplayName));
             });
 
-    /// <summary>
-    /// Gets the goto main.
-    /// </summary>
+    /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
     public ICommand? GotoMain { get; private set; }
 
-    /// <summary>
-    /// Gets the goto first.
-    /// </summary>
+    /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
     public ICommand? GotoFirst { get; private set; }
 
-    /// <summary>
-    /// WhenNavigatedTo.
-    /// </summary>
-    /// <param name="e"></param>
-    /// <param name="disposables"></param>
+    /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
@@ -68,10 +47,7 @@ public class FirstViewModel : RxObject
         base.WhenNavigatedTo(e, disposables);
     }
 
-    /// <summary>
-    /// WhenNavigatedFrom.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigatedFrom member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
@@ -84,10 +60,7 @@ public class FirstViewModel : RxObject
         base.WhenNavigatedFrom(e);
     }
 
-    /// <summary>
-    /// WhenNavigating.
-    /// </summary>
-    /// <param name="e"></param>
+    /// <summary>WhenNavigating member.</summary>
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {

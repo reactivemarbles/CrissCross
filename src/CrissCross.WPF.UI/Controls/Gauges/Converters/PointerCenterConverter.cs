@@ -1,19 +1,18 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Data;
 
 namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
 
-/// <summary>
-/// Calculates the pointer position.
-/// </summary>
+/// <summary>Calculates the pointer position.</summary>
 public class PointerCenterConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts a value.
-    /// </summary>
+    /// <summary>Provides the center divisor.</summary>
+    private const double CenterDivisor = 2.0;
+
+    /// <summary>Converts a value.</summary>
     /// <param name="value">The value produced by the binding source.</param>
     /// <param name="targetType">The type of the binding target property.</param>
     /// <param name="parameter">The converter parameter to use.</param>
@@ -23,13 +22,11 @@ public class PointerCenterConverter : IValueConverter
     {
         var tg = new TransformGroup();
         tg.Children.Add(new RotateTransform());
-        tg.Children.Add(new TranslateTransform { X = (double)value / 2 });
+        tg.Children.Add(new TranslateTransform { X = (double)value / CenterDivisor });
         return tg;
     }
 
-    /// <summary>
-    /// Converts a value.
-    /// </summary>
+    /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>
     /// <param name="targetType">The type to convert to.</param>
     /// <param name="parameter">The converter parameter to use.</param>

@@ -1,46 +1,47 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Maui.UI.Resources.Styles;
 
 namespace CrissCross.Maui.UI;
 
-/// <summary>
-/// Provides registration helpers for CrissCross MAUI UI resources.
-/// </summary>
+/// <summary>Provides registration helpers for CrissCross MAUI UI resources.</summary>
 public static class MauiUiAppBuilderExtensions
 {
-    /// <summary>
-    /// Adds the CrissCross MAUI UI resource dictionary to the current application when one is available.
-    /// </summary>
-    /// <param name="builder">The MAUI application builder.</param>
-    /// <returns>The supplied builder for fluent composition.</returns>
-    public static MauiAppBuilder UseCrissCrossMauiUi(this MauiAppBuilder builder)
+    /// <summary>Provides extension members for MAUI application builders.</summary>
+    /// <param name="builder">The builder value.</param>
+    extension(MauiAppBuilder builder)
     {
-        ArgumentNullException.ThrowIfNull(builder);
-        builder.ConfigureFonts(fonts => fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"));
-        return builder;
+        /// <summary>Adds the CrissCross MAUI UI resource dictionary to the current application when one is available.</summary>
+        /// <returns>The supplied builder for fluent composition.</returns>
+        public MauiAppBuilder UseCrissCrossMauiUi()
+        {
+            ArgumentNullException.ThrowIfNull(builder);
+            return builder.ConfigureFonts(fonts => fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"));
+        }
     }
 
-    /// <summary>
-    /// Adds CrissCross MAUI UI resources to the supplied resource dictionary if they are not already present.
-    /// </summary>
-    /// <param name="resources">The target resource dictionary.</param>
-    /// <returns>The supplied resource dictionary.</returns>
-    public static ResourceDictionary UseCrissCrossMauiUiResources(this ResourceDictionary resources)
+    /// <summary>Provides extension members for MAUI resource dictionaries.</summary>
+    /// <param name="resources">The resources value.</param>
+    extension(ResourceDictionary resources)
     {
-        ArgumentNullException.ThrowIfNull(resources);
-
-        foreach (var dictionary in resources.MergedDictionaries)
+        /// <summary>Adds CrissCross MAUI UI resources to the supplied resource dictionary if they are not already present.</summary>
+        /// <returns>The supplied resource dictionary.</returns>
+        public ResourceDictionary UseCrissCrossMauiUiResources()
         {
-            if (dictionary is CrissCrossMauiUi)
-            {
-                return resources;
-            }
-        }
+            ArgumentNullException.ThrowIfNull(resources);
 
-        resources.MergedDictionaries.Add(new CrissCrossMauiUi());
-        return resources;
+            foreach (var dictionary in resources.MergedDictionaries)
+            {
+                if (dictionary is CrissCrossMauiUi)
+                {
+                    return resources;
+                }
+            }
+
+            resources.MergedDictionaries.Add(new CrissCrossMauiUi());
+            return resources;
+        }
     }
 }

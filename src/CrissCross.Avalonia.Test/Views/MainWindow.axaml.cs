@@ -1,66 +1,69 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using ReactiveUI;
 
 namespace CrissCross.Avalonia.Test.Views;
 
-/// <summary>
-/// MainWindow.
-/// </summary>
+/// <summary>MainWindow member.</summary>
 /// <seealso cref="Window" />
 public partial class MainWindow : NavigationWindow<MainWindowViewModel>
 {
-    private Button? _NavBack;
+    /// <summary>The navigation button height.</summary>
+    private const double NavigationButtonHeight = 30;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainWindow"/> class.
-    /// </summary>
+    /// <summary>Provides the navigation back button.</summary>
+    private Button? _navBack;
+
+    /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
         InitializeComponent();
-        this.WhenActivated(d =>
+        _ = this.WhenActivated(Activate);
+
+        void Activate(CompositeDisposable disposables)
         {
             this.NavigateToView<MainViewModel>();
-            if (_NavBack != null)
+            if (_navBack is null)
             {
-                _NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack()).DisposeWith(d);
+                return;
             }
-        });
+
+            var navigateBack = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
+            _navBack.Command = navigateBack;
+            _ = navigateBack.DisposeWith(disposables);
+        }
     }
 
-    /// <summary>
-    /// Registers the content presenter.
-    /// </summary>
+    /// <summary>Registers the content presenter.</summary>
     /// <param name="presenter">The presenter.</param>
     /// <returns>
     /// A bool.
     /// </returns>
     protected override bool RegisterContentPresenter(ContentPresenter presenter)
     {
-        if (presenter == null)
+        if (presenter is null)
         {
             return false;
         }
 
         // Override the default content presenter with a grid containing a back button and the navigation frame
-        if (presenter.Name == "PART_ContentPresenter" && presenter.Content == null)
+        if (presenter.Name == "PART_ContentPresenter" && presenter.Content is null)
         {
             var grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
             grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            _NavBack = new Button
+            _navBack = new Button
             {
                 Content = "Back",
                 Name = "NavBack",
-                Height = 30
+                Height = NavigationButtonHeight
             };
-            grid.Children.Add(_NavBack);
-            Grid.SetColumn(_NavBack, 0);
+            grid.Children.Add(_navBack);
+            Grid.SetColumn(_navBack, 0);
             grid.Children.Add(NavigationFrame!);
             Grid.SetColumn(NavigationFrame!, 1);
             presenter.Content = grid;

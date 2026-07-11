@@ -1,15 +1,12 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace CrissCross.WPF.UI.Configuration;
 
-/// <summary>
-/// Trigger.
-/// </summary>
+/// <summary>Represents Trigger.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="Trigger"/> class.
 /// </remarks>
@@ -17,35 +14,28 @@ namespace CrissCross.WPF.UI.Configuration;
 /// <param name="sourceGetter">The source getter.</param>
 public class Trigger(string eventName, Func<object, object> sourceGetter)
 {
+    /// <summary>Stores the _handlers value.</summary>
     private readonly ConditionalWeakTable<object, Delegate> _handlers = new();
 
-    /// <summary>
-    /// Gets the name of the event.
-    /// </summary>
+    /// <summary>Gets the name of the event.</summary>
     /// <value>
     /// The name of the event.
     /// </value>
     public string EventName { get; } = eventName;
 
-    /// <summary>
-    /// Gets the source getter.
-    /// </summary>
+    /// <summary>Gets the source getter.</summary>
     /// <value>
     /// The source getter.
     /// </value>
     public Func<object, object> SourceGetter { get; } = sourceGetter;
 
-    /// <summary>
-    /// Subscribes the specified target.
-    /// </summary>
+    /// <summary>Subscribes the specified target.</summary>
+    /// <exception cref="ArgumentException">Event '{EventName}' not found on target of type '{source.GetType().Name}'. Check the tracking configuration for this type.</exception>
     /// <param name="target">The target.</param>
     /// <param name="action">The action.</param>
-    /// <exception cref="ArgumentException">Event '{EventName}' not found on target of type '{source.GetType().Name}'. Check the tracking configuration for this type.</exception>
     public void Subscribe(object target, Action action) => _ = SubscribeDisposable(target, action);
 
-    /// <summary>
-    /// Subscribes the specified target and returns an <see cref="IDisposable"/> to unsubscribe.
-    /// </summary>
+    /// <summary>Subscribes the specified target and returns an <see cref="IDisposable"/> to unsubscribe.</summary>
     /// <param name="target">The target.</param>
     /// <param name="action">The action.</param>
     /// <returns>An <see cref="IDisposable"/> which when disposed will unsubscribe.</returns>
@@ -72,21 +62,21 @@ public class Trigger(string eventName, Func<object, object> sourceGetter)
         eventInfo.AddEventHandler(source, handler);
 
         _handlers.Add(target, handler);
-        return Disposable.Create(() => Unsubscribe(target));
+        return new ActionDisposable(() => Unsubscribe(target));
     }
 
-    /// <summary>
-    /// Unsubscribes the specified target.
-    /// </summary>
+    /// <summary>Unsubscribes the specified target.</summary>
     /// <param name="target">The target.</param>
     public void Unsubscribe(object target)
     {
-        if (_handlers.TryGetValue(target, out var handler))
+        if (!_handlers.TryGetValue(target, out var handler))
         {
-            var source = SourceGetter(target);
-            var eventInfo = source.GetType().GetEvent(EventName);
-            eventInfo?.RemoveEventHandler(source, handler);
-            _handlers.Remove(target);
+            return;
         }
+
+        var source = SourceGetter(target);
+        var eventInfo = source.GetType().GetEvent(EventName);
+        eventInfo?.RemoveEventHandler(source, handler);
+        _ = _handlers.Remove(target);
     }
 }

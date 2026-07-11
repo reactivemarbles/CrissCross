@@ -1,15 +1,14 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive;
-using System.Reactive.Disposables.Fluent;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
+using PlotColor = ScottPlot.Color;
 
 namespace CrissCross.WPF.Plot;
 
@@ -25,36 +24,71 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class ChartObjects : RxObject, IAppearance
 {
+    /// <summary>The default chart line width.</summary>
+    private const double DefaultLineWidth = 3;
+
+    /// <summary>The cursor marker size.</summary>
+    private const float CursorMarkerSize = 17;
+
+    /// <summary>The cursor marker stroke width.</summary>
+    private const float CursorMarkerLineWidth = 2;
+
+    /// <summary>The cursor marker text offset.</summary>
+    private const float CursorMarkerTextOffset = 7;
+
+    /// <summary>Stores the is cross hair visible value.</summary>
     [Reactive]
     private bool _isCrossHairVisible;
+
+    /// <summary>Stores the icon value.</summary>
     [Reactive]
     private string? _icon;
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the color value.</summary>
     [Reactive]
     private string? _color;
+
+    /// <summary>Stores the color text value.</summary>
     [Reactive]
     private string? _colorText;
+
+    /// <summary>Stores the displayed value.</summary>
     [Reactive]
     private int _displayedValue;
+
+    /// <summary>Stores the is checked value.</summary>
     [Reactive]
     private bool _isChecked;
+
+    /// <summary>Stores the is paused value.</summary>
     [Reactive]
     private bool _isPaused;
+
+    /// <summary>Stores the is visible value.</summary>
     [Reactive]
     private bool _isVisible;
+
+    /// <summary>Stores the visibility value.</summary>
     [Reactive]
     private string? _visibility;
+
+    /// <summary>Stores the item name value.</summary>
     [Reactive]
     private string? _itemName;
+
+    /// <summary>Stores the line width value.</summary>
     [Reactive]
     private double _lineWidth;
+
+    /// <summary>Stores the opacity check box value.</summary>
     [Reactive]
     private string? _opacityCheckBox;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ChartObjects"/> class with the specified item name and color.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ChartObjects"/> class with the specified item name and color.</summary>
     /// <param name="itemName">The name of the chart item to be displayed. If not specified, defaults to "---".</param>
     /// <param name="color">The color used to represent the chart item. If not specified, defaults to "Green".</param>
     public ChartObjects(string itemName = "---", string color = "Green")
@@ -63,7 +97,7 @@ public partial class ChartObjects : RxObject, IAppearance
         ItemName = itemName;
         ColorText = "#FFD3D3D3";
         OpacityCheckBox = "1";
-        LineWidth = 3;
+        LineWidth = DefaultLineWidth;
         IsVisible = true;
         IsChecked = true;
         DisplayedValue = 0;
@@ -71,45 +105,31 @@ public partial class ChartObjects : RxObject, IAppearance
         AutoScale = false;
         IsPaused = false;
         IsCrossHairVisible = false;
-        Crosshair = new Crosshair();
-        Marker = new Marker();
-        MarkerText = new Text();
+        Crosshair = new();
+        Marker = new();
+        MarkerText = new();
     }
 
-    /// <summary>
-    /// Gets or sets the crosshair configuration used for rendering or interaction purposes.
-    /// </summary>
+    /// <summary>Gets or sets the crosshair configuration used for rendering or interaction purposes.</summary>
     public Crosshair Crosshair { get; set; }
 
-    /// <summary>
-    /// Gets or sets the marker associated with the current instance.
-    /// </summary>
+    /// <summary>Gets or sets the marker associated with the current instance.</summary>
     public Marker Marker { get; set; }
 
-    /// <summary>
-    /// Gets or sets the text displayed by the marker.
-    /// </summary>
+    /// <summary>Gets or sets the text displayed by the marker.</summary>
     public Text MarkerText { get; set; }
 
-    /// <summary>
-    /// Gets or sets the command that is executed when the checked state changes.
-    /// </summary>
+    /// <summary>Gets or sets the command that is executed when the checked state changes.</summary>
     /// <remarks>This command can be bound to UI elements to handle changes in checked or selected state, such
     /// as toggling a checkbox. The command executes with no parameters and does not return a value.</remarks>
     public ReactiveCommand<Unit, Unit>? IsCheckedCmd { get; set; }
 
-    /// <summary>
-    /// Initializes visual elements on the specified plot to highlight cursor positions, including a crosshair, marker,
-    /// and text label using the provided color.
-    /// </summary>
-    /// <remarks>The created visual elements are initially hidden and can be shown or updated to reflect
-    /// cursor interactions. This method does not modify the plot if the provided control is null.</remarks>
-    /// <param name="wpfPlot">The plot control on which cursor-related visual elements will be created. If null, no elements are created.</param>
-    /// <param name="colorName">The name of the color to apply to the crosshair, marker, and text label. Must correspond to a valid system color
-    /// name.</param>
+    /// <summary>Initializes visual elements on the specified plot to highlight cursor positions, including a crosshair, marker, and text label using the provided color.</summary>
+    /// <param name="wpfPlot">The wpfPlot value.</param>
+    /// <param name="colorName">The colorName value.</param>
     public void CreateCursorValues(WpfPlot wpfPlot, string colorName)
     {
-        if (wpfPlot == null)
+        if (wpfPlot is null)
         {
             return;
         }
@@ -122,8 +142,8 @@ public partial class ChartObjects : RxObject, IAppearance
         // Create a marker to highlight the point under the cursor
         Marker = wpfPlot!.Plot.Add.Marker(0, 0);
         Marker.Shape = MarkerShape.OpenCircle;
-        Marker.Size = 17;
-        Marker.LineWidth = 2;
+        Marker.Size = CursorMarkerSize;
+        Marker.LineWidth = CursorMarkerLineWidth;
         Marker.IsVisible = false;
         Marker!.Color = ResolveColor(colorName);
 
@@ -131,130 +151,118 @@ public partial class ChartObjects : RxObject, IAppearance
         MarkerText = wpfPlot!.Plot.Add.Text(" ", 0, 0);
         MarkerText.LabelAlignment = Alignment.LowerLeft;
         MarkerText.LabelBold = true;
-        MarkerText.OffsetX = 7;
-        MarkerText.OffsetY = -7;
+        MarkerText.OffsetX = CursorMarkerTextOffset;
+        MarkerText.OffsetY = -CursorMarkerTextOffset;
         MarkerText.IsVisible = false;
         MarkerText!.LabelFontColor = ResolveColor(colorName);
-        MarkerText.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
+        MarkerText.LabelStyle.BackgroundColor = Colors.White;
     }
 
-    /// <summary>
-    /// Synchronizes the appearance and visibility properties of the specified plotable object with the current view
-    /// model state and updates the provided WpfPlot accordingly.
-    /// </summary>
-    /// <remarks>This method establishes reactive subscriptions that automatically update the plotable
-    /// object's appearance and visibility based on changes to the view model's properties. The WpfPlot is refreshed
-    /// whenever relevant properties change to ensure the display remains current. The method disposes subscriptions
-    /// with the view model's disposables to manage resources effectively.</remarks>
-    /// <typeparam name="T">The type of the plotable object to synchronize. Must implement IHasLine, IHasMarker, and ScottPlot.IPlottable.</typeparam>
-    /// <param name="wpfPlot">The WpfPlot instance to refresh when appearance or visibility changes occur.</param>
-    /// <param name="plotable">The plotable object whose line, marker, and visibility properties will be updated in response to view model
-    /// changes.</param>
-    public void AppearanceSubsriptions<T>(WpfPlot wpfPlot, T plotable)
-        where T : IHasLine, IHasMarker, ScottPlot.IPlottable
+    /// <summary>Synchronizes the appearance and visibility properties of the specified plotable object with the current view model state and updates the provided WpfPlot accordingly.</summary>
+    /// <typeparam name="T">The T type.</typeparam>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="plotable">The plotable value.</param>
+    public void AppearanceSubsriptions<T>(WpfPlot plot, T plotable)
+        where T : IHasLine, IHasMarker, IPlottable
     {
-        this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
+        _ = this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
             .Subscribe(x =>
             {
-                var color = ResolveColor(x.Item2);
-                plotable!.LineStyle.Width = (float)x.Item1;
+                var color = ResolveColor(x.Value2);
+                plotable!.LineStyle.Width = (float)x.Value1;
                 plotable!.LineStyle.Color = color;
-                IsChecked = x.Item3 != "Invisible";
-                plotable!.IsVisible = x.Item3 != "Invisible";
+                IsChecked = x.Value3 != "Invisible";
+                plotable!.IsVisible = x.Value3 != "Invisible";
                 Crosshair!.LineColor = color;
                 Marker!.Color = color;
                 MarkerText!.LabelFontColor = color;
-                wpfPlot.Refresh();
+                plot.Refresh();
             }).DisposeWith(Disposables);
 
-        this.WhenAnyValue(x => x.IsChecked)
+        _ = this.WhenAnyValue(x => x.IsChecked)
             .Subscribe(x => Visibility = !x ? "Invisible" : "Visible")
             .DisposeWith(Disposables);
 
-        this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
+        _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
             .Subscribe(x =>
             {
-                var visibility = x.Item1 && x.Item2 != "Invisible";
+                var visibility = x.Value1 && x.Value2 != "Invisible";
                 Marker.IsVisible = visibility;
                 Crosshair.IsVisible = visibility;
                 MarkerText.IsVisible = visibility;
             }).DisposeWith(Disposables);
     }
 
-    /// <summary>
-    /// Subscribes to property changes related to appearance and updates the specified plot control accordingly.
-    /// </summary>
+    /// <summary>Subscribes to property changes related to appearance and updates the specified plot control accordingly.</summary>
     /// <remarks>This method establishes reactive subscriptions to properties such as line width, color,
     /// visibility, and crosshair state. When these properties change, the plot control is refreshed to reflect the
     /// updated appearance. This ensures that UI elements remain synchronized with the underlying data model.</remarks>
     /// <param name="wpfPlot">The plot control to refresh when appearance-related properties change.</param>
     public void AppearanceSubsriptions(WpfPlot wpfPlot)
     {
-        this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
+        _ = this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility)
             .Subscribe(x =>
             {
-                var color = ResolveColor(x.Item2);
-                IsChecked = x.Item3 != "Invisible";
+                var color = ResolveColor(x.Value2);
+                IsChecked = x.Value3 != "Invisible";
                 Crosshair!.LineColor = color;
                 Marker!.Color = color;
                 MarkerText!.LabelFontColor = color;
                 wpfPlot.Refresh();
             }).DisposeWith(Disposables);
 
-        this.WhenAnyValue(x => x.IsChecked)
+        _ = this.WhenAnyValue(x => x.IsChecked)
             .Subscribe(x => Visibility = !x ? "Invisible" : "Visible")
             .DisposeWith(Disposables);
 
-        this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
+        _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
             .Subscribe(x =>
             {
-                var visibility = x.Item1 && x.Item2 != "Invisible";
+                var visibility = x.Value1 && x.Value2 != "Invisible";
                 Marker.IsVisible = visibility;
                 Crosshair.IsVisible = visibility;
                 MarkerText.IsVisible = visibility;
             }).DisposeWith(Disposables);
     }
 
-    /// <summary>
-    /// Subsriptions for appearance.
-    /// </summary>
+    /// <summary>Subsriptions for appearance.</summary>
     public void CrosshairSubscription()
     {
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
         IsCheckedCmd?.Dispose();
         base.Dispose(disposing);
     }
 
-    private static ScottPlot.Color ResolveColor(string? colorName)
+    /// <summary>Handles the ResolveColor operation.</summary>
+    /// <param name="colorName">The colorName value.</param>
+    /// <returns>The result.</returns>
+    private static PlotColor ResolveColor(string? colorName)
     {
         if (string.IsNullOrWhiteSpace(colorName))
         {
-            return ScottPlot.Colors.White;
+            return Colors.White;
         }
 
         if (colorName!.StartsWith("#", StringComparison.Ordinal))
         {
             try
             {
-                return ScottPlot.Color.FromHex(colorName);
+                return PlotColor.FromHex(colorName);
             }
             catch (FormatException)
             {
-                return ScottPlot.Colors.White;
+                return Colors.White;
             }
         }
 
         var systemColor = System.Drawing.Color.FromName(colorName);
         return systemColor.A == 0 && !string.Equals(colorName, nameof(System.Drawing.Color.Transparent), StringComparison.OrdinalIgnoreCase)
-            ? ScottPlot.Colors.White
-            : ScottPlot.Color.FromColor(systemColor);
+            ? Colors.White
+            : PlotColor.FromColor(systemColor);
     }
 }

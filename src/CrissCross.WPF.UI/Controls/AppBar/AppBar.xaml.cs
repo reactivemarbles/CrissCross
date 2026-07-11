@@ -1,52 +1,45 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using ReactiveMarbles.ObservableEvents;
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// Interaction logic for AppBar.xaml.
-/// </summary>
+/// <summary>Interaction logic for AppBar.xaml.</summary>
 public partial class AppBar : IHaveAppBar
 {
-    /// <summary>
-    /// The application bar enabled property.
-    /// </summary>
+    /// <summary>The application bar enabled property.</summary>
     public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(nameof(AppBarEnabled), typeof(bool), typeof(AppBar), new PropertyMetadata(true));
 
-    /// <summary>
-    /// Holds AppBar open until explicitly closed.
-    /// </summary>
+    /// <summary>Holds AppBar open until explicitly closed.</summary>
     public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(nameof(AppBarIsSticky), typeof(bool), typeof(AppBar), new PropertyMetadata(false));
 
-    /// <summary>
-    /// Recommended Height 88.
-    /// </summary>
+    /// <summary>Recommended Height 88.</summary>
     public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(nameof(AppBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(AppBar));
 
-    /// <summary>
-    /// Recommended Height 88.
-    /// </summary>
+    /// <summary>Recommended Height 88.</summary>
     public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(nameof(AppBarRight), typeof(ObservableCollection<FrameworkElement>), typeof(AppBar));
 
+    /// <summary>Stores the _hide value.</summary>
     private readonly Storyboard? _hide;
+
+    /// <summary>Stores the _show value.</summary>
     private readonly Storyboard? _show;
+
+    /// <summary>Stores the _disposables value.</summary>
     private readonly CompositeDisposable _disposables = [];
+
+    /// <summary>Stores the _appBarVisible value.</summary>
     private bool _appBarVisible;
+
+    /// <summary>Stores the _mouseIsOverAppBar value.</summary>
     private bool _mouseIsOverAppBar;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AppBar"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="AppBar"/> class.</summary>
     public AppBar()
     {
         InitializeComponent();
@@ -56,20 +49,27 @@ public partial class AppBar : IHaveAppBar
         AppBarRightControl.ItemsSource = AppBarRight;
         _hide = BottomAppBar.Resources["Hide"] as Storyboard;
         _show = BottomAppBar.Resources["Show"] as Storyboard;
-        BottomAppBar.Events().MouseEnter.Select(_ => true)
-            .Merge(BottomAppBar.Events().MouseLeave.Select(_ => false))
+        _ = EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => BottomAppBar.MouseEnter += handler, handler => BottomAppBar.MouseEnter -= handler)
+            .Select(_ => true)
+            .Merge(EventSignal.From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => BottomAppBar.MouseLeave += handler, handler => BottomAppBar.MouseLeave -= handler).Select(_ => false))
             .Subscribe(isOver => _mouseIsOverAppBar = isOver)
             .DisposeWith(_disposables);
 
         HideAppBar();
-        this.Events().Loaded.Subscribe(_ =>
+        Loaded += (_, _) =>
         {
             // Find the parent window
             var parentWindow = Window.GetWindow(this);
-            parentWindow?.Events().PreviewMouseDown.Subscribe(e =>
+            if (parentWindow is not null)
             {
-                if (!_mouseIsOverAppBar)
+                _ = EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => parentWindow.PreviewMouseDown += handler, handler => parentWindow.PreviewMouseDown -= handler)
+                    .Subscribe(e =>
                 {
+                    if (_mouseIsOverAppBar)
+                    {
+                        return;
+                    }
+
                     if (!_appBarVisible && e.ButtonState == MouseButtonState.Pressed && e.ChangedButton == MouseButton.Right)
                     {
                         ShowAppBar();
@@ -78,22 +78,20 @@ public partial class AppBar : IHaveAppBar
                     {
                         HideAppBar();
                     }
-                }
-            })
-            .DisposeWith(_disposables);
+                })
+                .DisposeWith(_disposables);
+            }
 
             this.AppBarIsStickyListener(() => AppBarIsSticky, isSticky => AppBarIsSticky = isSticky);
             this.AppBarLeftListener(() => AppBarLeft);
             this.AppBarRightListener(() => AppBarRight);
             this.ShowAppBarListener(ShowAppBar);
             this.HideAppBarListener(HideAppBar);
-        }).DisposeWith(_disposables);
-        this.Events().Unloaded.Subscribe(_ => _disposables.Dispose()).DisposeWith(_disposables);
+        };
+        Unloaded += (_, _) => _disposables.Dispose();
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [application bar enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [application bar enabled].</summary>
     /// <value><c>true</c> if [application bar enabled]; otherwise, <c>false</c> .</value>
     [Description("Gets or Sets the Visibility of the Nav Bar")]
     [Category("CrissCross")]
@@ -104,16 +102,16 @@ public partial class AppBar : IHaveAppBar
         set
         {
             SetValue(AppBarEnabledProperty, value);
-            if (!value)
+            if (value)
             {
-                HideAppBar();
+                return;
             }
+
+            HideAppBar();
         }
     }
 
-    /// <summary>
-    /// Gets a value indicating whether [application bar is sticky].
-    /// </summary>
+    /// <summary>Gets a value indicating whether [application bar is sticky].</summary>
     /// <value><c>true</c> if [application bar is sticky]; otherwise, <c>false</c> .</value>
     [Description("Gets the AppBar Sticky state.")]
     [Category("CrissCross")]
@@ -124,9 +122,7 @@ public partial class AppBar : IHaveAppBar
         private set => SetValue(AppBarIsStickyProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the AppBarLeft content.
-    /// </summary>
+    /// <summary>Gets or sets the AppBarLeft content.</summary>
     [Description("Gets or sets the AppBarLeft content.")]
     [Category("CrissCross")]
     public ObservableCollection<FrameworkElement> AppBarLeft
@@ -135,9 +131,7 @@ public partial class AppBar : IHaveAppBar
         set => SetValue(AppBarLeftProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the AppBarRight content.
-    /// </summary>
+    /// <summary>Gets or sets the AppBarRight content.</summary>
     [Description("Gets or sets the AppBarRight content.")]
     [Category("CrissCross")]
     public ObservableCollection<FrameworkElement> AppBarRight
@@ -146,9 +140,7 @@ public partial class AppBar : IHaveAppBar
         set => SetValue(AppBarRightProperty, value);
     }
 
-    /// <summary>
-    /// Gets the template child.
-    /// </summary>
+    /// <summary>Gets the template child.</summary>
     /// <typeparam name="T">The element type.</typeparam>
     /// <param name="name">The name.</param>
     /// <returns>The Instance if exists.</returns>
@@ -158,15 +150,13 @@ public partial class AppBar : IHaveAppBar
     {
         if (GetTemplateChild(name) is not T dependencyObject)
         {
-            throw new ArgumentNullException(name);
+            throw new ArgumentException($"Template child '{name}' was not found.", nameof(name));
         }
 
         return dependencyObject;
     }
 
-    /// <summary>
-    /// Shows the application bar.
-    /// </summary>
+    /// <summary>Shows the application bar.</summary>
     /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
     private void ShowAppBar(bool isSticky = false)
     {
@@ -177,22 +167,24 @@ public partial class AppBar : IHaveAppBar
         }
 
         AppBarIsSticky = isSticky;
-        if (_show != null && !_appBarVisible)
+        if (_show is null || _appBarVisible)
         {
-            _show.Begin();
-            _appBarVisible = true;
+            return;
         }
+
+        _show.Begin();
+        _appBarVisible = true;
     }
 
-    /// <summary>
-    /// Hides the application bar.
-    /// </summary>
+    /// <summary>Hides the application bar.</summary>
     private void HideAppBar()
     {
-        if (_hide != null && _appBarVisible)
+        if (_hide is null || !_appBarVisible)
         {
-            _hide.Begin();
-            _appBarVisible = false;
+            return;
         }
+
+        _hide.Begin();
+        _appBarVisible = false;
     }
 }

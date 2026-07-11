@@ -1,13 +1,11 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 
@@ -19,128 +17,98 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// </summary>
 public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationViewItem
 {
-    /// <summary>
-    /// Property for <see cref="MenuItems"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MenuItems"/>.</summary>
     public static readonly DirectProperty<NavigationViewItem, IList> MenuItemsProperty =
         AvaloniaProperty.RegisterDirect<NavigationViewItem, IList>(
             nameof(MenuItems),
             o => o.MenuItems);
 
-    /// <summary>
-    /// Property for <see cref="MenuItemsSource"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MenuItemsSource"/>.</summary>
     public static readonly StyledProperty<object?> MenuItemsSourceProperty =
         AvaloniaProperty.Register<NavigationViewItem, object?>(nameof(MenuItemsSource));
 
-    /// <summary>
-    /// Property for <see cref="HasMenuItems"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="HasMenuItems"/>.</summary>
     public static readonly DirectProperty<NavigationViewItem, bool> HasMenuItemsProperty =
         AvaloniaProperty.RegisterDirect<NavigationViewItem, bool>(
             nameof(HasMenuItems),
             o => o.HasMenuItems);
 
-    /// <summary>
-    /// Property for <see cref="IsActive"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsActive"/>.</summary>
     public static readonly StyledProperty<bool> IsActiveProperty =
         AvaloniaProperty.Register<NavigationViewItem, bool>(nameof(IsActive), false);
 
-    /// <summary>
-    /// Property for <see cref="IsPaneOpen"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsPaneOpen"/>.</summary>
     public static readonly StyledProperty<bool> IsPaneOpenProperty =
         AvaloniaProperty.Register<NavigationViewItem, bool>(nameof(IsPaneOpen), false);
 
-    /// <summary>
-    /// Property for <see cref="IsExpanded"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsExpanded"/>.</summary>
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<NavigationViewItem, bool>(nameof(IsExpanded), false);
 
-    /// <summary>
-    /// Property for <see cref="Icon"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<IconElement?> IconProperty =
         AvaloniaProperty.Register<NavigationViewItem, IconElement?>(nameof(Icon));
 
-    /// <summary>
-    /// Property for <see cref="TargetPageTag"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TargetPageTag"/>.</summary>
     public static readonly StyledProperty<string> TargetPageTagProperty =
         AvaloniaProperty.Register<NavigationViewItem, string>(nameof(TargetPageTag), string.Empty);
 
-    /// <summary>
-    /// Property for <see cref="TargetPageType"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TargetPageType"/>.</summary>
     public static readonly StyledProperty<Type?> TargetPageTypeProperty =
         AvaloniaProperty.Register<NavigationViewItem, Type?>(nameof(TargetPageType));
 
-    /// <summary>
-    /// Property for <see cref="TargetViewModelType"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TargetViewModelType"/>.</summary>
     public static readonly StyledProperty<Type?> TargetViewModelTypeProperty =
         AvaloniaProperty.Register<NavigationViewItem, Type?>(nameof(TargetViewModelType));
 
-    /// <summary>
-    /// Property for <see cref="TargetHostName"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TargetHostName"/>.</summary>
     public static readonly StyledProperty<string?> TargetHostNameProperty =
         AvaloniaProperty.Register<NavigationViewItem, string?>(nameof(TargetHostName));
 
-    /// <summary>
-    /// Property for <see cref="InfoBadge"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="InfoBadge"/>.</summary>
     public static readonly StyledProperty<InfoBadge?> InfoBadgeProperty =
         AvaloniaProperty.Register<NavigationViewItem, InfoBadge?>(nameof(InfoBadge));
 
-    /// <summary>
-    /// Property for <see cref="NavigationCacheMode"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="NavigationCacheMode"/>.</summary>
     public static readonly StyledProperty<NavigationCacheMode> NavigationCacheModeProperty =
         AvaloniaProperty.Register<NavigationViewItem, NavigationCacheMode>(nameof(NavigationCacheMode), NavigationCacheMode.Disabled);
 
-    /// <summary>
-    /// The template element chevron grid.
-    /// </summary>
-    protected const string TemplateElementChevronGrid = "PART_ChevronGrid";
-
+    /// <summary>Provides the _menuItems member.</summary>
     private readonly ObservableCollection<object> _menuItems = [];
-    private bool _hasMenuItems;
-    private Grid? _chevronGrid;
 
+    /// <summary>Provides the NavigationViewItem member.</summary>
     static NavigationViewItem()
     {
-        MenuItemsSourceProperty.Changed.AddClassHandler<NavigationViewItem>((x, e) => x.OnMenuItemsSourceChanged(e));
+        _ = MenuItemsSourceProperty.Changed.AddClassHandler<NavigationViewItem>((x, e) => x.OnMenuItemsSourceChanged(e));
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     public NavigationViewItem()
     {
         Id = Guid.NewGuid().ToString("n");
         _menuItems.CollectionChanged += OnMenuItemsCollectionChanged;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="targetPageType">Type of the target page.</param>
     public NavigationViewItem(Type targetPageType)
         : this() => TargetPageType = targetPageType;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationViewItem"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="name">The name.</param>
     /// <param name="targetPageType">Type of the target page.</param>
     public NavigationViewItem(string name, Type targetPageType)
         : this(targetPageType) => Content = name;
 
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
+    /// <param name="name">The name.</param>
+    /// <param name="targetPageType">Type of the target page.</param>
+    /// <param name="targetPageFactory">The AOT-safe target page factory.</param>
+    public NavigationViewItem(string name, Type targetPageType, Func<object?> targetPageFactory)
+        : this(name, targetPageType) => TargetPageFactory = targetPageFactory;
+
     /// <inheritdoc/>
-    public event EventHandler<RoutedEventArgs>? Click;
+    public new event EventHandler<RoutedEventArgs>? Click;
 
     /// <inheritdoc/>
     public string Id { get; }
@@ -158,8 +126,8 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     /// <inheritdoc/>
     public bool HasMenuItems
     {
-        get => _hasMenuItems;
-        private set => SetAndRaise(HasMenuItemsProperty, ref _hasMenuItems, value);
+        get => field;
+        private set => SetAndRaise(HasMenuItemsProperty, ref field, value);
     }
 
     /// <inheritdoc/>
@@ -169,9 +137,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         set => SetValue(IsActiveProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the parent pane is open.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the parent pane is open.</summary>
     public bool IsPaneOpen
     {
         get => GetValue(IsPaneOpenProperty);
@@ -207,6 +173,9 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     }
 
     /// <inheritdoc/>
+    public Func<object?>? TargetPageFactory { get; set; }
+
+    /// <inheritdoc/>
     public Type? TargetViewModelType
     {
         get => GetValue(TargetViewModelTypeProperty);
@@ -235,7 +204,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     }
 
     /// <inheritdoc/>
-    public IControlTemplate? Template
+    public new IControlTemplate? Template
     {
         get => base.Template;
         set => base.Template = value;
@@ -262,11 +231,13 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
             NavigationViewItemParent.Activate(navigationView);
         }
 
-        if (NavigationViewItemParent is not null)
+        if (NavigationViewItemParent is null)
         {
-            NavigationViewItemParent.IsExpanded = navigationView.IsPaneOpen &&
-                navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
+            return;
         }
+
+        NavigationViewItemParent.IsExpanded = navigationView.IsPaneOpen &&
+            navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
     }
 
     /// <inheritdoc/>
@@ -280,19 +251,12 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         IsActive = false;
         NavigationViewItemParent?.Deactivate(navigationView);
 
-        if (!navigationView.IsPaneOpen && HasMenuItems)
+        if (navigationView.IsPaneOpen || !HasMenuItems)
         {
-            IsExpanded = false;
+            return;
         }
-    }
 
-    /// <inheritdoc/>
-    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
-    {
-        base.OnApplyTemplate(e);
-        ArgumentNullException.ThrowIfNull(e);
-
-        _chevronGrid = e.NameScope.Find<Grid>(TemplateElementChevronGrid);
+        IsExpanded = false;
     }
 
     /// <inheritdoc/>
@@ -302,6 +266,8 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         Click?.Invoke(this, new RoutedEventArgs());
     }
 
+    /// <summary>Provides the OnMenuItemsSourceChanged member.</summary>
+    /// <param name="e">The e value.</param>
     private void OnMenuItemsSourceChanged(AvaloniaPropertyChangedEventArgs e)
     {
         _menuItems.Clear();
@@ -313,12 +279,15 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
                 _menuItems.Add(item);
             }
         }
-        else if (e.NewValue != null)
+        else if (e.NewValue is not null)
         {
             _menuItems.Add(e.NewValue);
         }
     }
 
+    /// <summary>Provides the OnMenuItemsCollectionChanged member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnMenuItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         HasMenuItems = _menuItems.Count > 0;

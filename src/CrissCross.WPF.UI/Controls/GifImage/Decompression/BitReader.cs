@@ -1,15 +1,37 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls.Decompression;
 
-internal class BitReader(byte[] buffer)
+/// <summary>Provides the BitReader member.</summary>
+/// <param name="buffer">The buffer value.</param>
+internal sealed class BitReader(byte[] buffer)
 {
+    /// <summary>The number of bits in the local read window.</summary>
+    private const int ReadWindowBitCount = 32;
+
+    /// <summary>The number of bytes in the local read window.</summary>
+    private const int ReadWindowByteCount = 4;
+
+    /// <summary>The byte shift for bit-to-byte conversion.</summary>
+    private const int ByteShift = 3;
+
+    /// <summary>The byte-aligned bit position mask.</summary>
+    private const int ByteAlignedBitPositionMask = 0x07;
+
+    /// <summary>Stores the _bytePosition value.</summary>
     private int _bytePosition = -1;
+
+    /// <summary>Stores the _bitPosition value.</summary>
     private int _bitPosition;
+
+    /// <summary>Stores the _currentvalue.</summary>
     private int _currentValue = -1;
 
+    /// <summary>Provides the ReadBits member.</summary>
+    /// <param name="bitCount">The bitCount value.</param>
+    /// <returns>The result.</returns>
     public int ReadBits(int bitCount)
     {
         // The following code assumes it's running on a little-endian architecture.
@@ -24,11 +46,11 @@ internal class BitReader(byte[] buffer)
             _bitPosition = 0;
             _currentValue = ReadInt32();
         }
-        else if (bitCount > 32 - _bitPosition)
+        else if (bitCount > ReadWindowBitCount - _bitPosition)
         {
-            var n = _bitPosition >> 3;
+            var n = _bitPosition >> ByteShift;
             _bytePosition += n;
-            _bitPosition &= 0x07;
+            _bitPosition &= ByteAlignedBitPositionMask;
             _currentValue = ReadInt32() >> _bitPosition;
         }
 
@@ -39,17 +61,19 @@ internal class BitReader(byte[] buffer)
         return value;
     }
 
+    /// <summary>Provides the ReadInt32 member.</summary>
+    /// <returns>The result.</returns>
     private int ReadInt32()
     {
         var value = 0;
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < ReadWindowByteCount; i++)
         {
             if (_bytePosition + i >= buffer.Length)
             {
                 break;
             }
 
-            value |= buffer[_bytePosition + i] << (i << 3);
+            value |= buffer[_bytePosition + i] << (i << ByteShift);
         }
 
         return value;

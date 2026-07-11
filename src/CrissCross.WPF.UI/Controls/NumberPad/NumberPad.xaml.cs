@@ -1,25 +1,17 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Interaction logic for NumberPad.
-/// </summary>
+/// <summary>Interaction logic for NumberPad.</summary>
 public partial class NumberPad : IDisposable
 {
-    /// <summary>
-    /// The hide mask property.
-    /// </summary>
+    /// <summary>The hide mask property.</summary>
     public static readonly DependencyProperty HideMaskProperty =
         DependencyProperty.Register(
             nameof(HideMask),
@@ -27,9 +19,7 @@ public partial class NumberPad : IDisposable
             typeof(NumberPad),
             new PropertyMetadata(false));
 
-    /// <summary>
-    /// The mask color property.
-    /// </summary>
+    /// <summary>The mask color property.</summary>
     public static readonly DependencyProperty MaskColorProperty =
         DependencyProperty.Register(
             nameof(MaskColor),
@@ -37,9 +27,7 @@ public partial class NumberPad : IDisposable
             typeof(NumberPad),
             new PropertyMetadata(Brushes.Black, UpdateMask));
 
-    /// <summary>
-    /// The use criss cross theme manager property.
-    /// </summary>
+    /// <summary>The use criss cross theme manager property.</summary>
     public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
         DependencyProperty.Register(
             nameof(UseCrissCrossThemeManager),
@@ -47,87 +35,122 @@ public partial class NumberPad : IDisposable
             typeof(NumberPad),
             new PropertyMetadata(null, UpdateTheme));
 
+    /// <summary>Delay used before and after keypad fade operations.</summary>
+    private const int CloseAnimationDelayMilliseconds = 20;
+
+    /// <summary>Number of stored keypad margin values.</summary>
+    private const int KeypadMarginCount = 4;
+
+    /// <summary>Fallback scale when the owner is not scaled above its desired size.</summary>
+    private const double ViewboxScaleFallback = 1.0;
+
+    /// <summary>Horizontal spacing between the owner button and keypad.</summary>
+    private const int KeypadHorizontalMargin = 10;
+
+    /// <summary>Vertical offset used when positioning the keypad above the owner.</summary>
+    private const int KeypadVerticalOffset = 100;
+
+    /// <summary>Index of the top margin in the stored margin array.</summary>
+    private const int MarginTopIndex = 1;
+
+    /// <summary>Index of the left margin in the stored margin array.</summary>
+    private const int MarginLeftIndex = 2;
+
+    /// <summary>Stores the _disposables value.</summary>
     private readonly CompositeDisposable _disposables = [];
+
+    /// <summary>Stores the _limitsTimer value.</summary>
     private readonly DispatcherTimer _limitsTimer;
-    private readonly double[] _margin = new double[4];
+
+    /// <summary>Stores the _margin value.</summary>
+    private readonly double[] _margin = new double[KeypadMarginCount];
+
+    /// <summary>Stores the _owner value.</summary>
     private readonly INumberPadButton _owner;
+
+    /// <summary>Stores the _currentvalue.</summary>
     private string? _currentValue;
+
+    /// <summary>Stores the _disposedvalue.</summary>
     private bool _disposedValue;
+
+    /// <summary>Stores the _hasFocus value.</summary>
     private bool _hasFocus;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NumberPad"/> class.
-    /// </summary>
-    /// <param name="newOwner">The new owner.</param>
+    /// <summary>Initializes a new instance of the <see cref="NumberPad"/> class.</summary>
     /// <exception cref="ArgumentNullException">newOwner.</exception>
     /// <exception cref="ArgumentNullException">A ArgumentNullException.</exception>
+    /// <param name="newOwner">The new owner.</param>
     public NumberPad(INumberPadButton newOwner)
     {
-        _owner = newOwner;
-        if (_owner == null)
-        {
-            throw new ArgumentNullException(nameof(newOwner));
-        }
+        _owner = newOwner ?? throw new ArgumentNullException(nameof(newOwner));
 
         DataContext = this;
 
         InitializeComponent();
         Unit.Content = _owner.Units;
         _owner.IsEnabled = false;
-        this.Events().MouseLeftButtonDown
-            .Merge(Mask.Events().MouseLeftButtonDown)
+        _ = EventSignal
+            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => MouseLeftButtonDown += handler, handler => MouseLeftButtonDown -= handler)
+            .Merge(EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => Mask.MouseLeftButtonDown += handler, handler => Mask.MouseLeftButtonDown -= handler))
             .Subscribe(e =>
             {
                 var mouse = e.GetPosition(this);
                 var gridposition = WGrid.Margin;
 
-                if (mouse.X < gridposition.Left || mouse.X > gridposition.Left + WGrid.Width || mouse.Y < gridposition.Top || mouse.Y > gridposition.Top + WGrid.Height)
+                if (mouse.X >= gridposition.Left && mouse.X <= gridposition.Left + WGrid.Width && mouse.Y >= gridposition.Top && mouse.Y <= gridposition.Top + WGrid.Height)
                 {
-                    CloseKeypad();
+                    return;
                 }
+
+                CloseKeypad();
             }).DisposeWith(_disposables);
-        this.Events().PreviewKeyDown
+        _ = EventSignal
+            .From<KeyEventHandler, KeyEventArgs>(handler => handler.Invoke, handler => PreviewKeyDown += handler, handler => PreviewKeyDown -= handler)
             .Subscribe(Window_PreviewKeyDown)
             .DisposeWith(_disposables);
-        Value.Events().GotFocus.Select(_ => true)
-            .Merge(Value.Events().LostFocus.Select(_ => false))
+        _ = EventSignal
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.GotFocus += handler, handler => Value.GotFocus -= handler)
+            .Select(_ => true)
+            .Merge(EventSignal.From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.LostFocus += handler, handler => Value.LostFocus -= handler).Select(_ => false))
             .Subscribe(x => _hasFocus = x)
             .DisposeWith(_disposables);
-        Accept.Events().Click
-            .Subscribe(AcceptResult)
+        _ = EventSignal
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Accept.Click += handler, handler => Accept.Click -= handler)
+            .Subscribe(_ => AcceptResult())
             .DisposeWith(_disposables);
-        CancelBtn.Events().Click
+        _ = EventSignal
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => CancelBtn.Click += handler, handler => CancelBtn.Click -= handler)
             .Subscribe(_ => CloseKeypad())
             .DisposeWith(_disposables);
-        ClearBtn.Events().Click
-            .Subscribe(ClearValues)
+        _ = EventSignal
+            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => ClearBtn.Click += handler, handler => ClearBtn.Click -= handler)
+            .Subscribe(_ => ClearValues())
             .DisposeWith(_disposables);
-        _limitsTimer = new DispatcherTimer(
+        _limitsTimer = new(
             TimeSpan.FromSeconds(1),
             DispatcherPriority.Normal,
             (s, e) =>
             {
-                if (Value.Value.HasValue && Value.Value!.Value <= _owner.Maximum && Value.Value.Value >= _owner.Minimum)
+                if (!Value.Value.HasValue || !(Value.Value!.Value <= _owner.Maximum) || !(Value.Value.Value >= _owner.Minimum))
                 {
-                    _limitsTimer?.Stop();
+                    return;
                 }
+
+                _limitsTimer?.Stop();
             },
             Dispatcher);
         Showkeypad();
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [hide mask].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [hide mask].</summary>
     /// <value><c>true</c> if [hide mask]; otherwise, <c>false</c>.</value>
     public bool HideMask
     {
         get => (bool)GetValue(HideMaskProperty); set => SetValue(HideMaskProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the color of the mask.
-    /// </summary>
+    /// <summary>Gets or sets the color of the mask.</summary>
     /// <value>The color of the mask.</value>
     [Description("Sets MaskColor of the Keypad")]
     [Category("Brush")]
@@ -136,9 +159,7 @@ public partial class NumberPad : IDisposable
         get => (Brush)GetValue(MaskColorProperty); set => SetValue(MaskColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [use criss cross theme manager].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [use criss cross theme manager].</summary>
     /// <value>
     ///   <c>true</c> if [use criss cross theme manager]; otherwise, <c>false</c>.
     /// </value>
@@ -150,65 +171,123 @@ public partial class NumberPad : IDisposable
         set => SetValue(UseCrissCrossThemeManagerProperty, value);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting
-    /// unmanaged resources.
-    /// </summary>
+    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing">
-    /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.
-    /// </param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                _limitsTimer?.Stop();
-                _disposables?.Dispose();
-                Close();
-            }
+            return;
+        }
 
-            _disposedValue = true;
+        if (disposing)
+        {
+            _limitsTimer?.Stop();
+            _disposables?.Dispose();
+            Close();
+        }
+
+        _disposedValue = true;
+    }
+
+    /// <summary>Digit Pressed on key pad.</summary>
+    /// <param name="sender">Digit button pressed.</param>
+    /// <param name="e">Routed Event Arguments.</param>
+    protected void DigitPress(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Button button)
+        {
+            return;
+        }
+
+        var key = button.Tag.ToString();
+        switch (key)
+        {
+            case ".":
+                {
+                    var value = Value.Value;
+                    if (value is not null)
+                    {
+                        _currentValue = $"{(int)value}{key}";
+                    }
+
+                    break;
+                }
+
+            case "-":
+                {
+                    InvertValue(key);
+                    break;
+                }
+
+            default:
+                {
+                    AddDigit(key);
+                    break;
+                }
         }
     }
 
+    /// <summary>Gets the initial value for the configured range.</summary>
+    /// <param name="minimum">The minimum value.</param>
+    /// <param name="maximum">The maximum value.</param>
+    /// <returns>The initial value.</returns>
+    private static double GetInitialValue(double? minimum, double? maximum)
+    {
+        if (minimum > 0)
+        {
+            return minimum.GetValueOrDefault();
+        }
+
+        return maximum < 0 ? maximum.GetValueOrDefault() : 0;
+    }
+
+    /// <summary>Provides the UpdateMask member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void UpdateMask(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NumberPad c)
+        if (d is not NumberPad c)
         {
-            c.MaskColor = (Brush)e.NewValue;
-            c.Mask.Background = (Brush)e.NewValue;
+            return;
         }
+
+        c.MaskColor = (Brush)e.NewValue;
+        c.Mask.Background = (Brush)e.NewValue;
     }
 
+    /// <summary>Provides the UpdateTheme member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void UpdateTheme(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is NumberPad c && e.NewValue is bool useTheme)
+        if (d is not NumberPad c || e.NewValue is not bool useTheme)
         {
-            if (useTheme)
-            {
-                SystemThemeWatcher.Watch(c);
-            }
-            else
-            {
-                c.Events().Loaded.Take(1).Subscribe(_ => SystemThemeWatcher.UnWatch(c)).DisposeWith(c._disposables);
-            }
+            return;
+        }
+
+        if (useTheme)
+        {
+            SystemThemeWatcher.Watch(c);
+        }
+        else
+        {
+            _ = EventSignal
+                .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => c.Loaded += handler, handler => c.Loaded -= handler)
+                .Take(1)
+                .Subscribe(_ => SystemThemeWatcher.UnWatch(c))
+                .DisposeWith(c._disposables);
         }
     }
 
-    /// <summary>
-    /// Adds the digit.
-    /// </summary>
+    /// <summary>Adds the digit.</summary>
     /// <param name="key">The key.</param>
     private void AddDigit(string? key)
     {
@@ -221,32 +300,28 @@ public partial class NumberPad : IDisposable
         _currentValue = Value.Text;
     }
 
-    /// <summary>
-    /// Clear Button Clicked.
-    /// </summary>
-    /// <param name="e">Routed Event Arguments.</param>
-    private void ClearValues(RoutedEventArgs e)
+    /// <summary>Clear Button Clicked.</summary>
+    private void ClearValues()
     {
         Value.Value = double.NaN;
         Value.Text = string.Empty;
         _currentValue = string.Empty;
     }
 
+    /// <summary>Provides the CloseKeypad member.</summary>
     private async void CloseKeypad()
     {
-        ClearValues(null!);
-        await Task.Delay(20).ConfigureAwait(true);
+        ClearValues();
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         FadeOut();
-        Value.Value = Value.Minimum > 0 ? Value.Minimum : Value.Maximum < 0 ? Value.Maximum : 0;
+        Value.Value = GetInitialValue(Value.Minimum, Value.Maximum);
         _currentValue = Value.Value.Value.ToString(CultureInfo.InvariantCulture);
         _owner.DisposeKeypad();
-        await Task.Delay(20).ConfigureAwait(true);
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         _owner.IsEnabled = true;
     }
 
-    /// <summary>
-    /// Checks the limits.
-    /// </summary>
+    /// <summary>Checks the limits.</summary>
     /// <param name="value">The value.</param>
     /// <returns>Checked Limits.</returns>
     private double CheckTheLimits(double value)
@@ -261,43 +336,8 @@ public partial class NumberPad : IDisposable
         return value;
     }
 
-    /// <summary>
-    /// Digit Pressed on key pad.
-    /// </summary>
-    /// <param name="sender">Digit button pressed.</param>
-    /// <param name="e">Routed Event Arguments.</param>
-    private void DigitPress(object sender, RoutedEventArgs e)
-    {
-        if (sender is System.Windows.Controls.Button button)
-        {
-            var key = button.Tag.ToString();
-            switch (key)
-            {
-                case ".":
-                    var value = Value.Value;
-                    if (value != null)
-                    {
-                        _currentValue = $"{(int)value}{key}";
-                    }
-
-                    break;
-
-                case "-":
-                    InvertValue(key);
-                    break;
-
-                default:
-                    AddDigit(key);
-                    break;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Enter Button Clicked.
-    /// </summary>
-    /// <param name="e">Routed Event Arguments.</param>
-    private async void AcceptResult(RoutedEventArgs e)
+    /// <summary>Enter Button Clicked.</summary>
+    private async void AcceptResult()
     {
         if (Value.Value.HasValue)
         {
@@ -321,248 +361,182 @@ public partial class NumberPad : IDisposable
             _owner.DisposeKeypad();
         }
 
-        ClearValues(null!);
-        await Task.Delay(20).ConfigureAwait(true);
+        ClearValues();
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         FadeOut();
-        await Task.Delay(20).ConfigureAwait(true);
+        await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
         _owner.IsEnabled = true;
     }
 
+    /// <summary>Provides the FadeIn member.</summary>
     private void FadeIn()
     {
         Visibility = Visibility.Visible;
-        Focus();
+        _ = Focus();
     }
 
+    /// <summary>Provides the FadeOut member.</summary>
     private void FadeOut()
     {
         Visibility = Visibility.Collapsed;
         Dispose();
     }
 
+    /// <summary>Provides the InvertValue member.</summary>
+    /// <param name="key">The key value.</param>
     private void InvertValue(string key)
     {
         _currentValue = _currentValue?.Contains(key) == true ? _currentValue?.Remove(0, 1) : $"{key}{Value.Value}";
 
-        if (double.TryParse(_currentValue, out var value))
+        if (!double.TryParse(_currentValue, out var value))
         {
-            Value.Value = value;
+            return;
         }
+
+        Value.Value = value;
     }
 
+    /// <summary>Provides the Showkeypad member.</summary>
     private void Showkeypad()
     {
         Mask.Visibility = (Debugger.IsAttached || HideMask) ? Visibility.Collapsed : Visibility.Visible;
         Mask.Background = MaskColor;
         FadeIn();
         _currentValue = string.Empty;
-        Value.Value = _owner.Minimum > 0 ? _owner.Minimum : _owner.Maximum < 0 ? _owner.Maximum : 0;
+        Value.Value = GetInitialValue(_owner.Minimum, _owner.Maximum);
 
-        var button = _owner as System.Windows.Controls.Button;
-        var window = Window.GetWindow(button);
+        if (_owner is not System.Windows.Controls.Button button ||
+            Window.GetWindow(button) is not { } window ||
+            PresentationSource.FromVisual(button) is not { } presentationSource)
+        {
+            return;
+        }
 
         WindowStartupLocation = WindowStartupLocation.Manual;
+        ApplyOwnerWindowBounds(window);
 
-        // occupy owner screen
-        if (window?.WindowState == WindowState.Maximized)
+        Width = window.ActualWidth;
+        Height = window.ActualHeight;
+
+        var ownerPosition = button.TransformToAncestor(presentationSource.RootVisual).Transform(new Point(0, 0));
+        SetTopMargin(window, ownerPosition);
+        SetLeftMargin(button, window, ownerPosition);
+
+        WGrid.Margin = new(_margin[MarginLeftIndex], _margin[MarginTopIndex], 0, 0);
+    }
+
+    /// <summary>Provides the Window_PreviewKeyDown member.</summary>
+    /// <param name="e">The event arguments.</param>
+    private void Window_PreviewKeyDown(KeyEventArgs e)
+    {
+        if (GetDigitFromKey(e.Key) is { } digit)
         {
-            // Get the current screen
+            if (!_hasFocus)
+            {
+                AddDigit(digit);
+            }
+
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.Enter or Key.Return:
+                {
+                    AcceptResult();
+                    break;
+                }
+
+            case Key.Escape:
+                {
+                    CloseKeypad();
+                    break;
+                }
+
+            case Key.OemMinus:
+                {
+                    InvertValue("-");
+                    break;
+                }
+
+            case Key.OemPeriod or Key.Decimal:
+                {
+                    var value = Value.Value;
+                    if (value is not null)
+                    {
+                        _currentValue = $"{(int)value}.";
+                    }
+
+                    break;
+                }
+
+            default:
+                {
+                    break;
+                }
+        }
+
+        static string? GetDigitFromKey(Key key)
+        {
+            if (key is >= Key.D0 and <= Key.D9)
+            {
+                return ((char)('0' + key - Key.D0)).ToString();
+            }
+
+            return key is >= Key.NumPad0 and <= Key.NumPad9 ? ((char)('0' + key - Key.NumPad0)).ToString() : null;
+        }
+    }
+
+    /// <summary>Applies bounds from the owner window to the keypad.</summary>
+    /// <param name="window">The owner window.</param>
+    private void ApplyOwnerWindowBounds(System.Windows.Window window)
+    {
+        if (window.WindowState == WindowState.Maximized)
+        {
             WindowInteropHelper wih = new(window);
             if (User32.MonitorFromWindow(wih.Handle, User32.MONITOR_DEFAULTTONEAREST) is IntPtr monitor && monitor != IntPtr.Zero)
             {
                 var monitorInfo = new User32.NativeMonitorInfo();
-                User32.GetMonitorInfo(monitor, monitorInfo);
+                _ = User32.GetMonitorInfo(monitor, monitorInfo);
 
                 Left = monitorInfo.Monitor.Left;
                 Top = monitorInfo.Monitor.Top;
             }
+
+            return;
+        }
+
+        Top = window.Top;
+        Left = window.Left;
+        Topmost = true;
+    }
+
+    /// <summary>Sets the keypad left margin beside the owner button.</summary>
+    /// <param name="button">The owner button.</param>
+    /// <param name="window">The owner window.</param>
+    /// <param name="ownerPosition">The owner position.</param>
+    private void SetLeftMargin(System.Windows.Controls.Button button, System.Windows.Window window, Point ownerPosition)
+    {
+        var element = this.TryFindParent<Viewbox>();
+        if (element is not null)
+        {
+            var scaledWidth = element.ActualWidth / element.Child.DesiredSize.Width;
+            _margin[MarginLeftIndex] = ownerPosition.X + (button.ActualWidth * (scaledWidth > ViewboxScaleFallback ? scaledWidth : ViewboxScaleFallback)) + KeypadHorizontalMargin;
         }
         else
         {
-            Top = window!.Top;
-            Left = window!.Left;
-            Topmost = true;
+            _margin[MarginLeftIndex] = ownerPosition.X + button.ActualWidth + KeypadHorizontalMargin;
         }
 
-        Width = window!.ActualWidth;
-        Height = window!.ActualHeight;
-
-        var presentationSource = PresentationSource.FromVisual(button);
-        if (window != null && button != null && presentationSource != null)
-        {
-            var ownerPosition = button.TransformToAncestor(presentationSource.RootVisual).Transform(new Point(0, 0));
-
-            // Set the top position of the Keypad
-            _margin[1] = ownerPosition.Y - 100;
-
-            if ((_margin[1] + WGrid.Height) > window.ActualHeight)
-            {
-                _margin[1] = window.ActualHeight - WGrid.Height - 10;
-            }
-
-            // Set the left position of the Keypad
-            var element = this.TryFindParent<Viewbox>();
-            if (element != null)
-            {
-                // if the button is in a viewbox, scale the width of the keypad
-                var scaledWidth = element.ActualWidth / element.Child.DesiredSize.Width;
-                _margin[2] = ownerPosition.X + (button.ActualWidth * (scaledWidth > 1 ? scaledWidth : 1)) + 10;
-            }
-            else
-            {
-                _margin[2] = ownerPosition.X + button.ActualWidth + 10;
-            }
-
-            if ((_margin[2] + WGrid.Width) > (window.ActualWidth - 10))
-            {
-                // Set location to left of button if the location + with of keypad will be off
-                // the screen
-                _margin[2] = ownerPosition.X - WGrid.Width;
-            }
-
-            if (_margin[2] > (window.ActualWidth - 10))
-            {
-                _margin[2] = window.ActualWidth - WGrid.Width - 10;
-            }
-
-            WGrid.Margin = new(_margin[2], _margin[1], 0, 0);
-        }
+        _margin[MarginLeftIndex] = (_margin[MarginLeftIndex] + WGrid.Width) > (window.ActualWidth - KeypadHorizontalMargin) ? ownerPosition.X - WGrid.Width : _margin[MarginLeftIndex];
+        _margin[MarginLeftIndex] = _margin[MarginLeftIndex] > (window.ActualWidth - KeypadHorizontalMargin) ? window.ActualWidth - WGrid.Width - KeypadHorizontalMargin : _margin[MarginLeftIndex];
     }
 
-    private void Window_PreviewKeyDown(KeyEventArgs e)
+    /// <summary>Sets the keypad top margin near the owner button.</summary>
+    /// <param name="window">The owner window.</param>
+    /// <param name="ownerPosition">The owner position.</param>
+    private void SetTopMargin(System.Windows.Window window, Point ownerPosition)
     {
-        switch (e.Key)
-        {
-            case Key.NumPad0:
-            case Key.D0:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("0");
-                break;
-
-            case Key.D1:
-            case Key.NumPad1:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("1");
-                break;
-
-            case Key.D2:
-            case Key.NumPad2:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("2");
-                break;
-
-            case Key.D3:
-            case Key.NumPad3:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("3");
-                break;
-
-            case Key.D4:
-            case Key.NumPad4:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("4");
-                break;
-
-            case Key.D5:
-            case Key.NumPad5:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("5");
-                break;
-
-            case Key.D6:
-            case Key.NumPad6:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("6");
-                break;
-
-            case Key.D7:
-            case Key.NumPad7:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("7");
-                break;
-
-            case Key.D8:
-            case Key.NumPad8:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("8");
-                break;
-
-            case Key.D9:
-            case Key.NumPad9:
-                if (_hasFocus)
-                {
-                    return;
-                }
-
-                AddDigit("9");
-                break;
-
-            case Key.Enter:
-
-                AcceptResult(null!);
-                break;
-
-            case Key.Escape:
-                CloseKeypad();
-                break;
-
-            case Key.OemMinus:
-                InvertValue("-");
-                break;
-
-            case Key.OemPeriod:
-            case Key.Decimal:
-                var value = Value.Value;
-                if (value != null)
-                {
-                    _currentValue = $"{(int)value}.";
-                }
-
-                break;
-
-            default:
-                if (e.Key == Key.Return)
-                {
-                    AcceptResult(null!);
-                }
-
-                break;
-        }
+        _margin[MarginTopIndex] = Math.Min(ownerPosition.Y - KeypadVerticalOffset, window.ActualHeight - WGrid.Height - KeypadHorizontalMargin);
     }
 }

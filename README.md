@@ -248,7 +248,7 @@ Use `NavigationRegistry` when you need explicit view-model to view registrations
 ```csharp
 using CrissCross;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reactive.Linq;
+using ReactiveUI.Primitives;
 
 var services = new ServiceCollection();
 
@@ -1459,7 +1459,8 @@ Create a signal source and bind it to a chart:
 
 ```csharp
 using CrissCross.WPF.Plot;
-using System.Reactive.Linq;
+using ReactiveUI.Primitives;
+using Observable = ReactiveUI.Primitives.Signals.Signal;
 
 var ticks = Observable.Interval(TimeSpan.FromMilliseconds(100))
     .Select(i => (

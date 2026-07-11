@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media;
@@ -8,46 +8,50 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Test.ViewModels;
 
-/// <summary>
-/// DataViewModel.
-/// </summary>
+/// <summary>DataViewModel member.</summary>
 /// <seealso cref="RxObject" />
 /// <seealso cref="INavigationAware" />
 public class DataViewModel : RxObject, INavigationAware
 {
-    private bool _isInitialized;
-    private IEnumerable<DataColor>? _colors;
+    /// <summary>The number of colors generated for the sample.</summary>
+    private const int GeneratedColorCount = 8192;
 
-    /// <summary>
-    /// Gets or sets the colors.
-    /// </summary>
+    /// <summary>The alpha channel used by generated colors.</summary>
+    private const byte GeneratedColorAlpha = 200;
+
+    /// <summary>The exclusive upper bound for generated color channels.</summary>
+    private const int GeneratedChannelUpperBound = 250;
+
+    /// <summary>Tracks whether sample data has been generated.</summary>
+    private bool _isInitialized;
+
+    /// <summary>Gets or sets the colors.</summary>
     /// <value>
     /// The colors.
     /// </value>
     public IEnumerable<DataColor>? Colors
     {
-        get => _colors;
-        set => this.RaiseAndSetIfChanged(ref _colors, value);
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>
-    /// Method triggered when the class is navigated.
-    /// </summary>
+    /// <summary>Method triggered when the class is navigated.</summary>
     public void OnNavigatedTo()
     {
-        if (!_isInitialized)
+        if (_isInitialized)
         {
-            InitializeViewModel();
+            return;
         }
+
+        InitializeViewModel();
     }
 
-    /// <summary>
-    /// Method triggered when the navigation leaves the current class.
-    /// </summary>
+    /// <summary>Method triggered when the navigation leaves the current class.</summary>
     public void OnNavigatedFrom()
     {
     }
 
+    /// <summary>Generates the sample color collection.</summary>
     private void InitializeViewModel()
     {
         using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
@@ -62,17 +66,17 @@ public class DataViewModel : RxObject, INavigationAware
             return (byte)(min + (value % (max - min)));
         }
 
-        for (var i = 0; i < 8192; i++)
+        for (var i = 0; i < GeneratedColorCount; i++)
         {
             colorCollection.Add(
                 new DataColor
                 {
                     Color = new SolidColorBrush(
                         Color.FromArgb(
-                            (byte)200,
-                            GetRandomByte(0, 250),
-                            GetRandomByte(0, 250),
-                            GetRandomByte(0, 250)))
+                            GeneratedColorAlpha,
+                            GetRandomByte(0, GeneratedChannelUpperBound),
+                            GetRandomByte(0, GeneratedChannelUpperBound),
+                            GetRandomByte(0, GeneratedChannelUpperBound)))
                 });
         }
 

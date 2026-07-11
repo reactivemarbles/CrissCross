@@ -1,80 +1,64 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables;
 using System.Windows.Controls.Primitives;
-using ReactiveMarbles.ObservableEvents;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents a control that creates a pop-up window that displays information for an element in the interface.
-/// </summary>
+/// <summary>Represents a control that creates a pop-up window that displays information for an element in the interface.</summary>
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 public class Flyout : System.Windows.Controls.ContentControl
 {
-    /// <summary>
-    /// Property for <see cref="IsOpen"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsOpen"/>.</summary>
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
         nameof(IsOpen),
         typeof(bool),
         typeof(Flyout),
         new PropertyMetadata(false));
 
-    /// <summary>
-    /// Property for <see cref="Placement"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Placement"/>.</summary>
     public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
         nameof(Placement),
         typeof(PlacementMode),
         typeof(Flyout),
         new PropertyMetadata(PlacementMode.Top));
 
-    /// <summary>
-    /// Routed event for <see cref="Opened"/>.
-    /// </summary>
+    /// <summary>Routed event for <see cref="Opened"/>.</summary>
     public static readonly RoutedEvent OpenedEvent = EventManager.RegisterRoutedEvent(
         nameof(Opened),
         RoutingStrategy.Bubble,
-        typeof(TypedEventHandler<Flyout, RoutedEventArgs>),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(Flyout));
 
-    /// <summary>
-    /// Routed event for <see cref="Closed"/>.
-    /// </summary>
+    /// <summary>Routed event for <see cref="Closed"/>.</summary>
     public static readonly RoutedEvent ClosedEvent = EventManager.RegisterRoutedEvent(
         nameof(Closed),
         RoutingStrategy.Bubble,
-        typeof(TypedEventHandler<Flyout, RoutedEventArgs>),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(Flyout));
 
+    /// <summary>Provides the ElementPopup member.</summary>
     private const string ElementPopup = "PART_Popup";
-    private Popup? _popup;
-    private CompositeDisposable? _disposables = [];
 
-    /// <summary>
-    /// Event triggered when <see cref="Flyout" /> is opened.
-    /// </summary>
-    public event TypedEventHandler<Flyout, RoutedEventArgs> Opened
+    /// <summary>Stores the _popup value.</summary>
+    private Popup? _popup;
+
+    /// <summary>Event triggered when <see cref="Flyout" /> is opened.</summary>
+    public event EventHandler<RoutedEventArgs> Opened
     {
         add => AddHandler(OpenedEvent, value);
         remove => RemoveHandler(OpenedEvent, value);
     }
 
-    /// <summary>
-    /// Event triggered when <see cref="Flyout" /> is opened.
-    /// </summary>
-    public event TypedEventHandler<Flyout, RoutedEventArgs> Closed
+    /// <summary>Event triggered when <see cref="Flyout" /> is opened.</summary>
+    public event EventHandler<RoutedEventArgs> Closed
     {
         add => AddHandler(ClosedEvent, value);
         remove => RemoveHandler(ClosedEvent, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether a <see cref="Flyout" /> is visible.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether a <see cref="Flyout" /> is visible.</summary>
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
@@ -102,6 +86,12 @@ public class Flyout : System.Windows.Controls.ContentControl
     {
         base.OnApplyTemplate();
 
+        if (_popup is not null)
+        {
+            _popup.Opened -= OnPopupOpened;
+            _popup.Closed -= OnPopupClosed;
+        }
+
         _popup = GetTemplateChild(ElementPopup) as Popup;
 
         if (_popup is null)
@@ -109,48 +99,52 @@ public class Flyout : System.Windows.Controls.ContentControl
             return;
         }
 
-        _disposables?.Dispose();
-        _disposables = [];
-        _disposables.Add(_popup.Events().Opened.Subscribe(OnPopupOpened));
-        _disposables.Add(_popup.Events().Closed.Subscribe(OnPopupClosed));
+        _popup.Opened += OnPopupOpened;
+        _popup.Closed += OnPopupClosed;
     }
 
-    /// <summary>
-    /// Shows this instance.
-    /// </summary>
+    /// <summary>Shows this instance.</summary>
     public void Show()
-    {
-        if (!IsOpen)
-        {
-            SetCurrentValue(IsOpenProperty, true);
-        }
-    }
-
-    /// <summary>
-    /// Hides this instance.
-    /// </summary>
-    public void Hide()
     {
         if (IsOpen)
         {
-            SetCurrentValue(IsOpenProperty, false);
+            return;
         }
+
+        SetCurrentValue(IsOpenProperty, true);
     }
 
-    /// <summary>
-    /// Called when [popup opened].
-    /// </summary>
+    /// <summary>Hides this instance.</summary>
+    public void Hide()
+    {
+        if (!IsOpen)
+        {
+            return;
+        }
+
+        SetCurrentValue(IsOpenProperty, false);
+    }
+
+    /// <summary>Called when [popup opened].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected virtual void OnPopupOpened(EventArgs e) =>
         RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
 
-    /// <summary>
-    /// Called when [popup closed].
-    /// </summary>
+    /// <summary>Called when [popup closed].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected virtual void OnPopupClosed(EventArgs e)
     {
         Hide();
         RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
     }
+
+    /// <summary>Provides the OnPopupOpened member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
+    private void OnPopupOpened(object? sender, EventArgs e) => OnPopupOpened(e);
+
+    /// <summary>Provides the OnPopupClosed member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
+    private void OnPopupClosed(object? sender, EventArgs e) => OnPopupClosed(e);
 }

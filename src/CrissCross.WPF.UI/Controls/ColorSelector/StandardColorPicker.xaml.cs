@@ -1,18 +1,14 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// StandardColorPicker.
-/// </summary>
+/// <summary>Represents StandardColorPicker.</summary>
 /// <seealso cref="DualPickerControlBase" />
 public partial class StandardColorPicker : DualPickerControlBase
 {
-    /// <summary>
-    /// The small change property.
-    /// </summary>
+    /// <summary>The small change property.</summary>
     public static readonly DependencyProperty SmallChangeProperty =
         DependencyProperty.Register(
             nameof(SmallChange),
@@ -20,9 +16,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(1.0));
 
-    /// <summary>
-    /// The show alpha property.
-    /// </summary>
+    /// <summary>The show alpha property.</summary>
     public static readonly DependencyProperty ShowAlphaProperty =
         DependencyProperty.Register(
             nameof(ShowAlpha),
@@ -30,9 +24,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(true));
 
-    /// <summary>
-    /// The show hexadecimal property.
-    /// </summary>
+    /// <summary>The show hexadecimal property.</summary>
     public static readonly DependencyProperty ShowHexProperty =
         DependencyProperty.Register(
             nameof(ShowHex),
@@ -40,9 +32,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The show color swap property.
-    /// </summary>
+    /// <summary>The show color swap property.</summary>
     public static readonly DependencyProperty ShowColorSwapProperty =
         DependencyProperty.Register(
             nameof(ShowColorSwap),
@@ -50,9 +40,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The show sliders property.
-    /// </summary>
+    /// <summary>The show sliders property.</summary>
     public static readonly DependencyProperty ShowSlidersProperty =
         DependencyProperty.Register(
             nameof(ShowSliders),
@@ -60,9 +48,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The show picker type property.
-    /// </summary>
+    /// <summary>The show picker type property.</summary>
     public static readonly DependencyProperty ShowPickerTypeProperty =
         DependencyProperty.Register(
             nameof(ShowPickerType),
@@ -70,9 +56,7 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The picker type property.
-    /// </summary>
+    /// <summary>The picker type property.</summary>
     public static readonly DependencyProperty PickerTypeProperty
         = DependencyProperty.Register(
             nameof(PickerType),
@@ -80,14 +64,10 @@ public partial class StandardColorPicker : DualPickerControlBase
             typeof(StandardColorPicker),
             new PropertyMetadata(PickerType.HSV));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StandardColorPicker"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="StandardColorPicker"/> class.</summary>
     public StandardColorPicker() => InitializeComponent();
 
-    /// <summary>
-    /// Gets or sets the small change.
-    /// </summary>
+    /// <summary>Gets or sets the small change.</summary>
     /// <value>
     /// The small change.
     /// </value>
@@ -97,9 +77,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(SmallChangeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [show alpha].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [show alpha].</summary>
     /// <value>
     ///   <c>true</c> if [show alpha]; otherwise, <c>false</c>.
     /// </value>
@@ -109,9 +87,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(ShowAlphaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the show hexadecimal.
-    /// </summary>
+    /// <summary>Gets or sets the show hexadecimal.</summary>
     /// <value>
     /// The show hexadecimal.
     /// </value>
@@ -121,9 +97,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(ShowHexProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the show sliders.
-    /// </summary>
+    /// <summary>Gets or sets the show sliders.</summary>
     /// <value>
     /// The show sliders.
     /// </value>
@@ -133,9 +107,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(ShowSlidersProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the show color swap.
-    /// </summary>
+    /// <summary>Gets or sets the show color swap.</summary>
     /// <value>
     /// The show color swap.
     /// </value>
@@ -145,9 +117,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(ShowColorSwapProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the type of the show picker.
-    /// </summary>
+    /// <summary>Gets or sets the type of the show picker.</summary>
     /// <value>
     /// The type of the show picker.
     /// </value>
@@ -157,9 +127,7 @@ public partial class StandardColorPicker : DualPickerControlBase
         set => SetValue(ShowPickerTypeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the type of the picker.
-    /// </summary>
+    /// <summary>Gets or sets the type of the picker.</summary>
     /// <value>
     /// The type of the picker.
     /// </value>

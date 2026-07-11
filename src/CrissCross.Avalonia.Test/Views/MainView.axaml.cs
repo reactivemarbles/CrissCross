@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
 using Avalonia.Controls;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
@@ -10,24 +9,20 @@ using Splat;
 
 namespace CrissCross.Avalonia.Test.Views;
 
-/// <summary>
-/// MainView.
-/// </summary>
+/// <summary>MainView member.</summary>
 /// <seealso cref="UserControl" />
 public partial class MainView : ReactiveUserControl<MainViewModel>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainView"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
     public MainView()
     {
         InitializeComponent();
 
-        this.WhenActivated(d =>
+        _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoSecond).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoSecond).DisposeWith(d);
         });
     }
 }

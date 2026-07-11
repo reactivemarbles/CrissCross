@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -9,11 +9,11 @@ using WpfControls = CrissCross.WPF.UI.Controls;
 
 namespace CrissCross.NavigationView.Tests;
 
-/// <summary>
-/// Regression tests for platform navigation view journal moves.
-/// </summary>
+/// <summary>Regression tests for platform navigation view journal moves.</summary>
 public class NavigationViewJournalRegressionTests
 {
+    /// <summary>Provides the WpfGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WpfGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
@@ -32,6 +32,8 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(result.IsBackEnabled).IsTrue();
     }
 
+    /// <summary>Provides the WpfGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task WpfGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
@@ -50,6 +52,8 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(result.IsBackEnabled).IsFalse();
     }
 
+    /// <summary>Provides the AvaloniaGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
@@ -65,6 +69,8 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(navigationView.IsBackEnabled).IsTrue();
     }
 
+    /// <summary>Provides the AvaloniaGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
@@ -80,19 +86,38 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(navigationView.IsBackEnabled).IsFalse();
     }
 
-    private sealed class TestWpfNavigationView : WpfControls.NavigationView;
+    /// <summary>Verifies that Avalonia navigation uses the configured AOT-safe page factory.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task AvaloniaNavigate_WhenPageFactoryIsConfigured_UsesFactory()
+    {
+        var factoryCalls = 0;
+        var item = new AvaloniaControls.NavigationViewItem(
+            "Test page",
+            typeof(AvaloniaTestPage),
+            () =>
+            {
+                factoryCalls++;
+                return new AvaloniaTestPage();
+            });
+        var navigationView = new TestAvaloniaNavigationView();
+        GetFieldValue<Dictionary<Type, AvaloniaControls.INavigationViewItem>>(
+            navigationView,
+            "_pageTypeNavigationViewsDictionary")[typeof(AvaloniaTestPage)] = item;
 
-    private sealed class TestAvaloniaNavigationView : AvaloniaControls.NavigationView;
+        var navigated = navigationView.Navigate(typeof(AvaloniaTestPage));
 
-    private sealed record JournalMoveResult(bool Moved, bool CanGoBack, bool CanGoForward, bool IsBackEnabled);
+        await Assert.That(navigated).IsTrue();
+        await Assert.That(factoryCalls).IsEqualTo(1);
+    }
 
-    private sealed class WpfTestPage : System.Windows.Controls.UserControl;
-
-    private sealed class AvaloniaTestPage : global::Avalonia.Controls.UserControl;
-
+    /// <summary>Provides the SeedWpfAlreadyCurrentJournalMove member.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
+    /// <param name="item">The item value.</param>
+    /// <param name="currentIndex">The currentIndex value.</param>
     private static void SeedWpfAlreadyCurrentJournalMove(
         WpfControls.NavigationView navigationView,
-        WpfControls.INavigationViewItem item,
+        WpfControls.NavigationViewItem item,
         int currentIndex)
     {
         GetFieldValue<Dictionary<string, WpfControls.INavigationViewItem>>(
@@ -104,9 +129,13 @@ public class NavigationViewJournalRegressionTests
         SeedJournal(navigationView, item.Id, currentIndex);
     }
 
+    /// <summary>Provides the SeedAvaloniaAlreadyCurrentJournalMove member.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
+    /// <param name="item">The item value.</param>
+    /// <param name="currentIndex">The currentIndex value.</param>
     private static void SeedAvaloniaAlreadyCurrentJournalMove(
         AvaloniaControls.NavigationView navigationView,
-        AvaloniaControls.INavigationViewItem item,
+        AvaloniaControls.NavigationViewItem item,
         int currentIndex)
     {
         GetFieldValue<Dictionary<string, AvaloniaControls.INavigationViewItem>>(
@@ -118,6 +147,10 @@ public class NavigationViewJournalRegressionTests
         SeedJournal(navigationView, item.Id, currentIndex);
     }
 
+    /// <summary>Provides the SeedJournal member.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
+    /// <param name="itemId">The itemId value.</param>
+    /// <param name="currentIndex">The currentIndex value.</param>
     private static void SeedJournal(object navigationView, string itemId, int currentIndex)
     {
         var journal = GetFieldValue<List<string>>(navigationView, "_journal");
@@ -126,17 +159,29 @@ public class NavigationViewJournalRegressionTests
         SetCurrentIndex(navigationView, currentIndex);
     }
 
+    /// <summary>Provides the GetFieldValue member.</summary>
+    /// <typeparam name="T">The T type.</typeparam>
+    /// <param name="target">The target value.</param>
+    /// <param name="fieldName">The fieldName value.</param>
+    /// <returns>The field value.</returns>
     private static T GetFieldValue<T>(object target, string fieldName)
     {
         var field = FindField(target.GetType(), fieldName);
         return (T)field.GetValue(target)!;
     }
 
+    /// <summary>Provides the SetCurrentIndex member.</summary>
+    /// <param name="navigationView">The navigationView value.</param>
+    /// <param name="currentIndex">The currentIndex value.</param>
     private static void SetCurrentIndex(object navigationView, int currentIndex)
     {
         FindField(navigationView.GetType(), "_currentIndexInJournal").SetValue(navigationView, currentIndex);
     }
 
+    /// <summary>Provides the RunOnStaThread member.</summary>
+    /// <typeparam name="T">The T type.</typeparam>
+    /// <param name="action">The action value.</param>
+    /// <returns>The action result.</returns>
     private static T RunOnStaThread<T>(Func<T> action)
     {
         T? result = default;
@@ -165,6 +210,10 @@ public class NavigationViewJournalRegressionTests
         return result!;
     }
 
+    /// <summary>Provides the FindField member.</summary>
+    /// <param name="type">The type value.</param>
+    /// <param name="fieldName">The fieldName value.</param>
+    /// <returns>The result.</returns>
     private static FieldInfo FindField(Type type, string fieldName)
     {
         var current = type;
@@ -181,4 +230,24 @@ public class NavigationViewJournalRegressionTests
 
         throw new MissingFieldException(type.FullName, fieldName);
     }
+
+    /// <summary>Provides the TestWpfNavigationView member.</summary>
+    private sealed class TestWpfNavigationView : WpfControls.NavigationView;
+
+    /// <summary>Provides the TestAvaloniaNavigationView member.</summary>
+    private sealed class TestAvaloniaNavigationView : AvaloniaControls.NavigationView;
+
+    /// <summary>Provides the WpfTestPage member.</summary>
+    private sealed class WpfTestPage : System.Windows.Controls.UserControl;
+
+    /// <summary>Provides the AvaloniaTestPage member.</summary>
+    private sealed class AvaloniaTestPage : global::Avalonia.Controls.UserControl;
+
+    /// <summary>Provides the JournalMoveResult member.</summary>
+    /// <param name="Moved">The Moved value.</param>
+    /// <param name="CanGoBack">The CanGoBack value.</param>
+    /// <param name="CanGoForward">The CanGoForward value.</param>
+    /// <param name="IsBackEnabled">The IsBackEnabled value.</param>
+    /// <returns>The result.</returns>
+    private sealed record JournalMoveResult(bool Moved, bool CanGoBack, bool CanGoForward, bool IsBackEnabled);
 }

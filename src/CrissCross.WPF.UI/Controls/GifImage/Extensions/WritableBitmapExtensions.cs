@@ -1,25 +1,38 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Imaging;
 
 namespace CrissCross.WPF.UI.Controls.Extensions;
 
+/// <summary>Provides the WritableBitmapExtensions member.</summary>
 internal static class WritableBitmapExtensions
 {
-    public static IDisposable LockInScope(this WriteableBitmap bitmap) => new WriteableBitmapLock(bitmap);
-
-    private class WriteableBitmapLock : IDisposable
+    /// <summary>Provides extension members.</summary>
+    /// <param name="bitmap">The bitmap value.</param>
+    extension(WriteableBitmap bitmap)
     {
+        /// <summary>Provides the LockInScope member.</summary>
+        /// <returns>The result.</returns>
+        public IDisposable LockInScope() => new WriteableBitmapLock(bitmap);
+    }
+
+    /// <summary>Provides the WriteableBitmapLock member.</summary>
+    private sealed class WriteableBitmapLock : IDisposable
+    {
+        /// <summary>Stores the _bitmap value.</summary>
         private readonly WriteableBitmap _bitmap;
 
+        /// <summary>Initializes a new instance of the <see cref="WriteableBitmapLock"/> class.</summary>
+        /// <param name="bitmap">The bitmap value.</param>
         public WriteableBitmapLock(WriteableBitmap bitmap)
         {
             _bitmap = bitmap;
             _bitmap.Lock();
         }
 
+        /// <summary>Provides the Dispose member.</summary>
         public void Dispose()
         {
             _bitmap.Unlock();

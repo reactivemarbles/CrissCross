@@ -1,19 +1,15 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// AlphaSlider.
-/// </summary>
+/// <summary>Represents AlphaSlider.</summary>
 /// <seealso cref="PickerControlBase" />
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
 public partial class AlphaSlider : PickerControlBase
 {
-    /// <summary>
-    /// The small change property.
-    /// </summary>
+    /// <summary>The small change property.</summary>
     public static readonly DependencyProperty SmallChangeProperty =
         DependencyProperty.Register(
             nameof(SmallChange),
@@ -21,14 +17,10 @@ public partial class AlphaSlider : PickerControlBase
             typeof(AlphaSlider),
             new PropertyMetadata(1.0));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AlphaSlider"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="AlphaSlider"/> class.</summary>
     public AlphaSlider() => InitializeComponent();
 
-    /// <summary>
-    /// Gets or sets the small change.
-    /// </summary>
+    /// <summary>Gets or sets the small change.</summary>
     /// <value>
     /// The small change.
     /// </value>

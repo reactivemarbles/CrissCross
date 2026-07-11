@@ -1,38 +1,31 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
-using System.Reactive;
 using System.Windows.Media.Imaging;
-using CP.Reactive.Collections;
 using CrissCross.WPF.UI.Controls;
-using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
-/// <summary>
-/// Person.
-/// </summary>
+/// <summary>Person member.</summary>
 /// <seealso cref="ReactiveTreeItem" />
 public class Person
     : ReactiveTreeItem
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Person"/> class.
-    /// </summary>
+    /// <summary>The height and width of the person icon.</summary>
+    private const int IconSize = 20;
+
+    /// <summary>Initializes a new instance of the <see cref="Person"/> class.</summary>
     /// <param name="name">The name.</param>
     /// <param name="children">The children.</param>
     public Person(string? name, IEnumerable<ReactiveTreeItem>? children = null)
         : base(children)
     {
         DisplayName = name;
-        Icon = new ImageIcon() { Height = 20, Width = 20, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
+        Icon = new ImageIcon() { Height = IconSize, Width = IconSize, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
     }
 
-    /// <summary>
-    /// Gets the view model.
-    /// </summary>
+    /// <summary>Gets the view model.</summary>
     /// <value>
     /// The view model.
     /// </value>

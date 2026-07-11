@@ -1,23 +1,18 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
 using ReactiveUI.Builder;
 
-namespace CrissCross.WPF.UI.CC_Nav.Test
+namespace CrissCross.WPF.UI.CC_Nav.Test;
+
+/// <summary>Interaction logic for App.xaml.</summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml.
-    /// </summary>
-    public partial class App : Application
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="App"/> class and configures the application to use ReactiveUI with WPF.
-        /// </summary>
-        /// <remarks>This constructor sets up the application's reactive infrastructure by integrating
-        /// ReactiveUI with the WPF platform. Use this constructor when creating a WPF application that leverages
-        /// ReactiveUI for MVVM and reactive programming patterns.</remarks>
-        public App() => RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
-    }
+    /// <summary>Initializes a new instance of the <see cref="App"/> class and configures the application to use ReactiveUI with WPF.</summary>
+    /// <remarks>This constructor sets up the application's reactive infrastructure by integrating
+    /// ReactiveUI with the WPF platform. Use this constructor when creating a WPF application that leverages
+    /// ReactiveUI for MVVM and reactive programming patterns.</remarks>
+    public App() => RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
 }

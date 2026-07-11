@@ -1,20 +1,16 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
-/// <summary>
-/// MainViewModel.
-/// </summary>
+/// <summary>MainViewModel member.</summary>
 /// <seealso cref="CrissCross.RxObject" />
 public partial class MainViewModel : RxObject
 {
-    /// <summary>
-    /// Gets the application xaml setup.
-    /// </summary>
+    /// <summary>Gets the application xaml setup.</summary>
     /// <value>
     /// The application xaml setup.
     /// </value>
@@ -39,9 +35,7 @@ public partial class MainViewModel : RxObject
         """
 ;
 
-    /// <summary>
-    /// Gets the main window xaml setup.
-    /// </summary>
+    /// <summary>Gets the main window xaml setup.</summary>
     /// <value>
     /// The main window xaml setup.
     /// </value>
@@ -78,15 +72,12 @@ public partial class MainViewModel : RxObject
         </ui:FluentNavigationWindow>
         """;
 
-    /// <summary>
-    /// Gets the main window xaml cs setup.
-    /// </summary>
+    /// <summary>Gets the main window xaml cs setup.</summary>
     /// <value>
     /// The main window xaml cs setup.
     /// </value>
     [Reactive]
     private string _mainWindowXamlCsSetup = """
-        using System.Reactive.Disposables;
         using System.Windows;
         using CrissCross.WPF.UI.Appearance;
         using CrissCross.WPF.UI.Gallery.ViewModels;
@@ -95,23 +86,17 @@ public partial class MainViewModel : RxObject
 
         namespace CrissCross.WPF.UI.Gallery;
 
-        /// <summary>
-        /// Interaction logic for MainWindow.xaml.
-        /// </summary>
+        /// <summary>Interaction logic for MainWindow.xaml.</summary>
         public partial class MainWindow : IAmBuilt
         {
-            /// <summary>
-            /// The tracker property.
-            /// </summary>
+            /// <summary>The tracker property.</summary>
             public static readonly DependencyProperty TrackerProperty = DependencyProperty.Register(
                 nameof(Tracker),
                 typeof(Tracker),
                 typeof(MainWindow),
                 new PropertyMetadata(null));
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="MainWindow"/> class.
-            /// </summary>
+            /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
             public MainWindow()
             {
                 // Watch for system theme changes

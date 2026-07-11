@@ -1,55 +1,44 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Inherited from the <see cref="Avalonia.Controls.Expander"/> control which can hide the collapsible content.
-/// </summary>
+/// <summary>Inherited from the <see cref="global::Avalonia.Controls.Expander"/> control which can hide the collapsible content.</summary>
 public class CardExpander : global::Avalonia.Controls.Expander
 {
-    /// <summary>
-    /// Property for <see cref="Icon"/>.
-    /// </summary>
-    public static readonly StyledProperty<object> IconProperty = AvaloniaProperty.Register<CardExpander, object>(
-        nameof(Icon), null);
+    /// <summary>Property for <see cref="Icon"/>.</summary>
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardExpander, object?>(
+        nameof(Icon),
+        null);
 
-    /// <summary>
-    /// Property for <see cref="CornerRadius"/>.
-    /// </summary>
-    public static readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardExpander, CornerRadius>(
-        nameof(CornerRadius), new CornerRadius(4));
+    /// <summary>Property for <see cref="CornerRadius"/>.</summary>
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardExpander, CornerRadius>(
+        nameof(CornerRadius),
+        new CornerRadius(4));
 
-    /// <summary>
-    /// Property for <see cref="ContentPadding"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="ContentPadding"/>.</summary>
     public static readonly StyledProperty<Thickness> ContentPaddingProperty = AvaloniaProperty.Register<CardExpander, Thickness>(
-        nameof(ContentPadding), default);
+        nameof(ContentPadding),
+        default);
 
-    /// <summary>
-    /// Gets or sets displayed icon.
-    /// </summary>
+    /// <summary>Gets or sets displayed icon.</summary>
     public object? Icon
     {
         get => GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the corner radius.
-    /// </summary>
-    public CornerRadius CornerRadius
+    /// <summary>Gets or sets the corner radius.</summary>
+    public new CornerRadius CornerRadius
     {
         get => GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets content padding.
-    /// </summary>
+    /// <summary>Gets or sets content padding.</summary>
     public Thickness ContentPadding
     {
         get => GetValue(ContentPaddingProperty);

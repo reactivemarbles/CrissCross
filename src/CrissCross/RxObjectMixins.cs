@@ -1,139 +1,157 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using ReactiveUI;
 using Splat;
 
 namespace CrissCross;
 
-#pragma warning disable RCS1175 // Unused 'this' parameter.
-/// <summary>
-/// RxObjectMixins.
-/// </summary>
-#if NET8_0_OR_GREATER
-[RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-[RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
-#endif
+/// <summary>Provides build and observable collection helpers.</summary>
 public static class RxObjectMixins
 {
-    private static readonly ReplaySubject<Unit> _buildCompleteSubject = new(1);
+    /// <summary>Signals when dependency registration has completed.</summary>
+    private static readonly ReplaySignal<Unit> _buildCompleteSubject = new(1);
 
-    /// <summary>
-    /// Sets the IOC container build complete, Execute this once after completion of IOC registrations.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    public static void SetupComplete(this IMutableDependencyResolver dummy) => _buildCompleteSubject.OnNext(Unit.Default);
-
-    /// <summary>
-    /// Gets the build complete.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="action">The action.</param>
-    /// <value>The build complete.</value>
-    public static void BuildComplete(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
-
-    /// <summary>
-    /// Gets the build complete and returns IDisposable to unsubscribe.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="action">The action.</param>
-    /// <returns>IDisposable subscription.</returns>
-    public static IDisposable BuildCompleteDisposable(this IAmBuilt dummy, Action action) => _buildCompleteSubject.Subscribe(_ => action());
-
-    /// <summary>
-    /// Converts to listofobservable.
-    /// </summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <typeparam name="TResult">The type of the result.</typeparam>
-    /// <param name="source">The source.</param>
-    /// <param name="predicate">The predicate.</param>
-    /// <returns>An IObservable of IEnumerable of IObservable of TResult.</returns>
-    public static IObservable<IEnumerable<IObservable<TResult>>> ToListOfObservables<T, TResult>(this IObservable<IEnumerable<T>> source, Expression<Func<T, TResult>> predicate)
-        where T : ReactiveObject =>
-        Observable.Create<IEnumerable<IObservable<TResult>>>(o =>
-        {
-            var disposable = new CompositeDisposable();
-            var result = new List<IObservable<TResult>>();
-            source.Subscribe(l =>
-            {
-                if (l == null)
-                {
-                    return;
-                }
-
-                result.Clear();
-                foreach (var item in l)
-                {
-                    result.Add(item.WhenAnyValue(predicate));
-                }
-
-                o.OnNext(result);
-            }).DisposeWith(disposable);
-            return disposable;
-        });
-
-    /// <summary>
-    /// Any observable in the list is true.
-    /// </summary>
-    /// <typeparam name="T">The type.</typeparam>
-    /// <param name="sourceList">The source list.</param>
-    /// <param name="predicate">The predicate.</param>
-    /// <returns>
-    /// An IObservable of bool.
-    /// </returns>
-    public static IObservable<bool> AnyMatch<T>(this IObservable<IEnumerable<IObservable<T>>> sourceList, Func<T, bool> predicate) =>
-    Observable.Create<bool>(o =>
+    /// <summary>Provides build-completion helpers for build-aware objects.</summary>
+    /// <param name="target">The build-aware object.</param>
+    extension(IAmBuilt target)
     {
-        var disposable = new CompositeDisposable();
-        var dis = new CompositeDisposable();
-        var valueDict = new Dictionary<IObservable<T>, T>();
-        var lastResult = false;
-        var first = true;
-        sourceList.Subscribe(l =>
+        /// <summary>Runs an action when the IOC container build has completed.</summary>
+        /// <param name="action">The action.</param>
+        public void BuildComplete(Action action)
         {
-            if (l?.Any() != true)
-            {
-                return;
-            }
+            ThrowHelper.ThrowIfNull(target, nameof(target));
+            ThrowHelper.ThrowIfNull(action, nameof(action));
+            _ = _buildCompleteSubject.Subscribe(unused => action());
+        }
 
-            dis?.Dispose();
-            dis = [];
-            valueDict.Clear();
-            if (first)
-            {
-                first = false;
-                o.OnNext(false);
-            }
+        /// <summary>Subscribes to IOC build completion and returns an IDisposable to unsubscribe.</summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The subscription.</returns>
+        public IDisposable BuildCompleteDisposable(Action action)
+        {
+            ThrowHelper.ThrowIfNull(target, nameof(target));
+            ThrowHelper.ThrowIfNull(action, nameof(action));
+            return _buildCompleteSubject.Subscribe(unused => action());
+        }
+    }
 
-            foreach (var rti in l)
+    /// <summary>Provides build-completion setup for the dependency resolver.</summary>
+    /// <param name="resolver">The dependency resolver.</param>
+    extension(IMutableDependencyResolver resolver)
+    {
+        /// <summary>Sets the IOC container build complete, Execute this once after completion of IOC registrations.</summary>
+        public void SetupComplete()
+        {
+            ThrowHelper.ThrowIfNull(resolver, nameof(resolver));
+            _buildCompleteSubject.OnNext(Unit.Default);
+        }
+    }
+
+    /// <summary>Provides matching helpers for observable lists of observables.</summary>
+    /// <typeparam name="T">The observed value type.</typeparam>
+    /// <param name="sourceList">The observable list of observable values.</param>
+    extension<T>(IObservable<IEnumerable<IObservable<T>>> sourceList)
+    {
+        /// <summary>Returns true when any observable in the current list matches the predicate.</summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>An observable boolean result.</returns>
+        public IObservable<bool> AnyMatch(Func<T, bool> predicate) =>
+            Observable.Create<bool>(observer =>
             {
-                valueDict[rti] = default!;
-                rti.Subscribe(x =>
+                ThrowHelper.ThrowIfNull(sourceList, nameof(sourceList));
+                ThrowHelper.ThrowIfNull(predicate, nameof(predicate));
+
+                var disposable = new CompositeDisposable();
+                var innerSubscriptions = new SerialDisposable();
+                var valuesByObservable = new Dictionary<IObservable<T>, T>();
+                var lastResult = false;
+                var first = true;
+
+                void Publish(bool result)
                 {
-                    valueDict[rti] = x;
-                    var result = valueDict.Values.Any(predicate);
-                    if (result != lastResult)
+                    if (!first && result == lastResult)
                     {
-                        lastResult = result;
-                        o.OnNext(result);
+                        return;
                     }
-                }).DisposeWith(dis);
-            }
-        }).DisposeWith(disposable);
-        disposable.Add(dis);
-        return disposable;
-    });
-}
-#pragma warning restore RCS1175 // Unused 'this' parameter.
 
+                    first = false;
+                    lastResult = result;
+                    observer.OnNext(result);
+                }
+
+                _ = sourceList.Subscribe(items =>
+                {
+                    if (items is null)
+                    {
+                        return;
+                    }
+
+                    var currentInnerSubscriptions = new CompositeDisposable();
+                    innerSubscriptions.Disposable = currentInnerSubscriptions;
+                    valuesByObservable.Clear();
+
+                    var hasItems = false;
+                    foreach (var itemObservable in items)
+                    {
+                        hasItems = true;
+                        _ = itemObservable.Subscribe(value =>
+                        {
+                            valuesByObservable[itemObservable] = value;
+                            Publish(valuesByObservable.Values.Any(predicate));
+                        }).DisposeWith(currentInnerSubscriptions);
+                    }
+
+                    Publish(hasItems && valuesByObservable.Values.Any(predicate));
+                }).DisposeWith(disposable);
+
+                disposable.Add(innerSubscriptions);
+                return disposable;
+            });
+    }
+
+    /// <summary>Provides projection helpers for observable lists.</summary>
+    /// <typeparam name="T">The source item type.</typeparam>
+    /// <param name="source">The observable sequence of source items.</param>
+    extension<T>(IObservable<IEnumerable<T>> source)
+        where T : ReactiveObject
+    {
+        /// <summary>Converts items into observables for the selected property.</summary>
+        /// <typeparam name="TResult">The selected property type.</typeparam>
+        /// <param name="predicate">The property selector.</param>
+        /// <returns>An observable of item property observables.</returns>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Evaluates expression-based member chains via reflection; members may be trimmed.")]
+#endif
+        public IObservable<IEnumerable<IObservable<TResult>>> ToListOfObservables<TResult>(Expression<Func<T, TResult>> predicate) =>
+            Observable.Create<IEnumerable<IObservable<TResult>>>(observer =>
+            {
+                ThrowHelper.ThrowIfNull(source, nameof(source));
+                ThrowHelper.ThrowIfNull(predicate, nameof(predicate));
+
+                var disposable = new CompositeDisposable();
+                var result = new List<IObservable<TResult>>();
+                _ = source.Subscribe(items =>
+                {
+                    if (items is null)
+                    {
+                        return;
+                    }
+
+                    result.Clear();
+                    foreach (var item in items)
+                    {
+                        result.Add(item.WhenAnyValue(predicate));
+                    }
+
+                    observer.OnNext(result);
+                }).DisposeWith(disposable);
+                return disposable;
+            });
+    }
+}

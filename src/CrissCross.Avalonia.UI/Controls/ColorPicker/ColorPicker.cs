@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -9,127 +9,108 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Represents a control that lets a user pick a color using sliders and a color preview.
-/// </summary>
+/// <summary>Represents a control that lets a user pick a color using sliders and a color preview.</summary>
 public class ColorPicker : TemplatedControl
 {
-    /// <summary>
-    /// Property for <see cref="Color"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Color"/>.</summary>
     public static readonly StyledProperty<Color> ColorProperty =
         AvaloniaProperty.Register<ColorPicker, Color>(nameof(Color), Colors.Red);
 
-    /// <summary>
-    /// Property for <see cref="Red"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Red"/>.</summary>
     public static readonly StyledProperty<byte> RedProperty =
         AvaloniaProperty.Register<ColorPicker, byte>(nameof(Red), 255);
 
-    /// <summary>
-    /// Property for <see cref="Green"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Green"/>.</summary>
     public static readonly StyledProperty<byte> GreenProperty =
         AvaloniaProperty.Register<ColorPicker, byte>(nameof(Green), 0);
 
-    /// <summary>
-    /// Property for <see cref="Blue"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Blue"/>.</summary>
     public static readonly StyledProperty<byte> BlueProperty =
         AvaloniaProperty.Register<ColorPicker, byte>(nameof(Blue), 0);
 
-    /// <summary>
-    /// Property for <see cref="Alpha"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Alpha"/>.</summary>
     public static readonly StyledProperty<byte> AlphaProperty =
         AvaloniaProperty.Register<ColorPicker, byte>(nameof(Alpha), 255);
 
-    /// <summary>
-    /// Property for <see cref="IsAlphaEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsAlphaEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsAlphaEnabledProperty =
         AvaloniaProperty.Register<ColorPicker, bool>(nameof(IsAlphaEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="HexValue"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="HexValue"/>.</summary>
     public static readonly StyledProperty<string> HexValueProperty =
         AvaloniaProperty.Register<ColorPicker, string>(nameof(HexValue), "#FF0000");
 
+    /// <summary>Provides the _isUpdating member.</summary>
     private bool _isUpdating;
+
+    /// <summary>Provides the _redSlider member.</summary>
     private global::Avalonia.Controls.Slider? _redSlider;
+
+    /// <summary>Provides the _greenSlider member.</summary>
     private global::Avalonia.Controls.Slider? _greenSlider;
+
+    /// <summary>Provides the _blueSlider member.</summary>
     private global::Avalonia.Controls.Slider? _blueSlider;
+
+    /// <summary>Provides the _alphaSlider member.</summary>
     private global::Avalonia.Controls.Slider? _alphaSlider;
+
+    /// <summary>Provides the _colorPreview member.</summary>
     private global::Avalonia.Controls.Border? _colorPreview;
+
+    /// <summary>Provides the _hexTextBox member.</summary>
     private global::Avalonia.Controls.TextBox? _hexTextBox;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ColorPicker"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ColorPicker"/> class.</summary>
     public ColorPicker()
     {
         UpdateColorFromComponents();
         UpdateHexValue();
     }
 
-    /// <summary>
-    /// Gets or sets the currently selected color.
-    /// </summary>
+    /// <summary>Gets or sets the currently selected color.</summary>
     public Color Color
     {
         get => GetValue(ColorProperty);
         set => SetValue(ColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the red component of the color (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the red component of the color (0-255).</summary>
     public byte Red
     {
         get => GetValue(RedProperty);
         set => SetValue(RedProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the green component of the color (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the green component of the color (0-255).</summary>
     public byte Green
     {
         get => GetValue(GreenProperty);
         set => SetValue(GreenProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the blue component of the color (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the blue component of the color (0-255).</summary>
     public byte Blue
     {
         get => GetValue(BlueProperty);
         set => SetValue(BlueProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the alpha component of the color (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the alpha component of the color (0-255).</summary>
     public byte Alpha
     {
         get => GetValue(AlphaProperty);
         set => SetValue(AlphaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether alpha channel editing is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether alpha channel editing is enabled.</summary>
     public bool IsAlphaEnabled
     {
         get => GetValue(IsAlphaEnabledProperty);
         set => SetValue(IsAlphaEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets the hex representation of the current color.
-    /// </summary>
+    /// <summary>Gets the hex representation of the current color.</summary>
     public string HexValue
     {
         get => GetValue(HexValueProperty);
@@ -172,22 +153,22 @@ public class ColorPicker : TemplatedControl
         }
 
         // Unsubscribe from old sliders
-        if (_redSlider != null)
+        if (_redSlider is not null)
         {
             _redSlider.PropertyChanged -= OnSliderValueChanged;
         }
 
-        if (_greenSlider != null)
+        if (_greenSlider is not null)
         {
             _greenSlider.PropertyChanged -= OnSliderValueChanged;
         }
 
-        if (_blueSlider != null)
+        if (_blueSlider is not null)
         {
             _blueSlider.PropertyChanged -= OnSliderValueChanged;
         }
 
-        if (_alphaSlider != null)
+        if (_alphaSlider is not null)
         {
             _alphaSlider.PropertyChanged -= OnSliderValueChanged;
         }
@@ -201,22 +182,22 @@ public class ColorPicker : TemplatedControl
         _hexTextBox = e.NameScope.Find<global::Avalonia.Controls.TextBox>("PART_HexTextBox");
 
         // Subscribe to slider changes
-        if (_redSlider != null)
+        if (_redSlider is not null)
         {
             _redSlider.PropertyChanged += OnSliderValueChanged;
         }
 
-        if (_greenSlider != null)
+        if (_greenSlider is not null)
         {
             _greenSlider.PropertyChanged += OnSliderValueChanged;
         }
 
-        if (_blueSlider != null)
+        if (_blueSlider is not null)
         {
             _blueSlider.PropertyChanged += OnSliderValueChanged;
         }
 
-        if (_alphaSlider != null)
+        if (_alphaSlider is not null)
         {
             _alphaSlider.PropertyChanged += OnSliderValueChanged;
         }
@@ -227,6 +208,9 @@ public class ColorPicker : TemplatedControl
         UpdateHexTextBox();
     }
 
+    /// <summary>Provides the OnSliderValueChanged member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnSliderValueChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property != RangeBase.ValueProperty || _isUpdating)
@@ -253,7 +237,7 @@ public class ColorPicker : TemplatedControl
             Alpha = (byte)_alphaSlider!.Value;
         }
 
-        Color = new Color(Alpha, Red, Green, Blue);
+        Color = new(Alpha, Red, Green, Blue);
         UpdatePreview();
         UpdateHexValue();
         UpdateHexTextBox();
@@ -261,14 +245,16 @@ public class ColorPicker : TemplatedControl
         _isUpdating = false;
     }
 
+    /// <summary>Provides the UpdateColorFromComponents member.</summary>
     private void UpdateColorFromComponents()
     {
         _isUpdating = true;
-        Color = new Color(Alpha, Red, Green, Blue);
+        Color = new(Alpha, Red, Green, Blue);
         UpdatePreview();
         _isUpdating = false;
     }
 
+    /// <summary>Provides the UpdateComponentsFromColor member.</summary>
     private void UpdateComponentsFromColor()
     {
         _isUpdating = true;
@@ -281,6 +267,7 @@ public class ColorPicker : TemplatedControl
         _isUpdating = false;
     }
 
+    /// <summary>Provides the UpdateSlidersFromComponents member.</summary>
     private void UpdateSlidersFromComponents()
     {
         _redSlider?.Value = Red;
@@ -292,11 +279,14 @@ public class ColorPicker : TemplatedControl
         _alphaSlider?.Value = Alpha;
     }
 
+    /// <summary>Provides the UpdatePreview member.</summary>
     private void UpdatePreview() => _colorPreview?.Background = new SolidColorBrush(Color);
 
+    /// <summary>Provides the UpdateHexValue member.</summary>
     private void UpdateHexValue() => HexValue = IsAlphaEnabled
-            ? $"#{Alpha:X2}{Red:X2}{Green:X2}{Blue:X2}"
-            : $"#{Red:X2}{Green:X2}{Blue:X2}";
+        ? $"#{Alpha:X2}{Red:X2}{Green:X2}{Blue:X2}"
+        : $"#{Red:X2}{Green:X2}{Blue:X2}";
 
+    /// <summary>Provides the UpdateHexTextBox member.</summary>
     private void UpdateHexTextBox() => _hexTextBox?.Text = HexValue;
 }

@@ -1,36 +1,32 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Avalonia.UI.Controls;
 
 namespace CrissCross.Avalonia.UI;
 
-/// <summary>
-/// A service that provides methods related to displaying the <see cref="Snackbar"/>.
-/// </summary>
+/// <summary>A service that provides methods related to displaying the <see cref="Snackbar"/>.</summary>
 public class SnackbarService : ISnackbarService
 {
+    /// <summary>Provides the DefaultTimeoutSeconds member.</summary>
+    private const int DefaultTimeoutSeconds = 5;
+
+    /// <summary>Provides the _presenter member.</summary>
     private SnackbarPresenter? _presenter;
 
+    /// <summary>Provides the _snackbar member.</summary>
     private Snackbar? _snackbar;
 
     /// <inheritdoc />
-    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(5);
+    public TimeSpan DefaultTimeOut { get; set; } = TimeSpan.FromSeconds(DefaultTimeoutSeconds);
 
     /// <inheritdoc />
     public void SetSnackbarPresenter(SnackbarPresenter contentPresenter) => _presenter = contentPresenter;
 
     /// <inheritdoc />
-    public SnackbarPresenter GetSnackbarPresenter()
-    {
-        if (_presenter is null)
-        {
-            throw new ArgumentNullException("The SnackbarPresenter didn't set previously.");
-        }
-
-        return _presenter;
-    }
+    public SnackbarPresenter GetSnackbarPresenter() =>
+        _presenter ?? throw new InvalidOperationException("The SnackbarPresenter has not been set.");
 
     /// <inheritdoc />
     public void Show(

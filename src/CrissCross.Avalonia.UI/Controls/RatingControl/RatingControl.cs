@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -10,127 +10,105 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Displays the rating scale with interactive star selection.
-/// </summary>
+/// <summary>Displays the rating scale with interactive star selection.</summary>
 public class RatingControl : TemplatedControl
 {
-    /// <summary>
-    /// Property for <see cref="Value"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Value"/>.</summary>
     public static readonly StyledProperty<double> ValueProperty = AvaloniaProperty.Register<RatingControl, double>(
-        nameof(Value), 0.0);
+        nameof(Value),
+        0.0);
 
-    /// <summary>
-    /// Property for <see cref="MaxRating"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MaxRating"/>.</summary>
     public static readonly StyledProperty<int> MaxRatingProperty = AvaloniaProperty.Register<RatingControl, int>(
-        nameof(MaxRating), 5);
+        nameof(MaxRating),
+        5);
 
-    /// <summary>
-    /// Property for <see cref="HalfStarEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="HalfStarEnabled"/>.</summary>
     public static readonly StyledProperty<bool> HalfStarEnabledProperty = AvaloniaProperty.Register<RatingControl, bool>(
-        nameof(HalfStarEnabled), true);
+        nameof(HalfStarEnabled),
+        true);
 
-    /// <summary>
-    /// Property for <see cref="StarSize"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="StarSize"/>.</summary>
     public static readonly StyledProperty<double> StarSizeProperty = AvaloniaProperty.Register<RatingControl, double>(
-        nameof(StarSize), 24.0);
+        nameof(StarSize),
+        24.0);
 
-    /// <summary>
-    /// Property for <see cref="StarSpacing"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="StarSpacing"/>.</summary>
     public static readonly StyledProperty<double> StarSpacingProperty = AvaloniaProperty.Register<RatingControl, double>(
-        nameof(StarSpacing), 4.0);
+        nameof(StarSpacing),
+        4.0);
 
-    /// <summary>
-    /// Property for <see cref="FilledBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="FilledBrush"/>.</summary>
     public static readonly StyledProperty<IBrush> FilledBrushProperty = AvaloniaProperty.Register<RatingControl, IBrush>(
-        nameof(FilledBrush), Brushes.Gold);
+        nameof(FilledBrush),
+        Brushes.Gold);
 
-    /// <summary>
-    /// Property for <see cref="UnfilledBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="UnfilledBrush"/>.</summary>
     public static readonly StyledProperty<IBrush> UnfilledBrushProperty = AvaloniaProperty.Register<RatingControl, IBrush>(
-        nameof(UnfilledBrush), Brushes.Gray);
+        nameof(UnfilledBrush),
+        Brushes.Gray);
 
-    /// <summary>
-    /// Property for <see cref="IsReadOnly"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsReadOnly"/>.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<RatingControl, bool>(
-        nameof(IsReadOnly), false);
+        nameof(IsReadOnly),
+        false);
 
+    /// <summary>Increment used for half-star ratings.</summary>
+    private const double HalfStarIncrement = 0.5d;
+
+    /// <summary>Provides the _starsPanel member.</summary>
     private global::Avalonia.Controls.StackPanel? _starsPanel;
 
-    /// <summary>
-    /// Gets or sets the rating value.
-    /// </summary>
+    /// <summary>Gets or sets the rating value.</summary>
     public double Value
     {
         get => GetValue(ValueProperty);
         set => SetValue(ValueProperty, Math.Clamp(value, 0, MaxRating));
     }
 
-    /// <summary>
-    /// Gets or sets the maximum allowed rating value.
-    /// </summary>
+    /// <summary>Gets or sets the maximum allowed rating value.</summary>
     public int MaxRating
     {
         get => GetValue(MaxRatingProperty);
         set => SetValue(MaxRatingProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether half of the star can be selected.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether half of the star can be selected.</summary>
     public bool HalfStarEnabled
     {
         get => GetValue(HalfStarEnabledProperty);
         set => SetValue(HalfStarEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the star size.
-    /// </summary>
+    /// <summary>Gets or sets the star size.</summary>
     public double StarSize
     {
         get => GetValue(StarSizeProperty);
         set => SetValue(StarSizeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the spacing between stars.
-    /// </summary>
+    /// <summary>Gets or sets the spacing between stars.</summary>
     public double StarSpacing
     {
         get => GetValue(StarSpacingProperty);
         set => SetValue(StarSpacingProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the filled star brush.
-    /// </summary>
+    /// <summary>Gets or sets the filled star brush.</summary>
     public IBrush FilledBrush
     {
         get => GetValue(FilledBrushProperty);
         set => SetValue(FilledBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the unfilled star brush.
-    /// </summary>
+    /// <summary>Gets or sets the unfilled star brush.</summary>
     public IBrush UnfilledBrush
     {
         get => GetValue(UnfilledBrushProperty);
         set => SetValue(UnfilledBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the control is read-only.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the control is read-only.</summary>
     public bool IsReadOnly
     {
         get => GetValue(IsReadOnlyProperty);
@@ -155,12 +133,14 @@ public class RatingControl : TemplatedControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property == ValueProperty || change.Property == MaxRatingProperty ||
-            change.Property == FilledBrushProperty || change.Property == UnfilledBrushProperty ||
-            change.Property == StarSizeProperty || change.Property == StarSpacingProperty)
+        if (change.Property != ValueProperty && change.Property != MaxRatingProperty &&
+            change.Property != FilledBrushProperty && change.Property != UnfilledBrushProperty &&
+            change.Property != StarSizeProperty && change.Property != StarSpacingProperty)
         {
-            UpdateStars();
+            return;
         }
+
+        UpdateStars();
     }
 
     /// <inheritdoc/>
@@ -170,7 +150,7 @@ public class RatingControl : TemplatedControl
 
         base.OnPointerPressed(e);
 
-        if (IsReadOnly || _starsPanel == null)
+        if (IsReadOnly || _starsPanel is null)
         {
             return;
         }
@@ -186,7 +166,7 @@ public class RatingControl : TemplatedControl
 
         base.OnPointerMoved(e);
 
-        if (IsReadOnly || _starsPanel == null || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        if (IsReadOnly || _starsPanel is null || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             return;
         }
@@ -195,9 +175,11 @@ public class RatingControl : TemplatedControl
         UpdateValueFromPosition(position);
     }
 
+    /// <summary>Provides the UpdateValueFromPosition member.</summary>
+    /// <param name="position">The position value.</param>
     private void UpdateValueFromPosition(Point position)
     {
-        if (_starsPanel == null || _starsPanel.Bounds.Width == 0)
+        if (_starsPanel is null || _starsPanel.Bounds.Width == 0)
         {
             return;
         }
@@ -208,8 +190,8 @@ public class RatingControl : TemplatedControl
         if (HalfStarEnabled)
         {
             var fractionalPart = starIndex - Math.Floor(starIndex);
-            Value = fractionalPart < 0.5
-                ? Math.Floor(starIndex) + 0.5
+            Value = fractionalPart < HalfStarIncrement
+                ? Math.Floor(starIndex) + HalfStarIncrement
                 : Math.Ceiling(starIndex);
         }
         else
@@ -220,9 +202,10 @@ public class RatingControl : TemplatedControl
         Value = Math.Clamp(Value, 0, MaxRating);
     }
 
+    /// <summary>Provides the UpdateStars member.</summary>
     private void UpdateStars()
     {
-        if (_starsPanel == null)
+        if (_starsPanel is null)
         {
             return;
         }
@@ -237,7 +220,7 @@ public class RatingControl : TemplatedControl
             {
                 Width = StarSize,
                 Height = StarSize,
-                Margin = new Thickness(0, 0, StarSpacing, 0)
+                Margin = new(0, 0, StarSpacing, 0)
             };
 
             // Background (unfilled) star
@@ -256,6 +239,9 @@ public class RatingControl : TemplatedControl
         }
     }
 
+    /// <summary>Provides the CreateStarPath member.</summary>
+    /// <param name="fill">The fill value.</param>
+    /// <returns>The result.</returns>
     private global::Avalonia.Controls.Shapes.Path CreateStarPath(IBrush fill)
     {
         // Five-pointed star path

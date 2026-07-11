@@ -1,13 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Extends <see cref="System.Windows.Controls.GridViewColumn"/> with MinWidth and MaxWidth properties.
-/// It can be used with <see cref="ListView"/> when in GridView mode.
-/// </summary>
+/// <summary>Extends <see cref="System.Windows.Controls.GridViewColumn"/> with MinWidth and MaxWidth properties. It can be used with <see cref="ListView"/> when in GridView mode.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:ListView&gt;
@@ -25,24 +22,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// </example>
 public class GridViewColumn : System.Windows.Controls.GridViewColumn
 {
-    // use reflection to get the `_desiredWidth` private field.
-    private static readonly Lazy<FieldInfo> _desiredWidthField =
-        new(
-            () =>
-                typeof(System.Windows.Controls.GridViewColumn).GetField(
-                    "_desiredWidth",
-                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `_desiredWidth` field was not found."));
-
-    // use reflection to get the `UpdateActualWidth` private method.
-    private static readonly Lazy<MethodInfo> _updateActualWidthMethod =
-        new(() => typeof(System.Windows.Controls.GridViewColumn).GetMethod(
-                    "UpdateActualWidth",
-                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found."));
-
     /// <summary>Identifies the <see cref="MinWidth"/> dependency property.</summary>
-#pragma warning disable SA1202 // Elements should be ordered by access
     public static readonly DependencyProperty MinWidthProperty = DependencyProperty.Register(
-#pragma warning restore SA1202 // Elements should be ordered by access
         nameof(MinWidth),
         typeof(double),
         typeof(GridViewColumn),
@@ -55,31 +36,41 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
         typeof(GridViewColumn),
         new FrameworkPropertyMetadata(double.PositiveInfinity, OnMaxWidthChanged));
 
-    /// <summary>
-    /// Gets or sets the minimum width of the column.
-    /// </summary>
+    /// <summary>Uses reflection to get the `_desiredWidth` private field.</summary>
+    private static readonly Lazy<FieldInfo> _desiredWidthField =
+        new(
+            () =>
+                typeof(System.Windows.Controls.GridViewColumn).GetField(
+                    "_desiredWidth",
+                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `_desiredWidth` field was not found."));
+
+    /// <summary>Uses reflection to get the `UpdateActualWidth` private method.</summary>
+    private static readonly Lazy<MethodInfo> _updateActualWidthMethod =
+        new(() => typeof(System.Windows.Controls.GridViewColumn).GetMethod(
+                    "UpdateActualWidth",
+                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found."));
+
+    /// <summary>Gets or sets the minimum width of the column.</summary>
     public double MinWidth
     {
         get => (double)GetValue(MinWidthProperty);
         set => SetValue(MinWidthProperty, value);
     }
 
-    /// <summary>
-    /// gets or sets the maximum width of the column.
-    /// </summary>
+    /// <summary>Gets or sets the gets or sets the maximum width of the column. value.</summary>
     public double MaxWidth
     {
         get => (double)GetValue(MaxWidthProperty);
         set => SetValue(MaxWidthProperty, value);
     }
 
+    /// <summary>Gets the DesiredWidthField value.</summary>
     private static FieldInfo DesiredWidthField => _desiredWidthField.Value;
 
+    /// <summary>Gets the UpdateActualWidthMethod value.</summary>
     private static MethodInfo UpdateActualWidthMethod => _updateActualWidthMethod.Value;
 
-    /// <summary>
-    /// Updates the desired width of the column to be clamped between MinWidth and MaxWidth).
-    /// </summary>
+    /// <summary>Updates the desired width of the column to be clamped between MinWidth and MaxWidth).</summary>
     /// <remarks>
     /// Uses reflection to directly set the private `_desiredWidth` field on the `System.Windows.Controls.GridViewColumn`.
     /// </remarks>
@@ -96,24 +87,23 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
         _ = UpdateActualWidthMethod.Invoke(this, null);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:MinWidthChanged" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:MinWidthChanged" /> event.</summary>
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnMinWidthChanged(DependencyPropertyChangedEventArgs e)
     {
         // Hook for derived classes to react to MinWidth property changes
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:MaxWidthChanged" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:MaxWidthChanged" /> event.</summary>
     /// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
     protected virtual void OnMaxWidthChanged(DependencyPropertyChangedEventArgs e)
     {
         // Hook for derived classes to react to MaxWidth property changes
     }
 
+    /// <summary>Provides the OnMinWidthChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnMinWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not GridViewColumn self)
@@ -124,6 +114,9 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
         self.OnMinWidthChanged(e);
     }
 
+    /// <summary>Provides the OnMaxWidthChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnMaxWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not GridViewColumn self)

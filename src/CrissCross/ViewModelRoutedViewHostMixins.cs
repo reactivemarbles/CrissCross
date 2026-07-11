@@ -1,16 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using ReactiveUI;
 using Splat;
@@ -24,405 +18,513 @@ using Splat;
 
 namespace CrissCross;
 
-/// <summary>
-/// View Model Routed View Host Mixins.
-/// </summary>
+/// <summary>Provides navigation helpers for routed view hosts.</summary>
 public static class ViewModelRoutedViewHostMixins
 {
+    /// <summary>Coordinates access to shared navigation host state.</summary>
     private static readonly object _lockObject = new();
 
-    internal static ReplaySubject<Unit> ASetupCompleted { get; } = new(1);
+    /// <summary>Gets the signal that at least one navigation host setup has completed.</summary>
+    internal static ReplaySignal<Unit> ASetupCompleted { get; } = new(1);
 
+    /// <summary>Gets the view-scoped disposables by navigation host name.</summary>
     internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = [];
 
+    /// <summary>Gets the registered navigation hosts by name.</summary>
     internal static Dictionary<string, IViewModelRoutedViewHost> NavigationHost { get; } = [];
 
-    internal static Dictionary<string, Subject<IViewModelNavigatingEventArgs>> ResultNavigating { get; } = [];
+    /// <summary>Gets the navigating event signals by host name.</summary>
+    internal static Dictionary<string, Signal<IViewModelNavigatingEventArgs>> ResultNavigating { get; } = [];
 
-    internal static Subject<IViewModelNavigationEventArgs> SetWhenNavigated { get; } = new();
+    /// <summary>Gets the completed navigation event signal.</summary>
+    internal static Signal<IViewModelNavigationEventArgs> SetWhenNavigated { get; } = new();
 
-    internal static Subject<IViewModelNavigatingEventArgs> SetWhenNavigating { get; } = new();
+    /// <summary>Gets the pending navigation event signal.</summary>
+    internal static Signal<IViewModelNavigatingEventArgs> SetWhenNavigating { get; } = new();
 
-    internal static Dictionary<string, ReplaySubject<bool>> WhenSetupSubjects { get; } = [];
+    /// <summary>Gets the setup-completion signals by host name.</summary>
+    internal static Dictionary<string, ReplaySignal<bool>> WhenSetupSubjects { get; } = [];
 
-    /// <summary>
-    /// Determines whether this instance [can navigate back] the specified this.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <returns>A bool.</returns>
-#if NET8_0_OR_GREATER
-    [RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-    [RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
-#endif
-    public static IObservable<bool> CanNavigateBack(this IUseNavigation @this)
+    /// <summary>Provides navigation event helpers.</summary>
+    /// <param name="navigation">The navigation notification owner.</param>
+    extension(INotifiyNavigation navigation)
     {
-        if (@this == null)
+        /// <summary>Registers a handler for navigation-from notifications.</summary>
+        /// <param name="handler">The navigation handler.</param>
+        public void WhenNavigatedFrom(Action<IViewModelNavigationEventArgs> handler)
         {
-            throw new ArgumentNullException(nameof(@this));
-        }
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            ThrowHelper.ThrowIfNull(handler, nameof(handler));
 
-        return Observable.Create<bool>(obs =>
-        {
-            var dis = new CompositeDisposable();
-            @this.WhenSetup().Subscribe(_ =>
-            {
-                if (NavigationHost.Count > 0 && @this.Name != null && @this.TryGetNavigationHost(out var host) && host != null)
+            navigation.ISetupNavigatedFrom = true;
+            var vm = (navigation as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
+            _ = SetWhenNavigated
+                .Where(x => x.From is not null && x.From.Name == vm?.Name)
+                .Subscribe(args =>
                 {
-                    host.CanNavigateBackObservable
-                    .DistinctUntilChanged()
-                    .Subscribe(x => obs.OnNext(x == true))
-                    .DisposeWith(dis);
-                }
-            }).DisposeWith(dis);
+                    handler(args);
+                    args.From?.WhenNavigatedFrom(args);
+                })
+                .DisposeWith(navigation.CleanUp);
+        }
 
-            obs.OnNext(false);
+        /// <summary>Registers a handler for navigation-to notifications.</summary>
+        /// <param name="handler">The navigation handler.</param>
+        public void WhenNavigatedTo(Action<IViewModelNavigationEventArgs, CompositeDisposable> handler)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            ThrowHelper.ThrowIfNull(handler, nameof(handler));
 
-            return dis;
-        });
+            navigation.ISetupNavigatedTo = true;
+            var vm = (navigation as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
+            _ = SetWhenNavigated
+                .Where(x => x?.To?.Name == vm?.Name)
+                .Subscribe(args =>
+                {
+                    var disposable = GetCurrentViewDisposable(args);
+                    handler(args, disposable);
+                    args.To?.WhenNavigatedTo(args, disposable);
+                })
+                .DisposeWith(navigation.CleanUp);
+        }
+
+        /// <summary>Registers a handler for pending navigation notifications.</summary>
+        /// <param name="handler">The navigation handler.</param>
+        public void WhenNavigating(Func<IViewModelNavigatingEventArgs, IViewModelNavigatingEventArgs> handler)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            ThrowHelper.ThrowIfNull(handler, nameof(handler));
+
+            navigation.ISetupNavigating = true;
+            var vm = (navigation as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
+            _ = SetWhenNavigating
+                .Where(x => x?.From is null || x.From.Name == vm?.Name)
+                .Subscribe(args =>
+                {
+                    if (args is null)
+                    {
+                        return;
+                    }
+
+                    if (args.From is not null)
+                    {
+                        _ = handler(args);
+                    }
+
+                    args.From?.WhenNavigating(args);
+                    if (!ResultNavigating.TryGetValue(args.HostName!, out var resultNavigating))
+                    {
+                        return;
+                    }
+
+                    resultNavigating.OnNext(args);
+                })
+                .DisposeWith(navigation.CleanUp);
+        }
     }
 
-    /// <summary>
-    /// Determines whether this instance [can navigate back] the specified host name.
-    /// </summary>
-    /// <param name="this">The navigation host.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <returns>
-    /// A bool.
-    /// </returns>
-    public static IObservable<bool> CanNavigateBack(this IUseHostedNavigation @this, string hostName = "")
+    /// <summary>Provides setup helpers for navigation hosts.</summary>
+    /// <param name="navigation">The navigation setup owner.</param>
+    extension(ISetNavigation navigation)
     {
-        if (@this == null)
+        /// <summary>Sets the main navigation host.</summary>
+        /// <param name="viewHost">The view host.</param>
+        public void SetMainNavigationHost(IViewModelRoutedViewHost viewHost)
         {
-            throw new ArgumentNullException(nameof(@this));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            ThrowHelper.ThrowIfNull(viewHost, nameof(viewHost));
+
+            var hostKeys = CreateHostKeys(navigation, viewHost);
+            var hostKey = hostKeys[0];
+            EnsureViewHostName(viewHost, hostKey, hostKeys);
+            RegisterNavigationHostAliases(hostKeys, viewHost);
+            SetupViewHostIfRequired(viewHost);
+            ASetupCompleted.OnNext(Unit.Default);
+            PublishHostSetup(hostKey);
         }
-
-        return Observable.Create<bool>(obs =>
-         {
-             var dis = new CompositeDisposable();
-             @this.WhenSetup(hostName).Subscribe(_ =>
-             {
-                 if (NavigationHost.Count > 0 && hostName != null && TryGetNavigationHost(hostName, out var value) && value != null)
-                 {
-                     value.CanNavigateBackObservable
-                         .DistinctUntilChanged()
-                         .Subscribe(x => obs.OnNext(x == true))
-                         .DisposeWith(dis);
-                 }
-             }).DisposeWith(dis);
-
-             obs.OnNext(false);
-
-             return dis;
-         });
     }
 
-    /// <summary>
-    /// Clears the history.
-    /// </summary>
-    /// <param name="this">The dummy.</param>
-    public static void ClearHistory(this IUseNavigation @this)
+    /// <summary>Provides host-name based navigation helpers.</summary>
+    /// <param name="navigation">The hosted navigation owner.</param>
+    extension(IUseHostedNavigation navigation)
     {
-        if (@this == null)
+        /// <summary>Gets a value indicating whether the named host can navigate back.</summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <returns>An observable back-navigation state.</returns>
+        public IObservable<bool> CanNavigateBack(string hostName = "")
         {
-            throw new ArgumentNullException(nameof(@this));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            return Observable.Create<bool>(observer =>
+            {
+                var disposable = new CompositeDisposable();
+                _ = navigation.WhenSetup(hostName).Subscribe(unused =>
+                {
+                    if (NavigationHost.Count == 0 || hostName is null || !TryGetNavigationHost(hostName, out var host) || host is null)
+                    {
+                        return;
+                    }
+
+                    _ = host.CanNavigateBackObservable
+                        .DistinctUntilChanged()
+                        .Subscribe(x => observer.OnNext(x == true))
+                        .DisposeWith(disposable);
+                }).DisposeWith(disposable);
+
+                observer.OnNext(false);
+                return disposable;
+            });
         }
 
-        if (NavigationHost.Count == 0)
+        /// <summary>Clears the history for the named navigation host.</summary>
+        /// <param name="hostName">Name of the host.</param>
+        public void ClearHistory(string hostName = "")
         {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(hostName).ClearHistory();
         }
 
-        GetRequiredNavigationHost(@this.Name).ClearHistory();
+        /// <summary>Navigates backward on the named host.</summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        /// <returns>The target view model.</returns>
+        public IRxObject? NavigateBack(string? hostName = "", object? parameter = null)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            return GetRequiredNavigationHost(hostName).NavigateBack(parameter);
+        }
+
+        /// <summary>Navigates the named host to the requested view model type.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateToView<T>(string? hostName = "", string? contract = null, object? parameter = null)
+            where T : class, IRxObject
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(hostName).Navigate<T>(contract, parameter);
+        }
+
+        /// <summary>Navigates the named host to the requested view model type.</summary>
+        /// <param name="rxObject">The view model type.</param>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
+#endif
+        public void NavigateToView(Type rxObject, string? hostName = "", string? contract = null, object? parameter = null)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedView(GetRequiredNavigationHost(hostName), rxObject, contract, parameter);
+        }
+
+        /// <summary>Navigates the named host to the registered navigation key.</summary>
+        /// <typeparam name="TNavigationKey">The caller-facing view model or view lookup key.</typeparam>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo<TNavigationKey>(string? hostName = "", string? contract = null, object? parameter = null)
+            where TNavigationKey : class
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(hostName), typeof(TNavigationKey), contract, parameter);
+        }
+
+        /// <summary>Navigates the named host to the registered navigation key.</summary>
+        /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo(Type navigationKey, string? hostName = "", string? contract = null, object? parameter = null)
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(hostName), navigationKey, contract, parameter);
+        }
+
+        /// <summary>Navigates the named host to the requested view model type and clears history.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateToViewAndClearHistory<T>(string hostName = "", string? contract = null, object? parameter = null)
+            where T : class, IRxObject
+        {
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(hostName).NavigateAndReset<T>(contract, parameter);
+        }
+
+        /// <summary>Notifies when the named host is setup.</summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <returns>An observable setup state.</returns>
+        public IObservable<bool> WhenSetup(string? hostName = "") =>
+            Observable.Create<bool>(observer =>
+            {
+                ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+                var disposable = new CompositeDisposable();
+                _ = ASetupCompleted.Subscribe(unused =>
+                {
+                    if (!TryGetNavigationHost(hostName, out var host) || host is null)
+                    {
+                        return;
+                    }
+
+                    if (!WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
+                    {
+                        return;
+                    }
+
+                    _ = whenSetup.Where(x => x).Subscribe(observer).DisposeWith(disposable);
+                }).DisposeWith(disposable);
+                return disposable;
+            });
     }
 
-    /// <summary>
-    /// Clears the history.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="hostName">Name of the host.</param>
-    public static void ClearHistory(this IUseHostedNavigation dummy, string hostName = "")
+    /// <summary>Provides primary host navigation helpers.</summary>
+    /// <param name="navigation">The primary navigation owner.</param>
+    extension(IUseNavigation navigation)
     {
-        if (dummy == null)
+        /// <summary>Gets a value indicating whether the primary host can navigate back.</summary>
+        /// <returns>An observable back-navigation state.</returns>
+        public IObservable<bool> CanNavigateBack()
         {
-            throw new ArgumentNullException(nameof(dummy));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            return Observable.Create<bool>(observer =>
+            {
+                var disposable = new CompositeDisposable();
+                _ = navigation.WhenSetup().Subscribe(unused =>
+                {
+                    if (NavigationHost.Count == 0 || navigation.Name is null || !TryGetNavigationHost(navigation.Name, out var host) || host is null)
+                    {
+                        return;
+                    }
+
+                    _ = host.CanNavigateBackObservable
+                        .DistinctUntilChanged()
+                        .Subscribe(x => observer.OnNext(x == true))
+                        .DisposeWith(disposable);
+                }).DisposeWith(disposable);
+
+                observer.OnNext(false);
+                return disposable;
+            });
         }
 
-        if (NavigationHost.Count == 0)
+        /// <summary>Clears the history for the primary navigation host.</summary>
+        public void ClearHistory()
         {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(navigation.Name).ClearHistory();
         }
 
-        GetRequiredNavigationHost(hostName).ClearHistory();
-    }
-
-    /// <summary>
-    /// Navigates the back.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <param name="parameter">The parameter.</param>
-    public static void NavigateBack(this IUseNavigation @this, object? parameter = null)
-    {
-        if (@this == null)
+        /// <summary>Navigates backward on the primary host.</summary>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateBack(object? parameter = null)
         {
-            throw new ArgumentNullException(nameof(@this));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            _ = GetRequiredNavigationHost(navigation.Name).NavigateBack(parameter);
         }
 
-        if (NavigationHost.Count == 0)
+        /// <summary>Navigates the primary host to the requested view model type.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateToView<T>(string? contract = null, object? parameter = null)
+            where T : class, IRxObject
         {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(navigation.Name).Navigate<T>(contract, parameter);
         }
 
-        GetRequiredNavigationHost(@this.Name).NavigateBack(parameter);
-    }
-
-    /// <summary>
-    /// Navigates backwards.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <returns>The target ViewModel.</returns>
-    /// <exception cref="System.InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
-    public static IRxObject? NavigateBack(this IUseHostedNavigation dummy, string? hostName = "", object? parameter = null)
-    {
-        if (dummy == null)
+        /// <summary>Navigates the primary host to the requested view model type.</summary>
+        /// <param name="rxObject">The view model type.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
+#endif
+        public void NavigateToView(Type rxObject, string? contract = null, object? parameter = null)
         {
-            throw new ArgumentNullException(nameof(dummy));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedView(GetRequiredNavigationHost(navigation.Name), rxObject, contract, parameter);
         }
 
-        if (NavigationHost.Count == 0)
+        /// <summary>Navigates the primary host to the registered navigation key.</summary>
+        /// <typeparam name="TNavigationKey">The caller-facing view model or view lookup key.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo<TNavigationKey>(string? contract = null, object? parameter = null)
+            where TNavigationKey : class
         {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(navigation.Name), typeof(TNavigationKey), contract, parameter);
         }
 
-        return GetRequiredNavigationHost(hostName).NavigateBack(parameter);
-    }
-
-    /// <summary>
-    /// Navigates the specified contract.
-    /// </summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="this">The this.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public static void NavigateToView<T>(this IUseNavigation @this, string? contract = null, object? parameter = null)
-        where T : class, IRxObject
-    {
-        if (@this == null)
+        /// <summary>Navigates the primary host to the registered navigation key.</summary>
+        /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateTo(Type navigationKey, string? contract = null, object? parameter = null)
         {
-            throw new ArgumentNullException(nameof(@this));
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            NavigateResolvedNavigationKey(GetRequiredNavigationHost(navigation.Name), navigationKey, contract, parameter);
         }
 
-        if (NavigationHost.Count == 0)
+        /// <summary>Navigates the primary host to the requested view model type and clears history.</summary>
+        /// <typeparam name="T">The view model type.</typeparam>
+        /// <param name="contract">The contract.</param>
+        /// <param name="parameter">The navigation parameter.</param>
+        public void NavigateToViewAndClearHistory<T>(string? contract = null, object? parameter = null)
+            where T : class, IRxObject
         {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            EnsureNavigationHostAvailable();
+            GetRequiredNavigationHost(navigation.Name).NavigateAndReset<T>(contract, parameter);
         }
 
-        GetRequiredNavigationHost(@this.Name).Navigate<T>(contract, parameter);
-    }
-
-    /// <summary>
-    /// Navigates the specified contract.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <param name="rxObject">The rx object.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <exception cref="System.ArgumentNullException">this.</exception>
-    /// <exception cref="System.InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
-    public static void NavigateToView(this IUseNavigation @this, Type rxObject, string? contract = null, object? parameter = null)
-    {
-        if (@this == null)
+        /// <summary>Notifies when the primary host is setup.</summary>
+        /// <returns>An observable setup state.</returns>
+        public IObservable<bool> WhenSetup()
         {
-            throw new ArgumentNullException(nameof(@this));
-        }
+            ThrowHelper.ThrowIfNull(navigation, nameof(navigation));
+            return Observable.Create<bool>(observer =>
+            {
+                var disposable = new CompositeDisposable();
+                navigation.BuildComplete(() =>
+                {
+                    _ = ASetupCompleted.Subscribe(unused =>
+                    {
+                        if (navigation.Name is null || !TryGetNavigationHost(navigation.Name, out var host) || host is null)
+                        {
+                            return;
+                        }
 
-        if (NavigationHost.Count == 0)
-        {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
-        }
+                        if (!WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
+                        {
+                            return;
+                        }
 
-        var value = GetRequiredNavigationHost(@this.Name);
-        if (AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
-        {
-            value.Navigate(toViewModel, contract, parameter);
-        }
-    }
-
-    /// <summary>
-    /// Navigates to view.
-    /// </summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public static void NavigateToView<T>(this IUseHostedNavigation dummy, string? hostName = "", string? contract = null, object? parameter = null)
-        where T : class, IRxObject
-    {
-        if (dummy == null)
-        {
-            throw new ArgumentNullException(nameof(dummy));
-        }
-
-        if (NavigationHost.Count == 0)
-        {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
-        }
-
-        GetRequiredNavigationHost(hostName).Navigate<T>(contract, parameter);
-    }
-
-    /// <summary>
-    /// Navigates to view.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="rxObject">The rx object.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    /// <exception cref="InvalidOperationException">No navigation host registered, please ensure that the NavigationShell has a Name.</exception>
-    public static void NavigateToView(this IUseHostedNavigation dummy, Type rxObject, string? hostName = "", string? contract = null, object? parameter = null)
-    {
-        if (dummy == null)
-        {
-            throw new ArgumentNullException(nameof(dummy));
-        }
-
-        if (NavigationHost.Count == 0)
-        {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
-        }
-
-        var value = GetRequiredNavigationHost(hostName);
-        if (AppLocator.Current.GetService(rxObject, contract) is IRxObject toViewModel)
-        {
-            value.Navigate(toViewModel, contract, parameter);
+                        _ = whenSetup.Where(x => x).Subscribe(observer).DisposeWith(disposable);
+                    }).DisposeWith(disposable);
+                });
+                return disposable;
+            });
         }
     }
 
-    /// <summary>
-    /// Navigates the and reset.
-    /// </summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="this">The this.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public static void NavigateToViewAndClearHistory<T>(this IUseNavigation @this, string? contract = null, object? parameter = null)
-        where T : class, IRxObject
-    {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this));
-        }
-
-        if (NavigationHost.Count == 0)
-        {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
-        }
-
-        GetRequiredNavigationHost(@this.Name).NavigateAndReset<T>(contract, parameter);
-    }
-
-    /// <summary>
-    /// Navigates to view and clear history.
-    /// </summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public static void NavigateToViewAndClearHistory<T>(this IUseHostedNavigation dummy, string hostName = "", string? contract = null, object? parameter = null)
-        where T : class, IRxObject
-    {
-        if (dummy == null)
-        {
-            throw new ArgumentNullException(nameof(dummy));
-        }
-
-        if (NavigationHost.Count == 0)
-        {
-            throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
-        }
-
-        GetRequiredNavigationHost(hostName).NavigateAndReset<T>(contract, parameter);
-    }
-
-    /// <summary>
-    /// Sets the main navigation host.
-    /// </summary>
-    /// <param name="this">The dummy.</param>
+    /// <summary>Creates the host key list for a navigation host registration.</summary>
+    /// <param name="navigation">The navigation owner.</param>
     /// <param name="viewHost">The view host.</param>
-    public static void SetMainNavigationHost(this ISetNavigation @this, IViewModelRoutedViewHost viewHost)
+    /// <returns>The ordered host keys.</returns>
+    private static List<string> CreateHostKeys(ISetNavigation navigation, IViewModelRoutedViewHost viewHost)
     {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this));
-        }
-
-        if (viewHost == null)
-        {
-            throw new ArgumentNullException(nameof(viewHost));
-        }
-
         var hostKeys = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(@this.Name))
-        {
-            hostKeys.Add(@this.Name!);
-        }
-
-        if (!string.IsNullOrWhiteSpace(viewHost.Name) && !hostKeys.Contains(viewHost.Name))
-        {
-            hostKeys.Add(viewHost.Name);
-        }
+        AddHostKey(hostKeys, navigation.Name);
+        AddHostKey(hostKeys, viewHost.Name);
 
         if (hostKeys.Count == 0)
         {
-            hostKeys.Add($"__crisscross_host_{RuntimeHelpers.GetHashCode(@this)}");
+            hostKeys.Add($"__crisscross_host_{RuntimeHelpers.GetHashCode(navigation)}");
         }
 
-        var hostKey = hostKeys[0];
+        return hostKeys;
+    }
 
-        if (string.IsNullOrWhiteSpace(viewHost.Name))
+    /// <summary>Adds a non-empty host key when it is not already present.</summary>
+    /// <param name="hostKeys">The host key list.</param>
+    /// <param name="hostName">The host name.</param>
+    private static void AddHostKey(List<string> hostKeys, string? hostName)
+    {
+        if (string.IsNullOrWhiteSpace(hostName) || hostKeys.Contains(hostName!))
         {
-            viewHost.Name = hostKey;
-            if (!hostKeys.Contains(viewHost.Name))
-            {
-                hostKeys.Add(viewHost.Name);
-            }
+            return;
         }
 
+        hostKeys.Add(hostName!);
+    }
+
+    /// <summary>Adds a dictionary value only when the key is absent.</summary>
+    /// <typeparam name="TValue">The dictionary value type.</typeparam>
+    /// <param name="dictionary">The dictionary.</param>
+    /// <param name="key">The dictionary key.</param>
+    /// <param name="value">The value to add.</param>
+    private static void AddIfMissing<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value)
+    {
+#if NET8_0_OR_GREATER
+        _ = dictionary.TryAdd(key, value);
+#else
+        if (dictionary.ContainsKey(key))
+        {
+            return;
+        }
+
+        dictionary.Add(key, value);
+#endif
+    }
+
+    /// <summary>Ensures the registered view host has a stable name.</summary>
+    /// <param name="viewHost">The view host.</param>
+    /// <param name="hostKey">The primary host key.</param>
+    /// <param name="hostKeys">The host key list.</param>
+    private static void EnsureViewHostName(IViewModelRoutedViewHost viewHost, string hostKey, List<string> hostKeys)
+    {
+        if (!string.IsNullOrWhiteSpace(viewHost.Name))
+        {
+            return;
+        }
+
+        viewHost.Name = hostKey;
+        AddHostKey(hostKeys, viewHost.Name);
+    }
+
+    /// <summary>Registers all aliases for a navigation host.</summary>
+    /// <param name="hostKeys">The host keys.</param>
+    /// <param name="viewHost">The view host.</param>
+    private static void RegisterNavigationHostAliases(List<string> hostKeys, IViewModelRoutedViewHost viewHost)
+    {
         lock (_lockObject)
         {
             foreach (var key in hostKeys)
             {
                 NavigationHost[key] = viewHost;
-
-                if (!WhenSetupSubjects.ContainsKey(key))
-                {
-                    WhenSetupSubjects.Add(key, new(1));
-                }
-
-                if (!CurrentViewDisposable.ContainsKey(key))
-                {
-                    CurrentViewDisposable.Add(key, []);
-                }
-
-                if (!ResultNavigating.ContainsKey(key))
-                {
-                    ResultNavigating.Add(key, new Subject<IViewModelNavigatingEventArgs>());
-                }
+                AddIfMissing(WhenSetupSubjects, key, new(1));
+                AddIfMissing(CurrentViewDisposable, key, []);
+                AddIfMissing(ResultNavigating, key, new Signal<IViewModelNavigatingEventArgs>());
             }
         }
+    }
 
-        if (viewHost.RequiresSetup)
+    /// <summary>Runs setup on the host when required.</summary>
+    /// <param name="viewHost">The view host.</param>
+    private static void SetupViewHostIfRequired(IViewModelRoutedViewHost viewHost)
+    {
+        if (!viewHost.RequiresSetup)
         {
-            viewHost.Setup();
+            return;
         }
 
-        ASetupCompleted.OnNext(Unit.Default);
+        viewHost.Setup();
+    }
 
+    /// <summary>Publishes setup completion for a host.</summary>
+    /// <param name="hostKey">The host key.</param>
+    private static void PublishHostSetup(string hostKey)
+    {
         lock (_lockObject)
         {
             if (WhenSetupSubjects.TryGetValue(hostKey, out var hostSetup))
@@ -432,144 +534,103 @@ public static class ViewModelRoutedViewHostMixins
         }
     }
 
-    /// <summary>
-    /// Whens the navigated from.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <param name="e">The e.</param>
-    public static void WhenNavigatedFrom(this INotifiyNavigation @this, Action<IViewModelNavigationEventArgs> e)
+    /// <summary>Gets the active disposable collection for a navigation event.</summary>
+    /// <param name="args">The navigation event args.</param>
+    /// <returns>The active disposable collection.</returns>
+    private static CompositeDisposable GetCurrentViewDisposable(IViewModelNavigationEventArgs args)
     {
-        if (@this == null)
+        if (args.NavigationType == NavigationType.New && CurrentViewDisposable.TryGetValue(args.HostName!, out var cleanupCompositeDisposable))
         {
-            throw new ArgumentNullException(nameof(@this));
+            cleanupCompositeDisposable.Dispose();
+            CurrentViewDisposable[args.HostName!] = [];
         }
 
-        @this.ISetupNavigatedFrom = true;
-        var vm = (@this as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
-        SetWhenNavigated.Where(x => x.From != null && x.From.Name == vm?.Name).Subscribe(ea =>
+        if (!CurrentViewDisposable.TryGetValue(args.HostName!, out var disposable))
         {
-            e(ea);
-            ea.From?.WhenNavigatedFrom(ea);
-        }).DisposeWith(@this.CleanUp);
-    }
-
-    /// <summary>
-    /// Whens the navigated to.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <param name="e">The e.</param>
-    public static void WhenNavigatedTo(this INotifiyNavigation @this, Action<IViewModelNavigationEventArgs, CompositeDisposable> e)
-    {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this));
+            disposable = [];
+            CurrentViewDisposable[args.HostName!] = disposable;
         }
 
-        @this.ISetupNavigatedTo = true;
-        var vm = (@this as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
-        SetWhenNavigated.Where(x => x?.To?.Name == vm?.Name).Subscribe(ea =>
-        {
-            if (ea.NavigationType == NavigationType.New && CurrentViewDisposable.TryGetValue(ea.HostName!, out var cleanupCompositeDisposable))
-            {
-                cleanupCompositeDisposable.Dispose();
-                cleanupCompositeDisposable = [];
-                CurrentViewDisposable[ea.HostName!] = cleanupCompositeDisposable;
-            }
-
-            if (!CurrentViewDisposable.TryGetValue(ea.HostName!, out var disposable))
-            {
-                disposable = [];
-                CurrentViewDisposable[ea.HostName!] = disposable;
-            }
-
-            e(ea, disposable);
-            ea?.To?.WhenNavigatedTo(ea, disposable);
-        }).DisposeWith(@this.CleanUp);
+        return disposable;
     }
 
-    /// <summary>
-    /// Called when [navigating].
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <param name="e">
-    /// The <see cref="IViewModelNavigatingEventArgs"/> instance containing the event data.
-    /// </param>
-    public static void WhenNavigating(this INotifiyNavigation @this, Func<IViewModelNavigatingEventArgs, IViewModelNavigatingEventArgs> e)
-    {
-        if (@this == null)
-        {
-            throw new ArgumentNullException(nameof(@this));
-        }
-
-        @this.ISetupNavigating = true;
-        var vm = (@this as IViewFor)?.ViewModel as INotifiyRoutableViewModel;
-        SetWhenNavigating.Where(x => x?.From == null || x.From.Name == vm?.Name).Subscribe(ea =>
-        {
-            if (ea != null)
-            {
-                if (ea.From != null)
-                {
-                    e(ea);
-                }
-
-                ea.From?.WhenNavigating(ea);
-
-                if (ResultNavigating.TryGetValue(ea.HostName!, out var resultNavigating))
-                {
-                    resultNavigating.OnNext(ea);
-                }
-            }
-        }).DisposeWith(@this.CleanUp);
-    }
-
-    /// <summary>
-    /// Notify When the Host is setup.
-    /// </summary>
-    /// <param name="this">The this.</param>
-    /// <returns>A Bool.</returns>
+    /// <summary>Navigates to a resolved view model service when one is available.</summary>
+    /// <param name="viewHost">The view host.</param>
+    /// <param name="rxObject">The view model type.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
 #if NET8_0_OR_GREATER
-    [RequiresDynamicCode("The method uses reflection and will not work in AOT environments.")]
-    [RequiresUnreferencedCode("The method uses reflection and will not work in AOT environments.")]
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model type requires runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model type may require members removed by trimming.")]
 #endif
-    public static IObservable<bool> WhenSetup(this IUseNavigation @this) =>
-        Observable.Create<bool>(obs =>
-            {
-                var dis = new CompositeDisposable();
-                @this.BuildComplete(() => ASetupCompleted.Subscribe(_ =>
-                    {
-                if (@this.Name != null && @this.TryGetNavigationHost(out var host) && host != null && WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
-                {
-                    whenSetup.Where(x => x).Subscribe(obs).DisposeWith(dis);
-                }
-            }).DisposeWith(dis));
-                return dis;
-            });
+    private static void NavigateResolvedView(IViewModelRoutedViewHost viewHost, Type rxObject, string? contract, object? parameter)
+    {
+        ThrowHelper.ThrowIfNull(rxObject, nameof(rxObject));
+        if (AppLocator.Current.GetService(rxObject, contract) is not IRxObject toViewModel)
+        {
+            return;
+        }
 
-    /// <summary>
-    /// Notify When the Host is setup.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="hostName">Name of the host.</param>
-    /// <returns>
-    /// A Bool.
-    /// </returns>
-    public static IObservable<bool> WhenSetup(this IUseHostedNavigation dummy, string? hostName = "") =>
-        Observable.Create<bool>(obs =>
-            {
-                var dis = new CompositeDisposable();
-                ASetupCompleted.Subscribe(_ =>
-                {
-                    if (TryGetNavigationHost(hostName, out var host) && host != null)
-                    {
-                        if (WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
-                        {
-                            whenSetup.Where(x => x).Subscribe(obs).DisposeWith(dis);
-                        }
-                    }
-                }).DisposeWith(dis);
-                return dis;
-            });
+        viewHost.Navigate(toViewModel, contract, parameter);
+    }
 
+    /// <summary>Navigates to the navigation pair resolved from a caller-facing key.</summary>
+    /// <param name="viewHost">The view host.</param>
+    /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private static void NavigateResolvedNavigationKey(IViewModelRoutedViewHost viewHost, Type navigationKey, string? contract, object? parameter)
+    {
+        if (viewHost is not IResolvedViewModelRoutedViewHost resolvedViewHost)
+        {
+            throw new InvalidOperationException("The registered navigation host does not support resolved ViewModel/View navigation.");
+        }
+
+        var resolution = ResolveNavigationKey(navigationKey, contract, parameter);
+        resolvedViewHost.Navigate(resolution);
+    }
+
+    /// <summary>Resolves a caller-facing navigation key through the registered bidirectional navigator.</summary>
+    /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
+    /// <param name="contract">The contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    /// <returns>The navigation resolution.</returns>
+    private static NavigationResolution ResolveNavigationKey(Type navigationKey, string? contract, object? parameter)
+    {
+        ThrowHelper.ThrowIfNull(navigationKey, nameof(navigationKey));
+        var navigator = GetRequiredNavigator();
+        try
+        {
+            return navigator.NavigateViewModel(navigationKey, contract, parameter).FirstAsync().GetAwaiter().GetResult();
+        }
+        catch (NavigationResolutionException)
+        {
+            return navigator.NavigateView(navigationKey, contract, parameter).FirstAsync().GetAwaiter().GetResult();
+        }
+    }
+
+    /// <summary>Gets the registered bidirectional navigator.</summary>
+    /// <returns>The registered navigator.</returns>
+    private static IBidirectionalNavigator GetRequiredNavigator() =>
+        AppLocator.Current.GetService<IBidirectionalNavigator>() ??
+            AppLocator.Current.GetService<INavigationRegistry>()?.CreateNavigator() ??
+            throw new InvalidOperationException("No bidirectional navigation registry has been registered.");
+
+    /// <summary>Throws when no navigation hosts are registered.</summary>
+    private static void EnsureNavigationHostAvailable()
+    {
+        if (NavigationHost.Count != 0)
+        {
+            return;
+        }
+
+        throw new InvalidOperationException("No navigation host registered, please ensure that the NavigationShell has a Name.");
+    }
+
+    /// <summary>Attempts to resolve a navigation host by name.</summary>
+    /// <param name="hostName">The requested host name.</param>
+    /// <param name="host">The resolved host.</param>
+    /// <returns><c>true</c> when a host was found; otherwise, <c>false</c>.</returns>
     private static bool TryGetNavigationHost(string? hostName, out IViewModelRoutedViewHost? host)
     {
         host = null;
@@ -603,12 +664,12 @@ public static class ViewModelRoutedViewHostMixins
         return false;
     }
 
-    private static bool TryGetNavigationHost(this IUseNavigation @this, out IViewModelRoutedViewHost? host) =>
-        TryGetNavigationHost(@this.Name, out host);
-
+    /// <summary>Gets a required navigation host or throws a descriptive exception.</summary>
+    /// <param name="hostName">The requested host name.</param>
+    /// <returns>The resolved host.</returns>
     private static IViewModelRoutedViewHost GetRequiredNavigationHost(string? hostName)
     {
-        if (TryGetNavigationHost(hostName, out var host) && host != null)
+        if (TryGetNavigationHost(hostName, out var host) && host is not null)
         {
             return host;
         }
@@ -617,6 +678,9 @@ public static class ViewModelRoutedViewHostMixins
         throw new KeyNotFoundException($"Navigation host '{requestedHostName}' has not been registered.");
     }
 
+    /// <summary>Adds an alias for an existing navigation host.</summary>
+    /// <param name="hostName">The alias host name.</param>
+    /// <param name="host">The existing host.</param>
     private static void AliasNavigationHost(string hostName, IViewModelRoutedViewHost host)
     {
         if (NavigationHost.ContainsKey(hostName) || string.IsNullOrWhiteSpace(hostName))
@@ -626,10 +690,7 @@ public static class ViewModelRoutedViewHostMixins
 
         lock (_lockObject)
         {
-            if (!NavigationHost.ContainsKey(hostName))
-            {
-                NavigationHost.Add(hostName, host);
-            }
+            AddIfMissing(NavigationHost, hostName, host);
 
             if (!WhenSetupSubjects.TryGetValue(hostName, out var whenSetup))
             {
@@ -637,15 +698,8 @@ public static class ViewModelRoutedViewHostMixins
                 WhenSetupSubjects.Add(hostName, whenSetup);
             }
 
-            if (!CurrentViewDisposable.ContainsKey(hostName))
-            {
-                CurrentViewDisposable.Add(hostName, []);
-            }
-
-            if (!ResultNavigating.ContainsKey(hostName))
-            {
-                ResultNavigating.Add(hostName, new Subject<IViewModelNavigatingEventArgs>());
-            }
+            AddIfMissing(CurrentViewDisposable, hostName, []);
+            AddIfMissing(ResultNavigating, hostName, new Signal<IViewModelNavigatingEventArgs>());
         }
     }
 }

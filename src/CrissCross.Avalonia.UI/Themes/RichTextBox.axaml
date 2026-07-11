@@ -40,32 +40,14 @@
                             IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}"
                             Text="{TemplateBinding Watermark}" />
 
-                        <!--  Formatted text presenter (shows when not editing)  -->
-                        <controls:ScrollViewer
-                            Name="PART_DisplayScrollViewer"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
-                            VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
-                            Focusable="False"
-                            IsHitTestVisible="{Binding IsVisible, ElementName=PART_FormattedPresenter}">
-                             <controls:FormattedTextPresenter
-                                 Name="PART_FormattedPresenter"
-                                 HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Top"
-                                 DefaultForeground="{TemplateBinding Foreground}"
-                                 FontFamily="{TemplateBinding FontFamily}"
-                                 FontSize="{TemplateBinding FontSize}"
-                                 Foreground="{TemplateBinding Foreground}"
-                                 IsVisible="False"
-                                 TextWrapping="{TemplateBinding TextWrapping}" />
-                         </controls:ScrollViewer>
-
                         <!--  Editing TextBox  -->
                         <controls:TextBox
                             Name="PART_TextBox"
                             Padding="{TemplateBinding Padding}"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Top"
                             AcceptsReturn="{TemplateBinding AcceptsReturn}"
                             AcceptsTab="{TemplateBinding AcceptsTab}"
                             CaretBrush="{TemplateBinding CaretBrush}"
@@ -80,6 +62,32 @@
                             Foreground="{TemplateBinding Foreground}"
                             IsReadOnly="{TemplateBinding IsReadOnly}"
                              />
+
+                        <!--  Formatted content overlays the editor while remaining pointer-transparent.  -->
+                        <controls:ScrollViewer
+                            Name="PART_DisplayScrollViewer"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalScrollBarVisibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                            VerticalScrollBarVisibility="{TemplateBinding VerticalScrollBarVisibility}"
+                            Focusable="False">
+                            <controls:Grid>
+                                <controls:FormattedTextPresenter
+                                    Name="PART_FormattedPresenter"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    DefaultForeground="{TemplateBinding Foreground}"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    IsVisible="False"
+                                    TextWrapping="{TemplateBinding TextWrapping}" />
+                                <Canvas
+                                    Name="PART_ImageOverlay"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    IsHitTestVisible="False" />
+                            </controls:Grid>
+                        </controls:ScrollViewer>
                     </controls:Grid>
                 </controls:Border>
             </ControlTemplate>

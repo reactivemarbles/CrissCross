@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -12,15 +12,11 @@ using ReactiveUI.Avalonia;
 
 namespace CrissCross.Avalonia.Test.Android;
 
-/// <summary>
-/// Android application entry point for Avalonia.
-/// </summary>
+/// <summary>Android application entry point for Avalonia.</summary>
 [Application]
 public class AndroidApp : AvaloniaAndroidApplication<App>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AndroidApp"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="AndroidApp"/> class.</summary>
     /// <param name="javaReference">The Java reference.</param>
     /// <param name="transfer">The JNI handle ownership.</param>
     protected AndroidApp(IntPtr javaReference, JniHandleOwnership transfer)
@@ -28,9 +24,7 @@ public class AndroidApp : AvaloniaAndroidApplication<App>
     {
     }
 
-    /// <summary>
-    /// Customizes the application builder.
-    /// </summary>
+    /// <summary>Customizes the application builder.</summary>
     /// <param name="builder">The builder.</param>
     /// <returns>App Builder.</returns>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder) =>

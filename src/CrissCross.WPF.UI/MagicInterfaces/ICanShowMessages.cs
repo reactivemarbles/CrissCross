@@ -1,17 +1,13 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// Enables showing messages on ModernWindow.
-/// </summary>
+/// <summary>Enables showing messages on ModernWindow.</summary>
 public interface ICanShowMessages
 {
-    /// <summary>
-    /// Gets the owner.
-    /// </summary>
+    /// <summary>Gets the owner.</summary>
     /// <value>
     /// The owner.
     /// </value>

@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -7,14 +7,10 @@ using System.Windows.Data;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Dock To Text Alignment Converter.
-/// </summary>
+/// <summary>Dock To Text Alignment Converter.</summary>
 public class DockToTextAlignmentConverter : IValueConverter
 {
-    /// <summary>
-    /// Converts the specified value.
-    /// </summary>
+    /// <summary>Converts the specified value.</summary>
     /// <param name="value">The value.</param>
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
@@ -22,28 +18,18 @@ public class DockToTextAlignmentConverter : IValueConverter
     /// <returns>TextAlignment value.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is Dock dock)
-        {
-            switch (dock)
+        return value is Dock dock
+            ? dock switch
             {
-                case Dock.Left:
-                    return TextAlignment.Left;
-
-                case Dock.Right:
-                    return TextAlignment.Right;
-
-                case Dock.Top:
-                case Dock.Bottom:
-                    return TextAlignment.Center;
+                Dock.Left => TextAlignment.Left,
+                Dock.Right => TextAlignment.Right,
+                Dock.Top or Dock.Bottom => TextAlignment.Center,
+                _ => TextAlignment.Left
             }
-        }
-
-        return TextAlignment.Left;
+            : TextAlignment.Left;
     }
 
-    /// <summary>
-    /// Converts the back.
-    /// </summary>
+    /// <summary>Converts the back.</summary>
     /// <param name="value">The value.</param>
     /// <param name="targetType">Type of the target.</param>
     /// <param name="parameter">The parameter.</param>
@@ -51,18 +37,13 @@ public class DockToTextAlignmentConverter : IValueConverter
     /// <returns>Dock value.</returns>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is TextAlignment textAlignment)
-        {
-            switch (textAlignment)
+        return value is TextAlignment textAlignment
+            ? textAlignment switch
             {
-                case TextAlignment.Left:
-                    return Dock.Left;
-
-                case TextAlignment.Right:
-                    return Dock.Right;
+                TextAlignment.Left => Dock.Left,
+                TextAlignment.Right => Dock.Right,
+                _ => Dock.Left
             }
-        }
-
-        return Dock.Left;
+            : Dock.Left;
     }
 }

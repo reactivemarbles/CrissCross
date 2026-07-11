@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -35,171 +35,182 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// </remarks>
 public class RichTextBox : TemplatedControl
 {
-    /// <summary>
-    /// Property for <see cref="Text"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Text"/>.</summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<RichTextBox, string?>(nameof(Text), defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>
-    /// Property for <see cref="AcceptsReturn"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AcceptsReturn"/>.</summary>
     public static readonly StyledProperty<bool> AcceptsReturnProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(AcceptsReturn), true);
 
-    /// <summary>
-    /// Property for <see cref="AcceptsTab"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="AcceptsTab"/>.</summary>
     public static readonly StyledProperty<bool> AcceptsTabProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(AcceptsTab), true);
 
-    /// <summary>
-    /// Property for <see cref="IsReadOnly"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsReadOnly"/>.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsReadOnly), false);
 
-    /// <summary>
-    /// Property for <see cref="IsTextSelectionEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsTextSelectionEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsTextSelectionEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsTextSelectionEnabled), false);
 
-    /// <summary>
-    /// Property for <see cref="TextWrapping"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TextWrapping"/>.</summary>
     public static readonly StyledProperty<TextWrapping> TextWrappingProperty =
         AvaloniaProperty.Register<RichTextBox, TextWrapping>(nameof(TextWrapping), TextWrapping.Wrap);
 
-    /// <summary>
-    /// Property for <see cref="HorizontalScrollBarVisibility"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="HorizontalScrollBarVisibility"/>.</summary>
     public static readonly StyledProperty<ScrollBarVisibility> HorizontalScrollBarVisibilityProperty =
         AvaloniaProperty.Register<RichTextBox, ScrollBarVisibility>(nameof(HorizontalScrollBarVisibility), ScrollBarVisibility.Disabled);
 
-    /// <summary>
-    /// Property for <see cref="VerticalScrollBarVisibility"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="VerticalScrollBarVisibility"/>.</summary>
     public static readonly StyledProperty<ScrollBarVisibility> VerticalScrollBarVisibilityProperty =
         AvaloniaProperty.Register<RichTextBox, ScrollBarVisibility>(nameof(VerticalScrollBarVisibility), ScrollBarVisibility.Auto);
 
-    /// <summary>
-    /// Property for <see cref="CaretBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="CaretBrush"/>.</summary>
     public static readonly StyledProperty<IBrush?> CaretBrushProperty =
         AvaloniaProperty.Register<RichTextBox, IBrush?>(nameof(CaretBrush), Brushes.White);
 
-    /// <summary>
-    /// Property for <see cref="SelectionBrush"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SelectionBrush"/>.</summary>
     public static readonly StyledProperty<IBrush?> SelectionBrushProperty =
         AvaloniaProperty.Register<RichTextBox, IBrush?>(nameof(SelectionBrush), Brush.Parse("#400078D4"));
 
-    /// <summary>
-    /// Property for <see cref="Watermark"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Watermark"/>.</summary>
     public static readonly StyledProperty<string?> WatermarkProperty =
         AvaloniaProperty.Register<RichTextBox, string?>(nameof(Watermark));
 
-    /// <summary>
-    /// Property for <see cref="IsFormattingEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsFormattingEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsFormattingEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsFormattingEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="IsDocumentEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsDocumentEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsDocumentEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsDocumentEnabled), false);
 
-    /// <summary>
-    /// Property for <see cref="IsDragDropEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsDragDropEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsDragDropEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsDragDropEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="EditMode"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="EditMode"/>.</summary>
     public static readonly StyledProperty<RichTextEditMode> EditModeProperty =
         AvaloniaProperty.Register<RichTextBox, RichTextEditMode>(nameof(EditMode), RichTextEditMode.EditOnFocus);
 
-    /// <summary>
-    /// Property for <see cref="IsRichClipboardEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsRichClipboardEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsRichClipboardEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsRichClipboardEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="IsImagePasteEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsImagePasteEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsImagePasteEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsImagePasteEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="IsImageDropEnabled"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsImageDropEnabled"/>.</summary>
     public static readonly StyledProperty<bool> IsImageDropEnabledProperty =
         AvaloniaProperty.Register<RichTextBox, bool>(nameof(IsImageDropEnabled), true);
 
-    /// <summary>
-    /// Property for <see cref="MaxDroppedTextFileBytes"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MaxDroppedTextFileBytes"/>.</summary>
     public static readonly StyledProperty<long> MaxDroppedTextFileBytesProperty =
         AvaloniaProperty.Register<RichTextBox, long>(nameof(MaxDroppedTextFileBytes), 1_048_576);
 
-    /// <summary>
-    /// Property for <see cref="SelectionStart"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SelectionStart"/>.</summary>
     public static readonly StyledProperty<int> SelectionStartProperty =
         AvaloniaProperty.Register<RichTextBox, int>(nameof(SelectionStart));
 
-    /// <summary>
-    /// Property for <see cref="SelectionEnd"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SelectionEnd"/>.</summary>
     public static readonly StyledProperty<int> SelectionEndProperty =
         AvaloniaProperty.Register<RichTextBox, int>(nameof(SelectionEnd));
 
-    /// <summary>
-    /// Property for <see cref="CaretIndex"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="CaretIndex"/>.</summary>
     public static readonly StyledProperty<int> CaretIndexProperty =
         AvaloniaProperty.Register<RichTextBox, int>(nameof(CaretIndex));
 
-    /// <summary>
-    /// Defines the <see cref="TextChanged"/> event.
-    /// </summary>
+    /// <summary>Defines the <see cref="TextChanged"/> event.</summary>
     public static readonly RoutedEvent<TextChangedEventArgs> TextChangedEvent =
         RoutedEvent.Register<RichTextBox, TextChangedEventArgs>(nameof(TextChanged), RoutingStrategies.Bubble);
 
-    /// <summary>
-    /// Defines the <see cref="SelectionChanged"/> event.
-    /// </summary>
+    /// <summary>Defines the <see cref="SelectionChanged"/> event.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> SelectionChangedEvent =
         RoutedEvent.Register<RichTextBox, RoutedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
-    /// <summary>
-    /// Defines the <see cref="FormattingApplied"/> event.
-    /// </summary>
+    /// <summary>Defines the <see cref="FormattingApplied"/> event.</summary>
     public static readonly RoutedEvent<FormattingEventArgs> FormattingAppliedEvent =
         RoutedEvent.Register<RichTextBox, FormattingEventArgs>(nameof(FormattingApplied), RoutingStrategies.Bubble);
 
+    /// <summary>Provides the ParagraphBreakLineCount member.</summary>
+    private const int ParagraphBreakLineCount = 2;
+
+    /// <summary>Provides the DefaultImageOverlayHeight member.</summary>
+    private const double DefaultImageOverlayHeight = 100d;
+
+    /// <summary>Provides the CharacterWidthFontScale member.</summary>
+    private const double CharacterWidthFontScale = 0.6d;
+
+    /// <summary>Provides the DefaultCharacterWidth member.</summary>
+    private const double DefaultCharacterWidth = 8.4d;
+
+    /// <summary>Provides the LineHeightFontScale member.</summary>
+    private const double LineHeightFontScale = 1.4d;
+
+    /// <summary>Provides the DefaultLineHeight member.</summary>
+    private const double DefaultLineHeight = 19.6d;
+
+    /// <summary>Provides the SmallFontSize member.</summary>
+    private const double SmallFontSize = 12d;
+
+    /// <summary>Provides the MediumFontSize member.</summary>
+    private const double MediumFontSize = 16d;
+
+    /// <summary>Provides the LargeFontSize member.</summary>
+    private const double LargeFontSize = 20d;
+
+    /// <summary>Provides the WebPHeaderLength member.</summary>
+    private const int WebPHeaderLength = 12;
+
+    /// <summary>Provides the RiffSignatureLength member.</summary>
+    private const int RiffSignatureLength = 4;
+
+    /// <summary>Provides the WebPSignatureOffset member.</summary>
+    private const int WebPSignatureOffset = 8;
+
+    /// <summary>Provides the _propertyChangedHandlers member.</summary>
+    private readonly Dictionary<AvaloniaProperty, Action> _propertyChangedHandlers;
+
+    /// <summary>Provides the _undoStack member.</summary>
     private readonly Stack<RichTextHistoryEntry> _undoStack = new();
+
+    /// <summary>Provides the _redoStack member.</summary>
     private readonly Stack<RichTextHistoryEntry> _redoStack = new();
+
+    /// <summary>Provides the _defaultClipboardAdapter member.</summary>
     private readonly IRichTextClipboardAdapter _defaultClipboardAdapter = new RichTextMemoryClipboardAdapter();
+
+    /// <summary>Provides platform clipboard access for runtime interactions.</summary>
+    private readonly RichTextSystemClipboard _systemClipboard;
+
+    /// <summary>Provides the _editingTextBox member.</summary>
     private global::Avalonia.Controls.TextBox? _editingTextBox;
+
+    /// <summary>Provides the _formattedPresenter member.</summary>
     private FormattedTextPresenter? _formattedPresenter;
+
+    /// <summary>Scroll host for formatted display and image overlays.</summary>
+    private global::Avalonia.Controls.ScrollViewer? _displayScrollViewer;
+
+    /// <summary>Composed image layer used because text inlines do not render child visuals reliably.</summary>
+    private Canvas? _imageOverlay;
+
+    /// <summary>Provides the _contextMenu member.</summary>
     private ContextMenu? _contextMenu;
+
+    /// <summary>Provides the _isUpdating member.</summary>
     private bool _isUpdating;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RichTextBox"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="RichTextBox"/> class.</summary>
     public RichTextBox()
     {
-        Document = new FlowDocument();
-        Selection = new TextSelection(Document);
+        _propertyChangedHandlers = CreatePropertyChangedHandlers();
+        _systemClipboard = new(() => TopLevel.GetTopLevel(this)?.Clipboard);
+        Document = new();
+        Selection = new(Document);
         CopyCommand = new RichTextCommand(_ => CopyCore(), _ => CanCopy);
         CutCommand = new RichTextCommand(_ => CutCore(), _ => CanCut);
         PasteCommand = new RichTextCommand(_ => PasteCore(), _ => CanPaste);
@@ -219,370 +230,261 @@ public class RichTextBox : TemplatedControl
 
         AddHandler(DragDrop.DragOverEvent, OnDragOver, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
         AddHandler(DragDrop.DropEvent, OnDrop, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
+        AddHandler(KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel, true);
         DragDrop.SetAllowDrop(this, true);
 
         Text = string.Empty;
         Document.SetText(Text);
     }
 
-    /// <summary>
-    /// Occurs when text changes.
-    /// </summary>
+    /// <summary>Occurs when text changes.</summary>
     public event EventHandler<TextChangedEventArgs>? TextChanged
     {
         add => AddHandler(TextChangedEvent, value);
         remove => RemoveHandler(TextChangedEvent, value);
     }
 
-    /// <summary>
-    /// Occurs when selection changes.
-    /// </summary>
+    /// <summary>Occurs when selection changes.</summary>
     public event EventHandler<RoutedEventArgs>? SelectionChanged
     {
         add => AddHandler(SelectionChangedEvent, value);
         remove => RemoveHandler(SelectionChangedEvent, value);
     }
 
-    /// <summary>
-    /// Occurs when formatting is applied.
-    /// </summary>
+    /// <summary>Occurs when formatting is applied.</summary>
     public event EventHandler<FormattingEventArgs>? FormattingApplied
     {
         add => AddHandler(FormattingAppliedEvent, value);
         remove => RemoveHandler(FormattingAppliedEvent, value);
     }
 
-    /// <summary>
-    /// Gets or sets the text content.
-    /// </summary>
+    /// <summary>Gets or sets the text content.</summary>
     public string? Text
     {
         get => GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether Enter inserts a new line.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether Enter inserts a new line.</summary>
     public bool AcceptsReturn
     {
         get => GetValue(AcceptsReturnProperty);
         set => SetValue(AcceptsReturnProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether Tab inserts a tab character.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether Tab inserts a tab character.</summary>
     public bool AcceptsTab
     {
         get => GetValue(AcceptsTabProperty);
         set => SetValue(AcceptsTabProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the control is read-only.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the control is read-only.</summary>
     public bool IsReadOnly
     {
         get => GetValue(IsReadOnlyProperty);
         set => SetValue(IsReadOnlyProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether text selection-only mode is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether text selection-only mode is enabled.</summary>
     public bool IsTextSelectionEnabled
     {
         get => GetValue(IsTextSelectionEnabledProperty);
         set => SetValue(IsTextSelectionEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the wrapping mode.
-    /// </summary>
+    /// <summary>Gets or sets the wrapping mode.</summary>
     public TextWrapping TextWrapping
     {
         get => GetValue(TextWrappingProperty);
         set => SetValue(TextWrappingProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the horizontal scroll bar visibility.
-    /// </summary>
+    /// <summary>Gets or sets the horizontal scroll bar visibility.</summary>
     public ScrollBarVisibility HorizontalScrollBarVisibility
     {
         get => GetValue(HorizontalScrollBarVisibilityProperty);
         set => SetValue(HorizontalScrollBarVisibilityProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the vertical scroll bar visibility.
-    /// </summary>
+    /// <summary>Gets or sets the vertical scroll bar visibility.</summary>
     public ScrollBarVisibility VerticalScrollBarVisibility
     {
         get => GetValue(VerticalScrollBarVisibilityProperty);
         set => SetValue(VerticalScrollBarVisibilityProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the caret brush.
-    /// </summary>
+    /// <summary>Gets or sets the caret brush.</summary>
     public IBrush? CaretBrush
     {
         get => GetValue(CaretBrushProperty);
         set => SetValue(CaretBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selection brush.
-    /// </summary>
+    /// <summary>Gets or sets the selection brush.</summary>
     public IBrush? SelectionBrush
     {
         get => GetValue(SelectionBrushProperty);
         set => SetValue(SelectionBrushProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the watermark text.
-    /// </summary>
+    /// <summary>Gets or sets the watermark text.</summary>
     public string? Watermark
     {
         get => GetValue(WatermarkProperty);
         set => SetValue(WatermarkProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether formatting is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether formatting is enabled.</summary>
     public bool IsFormattingEnabled
     {
         get => GetValue(IsFormattingEnabledProperty);
         set => SetValue(IsFormattingEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether content elements in the document are interactive.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether content elements in the document are interactive.</summary>
     public bool IsDocumentEnabled
     {
         get => GetValue(IsDocumentEnabledProperty);
         set => SetValue(IsDocumentEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether drag and drop insertion is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether drag and drop insertion is enabled.</summary>
     public bool IsDragDropEnabled
     {
         get => GetValue(IsDragDropEnabledProperty);
         set => SetValue(IsDragDropEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the edit/display mode.
-    /// </summary>
+    /// <summary>Gets or sets the edit/display mode.</summary>
     public RichTextEditMode EditMode
     {
         get => GetValue(EditModeProperty);
         set => SetValue(EditModeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether HTML clipboard payloads are copied and pasted.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether HTML clipboard payloads are copied and pasted.</summary>
     public bool IsRichClipboardEnabled
     {
         get => GetValue(IsRichClipboardEnabledProperty);
         set => SetValue(IsRichClipboardEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether image paste is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether image paste is enabled.</summary>
     public bool IsImagePasteEnabled
     {
         get => GetValue(IsImagePasteEnabledProperty);
         set => SetValue(IsImagePasteEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether image drop is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether image drop is enabled.</summary>
     public bool IsImageDropEnabled
     {
         get => GetValue(IsImageDropEnabledProperty);
         set => SetValue(IsImageDropEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the maximum UTF-8 text file size accepted by runtime file drops.
-    /// </summary>
+    /// <summary>Gets or sets the maximum UTF-8 text file size accepted by runtime file drops.</summary>
     public long MaxDroppedTextFileBytes
     {
         get => GetValue(MaxDroppedTextFileBytesProperty);
         set => SetValue(MaxDroppedTextFileBytesProperty, Math.Max(0, value));
     }
 
-    /// <summary>
-    /// Gets or sets the clipboard adapter used by copy, cut, and paste operations.
-    /// </summary>
+    /// <summary>Gets or sets the clipboard adapter used by copy, cut, and paste operations.</summary>
     public IRichTextClipboardAdapter? ClipboardAdapter { get; set; }
 
-    /// <summary>
-    /// Gets a value indicating whether the current selection can be copied.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the current selection can be copied.</summary>
     public bool CanCopy => HasSelection;
 
-    /// <summary>
-    /// Gets a value indicating whether the current selection can be cut.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the current selection can be cut.</summary>
     public bool CanCut => HasSelection && !IsReadOnlyInternal;
 
-    /// <summary>
-    /// Gets a value indicating whether the clipboard can be pasted into the current document.
-    /// </summary>
-    public bool CanPaste
-    {
-        get
-        {
-            var clipboard = GetClipboardAdapter();
-            return !IsReadOnlyInternal &&
-                   ((IsRichClipboardEnabled && clipboard.ContainsHtml) ||
-                    clipboard.ContainsPlainText ||
-                    (IsImagePasteEnabled && clipboard.ContainsImage && RichTextHelpers.IsSupportedImageSource(clipboard.ImageSource)));
-        }
-    }
+    /// <summary>Gets a value indicating whether the clipboard can be pasted into the current document.</summary>
+    public bool CanPaste => !IsReadOnlyInternal && (_systemClipboard.IsAvailable || HasPasteContent(GetClipboardAdapter()));
 
-    /// <summary>
-    /// Gets a value indicating whether undo history is available.
-    /// </summary>
+    /// <summary>Gets a value indicating whether undo history is available.</summary>
     public bool CanUndo => !IsReadOnlyInternal && _undoStack.Count > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether redo history is available.
-    /// </summary>
+    /// <summary>Gets a value indicating whether redo history is available.</summary>
     public bool CanRedo => !IsReadOnlyInternal && _redoStack.Count > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether formatting can be applied to the current selection.
-    /// </summary>
+    /// <summary>Gets a value indicating whether formatting can be applied to the current selection.</summary>
     public bool CanApplyFormatting => IsFormattingEnabled && !IsReadOnlyInternal && HasSelection;
 
-    /// <summary>
-    /// Gets the copy command.
-    /// </summary>
+    /// <summary>Gets the copy command.</summary>
     public ICommand CopyCommand { get; }
 
-    /// <summary>
-    /// Gets the cut command.
-    /// </summary>
+    /// <summary>Gets the cut command.</summary>
     public ICommand CutCommand { get; }
 
-    /// <summary>
-    /// Gets the paste command.
-    /// </summary>
+    /// <summary>Gets the paste command.</summary>
     public ICommand PasteCommand { get; }
 
-    /// <summary>
-    /// Gets the undo command.
-    /// </summary>
+    /// <summary>Gets the undo command.</summary>
     public ICommand UndoCommand { get; }
 
-    /// <summary>
-    /// Gets the redo command.
-    /// </summary>
+    /// <summary>Gets the redo command.</summary>
     public ICommand RedoCommand { get; }
 
-    /// <summary>
-    /// Gets the select all command.
-    /// </summary>
+    /// <summary>Gets the select all command.</summary>
     public ICommand SelectAllCommand { get; }
 
-    /// <summary>
-    /// Gets the bold formatting command.
-    /// </summary>
+    /// <summary>Gets the bold formatting command.</summary>
     public ICommand ToggleBoldCommand { get; }
 
-    /// <summary>
-    /// Gets the italic formatting command.
-    /// </summary>
+    /// <summary>Gets the italic formatting command.</summary>
     public ICommand ToggleItalicCommand { get; }
 
-    /// <summary>
-    /// Gets the underline formatting command.
-    /// </summary>
+    /// <summary>Gets the underline formatting command.</summary>
     public ICommand ToggleUnderlineCommand { get; }
 
-    /// <summary>
-    /// Gets the strikethrough formatting command.
-    /// </summary>
+    /// <summary>Gets the strikethrough formatting command.</summary>
     public ICommand ToggleStrikethroughCommand { get; }
 
-    /// <summary>
-    /// Gets the clear formatting command.
-    /// </summary>
+    /// <summary>Gets the clear formatting command.</summary>
     public ICommand ClearFormattingCommand { get; }
 
-    /// <summary>
-    /// Gets the font family formatting command.
-    /// </summary>
+    /// <summary>Gets the font family formatting command.</summary>
     public ICommand SetFontFamilyCommand { get; }
 
-    /// <summary>
-    /// Gets the font size formatting command.
-    /// </summary>
+    /// <summary>Gets the font size formatting command.</summary>
     public ICommand SetFontSizeCommand { get; }
 
-    /// <summary>
-    /// Gets the foreground color formatting command.
-    /// </summary>
+    /// <summary>Gets the foreground color formatting command.</summary>
     public ICommand SetForegroundCommand { get; }
 
-    /// <summary>
-    /// Gets the highlight color formatting command.
-    /// </summary>
+    /// <summary>Gets the highlight color formatting command.</summary>
     public ICommand SetHighlightCommand { get; }
 
-    /// <summary>
-    /// Gets or sets the selection start index.
-    /// </summary>
+    /// <summary>Gets or sets the selection start index.</summary>
     public int SelectionStart
     {
         get => GetValue(SelectionStartProperty);
         set => SetValue(SelectionStartProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the selection end index.
-    /// </summary>
+    /// <summary>Gets or sets the selection end index.</summary>
     public int SelectionEnd
     {
         get => GetValue(SelectionEndProperty);
         set => SetValue(SelectionEndProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the caret index.
-    /// </summary>
+    /// <summary>Gets or sets the caret index.</summary>
     public int CaretIndex
     {
         get => GetValue(CaretIndexProperty);
         set => SetValue(CaretIndexProperty, value);
     }
 
-    /// <summary>
-    /// Gets the document model.
-    /// </summary>
+    /// <summary>Gets the document model.</summary>
     public FlowDocument Document { get; }
 
-    /// <summary>
-    /// Gets the text selection.
-    /// </summary>
+    /// <summary>Gets the text selection.</summary>
     public TextSelection Selection { get; }
 
-    /// <summary>
-    /// Gets or sets the current caret position.
-    /// </summary>
+    /// <summary>Gets or sets the current caret position.</summary>
     public TextPointer CaretPosition
     {
         get => Document.GetTextPointer(Math.Clamp(CaretIndex, 0, Document.Length));
@@ -603,30 +505,13 @@ public class RichTextBox : TemplatedControl
         }
     }
 
-    /// <summary>
-    /// Gets a value indicating whether text is selected.
-    /// </summary>
+    /// <summary>Gets a value indicating whether text is selected.</summary>
     public bool HasSelection => SelectionStart != SelectionEnd;
 
-    /// <summary>
-    /// Gets the current selection length.
-    /// </summary>
-    public int SelectionLength
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(Text))
-            {
-                return 0;
-            }
+    /// <summary>Gets the current selection length.</summary>
+    public int SelectionLength => string.IsNullOrEmpty(Text) ? 0 : Math.Abs(SelectionEnd - SelectionStart);
 
-            return Math.Abs(SelectionEnd - SelectionStart);
-        }
-    }
-
-    /// <summary>
-    /// Gets the selected text.
-    /// </summary>
+    /// <summary>Gets the selected text.</summary>
     public string SelectedText
     {
         get
@@ -642,50 +527,22 @@ public class RichTextBox : TemplatedControl
         }
     }
 
-    /// <summary>
-    /// Gets the selected content as an HTML fragment preserving inline formatting where possible.
-    /// </summary>
-    public string SelectedHtml
-    {
-        get
-        {
-            if (!HasSelection || string.IsNullOrEmpty(Text))
-            {
-                return string.Empty;
-            }
+    /// <summary>Gets the selected content as an HTML fragment preserving inline formatting where possible.</summary>
+    public string SelectedHtml => CreateSelectedHtml();
 
-            var start = Math.Min(SelectionStart, SelectionEnd);
-            var end = Math.Max(SelectionStart, SelectionEnd);
-            var builder = new StringBuilder();
-            foreach (var segment in Document.Segments)
-            {
-                if (!segment.HasRenderableText || segment.EndIndex <= start || segment.StartIndex >= end)
-                {
-                    continue;
-                }
+    /// <summary>Gets the current HTML/markup representation for the document.</summary>
+    public string Html => Document.Text;
 
-                var segmentStart = Math.Max(start, segment.StartIndex);
-                var segmentEnd = Math.Min(end, segment.EndIndex);
-                var segmentLength = segmentEnd - segmentStart;
-                if (segmentLength <= 0)
-                {
-                    continue;
-                }
+    /// <summary>Gets a Markdown-compatible text representation.</summary>
+    public string Markdown => PlainText;
 
-                var localStart = segmentStart - segment.StartIndex;
-                var selectedText = segment.Text.Substring(localStart, segmentLength);
-                builder.Append(RichTextHelpers.FormatSegmentAsHtml(segment, selectedText));
-            }
+    /// <summary>Gets the rendered plain text for the current document.</summary>
+    public string PlainText => Document.PlainText;
 
-            return builder.ToString();
-        }
-    }
-
+    /// <summary>Gets the IsReadOnlyInternal value.</summary>
     private bool IsReadOnlyInternal => IsReadOnly || IsTextSelectionEnabled || EditMode == RichTextEditMode.Display;
 
-    /// <summary>
-    /// Returns the text position nearest the provided point.
-    /// </summary>
+    /// <summary>Returns the text position nearest the provided point.</summary>
     /// <param name="point">Point in control coordinates.</param>
     /// <param name="snapToText">When false and point is outside content bounds, returns null.</param>
     /// <returns>The nearest document position.</returns>
@@ -702,55 +559,26 @@ public class RichTextBox : TemplatedControl
             return Document.GetTextPointer(0);
         }
 
-        if (TryGetRenderedDocumentOffsetFromPoint(point, out var renderedOffset))
-        {
-            return Document.GetTextPointer(renderedOffset);
-        }
-
-        return Document.GetTextPointer(EstimateDocumentOffsetFromPoint(point, textBounds));
+        return TryGetRenderedDocumentOffsetFromPoint(point, out var renderedOffset) ? Document.GetTextPointer(renderedOffset) : Document.GetTextPointer(EstimateDocumentOffsetFromPoint(point, textBounds));
     }
 
-    /// <summary>
-    /// Determines whether the document should be serialized.
-    /// </summary>
+    /// <summary>Determines whether the document should be serialized.</summary>
     /// <returns><see langword="true"/> when the current document has content.</returns>
-    public bool ShouldSerializeDocument() => !string.IsNullOrWhiteSpace(Document.GetPlainText());
+    public bool ShouldSerializeDocument() => !string.IsNullOrWhiteSpace(Document.PlainText);
 
-    /// <summary>
-    /// Gets the rendered plain text for the current document.
-    /// </summary>
-    /// <returns>The plain text projection.</returns>
-    public string GetPlainText() => Document.GetPlainText();
-
-    /// <summary>
-    /// Gets the current HTML/markup representation for the document.
-    /// </summary>
-    /// <returns>The HTML/markup representation.</returns>
-    public string GetHtml() => Document.GetText();
-
-    /// <summary>
-    /// Applies bold formatting to the selection.
-    /// </summary>
+    /// <summary>Applies bold formatting to the selection.</summary>
     public void ToggleBold() => ToggleBoldCommand.Execute(null);
 
-    /// <summary>
-    /// Applies italic formatting to the selection.
-    /// </summary>
+    /// <summary>Applies italic formatting to the selection.</summary>
     public void ToggleItalic() => ToggleItalicCommand.Execute(null);
 
-    /// <summary>
-    /// Applies underline formatting to the selection.
-    /// </summary>
+    /// <summary>Applies underline formatting to the selection.</summary>
     public void ToggleUnderline() => ToggleUnderlineCommand.Execute(null);
 
-    /// <summary>
-    /// Applies strikethrough formatting to the selection.
-    /// </summary>
+    /// <summary>Applies strikethrough formatting to the selection.</summary>
     public void ToggleStrikethrough() => ToggleStrikethroughCommand.Execute(null);
 
-    /// <summary>
-    /// Applies a font family to the selected content.
-    /// </summary>
+    /// <summary>Applies a font family to the selected content.</summary>
     /// <param name="fontFamily">The font family name.</param>
     public void SetSelectionFontFamily(string fontFamily)
     {
@@ -758,9 +586,7 @@ public class RichTextBox : TemplatedControl
         ApplySpanStyleToSelection($"font-family:{fontFamily};");
     }
 
-    /// <summary>
-    /// Applies a font size to the selected content.
-    /// </summary>
+    /// <summary>Applies a font size to the selected content.</summary>
     /// <param name="fontSize">The font size in pixels.</param>
     public void SetSelectionFontSize(double fontSize)
     {
@@ -769,26 +595,18 @@ public class RichTextBox : TemplatedControl
         ApplySpanStyleToSelection($"font-size:{fontSize}px;");
     }
 
-    /// <summary>
-    /// Applies a foreground color to the selected content.
-    /// </summary>
+    /// <summary>Applies a foreground color to the selected content.</summary>
     /// <param name="color">The text color.</param>
-    public void SetSelectionForeground(in Color color) => ApplySpanStyleToSelection($"color:{color.ToString()};");
+    public void SetSelectionForeground(in Color color) => ApplySpanStyleToSelection($"color:{color};");
 
-    /// <summary>
-    /// Applies a highlight color to the selected content.
-    /// </summary>
+    /// <summary>Applies a highlight color to the selected content.</summary>
     /// <param name="color">The highlight color.</param>
-    public void SetSelectionHighlight(in Color color) => ApplySpanStyleToSelection($"background-color:{color.ToString()};");
+    public void SetSelectionHighlight(in Color color) => ApplySpanStyleToSelection($"background-color:{color};");
 
-    /// <summary>
-    /// Selects all text.
-    /// </summary>
+    /// <summary>Selects all text.</summary>
     public void SelectAll() => SelectAllCommand.Execute(null);
 
-    /// <summary>
-    /// Selects a range by offset and length.
-    /// </summary>
+    /// <summary>Selects a range by offset and length.</summary>
     /// <param name="startIndex">The start index.</param>
     /// <param name="length">The length.</param>
     public void Select(int startIndex, int length)
@@ -804,9 +622,7 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
-    /// <summary>
-    /// Selects a range using flow document text pointers.
-    /// </summary>
+    /// <summary>Selects a range using flow document text pointers.</summary>
     /// <param name="start">The selection start.</param>
     /// <param name="end">The selection end.</param>
     public void Select(TextPointer start, TextPointer end)
@@ -828,9 +644,7 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
-    /// <summary>
-    /// Clears all text.
-    /// </summary>
+    /// <summary>Clears all text.</summary>
     public void Clear()
     {
         if (IsReadOnlyInternal)
@@ -843,14 +657,10 @@ public class RichTextBox : TemplatedControl
         CommitHistory(before);
     }
 
-    /// <summary>
-    /// Clears all formatting.
-    /// </summary>
+    /// <summary>Clears all formatting.</summary>
     public void ClearFormatting() => ClearFormattingCommand.Execute(null);
 
-    /// <summary>
-    /// Appends plain text to the end of the document.
-    /// </summary>
+    /// <summary>Appends plain text to the end of the document.</summary>
     /// <param name="text">The text to append.</param>
     public void AppendText(string text)
     {
@@ -860,9 +670,7 @@ public class RichTextBox : TemplatedControl
         SyncTextFromDocument();
     }
 
-    /// <summary>
-    /// Appends HTML content to the end of the document.
-    /// </summary>
+    /// <summary>Appends HTML content to the end of the document.</summary>
     /// <param name="html">The html fragment to append.</param>
     public void AppendHtml(string html)
     {
@@ -871,27 +679,19 @@ public class RichTextBox : TemplatedControl
         SyncTextFromDocument();
     }
 
-    /// <summary>
-    /// Replaces the current content with HTML.
-    /// </summary>
+    /// <summary>Replaces the current content with HTML.</summary>
     /// <param name="html">The html content.</param>
     public void SetHtml(string? html) => SetHtmlCore(html, resetUndo: true);
 
-    /// <summary>
-    /// Replaces the current content with plain text.
-    /// </summary>
+    /// <summary>Replaces the current content with plain text.</summary>
     /// <param name="text">The plain text content.</param>
     public void SetPlainText(string? text) => SetHtml(HtmlClipboardUtilities.EncodePlainText(text));
 
-    /// <summary>
-    /// Replaces the current content with markdown converted to HTML.
-    /// </summary>
+    /// <summary>Replaces the current content with markdown converted to HTML.</summary>
     /// <param name="markdown">The markdown content.</param>
     public void SetMarkdown(string? markdown) => SetHtml(MarkdownUtilities.ToHtml(markdown));
 
-    /// <summary>
-    /// Replaces the current selection with plain text.
-    /// </summary>
+    /// <summary>Replaces the current selection with plain text.</summary>
     /// <param name="text">The replacement text.</param>
     public void ReplaceSelection(string text)
     {
@@ -899,9 +699,7 @@ public class RichTextBox : TemplatedControl
         ReplaceSelectionWithHtml(HtmlClipboardUtilities.EncodePlainText(text));
     }
 
-    /// <summary>
-    /// Replaces the current selection with HTML.
-    /// </summary>
+    /// <summary>Replaces the current selection with HTML.</summary>
     /// <param name="html">The replacement html content.</param>
     public void ReplaceSelectionWithHtml(string html)
     {
@@ -928,24 +726,65 @@ public class RichTextBox : TemplatedControl
         CommitHistory(before);
     }
 
-    /// <summary>
-    /// Copies the selection to the clipboard.
-    /// </summary>
+    /// <summary>Copies the selection to the clipboard.</summary>
     public void Copy() => CopyCommand.Execute(null);
 
-    /// <summary>
-    /// Cuts the selection to the clipboard.
-    /// </summary>
+    /// <summary>Copies the selection to the configured or platform clipboard.</summary>
+    /// <returns>A task that completes when the clipboard write has finished.</returns>
+    public async Task CopyToClipboardAsync()
+    {
+        if (!CanCopy)
+        {
+            return;
+        }
+
+        if (ClipboardAdapter is not null || !_systemClipboard.IsAvailable)
+        {
+            CopyToAdapter(GetClipboardAdapter());
+            return;
+        }
+
+        await WriteSelectionToSystemClipboardAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>Cuts the selection to the clipboard.</summary>
     public void Cut() => CutCommand.Execute(null);
 
-    /// <summary>
-    /// Pastes from the clipboard.
-    /// </summary>
+    /// <summary>Cuts the selection to the configured or platform clipboard.</summary>
+    /// <returns>A task that completes when the clipboard write has finished.</returns>
+    public async Task CutToClipboardAsync()
+    {
+        if (!CanCut)
+        {
+            return;
+        }
+
+        await CopyToClipboardAsync().ConfigureAwait(true);
+        ReplaceSelectionWithHtml(string.Empty);
+    }
+
+    /// <summary>Pastes from the clipboard.</summary>
     public void Paste() => PasteCommand.Execute(null);
 
-    /// <summary>
-    /// Ensures that the RichTextBox context menu exists and returns it.
-    /// </summary>
+    /// <summary>Pastes from the configured or platform clipboard.</summary>
+    /// <returns>A task that completes when clipboard content has been read and inserted.</returns>
+    public async Task PasteFromClipboardAsync()
+    {
+        if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        if (ClipboardAdapter is not null || !_systemClipboard.IsAvailable)
+        {
+            PasteFromAdapter(GetClipboardAdapter());
+            return;
+        }
+
+        await PasteFromSystemClipboardAsync().ConfigureAwait(true);
+    }
+
+    /// <summary>Ensures that the RichTextBox context menu exists and returns it.</summary>
     /// <returns>The context menu used by the control.</returns>
     public ContextMenu EnsureContextMenu()
     {
@@ -954,18 +793,14 @@ public class RichTextBox : TemplatedControl
         return _contextMenu;
     }
 
-    /// <summary>
-    /// Refreshes command enablement for the context menu items.
-    /// </summary>
+    /// <summary>Refreshes command enablement for the context menu items.</summary>
     public void RefreshContextMenuState()
     {
         _contextMenu ??= CreateContextMenu();
         UpdateContextMenuState();
     }
 
-    /// <summary>
-    /// Inserts a dropped text payload when drag/drop and edit state allow it.
-    /// </summary>
+    /// <summary>Inserts a dropped text payload when drag/drop and edit state allow it.</summary>
     /// <param name="text">The dropped text or HTML payload.</param>
     /// <returns><see langword="true"/> when content was inserted.</returns>
     public bool TryDropText(string? text)
@@ -993,34 +828,21 @@ public class RichTextBox : TemplatedControl
         return true;
     }
 
-    /// <summary>
-    /// Inserts a dropped image source when drag/drop, image policy, and edit state allow it.
-    /// </summary>
+    /// <summary>Inserts a dropped image source when drag/drop, image policy, and edit state allow it.</summary>
     /// <param name="imageSource">The image file URI/path or data URI.</param>
     /// <returns><see langword="true"/> when an image was inserted.</returns>
     public bool TryDropImage(string? imageSource)
     {
-        if (imageSource is null)
-        {
-            return false;
-        }
-
-        return TryInsertImage(imageSource, requireDragDrop: true);
+        return imageSource is null ? false : TryInsertImage(imageSource, requireDragDrop: true);
     }
 
-    /// <summary>
-    /// Undoes the last action.
-    /// </summary>
+    /// <summary>Undoes the last action.</summary>
     public void Undo() => UndoCommand.Execute(null);
 
-    /// <summary>
-    /// Redoes the last undone action.
-    /// </summary>
+    /// <summary>Redoes the last undone action.</summary>
     public void Redo() => RedoCommand.Execute(null);
 
-    /// <summary>
-    /// Saves content to a stream.
-    /// </summary>
+    /// <summary>Saves content to a stream.</summary>
     /// <param name="stream">The stream to save to.</param>
     /// <param name="encoding">The encoding to use.</param>
     public void Save(Stream stream, Encoding? encoding = null)
@@ -1031,9 +853,7 @@ public class RichTextBox : TemplatedControl
         stream.Write(bytes, 0, bytes.Length);
     }
 
-    /// <summary>
-    /// Saves content to a stream in the requested format.
-    /// </summary>
+    /// <summary>Saves content to a stream in the requested format.</summary>
     /// <param name="stream">The stream to save to.</param>
     /// <param name="format">The data format to save.</param>
     /// <param name="encoding">The encoding to use.</param>
@@ -1043,25 +863,17 @@ public class RichTextBox : TemplatedControl
         encoding ??= Encoding.UTF8;
         var content = format switch
         {
-            RichTextDataFormat.PlainText => GetPlainText(),
-            RichTextDataFormat.Html => GetHtml(),
-            RichTextDataFormat.Markdown => GetMarkdown(),
+            RichTextDataFormat.PlainText => PlainText,
+            RichTextDataFormat.Html => Html,
+            RichTextDataFormat.Markdown => Markdown,
             RichTextDataFormat.Rtf => string.Empty,
-            _ => GetHtml()
+            _ => Html
         };
         var bytes = encoding.GetBytes(content);
         stream.Write(bytes, 0, bytes.Length);
     }
 
-    /// <summary>
-    /// Gets a Markdown-compatible text representation.
-    /// </summary>
-    /// <returns>The Markdown-compatible representation.</returns>
-    public string GetMarkdown() => GetPlainText();
-
-    /// <summary>
-    /// Loads content from a stream.
-    /// </summary>
+    /// <summary>Loads content from a stream.</summary>
     /// <param name="stream">The stream to load from.</param>
     /// <param name="encoding">The encoding to use.</param>
     public void Load(Stream stream, Encoding? encoding = null)
@@ -1072,9 +884,7 @@ public class RichTextBox : TemplatedControl
         SetHtml(reader.ReadToEnd());
     }
 
-    /// <summary>
-    /// Loads content from a stream in the requested format.
-    /// </summary>
+    /// <summary>Loads content from a stream in the requested format.</summary>
     /// <param name="stream">The stream to load from.</param>
     /// <param name="format">The data format to load.</param>
     /// <param name="encoding">The encoding to use.</param>
@@ -1098,6 +908,11 @@ public class RichTextBox : TemplatedControl
         }
     }
 
+    /// <summary>Creates an embeddable image source from a dropped storage file.</summary>
+    /// <param name="file">The dropped storage file.</param>
+    /// <returns>The embedded data URI, or <see langword="null"/> when the file is not a supported image.</returns>
+    internal static Task<string?> TryCreateDroppedImageSourceAsync(IStorageFile file) => RichTextHelpers.TryCreateImageSourceAsync(file);
+
     /// <inheritdoc/>
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -1120,6 +935,8 @@ public class RichTextBox : TemplatedControl
         // Find template parts
         _editingTextBox = e.NameScope.Find<global::Avalonia.Controls.TextBox>("PART_TextBox");
         _formattedPresenter = e.NameScope.Find<FormattedTextPresenter>("PART_FormattedPresenter");
+        _displayScrollViewer = e.NameScope.Find<global::Avalonia.Controls.ScrollViewer>("PART_DisplayScrollViewer");
+        _imageOverlay = e.NameScope.Find<Canvas>("PART_ImageOverlay");
         _contextMenu ??= CreateContextMenu();
 
         // Setup editing text box
@@ -1133,7 +950,7 @@ public class RichTextBox : TemplatedControl
             ScrollViewer.SetVerticalScrollBarVisibility(_editingTextBox, VerticalScrollBarVisibility);
             _editingTextBox.CaretBrush = CaretBrush;
             _editingTextBox.SelectionBrush = SelectionBrush;
-            _editingTextBox.Text = Text;
+            _editingTextBox.Text = Document.PlainText;
 
             _editingTextBox.TextChanged += OnTextBoxTextChanged;
             _editingTextBox.PropertyChanged += OnTextBoxPropertyChanged;
@@ -1167,126 +984,12 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        var readOnly = IsReadOnly || IsTextSelectionEnabled;
+        if (!_propertyChangedHandlers.TryGetValue(change.Property, out var handler))
+        {
+            return;
+        }
 
-        if (change.Property == TextProperty)
-        {
-            _isUpdating = true;
-            Document.SetText(Text);
-
-            _editingTextBox?.Text = Text;
-
-            UpdateFormattedPresenter();
-            _isUpdating = false;
-            ClampSelectionToDocument();
-
-            RaiseEvent(new TextChangedEventArgs(TextChangedEvent));
-        }
-        else if (change.Property == AcceptsReturnProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.AcceptsReturn = AcceptsReturn;
-        }
-        else if (change.Property == AcceptsTabProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.AcceptsTab = AcceptsTab;
-        }
-        else if (change.Property == TextWrappingProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.TextWrapping = TextWrapping;
-            if (_formattedPresenter is not null)
-            {
-                _formattedPresenter.TextWrapping = TextWrapping;
-            }
-        }
-        else if (change.Property == HorizontalScrollBarVisibilityProperty && _editingTextBox is not null)
-        {
-            ScrollViewer.SetHorizontalScrollBarVisibility(_editingTextBox, HorizontalScrollBarVisibility);
-        }
-        else if (change.Property == VerticalScrollBarVisibilityProperty && _editingTextBox is not null)
-        {
-            ScrollViewer.SetVerticalScrollBarVisibility(_editingTextBox, VerticalScrollBarVisibility);
-        }
-        else if (change.Property == CaretBrushProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.CaretBrush = CaretBrush;
-        }
-        else if (change.Property == SelectionBrushProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.SelectionBrush = SelectionBrush;
-        }
-        else if (change.Property == IsReadOnlyProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.IsReadOnly = readOnly;
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !readOnly);
-            if (_formattedPresenter is not null)
-            {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !readOnly);
-            }
-
-            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !readOnly);
-        }
-        else if (change.Property == IsTextSelectionEnabledProperty && _editingTextBox is not null)
-        {
-            _editingTextBox.IsReadOnly = readOnly;
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !readOnly);
-            DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !readOnly);
-            if (_formattedPresenter is not null)
-            {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !readOnly);
-            }
-
-            UpdateDisplayMode();
-        }
-        else if (change.Property == SelectionStartProperty || change.Property == SelectionEndProperty)
-        {
-            ClampSelectionToDocument();
-            ApplySelectionToTextBox();
-            SynchronizeSelectionFromIndexes(raiseEvent: true);
-        }
-        else if (change.Property == CaretIndexProperty)
-        {
-            var boundedCaret = Math.Clamp(CaretIndex, 0, Document.Length);
-            if (CaretIndex != boundedCaret)
-            {
-                CaretIndex = boundedCaret;
-            }
-
-            _editingTextBox?.CaretIndex = boundedCaret;
-        }
-        else if (change.Property == IsDocumentEnabledProperty && _formattedPresenter is not null)
-        {
-            _formattedPresenter.IsHitTestVisible = IsDocumentEnabled;
-        }
-        else if (change.Property == IsDragDropEnabledProperty)
-        {
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnlyInternal);
-            if (_editingTextBox is not null)
-            {
-                DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnlyInternal);
-            }
-
-            if (_formattedPresenter is not null)
-            {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
-            }
-        }
-        else if (change.Property == EditModeProperty)
-        {
-            if (_editingTextBox is not null)
-            {
-                _editingTextBox.IsReadOnly = IsReadOnlyInternal;
-                DragDrop.SetAllowDrop(_editingTextBox, IsDragDropEnabled && !IsReadOnlyInternal);
-            }
-
-            DragDrop.SetAllowDrop(this, IsDragDropEnabled && !IsReadOnlyInternal);
-            if (_formattedPresenter is not null)
-            {
-                DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
-            }
-
-            UpdateDisplayMode();
-            NotifyCommandStateChanged();
-        }
+        handler();
     }
 
     /// <inheritdoc/>
@@ -1298,51 +1001,9 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        if (TryHandleShortcut(e))
         {
-            switch (e.Key)
-            {
-                case Key.C:
-                    CopyCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.X:
-                    CutCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.V:
-                    PasteCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.Z:
-                    UndoCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.Y:
-                    RedoCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.B when IsFormattingEnabled && !IsReadOnlyInternal:
-                    ToggleBoldCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.I when IsFormattingEnabled && !IsReadOnlyInternal:
-                    ToggleItalicCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.U when IsFormattingEnabled && !IsReadOnlyInternal:
-                    ToggleUnderlineCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.A:
-                    SelectAllCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-                case Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && IsFormattingEnabled && !IsReadOnlyInternal:
-                    ToggleStrikethroughCommand.Execute(null);
-                    e.Handled = true;
-                    return;
-            }
+            return;
         }
 
         base.OnKeyDown(e);
@@ -1353,12 +1014,14 @@ public class RichTextBox : TemplatedControl
     {
         base.OnPointerReleased(e);
 
-        if (e?.InitialPressMouseButton == MouseButton.Right)
+        if (e?.InitialPressMouseButton != MouseButton.Right)
         {
-            UpdateContextMenuState();
-            _contextMenu?.Open(this);
-            e.Handled = true;
+            return;
         }
+
+        UpdateContextMenuState();
+        _contextMenu?.Open(this);
+        e.Handled = true;
     }
 
     /// <inheritdoc/>
@@ -1366,24 +1029,63 @@ public class RichTextBox : TemplatedControl
     {
         base.OnGotFocus(e);
 
-        if (_editingTextBox is not null)
-        {
-            _editingTextBox.IsVisible = true;
-            _editingTextBox.IsHitTestVisible = true;
-            _editingTextBox.Opacity = 1;
+        _ = _editingTextBox?.Focus();
 
-            if (!_editingTextBox.IsFocused)
-            {
-                _editingTextBox.Focus();
-            }
-        }
-
-        if (_formattedPresenter is not null)
-        {
-            _formattedPresenter.IsVisible = false;
-        }
+        UpdateDisplayMode();
     }
 
+    /// <summary>Handles command gestures before the composed text editor consumes them.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The key event.</param>
+    private void OnPreviewKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled)
+        {
+            return;
+        }
+
+        _ = TryHandleShortcut(e);
+    }
+
+    /// <summary>Routes WPF-compatible editing and formatting gestures.</summary>
+    /// <param name="e">The key event.</param>
+    /// <returns><see langword="true"/> when a command handled the gesture.</returns>
+    private bool TryHandleShortcut(KeyEventArgs e)
+    {
+        if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            return false;
+        }
+
+        var command = e.Key switch
+        {
+            Key.C => CopyCommand,
+            Key.X => CutCommand,
+            Key.V => PasteCommand,
+            Key.Z when e.KeyModifiers.HasFlag(KeyModifiers.Shift) => RedoCommand,
+            Key.Z => UndoCommand,
+            Key.Y => RedoCommand,
+            Key.B when IsFormattingEnabled && !IsReadOnlyInternal => ToggleBoldCommand,
+            Key.I when IsFormattingEnabled && !IsReadOnlyInternal => ToggleItalicCommand,
+            Key.U when IsFormattingEnabled && !IsReadOnlyInternal => ToggleUnderlineCommand,
+            Key.A => SelectAllCommand,
+            Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) && IsFormattingEnabled && !IsReadOnlyInternal => ToggleStrikethroughCommand,
+            _ => null,
+        };
+
+        if (command is null)
+        {
+            return false;
+        }
+
+        command.Execute(null);
+        e.Handled = true;
+        return true;
+    }
+
+    /// <summary>Provides the OnTextBoxTextChanged member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnTextBoxTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (_isUpdating)
@@ -1393,23 +1095,23 @@ public class RichTextBox : TemplatedControl
 
         _isUpdating = true;
 
-        var oldText = Text;
         var newText = _editingTextBox?.Text ?? string.Empty;
+        var before = CaptureHistory();
 
-        // Update document to reflect changes
-        if (oldText != newText)
+        if (RichTextEditingShim.ApplyPlainTextChange(Document, newText))
         {
-            // For simplicity, we update the document entirely
-            // A more sophisticated implementation would track incremental changes
-            Document.SetText(newText);
-            Text = newText;
+            Text = Document.Text;
             UpdateFormattedPresenter();
+            CommitHistory(before);
             RaiseEvent(new TextChangedEventArgs(TextChangedEvent));
         }
 
         _isUpdating = false;
     }
 
+    /// <summary>Provides the OnTextBoxPropertyChanged member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnTextBoxPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == global::Avalonia.Controls.TextBox.SelectionStartProperty ||
@@ -1434,18 +1136,25 @@ public class RichTextBox : TemplatedControl
         }
     }
 
+    /// <summary>Provides the OnTextBoxGotFocus member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnTextBoxGotFocus(object? sender, FocusChangedEventArgs e)
     {
         UpdateDisplayMode();
         SynchronizeSelectionFromIndexes(raiseEvent: false);
     }
 
+    /// <summary>Provides the OnTextBoxLostFocus member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnTextBoxLostFocus(object? sender, FocusChangedEventArgs e)
     {
         UpdateFormattedPresenter();
         UpdateDisplayMode();
     }
 
+    /// <summary>Provides the SelectAllCore member.</summary>
     private void SelectAllCore()
     {
         SelectionStart = 0;
@@ -1456,6 +1165,7 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
+    /// <summary>Provides the ClearFormattingCore member.</summary>
     private void ClearFormattingCore()
     {
         if (IsReadOnlyInternal)
@@ -1470,6 +1180,9 @@ public class RichTextBox : TemplatedControl
         CommitHistory(before);
     }
 
+    /// <summary>Provides the SetHtmlCore member.</summary>
+    /// <param name="html">The html value.</param>
+    /// <param name="resetUndo">The resetUndo value.</param>
     private void SetHtmlCore(string? html, bool resetUndo)
     {
         _isUpdating = true;
@@ -1477,8 +1190,8 @@ public class RichTextBox : TemplatedControl
         Text = html;
         if (_editingTextBox is not null)
         {
-            _editingTextBox.Text = html;
-            _editingTextBox.CaretIndex = _editingTextBox.Text?.Length ?? 0;
+            _editingTextBox.Text = Document.PlainText;
+            _editingTextBox.CaretIndex = Document.Length;
         }
 
         _isUpdating = false;
@@ -1493,13 +1206,179 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
+    /// <summary>Creates the property changed handler table.</summary>
+    /// <returns>The property changed handler table.</returns>
+    private Dictionary<AvaloniaProperty, Action> CreatePropertyChangedHandlers() => new()
+    {
+        [TextProperty] = OnTextPropertyChanged,
+        [AcceptsReturnProperty] = () => UpdateEditingTextBox(textBox => textBox.AcceptsReturn = AcceptsReturn),
+        [AcceptsTabProperty] = () => UpdateEditingTextBox(textBox => textBox.AcceptsTab = AcceptsTab),
+        [TextWrappingProperty] = OnTextWrappingPropertyChanged,
+        [HorizontalScrollBarVisibilityProperty] = () => UpdateEditingTextBox(textBox => ScrollViewer.SetHorizontalScrollBarVisibility(textBox, HorizontalScrollBarVisibility)),
+        [VerticalScrollBarVisibilityProperty] = () => UpdateEditingTextBox(textBox => ScrollViewer.SetVerticalScrollBarVisibility(textBox, VerticalScrollBarVisibility)),
+        [CaretBrushProperty] = () => UpdateEditingTextBox(textBox => textBox.CaretBrush = CaretBrush),
+        [SelectionBrushProperty] = () => UpdateEditingTextBox(textBox => textBox.SelectionBrush = SelectionBrush),
+        [IsReadOnlyProperty] = OnReadOnlyStatePropertyChanged,
+        [IsTextSelectionEnabledProperty] = OnTextSelectionEnabledPropertyChanged,
+        [SelectionStartProperty] = OnSelectionIndexPropertyChanged,
+        [SelectionEndProperty] = OnSelectionIndexPropertyChanged,
+        [CaretIndexProperty] = OnCaretIndexPropertyChanged,
+        [IsDocumentEnabledProperty] = OnDocumentEnabledPropertyChanged,
+        [IsDragDropEnabledProperty] = OnDragDropEnabledPropertyChanged,
+        [EditModeProperty] = OnEditModePropertyChanged,
+    };
+
+    /// <summary>Updates the editing text box when it is available.</summary>
+    /// <param name="update">The update action.</param>
+    private void UpdateEditingTextBox(Action<global::Avalonia.Controls.TextBox> update)
+    {
+        if (_editingTextBox is null)
+        {
+            return;
+        }
+
+        update(_editingTextBox);
+    }
+
+    /// <summary>Handles text property updates.</summary>
+    private void OnTextPropertyChanged()
+    {
+        _isUpdating = true;
+        try
+        {
+            Document.SetText(Text);
+            _editingTextBox?.Text = Document.PlainText;
+            UpdateFormattedPresenter();
+        }
+        finally
+        {
+            _isUpdating = false;
+        }
+
+        ClampSelectionToDocument();
+        RaiseEvent(new TextChangedEventArgs(TextChangedEvent));
+    }
+
+    /// <summary>Handles text wrapping property updates.</summary>
+    private void OnTextWrappingPropertyChanged()
+    {
+        UpdateEditingTextBox(textBox => textBox.TextWrapping = TextWrapping);
+        if (_formattedPresenter is null)
+        {
+            return;
+        }
+
+        _formattedPresenter.TextWrapping = TextWrapping;
+    }
+
+    /// <summary>Handles read-only state property updates.</summary>
+    private void OnReadOnlyStatePropertyChanged()
+    {
+        var readOnly = IsReadOnly || IsTextSelectionEnabled;
+        UpdateEditingTextBox(textBox => textBox.IsReadOnly = readOnly);
+        SetAllowDropOnSurfaces(IsDragDropEnabled && !readOnly);
+    }
+
+    /// <summary>Handles text selection mode property updates.</summary>
+    private void OnTextSelectionEnabledPropertyChanged()
+    {
+        OnReadOnlyStatePropertyChanged();
+        UpdateDisplayMode();
+    }
+
+    /// <summary>Handles selection index property updates.</summary>
+    private void OnSelectionIndexPropertyChanged()
+    {
+        ClampSelectionToDocument();
+        ApplySelectionToTextBox();
+        SynchronizeSelectionFromIndexes(raiseEvent: true);
+    }
+
+    /// <summary>Handles caret index property updates.</summary>
+    private void OnCaretIndexPropertyChanged()
+    {
+        var boundedCaret = Math.Clamp(CaretIndex, 0, Document.Length);
+        if (CaretIndex != boundedCaret)
+        {
+            CaretIndex = boundedCaret;
+        }
+
+        _editingTextBox?.CaretIndex = boundedCaret;
+    }
+
+    /// <summary>Handles document enabled property updates.</summary>
+    private void OnDocumentEnabledPropertyChanged()
+    {
+        if (_formattedPresenter is null)
+        {
+            return;
+        }
+
+        _formattedPresenter.IsHitTestVisible = IsDocumentEnabled;
+    }
+
+    /// <summary>Handles drag and drop enabled property updates.</summary>
+    private void OnDragDropEnabledPropertyChanged() => SetAllowDropOnSurfaces(IsDragDropEnabled && !IsReadOnlyInternal);
+
+    /// <summary>Handles edit mode property updates.</summary>
+    private void OnEditModePropertyChanged()
+    {
+        UpdateEditingTextBox(textBox => textBox.IsReadOnly = IsReadOnlyInternal);
+        SetAllowDropOnSurfaces(IsDragDropEnabled && !IsReadOnlyInternal);
+        UpdateDisplayMode();
+        NotifyCommandStateChanged();
+    }
+
+    /// <summary>Sets drag and drop availability on all rich text surfaces.</summary>
+    /// <param name="allowDrop">Whether drag and drop is allowed.</param>
+    private void SetAllowDropOnSurfaces(bool allowDrop)
+    {
+        DragDrop.SetAllowDrop(this, allowDrop);
+        RichTextHelpers.SetAllowDrop(_editingTextBox, allowDrop);
+        RichTextHelpers.SetAllowDrop(_formattedPresenter, allowDrop);
+    }
+
+    /// <summary>Provides the GetClipboardAdapter member.</summary>
+    /// <returns>The result.</returns>
     private IRichTextClipboardAdapter GetClipboardAdapter() => ClipboardAdapter ?? _defaultClipboardAdapter;
 
-    private RichTextHistoryEntry CaptureHistory() => new(Document.GetText(), SelectionStart, SelectionEnd, CaretIndex);
+    /// <summary>Determines whether the clipboard has content that can be pasted.</summary>
+    /// <param name="clipboard">The clipboard adapter.</param>
+    /// <returns><see langword="true"/> when pasteable content is available.</returns>
+    private bool HasPasteContent(IRichTextClipboardAdapter clipboard) =>
+        (IsRichClipboardEnabled && clipboard.ContainsHtml) ||
+        clipboard.ContainsPlainText ||
+        (IsImagePasteEnabled && clipboard.ContainsImage && RichTextHelpers.IsSupportedImageSource(clipboard.ImageSource));
 
+    /// <summary>Creates the selected HTML fragment.</summary>
+    /// <returns>The selected HTML fragment.</returns>
+    private string CreateSelectedHtml()
+    {
+        if (!HasSelection || string.IsNullOrEmpty(Text))
+        {
+            return string.Empty;
+        }
+
+        var start = Math.Min(SelectionStart, SelectionEnd);
+        var end = Math.Max(SelectionStart, SelectionEnd);
+        var builder = new StringBuilder();
+        foreach (var segment in Document.Segments)
+        {
+            RichTextHelpers.AppendSelectedSegmentHtml(segment, start, end, builder);
+        }
+
+        return builder.ToString();
+    }
+
+    /// <summary>Provides the CaptureHistory member.</summary>
+    /// <returns>The result.</returns>
+    private RichTextHistoryEntry CaptureHistory() => new(Document.Text, SelectionStart, SelectionEnd, CaretIndex);
+
+    /// <summary>Provides the CommitHistory member.</summary>
+    /// <param name="before">The before value.</param>
     private void CommitHistory(RichTextHistoryEntry before)
     {
-        if (string.Equals(before.Html, Document.GetText(), StringComparison.Ordinal))
+        if (string.Equals(before.Html, Document.Text, StringComparison.Ordinal))
         {
             NotifyCommandStateChanged();
             return;
@@ -1510,6 +1389,8 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
+    /// <summary>Provides the RestoreHistory member.</summary>
+    /// <param name="entry">The entry value.</param>
     private void RestoreHistory(RichTextHistoryEntry entry)
     {
         _isUpdating = true;
@@ -1517,7 +1398,7 @@ public class RichTextBox : TemplatedControl
         Text = entry.Html;
         if (_editingTextBox is not null)
         {
-            _editingTextBox.Text = Text;
+            _editingTextBox.Text = Document.PlainText;
         }
 
         _isUpdating = false;
@@ -1531,6 +1412,7 @@ public class RichTextBox : TemplatedControl
         NotifyCommandStateChanged();
     }
 
+    /// <summary>Provides the UndoCore member.</summary>
     private void UndoCore()
     {
         if (!CanUndo)
@@ -1544,6 +1426,7 @@ public class RichTextBox : TemplatedControl
         RestoreHistory(previous);
     }
 
+    /// <summary>Provides the RedoCore member.</summary>
     private void RedoCore()
     {
         if (!CanRedo)
@@ -1557,6 +1440,7 @@ public class RichTextBox : TemplatedControl
         RestoreHistory(next);
     }
 
+    /// <summary>Provides the CopyCore member.</summary>
     private void CopyCore()
     {
         if (!CanCopy)
@@ -1564,18 +1448,48 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        var selectedText = SelectedText;
-        var clipboard = GetClipboardAdapter();
-        clipboard.SetPlainText(selectedText);
-        if (IsRichClipboardEnabled)
+        if (ClipboardAdapter is not null || !_systemClipboard.IsAvailable)
         {
-            var selectedHtml = SelectedHtml;
-            clipboard.SetHtml(string.IsNullOrEmpty(selectedHtml) ? HtmlClipboardUtilities.EncodePlainText(selectedText) : selectedHtml);
+            CopyToAdapter(GetClipboardAdapter());
+        }
+        else
+        {
+            _ = WriteSelectionToSystemClipboardAsync();
         }
 
         NotifyCommandStateChanged();
     }
 
+    /// <summary>Copies the current selection into a deterministic clipboard adapter.</summary>
+    /// <param name="clipboard">The target clipboard adapter.</param>
+    private void CopyToAdapter(IRichTextClipboardAdapter clipboard)
+    {
+        var selectedText = SelectedText;
+        clipboard.SetPlainText(selectedText);
+        if (!IsRichClipboardEnabled)
+        {
+            return;
+        }
+
+        var selectedHtml = SelectedHtml;
+        clipboard.SetHtml(string.IsNullOrEmpty(selectedHtml) ? HtmlClipboardUtilities.EncodePlainText(selectedText) : selectedHtml);
+    }
+
+    /// <summary>Copies the current selection into the platform clipboard.</summary>
+    /// <returns>A task that completes when the clipboard write has finished.</returns>
+    private Task WriteSelectionToSystemClipboardAsync()
+    {
+        var selectedText = SelectedText;
+        var selectedHtml = IsRichClipboardEnabled ? SelectedHtml : null;
+        if (IsRichClipboardEnabled && string.IsNullOrEmpty(selectedHtml))
+        {
+            selectedHtml = HtmlClipboardUtilities.EncodePlainText(selectedText);
+        }
+
+        return _systemClipboard.WriteAsync(selectedText, selectedHtml);
+    }
+
+    /// <summary>Provides the CutCore member.</summary>
     private void CutCore()
     {
         if (!CanCut)
@@ -1587,47 +1501,95 @@ public class RichTextBox : TemplatedControl
         ReplaceSelectionWithHtml(string.Empty);
     }
 
+    /// <summary>Provides the PasteCore member.</summary>
     private void PasteCore()
     {
-        if (!CanPaste)
+        if (IsReadOnlyInternal)
         {
             return;
         }
 
-        var clipboard = GetClipboardAdapter();
-        if (IsRichClipboardEnabled && clipboard.ContainsHtml && !string.IsNullOrEmpty(clipboard.HtmlText))
+        if (ClipboardAdapter is null && _systemClipboard.IsAvailable)
         {
-            var fragment = HtmlClipboardUtilities.ExtractFragment(clipboard.HtmlText) ?? clipboard.HtmlText;
-            ReplaceSelectionWithHtml(fragment ?? string.Empty);
+            _ = PasteFromSystemClipboardAsync();
             return;
         }
 
-        if (IsImagePasteEnabled && clipboard.ContainsImage && TryInsertImage(clipboard.ImageSource, requireDragDrop: false))
-        {
-            return;
-        }
-
-        if (clipboard.ContainsPlainText)
-        {
-            ReplaceSelection(clipboard.PlainText ?? string.Empty);
-        }
+        PasteFromAdapter(GetClipboardAdapter());
     }
 
-    private bool TryInsertImage(string? imageSource, bool requireDragDrop)
+    /// <summary>Pastes data from a deterministic clipboard adapter.</summary>
+    /// <param name="clipboard">The source clipboard adapter.</param>
+    private void PasteFromAdapter(IRichTextClipboardAdapter clipboard)
     {
-        if (IsReadOnlyInternal || (requireDragDrop && !IsDragDropEnabled))
+        if (IsReadOnlyInternal || !HasPasteContent(clipboard))
+        {
+            return;
+        }
+
+        if (TryPasteHtml(clipboard))
+        {
+            return;
+        }
+
+        if (TryPasteImage(clipboard))
+        {
+            return;
+        }
+
+        if (!clipboard.ContainsPlainText)
+        {
+            return;
+        }
+
+        ReplaceSelection(clipboard.PlainText ?? string.Empty);
+    }
+
+    /// <summary>Reads and pastes content from the platform clipboard.</summary>
+    /// <returns>A task that completes when the clipboard read has finished.</returns>
+    private async Task PasteFromSystemClipboardAsync()
+    {
+        var content = await _systemClipboard.ReadAsync().ConfigureAwait(true);
+        var clipboard = new RichTextMemoryClipboardAdapter
+        {
+            PlainText = content.PlainText,
+            HtmlText = content.HtmlText,
+            ImageSource = content.ImageSource,
+        };
+
+        PasteFromAdapter(clipboard);
+    }
+
+    /// <summary>Tries to paste HTML clipboard content.</summary>
+    /// <param name="clipboard">The clipboard adapter.</param>
+    /// <returns><see langword="true"/> when HTML was pasted.</returns>
+    private bool TryPasteHtml(IRichTextClipboardAdapter clipboard)
+    {
+        if (!IsRichClipboardEnabled || !clipboard.ContainsHtml || string.IsNullOrEmpty(clipboard.HtmlText))
         {
             return false;
         }
 
-        if (requireDragDrop)
-        {
-            if (!IsImageDropEnabled)
-            {
-                return false;
-            }
-        }
-        else if (!IsImagePasteEnabled)
+        var fragment = HtmlClipboardUtilities.ExtractFragment(clipboard.HtmlText) ?? clipboard.HtmlText;
+        ReplaceSelectionWithHtml(fragment ?? string.Empty);
+        return true;
+    }
+
+    /// <summary>Tries to paste image clipboard content.</summary>
+    /// <param name="clipboard">The clipboard adapter.</param>
+    /// <returns><see langword="true"/> when an image was pasted.</returns>
+    private bool TryPasteImage(IRichTextClipboardAdapter clipboard) =>
+        IsImagePasteEnabled &&
+        clipboard.ContainsImage &&
+        TryInsertImage(clipboard.ImageSource, requireDragDrop: false);
+
+    /// <summary>Provides the TryInsertImage member.</summary>
+    /// <param name="imageSource">The imageSource value.</param>
+    /// <param name="requireDragDrop">The requireDragDrop value.</param>
+    /// <returns>The result.</returns>
+    private bool TryInsertImage(string? imageSource, bool requireDragDrop)
+    {
+        if (!CanInsertImage(requireDragDrop))
         {
             return false;
         }
@@ -1641,6 +1603,14 @@ public class RichTextBox : TemplatedControl
         return true;
     }
 
+    /// <summary>Determines whether image insertion is available for the current mode.</summary>
+    /// <param name="requireDragDrop">Whether drag and drop state is required.</param>
+    /// <returns><see langword="true"/> when image insertion is enabled.</returns>
+    private bool CanInsertImage(bool requireDragDrop) =>
+        !IsReadOnlyInternal &&
+        (requireDragDrop ? IsDragDropEnabled && IsImageDropEnabled : IsImagePasteEnabled);
+
+    /// <summary>Provides the NotifyCommandStateChanged member.</summary>
     private void NotifyCommandStateChanged()
     {
         foreach (var command in new[]
@@ -1669,28 +1639,12 @@ public class RichTextBox : TemplatedControl
         }
     }
 
-    private bool HasAnyFormatting()
-    {
-        foreach (var segment in Document.Segments)
-        {
-            if (segment.IsBold ||
-                segment.IsItalic ||
-                segment.IsUnderline ||
-                segment.IsStrikethrough ||
-                segment.IsImage ||
-                segment.Foreground is not null ||
-                segment.Background is not null ||
-                segment.FontSize.HasValue ||
-                segment.FontFamily is not null ||
-                segment.ParagraphAlignment.HasValue)
-            {
-                return true;
-            }
-        }
+    /// <summary>Provides the HasAnyFormatting member.</summary>
+    /// <returns>The result.</returns>
+    private bool HasAnyFormatting() => Document.Segments.Any(RichTextHelpers.HasFormatting);
 
-        return false;
-    }
-
+    /// <summary>Provides the ApplyFormattingToSelection member.</summary>
+    /// <param name="formatType">The formatType value.</param>
     private void ApplyFormattingToSelection(TextFormatType formatType)
     {
         if (!IsFormattingEnabled || IsReadOnlyInternal || !HasSelection)
@@ -1702,7 +1656,7 @@ public class RichTextBox : TemplatedControl
         var length = Math.Abs(SelectionEnd - SelectionStart);
         var before = CaptureHistory();
 
-        Document.ToggleFormatting(start, length, formatType);
+        _ = Document.ToggleFormatting(start, length, formatType);
         SyncTextFromDocument();
         UpdateFormattedPresenter();
         CommitHistory(before);
@@ -1710,6 +1664,8 @@ public class RichTextBox : TemplatedControl
         RaiseEvent(new FormattingEventArgs(FormattingAppliedEvent, this, formatType, SelectedText));
     }
 
+    /// <summary>Provides the ApplySpanStyleToSelection member.</summary>
+    /// <param name="style">The style value.</param>
     private void ApplySpanStyleToSelection(string style)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(style);
@@ -1729,17 +1685,61 @@ public class RichTextBox : TemplatedControl
         ReplaceSelectionWithHtml($"<span style=\"{safeStyle}\">{selectionText}</span>");
     }
 
+    /// <summary>Provides the UpdateFormattedPresenter member.</summary>
     private void UpdateFormattedPresenter()
     {
-        if (_formattedPresenter is not null)
+        if (_formattedPresenter is null)
         {
-            Document.Refresh();
-            _formattedPresenter.Document = Document;
-            _formattedPresenter.IsHitTestVisible = IsDocumentEnabled;
-            _formattedPresenter.UpdateInlines();
+            return;
         }
+
+        Document.Refresh();
+        _formattedPresenter.Document = Document;
+        _formattedPresenter.UpdateInlines();
+        UpdateImageOverlay();
+        UpdateDisplayMode();
     }
 
+    /// <summary>Updates the composed image layer from document image segments.</summary>
+    private void UpdateImageOverlay()
+    {
+        if (_imageOverlay is null || _formattedPresenter is null)
+        {
+            return;
+        }
+
+        _imageOverlay.Children.Clear();
+        var lineHeight = GetEstimatedLineHeight();
+        var stackedImageOffset = 0d;
+        var overlayHeight = 0d;
+
+        foreach (var segment in Document.Segments.Where(segment => segment.IsImage))
+        {
+            var image = _formattedPresenter.CreateImageElement(segment);
+            if (image is null)
+            {
+                continue;
+            }
+
+            var precedingLineCount = Document.Segments.Count(candidate =>
+                candidate.StartIndex < segment.StartIndex && candidate.IsLineBreak) +
+                (Document.Segments.Count(candidate => candidate.StartIndex < segment.StartIndex && candidate.IsParagraphBreak) * ParagraphBreakLineCount) +
+                1;
+            var top = (precedingLineCount * lineHeight) + stackedImageOffset;
+            var imageHeight = double.IsNaN(image.Height) ? DefaultImageOverlayHeight : image.Height;
+
+            Canvas.SetLeft(image, 0);
+            Canvas.SetTop(image, top);
+            _imageOverlay.Children.Add(image);
+
+            stackedImageOffset += imageHeight + lineHeight;
+            overlayHeight = Math.Max(overlayHeight, top + imageHeight);
+        }
+
+        _imageOverlay.Height = overlayHeight;
+    }
+
+    /// <summary>Provides the UpdateDisplayMode member.</summary>
     private void UpdateDisplayMode()
     {
         if (_editingTextBox is null || _formattedPresenter is null)
@@ -1747,20 +1747,57 @@ public class RichTextBox : TemplatedControl
             return;
         }
 
-        var showEditing = EditMode switch
+        var showEditing = ShouldShowEditingSurface();
+        var showRichEditingSurface = showEditing && Document.Segments.Any(segment => segment.IsImage);
+        UpdateEditingSurface(showEditing, showRichEditingSurface);
+        UpdateFormattedSurface(showEditing, showRichEditingSurface);
+    }
+
+    /// <summary>Applies state to the editable text surface.</summary>
+    /// <param name="showEditing">Whether editing is active.</param>
+    /// <param name="showRichEditingSurface">Whether formatted content overlays the editor.</param>
+    private void UpdateEditingSurface(bool showEditing, bool showRichEditingSurface)
+    {
+        if (_editingTextBox is null)
         {
-            RichTextEditMode.Edit => true,
-            RichTextEditMode.Display => false,
-            _ => _editingTextBox.IsFocused || IsFocused,
-        };
+            return;
+        }
+
         _editingTextBox.IsVisible = showEditing;
         _editingTextBox.IsHitTestVisible = showEditing;
         _editingTextBox.Opacity = showEditing ? 1 : 0;
-
-        _formattedPresenter.IsVisible = !showEditing;
-        _formattedPresenter.IsHitTestVisible = !showEditing && IsDocumentEnabled;
+        _editingTextBox.Foreground = showRichEditingSurface ? Brushes.Transparent : Foreground;
     }
 
+    /// <summary>Applies state to the formatted text and image surfaces.</summary>
+    /// <param name="showEditing">Whether editing is active.</param>
+    /// <param name="showRichEditingSurface">Whether formatted content overlays the editor.</param>
+    private void UpdateFormattedSurface(bool showEditing, bool showRichEditingSurface)
+    {
+        if (_formattedPresenter is null)
+        {
+            return;
+        }
+
+        var showFormattedSurface = !showEditing || showRichEditingSurface;
+        _formattedPresenter.IsVisible = showFormattedSurface;
+        _formattedPresenter.IsHitTestVisible = !showEditing && IsDocumentEnabled;
+        _imageOverlay?.SetCurrentValue(IsVisibleProperty, showFormattedSurface);
+        _displayScrollViewer?.SetCurrentValue(IsHitTestVisibleProperty, !showEditing && IsDocumentEnabled);
+    }
+
+    /// <summary>Determines whether the composed text input surface should be active.</summary>
+    /// <returns><see langword="true"/> when the editing surface should be shown.</returns>
+    private bool ShouldShowEditingSurface() => EditMode switch
+    {
+        RichTextEditMode.Edit => true,
+        RichTextEditMode.Display => false,
+        _ => _editingTextBox?.IsFocused == true || IsFocused,
+    };
+
+    /// <summary>Provides the OnDragOver member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private void OnDragOver(object? sender, DragEventArgs e)
     {
         if (e.Handled)
@@ -1772,6 +1809,9 @@ public class RichTextBox : TemplatedControl
         e.Handled = true;
     }
 
+    /// <summary>Provides the OnDrop member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private async void OnDrop(object? sender, DragEventArgs e)
     {
         if (e.Handled)
@@ -1792,6 +1832,9 @@ public class RichTextBox : TemplatedControl
         e.Handled = true;
     }
 
+    /// <summary>Provides the CanAcceptDropData member.</summary>
+    /// <param name="dataTransfer">The dataTransfer value.</param>
+    /// <returns>The result.</returns>
     private bool CanAcceptDropData(IDataTransfer dataTransfer)
     {
         if (!IsDragDropEnabled || IsReadOnlyInternal)
@@ -1813,7 +1856,7 @@ public class RichTextBox : TemplatedControl
 
         foreach (var file in files)
         {
-            var path = GetStorageItemPath(file);
+            var path = RichTextHelpers.GetStorageItemPath(file);
             if (RichTextHelpers.IsSupportedImagePath(path))
             {
                 return IsImageDropEnabled;
@@ -1828,6 +1871,9 @@ public class RichTextBox : TemplatedControl
         return false;
     }
 
+    /// <summary>Provides the TryInsertDropDataAsync member.</summary>
+    /// <param name="dataTransfer">The dataTransfer value.</param>
+    /// <returns>The result.</returns>
     private async Task<bool> TryInsertDropDataAsync(IDataTransfer dataTransfer)
     {
         var files = dataTransfer.TryGetFiles();
@@ -1843,7 +1889,7 @@ public class RichTextBox : TemplatedControl
                         inserted = true;
                     }
                 }
-                else if (RichTextHelpers.IsSupportedImagePath(GetStorageItemPath(file)) && TryDropImage(file.Path.AbsoluteUri))
+                else if (RichTextHelpers.IsSupportedImagePath(RichTextHelpers.GetStorageItemPath(file)) && TryDropImage(file.Path.AbsoluteUri))
                 {
                     inserted = true;
                 }
@@ -1855,12 +1901,15 @@ public class RichTextBox : TemplatedControl
         return TryDropText(dataTransfer.TryGetText());
     }
 
+    /// <summary>Provides the TryDropStorageFileAsync member.</summary>
+    /// <param name="file">The file value.</param>
+    /// <returns>The result.</returns>
     private async Task<bool> TryDropStorageFileAsync(IStorageFile file)
     {
-        var path = GetStorageItemPath(file);
+        var path = RichTextHelpers.GetStorageItemPath(file);
         if (RichTextHelpers.IsSupportedImagePath(path))
         {
-            var imageSource = await TryCreateImageSourceAsync(file).ConfigureAwait(true);
+            var imageSource = await RichTextHelpers.TryCreateImageSourceAsync(file).ConfigureAwait(true);
             return !string.IsNullOrWhiteSpace(imageSource) && TryDropImage(imageSource);
         }
 
@@ -1883,46 +1932,11 @@ public class RichTextBox : TemplatedControl
 
         using var reader = new StreamReader(readStream, Encoding.UTF8, true);
         var text = await reader.ReadToEndAsync().ConfigureAwait(true);
-        if (Encoding.UTF8.GetByteCount(text) > MaxDroppedTextFileBytes)
-        {
-            return false;
-        }
-
-        return TryDropText(text);
+        return Encoding.UTF8.GetByteCount(text) > MaxDroppedTextFileBytes ? false : TryDropText(text);
     }
 
-    private async Task<string?> TryCreateImageSourceAsync(IStorageFile file)
-    {
-        var localPath = file.TryGetLocalPath();
-        if (RichTextHelpers.IsSupportedImagePath(localPath))
-        {
-            return new Uri(localPath!, UriKind.Absolute).AbsoluteUri;
-        }
-
-        var path = GetStorageItemPath(file);
-        if (!RichTextHelpers.IsSupportedImagePath(path))
-        {
-            return null;
-        }
-
-        if (file.Path.IsFile || file.Path.Scheme is "http" or "https")
-        {
-            return file.Path.AbsoluteUri;
-        }
-
-        await using var stream = await file.OpenReadAsync().ConfigureAwait(true);
-        using var buffer = new MemoryStream();
-        await stream.CopyToAsync(buffer).ConfigureAwait(true);
-        var bytes = buffer.ToArray();
-        if (bytes.Length == 0)
-        {
-            return null;
-        }
-
-        var mimeType = RichTextHelpers.GetImageMimeType(path);
-        return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
-    }
-
+    /// <summary>Provides the MoveSelectionToDropPoint member.</summary>
+    /// <param name="point">The point value.</param>
     private void MoveSelectionToDropPoint(Point point)
     {
         var position = GetPositionFromPoint(point, snapToText: true);
@@ -1934,6 +1948,10 @@ public class RichTextBox : TemplatedControl
         Select(position.Offset, 0);
     }
 
+    /// <summary>Provides the TryGetRenderedDocumentOffsetFromPoint member.</summary>
+    /// <param name="point">The point value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <returns>The result.</returns>
     private bool TryGetRenderedDocumentOffsetFromPoint(Point point, out int offset)
     {
         offset = 0;
@@ -1950,9 +1968,19 @@ public class RichTextBox : TemplatedControl
         return TryHitTestTextLayout(_formattedPresenter, point, out offset);
     }
 
+    /// <summary>Provides the TryHitTestTextLayout member.</summary>
+    /// <param name="visual">The visual value.</param>
+    /// <param name="point">The point value.</param>
+    /// <param name="offset">The offset value.</param>
+    /// <returns>The result.</returns>
     private bool TryHitTestTextLayout(Visual? visual, Point point, out int offset)
     {
         offset = 0;
+        if (visual is null)
+        {
+            return false;
+        }
+
         var textLayout = visual switch
         {
             TextPresenter presenter => presenter.TextLayout,
@@ -1960,7 +1988,7 @@ public class RichTextBox : TemplatedControl
             _ => null,
         };
 
-        if (visual is null || textLayout is null)
+        if (textLayout is null)
         {
             return false;
         }
@@ -1976,6 +2004,8 @@ public class RichTextBox : TemplatedControl
         return hitTest.IsInside || new Rect(visual.Bounds.Size).Contains(translatedPoint.Value);
     }
 
+    /// <summary>Provides the GetTextHitTestBounds member.</summary>
+    /// <returns>The result.</returns>
     private Rect GetTextHitTestBounds()
     {
         if (_editingTextBox is not null)
@@ -1993,9 +2023,13 @@ public class RichTextBox : TemplatedControl
         return new Rect(0, 0, width, height);
     }
 
+    /// <summary>Provides the EstimateDocumentOffsetFromPoint member.</summary>
+    /// <param name="point">The point value.</param>
+    /// <param name="bounds">The bounds value.</param>
+    /// <returns>The result.</returns>
     private int EstimateDocumentOffsetFromPoint(Point point, Rect bounds)
     {
-        var text = Document.GetPlainText();
+        var text = Document.PlainText;
         if (text.Length == 0)
         {
             return 0;
@@ -2035,44 +2069,38 @@ public class RichTextBox : TemplatedControl
         return Document.Length;
     }
 
-    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * 0.6 : 8.4);
+    /// <summary>Provides the GetEstimatedCharacterWidth member.</summary>
+    /// <returns>The result.</returns>
+    private double GetEstimatedCharacterWidth() => Math.Max(1, FontSize > 0 ? FontSize * CharacterWidthFontScale : DefaultCharacterWidth);
 
-    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * 1.4 : 19.6);
+    /// <summary>Provides the GetEstimatedLineHeight member.</summary>
+    /// <returns>The result.</returns>
+    private double GetEstimatedLineHeight() => Math.Max(1, FontSize > 0 ? FontSize * LineHeightFontScale : DefaultLineHeight);
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
-    private string? GetStorageItemPath(IStorageItem file)
-    {
-        var localPath = file.TryGetLocalPath();
-        if (!string.IsNullOrWhiteSpace(localPath))
-        {
-            return localPath;
-        }
-
-        return file.Path.IsAbsoluteUri ? file.Path.AbsolutePath : file.Path.ToString();
-    }
-
+    /// <summary>Provides the CreateContextMenu member.</summary>
+    /// <returns>The result.</returns>
     private ContextMenu CreateContextMenu()
     {
-        _contextMenu = new ContextMenu();
+        _contextMenu = new();
         _contextMenu.Opened += (_, _) => UpdateContextMenuState();
 
-        var cutItem = new global::Avalonia.Controls.MenuItem { Header = "Cut", InputGesture = new KeyGesture(Key.X, KeyModifiers.Control), Command = CutCommand };
+        var cutItem = new global::Avalonia.Controls.MenuItem { Header = "Cut", InputGesture = new(Key.X, KeyModifiers.Control), Command = CutCommand };
 
-        var copyItem = new global::Avalonia.Controls.MenuItem { Header = "Copy", InputGesture = new KeyGesture(Key.C, KeyModifiers.Control), Command = CopyCommand };
+        var copyItem = new global::Avalonia.Controls.MenuItem { Header = "Copy", InputGesture = new(Key.C, KeyModifiers.Control), Command = CopyCommand };
 
-        var pasteItem = new global::Avalonia.Controls.MenuItem { Header = "Paste", InputGesture = new KeyGesture(Key.V, KeyModifiers.Control), Command = PasteCommand };
+        var pasteItem = new global::Avalonia.Controls.MenuItem { Header = "Paste", InputGesture = new(Key.V, KeyModifiers.Control), Command = PasteCommand };
 
-        var selectAllItem = new global::Avalonia.Controls.MenuItem { Header = "Select All", InputGesture = new KeyGesture(Key.A, KeyModifiers.Control), Command = SelectAllCommand };
+        var selectAllItem = new global::Avalonia.Controls.MenuItem { Header = "Select All", InputGesture = new(Key.A, KeyModifiers.Control), Command = SelectAllCommand };
 
-        var undoItem = new global::Avalonia.Controls.MenuItem { Header = "Undo", InputGesture = new KeyGesture(Key.Z, KeyModifiers.Control), Command = UndoCommand };
+        var undoItem = new global::Avalonia.Controls.MenuItem { Header = "Undo", InputGesture = new(Key.Z, KeyModifiers.Control), Command = UndoCommand };
 
-        var redoItem = new global::Avalonia.Controls.MenuItem { Header = "Redo", InputGesture = new KeyGesture(Key.Y, KeyModifiers.Control), Command = RedoCommand };
+        var redoItem = new global::Avalonia.Controls.MenuItem { Header = "Redo", InputGesture = new(Key.Y, KeyModifiers.Control), Command = RedoCommand };
 
-        var boldItem = new global::Avalonia.Controls.MenuItem { Header = "Bold", InputGesture = new KeyGesture(Key.B, KeyModifiers.Control), Command = ToggleBoldCommand };
+        var boldItem = new global::Avalonia.Controls.MenuItem { Header = "Bold", InputGesture = new(Key.B, KeyModifiers.Control), Command = ToggleBoldCommand };
 
-        var italicItem = new global::Avalonia.Controls.MenuItem { Header = "Italic", InputGesture = new KeyGesture(Key.I, KeyModifiers.Control), Command = ToggleItalicCommand };
+        var italicItem = new global::Avalonia.Controls.MenuItem { Header = "Italic", InputGesture = new(Key.I, KeyModifiers.Control), Command = ToggleItalicCommand };
 
-        var underlineItem = new global::Avalonia.Controls.MenuItem { Header = "Underline", InputGesture = new KeyGesture(Key.U, KeyModifiers.Control), Command = ToggleUnderlineCommand };
+        var underlineItem = new global::Avalonia.Controls.MenuItem { Header = "Underline", InputGesture = new(Key.U, KeyModifiers.Control), Command = ToggleUnderlineCommand };
 
         var strikethroughItem = new global::Avalonia.Controls.MenuItem { Header = "Strikethrough", Command = ToggleStrikethroughCommand };
 
@@ -2083,22 +2111,22 @@ public class RichTextBox : TemplatedControl
         fontItem.ItemsSource = new object[] { fontConsolas, fontSegoe, fontTimes };
 
         var fontSizeItem = new global::Avalonia.Controls.MenuItem { Header = "Font Size" };
-        var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = 12d };
-        var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = 16d };
-        var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = 20d };
+        var size12 = new global::Avalonia.Controls.MenuItem { Header = "12", Command = SetFontSizeCommand, CommandParameter = SmallFontSize };
+        var size16 = new global::Avalonia.Controls.MenuItem { Header = "16", Command = SetFontSizeCommand, CommandParameter = MediumFontSize };
+        var size20 = new global::Avalonia.Controls.MenuItem { Header = "20", Command = SetFontSizeCommand, CommandParameter = LargeFontSize };
         fontSizeItem.ItemsSource = new object[] { size12, size16, size20 };
 
         var foregroundItem = new global::Avalonia.Controls.MenuItem { Header = "Foreground" };
-        var fgWhite = new global::Avalonia.Controls.MenuItem { Header = "White", Command = SetForegroundCommand, CommandParameter = Colors.White };
-        var fgBlue = new global::Avalonia.Controls.MenuItem { Header = "DeepSkyBlue", Command = SetForegroundCommand, CommandParameter = Colors.DeepSkyBlue };
-        var fgOrange = new global::Avalonia.Controls.MenuItem { Header = "Orange", Command = SetForegroundCommand, CommandParameter = Colors.Orange };
-        foregroundItem.ItemsSource = new object[] { fgWhite, fgBlue, fgOrange };
+        var foregroundWhite = new global::Avalonia.Controls.MenuItem { Header = "White", Command = SetForegroundCommand, CommandParameter = Colors.White };
+        var foregroundBlue = new global::Avalonia.Controls.MenuItem { Header = "DeepSkyBlue", Command = SetForegroundCommand, CommandParameter = Colors.DeepSkyBlue };
+        var foregroundOrange = new global::Avalonia.Controls.MenuItem { Header = "Orange", Command = SetForegroundCommand, CommandParameter = Colors.Orange };
+        foregroundItem.ItemsSource = new object[] { foregroundWhite, foregroundBlue, foregroundOrange };
 
         var highlightItem = new global::Avalonia.Controls.MenuItem { Header = "Highlight" };
-        var hlTransparent = new global::Avalonia.Controls.MenuItem { Header = "Transparent", Command = SetHighlightCommand, CommandParameter = Colors.Transparent };
-        var hlYellow = new global::Avalonia.Controls.MenuItem { Header = "Yellow", Command = SetHighlightCommand, CommandParameter = Colors.Yellow };
-        var hlGreen = new global::Avalonia.Controls.MenuItem { Header = "LightGreen", Command = SetHighlightCommand, CommandParameter = Colors.LightGreen };
-        highlightItem.ItemsSource = new object[] { hlTransparent, hlYellow, hlGreen };
+        var highlightTransparent = new global::Avalonia.Controls.MenuItem { Header = "Transparent", Command = SetHighlightCommand, CommandParameter = Colors.Transparent };
+        var highlightYellow = new global::Avalonia.Controls.MenuItem { Header = "Yellow", Command = SetHighlightCommand, CommandParameter = Colors.Yellow };
+        var highlightGreen = new global::Avalonia.Controls.MenuItem { Header = "LightGreen", Command = SetHighlightCommand, CommandParameter = Colors.LightGreen };
+        highlightItem.ItemsSource = new object[] { highlightTransparent, highlightYellow, highlightGreen };
 
         var clearFormattingItem = new global::Avalonia.Controls.MenuItem { Header = "Clear Formatting", Command = ClearFormattingCommand };
 
@@ -2129,6 +2157,7 @@ public class RichTextBox : TemplatedControl
         return _contextMenu;
     }
 
+    /// <summary>Provides the UpdateContextMenuState member.</summary>
     private void UpdateContextMenuState()
     {
         if (_contextMenu?.ItemsSource is not object[] items)
@@ -2139,39 +2168,49 @@ public class RichTextBox : TemplatedControl
         var hasSelection = HasSelection;
         var canEdit = !IsReadOnlyInternal;
 
-        foreach (var item in items)
+        foreach (var menuItem in items.OfType<global::Avalonia.Controls.MenuItem>())
         {
-            if (item is global::Avalonia.Controls.MenuItem menuItem)
-            {
-                var header = menuItem.Header?.ToString();
-                menuItem.IsEnabled = header switch
-                {
-                    "Cut" => CanCut,
-                    "Copy" => hasSelection,
-                    "Paste" => CanPaste,
-                    "Undo" => CanUndo,
-                    "Redo" => CanRedo,
-                    "Select All" => Document.Length > 0,
-                    "Bold" or "Italic" or "Underline" or "Strikethrough" or "Font" or "Font Size" or "Foreground" or "Highlight" => hasSelection && canEdit && IsFormattingEnabled,
-                    "Clear Formatting" => ClearFormattingCommand.CanExecute(null),
-                    _ => true
-                };
-            }
+            menuItem.IsEnabled = IsContextMenuItemEnabled(menuItem, hasSelection, canEdit);
         }
     }
 
+    /// <summary>Determines whether a context menu item should be enabled.</summary>
+    /// <param name="menuItem">The menu item.</param>
+    /// <param name="hasSelection">Whether the editor has selected text.</param>
+    /// <param name="canEdit">Whether editing is currently allowed.</param>
+    /// <returns><see langword="true"/> when the item should be enabled.</returns>
+    private bool IsContextMenuItemEnabled(global::Avalonia.Controls.MenuItem menuItem, bool hasSelection, bool canEdit)
+    {
+        var header = menuItem.Header?.ToString();
+        return RichTextHelpers.IsFormattingMenuHeader(header)
+            ? hasSelection && canEdit && IsFormattingEnabled
+            : header switch
+            {
+                "Cut" => CanCut,
+                "Copy" => hasSelection,
+                "Paste" => CanPaste,
+                "Undo" => CanUndo,
+                "Redo" => CanRedo,
+                "Select All" => Document.Length > 0,
+                "Clear Formatting" => ClearFormattingCommand.CanExecute(null),
+                _ => true
+            };
+    }
+
+    /// <summary>Provides the SyncTextFromDocument member.</summary>
     private void SyncTextFromDocument()
     {
         _isUpdating = true;
-        Text = Document.GetText();
+        Text = Document.Text;
 
-        _editingTextBox?.Text = Text;
+        _editingTextBox?.Text = Document.PlainText;
 
         _isUpdating = false;
         ClampSelectionToDocument();
         UpdateFormattedPresenter();
     }
 
+    /// <summary>Provides the ClampSelectionToDocument member.</summary>
     private void ClampSelectionToDocument()
     {
         var max = Document.Length;
@@ -2181,6 +2220,7 @@ public class RichTextBox : TemplatedControl
         SynchronizeSelectionFromIndexes(raiseEvent: false);
     }
 
+    /// <summary>Provides the ApplySelectionToTextBox member.</summary>
     private void ApplySelectionToTextBox()
     {
         if (_editingTextBox is null)
@@ -2195,19 +2235,155 @@ public class RichTextBox : TemplatedControl
         _editingTextBox.CaretIndex = Math.Clamp(CaretIndex, 0, _editingTextBox.Text?.Length ?? 0);
     }
 
+    /// <summary>Provides the SynchronizeSelectionFromIndexes member.</summary>
+    /// <param name="raiseEvent">The raiseEvent value.</param>
     private void SynchronizeSelectionFromIndexes(bool raiseEvent)
     {
         Selection.Select(SelectionStart, SelectionEnd);
-        if (raiseEvent)
+        if (!raiseEvent)
         {
-            RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
+            return;
         }
+
+        RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
     }
 
+    /// <summary>Provides the RichTextHistoryEntry member.</summary>
+    /// <param name="Html">The Html value.</param>
+    /// <param name="SelectionStart">The SelectionStart value.</param>
+    /// <param name="SelectionEnd">The SelectionEnd value.</param>
+    /// <param name="CaretIndex">The CaretIndex value.</param>
     private readonly record struct RichTextHistoryEntry(string Html, int SelectionStart, int SelectionEnd, int CaretIndex);
 
+    /// <summary>Provides the RichTextHelpers member.</summary>
     private static class RichTextHelpers
     {
+        /// <summary>Provides the supported text file extensions.</summary>
+        private static readonly string[] SupportedTextFileExtensions =
+        [
+            ".txt",
+            ".md",
+            ".markdown",
+            ".csv",
+            ".log",
+            ".json",
+            ".xml",
+            ".html",
+            ".htm",
+            ".rtf"
+        ];
+
+        /// <summary>Sets drag and drop availability on a control when it exists.</summary>
+        /// <param name="control">The target control.</param>
+        /// <param name="allowDrop">Whether drag and drop is allowed.</param>
+        public static void SetAllowDrop(Control? control, bool allowDrop)
+        {
+            if (control is null)
+            {
+                return;
+            }
+
+            DragDrop.SetAllowDrop(control, allowDrop);
+        }
+
+        /// <summary>Determines whether a context menu header controls formatting.</summary>
+        /// <param name="header">The menu header.</param>
+        /// <returns><see langword="true"/> when the header represents a formatting command.</returns>
+        public static bool IsFormattingMenuHeader(string? header) =>
+            header is "Bold" or "Italic" or "Underline" or "Strikethrough" or "Font" or "Font Size" or "Foreground" or "Highlight";
+
+        /// <summary>Appends selected text from one segment as HTML.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <param name="start">The selected range start.</param>
+        /// <param name="end">The selected range end.</param>
+        /// <param name="builder">The destination builder.</param>
+        public static void AppendSelectedSegmentHtml(TextSegment segment, int start, int end, StringBuilder builder)
+        {
+            if (!segment.HasRenderableText || segment.EndIndex <= start || segment.StartIndex >= end)
+            {
+                return;
+            }
+
+            var segmentStart = Math.Max(start, segment.StartIndex);
+            var segmentEnd = Math.Min(end, segment.EndIndex);
+            var segmentLength = segmentEnd - segmentStart;
+            if (segmentLength <= 0)
+            {
+                return;
+            }
+
+            var localStart = segmentStart - segment.StartIndex;
+            var selectedText = segment.Text.Substring(localStart, segmentLength);
+            _ = builder.Append(FormatSegmentAsHtml(segment, selectedText));
+        }
+
+        /// <summary>Determines whether one segment contains formatting.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <returns><see langword="true"/> when formatting is present.</returns>
+        public static bool HasFormatting(TextSegment segment) =>
+            HasCharacterFormatting(segment) ||
+            HasObjectFormatting(segment) ||
+            segment.ParagraphAlignment.HasValue;
+
+        /// <summary>Determines whether one segment contains character formatting.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <returns><see langword="true"/> when character formatting is present.</returns>
+        public static bool HasCharacterFormatting(TextSegment segment) =>
+            segment.IsBold ||
+            segment.IsItalic ||
+            segment.IsUnderline ||
+            segment.IsStrikethrough ||
+            segment.Foreground is not null ||
+            segment.Background is not null ||
+            segment.FontSize.HasValue ||
+            segment.FontFamily is not null;
+
+        /// <summary>Determines whether one segment contains object formatting.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <returns><see langword="true"/> when object formatting is present.</returns>
+        public static bool HasObjectFormatting(TextSegment segment) => segment.IsImage;
+
+        /// <summary>Provides the GetStorageItemPath member.</summary>
+        /// <param name="file">The storage item.</param>
+        /// <returns>The local storage item path when available.</returns>
+        public static string? GetStorageItemPath(IStorageItem file)
+        {
+            var localPath = file.TryGetLocalPath();
+            if (!string.IsNullOrWhiteSpace(localPath))
+            {
+                return localPath;
+            }
+
+            return file.Path.IsAbsoluteUri ? file.Path.AbsolutePath : file.Path.ToString();
+        }
+
+        /// <summary>Provides the TryCreateImageSourceAsync member.</summary>
+        /// <param name="file">The file value.</param>
+        /// <returns>The result.</returns>
+        public static async Task<string?> TryCreateImageSourceAsync(IStorageFile file)
+        {
+            var path = GetStorageItemPath(file);
+            if (!IsSupportedImagePath(path))
+            {
+                return null;
+            }
+
+            var dataUri = await TryCreateImageDataUriAsync(file, path).ConfigureAwait(true);
+            if (!string.IsNullOrWhiteSpace(dataUri))
+            {
+                var localPath = file.TryGetLocalPath();
+                return string.IsNullOrWhiteSpace(localPath)
+                    ? dataUri
+                    : new Uri(localPath, UriKind.Absolute).AbsoluteUri;
+            }
+
+            return file.Path.Scheme is "http" or "https" ? file.Path.AbsoluteUri : null;
+        }
+
+        /// <summary>Provides the FormatSegmentAsHtml member.</summary>
+        /// <param name="segment">The segment value.</param>
+        /// <param name="text">The text value.</param>
+        /// <returns>The result.</returns>
         public static string FormatSegmentAsHtml(TextSegment segment, string text)
         {
             var result = HtmlClipboardUtilities.EncodePlainText(text);
@@ -2260,8 +2436,14 @@ public class RichTextBox : TemplatedControl
             return result;
         }
 
+        /// <summary>Provides the LooksLikeHtml member.</summary>
+        /// <param name="text">The text value.</param>
+        /// <returns>The result.</returns>
         public static bool LooksLikeHtml(string text) => text.Contains('<', StringComparison.Ordinal) && text.Contains('>', StringComparison.Ordinal);
 
+        /// <summary>Provides the NormalizeClipboardText member.</summary>
+        /// <param name="textPayload">The textPayload value.</param>
+        /// <returns>The result.</returns>
         public static string NormalizeClipboardText(string? textPayload)
         {
             if (string.IsNullOrWhiteSpace(textPayload))
@@ -2273,6 +2455,9 @@ public class RichTextBox : TemplatedControl
             return string.IsNullOrWhiteSpace(fragment) ? textPayload : fragment;
         }
 
+        /// <summary>Provides the IsSupportedImageSource member.</summary>
+        /// <param name="source">The source value.</param>
+        /// <returns>The result.</returns>
         public static bool IsSupportedImageSource(string? source)
         {
             if (string.IsNullOrWhiteSpace(source))
@@ -2294,6 +2479,9 @@ public class RichTextBox : TemplatedControl
             return IsSupportedImagePath(value);
         }
 
+        /// <summary>Provides the IsSupportedImagePath member.</summary>
+        /// <param name="path">The path value.</param>
+        /// <returns>The result.</returns>
         public static bool IsSupportedImagePath(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -2310,6 +2498,9 @@ public class RichTextBox : TemplatedControl
                    extension.Equals(".webp", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>Provides the IsSupportedTextFilePath member.</summary>
+        /// <param name="path">The path value.</param>
+        /// <returns>The result.</returns>
         public static bool IsSupportedTextFilePath(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -2318,18 +2509,12 @@ public class RichTextBox : TemplatedControl
             }
 
             var extension = Path.GetExtension(path) ?? string.Empty;
-            return extension.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".md", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".markdown", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".csv", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".log", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".json", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".htm", StringComparison.OrdinalIgnoreCase) ||
-                   extension.Equals(".rtf", StringComparison.OrdinalIgnoreCase);
+            return SupportedTextFileExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>Provides the GetImageMimeType member.</summary>
+        /// <param name="path">The path value.</param>
+        /// <returns>The result.</returns>
         public static string GetImageMimeType(string? path)
         {
             var extension = Path.GetExtension(path) ?? string.Empty;
@@ -2349,14 +2534,80 @@ public class RichTextBox : TemplatedControl
                 return "image/bmp";
             }
 
-            if (extension.Equals(".webp", StringComparison.OrdinalIgnoreCase))
-            {
-                return "image/webp";
-            }
-
-            return "image/png";
+            return extension.Equals(".webp", StringComparison.OrdinalIgnoreCase) ? "image/webp" : "image/png";
         }
 
+        /// <summary>Provides the CreateImageHtml member.</summary>
+        /// <param name="imageSource">The imageSource value.</param>
+        /// <returns>The result.</returns>
         public static string CreateImageHtml(string imageSource) => $"<img src=\"{imageSource.Replace("\"", "%22", StringComparison.Ordinal)}\" />";
+
+        /// <summary>Provides the TryCreateImageDataUriAsync member.</summary>
+        /// <param name="file">The file value.</param>
+        /// <param name="path">The path value.</param>
+        /// <returns>The result.</returns>
+        private static async Task<string?> TryCreateImageDataUriAsync(IStorageFile file, string? path)
+        {
+            try
+            {
+                await using var stream = await file.OpenReadAsync().ConfigureAwait(true);
+                await using var buffer = new MemoryStream();
+                await stream.CopyToAsync(buffer).ConfigureAwait(true);
+                var bytes = buffer.ToArray();
+                if (!HasExpectedImageSignature(bytes, path))
+                {
+                    return null;
+                }
+
+                var mimeType = GetImageMimeType(path);
+                return $"data:{mimeType};base64,{Convert.ToBase64String(bytes)}";
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return null;
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
+            catch (NotSupportedException)
+            {
+                return null;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Checks that file content starts with the signature expected for its image extension.</summary>
+        /// <param name="bytes">The image file bytes.</param>
+        /// <param name="path">The image file path.</param>
+        /// <returns>The result.</returns>
+        private static bool HasExpectedImageSignature(ReadOnlySpan<byte> bytes, string? path)
+        {
+            var extension = Path.GetExtension(path) ?? string.Empty;
+            return extension.ToUpperInvariant() switch
+            {
+                ".PNG" => bytes.StartsWith(new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }),
+                ".JPG" or ".JPEG" => bytes.StartsWith(new byte[] { 0xFF, 0xD8, 0xFF }),
+                ".GIF" => bytes.StartsWith("GIF87a"u8) || bytes.StartsWith("GIF89a"u8),
+                ".BMP" => bytes.StartsWith("BM"u8),
+                ".WEBP" => HasWebPImageSignature(bytes),
+                _ => false,
+            };
+        }
+
+        /// <summary>Checks for the RIFF and WebP markers in a WebP image header.</summary>
+        /// <param name="bytes">The image file bytes.</param>
+        /// <returns>The result.</returns>
+        private static bool HasWebPImageSignature(ReadOnlySpan<byte> bytes) =>
+            bytes.Length >= WebPHeaderLength &&
+            bytes[..RiffSignatureLength].SequenceEqual("RIFF"u8) &&
+            bytes[WebPSignatureOffset..WebPHeaderLength].SequenceEqual("WEBP"u8);
     }
 }

@@ -1,217 +1,237 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// ColorState.
-/// </summary>
-public record struct ColorState
+/// <summary>Represents color channel state.</summary>
+/// <param name="red">The RGB red channel.</param>
+/// <param name="green">The RGB green channel.</param>
+/// <param name="blue">The RGB blue channel.</param>
+/// <param name="a">The alpha channel.</param>
+/// <param name="hsvHue">The HSV hue channel.</param>
+/// <param name="hsvSaturation">The HSV saturation channel.</param>
+/// <param name="hsvValue">The HSV value channel.</param>
+/// <param name="hslHue">The HSL hue channel.</param>
+/// <param name="hslSaturation">The HSL saturation channel.</param>
+/// <param name="hslLightness">The HSL lightness channel.</param>
+public struct ColorState(double red, double green, double blue, double a, double hsvHue, double hsvSaturation, double hsvValue, double hslHue, double hslSaturation, double hslLightness) : IEquatable<ColorState>
 {
-    private double _RGB_R;
-    private double _RGB_G;
-    private double _RGB_B;
+    /// <summary>Stores the red RGB channel.</summary>
+    private double _rgbR = red;
 
-    private double _HSV_H;
-    private double _HSV_S;
-    private double _HSV_V;
+    /// <summary>Stores the green RGB channel.</summary>
+    private double _rgbG = green;
 
-    private double _HSL_H;
-    private double _HSL_S;
-    private double _HSL_L;
+    /// <summary>Stores the blue RGB channel.</summary>
+    private double _rgbB = blue;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ColorState"/> struct.
-    /// </summary>
-    /// <param name="rGB_R">The r gb r.</param>
-    /// <param name="rGB_G">The r gb g.</param>
-    /// <param name="rGB_B">The r gb b.</param>
-    /// <param name="a">a.</param>
-    /// <param name="hSV_H">The h sv h.</param>
-    /// <param name="hSV_S">The h sv s.</param>
-    /// <param name="hSV_V">The h sv v.</param>
-    /// <param name="hSL_h">The h sl h.</param>
-    /// <param name="hSL_s">The h sl s.</param>
-    /// <param name="hSL_l">The h sl l.</param>
-    public ColorState(double rGB_R, double rGB_G, double rGB_B, double a, double hSV_H, double hSV_S, double hSV_V, double hSL_h, double hSL_s, double hSL_l)
-    {
-        _RGB_R = rGB_R;
-        _RGB_G = rGB_G;
-        _RGB_B = rGB_B;
-        A = a;
-        _HSV_H = hSV_H;
-        _HSV_S = hSV_S;
-        _HSV_V = hSV_V;
-        _HSL_H = hSL_h;
-        _HSL_S = hSL_s;
-        _HSL_L = hSL_l;
-    }
+    /// <summary>Stores the HSV hue channel.</summary>
+    private double _hsvH = hsvHue;
 
-    /// <summary>
-    /// Gets or sets a.
-    /// </summary>
+    /// <summary>Stores the HSV saturation channel.</summary>
+    private double _hsvS = hsvSaturation;
+
+    /// <summary>Stores the HSV value channel.</summary>
+    private double _hsvV = hsvValue;
+
+    /// <summary>Stores the HSL hue channel.</summary>
+    private double _hslH = hslHue;
+
+    /// <summary>Stores the HSL saturation channel.</summary>
+    private double _hslS = hslSaturation;
+
+    /// <summary>Stores the HSL lightness channel.</summary>
+    private double _hslL = hslLightness;
+
+    /// <summary>Gets or sets a.</summary>
     /// <value>
     /// a.
     /// </value>
-    public double A { get; set; }
+    public double A { get; set; } = a;
 
-    /// <summary>
-    /// Gets or sets the RGB r.
-    /// </summary>
+    /// <summary>Gets or sets the RGB r.</summary>
     /// <value>
     /// The RGB r.
     /// </value>
     public double RGB_R
     {
-        readonly get => _RGB_R;
+        readonly get => _rgbR;
         set
         {
-            _RGB_R = value;
+            _rgbR = value;
             RecalculateHSVFromRGB();
             RecalculateHSLFromRGB();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the RGB g.
-    /// </summary>
+    /// <summary>Gets or sets the RGB g.</summary>
     /// <value>
     /// The RGB g.
     /// </value>
     public double RGB_G
     {
-        readonly get => _RGB_G;
+        readonly get => _rgbG;
         set
         {
-            _RGB_G = value;
+            _rgbG = value;
             RecalculateHSVFromRGB();
             RecalculateHSLFromRGB();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the RGB b.
-    /// </summary>
+    /// <summary>Gets or sets the RGB b.</summary>
     /// <value>
     /// The RGB b.
     /// </value>
     public double RGB_B
     {
-        readonly get => _RGB_B;
+        readonly get => _rgbB;
         set
         {
-            _RGB_B = value;
+            _rgbB = value;
             RecalculateHSVFromRGB();
             RecalculateHSLFromRGB();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV h.
-    /// </summary>
+    /// <summary>Gets or sets the HSV h.</summary>
     /// <value>
     /// The HSV h.
     /// </value>
     public double HSV_H
     {
-        readonly get => _HSV_H;
+        readonly get => _hsvH;
         set
         {
-            _HSV_H = value;
+            _hsvH = value;
             RecalculateRGBFromHSV();
             RecalculateHSLFromHSV();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV s.
-    /// </summary>
+    /// <summary>Gets or sets the HSV s.</summary>
     /// <value>
     /// The HSV s.
     /// </value>
     public double HSV_S
     {
-        readonly get => _HSV_S;
+        readonly get => _hsvS;
         set
         {
-            _HSV_S = value;
+            _hsvS = value;
             RecalculateRGBFromHSV();
             RecalculateHSLFromHSV();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSV v.
-    /// </summary>
+    /// <summary>Gets or sets the HSV v.</summary>
     /// <value>
     /// The HSV v.
     /// </value>
     public double HSV_V
     {
-        readonly get => _HSV_V;
+        readonly get => _hsvV;
         set
         {
-            _HSV_V = value;
+            _hsvV = value;
             RecalculateRGBFromHSV();
             RecalculateHSLFromHSV();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL h.
-    /// </summary>
+    /// <summary>Gets or sets the HSL h.</summary>
     /// <value>
     /// The HSL h.
     /// </value>
     public double HSL_H
     {
-        readonly get => _HSL_H;
+        readonly get => _hslH;
         set
         {
-            _HSL_H = value;
+            _hslH = value;
             RecalculateRGBFromHSL();
             RecalculateHSVFromHSL();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL s.
-    /// </summary>
+    /// <summary>Gets or sets the HSL s.</summary>
     /// <value>
     /// The HSL s.
     /// </value>
     public double HSL_S
     {
-        readonly get => _HSL_S;
+        readonly get => _hslS;
         set
         {
-            _HSL_S = value;
+            _hslS = value;
             RecalculateRGBFromHSL();
             RecalculateHSVFromHSL();
         }
     }
 
-    /// <summary>
-    /// Gets or sets the HSL l.
-    /// </summary>
+    /// <summary>Gets or sets the HSL l.</summary>
     /// <value>
     /// The HSL l.
     /// </value>
     public double HSL_L
     {
-        readonly get => _HSL_L;
+        readonly get => _hslL;
         set
         {
-            _HSL_L = value;
+            _hslL = value;
             RecalculateRGBFromHSL();
             RecalculateHSVFromHSL();
         }
     }
 
-    /// <summary>
-    /// Sets the ARGB.
-    /// </summary>
+    /// <summary>Determines whether two instances are equal.</summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true"/> when the values are equal.</returns>
+    public static bool operator ==(ColorState left, ColorState right) => left.Equals(right);
+
+    /// <summary>Determines whether two instances are different.</summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><see langword="true"/> when the values are different.</returns>
+    public static bool operator !=(ColorState left, ColorState right) => !left.Equals(right);
+
+    /// <inheritdoc/>
+    public readonly bool Equals(ColorState other) =>
+        _rgbR.Equals(other._rgbR)
+        && _rgbG.Equals(other._rgbG)
+        && _rgbB.Equals(other._rgbB)
+        && A.Equals(other.A)
+        && _hsvH.Equals(other._hsvH)
+        && _hsvS.Equals(other._hsvS)
+        && _hsvV.Equals(other._hsvV)
+        && _hslH.Equals(other._hslH)
+        && _hslS.Equals(other._hslS)
+        && _hslL.Equals(other._hslL);
+
+    /// <inheritdoc/>
+    public override readonly bool Equals(object? obj) => obj is ColorState other && Equals(other);
+
+    /// <inheritdoc/>
+    public override readonly int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = _rgbR.GetHashCode();
+            hashCode = (hashCode * 397) ^ _rgbG.GetHashCode();
+            hashCode = (hashCode * 397) ^ _rgbB.GetHashCode();
+            hashCode = (hashCode * 397) ^ A.GetHashCode();
+            hashCode = (hashCode * 397) ^ _hsvH.GetHashCode();
+            hashCode = (hashCode * 397) ^ _hsvS.GetHashCode();
+            hashCode = (hashCode * 397) ^ _hsvV.GetHashCode();
+            hashCode = (hashCode * 397) ^ _hslH.GetHashCode();
+            hashCode = (hashCode * 397) ^ _hslS.GetHashCode();
+            return (hashCode * 397) ^ _hslL.GetHashCode();
+        }
+    }
+
+    /// <summary>Sets the ARGB.</summary>
     /// <param name="a">a.</param>
     /// <param name="r">The r.</param>
     /// <param name="g">The g.</param>
@@ -219,86 +239,100 @@ public record struct ColorState
     public void SetARGB(double a, double r, double g, double b)
     {
         A = a;
-        _RGB_R = r;
-        _RGB_G = g;
-        _RGB_B = b;
+        _rgbR = r;
+        _rgbG = g;
+        _rgbB = b;
         RecalculateHSVFromRGB();
         RecalculateHSLFromRGB();
     }
 
+    /// <summary>Provides the RecalculateHSLFromRGB member.</summary>
     private void RecalculateHSLFromRGB()
     {
-        var hsltuple = ColorSpaceHelper.RgbToHsl(_RGB_R, _RGB_G, _RGB_B);
-        double h = hsltuple.Item1, s = hsltuple.Item2, l = hsltuple.Item3;
+        var hsltuple = ColorSpaceHelper.RgbToHsl(_rgbR, _rgbG, _rgbB);
+        double h = hsltuple.Item1;
+        double s = hsltuple.Item2;
+        double l = hsltuple.Item3;
         if (h != -1)
         {
-            _HSL_H = h;
+            _hslH = h;
         }
 
         if (s != -1)
         {
-            _HSL_S = s;
+            _hslS = s;
         }
 
-        _HSL_L = l;
+        _hslL = l;
     }
 
+    /// <summary>Provides the RecalculateHSLFromHSV member.</summary>
     private void RecalculateHSLFromHSV()
     {
-        var hsltuple = ColorSpaceHelper.HsvToHsl(_HSV_H, _HSV_S, _HSV_V);
-        double h = hsltuple.Item1, s = hsltuple.Item2, l = hsltuple.Item3;
-        _HSL_H = h;
+        var hsltuple = ColorSpaceHelper.HsvToHsl(_hsvH, _hsvS, _hsvV);
+        double h = hsltuple.Item1;
+        double s = hsltuple.Item2;
+        double l = hsltuple.Item3;
+        _hslH = h;
         if (s != -1)
         {
-            _HSL_S = s;
+            _hslS = s;
         }
 
-        _HSL_L = l;
+        _hslL = l;
     }
 
+    /// <summary>Provides the RecalculateHSVFromRGB member.</summary>
     private void RecalculateHSVFromRGB()
     {
-        var hsvtuple = ColorSpaceHelper.RgbToHsv(_RGB_R, _RGB_G, _RGB_B);
-        double h = hsvtuple.Item1, s = hsvtuple.Item2, v = hsvtuple.Item3;
+        var hsvtuple = ColorSpaceHelper.RgbToHsv(_rgbR, _rgbG, _rgbB);
+        double h = hsvtuple.Item1;
+        double s = hsvtuple.Item2;
+        double v = hsvtuple.Item3;
         if (h != -1)
         {
-            _HSV_H = h;
+            _hsvH = h;
         }
 
         if (s != -1)
         {
-            _HSV_S = s;
+            _hsvS = s;
         }
 
-        _HSV_V = v;
+        _hsvV = v;
     }
 
+    /// <summary>Provides the RecalculateHSVFromHSL member.</summary>
     private void RecalculateHSVFromHSL()
     {
-        var hsvtuple = ColorSpaceHelper.HslToHsv(_HSL_H, _HSL_S, _HSL_L);
-        double h = hsvtuple.Item1, s = hsvtuple.Item2, v = hsvtuple.Item3;
-        _HSV_H = h;
+        var hsvtuple = ColorSpaceHelper.HslToHsv(_hslH, _hslS, _hslL);
+        double h = hsvtuple.Item1;
+        double s = hsvtuple.Item2;
+        double v = hsvtuple.Item3;
+        _hsvH = h;
         if (s != -1)
         {
-            _HSV_S = s;
+            _hsvS = s;
         }
 
-        _HSV_V = v;
+        _hsvV = v;
     }
 
+    /// <summary>Provides the RecalculateRGBFromHSL member.</summary>
     private void RecalculateRGBFromHSL()
     {
-        var rgbtuple = ColorSpaceHelper.HslToRgb(_HSL_H, _HSL_S, _HSL_L);
-        _RGB_R = rgbtuple.Item1;
-        _RGB_G = rgbtuple.Item2;
-        _RGB_B = rgbtuple.Item3;
+        var rgbtuple = ColorSpaceHelper.HslToRgb(_hslH, _hslS, _hslL);
+        _rgbR = rgbtuple.Item1;
+        _rgbG = rgbtuple.Item2;
+        _rgbB = rgbtuple.Item3;
     }
 
+    /// <summary>Provides the RecalculateRGBFromHSV member.</summary>
     private void RecalculateRGBFromHSV()
     {
-        var rgbtuple = ColorSpaceHelper.HsvToRgb(_HSV_H, _HSV_S, _HSV_V);
-        _RGB_R = rgbtuple.Item1;
-        _RGB_G = rgbtuple.Item2;
-        _RGB_B = rgbtuple.Item3;
+        var rgbtuple = ColorSpaceHelper.HsvToRgb(_hsvH, _hsvS, _hsvV);
+        _rgbR = rgbtuple.Item1;
+        _rgbG = rgbtuple.Item2;
+        _rgbB = rgbtuple.Item3;
     }
 }

@@ -1,35 +1,27 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Button that opens a URL in a web browser.
-/// </summary>
+/// <summary>Button that opens a URL in a web browser.</summary>
 public class HyperlinkButton : Button
 {
-    /// <summary>
-    /// Property for <see cref="NavigateUri"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="NavigateUri"/>.</summary>
     public static readonly DependencyProperty NavigateUriProperty = DependencyProperty.Register(
         nameof(NavigateUri),
         typeof(string),
         typeof(HyperlinkButton),
         new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// Gets or sets the URL (or application shortcut) to open.
-    /// </summary>
+    /// <summary>Gets or sets the URL (or application shortcut) to open.</summary>
     public string NavigateUri
     {
-        get => GetValue(NavigateUriProperty) as string ?? string.Empty;
+        get => (GetValue(NavigateUriProperty) as string) ?? string.Empty;
         set => SetValue(NavigateUriProperty, value);
     }
 
-    /// <summary>
-    /// Called when a <see cref="T:System.Windows.Controls.Button" /> is clicked.
-    /// </summary>
+    /// <summary>Called when a <see cref="T:System.Windows.Controls.Button" /> is clicked.</summary>
     protected override void OnClick()
     {
         base.OnClick();
@@ -44,9 +36,9 @@ public class HyperlinkButton : Button
                 $"INFO | HyperlinkButton clicked, with href: {NavigateUri}",
                 "CrissCross.WPF.UI.HyperlinkButton");
 
-            ProcessStartInfo sInfo = new(new Uri(NavigateUri).AbsoluteUri) { UseShellExecute = true };
+            ProcessStartInfo startInfo = new(new Uri(NavigateUri).AbsoluteUri) { UseShellExecute = true };
 
-            Process.Start(sInfo);
+            _ = Process.Start(startInfo);
         }
         catch (Exception e)
         {

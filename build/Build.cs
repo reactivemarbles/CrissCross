@@ -25,8 +25,8 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 ////    FetchDepth = 0,
 ////    ImportSecrets = new[] { nameof(NuGetApiKey) },
 ////    InvokedTargets = new[] { nameof(Compile), nameof(Deploy) })]
-partial class Build : NukeBuild
-{    
+sealed partial class Build : NukeBuild
+{
     public static int Main() => Execute<Build>(x => x.Pack);
 
     private static AbsolutePath SolutionFile => RootDirectory / "src" / "CrissCross.slnx";

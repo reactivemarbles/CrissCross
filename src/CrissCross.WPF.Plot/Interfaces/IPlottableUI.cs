@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.Plot;
@@ -14,49 +14,37 @@ namespace CrissCross.WPF.Plot;
 /// needed.</remarks>
 public interface IPlottableUI : IDisposable
 {
-    /// <summary>
-    /// Gets or sets a value indicating whether [automatic scale].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [automatic scale].</summary>
     /// <value>
     ///   <c>true</c> if [automatic scale]; otherwise, <c>false</c>.
     /// </value>
     bool AutoScale { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [manual scale].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [manual scale].</summary>
     /// <value>
     ///   <c>true</c> if [manual scale]; otherwise, <c>false</c>.
     /// </value>
     bool ManualScale { get; set; }
 
-    /// <summary>
-    /// Gets or sets the mode.
-    /// </summary>
+    /// <summary>Gets or sets the mode.</summary>
     /// <value>
     /// The mode.
     /// </value>
     int Mode { get; set; }
 
-    /// <summary>
-    /// Gets or sets the number points plotted.
-    /// </summary>
+    /// <summary>Gets or sets the number points plotted.</summary>
     /// <value>
     /// The number points plotted.
     /// </value>
     int NumberPointsPlotted { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [use fixed number of points].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [use fixed number of points].</summary>
     /// <value>
     ///   <c>true</c> if [use fixed number of points]; otherwise, <c>false</c>.
     /// </value>
     bool UseFixedNumberOfPoints { get; set; }
 
-    /// <summary>
-    /// Gets or sets the chart settings.
-    /// </summary>
+    /// <summary>Gets or sets the chart settings.</summary>
     /// <value>
     /// The chart settings.
     /// </value>

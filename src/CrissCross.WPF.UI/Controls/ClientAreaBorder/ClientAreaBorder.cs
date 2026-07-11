@@ -1,9 +1,8 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Shell;
-using ReactiveMarbles.ObservableEvents;
 using Size = System.Windows.Size;
 
 namespace CrissCross.WPF.UI.Controls;
@@ -39,30 +38,35 @@ namespace CrissCross.WPF.UI.Controls;
 /// </example>
 public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
 {
+    /// <summary>Stores the _paddedBorderThickness value.</summary>
     private static Thickness? _paddedBorderThickness;
 
+    /// <summary>Stores the _resizeFrameBorderThickness value.</summary>
     private static Thickness? _resizeFrameBorderThickness;
 
+    /// <summary>Stores the _windowChromeNonClientFrameThickness value.</summary>
     private static Thickness? _windowChromeNonClientFrameThickness;
+
+    /// <summary>Stores the _windowStateChangedSubscription value.</summary>
     private IDisposable? _windowStateChangedSubscription;
+
+    /// <summary>Stores the _windowClosingSubscription value.</summary>
     private IDisposable? _windowClosingSubscription;
 
+    /// <summary>Stores the _borderBrushApplied value.</summary>
     private bool _borderBrushApplied;
 
+    /// <summary>Stores the _oldWindow value.</summary>
     private System.Windows.Window? _oldWindow;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ClientAreaBorder"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ClientAreaBorder"/> class.</summary>
     public ClientAreaBorder()
     {
         ApplicationTheme = ApplicationThemeManager.GetAppTheme();
         ApplicationThemeManager.Changed += OnThemeChanged;
     }
 
-    /// <summary>
-    /// Gets get the system SM_CXFRAME and SM_CYFRAME values in WPF units.
-    /// </summary>
+    /// <summary>Gets get the system SM_CXFRAME and SM_CYFRAME values in WPF units.</summary>
     public static Thickness ResizeFrameBorderThickness =>
         _resizeFrameBorderThickness ??= new Thickness(
             SystemParameters.ResizeFrameVerticalBorderWidth,
@@ -70,14 +74,10 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
             SystemParameters.ResizeFrameVerticalBorderWidth,
             SystemParameters.ResizeFrameHorizontalBorderHeight);
 
-    /// <summary>
-    /// Gets or sets the theme is currently set.
-    /// </summary>
+    /// <summary>Gets or sets the theme is currently set.</summary>
     public ApplicationTheme ApplicationTheme { get; set; } = ApplicationTheme.Unknown;
 
-    /// <summary>
-    /// Gets get the system SM_CXPADDEDBORDER value in WPF units.
-    /// </summary>
+    /// <summary>Gets get the system SM_CXPADDEDBORDER value in WPF units.</summary>
     public Thickness PaddedBorderThickness
     {
         get
@@ -121,7 +121,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     {
         base.OnVisualParentChanged(oldParent);
 
-        if (_oldWindow is { } oldWindow)
+        if (_oldWindow is not null)
         {
             _windowStateChangedSubscription?.Dispose();
             _windowClosingSubscription?.Dispose();
@@ -132,8 +132,12 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         if (newWindow is not null)
         {
             _windowStateChangedSubscription?.Dispose();
-            _windowStateChangedSubscription = newWindow.Events().StateChanged.Subscribe(e => OnWindowStateChanged(newWindow, e));
-            _windowClosingSubscription = newWindow.Events().Closing.Subscribe(OnWindowClosing);
+            _windowStateChangedSubscription = EventSignal
+                .From<EventHandler, EventArgs>(handler => handler.Invoke, handler => newWindow.StateChanged += handler, handler => newWindow.StateChanged -= handler)
+                .Subscribe(e => OnWindowStateChanged(newWindow, e));
+            _windowClosingSubscription = EventSignal
+                .From<CancelEventHandler, CancelEventArgs>(handler => handler.Invoke, handler => newWindow.Closing += handler, handler => newWindow.Closing -= handler)
+                .Subscribe(OnWindowClosing);
         }
 
         _oldWindow = newWindow;
@@ -141,11 +145,14 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         ApplyDefaultWindowBorder();
     }
 
-    private void OnThemeChanged(ApplicationTheme currentApplicationTheme, Color systemAccent)
+    /// <summary>Provides the OnThemeChanged member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="args">The event arguments.</param>
+    private void OnThemeChanged(object? sender, ThemeChangedEventArgs args)
     {
-        ApplicationTheme = currentApplicationTheme;
+        ApplicationTheme = args.CurrentApplicationTheme;
 
-        if (!_borderBrushApplied || _oldWindow == null)
+        if (!_borderBrushApplied || _oldWindow is null)
         {
             return;
         }
@@ -153,36 +160,53 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         ApplyDefaultWindowBorder();
     }
 
-    private void OnWindowClosing(CancelEventArgs e)
+    /// <summary>Provides the OnWindowClosing member.</summary>
+    /// <param name="eventArgs">The event arguments.</param>
+    private void OnWindowClosing(CancelEventArgs eventArgs)
     {
+        _ = eventArgs;
+
         ApplicationThemeManager.Changed -= OnThemeChanged;
-        if (_oldWindow != null)
+        if (_oldWindow is null)
         {
-            _windowClosingSubscription?.Dispose();
+            return;
         }
+
+        _windowClosingSubscription?.Dispose();
     }
 
-    private void OnWindowStateChanged(System.Windows.Window window, EventArgs e) => Padding = window.WindowState switch
+    /// <summary>Provides the OnWindowStateChanged member.</summary>
+    /// <param name="window">The window value.</param>
+    /// <param name="eventArgs">The event arguments.</param>
+    private void OnWindowStateChanged(System.Windows.Window window, EventArgs eventArgs)
     {
-        WindowState.Maximized => WindowChromeNonClientFrameThickness,
-        _ => default,
-    };
+        _ = eventArgs;
 
+        Padding = window.WindowState switch
+        {
+            WindowState.Maximized => WindowChromeNonClientFrameThickness,
+            _ => default,
+        };
+    }
+
+    /// <summary>Provides the ApplyDefaultWindowBorder member.</summary>
     private void ApplyDefaultWindowBorder()
     {
-        if (Win32.Utilities.IsOSWindows11OrNewer || _oldWindow == null)
+        if (Win32.Utilities.IsOSWindows11OrNewer || _oldWindow is null)
         {
             return;
         }
 
         _borderBrushApplied = true;
-        _oldWindow.BorderThickness = new Thickness(1);
+        _oldWindow.BorderThickness = new(1);
         _oldWindow.BorderBrush = new SolidColorBrush(
             ApplicationTheme == ApplicationTheme.Light
                 ? Color.FromArgb(0xFF, 0x7A, 0x7A, 0x7A)
                 : Color.FromArgb(0xFF, 0x3A, 0x3A, 0x3A));
     }
 
+    /// <summary>Provides the GetDpi member.</summary>
+    /// <returns>The result.</returns>
     private (double factorX, double factorY) GetDpi()
     {
         if (PresentationSource.FromVisual(this) is { } source)

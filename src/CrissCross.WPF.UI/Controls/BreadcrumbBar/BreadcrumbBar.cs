@@ -1,86 +1,69 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Specialized;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// The <see cref="BreadcrumbBar"/> control provides the direct path of pages or folders to the current location.
-/// </summary>
+/// <summary>The <see cref="BreadcrumbBar"/> control provides the direct path of pages or folders to the current location.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:BreadcrumbBar x:Name="BreadcrumbBar" /&gt;
 /// </code>
 /// </example>
 [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(BreadcrumbBarItem))]
-public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNavigation
+public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNavigation
 {
-    /// <summary>
-    /// Property for <see cref="Command"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Command"/>.</summary>
     public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
         nameof(Command),
         typeof(ICommand),
         typeof(BreadcrumbBar),
         new PropertyMetadata(null));
 
-    /// <summary>
-    /// Property for <see cref="TemplateButtonCommand"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(BreadcrumbBar),
         new PropertyMetadata(null));
 
-    /// <summary>
-    /// Property for <see cref="ItemClicked"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="ItemClicked"/>.</summary>
     public static readonly RoutedEvent ItemClickedRoutedEvent = EventManager.RegisterRoutedEvent(
         nameof(ItemClicked),
         RoutingStrategy.Bubble,
-        typeof(TypedEventHandler<BreadcrumbBar, BreadcrumbBarItemClickedEventArgs>),
+        typeof(EventHandler<BreadcrumbBarItemClickedEventArgs>),
         typeof(BreadcrumbBar));
 
-    private readonly CompositeDisposable _disposables = [];
+    /// <summary>The offset from the end used to update the item before the current last item.</summary>
+    private const int PreviousItemOffset = 2;
+
+    /// <summary>Stores the _hostName value.</summary>
     private string? _hostName;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="BreadcrumbBar"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="BreadcrumbBar"/> class.</summary>
     public BreadcrumbBar()
     {
-        SetValue(TemplateButtonCommandProperty, OnTemplateButtonClickCommand);
-        this.Events().Loaded.Subscribe(OnLoaded).DisposeWith(_disposables);
-        this.Events().Unloaded.Subscribe(OnUnloaded).DisposeWith(_disposables);
+        SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<object?>(OnTemplateButtonClick));
+        Loaded += (_, e) => OnLoaded(e);
+        Unloaded += (_, e) => OnUnloaded(e);
     }
 
-    /// <summary>
-    /// Occurs when an item is clicked in the <see cref="BreadcrumbBar"/>.
-    /// </summary>
-    public event TypedEventHandler<BreadcrumbBar, BreadcrumbBarItemClickedEventArgs> ItemClicked
+    /// <summary>Occurs when an item is clicked in the <see cref="BreadcrumbBar"/>.</summary>
+    public event EventHandler<BreadcrumbBarItemClickedEventArgs> ItemClicked
     {
         add => AddHandler(ItemClickedRoutedEvent, value);
         remove => RemoveHandler(ItemClickedRoutedEvent, value);
     }
 
-    /// <summary>
-    /// Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking.
-    /// </summary>
+    /// <summary>Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
-    /// <summary>
-    /// Gets or sets custom command executed after selecting the item.
-    /// </summary>
+    /// <summary>Gets or sets custom command executed after selecting the item.</summary>
     [Bindable(true)]
     [Category("Action")]
     [Localizability(LocalizationCategory.NeverLocalize)]
@@ -90,25 +73,23 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         set => SetValue(CommandProperty, value);
     }
 
-    /// <summary>
-    /// Setups the navigation.
-    /// </summary>
+    /// <summary>Setups the navigation.</summary>
     /// <param name="hostName">Name of the host.</param>
     public void SetupNavigation(string hostName)
     {
         _hostName = hostName;
-        this.Events().ItemClicked.Subscribe(e =>
+        ItemClicked += (_, args) =>
         {
-            if (e.args.Item is BreadcrumbBarItem item)
+            if (args.Item is not BreadcrumbBarItem item)
             {
-                NavigateTo(item.NavigationType);
+                return;
             }
-        });
+
+            NavigateTo(item.NavigationType);
+        };
     }
 
-    /// <summary>
-    /// Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.
-    /// </summary>
+    /// <summary>Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.</summary>
     /// <typeparam name="T">Type of ViewModel.</typeparam>
     /// <param name="contract">The viewmodel contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
@@ -126,14 +107,12 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         this.NavigateToView<T>(_hostName, contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.
-    /// </summary>
+    /// <summary>Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.</summary>
+    /// <exception cref="System.ArgumentNullException">type.</exception>
     /// <param name="type">Type of ViewModel.</param>
     /// <param name="contract">The viewmodel contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
     /// <param name="breadcrumbItemContent">Content of the breadcrumb item.</param>
-    /// <exception cref="System.ArgumentNullException">type.</exception>
     public void NavigateTo(Type type, string? contract = null, object? parameter = null, string? breadcrumbItemContent = null)
     {
         if (string.IsNullOrEmpty(_hostName))
@@ -151,12 +130,10 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         this.NavigateToView(type, _hostName, contract, parameter);
     }
 
-    /// <summary>
-    /// Navigates back and updates the Breadcrumb to remove the last item.
-    /// </summary>
+    /// <summary>Navigates back and updates the Breadcrumb to remove the last item.</summary>
+    /// <exception cref="System.InvalidOperationException">Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.</exception>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
-    /// <exception cref="System.InvalidOperationException">Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.</exception>
     public IRxObject? NavigateBack(object? parameter = null)
     {
         if (string.IsNullOrEmpty(_hostName))
@@ -164,23 +141,21 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
             throw new InvalidOperationException("Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.");
         }
 
-        if (Items.Count != 0)
+        if (Items.Count == 0)
         {
-            var vm = this.NavigateBack(_hostName, parameter);
-            if (vm != null)
-            {
-                UpdateItems(vm.GetType(), vm.DisplayName);
-            }
-
-            return vm;
+            return null;
         }
 
-        return null;
+        var vm = this.NavigateBack(_hostName, parameter);
+        if (vm is not null)
+        {
+            UpdateItems(vm.GetType(), vm.DisplayName);
+        }
+
+        return vm;
     }
 
-    /// <summary>
-    /// Called when [item clicked].
-    /// </summary>
+    /// <summary>Called when [item clicked].</summary>
     /// <param name="item">The item.</param>
     /// <param name="index">The index.</param>
     protected virtual void OnItemClicked(object item, int index)
@@ -193,29 +168,30 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
             Command.Execute(item);
         }
 
-        if (Command?.CanExecute(null) ?? false)
+        if (Command?.CanExecute(null) != true)
         {
-            Command.Execute(null);
+            return;
         }
+
+        Command.Execute(null);
     }
 
-    /// <summary>
-    /// Determines if the specified item is (or is eligible to be) its own container.
-    /// </summary>
+    /// <summary>Determines if the specified item is (or is eligible to be) its own container.</summary>
     /// <param name="item">The item to check.</param>
     /// <returns>
     /// true if the item is (or is eligible to be) its own container; otherwise, false.
     /// </returns>
     protected override bool IsItemItsOwnContainerOverride(object item) => item is BreadcrumbBarItem;
 
-    /// <summary>
-    /// Creates or identifies the element that is used to display the given item.
-    /// </summary>
+    /// <summary>Creates or identifies the element that is used to display the given item.</summary>
     /// <returns>
     /// The element that is used to display the given item.
     /// </returns>
     protected override DependencyObject GetContainerForItemOverride() => new BreadcrumbBarItem();
 
+    /// <summary>Provides the UpdateItems member.</summary>
+    /// <param name="typeName">The typeName value.</param>
+    /// <param name="content">The content value.</param>
     private void UpdateItems(Type typeName, string? content = null)
     {
         var list = Items.OfType<BreadcrumbBarItem>().ToList().Where(x => x.NavigationType == typeName).ToList();
@@ -229,26 +205,33 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         }
         else
         {
-            Items.Add(new BreadcrumbBarItem { NavigationType = typeName, Content = content ?? typeName.Name });
+            _ = Items.Add(new BreadcrumbBarItem { NavigationType = typeName, Content = content ?? typeName.Name });
         }
     }
 
+    /// <summary>Provides the OnLoaded member.</summary>
+    /// <param name="e">The event arguments.</param>
     private void OnLoaded(RoutedEventArgs e)
     {
+        _ = e;
         ItemContainerGenerator.ItemsChanged += ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged += ItemContainerGeneratorOnStatusChanged;
 
         UpdateLastContainer();
     }
 
+    /// <summary>Provides the OnUnloaded member.</summary>
+    /// <param name="e">The event arguments.</param>
     private void OnUnloaded(RoutedEventArgs e)
     {
-        _disposables.Dispose();
-
+        _ = e;
         ItemContainerGenerator.ItemsChanged -= ItemContainerGeneratorOnItemsChanged;
         ItemContainerGenerator.StatusChanged -= ItemContainerGeneratorOnStatusChanged;
     }
 
+    /// <summary>Provides the ItemContainerGeneratorOnStatusChanged member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void ItemContainerGeneratorOnStatusChanged(object? sender, EventArgs e)
     {
         if (ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
@@ -262,10 +245,13 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
             return;
         }
 
-        InteractWithItemContainer(2, static item => item.IsLast = false);
+        InteractWithItemContainer(PreviousItemOffset, static item => item.IsLast = false);
         UpdateLastContainer();
     }
 
+    /// <summary>Provides the ItemContainerGeneratorOnItemsChanged member.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void ItemContainerGeneratorOnItemsChanged(object sender, ItemsChangedEventArgs e)
     {
         if (e.Action != NotifyCollectionChangedAction.Remove)
@@ -276,7 +262,8 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         UpdateLastContainer();
     }
 
-    [ReactiveCommand]
+    /// <summary>Provides the OnTemplateButtonClick member.</summary>
+    /// <param name="obj">The obj value.</param>
     private void OnTemplateButtonClick(object? obj)
     {
         if (obj is null)
@@ -285,11 +272,14 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         }
 
         var container = ItemContainerGenerator.ContainerFromItem(obj);
-        var index = container == null ? -1 : ItemContainerGenerator.IndexFromContainer(container);
+        var index = container is null ? -1 : ItemContainerGenerator.IndexFromContainer(container);
 
         OnItemClicked(obj, index);
     }
 
+    /// <summary>Provides the InteractWithItemContainer member.</summary>
+    /// <param name="offsetFromEnd">The offsetFromEnd value.</param>
+    /// <param name="action">The action value.</param>
     private void InteractWithItemContainer(int offsetFromEnd, Action<BreadcrumbBarItem> action)
     {
         if (ItemContainerGenerator.Items.Count == 0)
@@ -303,5 +293,6 @@ public partial class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseH
         action.Invoke(container);
     }
 
+    /// <summary>Provides the UpdateLastContainer member.</summary>
     private void UpdateLastContainer() => InteractWithItemContainer(1, static item => item.IsLast = true);
 }

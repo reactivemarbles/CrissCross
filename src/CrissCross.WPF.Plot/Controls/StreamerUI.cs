@@ -1,9 +1,7 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
@@ -24,48 +22,58 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class StreamerUI : RxObject, IPlottableUI
 {
+    /// <summary>Stores the value buffer value.</summary>
     private readonly double[] _valueBuffer;
-    private readonly uint _nSamples = 1;
+
+    /// <summary>Stores the sample count value.</summary>
+    private readonly uint _sampleCount = 1;
+
+    /// <summary>Stores the fs value.</summary>
     private readonly int _fs = 1;
+
+    /// <summary>Stores the number points plotted saved value.</summary>
     private readonly int _numberPointsPlottedSaved;
 
+    /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects _chartSettings = new();
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the manual scale value.</summary>
     [Reactive]
     private bool _manualScale;
+
+    /// <summary>Stores the mode value.</summary>
     [Reactive]
     private int _mode;
+
+    /// <summary>Stores the number points plotted value.</summary>
     [Reactive]
     private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="StreamerUI"/> class to display and update a streaming plot based on observable.
-    /// data.
-    /// </summary>
-    /// <remarks>The chart's item name is set from the first emission of the observable sequence. Chart
-    /// appearance and cursor values are initialized using the provided color and plot control. The autoscale,
-    /// manualscale, and fixedPoints parameters control axis scaling and point display behavior.</remarks>
-    /// <param name="plot">The WpfPlot control used to render the streaming chart.</param>
-    /// <param name="observable">An observable sequence providing tuples containing the item name, value data, date/time data, and axis index for
-    /// plotting.</param>
+    /// <summary>Initializes a new instance of the <see cref="StreamerUI"/> class to display and update a streaming plot based on observable. data.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
     /// <param name="fs">The sampling frequency, in Hz, used for interpreting the data stream.</param>
-    /// <param name="nSamples">The number of samples to buffer for the streaming plot. Must be greater than 0.</param>
-    /// <param name="nPointsPlotted">The initial number of data points to display on the plot.</param>
+    /// <param name="sampleCount">The number of samples to buffer for the streaming plot. Must be greater than 0.</param>
+    /// <param name="plottedPointCount">The initial number of data points to display on the plot.</param>
     /// <param name="color">The color used for the plot line and chart appearance.</param>
     /// <param name="autoscale">true to enable automatic scaling of the plot axes; otherwise, false.</param>
     /// <param name="manualscale">true to enable manual scaling of the plot axes; otherwise, false.</param>
     /// <param name="fixedPoints">true to fix the number of points displayed on the plot; otherwise, false.</param>
-    /// <exception cref="IndexOutOfRangeException">Thrown when nSamples is less than or equal to 0.</exception>
     public StreamerUI(
                         WpfPlot plot,
                         IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
                         int fs,
-                        uint nSamples,
-                        int nPointsPlotted,
+                        uint sampleCount,
+                        int plottedPointCount,
                         string color,
                         bool autoscale = true,
                         bool manualscale = false,
@@ -75,22 +83,22 @@ public partial class StreamerUI : RxObject, IPlottableUI
         ManualScale = manualscale;
         AutoScale = autoscale;
 
-        if (nSamples <= 0)
+        if (sampleCount <= 0)
         {
-            throw new IndexOutOfRangeException("nSamples must be greater than 0");
+            throw new ArgumentOutOfRangeException(nameof(sampleCount), "sampleCount must be greater than 0");
         }
 
-        _nSamples = nSamples;
+        _sampleCount = sampleCount;
         _fs = fs;
-        _numberPointsPlottedSaved = nPointsPlotted;
-        _valueBuffer = new double[nPointsPlotted];
+        _numberPointsPlottedSaved = plottedPointCount;
+        _valueBuffer = new double[plottedPointCount];
 
         Plot = plot;
 
         CreateStreamer(color);
 
         // Set name from first emission of the observable
-        observable
+        _ = observable
             .Take(1)
             .Where(d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -102,21 +110,15 @@ public partial class StreamerUI : RxObject, IPlottableUI
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
-    /// <summary>
-    /// Gets or sets the WPF plot control used to display graphical data within the application.
-    /// </summary>
+    /// <summary>Gets or sets the WPF plot control used to display graphical data within the application.</summary>
     /// <remarks>Assign this property to embed or update the plot visualization in a WPF user interface. The
     /// property should be set before interacting with plot-specific features or rendering data.</remarks>
     public WpfPlot Plot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the data streamer used to plot line data in the visualization.
-    /// </summary>
+    /// <summary>Gets or sets the data streamer used to plot line data in the visualization.</summary>
     public DataStreamer? PlotLine { get; set; }
 
-    /// <summary>
-    /// Initializes a new data streamer line on the plot using the specified color.
-    /// </summary>
+    /// <summary>Initializes a new data streamer line on the plot using the specified color.</summary>
     /// <remarks>The method configures the streamer line with default width and period settings, and scrolls
     /// the view to the left to display the most recent data points. The color parameter must be a valid hexadecimal
     /// color code; otherwise, an exception may be thrown by the color parsing logic.</remarks>
@@ -127,25 +129,18 @@ public partial class StreamerUI : RxObject, IPlottableUI
         var darray = new double[_numberPointsPlottedSaved];
         PlotLine.Data = new(darray);
         PlotLine.ViewScrollLeft();
-        PlotLine.Period = (double)_fs / _nSamples;
+        PlotLine.Period = (double)_fs / _sampleCount;
         PlotLine.LineStyle.Width = 1f;
         PlotLine.Color = Color.FromHex(color);
     }
 
-    /// <summary>
-    /// Subscribes to an observable sequence of fixed-point data and updates the streamer plot with new values as they
-    /// arrive.
-    /// </summary>
-    /// <remarks>The method processes incoming data on a background thread and updates the plot on the main
-    /// thread. Data is only plotted if the chart is not paused. The observable sequence is retried on error, ensuring
-    /// continuous updates unless disposed.</remarks>
-    /// <param name="observable">An observable sequence that provides tuples containing the series name, Y-values, X-values, and axis index. Each
-    /// tuple must have a non-empty name, non-null and non-empty Y and X lists of equal length.</param>
+    /// <summary>Subscribes to an observable sequence of fixed-point data and updates the streamer plot with new values as they arrive.</summary>
+    /// <param name="observable">The observable value.</param>
     public void UpdateStreamerFixedPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
         observable
         .ObserveOn(RxSchedulers.TaskpoolScheduler)
-        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Y != null && d.X != null && d.Y.Count > 0 && d.X.Count > 0 && d.Y.Count == d.X.Count)
-        .Retry()
+        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Y is not null && d.X is not null && d.Y.Count > 0 && d.X.Count > 0 && d.Y.Count == d.X.Count)
+        .Retry(int.MaxValue)
         .ObserveOn(RxSchedulers.MainThreadScheduler)
         .Subscribe(d =>
         {
@@ -164,31 +159,26 @@ public partial class StreamerUI : RxObject, IPlottableUI
             PlotLine!.AddRange(segment);
             PlotLine!.ManageAxisLimits = false;
 
-            //// UPDATE IF IS NOT PAUSED
-            if (!ChartSettings.IsPaused)
+            if (ChartSettings.IsPaused)
             {
-                try
-                {
-                    Plot.Refresh();
-                }
-                catch
-                {
-                }
+                return;
             }
+
+            Plot.Refresh();
         }).DisposeWith(Disposables);
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        if (!disposing)
         {
-            ChartSettings.IsCheckedCmd?.Dispose();
-            ChartSettings.Dispose();
-            _chartSettings.Dispose();
+            base.Dispose(disposing);
+            return;
         }
+
+        ChartSettings.IsCheckedCmd?.Dispose();
+        _chartSettings.Dispose();
+        base.Dispose(disposing);
     }
 }

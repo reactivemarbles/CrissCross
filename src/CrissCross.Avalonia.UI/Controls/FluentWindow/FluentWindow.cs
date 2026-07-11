@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -7,34 +7,27 @@ using Avalonia.Controls;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// A custom Fluent Window with more convenience methods.
-/// </summary>
+/// <summary>A custom Fluent Window with more convenience methods.</summary>
 /// <remarks>
 /// This is a simplified version for Avalonia. Platform-specific features
 /// like Windows Mica backdrop are not available cross-platform.
 /// </remarks>
 public class FluentWindow : Window
 {
-    /// <summary>
-    /// Property for <see cref="ExtendsContentIntoTitleBar"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="ExtendsContentIntoTitleBar"/>.</summary>
     public static readonly StyledProperty<bool> ExtendsContentIntoTitleBarProperty =
         AvaloniaProperty.Register<FluentWindow, bool>(
-            nameof(ExtendsContentIntoTitleBar), false);
+            nameof(ExtendsContentIntoTitleBar),
+            false);
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FluentWindow"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="FluentWindow"/> class.</summary>
     public FluentWindow()
     {
         // Configure window for Fluent design appearance
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur };
+        TransparencyLevelHint = [ WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur];
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the content extends into the title bar area.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the content extends into the title bar area.</summary>
     public bool ExtendsContentIntoTitleBar
     {
         get => GetValue(ExtendsContentIntoTitleBarProperty);
@@ -48,10 +41,12 @@ public class FluentWindow : Window
 
         base.OnPropertyChanged(change);
 
-        if (change.Property == ExtendsContentIntoTitleBarProperty)
+        if (change.Property != ExtendsContentIntoTitleBarProperty)
         {
-            ExtendClientAreaToDecorationsHint = (bool)change.NewValue!;
-            ExtendClientAreaTitleBarHeightHint = (bool)change.NewValue! ? -1 : 0;
+            return;
         }
+
+        ExtendClientAreaToDecorationsHint = (bool)change.NewValue!;
+        ExtendClientAreaTitleBarHeightHint = (bool)change.NewValue! ? -1 : 0;
     }
 }

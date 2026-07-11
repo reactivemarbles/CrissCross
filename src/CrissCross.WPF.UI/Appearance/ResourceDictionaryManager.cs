@@ -1,35 +1,27 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>
-/// Allows managing application dictionaries.
-/// </summary>
+/// <summary>Allows managing application dictionaries.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="ResourceDictionaryManager"/> class.
 /// </remarks>
 /// <param name="searchNamespace">The search namespace.</param>
-internal class ResourceDictionaryManager(string searchNamespace)
+internal sealed class ResourceDictionaryManager(string searchNamespace)
 {
-    /// <summary>
-    /// Gets the namespace, e.g. the library the resource is being searched for.
-    /// </summary>
+    /// <summary>Gets the namespace, e.g. the library the resource is being searched for.</summary>
     public string SearchNamespace { get; } = searchNamespace;
 
-    /// <summary>
-    /// Shows whether the application contains the <see cref="ResourceDictionary"/>.
-    /// </summary>
+    /// <summary>Shows whether the application contains the <see cref="ResourceDictionary"/>.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <returns><see langword="false"/> if it doesn't exist.</returns>
-    public bool HasDictionary(string resourceLookup) => GetDictionary(resourceLookup) != null;
+    public bool HasDictionary(string resourceLookup) => GetDictionary(resourceLookup) is not null;
 
-    /// <summary>
-    /// Gets the <see cref="ResourceDictionary"/> if exists.
-    /// </summary>
+    /// <summary>Gets the <see cref="ResourceDictionary"/> if exists.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <returns><see cref="ResourceDictionary"/>, <see langword="null"/> if it doesn't exist.</returns>
     public ResourceDictionary? GetDictionary(string resourceLookup)
@@ -43,48 +35,24 @@ internal class ResourceDictionaryManager(string searchNamespace)
 
         resourceLookup = resourceLookup.ToLower().Trim();
 
-        foreach (var t in applicationDictionaries)
+        foreach (var dictionary in applicationDictionaries)
         {
-            string resourceDictionaryUri;
-
-            if (t?.Source != null)
+            if (IsMatchingDictionary(dictionary, resourceLookup))
             {
-                resourceDictionaryUri = t.Source.ToString().ToLower().Trim();
-
-                if (
-                    resourceDictionaryUri.Contains(SearchNamespace)
-                    && resourceDictionaryUri.Contains(resourceLookup))
-                {
-                    return t;
-                }
+                return dictionary;
             }
 
-            foreach (var t1 in t!.MergedDictionaries)
+            var mergedDictionary = dictionary.MergedDictionaries.FirstOrDefault(child => IsMatchingDictionary(child, resourceLookup));
+            if (mergedDictionary is not null)
             {
-                if (t1?.Source == null)
-                {
-                    continue;
-                }
-
-                resourceDictionaryUri = t1.Source.ToString().ToLower().Trim();
-
-                if (
-                    !resourceDictionaryUri.Contains(SearchNamespace)
-                    || !resourceDictionaryUri.Contains(resourceLookup))
-                {
-                    continue;
-                }
-
-                return t1;
+                return mergedDictionary;
             }
         }
 
         return null;
     }
 
-    /// <summary>
-    /// Shows whether the application contains the <see cref="ResourceDictionary"/>.
-    /// </summary>
+    /// <summary>Shows whether the application contains the <see cref="ResourceDictionary"/>.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <param name="newResourceUri">A valid <see cref="Uri"/> for the replaced resource.</param>
     /// <returns><see langword="true"/> if the dictionary <see cref="Uri"/> was updated. <see langword="false"/> otherwise.</returns>
@@ -102,48 +70,44 @@ internal class ResourceDictionaryManager(string searchNamespace)
 
         resourceLookup = resourceLookup.ToLower().Trim();
 
-        for (var i = 0; i < applicationDictionaries.Count; i++)
+        return TryUpdateDictionary(applicationDictionaries, resourceLookup, newResourceUri);
+    }
+
+    /// <summary>Provides the GetApplicationMergedDictionaries member.</summary>
+    /// <returns>The result.</returns>
+    private static Collection<ResourceDictionary> GetApplicationMergedDictionaries() => UiApplication.Current.Resources.MergedDictionaries;
+
+    /// <summary>Determines whether the dictionary source matches the lookup.</summary>
+    /// <param name="dictionary">The resource dictionary.</param>
+    /// <param name="resourceLookup">The resource lookup text.</param>
+    /// <returns><c>true</c> if the dictionary matches; otherwise, <c>false</c>.</returns>
+    private bool IsMatchingDictionary(ResourceDictionary? dictionary, string resourceLookup)
+    {
+        var sourceUri = dictionary?.Source?.ToString().ToLower().Trim();
+        return sourceUri?.Contains(SearchNamespace) == true && sourceUri.Contains(resourceLookup);
+    }
+
+    /// <summary>Updates the first matching dictionary in the collection.</summary>
+    /// <param name="dictionaries">The dictionaries to inspect.</param>
+    /// <param name="resourceLookup">The resource lookup text.</param>
+    /// <param name="newResourceUri">The replacement resource URI.</param>
+    /// <returns><c>true</c> if a dictionary was updated; otherwise, <c>false</c>.</returns>
+    private bool TryUpdateDictionary(Collection<ResourceDictionary> dictionaries, string resourceLookup, Uri newResourceUri)
+    {
+        for (var i = 0; i < dictionaries.Count; i++)
         {
-            string sourceUri;
-
-            if (applicationDictionaries[i]?.Source != null)
+            if (IsMatchingDictionary(dictionaries[i], resourceLookup))
             {
-                sourceUri = applicationDictionaries[i].Source.ToString().ToLower().Trim();
-
-                if (sourceUri.Contains(SearchNamespace) && sourceUri.Contains(resourceLookup))
-                {
-                    applicationDictionaries[i] = new() { Source = newResourceUri };
-
-                    return true;
-                }
+                dictionaries[i] = new() { Source = newResourceUri };
+                return true;
             }
 
-            for (var j = 0; j < applicationDictionaries[i].MergedDictionaries.Count; j++)
+            if (TryUpdateDictionary(dictionaries[i].MergedDictionaries, resourceLookup, newResourceUri))
             {
-                if (applicationDictionaries[i].MergedDictionaries[j]?.Source == null)
-                {
-                    continue;
-                }
-
-                sourceUri = applicationDictionaries[i]
-                    .MergedDictionaries[j]
-                    .Source.ToString()
-                    .ToLower()
-                    .Trim();
-
-                if (!sourceUri.Contains(SearchNamespace) || !sourceUri.Contains(resourceLookup))
-                {
-                    continue;
-                }
-
-                applicationDictionaries[i].MergedDictionaries[j] = new() { Source = newResourceUri };
-
                 return true;
             }
         }
 
         return false;
     }
-
-    private static Collection<ResourceDictionary> GetApplicationMergedDictionaries() => UiApplication.Current.Resources.MergedDictionaries;
 }

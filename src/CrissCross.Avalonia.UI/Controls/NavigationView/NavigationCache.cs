@@ -1,26 +1,23 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Navigation cache for storing page instances.
-/// </summary>
-internal class NavigationCache
+/// <summary>Navigation cache for storing page instances.</summary>
+internal sealed class NavigationCache
 {
+    /// <summary>Provides the _entries member.</summary>
     private readonly Dictionary<Type, object?> _entries = [];
 
-    /// <summary>
-    /// Remembers the specified entry type.
-    /// </summary>
+    /// <summary>Remembers the specified entry type.</summary>
     /// <param name="entryType">Type of the entry.</param>
     /// <param name="cacheMode">The cache mode.</param>
     /// <param name="generate">The generate function.</param>
     /// <returns>The cached or generated instance.</returns>
     public object? Remember(Type? entryType, NavigationCacheMode cacheMode, Func<object?> generate)
     {
-        if (entryType == null)
+        if (entryType is null)
         {
             return null;
         }
@@ -54,8 +51,6 @@ internal class NavigationCache
         return value;
     }
 
-    /// <summary>
-    /// Clears the cache.
-    /// </summary>
+    /// <summary>Clears the cache.</summary>
     public void Clear() => _entries.Clear();
 }

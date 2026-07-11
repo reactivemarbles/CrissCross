@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
@@ -13,16 +13,15 @@ namespace CrissCross.WPF.UI.Styles.Controls;
 /// </summary>
 public partial class ContextMenu : ResourceDictionary
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ContextMenu"/> class.
-    /// Registers editing <see cref="ContextMenu"/> styles with <see cref="Dispatcher"/>.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ContextMenu"/> class. Registers editing <see cref="ContextMenu"/> styles with <see cref="Dispatcher"/>.</summary>
     public ContextMenu() =>
+
         //// Run OnResourceDictionaryLoaded asynchronously to ensure other ResourceDictionary are already loaded before adding new entries
         Dispatcher.CurrentDispatcher.BeginInvoke(
             DispatcherPriority.Normal,
             new Action(OnResourceDictionaryLoaded));
 
+    /// <summary>Provides the OnResourceDictionaryLoaded member.</summary>
     private void OnResourceDictionaryLoaded()
     {
         var currentAssembly = typeof(Application).Assembly;
@@ -30,12 +29,14 @@ public partial class ContextMenu : ResourceDictionary
         AddEditorContextMenuDefaultStyle(currentAssembly);
     }
 
+    /// <summary>Provides the AddEditorContextMenuDefaultStyle member.</summary>
+    /// <param name="currentAssembly">The currentAssembly value.</param>
     private void AddEditorContextMenuDefaultStyle(Assembly currentAssembly)
     {
         var editorContextMenuType = Type.GetType(
             "System.Windows.Documents.TextEditorContextMenu+EditorContextMenu, " + currentAssembly);
 
-        if (editorContextMenuType == null || this["UiContextMenu"] is not Style contextMenuStyle)
+        if (editorContextMenuType is null || this["UiContextMenu"] is not Style contextMenuStyle)
         {
             return;
         }

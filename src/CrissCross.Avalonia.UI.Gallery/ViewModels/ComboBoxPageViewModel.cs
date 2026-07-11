@@ -1,19 +1,15 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
 
 namespace CrissCross.Avalonia.UI.Gallery.ViewModels;
 
-/// <summary>
-/// ViewModel for the ComboBox page.
-/// </summary>
+/// <summary>ViewModel for the ComboBox page.</summary>
 public class ComboBoxPageViewModel : RxObject
 {
-    /// <summary>
-    /// Gets the sample suggestions for the AutoSuggestBox.
-    /// </summary>
+    /// <summary>Gets the sample suggestions for the AutoSuggestBox.</summary>
     public IEnumerable<string> SampleSuggestions { get; } =
     [
         "Apple",

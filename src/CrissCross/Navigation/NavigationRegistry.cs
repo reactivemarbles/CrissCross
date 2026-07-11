@@ -1,21 +1,21 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace CrissCross;
 
-/// <summary>
-/// Default in-memory, AOT-friendly bidirectional navigation registry.
-/// </summary>
+/// <summary>Default in-memory, AOT-friendly bidirectional navigation registry.</summary>
 public sealed class NavigationRegistry : INavigationRegistry
 {
+    /// <summary>Stores registrations keyed by view model type and contract.</summary>
     private readonly Dictionary<NavigationLookupKey, NavigationRegistrationDescriptor> _viewModelRegistrations = [];
+
+    /// <summary>Stores registrations keyed by view type and contract.</summary>
     private readonly Dictionary<NavigationLookupKey, NavigationRegistrationDescriptor> _viewRegistrations = [];
 
     /// <inheritdoc/>
@@ -36,15 +36,8 @@ public sealed class NavigationRegistry : INavigationRegistry
         where TViewKey : class
         where TView : class, TViewKey, IViewFor<TViewModel>
     {
-        if (createViewModel == null)
-        {
-            throw new ArgumentNullException(nameof(createViewModel));
-        }
-
-        if (createView == null)
-        {
-            throw new ArgumentNullException(nameof(createView));
-        }
+        ThrowHelper.ThrowIfNull(createViewModel, nameof(createViewModel));
+        ThrowHelper.ThrowIfNull(createView, nameof(createView));
 
         var normalizedContract = NavigationContract.Normalize(contract);
         var viewModelKey = new NavigationLookupKey(NavigationSourceKind.ViewModel, typeof(TViewModelKey), normalizedContract);
@@ -72,11 +65,16 @@ public sealed class NavigationRegistry : INavigationRegistry
         _viewModelRegistrations.Values.ToArray(),
         serviceProvider ?? EmptyServiceProvider.Instance);
 
+    /// <summary>Throws when a lookup key is already registered.</summary>
+    /// <param name="registrations">The existing registration map.</param>
+    /// <param name="key">The lookup key to validate.</param>
     private static void EnsureAvailable(Dictionary<NavigationLookupKey, NavigationRegistrationDescriptor> registrations, NavigationLookupKey key)
     {
-        if (registrations.ContainsKey(key))
+        if (!registrations.ContainsKey(key))
         {
-            throw new NavigationRegistrationException(key.SourceKind, key.ServiceType, key.Contract);
+            return;
         }
+
+        throw new NavigationRegistrationException(key.SourceKind, key.ServiceType, key.Contract);
     }
 }

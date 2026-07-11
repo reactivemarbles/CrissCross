@@ -1,12 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Arranges child elements into a single line that can be oriented horizontally or vertically.
-/// </summary>
+/// <summary>Arranges child elements into a single line that can be oriented horizontally or vertically.</summary>
 /// <remarks>Use StackPanel to create layouts where child controls are stacked in a single direction. The
 /// orientation can be set to either horizontal or vertical, allowing for flexible UI arrangements. StackPanel does not
 /// wrap its content; if the combined size of its children exceeds the available space, the content may be clipped. For

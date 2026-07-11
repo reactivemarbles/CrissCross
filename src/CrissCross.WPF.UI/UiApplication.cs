@@ -1,28 +1,28 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// Represents a UI application.
-/// </summary>
+/// <summary>Represents a UI application.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="UiApplication" /> class.
 /// </remarks>
 public class UiApplication
 {
+    /// <summary>Stores the _uiApplication value.</summary>
     [ThreadStatic]
     private static UiApplication? _uiApplication;
+
+    /// <summary>Stores the _application value.</summary>
     private readonly Application? _application;
-    private ResourceDictionary? _resources;
+
+    /// <summary>Stores the _mainWindow value.</summary>
     private Window? _mainWindow;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UiApplication" /> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="UiApplication" /> class.</summary>
     /// <param name="application">The application.</param>
     public UiApplication(Application application)
     {
@@ -43,9 +43,7 @@ public class UiApplication
             "CrissCross.WPF.UI");
     }
 
-    /// <summary>
-    /// Gets the current application.
-    /// </summary>
+    /// <summary>Gets the current application.</summary>
     public static UiApplication Current
     {
         get
@@ -56,14 +54,10 @@ public class UiApplication
         }
     }
 
-    /// <summary>
-    /// Gets a value indicating whether the application is running outside of the desktop app context.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the application is running outside of the desktop app context.</summary>
     public bool IsApplication => _application is not null;
 
-    /// <summary>
-    /// Gets or sets the application's main window.
-    /// </summary>
+    /// <summary>Gets or sets the application's main window.</summary>
     public Window? MainWindow
     {
         get => _application?.MainWindow ?? _mainWindow;
@@ -75,54 +69,52 @@ public class UiApplication
         }
     }
 
-    /// <summary>
-    /// Gets or sets the application's resources.
-    /// </summary>
+    /// <summary>Gets or sets the application's resources.</summary>
     public ResourceDictionary Resources
     {
         get
         {
-            if (_resources is null)
+            if (field is null)
             {
-                _resources = [];
+                field = [];
 
                 try
                 {
                     ApplicationAccentColorManager.ApplySystemAccent();
                     var themesDictionary = new Markup.ThemesDictionary();
                     var controlsDictionary = new Markup.ControlsDictionary();
-                    _resources.MergedDictionaries.Add(themesDictionary);
-                    _resources.MergedDictionaries.Add(controlsDictionary);
+                    field.MergedDictionaries.Add(themesDictionary);
+                    field.MergedDictionaries.Add(controlsDictionary);
                 }
-                catch
+                catch (Exception exception)
                 {
+                    Debug.WriteLine(exception);
                 }
             }
 
-            return _application?.Resources ?? _resources;
+            return _application?.Resources ?? field;
         }
 
         set
         {
             _application?.Resources = value;
 
-            _resources = value;
+            field = value;
         }
     }
 
-    /// <summary>
-    /// Gets or sets the application's main window.
-    /// </summary>
+    /// <summary>Gets or sets the application's main window.</summary>
     /// <param name="resourceKey">The resource key.</param>
     /// <returns>An object representing the resource.</returns>
     public object TryFindResource(object resourceKey) => Resources[resourceKey];
 
-    /// <summary>
-    /// Turns the application's into shutdown mode.
-    /// </summary>
+    /// <summary>Turns the application's into shutdown mode.</summary>
     public void Shutdown() => _application?.Shutdown();
 
+    /// <summary>Provides the ApplicationHasResources member.</summary>
+    /// <param name="application">The application value.</param>
+    /// <returns>The result.</returns>
     private static bool ApplicationHasResources(Application application) =>
         application.Resources.MergedDictionaries
-            .Any(e => e.Source?.ToString().ToLower().Contains(Appearance.ApplicationThemeManager.LibraryNamespace) == true);
+            .Any(e => e.Source?.ToString().Contains(Appearance.ApplicationThemeManager.LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true);
 }

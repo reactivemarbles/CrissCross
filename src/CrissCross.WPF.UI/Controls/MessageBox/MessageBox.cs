@@ -1,20 +1,16 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
-using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Customized window for notifications.
-/// </summary>
+/// <summary>Customized window for notifications.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(MessageBox), "MessageBox.bmp")]
-public partial class MessageBox : System.Windows.Window
+public class MessageBox : System.Windows.Window
 {
     /// <summary>Identifies the <see cref="ShowTitle"/> dependency property.</summary>
     public static readonly DependencyProperty ShowTitleProperty = DependencyProperty.Register(
@@ -107,184 +103,155 @@ public partial class MessageBox : System.Windows.Window
         typeof(MessageBox),
         new PropertyMetadata(null));
 
-    private static readonly PropertyInfo CanCenterOverWPFOwnerPropertyInfo = typeof(System.Windows.Window).GetProperty(
-        "CanCenterOverWPFOwner",
-        BindingFlags.NonPublic | BindingFlags.Instance)!;
+    /// <summary>Divisor used to calculate centered window offsets.</summary>
+    private const double CenterOffsetDivisor = 2.0;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessageBox"/> class.
-    /// </summary>
+    /// <summary>Multiplier used to apply symmetric horizontal margins.</summary>
+    private const double HorizontalMarginMultiplier = 2.0;
+
+#if !NET8_0_OR_GREATER
+    /// <summary>Provides the CanCenterOverWPFOwnerPropertyInfo member.</summary>
+    private static readonly PropertyInfo CanCenterOverWPFOwnerPropertyInfo = typeof(System.Windows.Window).GetProperty(
+        nameof(CanCenterOverWPFOwner),
+        BindingFlags.NonPublic | BindingFlags.Instance)!;
+#endif
+
+    /// <summary>Initializes a new instance of the <see cref="MessageBox"/> class.</summary>
     public MessageBox()
     {
         Topmost = true;
-        SetValue(TemplateButtonCommandProperty, OnButtonClickCommand);
+        SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<MessageBoxButton>(OnButtonClick));
 
         PreviewMouseDoubleClick += static (_, args) => args.Handled = true;
 
-        this.Events().Loaded.Subscribe(static e =>
+        Loaded += static (sender, _) =>
         {
-            var self = (MessageBox)e.Source;
+            var self = (MessageBox)sender;
             self.OnLoaded();
-        });
+        };
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to show the <see cref="System.Windows.Window.Title"/> in <see cref="TitleBar"/>.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether to show the <see cref="System.Windows.Window.Title"/> in <see cref="TitleBar"/>.</summary>
     public bool ShowTitle
     {
         get => (bool)GetValue(ShowTitleProperty);
         set => SetValue(ShowTitleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the text to display on the primary button.
-    /// </summary>
+    /// <summary>Gets or sets the text to display on the primary button.</summary>
     public string PrimaryButtonText
     {
         get => (string)GetValue(PrimaryButtonTextProperty);
         set => SetValue(PrimaryButtonTextProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the text to be displayed on the secondary button.
-    /// </summary>
+    /// <summary>Gets or sets the text to be displayed on the secondary button.</summary>
     public string SecondaryButtonText
     {
         get => (string)GetValue(SecondaryButtonTextProperty);
         set => SetValue(SecondaryButtonTextProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the text to display on the close button.
-    /// </summary>
+    /// <summary>Gets or sets the text to display on the close button.</summary>
     public string CloseButtonText
     {
         get => (string)GetValue(CloseButtonTextProperty);
         set => SetValue(CloseButtonTextProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="SymbolRegular"/> on the primary button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="SymbolRegular"/> on the primary button.</summary>
     public IconElement? PrimaryButtonIcon
     {
         get => (IconElement?)GetValue(PrimaryButtonIconProperty);
         set => SetValue(PrimaryButtonIconProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="SymbolRegular"/> on the secondary button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="SymbolRegular"/> on the secondary button.</summary>
     public IconElement? SecondaryButtonIcon
     {
         get => (IconElement?)GetValue(SecondaryButtonIconProperty);
         set => SetValue(SecondaryButtonIconProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="SymbolRegular"/> on the close button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="SymbolRegular"/> on the close button.</summary>
     public IconElement? CloseButtonIcon
     {
         get => (IconElement?)GetValue(CloseButtonIconProperty);
         set => SetValue(CloseButtonIconProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="ControlAppearance"/> on the primary button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="ControlAppearance"/> on the primary button.</summary>
     public ControlAppearance PrimaryButtonAppearance
     {
         get => (ControlAppearance)GetValue(PrimaryButtonAppearanceProperty);
         set => SetValue(PrimaryButtonAppearanceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="ControlAppearance"/> on the secondary button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="ControlAppearance"/> on the secondary button.</summary>
     public ControlAppearance SecondaryButtonAppearance
     {
         get => (ControlAppearance)GetValue(SecondaryButtonAppearanceProperty);
         set => SetValue(SecondaryButtonAppearanceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the <see cref="ControlAppearance"/> on the close button.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="ControlAppearance"/> on the close button.</summary>
     public ControlAppearance CloseButtonAppearance
     {
         get => (ControlAppearance)GetValue(CloseButtonAppearanceProperty);
         set => SetValue(CloseButtonAppearanceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the <see cref="MessageBox"/> primary button is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the <see cref="MessageBox"/> primary button is enabled.</summary>
     public bool IsSecondaryButtonEnabled
     {
         get => (bool)GetValue(IsSecondaryButtonEnabledProperty);
         set => SetValue(IsSecondaryButtonEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the <see cref="MessageBox"/> secondary button is enabled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the <see cref="MessageBox"/> secondary button is enabled.</summary>
     public bool IsPrimaryButtonEnabled
     {
         get => (bool)GetValue(IsPrimaryButtonEnabledProperty);
         set => SetValue(IsPrimaryButtonEnabledProperty, value);
     }
 
-    /// <summary>
-    /// Gets the command triggered after clicking the button on the Footer.
-    /// </summary>
+    /// <summary>Gets the command triggered after clicking the button on the Footer.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
-    /// <summary>
-    /// Gets or sets the TCS.
-    /// </summary>
+    /// <summary>Gets or sets the TCS.</summary>
     /// <value>
     /// The TCS.
     /// </value>
     protected TaskCompletionSource<MessageBoxResult>? Tcs { get; set; }
 
-    /// <summary>
-    /// Shows this instance.
-    /// </summary>
+    /// <summary>Shows this instance.</summary>
     /// <exception cref="InvalidOperationException">$"Use {nameof(ShowDialogAsync)} instead.</exception>
     [Obsolete($"Use {nameof(ShowDialogAsync)} instead")]
     public new void Show() => throw new InvalidOperationException($"Use {nameof(ShowDialogAsync)} instead");
 
-    /// <summary>
-    /// Shows the dialog.
-    /// </summary>
+    /// <summary>Shows the dialog.</summary>
     /// <returns>A bool.</returns>
     /// <exception cref="InvalidOperationException">$"Use {nameof(ShowDialogAsync)} instead.</exception>
     [Obsolete($"Use {nameof(ShowDialogAsync)} instead")]
     public new bool? ShowDialog() => throw new InvalidOperationException($"Use {nameof(ShowDialogAsync)} instead");
 
-    /// <summary>
-    /// Closes this instance.
-    /// </summary>
+    /// <summary>Closes this instance.</summary>
     /// <exception cref="InvalidOperationException">$"Use {nameof(Close)} with MessageBoxResult instead.</exception>
     [Obsolete($"Use {nameof(Close)} with MessageBoxResult instead")]
     public new void Close() => throw new InvalidOperationException($"Use {nameof(Close)} with MessageBoxResult instead");
 
-    /// <summary>
-    /// Displays a message box.
-    /// </summary>
+    /// <summary>Displays a message box.</summary>
+    /// <exception cref="TaskCanceledException">Thrown if the operation is canceled.</exception>
     /// <param name="showAsDialog">if set to <c>true</c> [show as dialog].</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///   <see cref="MessageBoxResult" />.
     /// </returns>
-    /// <exception cref="TaskCanceledException">Thrown if the operation is canceled.</exception>
     public async Task<MessageBoxResult> ShowDialogAsync(
         bool showAsDialog = true,
         CancellationToken cancellationToken = default)
     {
-        Tcs = new TaskCompletionSource<MessageBoxResult>();
+        Tcs = new();
         var tokenRegistration = cancellationToken.Register(
             o => Tcs.TrySetCanceled((CancellationToken)o!),
             cancellationToken);
@@ -295,7 +262,7 @@ public partial class MessageBox : System.Windows.Window
 
             if (showAsDialog)
             {
-                base.ShowDialog();
+                _ = base.ShowDialog();
             }
             else
             {
@@ -314,9 +281,7 @@ public partial class MessageBox : System.Windows.Window
         }
     }
 
-    /// <summary>
-    /// Occurs after Loading event.
-    /// </summary>
+    /// <summary>Occurs after Loading event.</summary>
     protected virtual void OnLoaded()
     {
         var rootElement = (UIElement)GetVisualChild(0)!;
@@ -325,35 +290,38 @@ public partial class MessageBox : System.Windows.Window
 
         switch (WindowStartupLocation)
         {
-            case WindowStartupLocation.Manual:
-            case WindowStartupLocation.CenterScreen:
-                CenterWindowOnScreen();
-                break;
-            case WindowStartupLocation.CenterOwner:
-                if (
-                    !CanCenterOverWPFOwner()
-                    || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
+            case WindowStartupLocation.Manual or WindowStartupLocation.CenterScreen:
                 {
                     CenterWindowOnScreen();
-                }
-                else
-                {
-                    CenterWindowOnOwner();
+                    break;
                 }
 
-                break;
+            case WindowStartupLocation.CenterOwner:
+                {
+                    if (
+                                    !CanCenterOverWPFOwner()
+                                    || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
+                    {
+                        CenterWindowOnScreen();
+                    }
+                    else
+                    {
+                        CenterWindowOnOwner();
+                    }
+
+                    break;
+                }
+
             default:
                 throw new InvalidOperationException();
         }
     }
 
-    /// <summary>
-    /// Resizes the MessageBox to fit the content's size, including margins.
-    /// </summary>
+    /// <summary>Resizes the MessageBox to fit the content's size, including margins.</summary>
     /// <param name="rootElement">The root element of the MessageBox.</param>
     protected virtual void ResizeToContentSize(UIElement rootElement)
     {
-        if (rootElement == null)
+        if (rootElement is null)
         {
             return;
         }
@@ -361,7 +329,7 @@ public partial class MessageBox : System.Windows.Window
         var desiredSize = rootElement.DesiredSize;
 
         // left and right margin
-        const double margin = 12.0 * 2;
+        const double margin = 12.0 * HorizontalMarginMultiplier;
 
         SetCurrentValue(WidthProperty, desiredSize.Width + margin);
         SetCurrentValue(HeightProperty, desiredSize.Height);
@@ -370,9 +338,7 @@ public partial class MessageBox : System.Windows.Window
         ResizeHeight(rootElement);
     }
 
-    /// <summary>
-    /// Raises the <see cref="E:Closing" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:Closing" /> event.</summary>
     /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
     protected override void OnClosing(CancelEventArgs e)
     {
@@ -386,23 +352,18 @@ public partial class MessageBox : System.Windows.Window
         _ = Tcs?.TrySetResult(MessageBoxResult.None);
     }
 
-    /// <summary>
-    /// Centers the window on screen.
-    /// </summary>
+    /// <summary>Centers the window on screen.</summary>
     protected virtual void CenterWindowOnScreen()
     {
         var screenWidth = SystemParameters.PrimaryScreenWidth;
         var screenHeight = SystemParameters.PrimaryScreenHeight;
 
-        SetCurrentValue(LeftProperty, (screenWidth / 2) - (Width / 2));
-        SetCurrentValue(TopProperty, (screenHeight / 2) - (Height / 2));
+        SetCurrentValue(LeftProperty, (screenWidth / CenterOffsetDivisor) - (Width / CenterOffsetDivisor));
+        SetCurrentValue(TopProperty, (screenHeight / CenterOffsetDivisor) - (Height / CenterOffsetDivisor));
     }
 
-    /// <summary>
-    /// Occurs after the <see cref="MessageBoxButton"/> is clicked.
-    /// </summary>
+    /// <summary>Occurs after the <see cref="MessageBoxButton"/> is clicked.</summary>
     /// <param name="button">The MessageBox button.</param>
-    [ReactiveCommand]
     protected virtual void OnButtonClick(MessageBoxButton button)
     {
         var result = button switch
@@ -417,11 +378,18 @@ public partial class MessageBox : System.Windows.Window
     }
 
 #if NET8_0_OR_GREATER
+
+    /// <summary>Provides the CanCenterOverWPFOwnerAccessor member.</summary>
+    /// <param name="w">The w value.</param>
+    /// <returns>The result.</returns>
     [System.Runtime.CompilerServices.UnsafeAccessor(System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "get_CanCenterOverWPFOwner")]
     private static extern bool CanCenterOverWPFOwnerAccessor(System.Windows.Window w);
 #endif
 
-    // CanCenterOverWPFOwner property see https://source.dot.net/#PresentationFramework/System/Windows/Window.cs,e679e433777b21b8
+    /// <summary>
+    /// CanCenterOverWPFOwner property see https://source.dot.net/#PresentationFramework/System/Windows/Window.cs,e679e433777b21b8.
+    /// </summary>
+    /// <returns><c>true</c> when the window can center over the WPF owner; otherwise, <c>false</c>.</returns>
     private bool CanCenterOverWPFOwner() =>
 #if NET8_0_OR_GREATER
         CanCenterOverWPFOwnerAccessor(this);
@@ -429,21 +397,25 @@ public partial class MessageBox : System.Windows.Window
         (bool)CanCenterOverWPFOwnerPropertyInfo.GetValue(this)!;
 #endif
 
+    /// <summary>Provides the CenterWindowOnOwner member.</summary>
     private void CenterWindowOnOwner()
     {
-        var left = Owner.Left + ((Owner.Width - Width) / 2);
-        var top = Owner.Top + ((Owner.Height - Height) / 2);
+        var left = Owner.Left + ((Owner.Width - Width) / CenterOffsetDivisor);
+        var top = Owner.Top + ((Owner.Height - Height) / CenterOffsetDivisor);
 
         SetCurrentValue(LeftProperty, left);
         SetCurrentValue(TopProperty, top);
     }
 
+    /// <summary>Provides the RemoveTitleBarAndApplyMica member.</summary>
     private void RemoveTitleBarAndApplyMica()
     {
         _ = UnsafeNativeMethods.RemoveWindowTitlebarContents(this);
         _ = WindowBackdrop.ApplyBackdrop(this, WindowBackdropType.Mica);
     }
 
+    /// <summary>Provides the ResizeWidth member.</summary>
+    /// <param name="element">The element value.</param>
     private void ResizeWidth(UIElement element)
     {
         if (Width <= MaxWidth)
@@ -456,12 +428,16 @@ public partial class MessageBox : System.Windows.Window
 
         SetCurrentValue(HeightProperty, element.DesiredSize.Height);
 
-        if (Height > MaxHeight)
+        if (Height <= MaxHeight)
         {
-            SetCurrentValue(MaxHeightProperty, Height);
+            return;
         }
+
+        SetCurrentValue(MaxHeightProperty, Height);
     }
 
+    /// <summary>Provides the ResizeHeight member.</summary>
+    /// <param name="element">The element value.</param>
     private void ResizeHeight(UIElement element)
     {
         if (Height <= MaxHeight)
@@ -474,9 +450,11 @@ public partial class MessageBox : System.Windows.Window
 
         SetCurrentValue(WidthProperty, element.DesiredSize.Width);
 
-        if (Width > MaxWidth)
+        if (Width <= MaxWidth)
         {
-            SetCurrentValue(MaxWidthProperty, Width);
+            return;
         }
+
+        SetCurrentValue(MaxWidthProperty, Width);
     }
 }

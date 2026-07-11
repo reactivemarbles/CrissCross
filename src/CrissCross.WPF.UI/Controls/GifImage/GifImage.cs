@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -7,15 +7,10 @@ using System.Windows.Media.Animation;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents an image with additional properties for Borders and Rounded corners.
-/// </summary>
+/// <summary>Represents an image with additional properties for Borders and Rounded corners.</summary>
 public class GifImage : Control
 {
-    /// <summary>
-    /// Gets/Sets the Source on this Image.
-    /// The Source property is the ImageSource that holds the actual image drawn.
-    /// </summary>
+    /// <summary>Gets/Sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(Uri),
@@ -27,18 +22,14 @@ public class GifImage : Control
             null),
         null);
 
-    /// <summary>
-    /// DependencyProperty for CornerRadius property.
-    /// </summary>
+    /// <summary>DependencyProperty for CornerRadius property.</summary>
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(GifImage),
         new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged)));
 
-    /// <summary>
-    /// DependencyProperty for StretchDirection property.
-    /// </summary>
+    /// <summary>DependencyProperty for StretchDirection property.</summary>
     /// <seealso cref="Viewbox.Stretch" />
     public static readonly DependencyProperty StretchProperty = DependencyProperty.Register(
         nameof(Stretch),
@@ -49,9 +40,7 @@ public class GifImage : Control
             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
         null);
 
-    /// <summary>
-    /// DependencyProperty for Stretch property.
-    /// </summary>
+    /// <summary>DependencyProperty for Stretch property.</summary>
     public static readonly DependencyProperty StretchDirectionProperty = DependencyProperty.Register(
         nameof(StretchDirection),
         typeof(StretchDirection),
@@ -61,9 +50,7 @@ public class GifImage : Control
             FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender),
         null);
 
-    /// <summary>
-    /// DependencyPropertyKey for InnerCornerRadius property.
-    /// </summary>
+    /// <summary>DependencyPropertyKey for InnerCornerRadius property.</summary>
     public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
         DependencyProperty.RegisterReadOnly(
             nameof(InnerCornerRadius),
@@ -71,15 +58,11 @@ public class GifImage : Control
             typeof(GifImage),
             new PropertyMetadata(new CornerRadius(0)));
 
-    /// <summary>
-    /// DependencyProperty for InnerCornerRadius property.
-    /// </summary>
+    /// <summary>DependencyProperty for InnerCornerRadius property.</summary>
     public static readonly DependencyProperty InnerCornerRadiusProperty =
         InnerCornerRadiusPropertyKey.DependencyProperty;
 
-    /// <summary>
-    /// Identifies the <c>RepeatBehavior</c> attached property.
-    /// </summary>
+    /// <summary>Identifies the <c>RepeatBehavior</c> attached property.</summary>
     public static readonly DependencyProperty RepeatBehaviorProperty =
         DependencyProperty.Register(
           nameof(RepeatBehavior),
@@ -87,9 +70,7 @@ public class GifImage : Control
           typeof(GifImage),
           new PropertyMetadata(default(RepeatBehavior)));
 
-    /// <summary>
-    /// Identifies the <c>AnimationSpeedRatio</c> attached property.
-    /// </summary>
+    /// <summary>Identifies the <c>AnimationSpeedRatio</c> attached property.</summary>
     public static readonly DependencyProperty AnimationSpeedRatioProperty =
         DependencyProperty.Register(
             nameof(AnimationSpeedRatio),
@@ -97,9 +78,7 @@ public class GifImage : Control
             typeof(GifImage),
             new PropertyMetadata(null));
 
-    /// <summary>
-    /// Identifies the <c>AnimationDuration</c> attached property.
-    /// </summary>
+    /// <summary>Identifies the <c>AnimationDuration</c> attached property.</summary>
     public static readonly DependencyProperty AnimationDurationProperty =
         DependencyProperty.Register(
             nameof(AnimationDuration),
@@ -107,9 +86,7 @@ public class GifImage : Control
             typeof(GifImage),
             new PropertyMetadata(null));
 
-    /// <summary>
-    /// Identifies the <c>AnimateInDesignMode</c> attached property.
-    /// </summary>
+    /// <summary>Identifies the <c>AnimateInDesignMode</c> attached property.</summary>
     public static readonly DependencyProperty AnimateInDesignModeProperty =
         DependencyProperty.Register(
             nameof(AnimateInDesignMode),
@@ -117,9 +94,7 @@ public class GifImage : Control
             typeof(GifImage),
             new FrameworkPropertyMetadata(false));
 
-    /// <summary>
-    /// The automatic start property.
-    /// </summary>
+    /// <summary>The automatic start property.</summary>
     public static readonly DependencyProperty AutoStartProperty =
         DependencyProperty.Register(
             nameof(AutoStart),
@@ -127,20 +102,14 @@ public class GifImage : Control
             typeof(GifImage),
             new PropertyMetadata(true));
 
-    /// <summary>
-    /// Gets or sets the Source on this Image.
-    /// The Source property is the ImageSource that holds the actual image drawn.
-    /// </summary>
+    /// <summary>Gets or sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
     public Uri Source
     {
         get => (Uri)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Stretch on this Image.
-    /// The Stretch property determines how large the Image will be drawn.
-    /// </summary>
+    /// <summary>Gets or sets the Stretch on this Image. The Stretch property determines how large the Image will be drawn.</summary>
     public Stretch Stretch
     {
         get => (Stretch)GetValue(StretchProperty);
@@ -170,9 +139,7 @@ public class GifImage : Control
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the repeat behavior.
-    /// </summary>
+    /// <summary>Gets or sets the repeat behavior.</summary>
     /// <value>
     /// The repeat behavior.
     /// </value>
@@ -182,9 +149,7 @@ public class GifImage : Control
         set => SetValue(RepeatBehaviorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the animation speed ratio.
-    /// </summary>
+    /// <summary>Gets or sets the animation speed ratio.</summary>
     /// <value>
     /// The animation speed ratio.
     /// </value>
@@ -194,9 +159,7 @@ public class GifImage : Control
         set => SetValue(AnimationSpeedRatioProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the duration of the animation.
-    /// </summary>
+    /// <summary>Gets or sets the duration of the animation.</summary>
     /// <value>
     /// The duration of the animation.
     /// </value>
@@ -206,9 +169,7 @@ public class GifImage : Control
         set => SetValue(AnimationDurationProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [animate in design mode].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [animate in design mode].</summary>
     /// <value>
     ///   <c>true</c> if [animate in design mode]; otherwise, <c>false</c>.
     /// </value>
@@ -218,9 +179,7 @@ public class GifImage : Control
         set => SetValue(AnimateInDesignModeProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [automatic start].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [automatic start].</summary>
     /// <value>
     ///   <c>true</c> if [automatic start]; otherwise, <c>false</c>.
     /// </value>
@@ -230,22 +189,25 @@ public class GifImage : Control
         set => SetValue(AutoStartProperty, value);
     }
 
-    /// <summary>
-    /// Gets the CornerRadius for the inner image's Mask.
-    /// </summary>
+    /// <summary>Gets the CornerRadius for the inner image's Mask.</summary>
     internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
 
+    /// <summary>Provides the OnCornerRadiusChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        const double borderMidpointDivisor = 2.0;
+
         var thickness = (Thickness)d.GetValue(BorderThicknessProperty);
         var outerRarius = (CornerRadius)e.NewValue;
 
         d.SetValue(
             InnerCornerRadiusPropertyKey,
             new CornerRadius(
-                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / 2), 0)),
-                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / 2), 0)),
-                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / 2), 0)),
-                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / 2), 0))));
+                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / borderMidpointDivisor), 0)),
+                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / borderMidpointDivisor), 0)),
+                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / borderMidpointDivisor), 0)),
+                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / borderMidpointDivisor), 0))));
     }
 }

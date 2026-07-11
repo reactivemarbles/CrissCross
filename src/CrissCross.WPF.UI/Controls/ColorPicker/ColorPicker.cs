@@ -1,19 +1,15 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents a control that lets a user pick a color using a color spectrum, sliders, and text input.
-/// </summary>
+/// <summary>Represents a control that lets a user pick a color using a color spectrum, sliders, and text input.</summary>
 public class ColorPicker : Control
 {
-    /// <summary>
-    /// Identifies the <see cref="SelectedColor"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="SelectedColor"/> dependency property.</summary>
     public static readonly DependencyProperty SelectedColorProperty =
         DependencyProperty.Register(
             nameof(SelectedColor),
@@ -21,9 +17,7 @@ public class ColorPicker : Control
             typeof(ColorPicker),
             new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedColorChanged));
 
-    /// <summary>
-    /// Identifies the <see cref="ShowAlpha"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="ShowAlpha"/> dependency property.</summary>
     public static readonly DependencyProperty ShowAlphaProperty =
         DependencyProperty.Register(
             nameof(ShowAlpha),
@@ -31,107 +25,95 @@ public class ColorPicker : Control
             typeof(ColorPicker),
             new PropertyMetadata(true));
 
-    /// <summary>
-    /// Identifies the <see cref="A"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="A"/> dependency property.</summary>
     public static readonly DependencyProperty AProperty =
         DependencyProperty.Register(
             nameof(A),
             typeof(double),
             typeof(ColorPicker),
-            new FrameworkPropertyMetadata(255d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, CoerceChannel));
+            new FrameworkPropertyMetadata(MaximumColorChannelValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
 
-    /// <summary>
-    /// Identifies the <see cref="R"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="R"/> dependency property.</summary>
     public static readonly DependencyProperty RProperty =
         DependencyProperty.Register(
             nameof(R),
             typeof(double),
             typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, CoerceChannel));
+            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
 
-    /// <summary>
-    /// Identifies the <see cref="G"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="G"/> dependency property.</summary>
     public static readonly DependencyProperty GProperty =
         DependencyProperty.Register(
             nameof(G),
             typeof(double),
             typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, CoerceChannel));
+            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
 
-    /// <summary>
-    /// Identifies the <see cref="B"/> dependency property.
-    /// </summary>
+    /// <summary>Identifies the <see cref="B"/> dependency property.</summary>
     public static readonly DependencyProperty BProperty =
         DependencyProperty.Register(
             nameof(B),
             typeof(double),
             typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, CoerceChannel));
+            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
 
+    /// <summary>The maximum value for an ARGB byte channel.</summary>
+    private const double MaximumColorChannelValue = byte.MaxValue;
+
+    /// <summary>Stores the _updating value.</summary>
     private bool _updating;
 
+    /// <summary>Provides the ColorPicker member.</summary>
     static ColorPicker()
     {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(ColorPicker), new FrameworkPropertyMetadata(typeof(ColorPicker)));
     }
 
-    /// <summary>
-    /// Gets or sets the selected color.
-    /// </summary>
+    /// <summary>Gets or sets the selected color.</summary>
     public Color SelectedColor
     {
         get => (Color)GetValue(SelectedColorProperty);
         set => SetValue(SelectedColorProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the alpha channel is shown and editable.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the alpha channel is shown and editable.</summary>
     public bool ShowAlpha
     {
         get => (bool)GetValue(ShowAlphaProperty);
         set => SetValue(ShowAlphaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the alpha channel value (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the alpha channel value (0-255).</summary>
     public double A
     {
         get => (double)GetValue(AProperty);
         set => SetValue(AProperty, CoerceByteRange(value));
     }
 
-    /// <summary>
-    /// Gets or sets the red channel value (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the red channel value (0-255).</summary>
     public double R
     {
         get => (double)GetValue(RProperty);
         set => SetValue(RProperty, CoerceByteRange(value));
     }
 
-    /// <summary>
-    /// Gets or sets the green channel value (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the green channel value (0-255).</summary>
     public double G
     {
         get => (double)GetValue(GProperty);
         set => SetValue(GProperty, CoerceByteRange(value));
     }
 
-    /// <summary>
-    /// Gets or sets the blue channel value (0-255).
-    /// </summary>
+    /// <summary>Gets or sets the blue channel value (0-255).</summary>
     public double B
     {
         get => (double)GetValue(BProperty);
         set => SetValue(BProperty, CoerceByteRange(value));
     }
 
+    /// <summary>Provides the OnSelectedColorChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnSelectedColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not ColorPicker cp)
@@ -159,8 +141,12 @@ public class ColorPicker : Control
         }
     }
 
+    /// <summary>Provides the OnChannelChanged member.</summary>
+    /// <param name="d">The d value.</param>
+    /// <param name="e">The event arguments.</param>
     private static void OnChannelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        _ = e;
         if (d is not ColorPicker cp)
         {
             return;
@@ -187,8 +173,14 @@ public class ColorPicker : Control
         }
     }
 
-    private static object CoerceChannel(DependencyObject d, object baseValue) => CoerceByteRange((double)baseValue);
+    /// <summary>Provides the CoerceChannel member.</summary>
+    /// <param name="baseValue">The basevalue.</param>
+    /// <returns>The result.</returns>
+    private static double CoerceChannel(object baseValue) => CoerceByteRange((double)baseValue);
 
+    /// <summary>Provides the CoerceByteRange member.</summary>
+    /// <param name="value">The value.</param>
+    /// <returns>The result.</returns>
     private static double CoerceByteRange(double value)
     {
         if (value < 0)
@@ -196,11 +188,6 @@ public class ColorPicker : Control
             return 0;
         }
 
-        if (value > 255)
-        {
-            return 255;
-        }
-
-        return value;
+        return value > MaximumColorChannelValue ? MaximumColorChannelValue : value;
     }
 }

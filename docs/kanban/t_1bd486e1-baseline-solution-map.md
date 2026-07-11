@@ -81,10 +81,10 @@ Key versions from `src/Directory.Packages.props`:
 
 - Avalonia: `12.0.2`; ReactiveUI: `23.2.27`; ReactiveUI.Avalonia: `12.0.1`; Splat variable is defined as `19.3.1` but no central `Splat` package version entry was found (`Directory.Packages.props:6-28`).
 - WebView2: `1.0.3912.50`; Microsoft.Extensions.*: `10.0.7`; MAUI Controls/Compatibility: `10.0.60` for net10, `9.0.120` otherwise (`Directory.Packages.props:30-40`).
-- Source generators: `ReactiveMarbles.ObservableEvents.SourceGenerator` `1.3.1`, `ReactiveUI.SourceGenerators` `2.6.30` (`Directory.Packages.props:45-48`).
+- Reactive primitives/source generators: `ReactiveUI.Primitives*` `6.0.0`, `ReactiveUI.SourceGenerators` `3.1.0` (`Directory.Packages.props:25-57`).
 - UI/support packages: CP.Extensions.Hosting.ReactiveUI WPF/Avalonia `3.1.26`, ReactiveList `4.0.35`, ScottPlot.WPF `5.1.58`, AngleSharp `1.4.0`, Markdig `1.1.3` (`Directory.Packages.props:49-60`).
 - Testing packages: TUnit `1.43.11`, Verify.TUnit `31.16.2`, Microsoft.NET.Test.Sdk `18.5.1`, Microsoft.Testing.Extensions.CodeCoverage `18.6.2`, PublicApiGenerator `11.5.4` (`Directory.Packages.props:64-69`).
-- Build/analyzers: Nerdbank.GitVersioning `3.9.50`, StyleCop.Analyzers `1.2.0-beta.556`, Roslynator.Analyzers `4.15.0` (`Directory.Packages.props:70-74`).
+- Build/analyzers: Nerdbank.GitVersioning `3.9.50`, StyleSharp.Analyzers `3.14.0`, Roslynator.Analyzers `4.15.0` (`Directory.Packages.props:82-84`).
 
 ## Test coverage shape
 

@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -8,94 +8,58 @@ using CrissCross.WPF.UI.Animations;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Represents a container that enables navigation of app content. It has a header, a view for the main content, and a menu pane for navigation commands.
-/// </summary>
+/// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main content, and a menu pane for navigation commands.</summary>
 public interface INavigationView
 {
-    /// <summary>
-    /// Occurs when the NavigationView pane is opened.
-    /// </summary>
-    event TypedEventHandler<NavigationView, RoutedEventArgs> PaneOpened;
+    /// <summary>Occurs when the NavigationView pane is opened.</summary>
+    event EventHandler<RoutedEventArgs> PaneOpened;
 
-    /// <summary>
-    /// Occurs when the NavigationView pane is closed.
-    /// </summary>
-    event TypedEventHandler<NavigationView, RoutedEventArgs> PaneClosed;
+    /// <summary>Occurs when the NavigationView pane is closed.</summary>
+    event EventHandler<RoutedEventArgs> PaneClosed;
 
-    /// <summary>
-    /// Occurs when the currently selected item changes.
-    /// </summary>
-    event TypedEventHandler<NavigationView, RoutedEventArgs> SelectionChanged;
+    /// <summary>Occurs when the currently selected item changes.</summary>
+    event EventHandler<RoutedEventArgs> SelectionChanged;
 
-    /// <summary>
-    /// Occurs when an item in the menu receives an interaction such as a click or tap.
-    /// </summary>
-    event TypedEventHandler<NavigationView, RoutedEventArgs> ItemInvoked;
+    /// <summary>Occurs when an item in the menu receives an interaction such as a click or tap.</summary>
+    event EventHandler<RoutedEventArgs> ItemInvoked;
 
-    /// <summary>
-    /// Occurs when the back button receives an interaction such as a click or tap.
-    /// </summary>
-    event TypedEventHandler<NavigationView, RoutedEventArgs> BackRequested;
+    /// <summary>Occurs when the back button receives an interaction such as a click or tap.</summary>
+    event EventHandler<RoutedEventArgs> BackRequested;
 
-    /// <summary>
-    /// Occurs when a new navigation is requested
-    /// </summary>
-    event TypedEventHandler<NavigationView, NavigatingCancelEventArgs> Navigating;
+    /// <summary>Occurs when a new navigation is requested</summary>
+    event EventHandler<NavigatingCancelEventArgs> Navigating;
 
-    /// <summary>
-    /// Occurs when navigated to page
-    /// </summary>
-    event TypedEventHandler<NavigationView, NavigatedEventArgs> Navigated;
+    /// <summary>Occurs when navigated to page</summary>
+    event EventHandler<NavigatedEventArgs> Navigated;
 
-    /// <summary>
-    /// Gets or sets the header content.
-    /// </summary>
+    /// <summary>Gets or sets the header content.</summary>
     object? Header { get; set; }
 
-    /// <summary>
-    /// Gets or sets the <see cref="Header"/> visibility.
-    /// </summary>
+    /// <summary>Gets or sets the <see cref="Header"/> visibility.</summary>
     Visibility HeaderVisibility { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that indicates whether the header is always visible.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the header is always visible.</summary>
     bool AlwaysShowHeader { get; set; }
 
-    /// <summary>
-    /// Gets the collection of menu items displayed in the NavigationView.
-    /// </summary>
+    /// <summary>Gets the collection of menu items displayed in the NavigationView.</summary>
     IList MenuItems { get; }
 
-    /// <summary>
-    /// Gets or sets an object source used to generate the content of the NavigationView menu.
-    /// </summary>
+    /// <summary>Gets or sets an object source used to generate the content of the NavigationView menu.</summary>
     object? MenuItemsSource { get; set; }
 
-    /// <summary>
-    /// Gets the list of objects to be used as navigation items in the footer menu.
-    /// </summary>
+    /// <summary>Gets the list of objects to be used as navigation items in the footer menu.</summary>
     IList FooterMenuItems { get; }
 
-    /// <summary>
-    /// Gets or sets the object that represents the navigation items to be used in the footer menu.
-    /// </summary>
+    /// <summary>Gets or sets the object that represents the navigation items to be used in the footer menu.</summary>
     object? FooterMenuItemsSource { get; set; }
 
-    /// <summary>
-    /// Gets the selected item.
-    /// </summary>
+    /// <summary>Gets the selected item.</summary>
     INavigationViewItem? SelectedItem { get; }
 
-    /// <summary>
-    /// Gets or sets a UI element that is shown at the top of the control, below the pane if PaneDisplayMode is Top.
-    /// </summary>
+    /// <summary>Gets or sets a UI element that is shown at the top of the control, below the pane if PaneDisplayMode is Top.</summary>
     object? ContentOverlay { get; set; }
 
-    /// <summary>
-    /// Gets a value indicating whether gets a value that indicates whether the back button is enabled or disabled.
-    /// </summary>
+    /// <summary>Gets a value indicating whether gets a value that indicates whether the back button is enabled or disabled.</summary>
     bool IsBackEnabled { get; }
 
     /// <summary>
@@ -104,44 +68,28 @@ public interface INavigationView
     /// </summary>
     NavigationViewBackButtonVisible IsBackButtonVisible { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that indicates whether the toggle button is visible.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the toggle button is visible.</summary>
     bool IsPaneToggleVisible { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that specifies whether the NavigationView pane is expanded to its full width.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that specifies whether the NavigationView pane is expanded to its full width.</summary>
     bool IsPaneOpen { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that determines whether the pane is shown.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that determines whether the pane is shown.</summary>
     bool IsPaneVisible { get; set; }
 
-    /// <summary>
-    /// Gets or sets the width of the NavigationView pane when it's fully expanded.
-    /// </summary>
+    /// <summary>Gets or sets the width of the NavigationView pane when it's fully expanded.</summary>
     double OpenPaneLength { get; set; }
 
-    /// <summary>
-    /// Gets or sets the width of the NavigationView pane in its compact display mode.
-    /// </summary>
+    /// <summary>Gets or sets the width of the NavigationView pane in its compact display mode.</summary>
     double CompactPaneLength { get; set; }
 
-    /// <summary>
-    /// Gets or sets the content for the pane header.
-    /// </summary>
+    /// <summary>Gets or sets the content for the pane header.</summary>
     object? PaneHeader { get; set; }
 
-    /// <summary>
-    /// Gets or sets the label adjacent to the menu icon when the NavigationView pane is open.
-    /// </summary>
+    /// <summary>Gets or sets the label adjacent to the menu icon when the NavigationView pane is open.</summary>
     string? PaneTitle { get; set; }
 
-    /// <summary>
-    /// Gets or sets the content for the pane footer.
-    /// </summary>
+    /// <summary>Gets or sets the content for the pane footer.</summary>
     object? PaneFooter { get; set; }
 
     /// <summary>
@@ -150,121 +98,81 @@ public interface INavigationView
     /// </summary>
     NavigationViewPaneDisplayMode PaneDisplayMode { get; set; }
 
-    /// <summary>
-    /// Gets or sets an TitleBar to be displayed in the NavigationView.
-    /// </summary>
+    /// <summary>Gets or sets an TitleBar to be displayed in the NavigationView.</summary>
     TitleBar? TitleBar { get; set; }
 
-    /// <summary>
-    /// Gets or sets an AutoSuggestBox to be displayed in the NavigationView.
-    /// </summary>
+    /// <summary>Gets or sets an AutoSuggestBox to be displayed in the NavigationView.</summary>
     AutoSuggestBox? AutoSuggestBox { get; set; }
 
-    /// <summary>
-    /// Gets or sets an BreadcrumbBar that is in <see cref="Header"/>.
-    /// </summary>
+    /// <summary>Gets or sets an BreadcrumbBar that is in <see cref="Header"/>.</summary>
     BreadcrumbBar? BreadcrumbBar { get; set; }
 
-    /// <summary>
-    /// Gets or sets template Property for <see cref="MenuItems"/> and <see cref="FooterMenuItems"/>.
-    /// </summary>
+    /// <summary>Gets or sets template Property for <see cref="MenuItems"/> and <see cref="FooterMenuItems"/>.</summary>
     ControlTemplate? ItemTemplate { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value deciding how long the effect of the transition between the pages should take.
-    /// </summary>
+    /// <summary>Gets or sets a value deciding how long the effect of the transition between the pages should take.</summary>
     int TransitionDuration { get; set; }
 
-    /// <summary>
-    /// Gets or sets type of <see cref="INavigationView"/> transitions during navigation.
-    /// </summary>
+    /// <summary>Gets or sets type of <see cref="INavigationView"/> transitions during navigation.</summary>
     Transition Transition { get; set; }
 
-    /// <summary>
-    /// Gets or sets margin for a Frame of <see cref="INavigationView"/>.
-    /// </summary>
+    /// <summary>Gets or sets margin for a Frame of <see cref="INavigationView"/>.</summary>
     Thickness FrameMargin { get; set; }
 
-    /// <summary>
-    /// Gets a value indicating whether gets a value that indicates whether there is at least one entry in back navigation history.
-    /// </summary>
+    /// <summary>Gets a value indicating whether gets a value that indicates whether there is at least one entry in back navigation history.</summary>
     bool CanGoBack { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether there is at least one entry in forward navigation history.
-    /// </summary>
+    /// <summary>Gets a value indicating whether there is at least one entry in forward navigation history.</summary>
     bool CanGoForward { get; }
 
-    /// <summary>
-    /// Synchronously navigates current navigation Frame to the
-    /// given Element.
-    /// </summary>
-    /// <param name="pageType">Type of the page.</param>
-    /// <param name="dataContext">The data context.</param>
+    /// <summary>Synchronously navigates current navigation Frame to the given Element.</summary>
+    /// <param name="pageType">The pageType value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
     /// <returns>A bool.</returns>
     bool Navigate(Type pageType, object? dataContext = null);
 
-    /// <summary>
-    /// Synchronously navigates current navigation Frame to the
-    /// given Element.
-    /// </summary>
-    /// <param name="pageIdOrTargetTag">The page identifier or target tag.</param>
-    /// <param name="dataContext">The data context.</param>
+    /// <summary>Synchronously navigates current navigation Frame to the given Element.</summary>
+    /// <param name="pageIdOrTargetTag">The pageIdOrTargetTag value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
     /// <returns>A bool.</returns>
     bool Navigate(string pageIdOrTargetTag, object? dataContext = null);
 
-    /// <summary>
-    /// Synchronously adds an element to the navigation stack and navigates current navigation Frame to the.
-    /// </summary>
-    /// <param name="pageType">Type of the page.</param>
-    /// <param name="dataContext">The data context.</param>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the.</summary>
+    /// <param name="pageType">The pageType value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
     /// <returns>A bool.</returns>
     bool NavigateWithHierarchy(Type pageType, object? dataContext = null);
 
-    /// <summary>
-    /// Replaces the contents of the navigation frame, without changing the currently selected item or triggering an <see cref="SelectionChanged" />.
-    /// </summary>
-    /// <param name="pageTypeToEmbed">The page type to embed.</param>
+    /// <summary>Replaces the contents of the navigation frame, without changing the currently selected item or triggering an <see cref="SelectionChanged" />.</summary>
+    /// <param name="pageTypeToEmbed">The pageTypeToEmbed value.</param>
     /// <returns>A bool.</returns>
     bool ReplaceContent(Type pageTypeToEmbed);
 
-    /// <summary>
-    /// Replaces the contents of the navigation frame, without changing the currently selected item or triggering an <see cref="SelectionChanged" />.
-    /// </summary>
-    /// <param name="pageInstanceToEmbed">The page instance to embed.</param>
-    /// <param name="dataContext">The data context.</param>
+    /// <summary>Replaces the contents of the navigation frame, without changing the currently selected item or triggering an <see cref="SelectionChanged" />.</summary>
+    /// <param name="pageInstanceToEmbed">The pageInstanceToEmbed value.</param>
+    /// <param name="dataContext">The dataContext value.</param>
     /// <returns>A bool.</returns>
     bool ReplaceContent(UIElement pageInstanceToEmbed, object? dataContext = null);
 
-    /// <summary>
-    /// Navigates the NavigationView to the next journal entry.
-    /// </summary>
+    /// <summary>Navigates the NavigationView to the next journal entry.</summary>
     /// <remarks>
     /// Forward journal navigation intentionally has no forward-requested event; only user back-button interactions raise <see cref="BackRequested"/>.
     /// </remarks>
     /// <returns><see langword="true"/> if successfully navigated forward, otherwise <see langword="false"/>.</returns>
     bool GoForward();
 
-    /// <summary>
-    /// Navigates the NavigationView to the previous journal entry.
-    /// </summary>
+    /// <summary>Navigates the NavigationView to the previous journal entry.</summary>
     /// <returns><see langword="true"/> if successfully navigated backward, otherwise <see langword="false"/>.</returns>
     bool GoBack();
 
-    /// <summary>
-    /// Clears the NavigationView history.
-    /// </summary>
+    /// <summary>Clears the NavigationView history.</summary>
     void ClearJournal();
 
-    /// <summary>
-    /// Allows you to assign to the NavigationView a special service responsible for retrieving the page instances.
-    /// </summary>
-    /// <param name="pageService">The page service.</param>
+    /// <summary>Allows you to assign to the NavigationView a special service responsible for retrieving the page instances.</summary>
+    /// <param name="pageService">The pageService value.</param>
     void SetPageService(IPageService pageService);
 
-    /// <summary>
-    /// Allows you to assign a general <see cref="IServiceProvider" /> to the NavigationView that will be used to retrieve page instances and view models.
-    /// </summary>
-    /// <param name="serviceProvider">The service provider.</param>
+    /// <summary>Allows you to assign a general <see cref="IServiceProvider" /> to the NavigationView that will be used to retrieve page instances and view models.</summary>
+    /// <param name="serviceProvider">The serviceProvider value.</param>
     void SetServiceProvider(IServiceProvider serviceProvider);
 }

@@ -1,175 +1,265 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 
 namespace CrissCross.WPF.UI;
 
-#pragma warning disable RCS1175 // Unused 'this' parameter
-/// <summary>
-/// App Bar Mixins.
-/// </summary>
+/// <summary>App Bar Mixins.</summary>
 public static class AppBarMixins
 {
+    /// <summary>Stores the _setAppBarIsStickyFunc value.</summary>
     private static readonly SingleAssign<Action<bool>> _setAppBarIsStickyFunc = new();
+
+    /// <summary>Stores the _getAppBarIsStickyFunc value.</summary>
     private static readonly SingleAssign<Func<bool>> _getAppBarIsStickyFunc = new();
+
+    /// <summary>Stores the _showAppBarFunc value.</summary>
     private static readonly SingleAssign<Action<bool>> _showAppBarFunc = new();
+
+    /// <summary>Stores the _hideAppBarFunc value.</summary>
     private static readonly SingleAssign<Action> _hideAppBarFunc = new();
+
+    /// <summary>Stores the _getAppBarLeftFunc value.</summary>
     private static readonly SingleAssign<Func<ObservableCollection<FrameworkElement>>> _getAppBarLeftFunc = new();
+
+    /// <summary>Stores the _getAppBarRightFunc value.</summary>
     private static readonly SingleAssign<Func<ObservableCollection<FrameworkElement>>> _getAppBarRightFunc = new();
+
+    /// <summary>Stores the _getNavBarLeftFunc value.</summary>
     private static readonly SingleAssign<Func<ObservableCollection<FrameworkElement>>> _getNavBarLeftFunc = new();
+
+    /// <summary>Stores the _getNavBarFunc value.</summary>
     private static readonly SingleAssign<Func<ObservableCollection<FrameworkElement>>> _getNavBarFunc = new();
+
+    /// <summary>Stores the _getMainMenuFunc value.</summary>
     private static readonly SingleAssign<Func<ObservableCollection<FrameworkElement>>> _getMainMenuFunc = new();
 
-    /// <summary>
-    /// Applications the bar is sticky listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    /// <param name="setValue">The set value.</param>
-    public static void AppBarIsStickyListener(this IHaveAppBar dummy, Func<bool> getValue, Action<bool> setValue)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="dummy">The dummy value.</param>
+    extension(IControlAppBar dummy)
     {
-        _setAppBarIsStickyFunc.Assign(setValue);
-        _getAppBarIsStickyFunc.Assign(getValue);
+        /// <summary>Gets the Applications Left AppBar container.</summary>
+        /// <returns>
+        /// ObservableCollection of FrameworkElement.
+        /// </returns>
+        public ObservableCollection<FrameworkElement>? AppBarLeft()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getAppBarLeftFunc.Value?.Invoke();
+        }
+
+        /// <summary>Menus the link groups.</summary>
+        /// <returns>
+        /// A Value.
+        /// </returns>
+        public ObservableCollection<FrameworkElement>? MainMenu()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getMainMenuFunc.Value?.Invoke();
+        }
+
+        /// <summary>Navs the bar left.</summary>
+        /// <returns>
+        /// A Value.
+        /// </returns>
+        public ObservableCollection<FrameworkElement>? NavBarLeft()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getNavBarLeftFunc.Value?.Invoke();
+        }
+
+        /// <summary>Gets the Applications Right AppBar container.</summary>
+        /// <returns>
+        /// ObservableCollection of FrameworkElement.
+        /// </returns>
+        public ObservableCollection<FrameworkElement>? AppBarRight()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getAppBarRightFunc.Value?.Invoke();
+        }
+
+        /// <summary>Navs the bar right.</summary>
+        /// <returns>
+        /// A Value.
+        /// </returns>
+        public ObservableCollection<FrameworkElement>? NavBar()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getNavBarFunc.Value?.Invoke();
+        }
+
+        /// <summary>Shows the application bar.</summary>
+        /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
+        public void ShowAppBar(bool isSticky = false)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            _showAppBarFunc.Value?.Invoke(isSticky);
+        }
+
+        /// <summary>Hides the application bar.</summary>
+        public void HideAppBar()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            _hideAppBarFunc.Value?.Invoke();
+        }
+
+        /// <summary>Sets the AppBar is sticky.</summary>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        public void AppBarIsSticky(bool value)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            _setAppBarIsStickyFunc.Value?.Invoke(value);
+        }
+
+        /// <summary>Gets the AppBar is sticky.</summary>
+        /// <returns>
+        /// bool.
+        /// </returns>
+        public bool? AppBarIsSticky()
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
+
+            return _getAppBarIsStickyFunc.Value?.Invoke();
+        }
     }
 
-    /// <summary>
-    /// Navs the bar right listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    public static void NavBarListener(this IHaveAppBar dummy, Func<ObservableCollection<FrameworkElement>> getValue) =>
-        _getNavBarFunc.Assign(getValue);
+    /// <summary>Provides extension members.</summary>
+    /// <param name="dummy">The dummy value.</param>
+    extension(IHaveAppBar dummy)
+    {
+        /// <summary>Applications the bar is sticky listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        /// <param name="setValue">The set value.</param>
+        public void AppBarIsStickyListener(Func<bool> getValue, Action<bool> setValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Menus the link groups listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    public static void MainMenuListener(this IHaveAppBar dummy, Func<ObservableCollection<FrameworkElement>> getValue) =>
-        _getMainMenuFunc.Assign(getValue);
+            _setAppBarIsStickyFunc.Assign(setValue);
+            _getAppBarIsStickyFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Navs the bar left listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    public static void NavBarLeftListener(this IHaveAppBar dummy, Func<ObservableCollection<FrameworkElement>> getValue) =>
-        _getNavBarLeftFunc.Assign(getValue);
+        /// <summary>Navs the bar right listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        public void NavBarListener(Func<ObservableCollection<FrameworkElement>> getValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Applications the bar left listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    public static void AppBarLeftListener(this IHaveAppBar dummy, Func<ObservableCollection<FrameworkElement>> getValue) =>
-        _getAppBarLeftFunc.Assign(getValue);
+            _getNavBarFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Applications the bar right listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="getValue">The get value.</param>
-    public static void AppBarRightListener(this IHaveAppBar dummy, Func<ObservableCollection<FrameworkElement>> getValue) => _getAppBarRightFunc.Assign(getValue);
+        /// <summary>Menus the link groups listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        public void MainMenuListener(Func<ObservableCollection<FrameworkElement>> getValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Gets the Applications Left AppBar container.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// ObservableCollection of FrameworkElement.
-    /// </returns>
-    public static ObservableCollection<FrameworkElement>? AppBarLeft(this IControlAppBar dummy) =>
-        _getAppBarLeftFunc.Value?.Invoke();
+            _getMainMenuFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Menus the link groups.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// A Value.
-    /// </returns>
-    public static ObservableCollection<FrameworkElement>? MainMenu(this IControlAppBar dummy) =>
-        _getMainMenuFunc.Value?.Invoke();
+        /// <summary>Navs the bar left listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        public void NavBarLeftListener(Func<ObservableCollection<FrameworkElement>> getValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Navs the bar left.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// A Value.
-    /// </returns>
-    public static ObservableCollection<FrameworkElement>? NavBarLeft(this IControlAppBar dummy) =>
-        _getNavBarLeftFunc.Value?.Invoke();
+            _getNavBarLeftFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Gets the Applications Right AppBar container.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// ObservableCollection of FrameworkElement.
-    /// </returns>
-    public static ObservableCollection<FrameworkElement>? AppBarRight(this IControlAppBar dummy) =>
-        _getAppBarRightFunc.Value?.Invoke();
+        /// <summary>Applications the bar left listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        public void AppBarLeftListener(Func<ObservableCollection<FrameworkElement>> getValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Navs the bar right.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// A Value.
-    /// </returns>
-    public static ObservableCollection<FrameworkElement>? NavBar(this IControlAppBar dummy) =>
-        _getNavBarFunc.Value?.Invoke();
+            _getAppBarLeftFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Shows the application bar listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="e">The e.</param>
-    public static void ShowAppBarListener(this IHaveAppBar dummy, Action<bool> e) =>
-        _showAppBarFunc.Assign(e);
+        /// <summary>Applications the bar right listener.</summary>
+        /// <param name="getValue">The get value.</param>
+        public void AppBarRightListener(Func<ObservableCollection<FrameworkElement>> getValue)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Hides the application bar listener.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="e">The e.</param>
-    public static void HideAppBarListener(this IHaveAppBar dummy, Action e) =>
-        _hideAppBarFunc.Assign(e);
+            _getAppBarRightFunc.Assign(getValue);
+        }
 
-    /// <summary>
-    /// Shows the application bar.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
-    public static void ShowAppBar(this IControlAppBar dummy, bool isSticky = false) => _showAppBarFunc.Value?.Invoke(isSticky);
+        /// <summary>Shows the application bar listener.</summary>
+        /// <param name="e">The e.</param>
+        public void ShowAppBarListener(Action<bool> e)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Hides the application bar.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    public static void HideAppBar(this IControlAppBar dummy) =>
-        _hideAppBarFunc.Value?.Invoke();
+            _showAppBarFunc.Assign(e);
+        }
 
-    /// <summary>
-    /// Sets the AppBar is sticky.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <param name="value">if set to <c>true</c> [value].</param>
-    public static void AppBarIsSticky(this IControlAppBar dummy, bool value) =>
-        _setAppBarIsStickyFunc.Value?.Invoke(value);
+        /// <summary>Hides the application bar listener.</summary>
+        /// <param name="e">The e.</param>
+        public void HideAppBarListener(Action e)
+        {
+            if (dummy is null)
+            {
+                throw new ArgumentNullException(nameof(dummy));
+            }
 
-    /// <summary>
-    /// Gets the AppBar is sticky.
-    /// </summary>
-    /// <param name="dummy">The dummy.</param>
-    /// <returns>
-    /// bool.
-    /// </returns>
-    public static bool? AppBarIsSticky(this IControlAppBar dummy) =>
-        _getAppBarIsStickyFunc.Value?.Invoke();
+            _hideAppBarFunc.Assign(e);
+        }
+    }
 }
-#pragma warning restore RCS1175 // Unused 'this' parameter
-

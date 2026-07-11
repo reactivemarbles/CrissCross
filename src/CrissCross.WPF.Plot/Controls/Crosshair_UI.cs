@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -23,38 +21,47 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class Crosshair_UI : RxObject, IPlottableUI
 {
+    /// <summary>The crosshair stroke width.</summary>
+    private const float CrosshairLineWidth = 3;
+
+    /// <summary>The vertical offset for the horizontal-axis label.</summary>
+    private const float HorizontalLabelOffsetY = -10;
+
+    /// <summary>The horizontal offset for the horizontal-axis label.</summary>
+    private const float HorizontalLabelOffsetX = 80;
+
+    /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects _chartSettings;
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the manual scale value.</summary>
     [Reactive]
     private bool _manualScale;
+
+    /// <summary>Stores the mode value.</summary>
     [Reactive]
     private int _mode;
+
+    /// <summary>Stores the number points plotted value.</summary>
     [Reactive]
     private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Crosshair_UI"/> class, configuring crosshair display and marker behavior for the.
-    /// specified plot with customizable appearance and scaling options.
-    /// </summary>
-    /// <remarks>If coordinatesObs is provided, the crosshair and marker label will update dynamically as new
-    /// coordinates are received. When isXAxisDateTime is <see langword="true"/>, X axis values are displayed as
-    /// formatted time strings. Autoscale and manualscale options control how the plot view responds to crosshair
-    /// changes.</remarks>
-    /// <param name="plot">The WpfPlot instance to which the crosshair and marker will be attached.</param>
-    /// <param name="data">A tuple containing the name and axis index for the data series associated with the crosshair.</param>
-    /// <param name="color">The color used for the crosshair and marker appearance.</param>
-    /// <param name="isXAxisDateTime">Indicates whether the X axis represents DateTime values. If <see langword="true"/>, X axis values will be
-    /// formatted as time strings.</param>
-    /// <param name="autoscale">Specifies whether the plot should automatically scale to fit the crosshair and marker. Set to <see
-    /// langword="true"/> to enable autoscaling.</param>
-    /// <param name="manualscale">Specifies whether manual scaling is enabled for the crosshair and marker. Set to <see langword="true"/> to allow
-    /// manual adjustment.</param>
-    /// <param name="coordinatesObs">An optional observable sequence of Coordinates used to update the crosshair position and marker label in
-    /// response to mouse movement. If null, the crosshair is initialized without dynamic updates.</param>
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class, configuring crosshair display and marker behavior for the. specified plot with customizable appearance and scaling options.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    /// <param name="coordinatesObs">The coordinatesObs value.</param>
     public Crosshair_UI(
         WpfPlot plot,
         (string? Name, int Axis) data,
@@ -64,7 +71,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         bool manualscale = false,
         IObservable<Coordinates>? coordinatesObs = null)
     {
-        ChartSettings = new ChartObjects(itemName: data.Name!, color: color);
+        ChartSettings = new(itemName: data.Name!, color: color);
         ManualScale = manualscale;
         AutoScale = autoscale;
         Plot = plot;
@@ -73,7 +80,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         ChartSettings?.CreateCursorValues(Plot, color);
         ChartSettings!.Marker.IsVisible = false;
 
-        if (coordinatesObs != null && !isXAxisDateTime)
+        if (coordinatesObs is not null && !isXAxisDateTime)
         {
             MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
             {
@@ -82,7 +89,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
             }).DisposeWith(Disposables);
             CreateCrosshair(color: color);
         }
-        else if (coordinatesObs != null && isXAxisDateTime)
+        else if (coordinatesObs is not null && isXAxisDateTime)
         {
             MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
             {
@@ -98,26 +105,18 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         }
     }
 
-    /// <summary>
-    /// Gets or sets the WpfPlot control used for rendering interactive plots within the application.
-    /// </summary>
+    /// <summary>Gets or sets the WpfPlot control used for rendering interactive plots within the application.</summary>
     public WpfPlot Plot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the subscription used to observe mouse coordinate changes.
-    /// </summary>
+    /// <summary>Gets or sets the subscription used to observe mouse coordinate changes.</summary>
     /// <remarks>Dispose the returned object to stop receiving mouse coordinate updates and release resources
     /// associated with the observation.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
-    /// <summary>
-    /// Gets or sets the crosshair line to display on the plot, if any.
-    /// </summary>
+    /// <summary>Gets or sets the crosshair line to display on the plot, if any.</summary>
     public Crosshair? PlotLine { get; set; }
 
-    /// <summary>
-    /// Adds a draggable crosshair to the plot at the specified position and color.
-    /// </summary>
+    /// <summary>Adds a draggable crosshair to the plot at the specified position and color.</summary>
     /// <remarks>The crosshair consists of horizontal and vertical lines that can be dragged by the user. Both
     /// lines display a label with a customizable background color. If an invalid color name is provided, the crosshair
     /// may not display as intended.</remarks>
@@ -127,7 +126,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     {
         PlotLine = Plot.Plot.Add.Crosshair(position, 0);
         PlotLine.IsVisible = true;
-        PlotLine.LineWidth = 3;
+        PlotLine.LineWidth = CrosshairLineWidth;
         PlotLine.HorizontalLine.IsDraggable = true;
         PlotLine.VerticalLine.IsDraggable = true;
         PlotLine!.HorizontalLine.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
@@ -136,25 +135,26 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         PlotLine.VerticalLine.Text = "Click and drag me";
         PlotLine.HorizontalLine.LabelStyle.IsVisible = true;
         PlotLine.VerticalLine.LabelStyle.IsVisible = true;
-        PlotLine.HorizontalLine.LabelStyle.OffsetY = -10;
-        PlotLine.HorizontalLine.LabelStyle.OffsetX = 80;
+        PlotLine.HorizontalLine.LabelStyle.OffsetY = HorizontalLabelOffsetY;
+        PlotLine.HorizontalLine.LabelStyle.OffsetX = HorizontalLabelOffsetX;
         PlotLine.HorizontalLine.LabelStyle.Rotation = 0;
         PlotLine.HorizontalLine.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
         PlotLine.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        if (!disposing)
         {
-            ChartSettings.IsCheckedCmd?.Dispose();
-            ChartSettings.Dispose();
-            MouseCoordinatesObs?.Dispose();
+            base.Dispose(disposing);
+            return;
         }
+
+        ChartSettings.IsCheckedCmd?.Dispose();
+        ChartSettings.Dispose();
+        MouseCoordinatesObs?.Dispose();
+        base.Dispose(disposing);
     }
 }

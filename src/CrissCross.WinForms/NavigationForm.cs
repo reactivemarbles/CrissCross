@@ -1,31 +1,27 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.ComponentModel;
-using System.Reactive.Linq;
 
 namespace CrissCross.WinForms;
 
-/// <summary>
-/// NavigationForm.
-/// </summary>
+/// <summary>Hosts WinForms navigation content.</summary>
 /// <seealso cref="Form" />
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
 public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmBuilt
 {
+    /// <summary>Stores the navigation Frame Dock value.</summary>
     private DockStyle _navigationFrameDock = DockStyle.Fill;
+
+    /// <summary>Stores the navigate Back Is Enabled value.</summary>
     private bool _navigateBackIsEnabled = true;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="NavigationForm"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationForm"/> class.</summary>
     public NavigationForm() => InitializeComponent();
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [navigate back is enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
     ///   <c>true</c> if [navigate back is enabled]; otherwise, <c>false</c>.
     /// </value>
@@ -44,9 +40,7 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
         }
     }
 
-    /// <summary>
-    /// Gets or sets the navigation frame dock.
-    /// </summary>
+    /// <summary>Gets or sets the navigation frame dock.</summary>
     /// <value>
     /// The navigation frame dock.
     /// </value>
@@ -65,25 +59,19 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmB
         }
     }
 
-    /// <summary>
-    /// Gets the can navigate back.
-    /// </summary>
+    /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
     public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable.Select(x => x == true);
 
-    /// <summary>
-    /// Gets the navigation frame.
-    /// </summary>
+    /// <summary>Gets the navigation frame.</summary>
     /// <value>
     /// The navigation frame.
     /// </value>
     public ViewModelRoutedViewHost NavigationFrame { get; } = new();
 
-    /// <summary>
-    /// Raises the <see cref="E:System.Windows.Forms.Form.Load" /> event.
-    /// </summary>
+    /// <summary>Raises the <see cref="E:System.Windows.Forms.Form.Load" /> event.</summary>
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnLoad(EventArgs e)
     {

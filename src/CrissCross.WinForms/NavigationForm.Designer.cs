@@ -1,15 +1,15 @@
-﻿namespace CrissCross.WinForms;
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+namespace CrissCross.WinForms;
 
 partial class NavigationForm
 {
-    /// <summary>
-    /// Required designer variable.
-    /// </summary>
+    /// <summary>Required designer variable.</summary>
     private System.ComponentModel.IContainer components = null;
 
-    /// <summary>
-    /// Clean up any resources being used.
-    /// </summary>
+    /// <summary>Clean up any resources being used.</summary>
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {

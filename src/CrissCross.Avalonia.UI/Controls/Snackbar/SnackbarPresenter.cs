@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -8,26 +8,21 @@ using Avalonia.Interactivity;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// SnackbarPresenter.
-/// </summary>
+/// <summary>SnackbarPresenter member.</summary>
 /// <seealso cref="ContentPresenter" />
 public class SnackbarPresenter : ContentPresenter
 {
-    /// <summary>
-    /// Property for <see cref="SnackbarContent"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="SnackbarContent"/>.</summary>
     public static readonly StyledProperty<Snackbar?> SnackbarContentProperty =
         AvaloniaProperty.Register<SnackbarPresenter, Snackbar?>(nameof(SnackbarContent));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SnackbarPresenter"/> class.
-    /// </summary>
+    /// <summary>Delay that allows the hide animation to complete.</summary>
+    private const int HideCompletionDelayMilliseconds = 300;
+
+    /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
     public SnackbarPresenter() => Unloaded += OnUnloadedHandler;
 
-    /// <summary>
-    /// Finalizes an instance of the <see cref="SnackbarPresenter"/> class.
-    /// </summary>
+    /// <summary>Finalizes an instance of the <see cref="SnackbarPresenter"/> class.</summary>
     ~SnackbarPresenter()
     {
         if (!CancellationTokenSource.IsCancellationRequested)
@@ -38,9 +33,7 @@ public class SnackbarPresenter : ContentPresenter
         CancellationTokenSource.Dispose();
     }
 
-    /// <summary>
-    /// Gets or sets the snackbar content.
-    /// </summary>
+    /// <summary>Gets the SnackbarContent value.</summary>
     /// <value>
     /// The snackbar content.
     /// </value>
@@ -50,41 +43,35 @@ public class SnackbarPresenter : ContentPresenter
         protected set => SetValue(SnackbarContentProperty, value);
     }
 
-    /// <summary>
-    /// Gets the queue.
-    /// </summary>
+    /// <summary>Gets the queue.</summary>
     /// <value>
     /// The queue.
     /// </value>
     protected Queue<Snackbar> Queue { get; } = new();
 
-    /// <summary>
-    /// Gets or sets the cancellation token source.
-    /// </summary>
+    /// <summary>Gets or sets the cancellation token source.</summary>
     /// <value>
     /// The cancellation token source.
     /// </value>
     protected CancellationTokenSource CancellationTokenSource { get; set; } = new();
 
-    /// <summary>
-    /// Adds to queue.
-    /// </summary>
+    /// <summary>Adds to queue.</summary>
     /// <param name="snackbar">The snackbar.</param>
     public virtual void AddToQueue(Snackbar snackbar)
     {
         Queue.Enqueue(snackbar);
 
-        if (SnackbarContent is null)
+        if (SnackbarContent is not null)
         {
-            _ = ShowQueuedSnackbarsAsync();
+            return;
         }
+
+        _ = ShowQueuedSnackbarsAsync();
     }
 
-    /// <summary>
-    /// Immediately displays the snackbar.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <summary>Immediately displays the snackbar.</summary>
     /// <param name="snackbar">The snackbar.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public virtual async Task ImmediatelyDisplayAsync(Snackbar snackbar)
     {
         if (snackbar is null)
@@ -98,9 +85,7 @@ public class SnackbarPresenter : ContentPresenter
         await ShowQueuedSnackbarsAsync();
     }
 
-    /// <summary>
-    /// Hides the current snackbar.
-    /// </summary>
+    /// <summary>Hides the current snackbar.</summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public virtual async Task HideCurrentAsync()
     {
@@ -109,14 +94,12 @@ public class SnackbarPresenter : ContentPresenter
             return;
         }
 
-        CancellationTokenSource.Cancel();
+        await CancellationTokenSource.CancelAsync();
         await HideSnackbarAsync(SnackbarContent);
         ResetCancellationTokenSource();
     }
 
-    /// <summary>
-    /// Called when [unloaded].
-    /// </summary>
+    /// <summary>Called when [unloaded].</summary>
     protected virtual void OnUnloaded()
     {
         if (CancellationTokenSource.IsCancellationRequested)
@@ -128,23 +111,27 @@ public class SnackbarPresenter : ContentPresenter
         ResetCancellationTokenSource();
     }
 
-    /// <summary>
-    /// Resets the cancellation token source.
-    /// </summary>
+    /// <summary>Resets the cancellation token source.</summary>
     protected void ResetCancellationTokenSource()
     {
         CancellationTokenSource.Dispose();
-        CancellationTokenSource = new CancellationTokenSource();
+        CancellationTokenSource = new();
     }
 
+    /// <summary>Provides the OnUnloadedHandler member.</summary>
+    /// <param name="sender">The sender value.</param>
+    /// <param name="e">The e value.</param>
     private static void OnUnloadedHandler(object? sender, RoutedEventArgs e)
     {
-        if (sender is SnackbarPresenter self)
+        if (sender is not SnackbarPresenter self)
         {
-            self.OnUnloaded();
+            return;
         }
+
+        self.OnUnloaded();
     }
 
+    /// <summary>Provides the ImmediatelyHideCurrent member.</summary>
     private void ImmediatelyHideCurrent()
     {
         if (SnackbarContent is null)
@@ -156,6 +143,8 @@ public class SnackbarPresenter : ContentPresenter
         ImmediatelyHideSnackbar(SnackbarContent);
     }
 
+    /// <summary>Provides the ImmediatelyHideSnackbar member.</summary>
+    /// <param name="snackbar">The snackbar value.</param>
     private void ImmediatelyHideSnackbar(Snackbar snackbar)
     {
         snackbar.IsShown = false;
@@ -163,6 +152,8 @@ public class SnackbarPresenter : ContentPresenter
         Content = null;
     }
 
+    /// <summary>Provides the ShowQueuedSnackbarsAsync member.</summary>
+    /// <returns>The result.</returns>
     private async Task ShowQueuedSnackbarsAsync()
     {
         while (Queue.Count > 0 && !CancellationTokenSource.IsCancellationRequested)
@@ -173,6 +164,9 @@ public class SnackbarPresenter : ContentPresenter
         }
     }
 
+    /// <summary>Provides the ShowSnackbarAsync member.</summary>
+    /// <param name="snackbar">The snackbar value.</param>
+    /// <returns>The result.</returns>
     private async Task ShowSnackbarAsync(Snackbar snackbar)
     {
         SnackbarContent = snackbar;
@@ -192,11 +186,14 @@ public class SnackbarPresenter : ContentPresenter
         await HideSnackbarAsync(snackbar);
     }
 
+    /// <summary>Provides the HideSnackbarAsync member.</summary>
+    /// <param name="snackbar">The snackbar value.</param>
+    /// <returns>The result.</returns>
     private async Task HideSnackbarAsync(Snackbar snackbar)
     {
         snackbar.IsShown = false;
 
-        await Task.Delay(300);
+        await Task.Delay(HideCompletionDelayMilliseconds);
 
         SnackbarContent = null;
         Content = null;

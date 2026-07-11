@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
-using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
@@ -24,37 +22,37 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class SignalXY_UI : RxObject, IPlottableUI
 {
+    /// <summary>Stores the chart settings value.</summary>
     [Reactive]
     private ChartObjects? _chartSettings;
+
+    /// <summary>Stores the auto scale value.</summary>
     [Reactive]
     private bool _autoScale;
+
+    /// <summary>Stores the manual scale value.</summary>
     [Reactive]
     private bool _manualScale;
+
+    /// <summary>Stores the mode value.</summary>
     [Reactive]
     private int _mode;
+
+    /// <summary>Stores the number points plotted value.</summary>
     [Reactive]
     private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SignalXY_UI"/> class to display an XY signal on the specified WpfPlot using the.
-    /// provided data and appearance settings.
-    /// </summary>
-    /// <remarks>If a coordinates observable is supplied, the plot will display a crosshair and marker at the
-    /// nearest data point to the mouse position, updating in real time. The autoscale and manualscale parameters
-    /// control axis scaling behavior and can be used together to customize how the plot responds to data
-    /// changes.</remarks>
-    /// <param name="plot">The WpfPlot control on which the signal will be rendered.</param>
-    /// <param name="data">A tuple containing the signal's name, Y-axis values, corresponding X-axis DateTime values, and the axis index to
-    /// plot against. The Value and DateTime lists must not be null.</param>
-    /// <param name="color">The color used to render the signal line and related chart elements.</param>
-    /// <param name="autoscale">Indicates whether the plot should automatically scale its axes to fit the signal data. The default is <see
-    /// langword="true"/>.</param>
-    /// <param name="manualscale">Indicates whether manual axis scaling is enabled for the plot. The default is <see langword="false"/>.</param>
-    /// <param name="coordinatesObs">An optional observable sequence of mouse coordinates. If provided, the plot will update crosshair and marker
-    /// positions in response to mouse movements.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="data.Value"/> or <paramref name="data.DateTime"/> is null.</exception>
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class to display an XY signal on the specified WpfPlot using the. provided data and appearance settings.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    /// <param name="coordinatesObs">The coordinatesObs value.</param>
     public SignalXY_UI(
         WpfPlot plot,
         (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
@@ -63,13 +61,13 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
         bool manualscale = false,
         IObservable<Coordinates>? coordinatesObs = null)
     {
-        if (data.Value == null || data.DateTime == null)
+        if (data.Value is null || data.DateTime is null)
         {
             throw new ArgumentNullException(nameof(data));
         }
 
         ChartSettings = new(itemName: data.Name!, color: color);
-        ChartSettings.DisposeWith(Disposables);
+        _ = ChartSettings.DisposeWith(Disposables);
         ManualScale = manualscale;
         AutoScale = autoscale;
 
@@ -79,50 +77,44 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine);
         ChartSettings.CreateCursorValues(Plot, color);
 
-        if (coordinatesObs != null)
+        if (coordinatesObs is null)
         {
-            MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
-            {
-                if (PlotLine!.Data.Count <= 0)
-                {
-                    return;
-                }
-
-                var closestCoordinate = PlotLine.GetNearestX(x, Plot.Plot.LastRender);
-
-                ChartSettings.Crosshair!.Position = closestCoordinate.Coordinates;
-                ChartSettings.Marker!.Position = closestCoordinate.Coordinates;
-                ChartSettings.MarkerText!.Location = closestCoordinate.Coordinates;
-                ChartSettings.MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
-
-                Plot?.Refresh();
-            }).DisposeWith(Disposables);
+            return;
         }
+
+        MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
+        {
+            if (PlotLine!.Data.Count <= 0)
+            {
+                return;
+            }
+
+            var closestCoordinate = PlotLine.GetNearestX(x, Plot.Plot.LastRender);
+
+            ChartSettings.Crosshair!.Position = closestCoordinate.Coordinates;
+            ChartSettings.Marker!.Position = closestCoordinate.Coordinates;
+            ChartSettings.MarkerText!.Location = closestCoordinate.Coordinates;
+            ChartSettings.MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
+
+            Plot?.Refresh();
+        }).DisposeWith(Disposables);
     }
 
-    /// <summary>
-    /// Gets or sets the WpfPlot control used for rendering interactive plots within the application.
-    /// </summary>
+    /// <summary>Gets or sets the WpfPlot control used for rendering interactive plots within the application.</summary>
     /// <remarks>Assigning a new WpfPlot instance replaces the current plot displayed in the control. This
     /// property is typically used to configure or update the plot shown to users.</remarks>
     public WpfPlot Plot { get; set; }
 
-    /// <summary>
-    /// Gets or sets the plot line to be displayed on the chart as an XY signal.
-    /// </summary>
+    /// <summary>Gets or sets the plot line to be displayed on the chart as an XY signal.</summary>
     public SignalXY? PlotLine { get; set; }
 
-    /// <summary>
-    /// Gets or sets the subscription used to observe mouse coordinate changes.
-    /// </summary>
+    /// <summary>Gets or sets the subscription used to observe mouse coordinate changes.</summary>
     /// <remarks>Dispose the returned object to stop receiving mouse coordinate updates and release associated
     /// resources. Assigning a new value may replace an existing subscription; ensure previous subscriptions are
     /// disposed if no longer needed.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
-    /// <summary>
-    /// Creates a new signal plot line with the specified color.
-    /// </summary>
+    /// <summary>Creates a new signal plot line with the specified color.</summary>
     /// <remarks>The signal is initialized with a single data point at the origin. The line width is set to 1
     /// pixel. If the color string is not a valid hex code, an exception may be thrown by the underlying color
     /// conversion method.</remarks>
@@ -136,11 +128,8 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
         PlotLine.Color = Color.FromHex(color);
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing">The disposing value.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)

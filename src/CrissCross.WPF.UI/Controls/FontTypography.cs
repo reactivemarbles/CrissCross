@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
@@ -10,38 +10,24 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 public enum FontTypography
 {
-    /// <summary>
-    /// The caption.
-    /// </summary>
+    /// <summary>The caption.</summary>
     Caption,
 
-    /// <summary>
-    /// The body.
-    /// </summary>
+    /// <summary>The body.</summary>
     Body,
 
-    /// <summary>
-    /// The body strong.
-    /// </summary>
+    /// <summary>The body strong.</summary>
     BodyStrong,
 
-    /// <summary>
-    /// The subtitle.
-    /// </summary>
+    /// <summary>The subtitle.</summary>
     Subtitle,
 
-    /// <summary>
-    /// The title.
-    /// </summary>
+    /// <summary>The title.</summary>
     Title,
 
-    /// <summary>
-    /// The title large.
-    /// </summary>
+    /// <summary>The title large.</summary>
     TitleLarge,
 
-    /// <summary>
-    /// The display.
-    /// </summary>
+    /// <summary>The display.</summary>
     Display
 }

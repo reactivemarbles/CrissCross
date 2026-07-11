@@ -1,39 +1,50 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Extensions;
 
+/// <summary>Provides the UiElementExtensions member.</summary>
 internal static class UiElementExtensions
 {
-    /// <summary>
-    /// Do not call it outside of NCHITTEST, NCLBUTTONUP, NCLBUTTONDOWN messages.
-    /// </summary>
-    /// <returns><see langword="true"/> if mouse is over the element. <see langword="false"/> otherwise.</returns>
-    public static bool IsMouseOverElement(this UIElement element, IntPtr lParam)
+    /// <summary>Provides extension members.</summary>
+    /// <param name="element">The element value.</param>
+    extension(UIElement element)
     {
-        // This method will be invoked very often and must be as simple as possible.
-        if (lParam == IntPtr.Zero)
+        /// <summary>Do not call it outside of NCHITTEST, NCLBUTTONUP, NCLBUTTONDOWN messages.</summary>
+        /// <param name="messageParameter">The message parameter value.</param>
+        /// <returns><see langword="true"/> if mouse is over the element. <see langword="false"/> otherwise.</returns>
+        public bool IsMouseOverElement(IntPtr messageParameter)
         {
-            return false;
-        }
+            // This method will be invoked very often and must be as simple as possible.
+            if (messageParameter == IntPtr.Zero)
+            {
+                return false;
+            }
 
-        try
-        {
-            var mousePosScreen = new Point(Get_X_LParam(lParam), Get_Y_LParam(lParam));
-            var bounds = new Rect(default, element.RenderSize);
+            try
+            {
+                var mousePosScreen = new Point(Get_X_LParam(messageParameter), Get_Y_LParam(messageParameter));
+                var bounds = new Rect(default, element.RenderSize);
 
-            var mousePosRelative = element.PointFromScreen(mousePosScreen);
+                var mousePosRelative = element.PointFromScreen(mousePosScreen);
 
-            return bounds.Contains(mousePosRelative);
-        }
-        catch
-        {
-            return false;
+                return bounds.Contains(mousePosRelative);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 
-    private static int Get_X_LParam(IntPtr lParam) => (short)(lParam.ToInt32() & 0xFFFF);
+    /// <summary>Provides the Get_X_LParam member.</summary>
+    /// <param name="messageParameter">The message parameter value.</param>
+    /// <returns>The result.</returns>
+    private static int Get_X_LParam(IntPtr messageParameter) => (short)(messageParameter.ToInt32() & 0xFFFF);
 
-    private static int Get_Y_LParam(IntPtr lParam) => (short)(lParam.ToInt32() >> 16);
+    /// <summary>Provides the Get_Y_LParam member.</summary>
+    /// <param name="messageParameter">The message parameter value.</param>
+    /// <returns>The result.</returns>
+    private static int Get_Y_LParam(IntPtr messageParameter) => (short)(messageParameter.ToInt32() >> 16);
 }

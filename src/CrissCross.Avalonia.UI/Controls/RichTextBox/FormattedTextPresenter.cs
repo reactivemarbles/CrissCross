@@ -1,93 +1,69 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.IO;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using DocumentsInline = Avalonia.Controls.Documents.Inline;
-using DocumentsInlineUIContainer = Avalonia.Controls.Documents.InlineUIContainer;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// A control that displays formatted text using Inlines.
-/// </summary>
+/// <summary>A control that displays formatted text using Inlines.</summary>
 public class FormattedTextPresenter : TextBlock
 {
-    /// <summary>
-    /// Property for <see cref="Document"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Document"/>.</summary>
     public static readonly StyledProperty<FlowDocument?> DocumentProperty =
         AvaloniaProperty.Register<FormattedTextPresenter, FlowDocument?>(nameof(Document));
 
-    /// <summary>
-    /// Property for <see cref="DefaultForeground"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="DefaultForeground"/>.</summary>
     public static readonly StyledProperty<IBrush?> DefaultForegroundProperty =
         AvaloniaProperty.Register<FormattedTextPresenter, IBrush?>(nameof(DefaultForeground));
 
-    /// <summary>
-    /// Property for <see cref="DefaultFontSize"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="DefaultFontSize"/>.</summary>
     public static readonly StyledProperty<double> DefaultFontSizeProperty =
         AvaloniaProperty.Register<FormattedTextPresenter, double>(nameof(DefaultFontSize), 14);
 
+    /// <summary>Provides the InlineObjectBoundarySentinel member.</summary>
     private const string InlineObjectBoundarySentinel = "\u200B";
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="FormattedTextPresenter"/> class.
-    /// </summary>
-    public FormattedTextPresenter()
-    {
-    }
+    /// <summary>Provides the DefaultImageMaxWidth member.</summary>
+    private const double DefaultImageMaxWidth = 640;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether HTTP/HTTPS image sources may be resolved by <see cref="RemoteImageLoader"/>.
-    /// </summary>
+    /// <summary>Provides the DefaultImageMaxHeight member.</summary>
+    private const double DefaultImageMaxHeight = 480;
+
+    /// <summary>Gets or sets a value indicating whether HTTP/HTTPS image sources may be resolved by <see cref="RemoteImageLoader"/>.</summary>
     public bool IsRemoteImageLoadingEnabled { get; set; }
 
-    /// <summary>
-    /// Gets or sets the opt-in remote image loader used for HTTP/HTTPS image sources.
-    /// </summary>
+    /// <summary>Gets or sets the opt-in remote image loader used for HTTP/HTTPS image sources.</summary>
     public Func<Uri, IImage?>? RemoteImageLoader { get; set; }
 
-    /// <summary>
-    /// Gets or sets the document to display.
-    /// </summary>
+    /// <summary>Gets or sets the document to display.</summary>
     public FlowDocument? Document
     {
         get => GetValue(DocumentProperty);
         set => SetValue(DocumentProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default foreground brush.
-    /// </summary>
+    /// <summary>Gets or sets the default foreground brush.</summary>
     public IBrush? DefaultForeground
     {
         get => GetValue(DefaultForegroundProperty);
         set => SetValue(DefaultForegroundProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the default font size.
-    /// </summary>
+    /// <summary>Gets or sets the default font size.</summary>
     public double DefaultFontSize
     {
         get => GetValue(DefaultFontSizeProperty);
         set => SetValue(DefaultFontSizeProperty, value);
     }
 
-    /// <summary>
-    /// Updates the inline collection from the document.
-    /// </summary>
+    /// <summary>Updates the inline collection from the document.</summary>
     public void UpdateInlines()
     {
         Inlines?.Clear();
@@ -99,89 +75,18 @@ public class FormattedTextPresenter : TextBlock
 
         foreach (var segment in Document.Segments)
         {
-            if (segment.IsParagraphBreak)
-            {
-                Inlines!.Add(new LineBreak());
-                Inlines.Add(new LineBreak());
-                continue;
-            }
-
-            if (segment.IsLineBreak)
-            {
-                Inlines!.Add(new LineBreak());
-                continue;
-            }
-
-            if (segment.IsImage)
-            {
-                // Keep the preceding shaped text run splittable when Avalonia wraps before an embedded inline.
-                AppendInlineObjectBoundarySentinel();
-                var imageInline = CreateImageInline(segment);
-                if (imageInline is not null)
-                {
-                    Inlines!.Add(imageInline);
-                }
-
-                continue;
-            }
-
-            if (!segment.HasRenderableText)
-            {
-                continue;
-            }
-
-            var run = new Run(segment.Text)
-            {
-                FontWeight = segment.FontWeight,
-                FontStyle = segment.FontStyle,
-                FontSize = segment.FontSize ?? DefaultFontSize,
-                FontFamily = segment.FontFamily ?? FontFamily,
-            };
-
-            if (segment.TextDecorations is { } decorations)
-            {
-                run.TextDecorations = decorations;
-            }
-
-            run.Foreground = segment.Foreground ?? DefaultForeground ?? Foreground;
-            if (segment.Background is not null)
-            {
-                run.Background = segment.Background;
-            }
-
-            Inlines!.Add(run);
+            AppendSegment(segment);
         }
     }
 
-    /// <inheritdoc/>
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    /// <summary>Creates a sized image element for a document image segment.</summary>
+    /// <param name="segment">The image segment.</param>
+    /// <returns>The image element, or <see langword="null"/> when the source cannot be loaded.</returns>
+    internal Image? CreateImageElement(TextSegment segment)
     {
-        base.OnPropertyChanged(change);
-
-        if (change is null)
-        {
-            return;
-        }
-
-        if (change.Property == DocumentProperty ||
-            change.Property == DefaultForegroundProperty ||
-            change.Property == DefaultFontSizeProperty ||
-            change.Property == ForegroundProperty ||
-            change.Property == FontSizeProperty ||
-            change.Property == FontFamilyProperty)
-        {
-            UpdateInlines();
-        }
-    }
-
-    private DocumentsInline? CreateImageInline(TextSegment segment)
-    {
-        if (string.IsNullOrWhiteSpace(segment.ImageSource))
-        {
-            return null;
-        }
-
-        if (!TryLoadImage(segment.ImageSource, out var bitmap))
+        if (string.IsNullOrWhiteSpace(segment.ImageSource) ||
+            !TryLoadImage(segment.ImageSource, out var bitmap) ||
+            bitmap is null)
         {
             return null;
         }
@@ -189,7 +94,10 @@ public class FormattedTextPresenter : TextBlock
         var image = new Image
         {
             Source = bitmap,
+            MaxWidth = DefaultImageMaxWidth,
+            MaxHeight = DefaultImageMaxHeight,
             Stretch = Stretch.Uniform,
+            StretchDirection = StretchDirection.DownOnly,
             HorizontalAlignment = segment.ImageAlignment,
         };
 
@@ -203,69 +111,44 @@ public class FormattedTextPresenter : TextBlock
             image.Height = segment.ImageHeight.Value;
         }
 
-        return new DocumentsInlineUIContainer
+        if (!segment.ImageWidth.HasValue && !segment.ImageHeight.HasValue && bitmap.Size is { Width: > 0, Height: > 0 } naturalSize)
         {
-            Child = new Border
-            {
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                Child = image,
-            }
-        };
+            var scale = Math.Min(1, Math.Min(DefaultImageMaxWidth / naturalSize.Width, DefaultImageMaxHeight / naturalSize.Height));
+            image.Width = naturalSize.Width * scale;
+            image.Height = naturalSize.Height * scale;
+        }
+
+        return image;
     }
 
-    private bool TryLoadImage(string source, out IImage? bitmap)
+    /// <inheritdoc/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        bitmap = null;
+        base.OnPropertyChanged(change);
 
-        try
+        if (change is null)
         {
-            if (TryLoadDataUri(source, out bitmap))
-            {
-                return true;
-            }
-
-            if (Uri.TryCreate(source, UriKind.Absolute, out var absolute))
-            {
-                if (absolute.IsFile)
-                {
-                    var localPath = absolute.LocalPath;
-                    if (File.Exists(localPath))
-                    {
-                        using var fileStream = File.OpenRead(localPath);
-                        bitmap = CreateBitmapFromStream(fileStream);
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                if (absolute.Scheme is "http" or "https")
-                {
-                    return TryLoadRemoteImage(absolute, out bitmap);
-                }
-
-                using var assetStream = AssetLoader.Open(absolute);
-                bitmap = CreateBitmapFromStream(assetStream);
-                return true;
-            }
-
-            if (File.Exists(source))
-            {
-                using var fallbackFile = File.OpenRead(source);
-                bitmap = CreateBitmapFromStream(fallbackFile);
-                return true;
-            }
-        }
-        catch
-        {
-            bitmap = null;
+            return;
         }
 
-        return false;
+        if (change.Property != DocumentProperty &&
+            change.Property != DefaultForegroundProperty &&
+            change.Property != DefaultFontSizeProperty &&
+            change.Property != ForegroundProperty &&
+            change.Property != FontSizeProperty &&
+            change.Property != FontFamilyProperty)
+        {
+            return;
+        }
+
+        UpdateInlines();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
-    private bool TryLoadDataUri(string source, out IImage? bitmap)
+    /// <summary>Provides the TryLoadDataUri member.</summary>
+    /// <param name="source">The image source.</param>
+    /// <param name="bitmap">The loaded bitmap.</param>
+    /// <returns><see langword="true"/> when the data URI was loaded.</returns>
+    private static bool TryLoadDataUri(string source, out IImage? bitmap)
     {
         bitmap = null;
         if (!source.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
@@ -311,6 +194,176 @@ public class FormattedTextPresenter : TextBlock
         }
     }
 
+    /// <summary>Provides the CreateBitmapFromStream member.</summary>
+    /// <param name="stream">The source stream.</param>
+    /// <returns>The decoded bitmap.</returns>
+    private static Bitmap CreateBitmapFromStream(Stream stream)
+    {
+        using var buffer = new MemoryStream();
+        stream.CopyTo(buffer);
+        buffer.Position = 0;
+        return new Bitmap(buffer);
+    }
+
+    /// <summary>Loads an image from a local file.</summary>
+    /// <param name="path">The local image path.</param>
+    /// <returns>The loaded image, or <see langword="null"/> when the file does not exist.</returns>
+    private static Bitmap? LoadImageFile(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
+        using var stream = File.OpenRead(path);
+        return CreateBitmapFromStream(stream);
+    }
+
+    /// <summary>Appends one segment to the inline collection.</summary>
+    /// <param name="segment">The segment to append.</param>
+    private void AppendSegment(TextSegment segment)
+    {
+        if (segment.IsParagraphBreak)
+        {
+            AppendParagraphBreak();
+            return;
+        }
+
+        if (segment.IsLineBreak)
+        {
+            AppendLineBreak();
+            return;
+        }
+
+        if (segment.IsImage)
+        {
+            AppendImageSegment();
+            return;
+        }
+
+        if (!segment.HasRenderableText)
+        {
+            return;
+        }
+
+        AppendRunSegment(segment);
+    }
+
+    /// <summary>Appends a paragraph break.</summary>
+    private void AppendParagraphBreak()
+    {
+        Inlines!.Add(new LineBreak());
+        Inlines.Add(new LineBreak());
+    }
+
+    /// <summary>Appends a line break.</summary>
+    private void AppendLineBreak() => Inlines!.Add(new LineBreak());
+
+    /// <summary>Appends an image segment.</summary>
+    private void AppendImageSegment()
+    {
+        // The composed image overlay owns rendering; these inlines reserve a stable document boundary.
+        AppendInlineObjectBoundarySentinel();
+        Inlines!.Add(new LineBreak());
+    }
+
+    /// <summary>Appends a text run segment.</summary>
+    /// <param name="segment">The text segment.</param>
+    private void AppendRunSegment(TextSegment segment)
+    {
+        var run = new Run(segment.Text)
+        {
+            FontWeight = segment.FontWeight,
+            FontStyle = segment.FontStyle,
+            FontSize = segment.FontSize ?? DefaultFontSize,
+            FontFamily = segment.FontFamily ?? FontFamily,
+            Foreground = segment.Foreground ?? DefaultForeground ?? Foreground,
+        };
+
+        if (segment.TextDecorations is { } decorations)
+        {
+            run.TextDecorations = decorations;
+        }
+
+        if (segment.Background is not null)
+        {
+            run.Background = segment.Background;
+        }
+
+        Inlines!.Add(run);
+    }
+
+    /// <summary>Provides the TryLoadImage member.</summary>
+    /// <param name="source">The source value.</param>
+    /// <param name="bitmap">The bitmap value.</param>
+    /// <returns>The result.</returns>
+    private bool TryLoadImage(string source, out IImage? bitmap)
+    {
+        try
+        {
+            bitmap = LoadImage(source);
+            return bitmap is not null;
+        }
+        catch (IOException)
+        {
+            bitmap = null;
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            bitmap = null;
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            bitmap = null;
+            return false;
+        }
+        catch (NotSupportedException)
+        {
+            bitmap = null;
+            return false;
+        }
+        catch (ArgumentException)
+        {
+            bitmap = null;
+            return false;
+        }
+    }
+
+    /// <summary>Loads one supported image source.</summary>
+    /// <param name="source">The image source.</param>
+    /// <returns>The loaded image, or <see langword="null"/> when no supported source exists.</returns>
+    private IImage? LoadImage(string source)
+    {
+        if (TryLoadDataUri(source, out var dataImage))
+        {
+            return dataImage;
+        }
+
+        if (!Uri.TryCreate(source, UriKind.Absolute, out var absolute))
+        {
+            return LoadImageFile(source);
+        }
+
+        if (absolute.IsFile)
+        {
+            return LoadImageFile(absolute.LocalPath);
+        }
+
+        if (absolute.Scheme is "http" or "https")
+        {
+            return TryLoadRemoteImage(absolute, out var remoteImage) ? remoteImage : null;
+        }
+
+        using var assetStream = AssetLoader.Open(absolute);
+        return CreateBitmapFromStream(assetStream);
+    }
+
+    /// <summary>Provides the TryLoadRemoteImage member.</summary>
+    /// <param name="uri">The uri value.</param>
+    /// <param name="bitmap">The bitmap value.</param>
+    /// <returns>The result.</returns>
     private bool TryLoadRemoteImage(Uri uri, out IImage? bitmap)
     {
         bitmap = null;
@@ -331,15 +384,7 @@ public class FormattedTextPresenter : TextBlock
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Kept as an instance helper to satisfy StyleCop member ordering for this control.")]
-    private Bitmap CreateBitmapFromStream(Stream stream)
-    {
-        using var buffer = new MemoryStream();
-        stream.CopyTo(buffer);
-        buffer.Position = 0;
-        return new Bitmap(buffer);
-    }
-
+    /// <summary>Provides the AppendInlineObjectBoundarySentinel member.</summary>
     private void AppendInlineObjectBoundarySentinel()
     {
         if (Inlines is null)

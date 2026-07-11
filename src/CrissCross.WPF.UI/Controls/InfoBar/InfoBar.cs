@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -15,54 +15,42 @@ namespace CrissCross.WPF.UI.Controls;
 /// </summary>
 public class InfoBar : System.Windows.Controls.ContentControl
 {
-    /// <summary>
-    /// Property for <see cref="IsClosable"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsClosable"/>.</summary>
     public static readonly DependencyProperty IsClosableProperty = DependencyProperty.Register(
         nameof(IsClosable),
         typeof(bool),
         typeof(InfoBar),
         new PropertyMetadata(true));
 
-    /// <summary>
-    /// Property for <see cref="IsOpen"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="IsOpen"/>.</summary>
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
         nameof(IsOpen),
         typeof(bool),
         typeof(InfoBar),
         new PropertyMetadata(false));
 
-    /// <summary>
-    /// Property for <see cref="Title"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(string),
         typeof(InfoBar),
         new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// Property for <see cref="Message"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Message"/>.</summary>
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
         typeof(InfoBar),
         new PropertyMetadata(string.Empty));
 
-    /// <summary>
-    /// Property for <see cref="Severity"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Severity"/>.</summary>
     public static readonly DependencyProperty SeverityProperty = DependencyProperty.Register(
         nameof(Severity),
         typeof(InfoBarSeverity),
         typeof(InfoBar),
         new PropertyMetadata(InfoBarSeverity.Informational));
 
-    /// <summary>
-    /// Property for <see cref="TemplateButtonCommand"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
@@ -74,38 +62,28 @@ public class InfoBar : System.Windows.Controls.ContentControl
             TemplateButtonCommandProperty,
             ReactiveCommand.Create<object>(_ => SetCurrentValue(IsOpenProperty, false)));
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the user can close the
-    /// <see cref="InfoBar" />. Defaults to <c>true</c>.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the user can close the <see cref="InfoBar" />. Defaults to <c>true</c>.</summary>
     public bool IsClosable
     {
         get => (bool)GetValue(IsClosableProperty);
         set => SetValue(IsClosableProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the
-    /// <see cref="InfoBar" /> is open.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the <see cref="InfoBar" /> is open.</summary>
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
         set => SetValue(IsOpenProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the title of the <see cref="InfoBar" />.
-    /// </summary>
+    /// <summary>Gets or sets the title of the <see cref="InfoBar" />.</summary>
     public string Title
     {
         get => (string)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the message of the <see cref="InfoBar" />.
-    /// </summary>
+    /// <summary>Gets or sets the message of the <see cref="InfoBar" />.</summary>
     public string Message
     {
         get => (string)GetValue(MessageProperty);
@@ -123,9 +101,6 @@ public class InfoBar : System.Windows.Controls.ContentControl
         set => SetValue(SeverityProperty, value);
     }
 
-    /// <summary>
-    /// Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking
-    /// the close button.
-    /// </summary>
+    /// <summary>Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking the close button.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 }

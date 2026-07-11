@@ -1,12 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Used to highlight an item, attract attention or flag status.
-/// </summary>
+/// <summary>Used to highlight an item, attract attention or flag status.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:Badge Appearance="Secondary"&gt;
@@ -16,9 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </example>
 public class Badge : System.Windows.Controls.ContentControl, IAppearanceControl
 {
-    /// <summary>
-    /// Property for <see cref="Appearance"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="Appearance"/>.</summary>
     public static readonly DependencyProperty AppearanceProperty = DependencyProperty.Register(
         nameof(Appearance),
         typeof(ControlAppearance),

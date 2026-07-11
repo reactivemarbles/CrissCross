@@ -1,12 +1,10 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Base nubmer formatter that uses default format specifier and <see cref="CultureInfo"/> that represents the culture used by the current thread.
-/// </summary>
+/// <summary>Base nubmer formatter that uses default format specifier and <see cref="CultureInfo"/> that represents the culture used by the current thread.</summary>
 public class ValidateNumberFormatter : INumberFormatter, INumberParser
 {
     /// <inheritdoc />
@@ -42,7 +40,11 @@ public class ValidateNumberFormatter : INumberFormatter, INumberParser
         return ui;
     }
 
+    /// <summary>Provides the GetFormatSpecifier member.</summary>
+    /// <returns>The result.</returns>
     private static string GetFormatSpecifier() => "G";
 
+    /// <summary>Provides the GetCurrentCultureConverter member.</summary>
+    /// <returns>The result.</returns>
     private static CultureInfo GetCurrentCultureConverter() => CultureInfo.CurrentCulture;
 }

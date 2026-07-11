@@ -1,41 +1,34 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// Represents a document model for rich text content with formatting information.
-/// </summary>
+/// <summary>Represents a document model for rich text content with formatting information.</summary>
 public class RichTextDocument
 {
+    /// <summary>Provides the _segments member.</summary>
     private readonly List<TextSegment> _segments = [];
+
+    /// <summary>Provides the _rawText member.</summary>
     private string _rawText = string.Empty;
+
+    /// <summary>Provides the _projection member.</summary>
     private HtmlTextProjection _projection = HtmlTextProjection.Create(string.Empty);
 
-    /// <summary>
-    /// Gets the segments in the document.
-    /// </summary>
+    /// <summary>Gets the segments in the document.</summary>
     public IReadOnlyList<TextSegment> Segments => _segments;
 
-    /// <summary>
-    /// Gets the raw HTML content of the document.
-    /// </summary>
+    /// <summary>Gets the raw HTML content of the document.</summary>
     public string PlainText => _rawText;
 
-    /// <summary>
-    /// Gets the rendered plain-text projection of the document.
-    /// </summary>
+    /// <summary>Gets the rendered plain-text projection of the document.</summary>
     public string RenderedText => _projection.Text;
 
-    /// <summary>
-    /// Gets the total rendered text length, excluding markup tags.
-    /// </summary>
+    /// <summary>Gets the total rendered text length, excluding markup tags.</summary>
     public int Length => _projection.Length;
 
-    /// <summary>
-    /// Sets the document text, replacing existing content.
-    /// </summary>
+    /// <summary>Sets the document text, replacing existing content.</summary>
     /// <param name="text">The HTML or markdown text to set.</param>
     public void SetText(string? text)
     {
@@ -43,9 +36,7 @@ public class RichTextDocument
         RebuildSegments();
     }
 
-    /// <summary>
-    /// Appends text to the end of the document.
-    /// </summary>
+    /// <summary>Appends text to the end of the document.</summary>
     /// <param name="text">The HTML fragment to append.</param>
     public void AppendText(string text)
     {
@@ -58,9 +49,7 @@ public class RichTextDocument
         RebuildSegments();
     }
 
-    /// <summary>
-    /// Inserts text at the specified offset.
-    /// </summary>
+    /// <summary>Inserts text at the specified offset.</summary>
     /// <param name="offset">The insertion offset.</param>
     /// <param name="text">The HTML fragment to insert.</param>
     public void Insert(int offset, string text)
@@ -75,9 +64,7 @@ public class RichTextDocument
         RebuildSegments();
     }
 
-    /// <summary>
-    /// Deletes text in the provided range.
-    /// </summary>
+    /// <summary>Deletes text in the provided range.</summary>
     /// <param name="offset">The start offset.</param>
     /// <param name="length">The number of characters to delete.</param>
     public void Delete(int offset, int length)
@@ -97,27 +84,25 @@ public class RichTextDocument
         RebuildSegments();
     }
 
-    /// <summary>
-    /// Replaces a range with new text.
-    /// </summary>
+    /// <summary>Replaces a range with new text.</summary>
     /// <param name="offset">The start offset.</param>
     /// <param name="length">The length of the range to replace.</param>
     /// <param name="text">The replacement HTML.</param>
     public void Replace(int offset, int length, string? text)
     {
         Delete(offset, length);
-        if (!string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(text))
         {
-            var sourceOffset = _projection.GetSourceInsertionOffset(Math.Clamp(offset, 0, _projection.Length));
-            var boundedOffset = Math.Clamp(sourceOffset, 0, _rawText.Length);
-            _rawText = _rawText.Insert(boundedOffset, text);
-            RebuildSegments();
+            return;
         }
+
+        var sourceOffset = _projection.GetSourceInsertionOffset(Math.Clamp(offset, 0, _projection.Length));
+        var boundedOffset = Math.Clamp(sourceOffset, 0, _rawText.Length);
+        _rawText = _rawText.Insert(boundedOffset, text);
+        RebuildSegments();
     }
 
-    /// <summary>
-    /// Toggles formatting for a range of text by wrapping the HTML selection with tags.
-    /// </summary>
+    /// <summary>Toggles formatting for a range of text by wrapping the HTML selection with tags.</summary>
     /// <param name="start">The start offset.</param>
     /// <param name="length">The length of the range.</param>
     /// <param name="formatType">The formatting to toggle.</param>
@@ -135,9 +120,7 @@ public class RichTextDocument
         return applied;
     }
 
-    /// <summary>
-    /// Clears all formatting information, keeping the textual content.
-    /// </summary>
+    /// <summary>Clears all formatting information, keeping the textual content.</summary>
     public void ClearFormatting()
     {
         var plain = _projection.Text;
@@ -145,17 +128,13 @@ public class RichTextDocument
         RebuildSegments();
     }
 
-    /// <summary>
-    /// Gets rendered text for a document range.
-    /// </summary>
+    /// <summary>Gets rendered text for a document range.</summary>
     /// <param name="offset">The rendered start offset.</param>
     /// <param name="length">The rendered range length.</param>
     /// <returns>The rendered text in the requested range.</returns>
     public string GetTextRange(int offset, int length) => _projection.GetRangeText(offset, length);
 
-    /// <summary>
-    /// Gets the source HTML fragment for a rendered document range.
-    /// </summary>
+    /// <summary>Gets the source HTML fragment for a rendered document range.</summary>
     /// <param name="offset">The rendered start offset.</param>
     /// <param name="length">The rendered range length.</param>
     /// <returns>The source HTML fragment for the requested range.</returns>
@@ -176,6 +155,9 @@ public class RichTextDocument
         return safeLength <= 0 ? string.Empty : _rawText.Substring(sourceStart, safeLength);
     }
 
+    /// <summary>Provides the RemoveEmptyFormattingElements member.</summary>
+    /// <param name="text">The text value.</param>
+    /// <returns>The result.</returns>
     private static string RemoveEmptyFormattingElements(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -203,6 +185,7 @@ public class RichTextDocument
         return cleaned;
     }
 
+    /// <summary>Provides the RebuildSegments member.</summary>
     private void RebuildSegments()
     {
         _segments.Clear();

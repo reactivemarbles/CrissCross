@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Reactive.Disposables.Fluent;
 using System.Windows;
 using CrissCross.WPF.UI.Appearance;
 using CrissCross.WPF.UI.Controls;
@@ -12,23 +11,17 @@ using Splat;
 
 namespace CrissCross.WPF.UI.Gallery;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml.
-/// </summary>
+/// <summary>Interaction logic for MainWindow.xaml.</summary>
 public partial class MainWindow : IAmBuilt
 {
-    /// <summary>
-    /// The tracker property.
-    /// </summary>
+    /// <summary>The tracker property.</summary>
     public static readonly DependencyProperty TrackerProperty = DependencyProperty.Register(
         nameof(Tracker),
         typeof(Tracker),
         typeof(MainWindow),
         new PropertyMetadata(null));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainWindow"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
         // Watch for system theme changes
@@ -37,8 +30,9 @@ public partial class MainWindow : IAmBuilt
         Navigation = NavBreadcrumb;
 
         // Set the data context
-        DataContext = ViewModel = new();
-        this.WhenActivated(d =>
+        ViewModel = new();
+        DataContext = ViewModel;
+        _ = this.WhenActivated(d =>
         {
             // Set the tracker
             var tracker = AppLocator.Current.GetService<Tracker>();
@@ -46,24 +40,20 @@ public partial class MainWindow : IAmBuilt
             SetCurrentValue(TrackerProperty, tracker);
 
             // Bind the view model
-            this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
-            this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
+            _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
+            _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
 
-            NavBreadcrumb.SetupNavigation("mainWindow");
+            NavBreadcrumb.SetupNavigation(nameof(mainWindow));
 
             // Navigate to the main view
             NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
-
-            ////this.NavigateToView<MainViewModel>();
         });
 
         // Dispose the view model on close
         Closing += (s, e) => ViewModel.Dispose();
     }
 
-    /// <summary>
-    /// Gets the nav breadcrumb.
-    /// </summary>
+    /// <summary>Gets the nav breadcrumb.</summary>
     /// <value>
     /// The nav breadcrumb.
     /// </value>

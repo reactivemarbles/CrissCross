@@ -1,5 +1,5 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -10,14 +10,10 @@ using System.Windows.Input;
 
 namespace CrissCross;
 
-/// <summary>
-/// Describes a single AOT-friendly property inspector field without reflection-based discovery.
-/// </summary>
+/// <summary>Describes a single AOT-friendly property inspector field without reflection-based discovery.</summary>
 public sealed class PropertyDescriptorModel
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyDescriptorModel"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="PropertyDescriptorModel"/> class.</summary>
     /// <param name="key">The stable property key.</param>
     /// <param name="displayName">The user-facing property name.</param>
     /// <param name="category">The category used for grouping.</param>
@@ -44,15 +40,9 @@ public sealed class PropertyDescriptorModel
         IReadOnlyList<ValidationMessage>? validationMessages = null,
         string? templateKey = null)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            throw new ArgumentException("Property key cannot be empty.", nameof(key));
-        }
+        ThrowHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
 
-        if (string.IsNullOrWhiteSpace(displayName))
-        {
-            throw new ArgumentException("Property display name cannot be empty.", nameof(displayName));
-        }
+        ThrowHelper.ThrowIfNullOrWhiteSpace(displayName, nameof(displayName));
 
         Key = key.Trim();
         DisplayName = displayName.Trim();
@@ -68,119 +58,73 @@ public sealed class PropertyDescriptorModel
         TemplateKey = string.IsNullOrWhiteSpace(templateKey) ? null : templateKey!.Trim();
     }
 
-    /// <summary>
-    /// Gets the stable property key.
-    /// </summary>
+    /// <summary>Gets the stable property key.</summary>
     public string Key { get; }
 
-    /// <summary>
-    /// Gets the user-facing property name.
-    /// </summary>
+    /// <summary>Gets the user-facing property name.</summary>
     public string DisplayName { get; }
 
-    /// <summary>
-    /// Gets the category used for grouping.
-    /// </summary>
+    /// <summary>Gets the category used for grouping.</summary>
     public string Category { get; }
 
-    /// <summary>
-    /// Gets the editor kind used by platform presenters.
-    /// </summary>
+    /// <summary>Gets the editor kind used by platform presenters.</summary>
     public PropertyEditorKind EditorKind { get; }
 
-    /// <summary>
-    /// Gets the current property value snapshot.
-    /// </summary>
+    /// <summary>Gets the current property value snapshot.</summary>
     public object? Value { get; }
 
-    /// <summary>
-    /// Gets the original value snapshot used for modified-state calculation.
-    /// </summary>
+    /// <summary>Gets the original value snapshot used for modified-state calculation.</summary>
     public object? OriginalValue { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether the property is read-only.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the property is read-only.</summary>
     public bool IsReadOnly { get; }
 
-    /// <summary>
-    /// Gets the explicit choices for enum-like editors.
-    /// </summary>
+    /// <summary>Gets the explicit choices for enum-like editors.</summary>
     public IReadOnlyList<object?> Choices { get; }
 
-    /// <summary>
-    /// Gets an optional command used to set a new value.
-    /// </summary>
+    /// <summary>Gets an optional command used to set a new value.</summary>
     public ICommand? SetValueCommand { get; }
 
-    /// <summary>
-    /// Gets an optional command used to reset the property.
-    /// </summary>
+    /// <summary>Gets an optional command used to reset the property.</summary>
     public ICommand? ResetCommand { get; }
 
-    /// <summary>
-    /// Gets validation messages for the property.
-    /// </summary>
+    /// <summary>Gets validation messages for the property.</summary>
     public IReadOnlyList<ValidationMessage> ValidationMessages { get; }
 
-    /// <summary>
-    /// Gets an optional platform template key for custom editors.
-    /// </summary>
+    /// <summary>Gets an optional platform template key for custom editors.</summary>
     public string? TemplateKey { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether the descriptor has a value.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the descriptor has a value.</summary>
     public bool HasValue => Value is not null && (Value is not string text || text.Trim().Length > 0);
 
-    /// <summary>
-    /// Gets a value indicating whether explicit choices are available.
-    /// </summary>
+    /// <summary>Gets a value indicating whether explicit choices are available.</summary>
     public bool HasChoices => Choices.Count > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether validation messages are present.
-    /// </summary>
+    /// <summary>Gets a value indicating whether validation messages are present.</summary>
     public bool HasValidationMessages => ValidationMessages.Count > 0;
 
-    /// <summary>
-    /// Gets a value indicating whether any validation message blocks commit.
-    /// </summary>
+    /// <summary>Gets a value indicating whether any validation message blocks commit.</summary>
     public bool IsInvalid => ValidationMessages.Any(static message => message.IsBlocking);
 
-    /// <summary>
-    /// Gets a value indicating whether any validation message is pending.
-    /// </summary>
+    /// <summary>Gets a value indicating whether any validation message is pending.</summary>
     public bool IsPending => ValidationMessages.Any(static message => message.Severity == ValidationSeverity.Pending);
 
-    /// <summary>
-    /// Gets a value indicating whether the value has changed from the original snapshot.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the value has changed from the original snapshot.</summary>
     public bool IsModified => !ValuesEqual(Value, OriginalValue);
 
-    /// <summary>
-    /// Gets a value indicating whether the property can be edited.
-    /// </summary>
+    /// <summary>Gets a value indicating whether the property can be edited.</summary>
     public bool CanEdit => !IsReadOnly;
 
-    /// <summary>
-    /// Gets a value indicating whether reset should be offered.
-    /// </summary>
+    /// <summary>Gets a value indicating whether reset should be offered.</summary>
     public bool CanReset => !IsReadOnly && IsModified && ResetCommand is not null;
 
-    /// <summary>
-    /// Gets a culture-invariant display string for the current value.
-    /// </summary>
+    /// <summary>Gets a culture-invariant display string for the current value.</summary>
     public string ValueDisplayText => FormatValue(Value);
 
-    /// <summary>
-    /// Gets a stable key that combines category and property key.
-    /// </summary>
+    /// <summary>Gets a stable key that combines category and property key.</summary>
     public string CategoryKey => string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Category, Key);
 
-    /// <summary>
-    /// Creates a descriptor snapshot with an updated value.
-    /// </summary>
+    /// <summary>Creates a descriptor snapshot with an updated value.</summary>
     /// <param name="value">The updated value.</param>
     /// <returns>The descriptor snapshot.</returns>
     public PropertyDescriptorModel WithValue(object? value) => new(
@@ -197,8 +141,15 @@ public sealed class PropertyDescriptorModel
             ValidationMessages,
             TemplateKey);
 
+    /// <summary>Compares two property values for equality.</summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><c>true</c> when the values are equal; otherwise, <c>false</c>.</returns>
     private static bool ValuesEqual(object? left, object? right) => Equals(left, right);
 
+    /// <summary>Formats a property value for display.</summary>
+    /// <param name="value">The property value.</param>
+    /// <returns>The formatted value.</returns>
     private static string FormatValue(object? value) => value switch
     {
         null => string.Empty,

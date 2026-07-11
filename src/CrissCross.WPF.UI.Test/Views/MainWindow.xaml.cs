@@ -1,28 +1,22 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.UI.Test.ViewModels;
 
 namespace CrissCross.WPF.UI.Test.Views;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml.
-/// </summary>
+/// <summary>Interaction logic for MainWindow.xaml.</summary>
 public partial class MainWindow : INavigationWindow
 {
-    /// <summary>
-    /// The tracker property.
-    /// </summary>
+    /// <summary>The tracker property.</summary>
     public static readonly DependencyProperty TrackerProperty = DependencyProperty.Register(
         nameof(Tracker),
         typeof(Tracker),
         typeof(MainWindow),
         new PropertyMetadata(null));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MainWindow" /> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="MainWindow" /> class.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="pageService">The page service.</param>
     /// <param name="navigationService">The navigation service.</param>
@@ -40,7 +34,7 @@ public partial class MainWindow : INavigationWindow
 
         InitializeComponent();
 
-        Breadcrumb.SetupNavigation("mainWindow");
+        Breadcrumb.SetupNavigation(nameof(mainWindow));
         Navigation = Breadcrumb;
 
         SetPageService(pageService);
@@ -50,17 +44,13 @@ public partial class MainWindow : INavigationWindow
         navigationService?.SetNavigationControl(RootNavigation);
     }
 
-    /// <summary>
-    /// Gets the navigation.
-    /// </summary>
+    /// <summary>Gets the navigation.</summary>
     /// <value>
     /// The navigation.
     /// </value>
     public static BreadcrumbBar? Navigation { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the tracker.
-    /// </summary>
+    /// <summary>Gets or sets the tracker.</summary>
     /// <value>
     /// The tracker.
     /// </value>
@@ -70,59 +60,43 @@ public partial class MainWindow : INavigationWindow
         set => SetValue(TrackerProperty, value);
     }
 
-    /// <summary>
-    /// Gets the view model.
-    /// </summary>
+    /// <summary>Gets the view model.</summary>
     /// <value>
     /// The view model.
     /// </value>
     public MainWindowViewModel ViewModel { get; }
 
-    /// <summary>
-    /// Provides direct access to the control responsible for navigation.
-    /// </summary>
+    /// <summary>Provides direct access to the control responsible for navigation.</summary>
     /// <returns>
     /// Instance of the <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" /> control.
     /// </returns>
     public INavigationView GetNavigation() => RootNavigation;
 
-    /// <summary>
-    /// Lets you navigate to the selected page based on it's type. Should be used with <see cref="T:CrissCross.WPF.UI.IPageService" />.
-    /// </summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="T:CrissCross.WPF.UI.IPageService" />.</summary>
     /// <param name="pageType"><see langword="Type" /> of the page.</param>
     /// <returns>
     ///   <see langword="true" /> if the operation succeeds. <see langword="false" /> otherwise.
     /// </returns>
     public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
-    /// <summary>
-    /// Lets you attach the service that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
-    /// </summary>
+    /// <summary>Lets you attach the service that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
     /// <param name="pageService">Instance of the <see cref="T:CrissCross.WPF.UI.IPageService" /> with attached service provider.</param>
     public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
 
-    /// <summary>
-    /// Triggers the command to open a window.
-    /// </summary>
+    /// <summary>Triggers the command to open a window.</summary>
     public void ShowWindow() => Show();
 
-    /// <summary>
-    /// Triggers the command to close a window.
-    /// </summary>
+    /// <summary>Triggers the command to close a window.</summary>
     public void CloseWindow() => Close();
 
-    /// <summary>
-    /// Lets you attach the service provider that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
-    /// </summary>
+    /// <summary>Lets you attach the service provider that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
     /// <param name="serviceProvider">Instance of the <see cref="T:System.IServiceProvider" />.</param>
     public void SetServiceProvider(IServiceProvider serviceProvider)
     {
         // Not used
     }
 
-    /// <summary>
-    /// Raises the closed event.
-    /// </summary>
+    /// <summary>Raises the closed event.</summary>
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnClosed(EventArgs e)
     {

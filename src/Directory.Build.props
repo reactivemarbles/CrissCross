@@ -49,6 +49,23 @@
     <NoWarn>$(NoWarn);CS4014</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net11.0'))">
+    <Features>$(Features);runtime-async=on</Features>
+  </PropertyGroup>
+  
+  <!-- AOT Compatibility Settings for non-test, non-WPF projects on modern .NET -->
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('WPF')) != 'true' and '$(IsTestProject)' != 'true' and $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <!-- Mark this library as AOT-compatible -->
+    <IsAotCompatible>true</IsAotCompatible>
+
+    <!-- Enable trim analyzers to verify library is trim-safe -->
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+
+    <!-- Treat trimming warnings as errors during build -->
+    <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+  </PropertyGroup>
+  
   <ItemGroup Condition="$(IsTestProject)">
     <PackageReference Include="TUnit"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
@@ -73,8 +90,24 @@
   <ItemGroup>
     <!--<Compile Update="**\*.cs" DependentUpon="I%(Filename).cs" />-->
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" Condition="!Exists('packages.config')" />
-    <PackageReference Include="stylecop.analyzers" PrivateAssets="all" />
+    <PackageReference Include="StyleSharp.Analyzers" PrivateAssets="all" />
     <PackageReference Include="Roslynator.Analyzers" PrivateAssets="All" />
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+    <PackageReference Include="ReactiveUI.Disposables" />
+    <PackageReference Include="ReactiveUI.Primitives" />
+    <PackageReference Include="ReactiveUI.Primitives.Core" />
+    <PackageReference Include="ReactiveUI.Primitives.Extensions" />
+    <PackageReference Include="ReactiveUI.Primitives.Extensions.Core" />
+    <Using Include="ReactiveUI.Primitives" />
+    <Using Include="ReactiveUI.Primitives.Concurrency" />
+    <Using Include="ReactiveUI.Primitives.Core" />
+    <Using Include="ReactiveUI.Primitives.Disposables" />
+    <Using Include="ReactiveUI.Primitives.Extensions" />
+    <Using Include="ReactiveUI.Primitives.Signals" />
+    <Using Include="ReactiveUI.Primitives.RxVoid" Alias="Unit" />
+    <Using Include="ReactiveUI.Primitives.Concurrency.ISequencer" Alias="IScheduler" />
+    <Using Include="ReactiveUI.Primitives.Concurrency.ImmediateSequencer" Alias="ImmediateScheduler" />
+    <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="CompositeDisposable" />
+    <Using Include="ReactiveUI.Primitives.Disposables.SwapDisposable" Alias="SerialDisposable" />
+    <Using Include="ReactiveUI.Primitives.Signals.Signal" Alias="Observable" />
   </ItemGroup>
 </Project>

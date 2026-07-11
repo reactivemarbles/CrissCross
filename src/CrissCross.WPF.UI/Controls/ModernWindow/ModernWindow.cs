@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using CP.WPF.Controls;
@@ -14,141 +11,110 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>
-/// Represents a Modern UI styled window.
-/// </summary>
+/// <summary>Represents a Modern UI styled window.</summary>
 public class ModernWindow
-    : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, ICancelable
+    : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, IDisposable
 {
-    /// <summary>
-    /// The application bar enabled property.
-    /// </summary>
+    /// <summary>The application bar enabled property.</summary>
     public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(nameof(AppBarEnabled), typeof(bool), typeof(ModernWindow), new PropertyMetadata(true));
 
-    /// <summary>
-    /// Holds AppBar open until explicitly closed.
-    /// </summary>
+    /// <summary>Holds AppBar open until explicitly closed.</summary>
     public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(nameof(AppBarIsSticky), typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
 
-    /// <summary>
-    /// Recommended Height 88.
-    /// </summary>
+    /// <summary>Recommended Height 88.</summary>
     public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(nameof(AppBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// Recommended Height 88.
-    /// </summary>
+    /// <summary>Recommended Height 88.</summary>
     public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(nameof(AppBarRight), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// Identifies the BackgroundContent dependency property.
-    /// </summary>
+    /// <summary>Identifies the BackgroundContent dependency property.</summary>
     public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register(nameof(BackgroundContent), typeof(object), typeof(ModernWindow));
 
-    /// <summary>
-    /// The foreground content property.
-    /// </summary>
+    /// <summary>The foreground content property.</summary>
     public static readonly DependencyProperty ForegroundContentProperty = DependencyProperty.Register(nameof(ForegroundContent), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// Identifies the IsTitleVisible dependency property.
-    /// </summary>
+    /// <summary>Identifies the IsTitleVisible dependency property.</summary>
     public static readonly DependencyProperty IsTitleVisibleProperty = DependencyProperty.Register(nameof(IsTitleVisible), typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
 
-    /// <summary>
-    /// Identifies the LogoData dependency property.
-    /// </summary>
+    /// <summary>Identifies the LogoData dependency property.</summary>
     public static readonly DependencyProperty LogoDataProperty = DependencyProperty.Register(nameof(LogoData), typeof(Geometry), typeof(ModernWindow));
 
-    /// <summary>
-    /// Identifies the Logo dependency property.
-    /// </summary>
+    /// <summary>Identifies the Logo dependency property.</summary>
     public static readonly DependencyProperty LogoProperty = DependencyProperty.Register(nameof(Logo), typeof(ImageSource), typeof(ModernWindow));
 
-    /// <summary>
-    /// The main menu visible property.
-    /// </summary>
+    /// <summary>The main menu visible property.</summary>
     public static readonly DependencyProperty MainMenuVisibleProperty = DependencyProperty.Register(nameof(MainMenuVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The main title font property.
-    /// </summary>
+    /// <summary>The main title font property.</summary>
     public static readonly DependencyProperty MainTitleFontProperty = DependencyProperty.Register(nameof(MainTitleFont), typeof(FontFamily), typeof(ModernWindow), new PropertyMetadata(new FontFamily("Segoe UI")));
 
-    /// <summary>
-    /// The main title property.
-    /// </summary>
+    /// <summary>The main title property.</summary>
     public static readonly DependencyProperty MainTitleProperty = DependencyProperty.Register(nameof(MainTitle), typeof(string), typeof(ModernWindow), new PropertyMetadata("CrissCross"));
 
-    /// <summary>
-    /// Identifies the MenuLinkGroups dependency property.
-    /// </summary>
+    /// <summary>Identifies the MenuLinkGroups dependency property.</summary>
     public static readonly DependencyProperty MainMenuProperty = DependencyProperty.Register(nameof(MainMenu), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// The navigation bar back button visible property.
-    /// </summary>
+    /// <summary>The navigation bar back button visible property.</summary>
     public static readonly DependencyProperty NavBarBackButtonVisibleProperty = DependencyProperty.Register(nameof(NavBarBackButtonVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The navigation bar left property.
-    /// </summary>
+    /// <summary>The navigation bar left property.</summary>
     public static readonly DependencyProperty NavBarLeftProperty = DependencyProperty.Register(nameof(NavBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// The navigation bar logo visible property.
-    /// </summary>
+    /// <summary>The navigation bar logo visible property.</summary>
     public static readonly DependencyProperty NavBarLogoVisibleProperty = DependencyProperty.Register(nameof(NavBarLogoVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The navigation bar property.
-    /// </summary>
+    /// <summary>The navigation bar property.</summary>
     public static readonly DependencyProperty NavBarProperty = DependencyProperty.Register(nameof(NavBar), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// The navigation bar visible property.
-    /// </summary>
+    /// <summary>The navigation bar visible property.</summary>
     public static readonly DependencyProperty NavBarVisibleProperty = DependencyProperty.Register(nameof(NavBarVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
 
-    /// <summary>
-    /// The status bar property.
-    /// </summary>
+    /// <summary>The status bar property.</summary>
     public static readonly DependencyProperty StatusBarProperty = DependencyProperty.Register(nameof(StatusBar), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
 
-    /// <summary>
-    /// The title logo data property.
-    /// </summary>
+    /// <summary>The title logo data property.</summary>
     public static readonly DependencyProperty TitleLogoDataProperty = DependencyProperty.Register(nameof(TitleLogoData), typeof(Geometry), typeof(ModernWindow));
 
-    /// <summary>
-    /// The title logo property.
-    /// </summary>
+    /// <summary>The title logo property.</summary>
     public static readonly DependencyProperty TitleLogoProperty = DependencyProperty.Register(nameof(TitleLogo), typeof(ImageSource), typeof(ModernWindow));
 
-    /// <summary>
-    /// The title margin property.
-    /// </summary>
+    /// <summary>The title margin property.</summary>
     public static readonly DependencyProperty TitleMarginProperty = DependencyProperty.Register(nameof(TitleMargin), typeof(Thickness), typeof(ModernWindow), new PropertyMetadata(new Thickness(0)));
 
-    /// <summary>
-    /// The browse back property.
-    /// </summary>
+    /// <summary>The browse back property.</summary>
     public static readonly DependencyProperty BrowseBackProperty = DependencyProperty.Register(nameof(BrowseBack), typeof(ICommand), typeof(ModernWindow), new PropertyMetadata(null));
 
-    private readonly ReplaySubject<string> _busyStatusTextSubject = new(1);
-    private readonly ReplaySubject<Visibility> _busyVisibilitySubject = new(1);
+    /// <summary>Stores the _busyStatusTextSubject value.</summary>
+    private readonly ReplaySignal<string> _busyStatusTextSubject = new(1);
+
+    /// <summary>Stores the _busyVisibilitySubject value.</summary>
+    private readonly ReplaySignal<Visibility> _busyVisibilitySubject = new(1);
+
+    /// <summary>Stores the _cleanUp value.</summary>
     private readonly CompositeDisposable _cleanUp = [];
+
+    /// <summary>Stores the _appBar value.</summary>
     private Grid? _appBar;
+
+    /// <summary>Stores the _appBarVisible value.</summary>
     private bool _appBarVisible;
+
+    /// <summary>Stores the _backgroundAnimation value.</summary>
     private Storyboard? _backgroundAnimation;
+
+    /// <summary>Stores the _hide value.</summary>
     private Storyboard? _hide;
+
+    /// <summary>Stores the _mouseIsOverAppBar value.</summary>
     private bool _mouseIsOverAppBar;
+
+    /// <summary>Stores the _show value.</summary>
     private Storyboard? _show;
+
+    /// <summary>Stores the _disposedvalue.</summary>
     private bool _disposedValue;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ModernWindow"/> class.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="ModernWindow"/> class.</summary>
     public ModernWindow()
     {
         _cleanUp.Add(_busyVisibilitySubject);
@@ -165,19 +131,17 @@ public class ModernWindow
         SetCurrentValue(MainMenuProperty, new ObservableCollection<FrameworkElement>());
 
         // associate window commands with this instance
-        CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
-        CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
-        CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
-        CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
+        _ = CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
+        _ = CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
+        _ = CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
+        _ = CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
 
         // listen for theme changes
         PreviewMouseDown += ModernWindow_PreviewMouseDown;
         PreviewKeyDown += ModernWindow_PreviewKeyDown;
     }
 
-    /// <summary>
-    /// Gets or sets the browse back.
-    /// </summary>
+    /// <summary>Gets or sets the browse back.</summary>
     /// <value>
     /// The browse back.
     /// </value>
@@ -187,9 +151,7 @@ public class ModernWindow
         set => SetValue(BrowseBackProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether [application bar enabled].
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether [application bar enabled].</summary>
     /// <value><c>true</c> if [application bar enabled]; otherwise, <c>false</c> .</value>
     [Description("Gets or Sets the Visibility of the Nav Bar")]
     [Category("CrissCross Metro")]
@@ -200,16 +162,16 @@ public class ModernWindow
         set
         {
             SetValue(AppBarEnabledProperty, value);
-            if (!value)
+            if (value)
             {
-                HideAppBar();
+                return;
             }
+
+            HideAppBar();
         }
     }
 
-    /// <summary>
-    /// Gets a value indicating whether [application bar is sticky].
-    /// </summary>
+    /// <summary>Gets a value indicating whether [application bar is sticky].</summary>
     /// <value><c>true</c> if [application bar is sticky]; otherwise, <c>false</c> .</value>
     [Description("Gets the AppBar Sticky state.")]
     [Category("CrissCross Metro")]
@@ -220,9 +182,7 @@ public class ModernWindow
         private set => SetValue(AppBarIsStickyProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the AppBarLeft content.
-    /// </summary>
+    /// <summary>Gets or sets the AppBarLeft content.</summary>
     [Description("Gets or sets the AppBarLeft content.")]
     [Category("CrissCross Metro")]
     public ObservableCollection<FrameworkElement> AppBarLeft
@@ -231,9 +191,7 @@ public class ModernWindow
         set => SetValue(AppBarLeftProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the AppBarRight content.
-    /// </summary>
+    /// <summary>Gets or sets the AppBarRight content.</summary>
     [Description("Gets or sets the AppBarRight content.")]
     [Category("CrissCross Metro")]
     public ObservableCollection<FrameworkElement> AppBarRight
@@ -242,9 +200,7 @@ public class ModernWindow
         set => SetValue(AppBarRightProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the background content of this window instance.
-    /// </summary>
+    /// <summary>Gets or sets the background content of this window instance.</summary>
     [Description("Gets or sets the Background Content.")]
     [Category("CrissCross Metro")]
     public object BackgroundContent
@@ -253,15 +209,11 @@ public class ModernWindow
         set => SetValue(BackgroundContentProperty, value);
     }
 
-    /// <summary>
-    /// Gets the busy calls.
-    /// </summary>
+    /// <summary>Gets the busy calls.</summary>
     /// <value>The busy calls.</value>
     public Dictionary<string, string> BusyCalls { get; } = [];
 
-    /// <summary>
-    /// Gets or sets the content of the foreground.
-    /// </summary>
+    /// <summary>Gets or sets the content of the foreground.</summary>
     /// <value>The content of the foreground.</value>
     [Description("Gets or sets the Foreground Content.")]
     [Category("CrissCross Metro")]
@@ -271,9 +223,7 @@ public class ModernWindow
         set => SetValue(ForegroundContentProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether the window title is visible in the UI.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether the window title is visible in the UI.</summary>
     [Description("Gets or sets if the Title is visible.")]
     [Category("CrissCross MVVM")]
     public bool IsTitleVisible
@@ -282,9 +232,7 @@ public class ModernWindow
         set => SetValue(IsTitleVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Image for the logo displayed in the title area of the window.
-    /// </summary>
+    /// <summary>Gets or sets the Image for the logo displayed in the title area of the window.</summary>
     [Description("Gets or sets the Image for the logo displayed in the title area of the window.")]
     [Category("CrissCross Metro")]
     public ImageSource Logo
@@ -293,9 +241,7 @@ public class ModernWindow
         set => SetValue(LogoProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the path data for the logo displayed in the title area of the window.
-    /// </summary>
+    /// <summary>Gets or sets the path data for the logo displayed in the title area of the window.</summary>
     [Description("Gets or sets the path data for the logo displayed in the title area of the window.")]
     [Category("CrissCross Metro")]
     public Geometry LogoData
@@ -304,9 +250,7 @@ public class ModernWindow
         set => SetValue(LogoDataProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the main menu visible.
-    /// </summary>
+    /// <summary>Gets or sets the main menu visible.</summary>
     /// <value>The main menu visible.</value>
     [Description("Gets or Sets the Visibility of the Main Navigation Menu (MenuLinkGroups)")]
     [Category("CrissCross Metro")]
@@ -316,9 +260,7 @@ public class ModernWindow
         set => SetValue(MainMenuVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the main title.
-    /// </summary>
+    /// <summary>Gets or sets the main title.</summary>
     /// <value>The main title.</value>
     [Description("Gets or sets the Main Page Title.")]
     [Category("CrissCross Metro")]
@@ -328,9 +270,7 @@ public class ModernWindow
         set => SetValue(MainTitleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the main title font.
-    /// </summary>
+    /// <summary>Gets or sets the main title font.</summary>
     /// <value>The main title font.</value>
     [Description("Gets or sets the Title Font.")]
     [Category("CrissCross Metro")]
@@ -340,9 +280,7 @@ public class ModernWindow
         set => SetValue(MainTitleFontProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the collection of link groups shown in the window's menu.
-    /// </summary>
+    /// <summary>Gets or sets the collection of link groups shown in the window's menu.</summary>
     /// <value>The menu link groups.</value>
     [Description("Gets or sets the collection of link groups shown in the window's menu.")]
     [Category("CrissCross MVVM")]
@@ -352,9 +290,7 @@ public class ModernWindow
         set => SetValue(MainMenuProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Navigation Bar content.
-    /// </summary>
+    /// <summary>Gets or sets the Navigation Bar content.</summary>
     /// <value>The navigation bar.</value>
     [Description("Gets or sets the NavBar content.")]
     [Category("CrissCross Metro")]
@@ -364,9 +300,7 @@ public class ModernWindow
         set => SetValue(NavBarProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets Visibility of Navigation Bar Back Button.
-    /// </summary>
+    /// <summary>Gets or sets Visibility of Navigation Bar Back Button.</summary>
     /// <value>The navigation bar back button visible.</value>
     [Description("Gets or Sets Visibility of Nav Bar Back Button")]
     [Category("CrissCross Metro")]
@@ -377,9 +311,7 @@ public class ModernWindow
         set => SetValue(NavBarBackButtonVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Navigation Bar Left content.
-    /// </summary>
+    /// <summary>Gets or sets the Navigation Bar Left content.</summary>
     [Description("Gets or sets the NavBarLeft content.")]
     [Category("CrissCross Metro")]
     public ObservableCollection<FrameworkElement> NavBarLeft
@@ -388,9 +320,7 @@ public class ModernWindow
         set => SetValue(NavBarLeftProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets Visibility of Navigation Bar Logo.
-    /// </summary>
+    /// <summary>Gets or sets Visibility of Navigation Bar Logo.</summary>
     /// <value>The navigation bar logo visible.</value>
     [Description("Gets or Sets Visibility of Nav Bar Logo")]
     [Category("CrissCross Metro")]
@@ -400,9 +330,7 @@ public class ModernWindow
         set => SetValue(NavBarLogoVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the Visibility of the Navigation Bar.
-    /// </summary>
+    /// <summary>Gets or sets the Visibility of the Navigation Bar.</summary>
     /// <value>The navigation bar visible.</value>
     [Description("Gets or sets Sets the Visibility of the Nav Bar")]
     [Category("CrissCross Metro")]
@@ -412,9 +340,7 @@ public class ModernWindow
         set => SetValue(NavBarVisibleProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the StatusBar content.
-    /// </summary>
+    /// <summary>Gets or sets the StatusBar content.</summary>
     /// <value>The status bar.</value>
     [Description("Gets or sets the StatusBar content.")]
     [Category("CrissCross Metro")]
@@ -424,9 +350,7 @@ public class ModernWindow
         set => SetValue(StatusBarProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the title logo.
-    /// </summary>
+    /// <summary>Gets or sets the title logo.</summary>
     /// <value>The title logo.</value>
     [Description("Gets or sets the Title Logo Image.")]
     [Category("CrissCross Metro")]
@@ -436,9 +360,7 @@ public class ModernWindow
         set => SetValue(TitleLogoProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the title logo data.
-    /// </summary>
+    /// <summary>Gets or sets the title logo data.</summary>
     /// <value>The title logo data.</value>
     [Description("Gets or sets the Title logo.")]
     [Category("CrissCross MVVM")]
@@ -448,9 +370,7 @@ public class ModernWindow
         set => SetValue(TitleLogoDataProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets the title margin.
-    /// </summary>
+    /// <summary>Gets or sets the title margin.</summary>
     /// <value>The title margin.</value>
     [Description("Gets or sets the Title Margin.")]
     [Category("CrissCross Metro")]
@@ -460,37 +380,27 @@ public class ModernWindow
         set => SetValue(TitleMarginProperty, value);
     }
 
-    /// <summary>
-    /// Gets a value indicating whether this instance is disposed.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this instance is disposed.</summary>
     /// <value>
     ///   <c>true</c> if this instance is disposed; otherwise, <c>false</c>.
     /// </value>
     public bool IsDisposed => _cleanUp.IsDisposed;
 
-    /// <summary>
-    /// Gets the owner.
-    /// </summary>
+    /// <summary>Gets the owner.</summary>
     /// <value>
     /// The owner.
     /// </value>
     string ICanShowMessages.Owner => Name;
 
-    /// <summary>
-    /// Gets the status bar status text.
-    /// </summary>
+    /// <summary>Gets the status bar status text.</summary>
     /// <value>The status bar status text.</value>
     protected IObservable<string> BusyStatusText => _busyStatusTextSubject.Publish().RefCount();
 
-    /// <summary>
-    /// Gets the busy visibility.
-    /// </summary>
+    /// <summary>Gets the busy visibility.</summary>
     /// <value>The busy visibility.</value>
     protected IObservable<Visibility> BusyVisibility => _busyVisibilitySubject.Publish().RefCount();
 
-    /// <summary>
-    /// Themes the changed.
-    /// </summary>
+    /// <summary>Themes the changed.</summary>
     /// <param name="theme">The theme.</param>
     public virtual void ThemeChanged(string theme)
     {
@@ -512,15 +422,15 @@ public class ModernWindow
             _backgroundAnimation?.Begin();
         }
 
-        BrowseBack = ReactiveCommand.Create<object>(o => this.NavigateBack(o), this.CanNavigateBack());
+        BrowseBack = ReactiveCommand.Create<object>(this.NavigateBack, this.CanNavigateBack());
         var backButton = (AppBarButton)Template.FindName("BackButton", this);
-        if (backButton != null)
+        if (backButton is not null)
         {
             backButton.Command = BrowseBack;
         }
 
         _appBar = (Grid)Template.FindName("BottomAppBar", this);
-        if (_appBar != null)
+        if (_appBar is not null)
         {
             _hide = _appBar.Resources["Hide"] as Storyboard;
             _show = _appBar.Resources["Show"] as Storyboard;
@@ -538,13 +448,11 @@ public class ModernWindow
         this.AppBarRightListener(() => AppBarRight);
         this.NavBarLeftListener(() => NavBarLeft);
         this.NavBarListener(() => NavBar);
-        this.MainMenuListener(() => MainMenu);
+        this.MainMenuListener(GetMainMenu);
         this.ListenForBusy(IsBusy);
     }
 
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
+    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -552,41 +460,42 @@ public class ModernWindow
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources.
-    /// </summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-    /// unmanaged resources.</param>
+    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_disposedValue)
+        if (_disposedValue)
         {
-            if (disposing)
-            {
-                _busyStatusTextSubject?.Dispose();
-                _busyVisibilitySubject?.Dispose();
-                _cleanUp.Dispose();
-            }
-
-            _disposedValue = true;
+            return;
         }
+
+        if (disposing)
+        {
+            _busyStatusTextSubject?.Dispose();
+            _busyVisibilitySubject?.Dispose();
+            _cleanUp.Dispose();
+        }
+
+        _disposedValue = true;
     }
 
-    /// <summary>
-    /// Hides the application bar.
-    /// </summary>
+    /// <summary>Hides the application bar.</summary>
     private void HideAppBar()
     {
-        if (_hide != null && _appBarVisible)
+        if (_hide is null || !_appBarVisible)
         {
-            _hide.Begin();
-            _appBarVisible = false;
+            return;
         }
+
+        _hide.Begin();
+        _appBarVisible = false;
     }
 
-    /// <summary>
-    /// Determines whether the specified call is busy.
-    /// </summary>
+    /// <summary>Gets the main menu collection for listener registration.</summary>
+    /// <returns>The main menu collection.</returns>
+    private ObservableCollection<FrameworkElement> GetMainMenu() => MainMenu;
+
+    /// <summary>Determines whether the specified call is busy.</summary>
     /// <param name="call">The call.</param>
     /// <param name="busy">if set to <c>true</c> [busy].</param>
     /// <param name="message">The message.</param>
@@ -598,7 +507,7 @@ public class ModernWindow
         }
         else
         {
-            BusyCalls.Remove(call);
+            _ = BusyCalls.Remove(call);
         }
 
         if (BusyCalls.Count == 0)
@@ -613,9 +522,7 @@ public class ModernWindow
         }
     }
 
-    /// <summary>
-    /// Shows the application bar.
-    /// </summary>
+    /// <summary>Shows the application bar.</summary>
     /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
     private void ShowAppBar(bool isSticky = false)
     {
@@ -626,120 +533,92 @@ public class ModernWindow
         }
 
         AppBarIsSticky = isSticky;
-        if (_show != null && !_appBarVisible)
+        if (_show is null || _appBarVisible)
         {
-            _show.Begin();
-            _appBarVisible = true;
+            return;
         }
+
+        _show.Begin();
+        _appBarVisible = true;
     }
 
-    /// <summary>
-    /// Handles the MouseEnter event of the _AppBar control.
-    /// </summary>
+    /// <summary>Handles the MouseEnter event of the _AppBar control.</summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
     private void AppBar_MouseEnter(object sender, MouseEventArgs e) => _mouseIsOverAppBar = true;
 
-    /// <summary>
-    /// Handles the MouseLeave event of the _AppBar control.
-    /// </summary>
+    /// <summary>Handles the MouseLeave event of the _AppBar control.</summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
     private void AppBar_MouseLeave(object sender, MouseEventArgs e) => _mouseIsOverAppBar = false;
 
-    /// <summary>
-    /// Handles the PreviewKeyDown event of the ModernWindow control.
-    /// </summary>
+    /// <summary>Handles the PreviewKeyDown event of the ModernWindow control.</summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
     private void ModernWindow_PreviewKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Z && (Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin)))
+        if (e.Key != Key.Z || (!Keyboard.IsKeyDown(Key.LWin) && !Keyboard.IsKeyDown(Key.RWin)))
         {
-            if (!_appBarVisible)
-            {
-                ShowAppBar();
-            }
-            else if (_appBarVisible && !AppBarIsSticky)
-            {
-                HideAppBar();
-            }
+            return;
+        }
+
+        if (!_appBarVisible)
+        {
+            ShowAppBar();
+        }
+        else if (_appBarVisible && !AppBarIsSticky)
+        {
+            HideAppBar();
         }
     }
 
-    /// <summary>
-    /// Handles the PreviewMouseDown event of the ModernWindow control.
-    /// </summary>
+    /// <summary>Handles the PreviewMouseDown event of the ModernWindow control.</summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">
-    /// The <see cref="MouseButtonEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="MouseButtonEventArgs"/> instance containing the event data.</param>
     private void ModernWindow_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (!_mouseIsOverAppBar)
+        if (_mouseIsOverAppBar)
         {
-            if (!_appBarVisible && e.ButtonState == MouseButtonState.Pressed && e.ChangedButton == MouseButton.Right)
-            {
-                ShowAppBar();
-            }
-            else if (_appBarVisible && e.ChangedButton != MouseButton.Right && !AppBarIsSticky)
-            {
-                HideAppBar();
-            }
+            return;
+        }
+
+        if (!_appBarVisible && e.ButtonState == MouseButtonState.Pressed && e.ChangedButton == MouseButton.Right)
+        {
+            ShowAppBar();
+        }
+        else if (_appBarVisible && e.ChangedButton != MouseButton.Right && !AppBarIsSticky)
+        {
+            HideAppBar();
         }
     }
 
-    /// <summary>
-    /// Called when [can minimize window].
-    /// </summary>
+    /// <summary>Called when [can minimize window].</summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">
-    /// The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.</param>
     private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ResizeMode != ResizeMode.NoResize;
 
-    /// <summary>
-    /// Called when [can resize window].
-    /// </summary>
+    /// <summary>Called when [can resize window].</summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">
-    /// The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.</param>
     private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ResizeMode == ResizeMode.CanResize || ResizeMode == ResizeMode.CanResizeWithGrip;
 
-    /// <summary>
-    /// Called when [close window].
-    /// </summary>
+    /// <summary>Called when [close window].</summary>
     /// <param name="target">The target.</param>
-    /// <param name="e">
-    /// The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.</param>
     private void OnCloseWindow(object target, ExecutedRoutedEventArgs e) => SystemCommands.CloseWindow(this);
 
-    /// <summary>
-    /// Called when [maximize window].
-    /// </summary>
+    /// <summary>Called when [maximize window].</summary>
     /// <param name="target">The target.</param>
-    /// <param name="e">
-    /// The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.</param>
     private void OnMaximizeWindow(object target, ExecutedRoutedEventArgs e) => SystemCommands.MaximizeWindow(this);
 
-    /// <summary>
-    /// Called when [minimize window].
-    /// </summary>
+    /// <summary>Called when [minimize window].</summary>
     /// <param name="target">The target.</param>
-    /// <param name="e">
-    /// The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.</param>
     private void OnMinimizeWindow(object target, ExecutedRoutedEventArgs e) => SystemCommands.MinimizeWindow(this);
 
-    /// <summary>
-    /// Called when [restore window].
-    /// </summary>
+    /// <summary>Called when [restore window].</summary>
     /// <param name="target">The target.</param>
-    /// <param name="e">
-    /// The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.
-    /// </param>
+    /// <param name="e">The <see cref="ExecutedRoutedEventArgs"/> instance containing the event data.</param>
     private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e) => SystemCommands.RestoreWindow(this);
 }

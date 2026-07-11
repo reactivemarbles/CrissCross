@@ -1,12 +1,10 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// AnimationErrorEventArgs.
-/// </summary>
+/// <summary>Represents AnimationErrorEventArgs.</summary>
 /// <seealso cref="RoutedEventArgs" />
 /// <remarks>
 /// Initializes a new instance of the <see cref="AnimationErrorEventArgs"/> class.
@@ -16,17 +14,13 @@ namespace CrissCross.WPF.UI.Controls;
 /// <param name="kind">The kind.</param>
 public class AnimationErrorEventArgs(object source, Exception exception, AnimationErrorKind kind) : RoutedEventArgs(AnimationBehavior.ErrorEvent, source)
 {
-    /// <summary>
-    /// Gets the exception.
-    /// </summary>
+    /// <summary>Gets the exception.</summary>
     /// <value>
     /// The exception.
     /// </value>
     public Exception Exception { get; } = exception;
 
-    /// <summary>
-    /// Gets the kind.
-    /// </summary>
+    /// <summary>Gets the kind.</summary>
     /// <value>
     /// The kind.
     /// </value>

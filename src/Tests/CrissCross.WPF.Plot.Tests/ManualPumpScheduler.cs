@@ -1,62 +1,37 @@
-// Copyright (c) 2019-2025 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-using System.Reactive.Concurrency;
 
 namespace CrissCross.WPF.Plot.Tests;
 
+/// <summary>Provides a manually pumped scheduler for deterministic binder tests.</summary>
 internal sealed class ManualPumpScheduler : IScheduler
 {
-    private readonly Queue<Action> _actions = new();
+    /// <summary>Stores queued work items.</summary>
+    private readonly Queue<IWorkItem> _actions = new();
 
-    public DateTimeOffset Now { get; private set; }
+    /// <inheritdoc />
+    public DateTimeOffset Now { get; } = DateTimeOffset.UtcNow;
 
-    public IDisposable Schedule<TState>(TState state, Func<IScheduler, TState, IDisposable> action)
+    /// <summary>Gets the last scheduled timestamp.</summary>
+    public long Timestamp { get; private set; }
+
+    /// <inheritdoc />
+    public void Schedule(IWorkItem item) => _actions.Enqueue(item);
+
+    /// <inheritdoc />
+    public void Schedule(IWorkItem item, long dueTimestamp)
     {
-        _actions.Enqueue(() => action(this, state));
-        return new ScheduledDisposable(() => { });
+        Timestamp = dueTimestamp;
+        _actions.Enqueue(item);
     }
 
-    public IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
-    {
-        _actions.Enqueue(() =>
-        {
-            Now = Now.Add(dueTime);
-            action(this, state);
-        });
-        return new ScheduledDisposable(() => { });
-    }
-
-    public IDisposable Schedule<TState>(TState state, DateTimeOffset dueTime, Func<IScheduler, TState, IDisposable> action)
-    {
-        _actions.Enqueue(() =>
-        {
-            Now = dueTime;
-            action(this, state);
-        });
-        return new ScheduledDisposable(() => { });
-    }
-
+    /// <summary>Runs all queued work items.</summary>
     public void RunAll()
     {
         while (_actions.Count > 0)
         {
-            _actions.Dequeue().Invoke();
-        }
-    }
-
-    private sealed class ScheduledDisposable(Action dispose) : IDisposable
-    {
-        private bool _isDisposed;
-
-        public void Dispose()
-        {
-            if (!_isDisposed)
-            {
-                _isDisposed = true;
-                dispose();
-            }
+            _actions.Dequeue().Execute();
         }
     }
 }

@@ -1,71 +1,45 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>
-/// Windows 11 themes.
-/// </summary>
+/// <summary>Windows 11 themes.</summary>
 public enum SystemTheme
 {
-    /// <summary>
-    /// Unknown Windows theme.
-    /// </summary>
+    /// <summary>Unknown Windows theme.</summary>
     Unknown,
 
-    /// <summary>
-    /// Custom Windows theme.
-    /// </summary>
+    /// <summary>Custom Windows theme.</summary>
     Custom,
 
-    /// <summary>
-    /// Default light theme.
-    /// </summary>
+    /// <summary>Default light theme.</summary>
     Light,
 
-    /// <summary>
-    /// Default dark theme.
-    /// </summary>
+    /// <summary>Default dark theme.</summary>
     Dark,
 
-    /// <summary>
-    /// High-contrast theme: Desert.
-    /// </summary>
+    /// <summary>High-contrast theme: Desert.</summary>
     HCWhite,
 
-    /// <summary>
-    /// High-contrast theme: Acquatic.
-    /// </summary>
+    /// <summary>High-contrast theme: Acquatic.</summary>
     HCBlack,
 
-    /// <summary>
-    /// High-contrast theme: Dusk.
-    /// </summary>
+    /// <summary>High-contrast theme: Dusk.</summary>
     HC1,
 
-    /// <summary>
-    /// High-contrast theme: Nightsky.
-    /// </summary>
+    /// <summary>High-contrast theme: Nightsky.</summary>
     HC2,
 
-    /// <summary>
-    /// Dark theme: Glow.
-    /// </summary>
+    /// <summary>Dark theme: Glow.</summary>
     Glow,
 
-    /// <summary>
-    /// Dark theme: Captured Motion.
-    /// </summary>
+    /// <summary>Dark theme: Captured Motion.</summary>
     CapturedMotion,
 
-    /// <summary>
-    /// Light theme: Sunrise.
-    /// </summary>
+    /// <summary>Light theme: Sunrise.</summary>
     Sunrise,
 
-    /// <summary>
-    /// Light theme: Flow.
-    /// </summary>
+    /// <summary>Light theme: Flow.</summary>
     Flow
 }

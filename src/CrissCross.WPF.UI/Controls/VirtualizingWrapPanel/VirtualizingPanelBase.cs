@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -9,165 +9,120 @@ using System.Windows.Controls.Primitives;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>
-/// Base abstract class for creating virtualized panels.
-/// <para>Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</para>
-/// </summary>
+/// <summary>Base abstract class for creating virtualized panels. <para>Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</para></summary>
 public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
 {
-    /// <summary>
-    /// Property for <see cref="ScrollLineDelta"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="ScrollLineDelta"/>.</summary>
     public static readonly DependencyProperty ScrollLineDeltaProperty = DependencyProperty.Register(
         nameof(ScrollLineDelta),
         typeof(double),
         typeof(VirtualizingPanelBase),
         new FrameworkPropertyMetadata(16.0));
 
-    /// <summary>
-    /// Property for <see cref="MouseWheelDelta"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MouseWheelDelta"/>.</summary>
     public static readonly DependencyProperty MouseWheelDeltaProperty = DependencyProperty.Register(
         nameof(MouseWheelDelta),
         typeof(double),
         typeof(VirtualizingPanelBase),
         new FrameworkPropertyMetadata(48.0));
 
-    /// <summary>
-    /// Property for <see cref="ScrollLineDeltaItem"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="ScrollLineDeltaItem"/>.</summary>
     public static readonly DependencyProperty ScrollLineDeltaItemProperty = DependencyProperty.Register(
         nameof(ScrollLineDeltaItem),
         typeof(int),
         typeof(VirtualizingPanelBase),
         new FrameworkPropertyMetadata(1));
 
-    /// <summary>
-    /// Property for <see cref="MouseWheelDeltaItem"/>.
-    /// </summary>
+    /// <summary>Property for <see cref="MouseWheelDeltaItem"/>.</summary>
     public static readonly DependencyProperty MouseWheelDeltaItemProperty = DependencyProperty.Register(
         nameof(MouseWheelDeltaItem),
         typeof(int),
         typeof(VirtualizingPanelBase),
         new FrameworkPropertyMetadata(3));
 
-    private DependencyObject? _itemsOwner;
-    private IRecyclingItemContainerGenerator? _itemContainerGenerator;
+    /// <summary>Provides the left margin reserved for grouped items.</summary>
+    private const double GroupedItemLeftMargin = 5D;
+
+    /// <summary>Stores the _previousVerticalScrollBarVisibility value.</summary>
     private Visibility _previousVerticalScrollBarVisibility = Visibility.Collapsed;
+
+    /// <summary>Stores the _previousHorizontalScrollBarVisibility value.</summary>
     private Visibility _previousHorizontalScrollBarVisibility = Visibility.Collapsed;
 
-    /// <summary>
-    /// Gets or sets the scroll owner.
-    /// </summary>
+    /// <summary>Gets or sets the scroll owner.</summary>
     public ScrollViewer? ScrollOwner { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be vertically scrolled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be vertically scrolled.</summary>
     public bool CanVerticallyScroll { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be horizontally scrolled.
-    /// </summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be horizontally scrolled.</summary>
     public bool CanHorizontallyScroll { get; set; }
 
-    /// <summary>
-    /// Gets or sets scroll line delta for pixel based scrolling. The default value is 16 dp.
-    /// </summary>
+    /// <summary>Gets or sets scroll line delta for pixel based scrolling. The default value is 16 dp.</summary>
     public double ScrollLineDelta
     {
         get => (double)GetValue(ScrollLineDeltaProperty);
         set => SetValue(ScrollLineDeltaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets mouse wheel delta for pixel based scrolling. The default value is 48 dp.
-    /// </summary>
+    /// <summary>Gets or sets mouse wheel delta for pixel based scrolling. The default value is 48 dp.</summary>
     public double MouseWheelDelta
     {
         get => (double)GetValue(MouseWheelDeltaProperty);
         set => SetValue(MouseWheelDeltaProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets scroll line delta for item based scrolling. The default value is 1 item.
-    /// </summary>
+    /// <summary>Gets or sets scroll line delta for item based scrolling. The default value is 1 item.</summary>
     public double ScrollLineDeltaItem
     {
         get => (int)GetValue(ScrollLineDeltaItemProperty);
         set => SetValue(ScrollLineDeltaItemProperty, value);
     }
 
-    /// <summary>
-    /// Gets or sets mouse wheel delta for item based scrolling. The default value is 3 items.
-    /// </summary>
+    /// <summary>Gets or sets mouse wheel delta for item based scrolling. The default value is 3 items.</summary>
     public int MouseWheelDeltaItem
     {
         get => (int)GetValue(MouseWheelDeltaItemProperty);
         set => SetValue(MouseWheelDeltaItemProperty, value);
     }
 
-    /// <summary>
-    /// Gets width of the <see cref="Extent"/>.
-    /// </summary>
+    /// <summary>Gets width of the <see cref="Extent"/>.</summary>
     public double ExtentWidth => Extent.Width;
 
-    /// <summary>
-    /// Gets height of the <see cref="Extent"/>.
-    /// </summary>
+    /// <summary>Gets height of the <see cref="Extent"/>.</summary>
     public double ExtentHeight => Extent.Height;
 
-    /// <summary>
-    /// Gets the horizontal offset.
-    /// </summary>
+    /// <summary>Gets the horizontal offset.</summary>
     public double HorizontalOffset => Offset.X;
 
-    /// <summary>
-    /// Gets the vertical offset.
-    /// </summary>
+    /// <summary>Gets the vertical offset.</summary>
     public double VerticalOffset => Offset.Y;
 
-    /// <summary>
-    /// Gets the <see cref="Viewport"/> width.
-    /// </summary>
+    /// <summary>Gets the <see cref="Viewport"/> width.</summary>
     public double ViewportWidth => Viewport.Width;
 
-    /// <summary>
-    /// Gets the <see cref="Viewport"/> height.
-    /// </summary>
+    /// <summary>Gets the <see cref="Viewport"/> height.</summary>
     public double ViewportHeight => Viewport.Height;
 
     /// <inheritdoc />
     protected override bool CanHierarchicallyScrollAndVirtualizeCore => true;
 
-    /// <summary>
-    /// Gets the scroll unit.
-    /// </summary>
+    /// <summary>Gets the scroll unit.</summary>
     protected ScrollUnit ScrollUnit => GetScrollUnit(ItemsControl);
 
-    /// <summary>
-    /// Gets or sets the direction in which the panel scrolls when user turns the mouse wheel.
-    /// </summary>
+    /// <summary>Gets or sets the direction in which the panel scrolls when user turns the mouse wheel.</summary>
     protected ScrollDirection MouseWheelScrollDirection { get; set; } = ScrollDirection.Vertical;
 
-    /// <summary>
-    /// Gets a value indicating whether gets a value that inidicates whether the virtualizing is enabled.
-    /// </summary>
+    /// <summary>Gets a value indicating whether gets a value that inidicates whether the virtualizing is enabled.</summary>
     protected bool IsVirtualizing => GetIsVirtualizing(ItemsControl);
 
-    /// <summary>
-    /// Gets the virtualization mode.
-    /// </summary>
+    /// <summary>Gets the virtualization mode.</summary>
     protected VirtualizationMode VirtualizationMode => GetVirtualizationMode(ItemsControl);
 
-    /// <summary>
-    /// Gets a value indicating whether returns true if the panel is in VirtualizationMode.Recycling, otherwise false.
-    /// </summary>
+    /// <summary>Gets a value indicating whether returns true if the panel is in VirtualizationMode.Recycling, otherwise false.</summary>
     protected bool IsRecycling => VirtualizationMode == VirtualizationMode.Recycling;
 
-    /// <summary>
-    /// Gets the cache length before and after the viewport.
-    /// </summary>
+    /// <summary>Gets the cache length before and after the viewport.</summary>
     protected VirtualizationCacheLength CacheLength { get; private set; }
 
     /// <summary>
@@ -176,21 +131,17 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// </summary>
     protected VirtualizationCacheLengthUnit CacheLengthUnit { get; private set; }
 
-    /// <summary>
-    /// Gets the ItemsControl (e.g. ListView).
-    /// </summary>
+    /// <summary>Gets the ItemsControl (e.g. ListView).</summary>
     protected ItemsControl ItemsControl => ItemsControl.GetItemsOwner(this);
 
-    /// <summary>
-    /// Gets the ItemsControl (e.g. ListView) or if the ItemsControl is grouping a GroupItem.
-    /// </summary>
+    /// <summary>Gets the ItemsControl (e.g. ListView) or if the ItemsControl is grouping a GroupItem.</summary>
     protected DependencyObject ItemsOwner
     {
         get
         {
-            if (_itemsOwner is not null)
+            if (field is not null)
             {
-                return _itemsOwner;
+                return field;
             }
 
             /* Use reflection to access internal method because the public
@@ -203,62 +154,50 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
                 [typeof(DependencyObject)],
                 null)!;
 
-            _itemsOwner = (DependencyObject)getItemsOwnerInternalMethod.Invoke(null, [this])!;
+            field = (DependencyObject)getItemsOwnerInternalMethod.Invoke(null, [this])!;
 
-            return _itemsOwner;
+            return field;
         }
     }
 
-    /// <summary>
-    /// Gets items collection.
-    /// </summary>
+    /// <summary>Gets items collection.</summary>
     protected ReadOnlyCollection<object> Items => ((ItemContainerGenerator)ItemContainerGenerator).Items;
 
-    /// <summary>
-    /// Gets the offset.
-    /// </summary>
+    /// <summary>Gets the offset.</summary>
     protected Point Offset { get; private set; } = new(0, 0);
 
-    /// <summary>
-    /// Gets items container.
-    /// </summary>
+    /// <summary>Gets items container.</summary>
     protected new IRecyclingItemContainerGenerator ItemContainerGenerator
     {
         get
         {
-            if (_itemContainerGenerator is not null)
+            if (field is not null)
             {
-                return _itemContainerGenerator;
+                return field;
             }
 
             /* Because of a bug in the framework the ItemContainerGenerator
                is null until InternalChildren accessed at least one time. */
             _ = InternalChildren;
-            _itemContainerGenerator = (IRecyclingItemContainerGenerator)base.ItemContainerGenerator;
+            field = (IRecyclingItemContainerGenerator)base.ItemContainerGenerator;
 
-            return _itemContainerGenerator;
+            return field;
         }
     }
 
-    /// <summary>
-    /// Gets or sets the range of items that a realized in <see cref="Viewport"/> or cache.
-    /// </summary>
+    /// <summary>Gets or sets the range of items that a realized in <see cref="Viewport"/> or cache.</summary>
     protected ItemRange ItemRange { get; set; }
 
-    /// <summary>
-    /// Gets the <see cref="Extent"/>.
-    /// </summary>
+    /// <summary>Gets the <see cref="Extent"/>.</summary>
     protected Size Extent { get; private set; } = new Size(0, 0);
 
-    /// <summary>
-    /// Gets the viewport.
-    /// </summary>
+    /// <summary>Gets the viewport.</summary>
     protected Size Viewport { get; private set; } = new Size(0, 0);
 
     /// <inheritdoc />
     public virtual Rect MakeVisible(Visual visual, Rect rectangle)
     {
-        if (visual == null)
+        if (visual is null)
         {
             return default;
         }
@@ -274,7 +213,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         }
         else if ((pos.X + rectangle.Width) > (Offset.X + Viewport.Width))
         {
-            var notVisibleX = (pos.X + rectangle.Width) - (Offset.X + Viewport.Width);
+            var notVisibleX = pos.X + rectangle.Width - (Offset.X + Viewport.Width);
             var maxScrollX = pos.X - Offset.X; // keep left of the visual visible
             scrollAmountX = Math.Min(notVisibleX, maxScrollX);
         }
@@ -285,7 +224,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         }
         else if ((pos.Y + rectangle.Height) > (Offset.Y + Viewport.Height))
         {
-            var notVisibleY = (pos.Y + rectangle.Height) - (Offset.Y + Viewport.Height);
+            var notVisibleY = pos.Y + rectangle.Height - (Offset.Y + Viewport.Height);
             var maxScrollY = pos.Y - Offset.Y; // keep top of the visual visible
             scrollAmountY = Math.Min(notVisibleY, maxScrollY);
         }
@@ -299,9 +238,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         return new Rect(scrollAmountX, scrollAmountY, visibleRectWidth, visibleRectHeight);
     }
 
-    /// <summary>
-    /// Sets the vertical offset.
-    /// </summary>
+    /// <summary>Sets the vertical offset.</summary>
     /// <param name="offset">The offset.</param>
     public void SetVerticalOffset(double offset)
     {
@@ -314,15 +251,13 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
             offset = Extent.Height - Viewport.Height;
         }
 
-        Offset = new Point(Offset.X, offset);
+        Offset = new(Offset.X, offset);
         ScrollOwner?.InvalidateScrollInfo();
 
         InvalidateMeasure();
     }
 
-    /// <summary>
-    /// Sets the horizontal offset.
-    /// </summary>
+    /// <summary>Sets the horizontal offset.</summary>
     /// <param name="offset">The offset.</param>
     public void SetHorizontalOffset(double offset)
     {
@@ -335,7 +270,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
             offset = Extent.Width - Viewport.Width;
         }
 
-        Offset = new Point(offset, Offset.Y);
+        Offset = new(offset, Offset.Y);
         ScrollOwner?.InvalidateScrollInfo();
         InvalidateMeasure();
     }
@@ -411,61 +346,39 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     {
         switch (args?.Action)
         {
-            case NotifyCollectionChangedAction.Remove:
-            case NotifyCollectionChangedAction.Replace:
-                RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
-                break;
+            case NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace:
+                {
+                    RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
+                    break;
+                }
+
             case NotifyCollectionChangedAction.Move:
-                RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
-                break;
+                {
+                    RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
+                    break;
+                }
         }
     }
 
-    /// <summary>
-    /// Updates scroll offset, extent and viewport.
-    /// </summary>
+    /// <summary>Updates scroll offset, extent and viewport.</summary>
     /// <param name="availableSize">Size of the available.</param>
     /// <param name="extent">The extent.</param>
     protected virtual void UpdateScrollInfo(Size availableSize, Size extent)
     {
-        var invalidateScrollInfo = false;
+        var invalidateScrollInfo = UpdateExtent(extent);
+        invalidateScrollInfo |= UpdateViewport(availableSize);
+        invalidateScrollInfo |= CoerceVerticalOffset(availableSize, extent);
+        invalidateScrollInfo |= CoerceHorizontalOffset(availableSize, extent);
 
-        if (extent != Extent)
+        if (!invalidateScrollInfo)
         {
-            Extent = extent;
-            invalidateScrollInfo = true;
+            return;
         }
 
-        if (availableSize != Viewport)
-        {
-            Viewport = availableSize;
-            invalidateScrollInfo = true;
-        }
-
-        if (ViewportHeight != 0 && VerticalOffset != 0 && VerticalOffset + ViewportHeight + 1 >= ExtentHeight)
-        {
-            Offset = new Point(Offset.X, extent.Height - availableSize.Height);
-            invalidateScrollInfo = true;
-        }
-
-        if (
-            ViewportWidth != 0
-            && HorizontalOffset != 0
-            && HorizontalOffset + ViewportWidth + 1 >= ExtentWidth)
-        {
-            Offset = new Point(extent.Width - availableSize.Width, Offset.Y);
-            invalidateScrollInfo = true;
-        }
-
-        if (invalidateScrollInfo)
-        {
-            ScrollOwner?.InvalidateScrollInfo();
-        }
+        ScrollOwner?.InvalidateScrollInfo();
     }
 
-    /// <summary>
-    /// Gets item index from the generator.
-    /// </summary>
+    /// <summary>Gets item index from the generator.</summary>
     /// <param name="childIndex">Index of the child.</param>
     /// <returns>An Int.</returns>
     protected int GetItemIndexFromChildIndex(int childIndex)
@@ -474,9 +387,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         return ItemContainerGenerator.IndexFromGeneratorPosition(generatorPosition);
     }
 
-    /// <summary>
-    /// Gets the position of children from the generator.
-    /// </summary>
+    /// <summary>Gets the position of children from the generator.</summary>
     /// <param name="childIndex">Index of the child.</param>
     /// <returns>
     /// A GeneratorPosition.
@@ -489,7 +400,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     {
         /* Sometimes when scrolling the scrollbar gets hidden without any reason. In this case the "IsMeasureValid"
          * property of the ScrollOwner is false. To prevent a infinite circle the mesasure call is ignored. */
-        if (ScrollOwner != null)
+        if (ScrollOwner is not null)
         {
             var verticalScrollBarGotHidden =
                 ScrollOwner.VerticalScrollBarVisibility == ScrollBarVisibility.Auto
@@ -520,13 +431,13 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
              * Therfore the vieport size provided by the group item is used. */
             var viewportSize = groupItem.Constraints.Viewport.Size;
             var headerSize = groupItem.HeaderDesiredSizes.PixelSize;
-            var availableWidth = Math.Max(viewportSize.Width - 5, 0); // left margin of 5 dp
+            var availableWidth = Math.Max(viewportSize.Width - GroupedItemLeftMargin, 0);
             var availableHeight = Math.Max(viewportSize.Height - headerSize.Height, 0);
-            availableSize = new Size(availableWidth, availableHeight);
+            availableSize = new(availableWidth, availableHeight);
 
             extent = CalculateExtent(availableSize);
 
-            desiredSize = new Size(extent.Width, extent.Height);
+            desiredSize = new(extent.Width, extent.Height);
 
             Extent = extent;
             Offset = groupItem.Constraints.Viewport.Location;
@@ -539,7 +450,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
             extent = CalculateExtent(availableSize);
             var desiredWidth = Math.Min(availableSize.Width, extent.Width);
             var desiredHeight = Math.Min(availableSize.Height, extent.Height);
-            desiredSize = new Size(desiredWidth, desiredHeight);
+            desiredSize = new(desiredWidth, desiredHeight);
 
             UpdateScrollInfo(desiredSize, extent);
             CacheLength = GetCacheLength(ItemsOwner);
@@ -554,9 +465,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         return desiredSize;
     }
 
-    /// <summary>
-    /// Realizes visible and cached items.
-    /// </summary>
+    /// <summary>Realizes visible and cached items.</summary>
     protected virtual void RealizeItems()
     {
         var startPosition = ItemContainerGenerator.GeneratorPositionFromIndex(ItemRange.StartIndex);
@@ -595,7 +504,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
                 continue;
             }
 
-            groupItem.Constraints = new HierarchicalVirtualizationConstraints(
+            groupItem.Constraints = new(
                 new VirtualizationCacheLength(0),
                 VirtualizationCacheLengthUnit.Item,
                 new Rect(0, 0, ViewportWidth, ViewportHeight));
@@ -604,9 +513,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         }
     }
 
-    /// <summary>
-    /// Virtualizes (cleanups) no longer visible or cached items.
-    /// </summary>
+    /// <summary>Virtualizes (cleanups) no longer visible or cached items.</summary>
     protected virtual void VirtualizeItems()
     {
         for (var childIndex = InternalChildren.Count - 1; childIndex >= 0; childIndex--)
@@ -633,100 +540,130 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         }
     }
 
-    /// <summary>
-    /// Sets vertical scroll offset by given amount.
-    /// </summary>
+    /// <summary>Sets vertical scroll offset by given amount.</summary>
     /// <param name="amount">The value by which the offset is to be increased.</param>
     protected void ScrollVertical(double amount) => SetVerticalOffset(VerticalOffset + amount);
 
-    /// <summary>
-    /// Sets horizontal scroll offset by given amount.
-    /// </summary>
+    /// <summary>Sets horizontal scroll offset by given amount.</summary>
     /// <param name="amount">The value by which the offset is to be increased.</param>
     protected void ScrollHorizontal(double amount) => SetHorizontalOffset(HorizontalOffset + amount);
 
-    /// <summary>
-    /// Calculates the extent that would be needed to show all items.
-    /// </summary>
+    /// <summary>Calculates the extent that would be needed to show all items.</summary>
     /// <param name="availableSize">Size of the available.</param>
     /// <returns>A Size.</returns>
     protected abstract Size CalculateExtent(Size availableSize);
 
-    /// <summary>
-    /// Calculates the item range that is visible in the viewport or cached.
-    /// </summary>
+    /// <summary>Calculates the item range that is visible in the viewport or cached.</summary>
     /// <returns>ItemRange.</returns>
     protected abstract ItemRange UpdateItemRange();
 
-    /// <summary>
-    /// Gets line up scroll amount.
-    /// </summary>
+    /// <summary>Gets line up scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetLineUpScrollAmount();
 
-    /// <summary>
-    /// Gets line down scroll amount.
-    /// </summary>
+    /// <summary>Gets line down scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetLineDownScrollAmount();
 
-    /// <summary>
-    /// Gets line left scroll amount.
-    /// </summary>
+    /// <summary>Gets line left scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetLineLeftScrollAmount();
 
-    /// <summary>
-    /// Gets line right scroll amount.
-    /// </summary>
+    /// <summary>Gets line right scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetLineRightScrollAmount();
 
-    /// <summary>
-    /// Gets mouse wheel up scroll amount.
-    /// </summary>
+    /// <summary>Gets mouse wheel up scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetMouseWheelUpScrollAmount();
 
-    /// <summary>
-    /// Gets mouse wheel down scroll amount.
-    /// </summary>
+    /// <summary>Gets mouse wheel down scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetMouseWheelDownScrollAmount();
 
-    /// <summary>
-    /// Gets mouse wheel left scroll amount.
-    /// </summary>
+    /// <summary>Gets mouse wheel left scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetMouseWheelLeftScrollAmount();
 
-    /// <summary>
-    /// Gets mouse wheel right scroll amount.
-    /// </summary>
+    /// <summary>Gets mouse wheel right scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetMouseWheelRightScrollAmount();
 
-    /// <summary>
-    /// Gets page up scroll amount.
-    /// </summary>
+    /// <summary>Gets page up scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetPageUpScrollAmount();
 
-    /// <summary>
-    /// Gets page down scroll amount.
-    /// </summary>
+    /// <summary>Gets page down scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetPageDownScrollAmount();
 
-    /// <summary>
-    /// Gets page left scroll amount.
-    /// </summary>
+    /// <summary>Gets page left scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetPageLeftScrollAmount();
 
-    /// <summary>
-    /// Gets page right scroll amount.
-    /// </summary>
+    /// <summary>Gets page right scroll amount.</summary>
     /// <returns>A double.</returns>
     protected abstract double GetPageRightScrollAmount();
+
+    /// <summary>Coerces the horizontal offset when the viewport reaches the extent.</summary>
+    /// <param name="availableSize">The available size.</param>
+    /// <param name="extent">The extent.</param>
+    /// <returns><c>true</c> if the offset changed; otherwise, <c>false</c>.</returns>
+    private bool CoerceHorizontalOffset(Size availableSize, Size extent)
+    {
+        if (ViewportWidth == 0 ||
+            HorizontalOffset == 0 ||
+            HorizontalOffset + ViewportWidth + 1 < ExtentWidth)
+        {
+            return false;
+        }
+
+        Offset = new(extent.Width - availableSize.Width, Offset.Y);
+        return true;
+    }
+
+    /// <summary>Coerces the vertical offset when the viewport reaches the extent.</summary>
+    /// <param name="availableSize">The available size.</param>
+    /// <param name="extent">The extent.</param>
+    /// <returns><c>true</c> if the offset changed; otherwise, <c>false</c>.</returns>
+    private bool CoerceVerticalOffset(Size availableSize, Size extent)
+    {
+        if (ViewportHeight == 0 ||
+            VerticalOffset == 0 ||
+            VerticalOffset + ViewportHeight + 1 < ExtentHeight)
+        {
+            return false;
+        }
+
+        Offset = new(Offset.X, extent.Height - availableSize.Height);
+        return true;
+    }
+
+    /// <summary>Updates the extent.</summary>
+    /// <param name="extent">The extent.</param>
+    /// <returns><c>true</c> if the extent changed; otherwise, <c>false</c>.</returns>
+    private bool UpdateExtent(Size extent)
+    {
+        if (extent == Extent)
+        {
+            return false;
+        }
+
+        Extent = extent;
+        return true;
+    }
+
+    /// <summary>Updates the viewport.</summary>
+    /// <param name="availableSize">The available size.</param>
+    /// <returns><c>true</c> if the viewport changed; otherwise, <c>false</c>.</returns>
+    private bool UpdateViewport(Size availableSize)
+    {
+        if (availableSize == Viewport)
+        {
+            return false;
+        }
+
+        Viewport = availableSize;
+        return true;
+    }
 }

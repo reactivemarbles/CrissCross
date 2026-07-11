@@ -1,14 +1,12 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
 
 namespace CrissCross.WPF.UI.Markup;
 
-/// <summary>
-/// Custom <see cref="MarkupExtension"/> which can provide <see cref="ImageIcon"/>.
-/// </summary>
+/// <summary>Custom <see cref="MarkupExtension"/> which can provide <see cref="ImageIcon"/>.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:Button
@@ -34,42 +32,41 @@ namespace CrissCross.WPF.UI.Markup;
 [MarkupExtensionReturnType(typeof(ImageIcon))]
 public class ImageIconExtension(ImageSource? source) : MarkupExtension
 {
-    /// <summary>
-    /// Gets or sets the source.
-    /// </summary>
+    /// <summary>Gets or sets the source.</summary>
     /// <value>
     /// The source.
     /// </value>
     [ConstructorArgument("source")]
     public ImageSource? Source { get; set; } = source;
 
-    /// <summary>
-    /// Gets or sets the width.
-    /// </summary>
+    /// <summary>Gets or sets the width.</summary>
     /// <value>
     /// The width.
     /// </value>
     public double Width { get; set; } = 16D;
 
-    /// <summary>
-    /// Gets or sets the height.
-    /// </summary>
+    /// <summary>Gets or sets the height.</summary>
     /// <value>
     /// The height.
     /// </value>
     public double Height { get; set; } = 16D;
 
-    /// <summary>
-    /// When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.
-    /// </summary>
+    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.</summary>
     /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
     /// <returns>
     /// The object value to set on the property where the extension is applied.
     /// </returns>
-    public override object ProvideValue(IServiceProvider serviceProvider) => new ImageIcon
+    public override object ProvideValue(IServiceProvider serviceProvider)
     {
-        Source = Source,
-        Width = Width,
-        Height = Height
-    };
+        var source = Source;
+        var width = Width;
+        var height = Height;
+
+        return new ImageIcon
+        {
+            Source = source,
+            Width = width,
+            Height = height
+        };
+    }
 }

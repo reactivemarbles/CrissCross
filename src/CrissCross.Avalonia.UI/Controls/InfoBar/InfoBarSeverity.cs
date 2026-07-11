@@ -1,19 +1,13 @@
-// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
-// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-using ReactiveUI;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>
-/// InfoBarSeverity.
-/// </summary>
+/// <summary>InfoBarSeverity member.</summary>
 public enum InfoBarSeverity
 {
-    /// <summary>
-    /// Communicates that the InfoBar is displaying general information that requires the user's attention.
-    /// </summary>
+    /// <summary>Communicates that the InfoBar is displaying general information that requires the user's attention.</summary>
     Informational = 0,
 
     /// <summary>
@@ -22,14 +16,9 @@ public enum InfoBarSeverity
     /// </summary>
     Success = 1,
 
-    /// <summary>
-    /// Communicates that the InfoBar is displaying information regarding a condition that might cause a problem in
-    /// the future.
-    /// </summary>
+    /// <summary>Communicates that the InfoBar is displaying information regarding a condition that might cause a problem in the future.</summary>
     Warning = 2,
 
-    /// <summary>
-    /// Communicates that the InfoBar is displaying information regarding an error or problem that has occurred.
-    /// </summary>
+    /// <summary>Communicates that the InfoBar is displaying information regarding an error or problem that has occurred.</summary>
     Error = 3
 }
