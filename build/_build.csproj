@@ -12,15 +12,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.10.85" />
-    <PackageReference Include="NuGet.Packaging" Version="7.6.0" />
     <PackageReference Include="Nuke.Common" Version="10.1.0" />
     <PackageReference Include="CP.Nuke.BuildTools" Version="3.0.2" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.9" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageDownload Include="nbgv" Version="[3.9.50]" />
   </ItemGroup>
 
 </Project>
