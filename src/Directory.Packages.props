@@ -80,7 +80,7 @@
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" Condition="!$(IsTestProject)" />
 
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.91" Condition="!Exists('packages.config')" />
+    <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="StyleSharp.Analyzers" Version="3.17.9" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
 
