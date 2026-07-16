@@ -16,17 +16,39 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+        <WrapPanel Margin="8" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBlock
+                x:Name="ActiveScenarioText"
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                FontWeight="SemiBold" />
+            <ui:Button
+                x:Name="ShowAllChartTypesButton"
+                Margin="0,0,6,0"
+                Content="All chart types" />
+            <ui:Button
+                x:Name="ShowLiveButton"
+                Margin="0,0,6,0"
+                Content="Live streams" />
+            <ui:Button
+                x:Name="ShowHistoricButton"
+                Margin="0,0,6,0"
+                Content="Historic DateTime" />
+            <ui:Button
+                x:Name="ShowIndicatorsButton"
+                Margin="0,0,6,0"
+                Content="Indicators" />
+            <ui:Button
+                x:Name="ToggleThemeButton"
+                Margin="0,0,12,0" />
             <ui:CheckBox
                 x:Name="CheckBoxUseFixedNumberOfPoints"
-                Content="Use Fixed Number Of Points"
-                IsChecked="{Binding ElementName=Chart, Path=UseFixedNumberOfPoints, Mode=TwoWay}" />
+                VerticalAlignment="Center"
+                Content="Use Fixed Number Of Points" />
             <ui:NumberBox
                 x:Name="NumberPointsPlotted"
-                Width="200"
-                Value="{Binding ElementName=Chart, Path=NumberPointsPlotted, Mode=TwoWay}" />
-
-        </StackPanel>
+                Width="200" />
+        </WrapPanel>
         <ui:LiveChart x:Name="Chart" Grid.Row="1" />
     </Grid>
 </UserControl>

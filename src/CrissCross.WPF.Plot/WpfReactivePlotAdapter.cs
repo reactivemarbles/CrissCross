@@ -5,11 +5,12 @@
 using ReactiveUI;
 using ScottPlot;
 using ScottPlot.DataSources;
+using ScottPlot.Plottables;
 
 namespace CrissCross.WPF.Plot;
 
 /// <summary>Applies normalized reactive plot updates to WPF plot UI elements.</summary>
-internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
+internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
 {
     /// <summary>Stores the owning live chart view model.</summary>
     private readonly LiveChartViewModel _chart;
@@ -18,16 +19,36 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     private readonly string _color;
 
     /// <summary>Stores the signal subject value.</summary>
-    private readonly Signal<(string? Name, IList<double>? Value, IList<double> X, int Axis)>? _signalSubject;
+    private readonly Signal<(
+        string? Name,
+        IList<double>? Value,
+        IList<double> X,
+        int Axis
+    )>? _signalSubject;
 
     /// <summary>Stores the scatter subject value.</summary>
-    private readonly Signal<(string? Name, IList<double>? X, IList<double> Y, int Axis)>? _scatterSubject;
+    private readonly Signal<(
+        string? Name,
+        IList<double>? X,
+        IList<double> Y,
+        int Axis
+    )>? _scatterSubject;
 
     /// <summary>Stores the data logger subject value.</summary>
-    private readonly Signal<(string? Name, IList<double>? Value, int Axis, int nPoints)>? _dataLoggerSubject;
+    private readonly Signal<(
+        string? Name,
+        IList<double>? Value,
+        int Axis,
+        int nPoints
+    )>? _dataLoggerSubject;
 
     /// <summary>Stores the streamer subject value.</summary>
-    private readonly Signal<(string? Name, IList<double>? Y, IList<double> X, int Axis)>? _streamerSubject;
+    private readonly Signal<(
+        string? Name,
+        IList<double>? Y,
+        IList<double> X,
+        int Axis
+    )>? _streamerSubject;
 
     /// <summary>Stores retained X values for append operations.</summary>
     private readonly List<double> _retainedX = [];
@@ -37,6 +58,9 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
 
     /// <summary>Stores the current plottable UI element.</summary>
     private IPlottableUI? _ui;
+
+    /// <summary>Stores the current snapshot-oriented ScottPlot plottable.</summary>
+    private IPlottable? _snapshotPlottable;
 
     /// <summary>Stores the signal X-axis kind currently used by the UI.</summary>
     private PlotXAxisKind? _signalXAxisKind;
@@ -49,7 +73,11 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="key">The key value.</param>
     /// <param name="plotType">The plotType value.</param>
     /// <param name="color">The color value.</param>
-    public WpfReactivePlotAdapter(LiveChartViewModel chart, PlotSeriesKey key, PlotType plotType, string color)
+    public WpfReactivePlotAdapter(
+        LiveChartViewModel chart,
+        PlotSeriesKey key,
+        PlotType plotType,
+        string color)
     {
         _chart = chart ?? throw new ArgumentNullException(nameof(chart));
         _color = color;
@@ -59,39 +87,54 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         switch (plotType)
         {
             case PlotType.Signal:
-                {
-                    _signalSubject = new();
-                    break;
-                }
+            {
+                _signalSubject = new();
+                break;
+            }
 
             case PlotType.Scatter:
-                {
-                    _scatterSubject = new();
-                    _ui = new ScatterUI(_chart.WpfPlot1vm!, _scatterSubject, _color);
-                    AddUi();
-                    break;
-                }
+            {
+                _scatterSubject = new();
+                _ui = new ScatterUI(_chart.WpfPlot1vm!, _scatterSubject, _color);
+                AddUi();
+                break;
+            }
 
             case PlotType.DataLogger:
-                {
-                    _dataLoggerSubject = new();
-                    _ui = new DataLoggerUI(_chart.WpfPlot1vm!, _dataLoggerSubject, _color);
-                    AddUi();
-                    break;
-                }
+            {
+                _dataLoggerSubject = new();
+                _ui = new DataLoggerUI(_chart.WpfPlot1vm!, _dataLoggerSubject, _color);
+                AddUi();
+                break;
+            }
 
             case PlotType.Streamer:
-                {
-                    _streamerSubject = new();
-                    _ui = new StreamerUI(_chart.WpfPlot1vm!, _streamerSubject, fs: 1, sampleCount: 1, plottedPointCount: Math.Max(1, _chart.NumberPointsPlotted), _color);
-                    AddUi();
-                    break;
-                }
+            {
+                _streamerSubject = new();
+                _ui = new StreamerUI(
+                    _chart.WpfPlot1vm!,
+                    _streamerSubject,
+                    fs: 1,
+                    sampleCount: 1,
+                    plottedPointCount: Math.Max(1, _chart.NumberPointsPlotted),
+                    _color);
+                AddUi();
+                break;
+            }
 
-            case PlotType.SignalXY:
+            case PlotType.SignalXY
+            or PlotType.Line
+            or PlotType.StepLine
+            or PlotType.Area
+            or PlotType.Bar
+            or PlotType.Stem
+            or PlotType.Points:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(plotType), plotType, "Unsupported reactive plot type.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(plotType),
+                    plotType,
+                    "Unsupported reactive plot type.");
         }
     }
 
@@ -106,12 +149,14 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     public void Apply(ReactivePlotUpdate update)
     {
         EnsureNotDisposed();
+        ConfigureXAxis(update.XAxisKind);
         if (TryApplyClear(update))
         {
             return;
         }
 
         ApplyPlotUpdate(update);
+        ApplyStyle(update.Style);
         AssignAxis(update.Key.Axis);
         _chart.WpfPlot1vm?.Refresh();
     }
@@ -130,25 +175,29 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         DisposeSubject(_dataLoggerSubject);
         DisposeSubject(_streamerSubject);
         _ui?.Dispose();
+        RemoveSnapshotPlottable();
     }
 
-    /// <summary>Clears a SignalXY UI element.</summary>
-    /// <param name="signalXy">The SignalXY UI element.</param>
-    private static void ClearSignalXy(SignalXY_UI signalXy) =>
-        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray([], []);
-
-    /// <summary>Completes and disposes a subject.</summary>
-    /// <typeparam name="T">The subject value type.</typeparam>
-    /// <param name="subject">The subject to dispose.</param>
-    private static void DisposeSubject<T>(Signal<T>? subject)
+    /// <summary>Ensures the shared chart X axis matches the incoming series.</summary>
+    /// <param name="axisKind">The incoming X-axis interpretation.</param>
+    private void ConfigureXAxis(PlotXAxisKind axisKind)
     {
-        if (subject is null)
+        var isDateTime = axisKind is PlotXAxisKind.OADate or PlotXAxisKind.Ticks;
+        if (_chart.IsXAxisDateTime == isDateTime)
         {
             return;
         }
 
-        subject.OnCompleted();
-        subject.Dispose();
+        if (isDateTime)
+        {
+            _chart.CreateAxisWithTimeStamp();
+        }
+        else
+        {
+            _chart.CreateAxisWithPoints();
+        }
+
+        _chart.IsXAxisDateTime = isDateTime;
     }
 
     /// <summary>Throws when the adapter has been disposed.</summary>
@@ -163,16 +212,16 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         switch (update.Kind)
         {
             case ReactivePlotUpdateKind.Clear:
-                {
-                    ApplyClear(update);
-                    return true;
-                }
+            {
+                ApplyClear(update);
+                return true;
+            }
 
             case ReactivePlotUpdateKind.Replace:
-                {
-                    ApplyClear(update);
-                    return false;
-                }
+            {
+                ApplyClear(update);
+                return false;
+            }
 
             default:
                 return false;
@@ -186,34 +235,134 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         switch (PlotType)
         {
             case PlotType.Signal:
-                {
-                    ApplySignal(update);
-                    break;
-                }
+            {
+                ApplySignal(update);
+                break;
+            }
 
             case PlotType.Scatter:
-                {
-                    ApplyScatter(update);
-                    break;
-                }
+            {
+                ApplyScatter(update);
+                break;
+            }
 
             case PlotType.DataLogger:
-                {
-                    ApplyDataLogger(update);
-                    break;
-                }
+            {
+                ApplyDataLogger(update);
+                break;
+            }
 
             case PlotType.Streamer:
-                {
-                    ApplyStreamer(update);
-                    break;
-                }
+            {
+                ApplyStreamer(update);
+                break;
+            }
 
             case PlotType.SignalXY:
-                {
-                    ApplySignalXy(PrepareSnapshotUpdate(update));
-                    break;
-                }
+            {
+                ApplySignalXy(PrepareSnapshotUpdate(update));
+                break;
+            }
+
+            case PlotType.Line
+            or PlotType.StepLine
+            or PlotType.Area
+            or PlotType.Bar
+            or PlotType.Stem
+            or PlotType.Points:
+            {
+                ApplySnapshot(update);
+                break;
+            }
+
+            default:
+                throw new ArgumentOutOfRangeException(
+                    nameof(PlotType),
+                    PlotType,
+                    "The plot type is not supported by the WPF adapter.");
+        }
+    }
+
+    /// <summary>Renders a retained snapshot using one of the extended ScottPlot chart types.</summary>
+    /// <param name="update">The source update.</param>
+    private void ApplySnapshot(ReactivePlotUpdate update)
+    {
+        var snapshot = PrepareSnapshotUpdate(update);
+        var x = ConvertXValues(snapshot.X, snapshot.XAxisKind);
+        var y = snapshot.Y.ToArray();
+        var plot =
+            _chart.WpfPlot1vm?.Plot
+            ?? throw new InvalidOperationException("The WPF plot has not been initialized.");
+        RemoveSnapshotPlottable();
+        _snapshotPlottable = PlotType switch
+        {
+            PlotType.Line => plot.Add.ScatterLine(x, y),
+            PlotType.StepLine => CreateStepLine(plot, x, y),
+            PlotType.Area => CreateArea(plot, x, y, snapshot.Style),
+            PlotType.Bar => plot.Add.Bars(y, x),
+            PlotType.Stem => plot.Add.Lollipop(x, y),
+            PlotType.Points => plot.Add.ScatterPoints(x, y),
+            _ => throw new InvalidOperationException(
+                $"Plot type '{PlotType}' is not a snapshot chart type."),
+        };
+
+        SetLegendText(_snapshotPlottable, snapshot.Key.Name, snapshot.Style?.ShowInLegend ?? true);
+    }
+
+    /// <summary>Applies immutable styling to the active series.</summary>
+    /// <param name="style">The optional series style.</param>
+    private void ApplyStyle(ReactivePlotSeriesStyle? style)
+    {
+        if (style is null)
+        {
+            return;
+        }
+
+        if (_ui is not null)
+        {
+            _ui.ChartSettings.LineWidth = style.LineWidth;
+            _ui.ChartSettings.IsChecked = style.LineMode != PlotLineMode.Hidden;
+            _ui.ChartSettings.Visibility =
+                style.LineMode == PlotLineMode.Hidden ? "Invisible" : "Visible";
+            if (!string.IsNullOrWhiteSpace(style.Color))
+            {
+                _ui.ChartSettings.Color = style.Color;
+            }
+        }
+
+        if (_snapshotPlottable is null)
+        {
+            return;
+        }
+
+        var color = ResolveColor(style.Color ?? _color);
+        _snapshotPlottable.IsVisible = style.LineMode != PlotLineMode.Hidden;
+        switch (_snapshotPlottable)
+        {
+            case Scatter scatter:
+            {
+                scatter.LineColor = color;
+                scatter.MarkerColor = color;
+                scatter.LineWidth =
+                    style.LineMode == PlotLineMode.MarkersOnly ? 0 : style.LineWidth;
+                scatter.MarkerSize = style.LineMode == PlotLineMode.LineOnly ? 0 : style.MarkerSize;
+                break;
+            }
+
+            case BarPlot bars:
+            {
+                bars.Color = color;
+                break;
+            }
+
+            case LollipopPlot stem:
+            {
+                stem.LineColor = color;
+                stem.MarkerColor = color;
+                stem.LineWidth = style.LineWidth;
+                stem.MarkerSize = style.MarkerSize;
+                break;
+            }
         }
     }
 
@@ -222,7 +371,8 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     private void ApplySignal(ReactivePlotUpdate update)
     {
         EnsureSignalUi(update.XAxisKind);
-        _signalSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _signalSubject?.OnNext(
+            (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
     }
 
     /// <summary>Applies a scatter update.</summary>
@@ -230,18 +380,26 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     private void ApplyScatter(ReactivePlotUpdate update)
     {
         var scatterUpdate = PrepareSnapshotUpdate(update);
-        _scatterSubject?.OnNext((scatterUpdate.Key.Name, scatterUpdate.X.ToList(), scatterUpdate.Y.ToList(), scatterUpdate.Key.Axis));
+        _scatterSubject?.OnNext(
+            (
+                scatterUpdate.Key.Name,
+                scatterUpdate.X.ToList(),
+                scatterUpdate.Y.ToList(),
+                scatterUpdate.Key.Axis
+            ));
     }
 
     /// <summary>Applies a data logger update.</summary>
     /// <param name="update">The update value.</param>
     private void ApplyDataLogger(ReactivePlotUpdate update) =>
-        _dataLoggerSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.Key.Axis, update.MaxPoints ?? int.MaxValue));
+        _dataLoggerSubject?.OnNext(
+            (update.Key.Name, update.Y.ToList(), update.Key.Axis, update.MaxPoints ?? int.MaxValue));
 
     /// <summary>Applies a streamer update.</summary>
     /// <param name="update">The update value.</param>
     private void ApplyStreamer(ReactivePlotUpdate update) =>
-        _streamerSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _streamerSubject?.OnNext(
+            (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
 
     /// <summary>Handles the AddUi operation.</summary>
     private void AddUi()
@@ -296,7 +454,10 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
             _retainedY.Clear();
         }
 
-        if (update.Kind != ReactivePlotUpdateKind.Append && update.Kind != ReactivePlotUpdateKind.Replace)
+        if (
+            update.Kind != ReactivePlotUpdateKind.Append
+            && update.Kind != ReactivePlotUpdateKind.Replace
+        )
         {
             return update;
         }
@@ -310,7 +471,11 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
             _retainedY.RemoveRange(0, excess);
         }
 
-        return update with { X = _retainedX.ToArray(), Y = _retainedY.ToArray() };
+        return update with
+        {
+            X = _retainedX.ToArray(),
+            Y = _retainedY.ToArray(),
+        };
     }
 
     /// <summary>Handles the ApplySignalXy operation.</summary>
@@ -319,12 +484,18 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     {
         if (_ui is not SignalXY_UI signalXy)
         {
-            _ui = new SignalXY_UI(_chart.WpfPlot1vm!, (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis), _color, coordinatesObs: _chart.MouseCoordinatesObservable);
+            _ui = new SignalXY_UI(
+                _chart.WpfPlot1vm!,
+                (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis),
+                _color,
+                coordinatesObs: _chart.MouseCoordinatesObservable);
             AddUi();
             return;
         }
 
-        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(update.X.ToArray(), update.Y.ToArray());
+        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(
+            update.X.ToArray(),
+            update.Y.ToArray());
     }
 
     /// <summary>Handles the ApplyClear operation.</summary>
@@ -335,6 +506,7 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         _retainedY.Clear();
 
         ClearUi();
+        RemoveSnapshotPlottable();
 
         AssignAxis(update.Key.Axis);
         _chart.WpfPlot1vm?.Refresh();
@@ -346,34 +518,34 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
         switch (_ui)
         {
             case SignalXY_UI signalXy:
-                {
-                    ClearSignalXy(signalXy);
-                    break;
-                }
+            {
+                ClearSignalXy(signalXy);
+                break;
+            }
 
             case ScatterUI scatter:
-                {
-                    scatter.InsertData([], []);
-                    break;
-                }
+            {
+                scatter.InsertData([], []);
+                break;
+            }
 
             case SignalUI signal:
-                {
-                    signal.ClearData();
-                    break;
-                }
+            {
+                signal.ClearData();
+                break;
+            }
 
             case DataLoggerUI dataLogger:
-                {
-                    dataLogger.PlotLine!.Data.Coordinates.Clear();
-                    break;
-                }
+            {
+                dataLogger.PlotLine!.Data.Coordinates.Clear();
+                break;
+            }
 
             case StreamerUI streamer:
-                {
-                    ClearStreamer(streamer);
-                    break;
-                }
+            {
+                ClearStreamer(streamer);
+                break;
+            }
         }
     }
 
@@ -393,16 +565,19 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="axis">The axis value.</param>
     private void AssignAxis(int axis)
     {
-        if (_ui is null || axis < 0 || axis >= _chart.YAxisList.Count)
+        if (axis < 0 || axis >= _chart.YAxisList.Count)
         {
             return;
         }
 
         var verticalAxis = _chart.YAxisList[axis];
         verticalAxis.IsVisible = true;
-        _ui.ChartSettings.Marker!.Axes.YAxis = verticalAxis;
-        _ui.ChartSettings.MarkerText!.Axes.YAxis = verticalAxis;
-        _ui.ChartSettings.Crosshair!.Axes.YAxis = verticalAxis;
+        if (_ui is not null)
+        {
+            _ui.ChartSettings.Marker!.Axes.YAxis = verticalAxis;
+            _ui.ChartSettings.MarkerText!.Axes.YAxis = verticalAxis;
+            _ui.ChartSettings.Crosshair!.Axes.YAxis = verticalAxis;
+        }
 
         IPlottable? plottable = _ui switch
         {
@@ -411,7 +586,7 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
             DataLoggerUI logger => logger.PlotLine,
             StreamerUI streamer => streamer.PlotLine,
             SignalXY_UI signalXy => signalXy.PlotLine,
-            _ => null,
+            _ => _snapshotPlottable,
         };
 
         if (plottable is null)
@@ -421,5 +596,17 @@ internal sealed class WpfReactivePlotAdapter : IReactivePlotAdapter
 
         plottable.Axes.YAxis = verticalAxis;
         plottable.Axes.XAxis = _chart.XAxis1;
+    }
+
+    /// <summary>Removes the current snapshot plottable from the underlying plot.</summary>
+    private void RemoveSnapshotPlottable()
+    {
+        if (_snapshotPlottable is null)
+        {
+            return;
+        }
+
+        _chart.WpfPlot1vm?.Plot.Remove(_snapshotPlottable);
+        _snapshotPlottable = null;
     }
 }

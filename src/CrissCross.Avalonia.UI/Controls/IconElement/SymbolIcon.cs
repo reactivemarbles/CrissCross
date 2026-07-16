@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
+using Avalonia.Media;
 using CrissCross.Avalonia.UI.Extensions;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -28,6 +29,7 @@ public class SymbolIcon : FontIcon
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
     public SymbolIcon()
     {
+        FontFamily = new("Segoe Fluent Icons, Segoe MDL2 Assets");
     }
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
@@ -35,6 +37,7 @@ public class SymbolIcon : FontIcon
     /// <param name="fontSize">Size of the font.</param>
     /// <param name="filled">if set to <c>true</c> use filled variant.</param>
     public SymbolIcon(SymbolRegular symbol, double fontSize = 14, bool filled = false)
+        : this()
     {
         Symbol = symbol;
         Filled = filled;

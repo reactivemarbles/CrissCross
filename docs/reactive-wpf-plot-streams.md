@@ -1,6 +1,6 @@
 # Reactive WPF.Plot streams
 
-`CrissCross.WPF.Plot` supports an observable-first binding surface for live charts. The API normalizes existing tuple-based chart streams into `IReactivePlotSource` instances and binds them through `ReactivePlotBinder`, which owns subscription lifetime, UI-scheduler marshalling, validation, batching, visible-point retention, completion, and error state.
+`CrissCross.WPF.Plot` supports one observable-first binding surface for static, historic, and live charts. The API normalizes data into `IReactivePlotSource` instances and binds them through `ReactivePlotBinder`, which owns subscription lifetime, UI-scheduler marshalling, validation, batching, visible-point retention, completion, and error state.
 
 ## Minimal usage
 
@@ -33,6 +33,55 @@ Each source emits one logical series. Series identity is derived from the emitte
 | DataLogger | `ReactivePlotSource.FromDataLoggerPoints(...)` | Append | Numeric ordinal |
 | Streamer | `ReactivePlotSource.FromStreamerPoints(...)` | Append | Numeric |
 | SignalXY | `ReactivePlotSource.FromSignalXyPoints(...)` | Replace | Numeric |
+| Line | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+| Step line | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+| Area | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+| Bar | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+| Stem | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+| Points | `ReactivePlotSource.FromStatic(...)` | Replace | Numeric, OADate, or ticks |
+
+## Static, DateTime, and historic data
+
+Use `PlotSeriesData.Numeric(...)` for double/double data and `PlotSeriesData.DateTime(...)` for DateTime/double data. DateTime values are normalized to ScottPlot-compatible OLE Automation dates.
+
+```csharp
+var staticSeries = PlotSeriesData.Numeric("Reference", 0, x, y);
+var staticSource = ReactivePlotSource.FromStatic(staticSeries, PlotType.Area);
+
+var history = PlotSeriesData.DateTime("Ten-year trend", 0, timestamps, values);
+var historicSource = ReactivePlotSource.FromHistoric(
+    history,
+    targetPointCount: 2_000,
+    plotType: PlotType.Line);
+```
+
+`FromHistoric` uses Largest-Triangle-Three-Buckets reduction to preserve extrema and overall shape while bounding the number of points sent to the renderer. The first and final timestamps are retained.
+
+For typed live streams, use `ReactivePlotSource.FromLive(...)` with `PlotDataPoint` or `ReactivePlotSource.FromDateTimeLive(...)` with `(DateTime Timestamp, double Value)` values. Both factories support per-series rolling retention.
+
+## Technical studies
+
+`TechnicalIndicators` calculates pure static SMA, EMA, MACD, RSI, Ichimoku, and Bollinger Band results. `ReactivePlotStudies` composes the same studies over any `IReactivePlotSource` and returns ordinary sources that participate in the same lifecycle, scheduling, batching, styling, and axis assignment as primary series.
+
+```csharp
+var price = ReactivePlotSource.FromStatic(priceData);
+var sources = new List<IReactivePlotSource>
+{
+    price,
+    ReactivePlotStudies.SimpleMovingAverage(price, 20),
+    ReactivePlotStudies.ExponentialMovingAverage(price, 12),
+    ReactivePlotStudies.RelativeStrengthIndex(price, axis: 1),
+};
+sources.AddRange(ReactivePlotStudies.BollingerBands(price));
+sources.AddRange(ReactivePlotStudies.MovingAverageConvergenceDivergence(price, axis: 1));
+sources.AddRange(ReactivePlotStudies.Ichimoku(price));
+```
+
+## Styling and interaction
+
+`ReactivePlotSeriesStyle` controls color, line width, marker size, line/marker visibility, legend inclusion, and zero/custom area baselines. `ReactivePlotTheme.Dark`, `ReactivePlotTheme.Light`, or an application-defined `ReactivePlotTheme` can be applied with `LiveChartViewModel.ApplyTheme(...)`.
+
+ScottPlot's native mouse input supplies responsive zoom and pan. `LiveChart` adds nearest-point hover labels, markers, crosshairs, movable axis lines, automatic/manual scaling, per-series visibility, and multiple Y axes. These features remain active for reactive sources because the adapters assign every generated plottable to the chart's shared axes and interaction surface.
 
 ## Lifecycle and errors
 
@@ -62,4 +111,4 @@ Use `UiScheduler` in tests or specialized hosts to control marshalling determini
 
 ## Example project
 
-The WPF plot example at `src/CrissCross.WPF.Plot.Test` demonstrates all five chart types through `MainViewModel.ReactivePlotSources`. It uses one numeric X-axis scale for the live demo so all series render together, starts live demo subjects when the chart view model is attached, and disposes the interval subscription with the view model.
+The WPF plot example at `src/CrissCross.WPF.Plot.Test` demonstrates all eleven chart types, rolling live streams, a reduced 150,000-point DateTime history, every technical study, and dark/light plot themes. Scenario and theme commands are bound with ReactiveUI; no imperative data binding is performed from the window.

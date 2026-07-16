@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <!-- Core dependencies -->
-    <PackageReference Include="CP.Extensions.Hosting.Avalonia" />
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="ReactiveUI" />

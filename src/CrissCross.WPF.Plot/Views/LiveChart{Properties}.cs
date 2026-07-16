@@ -5,7 +5,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using CP.Reactive.Collections;
+using CP.Primitives.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -14,7 +14,7 @@ namespace CrissCross.WPF.Plot;
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
 public partial class LiveChart
 {
-    /// <summary>Gets or sets the collection of observable sequences that provide named double values for the Y axis.</summary>
+    /// <summary>Gets or sets named observable Y-axis values.</summary>
     /// <remarks>Each observable in the collection emits tuples containing a name and a corresponding value,
     /// which can be used for dynamic data binding or real-time updates in charting scenarios. The property is typically
     /// used to supply multiple data series for visualization components.</remarks>
@@ -86,9 +86,13 @@ public partial class LiveChart
     /// <remarks>Each observable in the collection emits tuples containing an optional series name, optional X
     /// values, required Y values, and an axis identifier. The property is intended for scenarios where scatter plot
     /// data is streamed or updated over time, such as in real-time charting applications.</remarks>
-    public IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> ScatterObservablesWithTimeStamp
+    public IEnumerable<
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>
+    > ScatterObservablesWithTimeStamp
     {
-        get => (IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>>)GetValue(ScatterObservablesWithTimeStampProperty);
+        get =>
+            (IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>>)
+                GetValue(ScatterObservablesWithTimeStampProperty);
         set
         {
             SetValue(ScatterObservablesWithTimeStampProperty, value);
@@ -96,13 +100,19 @@ public partial class LiveChart
         }
     }
 
-    /// <summary>Gets or sets the collection of observables that provide signal data with associated timestamps and axis information.</summary>
+    /// <summary>Gets or sets signal data with timestamps and axis information.</summary>
     /// <remarks>Each observable in the collection emits tuples containing a signal name, its value, a list of
     /// timestamp values, and an axis identifier. The property is intended for scenarios where multiple time-stamped
     /// signal streams are monitored or visualized concurrently.</remarks>
-    public IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> SignalObservablesWithTimeStamp
+    public IEnumerable<
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
+    > SignalObservablesWithTimeStamp
     {
-        get => (IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>)GetValue(SignalObservablesWithTimeStampProperty);
+        get =>
+            (IEnumerable<
+                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
+            >)
+                GetValue(SignalObservablesWithTimeStampProperty);
         set
         {
             SetValue(SignalObservablesWithTimeStampProperty, value);
@@ -117,9 +127,15 @@ public partial class LiveChart
     /// <remarks>Each observable in the collection emits tuples containing the name of the data series, a list
     /// of data values, the axis index, and the maximum number of points to keep. This property is typically used to
     /// bind multiple data sources for real-time logging or visualization scenarios.</remarks>
-    public IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> DataLoggerObservablesWithPoints
+    public IEnumerable<
+        IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
+    > DataLoggerObservablesWithPoints
     {
-        get => (IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>>)GetValue(DataLoggerObservablesWithPointsProperty);
+        get =>
+            (IEnumerable<
+                IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
+            >)
+                GetValue(DataLoggerObservablesWithPointsProperty);
         set
         {
             SetValue(DataLoggerObservablesWithPointsProperty, value);
@@ -134,7 +150,9 @@ public partial class LiveChart
     /// updates.</remarks>
     public (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) DataWithTimeStamp
     {
-        get => ((string? Name, IList<double>? Value, IList<double> DateTime, int Axis))GetValue(DataWithTimeStampProperty);
+        get =>
+            ((string? Name, IList<double>? Value, IList<double> DateTime, int Axis))GetValue(
+                DataWithTimeStampProperty);
         set
         {
             SetValue(DataWithTimeStampProperty, value);
@@ -148,7 +166,9 @@ public partial class LiveChart
     /// this property updates the associated signal data with the provided points.</remarks>
     public (string? Name, IList<double>? Y, IList<double> X, int Axis) SignalWithPoints
     {
-        get => ((string? Name, IList<double>? Y, IList<double> X, int Axis))GetValue(SignalWithPointsProperty);
+        get =>
+            ((string? Name, IList<double>? Y, IList<double> X, int Axis))GetValue(
+                SignalWithPointsProperty);
         set
         {
             SetValue(SignalWithPointsProperty, value);
@@ -164,9 +184,16 @@ public partial class LiveChart
     /// unnamed. The Y and X lists must be of equal length for each signal. The axis index specifies which axis the
     /// signal is associated with. Setting this property updates the underlying signal data and may trigger related
     /// changes in the consuming component.</remarks>
-    public IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> SignalsWithPoints
+    public IEnumerable<(
+        string? Name,
+        IList<double>? Y,
+        IList<double> X,
+        int Axis
+    )> SignalsWithPoints
     {
-        get => (IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>)GetValue(SignalsWithPointsProperty);
+        get =>
+            (IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>)
+                GetValue(SignalsWithPointsProperty);
         set
         {
             SetValue(SignalsWithPointsProperty, value);
@@ -174,13 +201,17 @@ public partial class LiveChart
         }
     }
 
-    /// <summary>Gets or sets the collection of observables that provide signal data points for plotting or analysis.</summary>
+    /// <summary>Gets or sets observable signal points.</summary>
     /// <remarks>Each observable in the collection emits tuples containing a signal name, Y-values, X-values,
     /// and an axis index. The property is typically used to bind multiple dynamic data sources to a visualization or
     /// processing component. Changing the collection will update the associated signal data observers.</remarks>
-    public IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> SignalObservablesWithPoints
+    public IEnumerable<
+        IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>
+    > SignalObservablesWithPoints
     {
-        get => (IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>>)GetValue(SignalObservablesWithPointsProperty);
+        get =>
+            (IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>>)
+                GetValue(SignalObservablesWithPointsProperty);
         set
         {
             SetValue(SignalObservablesWithPointsProperty, value);
@@ -197,7 +228,9 @@ public partial class LiveChart
     /// correspond to a valid axis in the plot configuration.</remarks>
     public (string? Name, IList<double> X, IList<double> Y, int Axis) ScatterWithPoints
     {
-        get => ((string? Name, IList<double> X, IList<double> Y, int Axis))GetValue(ScatterWithPointsProperty);
+        get =>
+            ((string? Name, IList<double> X, IList<double> Y, int Axis))GetValue(
+                ScatterWithPointsProperty);
         set
         {
             SetValue(ScatterWithPointsProperty, value);
@@ -216,18 +249,18 @@ public partial class LiveChart
     }
 
 #if NET8_0_OR_GREATER
-    /// <summary>Gets or sets the collection of chart objects displayed in the control menu.</summary>
+    /// <summary>Gets the collection of chart objects displayed in the control menu.</summary>
     public QuaternaryList<ChartObjects> ControlMenu
     {
         get => (QuaternaryList<ChartObjects>)GetValue(ControlMenuProperty);
-        set => SetValue(ControlMenuProperty, value);
+        private set => SetValue(ControlMenuProperty, value);
     }
 #else
-    /// <summary>Gets or sets the collection of chart objects displayed in the control menu.</summary>
+    /// <summary>Gets the collection of chart objects displayed in the control menu.</summary>
     public ReactiveList<ChartObjects> ControlMenu
     {
         get => (ReactiveList<ChartObjects>)GetValue(ControlMenuProperty);
-        set => SetValue(ControlMenuProperty, value);
+        private set => SetValue(ControlMenuProperty, value);
     }
 #endif
 
@@ -238,7 +271,7 @@ public partial class LiveChart
         set => SetValue(NumberPointsPlottedProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether a fixed number of points should be used for rendering or calculation.</summary>
+    /// <summary>Gets or sets whether rendering uses a fixed point count.</summary>
     /// <remarks>When set to <see langword="true"/>, the system uses a predetermined number of points, which
     /// may affect performance and accuracy depending on the scenario. When set to <see langword="false"/>, the number
     /// of points may be determined dynamically based on other factors.</remarks>
@@ -248,92 +281,102 @@ public partial class LiveChart
         set => SetValue(UseFixedNumberOfPointsProperty, value);
     }
 
-    /// <summary>Assigns live chart data to the appropriate plot type based on the specified source and plot type.</summary>
+    /// <summary>Assigns live data to its selected plot type.</summary>
     /// <param name="source">The source value.</param>
-    /// <param name="type">The plot type that determines how the chart data from <paramref name="source"/> will be assigned.</param>
+    /// <param name="type">The target plot type.</param>
     public void AssignLiveChartData(object source, UserPlotType type)
     {
         switch (type, source)
         {
             case (UserPlotType.SignalEnumObsTicks, SignalEnumObsTicks data):
-                {
-                    ChangeSignalObserver(data);
-                    break;
-                }
+            {
+                ChangeSignalObserver(data);
+                break;
+            }
 
             case (UserPlotType.DataLoggerEnumObsPoints, DataLoggerEnumObsPoints data):
-                {
-                    ChangeDataLoggerObserver(data);
-                    break;
-                }
+            {
+                ChangeDataLoggerObserver(data);
+                break;
+            }
 
             case (UserPlotType.SignalXYTimestamp, SignalXYTimestamp data):
-                {
-                    ChangeSignalData(data);
-                    break;
-                }
+            {
+                ChangeSignalData(data);
+                break;
+            }
 
             case (UserPlotType.SignalXYPoints, SignalXYPoints data):
-                {
-                    ChangeSignalDataWithPoints(data);
-                    break;
-                }
+            {
+                ChangeSignalDataWithPoints(data);
+                break;
+            }
 
             case (UserPlotType.SignalXYEnumPoints, SignalXYEnumPoints data):
-                {
-                    ChangeSignalsDataWithPoints(data);
-                    break;
-                }
+            {
+                ChangeSignalsDataWithPoints(data);
+                break;
+            }
 
             case (UserPlotType.StreamerEnumObsPoints, StreamerEnumObsPoints data):
-                {
-                    ChangeSignalDataObserverWithPoints(data);
-                    break;
-                }
+            {
+                ChangeSignalDataObserverWithPoints(data);
+                break;
+            }
 
             case (UserPlotType.ScatterEnumObsPoints, ScatterEnumObsPoints data):
-                {
-                    ChangeScatterObserver(data);
-                    break;
-                }
+            {
+                ChangeScatterObserver(data);
+                break;
+            }
 
             case (UserPlotType.ScatterPoints, ScatterPoints data):
-                {
-                    ChangeScatterDataWithPoints(data);
-                    break;
-                }
+            {
+                ChangeScatterDataWithPoints(data);
+                break;
+            }
         }
     }
 
-    /// <summary>Represents a collection of observable signal data series, each identified by name and associated with X and Y values and an axis index.</summary>
+    /// <summary>Provides named observable XY signal series with axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalEnumObsTicks(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> Data);
+    public sealed record SignalEnumObsTicks(
+        IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> Data);
 
-    /// <summary>Represents a collection of observable data streams, each providing named data points with associated values, axis information, and a maximum number of points.</summary>
+    /// <summary>Provides named observable data streams with axes and retention limits.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record DataLoggerEnumObsPoints(IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> Data);
+    public sealed record DataLoggerEnumObsPoints(
+        IEnumerable<
+            IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
+        > Data);
 
     /// <summary>Represents a signal with X and Y values, associated timestamps, and axis information.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalXYTimestamp((string? Name, IList<double>? Value, IList<double> DateTime, int Axis) Data);
+    public sealed record SignalXYTimestamp(
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) Data);
 
-    /// <summary>Represents a set of XY signal data points, including optional metadata such as a name and axis assignment.</summary>
+    /// <summary>Provides XY signal points with optional names and axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalXYPoints((string? Name, IList<double>? Y, IList<double> X, int Axis) Data);
+    public sealed record SignalXYPoints(
+        (string? Name, IList<double>? Y, IList<double> X, int Axis) Data);
 
-    /// <summary>Represents a collection of named XY data point series, each associated with an axis identifier.</summary>
+    /// <summary>Provides named XY data-point series with axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalXYEnumPoints(IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> Data);
+    public sealed record SignalXYEnumPoints(
+        IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> Data);
 
-    /// <summary>Represents a collection of observable data streams, each providing named point data for plotting or analysis.</summary>
+    /// <summary>Provides named observable point-data streams.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record StreamerEnumObsPoints(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> Data);
+    public sealed record StreamerEnumObsPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> Data);
 
-    /// <summary>Represents a collection of observable scatter plot data points, where each observation includes a name, X and Y coordinates, and an axis identifier.</summary>
+    /// <summary>Provides named observable scatter points with axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record ScatterEnumObsPoints(IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> Data);
+    public sealed record ScatterEnumObsPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> Data);
 
-    /// <summary>Represents a set of scatter plot points, including their names, coordinates, and associated axis.</summary>
+    /// <summary>Provides named scatter points with coordinates and axes.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record ScatterPoints((string? Name, IList<double> X, IList<double> Y, int Axis) Data);
+    public sealed record ScatterPoints(
+        (string? Name, IList<double> X, IList<double> Y, int Axis) Data);
 }

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Canvas
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="appbar_sidebar_left_collapse"
+    Width="76"
+    Height="76"
+    Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+    <Path
+        x:Name="Cutter"
+        Canvas.Left="3"
+        Canvas.Top="9.00001"
+        Width="40"
+        Height="58"
+        Data="F1 M 43,28L 33,38L 43,48L 43,28 Z M 17,43L 17,55L 30,55L 30,43L 17,43 Z M 14,43L 3.35444,43C 3.96978,47.3019 5.36741,51.3515 7.3986,55L 14,55L 14,43 Z M 30,33L 3.35444,33C 3.12086,34.633 3,36.3024 3,38L 30,38L 30,33 Z M 30,24L 5.91231,24C 5.21003,25.6073 4.62499,27.2776 4.16799,29L 30,29L 30,24 Z M 30,14L 12.5244,14C 11.0717,15.5415 9.75733,17.2147 8.60116,19L 30.0833,19L 30,14 Z M 38,67L 38,46L 35,43L 35,67L 38,67 Z M 38,30L 38,9.00001L 35,9.00002L 35,33L 38,30 Z "
+        Fill="#FF000000"
+        Stretch="Fill" />
+</Canvas>

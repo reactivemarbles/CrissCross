@@ -23,5 +23,23 @@ public enum PlotType
     Streamer,
 
     /// <summary>The signal xy.</summary>
-    SignalXY
+    SignalXY,
+
+    /// <summary>A conventional connected XY line.</summary>
+    Line,
+
+    /// <summary>A horizontal-step XY line.</summary>
+    StepLine,
+
+    /// <summary>An XY line filled to a configured baseline.</summary>
+    Area,
+
+    /// <summary>A vertical bar chart.</summary>
+    Bar,
+
+    /// <summary>A lollipop or stem chart.</summary>
+    Stem,
+
+    /// <summary>An unconnected point chart.</summary>
+    Points,
 }

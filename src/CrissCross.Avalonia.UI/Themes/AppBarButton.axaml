@@ -1,0 +1,119 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+
+    <Style Selector="controls|AppBarButton">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTransparentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="ForegroundGlyphColor" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_LayoutRoot"
+                        MaxWidth="100"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}">
+                    <StackPanel HorizontalAlignment="Center" Spacing="4">
+                        <Grid Width="{TemplateBinding ElipseDiameter}"
+                              Height="{TemplateBinding ElipseDiameter}"
+                              HorizontalAlignment="Center">
+                            <Ellipse Name="PART_IconBorder"
+                                     Fill="{DynamicResource SubtleFillColorTransparentBrush}"
+                                     Stroke="{DynamicResource ControlStrongStrokeColorDefaultBrush}"
+                                     StrokeThickness="1" />
+                            <Path Name="PART_IconPath"
+                                  Width="{TemplateBinding IconWidth}"
+                                  Height="{TemplateBinding IconHeight}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Data="{TemplateBinding IconData}"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" />
+                            <controls:SymbolIcon Name="PART_SymbolIcon"
+                                                 Width="{TemplateBinding IconWidth}"
+                                                 Height="{TemplateBinding IconHeight}"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 Filled="{TemplateBinding IsIconFilled}"
+                                                 FontSize="{TemplateBinding IconHeight}"
+                                                 Foreground="{TemplateBinding Foreground}"
+                                                 Symbol="{TemplateBinding Icon}" />
+                            <TextBlock Name="PART_BackgroundGlyph"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontFamily="Segoe UI Symbol"
+                                       FontSize="{TemplateBinding BackgroundGlyphFontSize}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Text="{TemplateBinding BackgroundGlyph}" />
+                            <TextBlock Name="PART_ForegroundGlyph"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontFamily="Segoe UI Symbol"
+                                       FontSize="{TemplateBinding ForegroundGlyphFontSize}"
+                                       Foreground="{TemplateBinding ForegroundGlyphColor}"
+                                       Text="{TemplateBinding ForegroundGlyph}" />
+                        </Grid>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          MaxWidth="88"
+                                          MaxHeight="32"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          FontSize="12"
+                                          Foreground="{TemplateBinding Foreground}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPointerOver}" />
+        <Setter Property="ForegroundGlyphColor" Value="{DynamicResource ButtonForegroundPointerOver}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pointerover /template/ Ellipse#PART_IconBorder">
+        <Setter Property="Fill" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource ButtonForegroundPointerOver}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pressed">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundPressed}" />
+        <Setter Property="ForegroundGlyphColor" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pressed /template/ Ellipse#PART_IconBorder">
+        <Setter Property="Fill" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource SystemAccentColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pressed /template/ Path#PART_IconPath">
+        <Setter Property="Fill" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pressed /template/ controls|SymbolIcon#PART_SymbolIcon">
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:pressed /template/ TextBlock#PART_BackgroundGlyph">
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:disabled">
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+        <Setter Property="ForegroundGlyphColor" Value="{DynamicResource ButtonForegroundDisabled}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:disabled /template/ Ellipse#PART_IconBorder">
+        <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}" />
+    </Style>
+
+    <Style Selector="controls|AppBarButton:focus-visible /template/ Ellipse#PART_IconBorder">
+        <Setter Property="Stroke" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
+</Styles>

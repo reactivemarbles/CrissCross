@@ -33,7 +33,13 @@ public class FontIcon : IconElement
     /// <summary>Provides the FontIcon member.</summary>
     static FontIcon()
     {
-        AffectsRender<FontIcon>(FontFamilyProperty, FontSizeProperty, FontStyleProperty, FontWeightProperty, GlyphProperty);
+        AffectsRender<FontIcon>(
+            ForegroundProperty,
+            FontFamilyProperty,
+            FontSizeProperty,
+            FontStyleProperty,
+            FontWeightProperty,
+            GlyphProperty);
     }
 
     /// <summary>Gets or sets the font family used to display text.</summary>

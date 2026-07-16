@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
-using CP.Reactive.Collections;
+using CP.Primitives.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -25,7 +25,11 @@ public partial class LiveChart
     /// <remarks>This field is typically used when interacting with the WPF property system, such as when
     /// calling methods like SetValue or GetValue. The default value is <see langword="false"/>.</remarks>
     public static readonly DependencyProperty UseFixedNumberOfPointsProperty =
-        DependencyProperty.Register(nameof(UseFixedNumberOfPoints), typeof(bool), typeof(LiveChart), new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
+        DependencyProperty.Register(
+            nameof(UseFixedNumberOfPoints),
+            typeof(bool),
+            typeof(LiveChart),
+            new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
 
     /// <summary>
     /// Identifies the NumberPointsPlotted dependency property, which specifies the maximum number of data points to
@@ -35,56 +39,68 @@ public partial class LiveChart
     /// data binding or property metadata operations. The default value is 600. Changing this property affects how many
     /// points are rendered in the chart at any given time.</remarks>
     public static readonly DependencyProperty NumberPointsPlottedProperty =
-        DependencyProperty.Register(nameof(NumberPointsPlotted), typeof(int), typeof(LiveChart), new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
+        DependencyProperty.Register(
+            nameof(NumberPointsPlotted),
+            typeof(int),
+            typeof(LiveChart),
+            new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
 
-    /// <summary>Identifies the TitleContent dependency property, which represents the title text displayed by the LiveChart control.</summary>
+    /// <summary>Identifies the dependency property for the displayed chart title.</summary>
     /// <remarks>This field is typically used when interacting with the LiveChart control's title in XAML or
     /// when calling methods such as SetValue or GetValue. The default value is a single space character.</remarks>
-    public static readonly DependencyProperty TitleProperty =
-        DependencyProperty.Register(nameof(TitleContent), typeof(string), typeof(LiveChart), new PropertyMetadata(" ", new(TitleCallback)));
+    public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+        nameof(TitleContent),
+        typeof(string),
+        typeof(LiveChart),
+        new PropertyMetadata(" ", new(TitleCallback)));
 
-    /// <summary>Identifies the LegendPosition dependency property, which determines the position of the legend in a LiveChart control.</summary>
+    /// <summary>Identifies the dependency property for the chart legend position.</summary>
     /// <remarks>This field is used when referencing the LegendPosition property in property system
     /// operations, such as data binding or styling. The default value is LegendPosition.Top.</remarks>
-    public static readonly DependencyProperty LegendPositionProperty =
-        DependencyProperty.Register(nameof(LegendPosition), typeof(LegendPosition), typeof(LiveChart), new PropertyMetadata(LegendPosition.Top, new(LegendPositionCallback)));
+    public static readonly DependencyProperty LegendPositionProperty = DependencyProperty.Register(
+        nameof(LegendPosition),
+        typeof(LegendPosition),
+        typeof(LiveChart),
+        new PropertyMetadata(LegendPosition.Top, new(LegendPositionCallback)));
 
-    /// <summary>Identifies the RightWidth dependency property, which specifies the width of the right panel in the LiveChart control.</summary>
+    /// <summary>Identifies the dependency property for the right panel width.</summary>
     /// <remarks>This property can be used in XAML or code to set or retrieve the width of the right panel.
     /// Changes to this property will trigger layout updates for the control. The default value is a GridLength of
     /// 0.</remarks>
-    public static readonly DependencyProperty RightWidthProperty =
-        DependencyProperty.Register(
-            nameof(RightWidth),
-            typeof(GridLength),
-            typeof(LiveChart),
-            new PropertyMetadata(
-            new GridLength(0),
-            new PropertyChangedCallback(RightWidthCallback)));
+    public static readonly DependencyProperty RightWidthProperty = DependencyProperty.Register(
+        nameof(RightWidth),
+        typeof(GridLength),
+        typeof(LiveChart),
+        new PropertyMetadata(new GridLength(0), new PropertyChangedCallback(RightWidthCallback)));
 
     /// <summary>Identifies the LegendWidth dependency property.</summary>
     /// <remarks>This field is used to reference the LegendWidth property in property system operations, such
     /// as data binding or styling within XAML. It is typically used when calling methods that require a
     /// DependencyProperty identifier.</remarks>
-    public static readonly DependencyProperty LegendWidthProperty =
-        DependencyProperty.Register(
-            nameof(LegendWidth),
-            typeof(double),
-            typeof(LiveChart),
-            new(new PropertyChangedCallback(LegendWidthCallback)));
+    public static readonly DependencyProperty LegendWidthProperty = DependencyProperty.Register(
+        nameof(LegendWidth),
+        typeof(double),
+        typeof(LiveChart),
+        new(new PropertyChangedCallback(LegendWidthCallback)));
 
-    /// <summary>Identifies the NSamples dependency property, which specifies the number of samples to display in the LiveChart control.</summary>
+    /// <summary>Identifies the dependency property for the displayed sample count.</summary>
     /// <remarks>This field is used when referencing the NSamples property in property system operations, such
     /// as data binding or property metadata configuration. The default value is 2024.</remarks>
-    public static readonly DependencyProperty NSamplesProperty =
-        DependencyProperty.Register(nameof(NSamples), typeof(int), typeof(LiveChart), new PropertyMetadata(2024, new(NSamplesCallback)));
+    public static readonly DependencyProperty NSamplesProperty = DependencyProperty.Register(
+        nameof(NSamples),
+        typeof(int),
+        typeof(LiveChart),
+        new PropertyMetadata(2024, new(NSamplesCallback)));
 
-    /// <summary>Identifies the Frequency dependency property, which specifies the data sampling frequency for the LiveChart control.</summary>
+    /// <summary>Identifies the dependency property for the sampling frequency.</summary>
     /// <remarks>This field is used when referencing the Frequency property in property system operations,
     /// such as data binding or property metadata overrides. The default value is 32,000. Changing the Frequency
     /// property affects how often the LiveChart control samples or updates its data.</remarks>
-    public static readonly DependencyProperty FrequencyProperty =
-        DependencyProperty.Register(nameof(Frequency), typeof(int), typeof(LiveChart), new PropertyMetadata(32_000, new(FrequencyCallback)));
+    public static readonly DependencyProperty FrequencyProperty = DependencyProperty.Register(
+        nameof(Frequency),
+        typeof(int),
+        typeof(LiveChart),
+        new PropertyMetadata(32_000, new(FrequencyCallback)));
 
     /// <summary>
     /// Identifies the Observables dependency property, which enables data binding for a collection of observable data
@@ -93,10 +109,12 @@ public partial class LiveChart
     /// <remarks>This dependency property allows the LiveChart to bind to an enumerable collection of
     /// IObservable tuples, where each tuple represents a data series with a string key and a double value. Use this
     /// property to provide dynamic, real-time data updates to the chart through data binding in XAML or code.</remarks>
-    public static readonly DependencyProperty ObservablesProperty =
-        DependencyProperty.Register(nameof(Observables), typeof(IEnumerable<IObservable<(string Name, double Value)>>), typeof(LiveChart));
+    public static readonly DependencyProperty ObservablesProperty = DependencyProperty.Register(
+        nameof(Observables),
+        typeof(IEnumerable<IObservable<(string Name, double Value)>>),
+        typeof(LiveChart));
 
-    /// <summary>Identifies the ReactivePlotSources dependency property, which binds normalized observable plot sources to the chart.</summary>
+    /// <summary>Identifies the dependency property for normalized reactive plot sources.</summary>
     public static readonly DependencyProperty ReactivePlotSourcesProperty =
         DependencyProperty.Register(
             nameof(ReactivePlotSources),
@@ -112,7 +130,12 @@ public partial class LiveChart
     /// X values, Y values, and a time stamp index. This property is typically used to display real-time or historical
     /// signal data in the chart. The property is intended for use with data binding in XAML or code-behind.</remarks>
     public static readonly DependencyProperty SignalObservablesWithTimeStampProperty =
-        DependencyProperty.Register(nameof(SignalObservablesWithTimeStamp), typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(SignalObservablesWithTimeStamp),
+            typeof(IEnumerable<
+                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
+            >),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the DataLoggerObservablesWithPoints dependency property, which enables binding a collection of
@@ -122,7 +145,12 @@ public partial class LiveChart
     /// point values, and two integer values representing additional metadata. This property is typically used to supply
     /// dynamic or real-time data to the chart through data binding.</remarks>
     public static readonly DependencyProperty DataLoggerObservablesWithPointsProperty =
-        DependencyProperty.Register(nameof(DataLoggerObservablesWithPoints), typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>>), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(DataLoggerObservablesWithPoints),
+            typeof(IEnumerable<
+                IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
+            >),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the DataWithTimeStamp dependency property, which stores a tuple containing optional string data,
@@ -133,7 +161,10 @@ public partial class LiveChart
     /// of doubles, a non-nullable list of doubles, and an integer. The property is typically used to represent chart
     /// data along with associated timestamps and metadata.</remarks>
     public static readonly DependencyProperty DataWithTimeStampProperty =
-        DependencyProperty.Register(nameof(DataWithTimeStamp), typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(DataWithTimeStamp),
+            typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalWithPoints dependency property, which stores a tuple containing a signal name, optional X
@@ -145,7 +176,10 @@ public partial class LiveChart
     /// scenarios where both the signal's identity and its associated data points need to be provided to the chart
     /// control.</remarks>
     public static readonly DependencyProperty SignalWithPointsProperty =
-        DependencyProperty.Register(nameof(SignalWithPoints), typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(SignalWithPoints),
+            typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalsWithPoints dependency property, which represents a collection of signal data points to be
@@ -155,7 +189,15 @@ public partial class LiveChart
     /// and a color index. This property enables data binding for multiple signals with associated points in a LiveChart
     /// control.</remarks>
     public static readonly DependencyProperty SignalsWithPointsProperty =
-        DependencyProperty.Register(nameof(SignalsWithPoints), typeof(IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(SignalsWithPoints),
+            typeof(IEnumerable<(
+                string? Name,
+                IList<double>? Value,
+                IList<double> DateTime,
+                int Axis
+            )>),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalObservablesWithPoints dependency property, which enables data binding for a collection of
@@ -167,7 +209,12 @@ public partial class LiveChart
     /// observables, where each observable emits a tuple containing a series name, optional X values, Y values, and a
     /// point count.</remarks>
     public static readonly DependencyProperty SignalObservablesWithPointsProperty =
-        DependencyProperty.Register(nameof(SignalObservablesWithPoints), typeof(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>>), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(SignalObservablesWithPoints),
+            typeof(IEnumerable<
+                IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>
+            >),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the ScatterObservablesWithTimeStamp dependency property, which enables data binding for a collection
@@ -179,7 +226,12 @@ public partial class LiveChart
     /// value is an enumerable of IObservable sequences, each producing a tuple of (string?, IList{double}?,
     /// IList{double}, int).</remarks>
     public static readonly DependencyProperty ScatterObservablesWithTimeStampProperty =
-        DependencyProperty.Register(nameof(ScatterObservablesWithTimeStamp), typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(ScatterObservablesWithTimeStamp),
+            typeof(IEnumerable<
+                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
+            >),
+            typeof(LiveChart));
 
     /// <summary>
     /// Identifies the ScatterWithPoints dependency property, which stores the configuration for a scatter plot with
@@ -189,18 +241,22 @@ public partial class LiveChart
     /// values representing the X and Y coordinates of the points, and an integer specifying the series index. This
     /// property is typically used to bind scatter plot data to a LiveChart control in XAML or code-behind.</remarks>
     public static readonly DependencyProperty ScatterWithPointsProperty =
-        DependencyProperty.Register(nameof(ScatterWithPoints), typeof((string? Name, IList<double>? X, IList<double> Y, int Axis)), typeof(LiveChart));
+        DependencyProperty.Register(
+            nameof(ScatterWithPoints),
+            typeof((string? Name, IList<double>? X, IList<double> Y, int Axis)),
+            typeof(LiveChart));
 
-    /// <summary>Identifies the YAxisName dependency property, which stores the names of the Y axes for the chart.</summary>
+    /// <summary>Identifies the dependency property for Y-axis names.</summary>
     /// <remarks>This dependency property is used to associate a pair of string lists representing Y axis
     /// names with a LiveChart instance. It enables data binding and styling for Y axis labels in XAML-based
     /// applications.</remarks>
-    public static readonly DependencyProperty YAxisNameProperty =
-        DependencyProperty.Register(
-            nameof(YAxisName),
-            typeof((IList<string> yNames, IList<string> hexColors)),
-            typeof(LiveChart),
-            new PropertyMetadata(default((IList<string> yNames, IList<string> hexColors)), new PropertyChangedCallback((d, _) => YAxisNameCallback(d))));
+    public static readonly DependencyProperty YAxisNameProperty = DependencyProperty.Register(
+        nameof(YAxisName),
+        typeof((IList<string> yNames, IList<string> hexColors)),
+        typeof(LiveChart),
+        new PropertyMetadata(
+            default((IList<string> yNames, IList<string> hexColors)),
+            new PropertyChangedCallback((d, _) => YAxisNameCallback(d))));
 
     /// <summary>
     /// Identifies the ControlMenu dependency property, which represents a collection of chart objects associated with
@@ -209,20 +265,24 @@ public partial class LiveChart
     /// <remarks>This field is typically used when interacting with the property system, such as for data
     /// binding, styling, or animation in XAML. To get or set the value of the ControlMenu property, use the
     /// corresponding CLR property on the LiveChart class.</remarks>
-    #if NET8_0_OR_GREATER
-    public static readonly DependencyProperty ControlMenuProperty =
-        DependencyProperty.Register(nameof(ControlMenu), typeof(QuaternaryList<ChartObjects>), typeof(LiveChart));
+#if NET8_0_OR_GREATER
+    public static readonly DependencyProperty ControlMenuProperty = DependencyProperty.Register(
+        nameof(ControlMenu),
+        typeof(QuaternaryList<ChartObjects>),
+        typeof(LiveChart));
 #else
-    public static readonly DependencyProperty ControlMenuProperty =
-        DependencyProperty.Register(nameof(ControlMenu), typeof(ReactiveList<ChartObjects>), typeof(LiveChart));
+    public static readonly DependencyProperty ControlMenuProperty = DependencyProperty.Register(
+        nameof(ControlMenu),
+        typeof(ReactiveList<ChartObjects>),
+        typeof(LiveChart));
 #endif
 
     /// <summary>Handles changes to the right width property of a LiveChart control.</summary>
     /// <remarks>This callback is typically used as a property changed handler for a DependencyProperty
     /// representing the right width of a LiveChart. If the provided dependency object is not a LiveChart or the new
     /// value is not a GridLength, the callback does nothing.</remarks>
-    /// <param name="d">The dependency object on which the property change occurred. Expected to be a LiveChart instance.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value.</param>
+    /// <param name="d">The changed LiveChart dependency object.</param>
+    /// <param name="e">The property-change event data.</param>
     private static void RightWidthCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not GridLength gridLength)
@@ -236,7 +296,9 @@ public partial class LiveChart
     /// <summary>Handles reactive plot source collection changes by rebinding the chart connection.</summary>
     /// <param name="d">The dependency object on which the property changed.</param>
     /// <param name="e">The dependency property change event arguments.</param>
-    private static void ReactivePlotSourcesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void ReactivePlotSourcesCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart)
         {
@@ -246,7 +308,7 @@ public partial class LiveChart
         livechart.ApplyReactivePlotSources(e.NewValue as IEnumerable<IReactivePlotSource>);
     }
 
-    /// <summary>Handles axis metadata changes by rebuilding chart axes before reactive plot sources are rebound.</summary>
+    /// <summary>Rebuilds chart axes before reactive sources are rebound.</summary>
     /// <param name="d">The dependency object on which the property changed.</param>
     private static void YAxisNameCallback(DependencyObject d)
     {
@@ -259,10 +321,12 @@ public partial class LiveChart
         livechart.RefreshReactivePlotSources();
     }
 
-    /// <summary>Handles changes to the legend width property by updating the width of the right legend in a LiveChart control.</summary>
+    /// <summary>Updates the chart's right legend width.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The e value.</param>
-    private static void LegendWidthCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void LegendWidthCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not double gridLength)
         {
@@ -279,8 +343,8 @@ public partial class LiveChart
     /// <remarks>This callback is typically used in property metadata to synchronize the NSamples property
     /// value between the dependency property system and the LiveChart control. If the dependency object is not a
     /// LiveChart or the new value is not an integer, no action is taken.</remarks>
-    /// <param name="d">The dependency object on which the property change occurred. Must be a LiveChart instance to apply the update.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value for NSamples.</param>
+    /// <param name="d">The changed LiveChart dependency object.</param>
+    /// <param name="e">The sample-count change event data.</param>
     private static void NSamplesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not int sampleCount)
@@ -291,12 +355,12 @@ public partial class LiveChart
         livechart.ApplySampleCount(sampleCount);
     }
 
-    /// <summary>Handles changes to the frequency dependency property and updates the associated LiveChart instance.</summary>
+    /// <summary>Updates the LiveChart sampling frequency.</summary>
     /// <remarks>This callback is typically used in property metadata to synchronize the LiveChart's Frequency
     /// property with the value of the dependency property. If the dependency object is not a LiveChart or the new value
     /// is not an integer, no action is taken.</remarks>
-    /// <param name="d">The dependency object on which the property change occurred. Expected to be a LiveChart instance.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value.</param>
+    /// <param name="d">The changed LiveChart dependency object.</param>
+    /// <param name="e">The frequency-change event data.</param>
     private static void FrequencyCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not int frequency)
@@ -307,10 +371,12 @@ public partial class LiveChart
         livechart.ApplyFrequency(frequency);
     }
 
-    /// <summary>Handles changes to the NumberPointsPlotted dependency property by updating the corresponding values on the LiveChart instance and its view model.</summary>
+    /// <summary>Updates the plotted-point count on the chart and its view model.</summary>
     /// <param name="d">The d value.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value to be applied.</param>
-    private static void NumberPointsPlottedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="e">The plotted-point change event data.</param>
+    private static void NumberPointsPlottedCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not int numberOfSamples)
         {
@@ -325,7 +391,7 @@ public partial class LiveChart
     /// property on LiveChart controls. If the dependency object is not a LiveChart or the new value is not a string, no
     /// action is taken.</remarks>
     /// <param name="d">The dependency object whose Title property has changed. Must be a LiveChart instance.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value.</param>
+    /// <param name="e">The fixed-point change event data.</param>
     private static void TitleCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not string title)
@@ -339,7 +405,9 @@ public partial class LiveChart
     /// <summary>Handles changes to the legend position dependency property for a LiveChart control.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The e value.</param>
-    private static void LegendPositionCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void LegendPositionCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not LegendPosition position)
         {
@@ -356,9 +424,11 @@ public partial class LiveChart
     /// <remarks>This callback is typically used in property metadata to synchronize the
     /// UseFixedNumberOfPoints setting between the LiveChart control and its associated ViewModel. The method expects
     /// the new value to be of type Boolean.</remarks>
-    /// <param name="d">The dependency object on which the property change occurred. Must be a LiveChart instance.</param>
-    /// <param name="e">The event data containing information about the property change, including the new value.</param>
-    private static void UseFixedNumberOfPointsCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <param name="d">The changed LiveChart dependency object.</param>
+    /// <param name="e">The graph-count change event data.</param>
+    private static void UseFixedNumberOfPointsCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not bool fixedNumberOfSamples)
         {
@@ -374,7 +444,8 @@ public partial class LiveChart
 
     /// <summary>Applies the reactive plot sources.</summary>
     /// <param name="sources">The sources to bind.</param>
-    private void ApplyReactivePlotSources(IEnumerable<IReactivePlotSource>? sources) => ChangeReactivePlotSources(sources);
+    private void ApplyReactivePlotSources(IEnumerable<IReactivePlotSource>? sources) =>
+        ChangeReactivePlotSources(sources);
 
     /// <summary>Refreshes reactive plot sources after axis metadata changes.</summary>
     private void RefreshReactivePlotSources()
@@ -413,7 +484,8 @@ public partial class LiveChart
 
     /// <summary>Applies the legend position.</summary>
     /// <param name="position">The legend position.</param>
-    private void ApplyLegendPosition(LegendPosition position) => ViewModel?.LegendPosition = position;
+    private void ApplyLegendPosition(LegendPosition position) =>
+        ViewModel?.LegendPosition = position;
 
     /// <summary>Applies fixed point rendering configuration.</summary>
     /// <param name="fixedNumberOfSamples">A value indicating whether fixed point rendering is enabled.</param>

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+    <PackageReference Include="ReactiveList" />
   </ItemGroup>
 
   <ItemGroup>

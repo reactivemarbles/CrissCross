@@ -8,6 +8,7 @@
 
     <!-- Button Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Button.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/AppBarButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelRepeatButton.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/BezelToggleButton.axaml" />

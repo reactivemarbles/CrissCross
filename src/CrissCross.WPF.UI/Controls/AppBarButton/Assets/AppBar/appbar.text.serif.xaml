@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Canvas
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="appbar_text_serif"
+    Width="76"
+    Height="76"
+    Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+    <Path
+        Canvas.Left="21"
+        Canvas.Top="20"
+        Width="34"
+        Height="38"
+        Data="F1 M 29,58L 29,55.0833C 32.4978,55.0833 35,53.2083 35,49.25L 35,29C 35,25.9394 32.7481,25 29.6875,25C 26.6269,25 24.5,25.9394 24.5,29L 21,29L 21,20L 55,20L 55,29L 51.5,29C 51.5,25.9394 49.373,25 46.3125,25C 43.2519,25 41,25.9394 41,29L 41,49.25C 41,53.2083 43.5022,55.0833 47,55.0833L 47,58L 29,58 Z "
+        Fill="#FF000000"
+        Stretch="Fill" />
+</Canvas>

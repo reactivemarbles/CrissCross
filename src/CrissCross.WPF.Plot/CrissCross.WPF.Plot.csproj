@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+    <PackageReference Include="ReactiveList" />
     <PackageReference Include="ScottPlot.WPF" />
   </ItemGroup>
 

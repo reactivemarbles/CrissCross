@@ -13,7 +13,7 @@ using Splat;
 namespace CrissCross.WPF.Plot.Test;
 
 /// <summary>Interaction logic for MainWindow.xaml.</summary>
-public partial class MainWindow : IAmBuilt
+public partial class MainWindow : IAmBuilt, IDisposable
 {
     /// <summary>The tracker property.</summary>
     public static readonly DependencyProperty TrackerProperty = DependencyProperty.Register(
@@ -22,33 +22,18 @@ public partial class MainWindow : IAmBuilt
         typeof(MainWindow),
         new PropertyMetadata(null));
 
+    /// <summary>Stores bindings owned by the window's visual-tree lifetime.</summary>
+    private CompositeDisposable? _viewBindings;
+
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
-        // Watch for system theme changes
-        SystemThemeWatcher.Watch(this);
         InitializeComponent();
         Navigation = NavBreadcrumb;
-
-        // Set the data context
         ViewModel = new();
         DataContext = ViewModel;
-        _ = this.WhenActivated(d =>
-        {
-            // Set the tracker
-            var tracker = AppLocator.Current.GetService<Tracker>();
-            tracker?.Track(this);
-            SetCurrentValue(TrackerProperty, tracker);
-
-            // Bind the view model
-            _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
-            _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
-
-            NavBreadcrumb.SetupNavigation(nameof(mainWindow));
-
-            // Navigate to the main view
-            NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
-        });
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     /// <summary>Gets the nav breadcrumb.</summary>
@@ -56,4 +41,58 @@ public partial class MainWindow : IAmBuilt
     /// The nav breadcrumb.
     /// </value>
     public static BreadcrumbBar? Navigation { get; private set; }
+
+    /// <summary>Releases the window's event handlers and active bindings.</summary>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>Releases resources owned by the window.</summary>
+    /// <param name="disposing">Whether managed resources should be released.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
+        Loaded -= OnLoaded;
+        Unloaded -= OnUnloaded;
+        _viewBindings?.Dispose();
+        _viewBindings = null;
+    }
+
+    /// <summary>Initializes theme tracking, bindings, and navigation after construction.</summary>
+    /// <param name="sender">The loaded window.</param>
+    /// <param name="e">The routed event data.</param>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_viewBindings is not null)
+        {
+            return;
+        }
+
+        SystemThemeWatcher.Watch(this);
+        var tracker = AppLocator.Current.GetService<Tracker>();
+        tracker?.Track(this);
+        SetCurrentValue(TrackerProperty, tracker);
+        _viewBindings = new();
+        _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title)
+            .DisposeWith(_viewBindings);
+        _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource)
+            .DisposeWith(_viewBindings);
+        NavBreadcrumb.SetupNavigation(nameof(mainWindow));
+        NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
+    }
+
+    /// <summary>Releases view bindings when the window leaves the visual tree.</summary>
+    /// <param name="sender">The unloaded window.</param>
+    /// <param name="e">The routed event data.</param>
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _viewBindings?.Dispose();
+        _viewBindings = null;
+    }
 }

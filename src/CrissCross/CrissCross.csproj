@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI" />
+    <PackageReference Include="ReactiveList" />
   </ItemGroup>
 
 </Project>

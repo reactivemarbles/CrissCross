@@ -27,6 +27,73 @@
                 </controls:StackPanel>
             </controls:Card>
 
+            <!-- AppBarButton -->
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock Text="AppBarButton" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Compact command buttons support native Fluent symbols, custom vector geometry, layered glyphs, keyboard focus, and disabled states."
+                                        TextWrapping="Wrap"
+                                        Opacity="0.7" />
+                    <WrapPanel Orientation="Horizontal">
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               Command="{Binding AppBarCommand}"
+                                               CommandParameter="Save"
+                                               Content="Save"
+                                               Icon="Save"
+                                               ToolTip.Tip="Native Fluent symbol" />
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               Command="{Binding AppBarCommand}"
+                                               CommandParameter="Delete"
+                                               Content="Delete"
+                                               Icon="Delete"
+                                               ToolTip.Tip="Native Fluent symbol" />
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               Command="{Binding AppBarCommand}"
+                                               CommandParameter="Favorite"
+                                               Content="Favorite"
+                                               Icon="Favorite"
+                                               IsIconFilled="True"
+                                               ToolTip.Tip="Filled Fluent symbol" />
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               Command="{Binding AppBarCommand}"
+                                               CommandParameter="Custom geometry"
+                                               Content="Geometry"
+                                               IconData="M 12,2 L 15,9 L 22,9 L 16.5,13.5 L 18.5,21 L 12,16.5 L 5.5,21 L 7.5,13.5 L 2,9 L 9,9 Z"
+                                               ToolTip.Tip="Custom vector geometry" />
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               BackgroundGlyph="○"
+                                               Command="{Binding AppBarCommand}"
+                                               CommandParameter="Layered glyph"
+                                               Content="Glyph"
+                                               ForegroundGlyph="+"
+                                               ToolTip.Tip="Layered glyphs" />
+                        <controls:AppBarButton Width="90"
+                                               Height="76"
+                                               Margin="4"
+                                               Content="Disabled"
+                                               Icon="Add"
+                                               IsEnabled="False"
+                                               ToolTip.Tip="Disabled state" />
+                    </WrapPanel>
+                    <controls:TextBlock Text="{Binding LastAppBarAction}"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <controls:TextBlock Text="Use the theme selector below, then verify normal, hover, pressed, keyboard-focus, and disabled states."
+                                        TextWrapping="Wrap"
+                                        Opacity="0.7" />
+                    <controls:ThemeSwitcher Width="360" HorizontalAlignment="Left" />
+                </controls:StackPanel>
+            </controls:Card>
+
             <!-- Button with Icons -->
             <controls:Card>
                 <controls:StackPanel Spacing="12">

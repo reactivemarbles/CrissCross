@@ -13,6 +13,9 @@ public interface IReactivePlotSource
     /// <summary>Gets the plot type rendered by this source.</summary>
     PlotType PlotType { get; }
 
+    /// <summary>Gets the X-axis interpretation used by this source when it is known upfront.</summary>
+    PlotXAxisKind? XAxisKind { get; }
+
     /// <summary>Gets the observable update stream for this series.</summary>
     IObservable<ReactivePlotUpdate> Updates { get; }
 }
