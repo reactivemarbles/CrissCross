@@ -48,11 +48,7 @@ internal sealed partial class WpfReactivePlotAdapter
     /// <param name="y">The rendered Y values.</param>
     /// <param name="style">Optional series styling.</param>
     /// <returns>The created area scatter.</returns>
-    private static Scatter CreateArea(
-        ScottPlot.Plot plot,
-        double[] x,
-        double[] y,
-        ReactivePlotSeriesStyle? style)
+    private static Scatter CreateArea(ScottPlot.Plot plot, double[] x, double[] y, ReactivePlotSeriesStyle? style)
     {
         var scatter = plot.Add.ScatterLine(x, y);
         var baselineMode = style?.BaselineMode ?? PlotBaselineMode.Zero;
@@ -134,10 +130,7 @@ internal sealed partial class WpfReactivePlotAdapter
         var drawingColor = System.Drawing.Color.FromName(colorName);
         var isUnknownColor =
             drawingColor.A == 0
-            && !string.Equals(
-                colorName,
-                nameof(System.Drawing.Color.Transparent),
-                StringComparison.OrdinalIgnoreCase);
+            && !string.Equals(colorName, nameof(System.Drawing.Color.Transparent), StringComparison.OrdinalIgnoreCase);
         return isUnknownColor ? Colors.White : Color.FromColor(drawingColor);
     }
 }

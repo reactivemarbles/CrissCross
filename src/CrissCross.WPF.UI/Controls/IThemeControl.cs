@@ -8,5 +8,5 @@ namespace CrissCross.WPF.UI.Controls;
 public interface IThemeControl
 {
     /// <summary>Gets the theme is currently set.</summary>
-    public ApplicationTheme ApplicationTheme { get; }
+    ApplicationTheme ApplicationTheme { get; }
 }

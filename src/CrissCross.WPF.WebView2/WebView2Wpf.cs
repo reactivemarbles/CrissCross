@@ -21,27 +21,26 @@ namespace CrissCross.WPF;
 public class WebView2Wpf : ContentControl, IWebView2
 {
     /// <summary>The automatic dispose property.</summary>
-    public static readonly DependencyProperty AutoDisposeProperty =
-        DependencyProperty.Register(
-            nameof(AutoDispose),
-            typeof(bool),
-            typeof(WebView2Wpf),
-            new PropertyMetadata(true, AutoDisposePropertyChanged));
+    public static readonly DependencyProperty AutoDisposeProperty = DependencyProperty.Register(
+        nameof(AutoDispose),
+        typeof(bool),
+        typeof(WebView2Wpf),
+        new PropertyMetadata(true, AutoDisposePropertyChanged));
 
     /// <summary>The allow external drop property.</summary>
     public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
-            nameof(AllowExternalDrop),
-            typeof(bool),
-            typeof(WebView2Wpf),
-            new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+        nameof(AllowExternalDrop),
+        typeof(bool),
+        typeof(WebView2Wpf),
+        new PropertyMetadata(true, AllowExternalDropPropertyChanged));
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.</summary>
+    /// <summary>The dependency property for <see cref="CanGoBack" />.</summary>
     public static readonly DependencyProperty CanGoBackProperty;
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoForward property.</summary>
+    /// <summary>The dependency property for <see cref="CanGoForward" />.</summary>
     public static readonly DependencyProperty CanGoForwardProperty;
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.CreationProperties property.</summary>
+    /// <summary>The dependency property for <see cref="CreationProperties" />.</summary>
     public static readonly DependencyProperty CreationPropertiesProperty = DependencyProperty.Register(
         nameof(CreationProperties),
         typeof(CoreWebView2CreationProperties),
@@ -57,10 +56,10 @@ public class WebView2Wpf : ContentControl, IWebView2
 
     /// <summary>The default background color property.</summary>
     public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
-            nameof(DefaultBackgroundColor),
-            typeof(System.Drawing.Color),
-            typeof(WebView2Wpf),
-            new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+        nameof(DefaultBackgroundColor),
+        typeof(System.Drawing.Color),
+        typeof(WebView2Wpf),
+        new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
 
     /// <summary>The design mode foreground color property.</summary>
     public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
@@ -69,24 +68,24 @@ public class WebView2Wpf : ContentControl, IWebView2
         typeof(WebView2Wpf),
         new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.Source property.</summary>
+    /// <summary>The dependency property for <see cref="Source" />.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(Uri),
         typeof(WebView2Wpf),
         new PropertyMetadata(SourcePropertyChanged));
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.ZoomFactor property.</summary>
+    /// <summary>The dependency property for <see cref="ZoomFactor" />.</summary>
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
         typeof(WebView2Wpf),
         new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
 
-    /// <summary>The WPF DependencyProperty key which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoBack property.</summary>
+    /// <summary>The dependency property key for <see cref="CanGoBack" />.</summary>
     private static readonly DependencyPropertyKey CanGoBackPropertyKey;
 
-    /// <summary>The WPF DependencyProperty key which backs the Microsoft.Web.WebView2.Wpf.WebView2.CanGoForward property.</summary>
+    /// <summary>The dependency property key for <see cref="CanGoForward" />.</summary>
     private static readonly DependencyPropertyKey CanGoForwardPropertyKey;
 
     /// <summary>Stores the web browser.</summary>
@@ -194,7 +193,8 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// Gets a value indicating whether this instance can go back.
     /// if the WebView can navigate to a previous page in the navigation
     ///     history. Wrapper around the Microsoft.Web.WebView2.Core.CoreWebView2.CanGoBack
-    ///     property of Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2. If Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    ///     property of Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2. If
+    ///     Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     isn't initialized yet then returns false.
     /// </summary>
     /// <value>
@@ -349,7 +349,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(AutoDisposeProperty, value);
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Releases managed and unmanaged resources.</summary>
     public void Dispose()
     {
         Dispose(disposing: true);
@@ -360,23 +360,29 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <param name="environment">The environment.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
     ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
-    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    ///     for use (i.e. non-null). Note that the control's
+    ///     Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
-    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) => _webBrowser.EnsureCoreWebView2Async(environment);
+    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) =>
+        _webBrowser.EnsureCoreWebView2Async(environment);
 
     /// <summary>Ensures the core web view2 asynchronous.</summary>
     /// <param name="environment">The environment.</param>
     /// <param name="controllerOptions">The controller options.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
     ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
-    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    ///     for use (i.e. non-null). Note that the control's
+    ///     Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
-    public Task EnsureCoreWebView2Async(CoreWebView2Environment? environment = null, CoreWebView2ControllerOptions? controllerOptions = null) =>
+    public Task EnsureCoreWebView2Async(
+        CoreWebView2Environment? environment = null,
+        CoreWebView2ControllerOptions? controllerOptions = null) =>
         _webBrowser.EnsureCoreWebView2Async(environment, controllerOptions);
 
     /// <summary>
     /// Executes JavaScript code from the javaScript parameter in the current top level
-    ///     document rendered in the WebView. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.ExecuteScriptAsync(System.String)
+    ///     document rendered in the WebView. Equivalent to calling
+    ///     Microsoft.Web.WebView2.Core.CoreWebView2.ExecuteScriptAsync(System.String)
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
     /// <param name="javaScript">The java script.</param>
@@ -385,14 +391,16 @@ public class WebView2Wpf : ContentControl, IWebView2
 
     /// <summary>
     /// Navigates the WebView to the previous page in the navigation history. Equivalent
-    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on
+    ///     Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
     public void GoBack() => _webBrowser?.GoBack();
 
     /// <summary>
     /// Navigates the WebView to the next page in the navigation history. Equivalent
-    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoForward on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoForward on
+    ///     Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
     public void GoForward() => _webBrowser?.GoForward();
@@ -412,12 +420,16 @@ public class WebView2Wpf : ContentControl, IWebView2
     public void Reload() => _webBrowser?.Reload();
 
     /// <summary>
-    /// Stops all navigations and pending resource fetches. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.Stop
+    /// Stops all navigations and pending resource fetches. Equivalent to calling
+    /// Microsoft.Web.WebView2.Core.CoreWebView2.Stop
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
     public void Stop() => _webBrowser?.Stop();
 
-    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" /> internally.</summary>
+    /// <summary>
+    /// Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever
+    /// <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" /> internally.
+    /// </summary>
     /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
@@ -434,7 +446,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing">
+    /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+    /// </param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -455,7 +469,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the default Background Color Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void DefaultBackgroundColorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void DefaultBackgroundColorPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser || args.NewValue is not System.Drawing.Color color)
         {
@@ -468,7 +484,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the zoom Factor Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void ZoomFactorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void ZoomFactorPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser || args.NewValue is not double zoom)
         {
@@ -481,7 +499,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the allow External Drop Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void AllowExternalDropPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void AllowExternalDropPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser || args.NewValue is not bool allowDrop)
         {
@@ -494,7 +514,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the design Mode Foreground Color Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void DesignModeForegroundColorChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void DesignModeForegroundColorChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser || args.NewValue is not System.Drawing.Color color)
         {
@@ -507,9 +529,13 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the creation Properties Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void CreationPropertiesChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void CreationPropertiesChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
-        if (dependencyObject is not WebView2Wpf browser || args.NewValue is not CoreWebView2CreationProperties creationProperties)
+        if (
+            dependencyObject is not WebView2Wpf browser
+            || args.NewValue is not CoreWebView2CreationProperties creationProperties)
         {
             return;
         }
@@ -520,7 +546,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the source Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void SourcePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void SourcePropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser || args.NewValue is not Uri source)
         {
@@ -546,7 +574,9 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Runs the auto Dispose Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void AutoDisposePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void AutoDisposePropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not WebView2Wpf browser)
         {

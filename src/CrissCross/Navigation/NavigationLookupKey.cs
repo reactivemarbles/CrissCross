@@ -10,7 +10,8 @@ namespace CrissCross;
 /// <param name="sourceKind">The navigation source kind.</param>
 /// <param name="serviceType">The registered service type.</param>
 /// <param name="contract">The optional navigation contract.</param>
-internal readonly struct NavigationLookupKey(NavigationSourceKind sourceKind, Type serviceType, string? contract) : IEquatable<NavigationLookupKey>
+internal readonly struct NavigationLookupKey(NavigationSourceKind sourceKind, Type serviceType, string? contract)
+    : IEquatable<NavigationLookupKey>
 {
     /// <summary>Gets the navigation source kind.</summary>
     public NavigationSourceKind SourceKind { get; } = sourceKind;
@@ -35,9 +36,9 @@ internal readonly struct NavigationLookupKey(NavigationSourceKind sourceKind, Ty
 
     /// <inheritdoc/>
     public bool Equals(NavigationLookupKey other) =>
-        SourceKind == other.SourceKind &&
-        ServiceType == other.ServiceType &&
-        string.Equals(Contract, other.Contract, StringComparison.Ordinal);
+        SourceKind == other.SourceKind
+        && ServiceType == other.ServiceType
+        && string.Equals(Contract, other.Contract, StringComparison.Ordinal);
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is NavigationLookupKey other && Equals(other);

@@ -9,34 +9,63 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents CommonToggleButtonBase.</summary>
 /// <seealso cref="System.Windows.Controls.Primitives.ToggleButton" />
-public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitives.ToggleButton
+public class CommonToggleButtonBase : System.Windows.Controls.Primitives.ToggleButton
 {
     /// <summary>The corner radius1 property.</summary>
-    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(nameof(CornerRadius1), typeof(CornerRadius), typeof(CommonToggleButtonBase), new PropertyMetadata(new CornerRadius(3.0)));
+    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(
+        nameof(CornerRadius1),
+        typeof(CornerRadius),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(new CornerRadius(3.0)));
 
     /// <summary>The corner radius2 property.</summary>
-    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(nameof(CornerRadius2), typeof(CornerRadius), typeof(CommonToggleButtonBase), new PropertyMetadata(new CornerRadius(2.0)));
+    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(
+        nameof(CornerRadius2),
+        typeof(CornerRadius),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(new CornerRadius(2.0)));
 
     /// <summary>The focus border thickness property.</summary>
-    public static readonly DependencyProperty FocusBorderThicknessProperty = DependencyProperty.Register(nameof(FocusBorderThickness), typeof(Thickness), typeof(CommonToggleButtonBase), new PropertyMetadata(new Thickness(2.0)));
+    public static readonly DependencyProperty FocusBorderThicknessProperty = DependencyProperty.Register(
+        nameof(FocusBorderThickness),
+        typeof(Thickness),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(new Thickness(2.0)));
 
     /// <summary>The focus brush property.</summary>
-    public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(nameof(FocusBrush), typeof(Brush), typeof(CommonToggleButtonBase), new PropertyMetadata(Brushes.Orange));
+    public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(
+        nameof(FocusBrush),
+        typeof(Brush),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(Brushes.Orange));
 
     /// <summary>The glare brush property.</summary>
-    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(nameof(GlareBrush), typeof(Brush), typeof(CommonToggleButtonBase), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(
+        nameof(GlareBrush),
+        typeof(Brush),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(null));
 
     /// <summary>The minor border brush1 property.</summary>
-    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(nameof(MinorBorderBrush1), typeof(Brush), typeof(CommonToggleButtonBase), new PropertyMetadata(new LinearGradientBrush(SystemColors.ControlDarkDarkColor, SystemColors.ControlDarkDarkColor, 45)));
+    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(
+        nameof(MinorBorderBrush1),
+        typeof(Brush),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(
+            new LinearGradientBrush(SystemColors.ControlDarkDarkColor, SystemColors.ControlDarkDarkColor, 45)));
 
     /// <summary>The minor border thickness1 property.</summary>
-    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(nameof(MinorBorderThickness1), typeof(Thickness), typeof(CommonToggleButtonBase), new PropertyMetadata(new Thickness(0.0)));
+    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(
+        nameof(MinorBorderThickness1),
+        typeof(Thickness),
+        typeof(CommonToggleButtonBase),
+        new PropertyMetadata(new Thickness(0.0)));
 
     /// <summary>The inset subtracted from the configured focus border thickness.</summary>
-    private const double FocusBorderInset = 2d;
+    private const double FocusBorderInset = 2D;
 
     /// <summary>The border thickness used while the pointer hovers over the button.</summary>
-    private const double HoverIndicatorBorderSize = 2d;
+    private const double HoverIndicatorBorderSize = 2D;
 
     /// <summary>Initializes a new instance of the <see cref="CommonToggleButtonBase"/> class.</summary>
     /// <param name="styleName">Name of the style.</param>
@@ -54,7 +83,11 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
         }
         catch (Exception exception)
         {
-            _ = System.Windows.MessageBox.Show(exception.Message, exception.TargetSite?.ToString(), System.Windows.MessageBoxButton.OK, MessageBoxImage.Hand);
+            _ = System.Windows.MessageBox.Show(
+                exception.Message,
+                exception.TargetSite?.ToString(),
+                System.Windows.MessageBoxButton.OK,
+                MessageBoxImage.Hand);
         }
 
         IsEnabledChanged += CommonButtonBase_IsEnabledChanged;
@@ -147,7 +180,8 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
     {
         try
         {
-            var manifestResourceStream = typeof(CommonToggleButtonBase).Module.Assembly.GetManifestResourceStream(styleName + ".xaml");
+            var manifestResourceStream = typeof(CommonToggleButtonBase).Module.Assembly.GetManifestResourceStream(
+                styleName + ".xaml");
             if (manifestResourceStream is null)
             {
                 return null;
@@ -164,15 +198,17 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
         }
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.UIElement.LostFocus" /> routed event by using the event data that is provided.</summary>
-    /// <param name="e">A <see cref="T:System.Windows.RoutedEventArgs" /> that contains event data. This event data must contain the identifier for the <see cref="E:System.Windows.UIElement.LostFocus" /> event.</param>
+    /// <summary>Raises the LostFocus routed event by using the event data that is provided.</summary>
+    /// <param name="e">A <see cref="T:System.Windows.RoutedEventArgs" /> that contains event data. This event data must
+    /// contain the identifier for the <see cref="E:System.Windows.UIElement.LostFocus" /> event.</param>
     protected override void OnLostFocus(RoutedEventArgs e)
     {
         base.OnLostFocus(e);
         SetIndicatorBorderSize(0.0);
     }
 
-    /// <summary>Provides class handling for the <see cref="P:System.Windows.Controls.Primitives.ButtonBase.ClickMode" /> routed event that occurs when the mouse enters this control.</summary>
+    /// <summary>Provides class handling for the <see cref="P:System.Windows.Controls.Primitives.ButtonBase.ClickMode"
+    /// /> routed event that occurs when the mouse enters this control.</summary>
     /// <param name="e">The event data for the <see cref="E:System.Windows.Input.Mouse.MouseEnter" /> event.</param>
     protected override void OnMouseEnter(MouseEventArgs e)
     {
@@ -180,7 +216,8 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
         SetIndicatorBorderSize(HoverIndicatorBorderSize);
     }
 
-    /// <summary>Provides class handling for the <see cref="E:System.Windows.UIElement.MouseLeave" /> routed event that occurs when the mouse leaves an element.</summary>
+    /// <summary>Provides class handling for the <see cref="E:System.Windows.UIElement.MouseLeave" /> routed event that
+    /// occurs when the mouse leaves an element.</summary>
     /// <param name="e">The event data for the <see cref="E:System.Windows.Input.Mouse.MouseLeave" /> event.</param>
     protected override void OnMouseLeave(MouseEventArgs e)
     {
@@ -188,7 +225,8 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
         SetIndicatorBorderSize(IsFocused ? 1.0 : 0.0);
     }
 
-    /// <summary>Returns a value that indicates whether serialization processes should serialize the value for the provided dependency property.</summary>
+    /// <summary>Returns a value that indicates whether serialization processes should serialize the value for the
+    /// provided dependency property.</summary>
     /// <param name="dp">The identifier for the dependency property that should be serialized.</param>
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
@@ -237,7 +275,7 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
             return;
         }
 
-        if (size != 1)
+        if (!DoubleComparison.AreClose(size, 1D))
         {
             border.BorderThickness = FocusBorderThickness;
             return;
@@ -249,7 +287,7 @@ public abstract class CommonToggleButtonBase : System.Windows.Controls.Primitive
             return;
         }
 
-        border.Margin = border.BorderThickness.Left == 1.0 ? new(1.0) : new(0);
+        border.Margin = DoubleComparison.AreClose(border.BorderThickness.Left, 1D) ? new(1D) : new(0);
     }
 
     /// <summary>Gets the focused border thickness.</summary>

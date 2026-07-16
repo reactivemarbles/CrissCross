@@ -4,11 +4,15 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extends <see cref="System.Windows.Controls.ListView"/> adding customized support for GridView vs Default view states.</summary>
+/// <summary>Extends ListView adding customized support for GridView vs Default view states.</summary>
 public class ListView : System.Windows.Controls.ListView, IDisposable
 {
     /// <summary>Dependency property backing <see cref="ViewState"/>.</summary>
-    public static readonly DependencyProperty ViewStateProperty = DependencyProperty.Register(nameof(ViewState), typeof(ListViewViewState), typeof(ListView), new FrameworkPropertyMetadata(ListViewViewState.Default, OnViewStateChanged));
+    public static readonly DependencyProperty ViewStateProperty = DependencyProperty.Register(
+        nameof(ViewState),
+        typeof(ListViewViewState),
+        typeof(ListView),
+        new FrameworkPropertyMetadata(ListViewViewState.Default, OnViewStateChanged));
 
     /// <summary>Stores the _unloadedDisposable value.</summary>
     private readonly SerialDisposable _unloadedDisposable = new();
@@ -20,12 +24,14 @@ public class ListView : System.Windows.Controls.ListView, IDisposable
     private bool _disposed;
 
     /// <summary>Provides the ListView member.</summary>
-    static ListView() => DefaultStyleKeyProperty.OverrideMetadata(typeof(ListView), new FrameworkPropertyMetadata(typeof(ListView)));
+    static ListView() =>
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(ListView), new FrameworkPropertyMetadata(typeof(ListView)));
 
     /// <summary>Initializes a new instance of the <see cref="ListView"/> class.</summary>
     public ListView()
     {
-        _ = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
+        _ = Observable
+            .FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
             .Take(1)
             .Subscribe(_ => OnLoadedReactive());
     }
@@ -46,9 +52,7 @@ public class ListView : System.Windows.Controls.ListView, IDisposable
 
     /// <summary>Called when <see cref="ViewState"/> changes. Override to react to changes.</summary>
     /// <param name="e">Property changed arguments.</param>
-    protected virtual void OnViewStateChanged(DependencyPropertyChangedEventArgs e)
-    {
-    }
+    protected virtual void OnViewStateChanged(DependencyPropertyChangedEventArgs e) { }
 
     /// <summary>Protected dispose pattern implementation.</summary>
     /// <param name="disposing">If true, dispose managed resources.</param>
@@ -85,10 +89,13 @@ public class ListView : System.Windows.Controls.ListView, IDisposable
     /// <summary>Provides the OnLoadedReactive member.</summary>
     private void OnLoadedReactive()
     {
-        _descriptor = DependencyPropertyDescriptor.FromProperty(System.Windows.Controls.ListView.ViewProperty, typeof(System.Windows.Controls.ListView));
+        _descriptor = DependencyPropertyDescriptor.FromProperty(
+            System.Windows.Controls.ListView.ViewProperty,
+            typeof(System.Windows.Controls.ListView));
         _descriptor?.AddValueChanged(this, OnViewPropertyChanged);
 
-        _unloadedDisposable.Disposable = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
+        _unloadedDisposable.Disposable = Observable
+            .FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
             .Take(1)
             .Subscribe(_ => OnUnloadedReactive());
 
@@ -111,7 +118,8 @@ public class ListView : System.Windows.Controls.ListView, IDisposable
     /// <summary>Provides the UpdateViewState member.</summary>
     private void UpdateViewState()
     {
-        var viewState = View is System.Windows.Controls.GridView ? ListViewViewState.GridView : ListViewViewState.Default;
+        var viewState =
+            View is System.Windows.Controls.GridView ? ListViewViewState.GridView : ListViewViewState.Default;
         SetCurrentValue(ViewStateProperty, viewState);
     }
 }

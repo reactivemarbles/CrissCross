@@ -24,19 +24,20 @@ public static class TransitionAnimationProvider
     private const int MaximumDurationMilliseconds = 10_000;
 
     /// <summary>Provides the vertical slide distance in device-independent pixels.</summary>
-    private const double VerticalSlideOffset = 30d;
+    private const double VerticalSlideOffset = 30D;
 
     /// <summary>Provides the horizontal slide distance in device-independent pixels.</summary>
-    private const double HorizontalSlideOffset = 50d;
+    private const double HorizontalSlideOffset = 50D;
 
     /// <summary>Provides the centered transform-origin coordinate.</summary>
-    private const double TransformOriginCenter = 0.5d;
+    private const double TransformOriginCenter = 0.5D;
 
     /// <summary>Attempts to apply an animation effect while adding content to the frame.</summary>
     /// <param name="element">Currently rendered element.</param>
     /// <param name="type">Selected transition type.</param>
     /// <param name="duration">Transition duration.</param>
-    /// <returns>Returns <see langword="true"/> if the transition was applied. Otherwise <see langword="false"/>.</returns>
+    /// <returns>Returns <see langword="true"/> if the transition was applied. Otherwise <see
+    /// langword="false"/>.</returns>
     public static bool ApplyTransition(object element, Transition type, int duration)
     {
         if (type == Transition.None)
@@ -70,34 +71,34 @@ public static class TransitionAnimationProvider
         switch (type)
         {
             case Transition.FadeIn:
-                {
-                    FadeInTransition(uiElement, timespanDuration);
-                    break;
-                }
+            {
+                FadeInTransition(uiElement, timespanDuration);
+                break;
+            }
 
             case Transition.FadeInWithSlide:
-                {
-                    FadeInWithSlideTransition(uiElement, timespanDuration);
-                    break;
-                }
+            {
+                FadeInWithSlideTransition(uiElement, timespanDuration);
+                break;
+            }
 
             case Transition.SlideBottom:
-                {
-                    SlideBottomTransition(uiElement, timespanDuration);
-                    break;
-                }
+            {
+                SlideBottomTransition(uiElement, timespanDuration);
+                break;
+            }
 
             case Transition.SlideRight:
-                {
-                    SlideRightTransition(uiElement, timespanDuration);
-                    break;
-                }
+            {
+                SlideRightTransition(uiElement, timespanDuration);
+                break;
+            }
 
             case Transition.SlideLeft:
-                {
-                    SlideLeftTransition(uiElement, timespanDuration);
-                    break;
-                }
+            {
+                SlideLeftTransition(uiElement, timespanDuration);
+                break;
+            }
 
             default:
                 return false;
@@ -137,19 +138,17 @@ public static class TransitionAnimationProvider
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
-            animatedUiElement.SetCurrentValue(
-                UIElement.RenderTransformProperty,
-                new TranslateTransform(0, 0));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
         if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
+            animatedUiElement.SetCurrentValue(
+                UIElement.RenderTransformOriginProperty,
+                new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
-        animatedUiElement.RenderTransform.BeginAnimation(
-            TranslateTransform.YProperty,
-            translateDoubleAnimation);
+        animatedUiElement.RenderTransform.BeginAnimation(TranslateTransform.YProperty, translateDoubleAnimation);
 
         var opacityDoubleAnimation = new DoubleAnimation
         {
@@ -177,19 +176,17 @@ public static class TransitionAnimationProvider
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
-            animatedUiElement.SetCurrentValue(
-                UIElement.RenderTransformProperty,
-                new TranslateTransform(0, 0));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
         if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
+            animatedUiElement.SetCurrentValue(
+                UIElement.RenderTransformOriginProperty,
+                new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
-        animatedUiElement.RenderTransform.BeginAnimation(
-            TranslateTransform.YProperty,
-            translateDoubleAnimation);
+        animatedUiElement.RenderTransform.BeginAnimation(TranslateTransform.YProperty, translateDoubleAnimation);
     }
 
     /// <summary>Provides the SlideRightTransition member.</summary>
@@ -207,19 +204,17 @@ public static class TransitionAnimationProvider
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
-            animatedUiElement.SetCurrentValue(
-                UIElement.RenderTransformProperty,
-                new TranslateTransform(0, 0));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
         if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
+            animatedUiElement.SetCurrentValue(
+                UIElement.RenderTransformOriginProperty,
+                new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
-        animatedUiElement.RenderTransform.BeginAnimation(
-            TranslateTransform.XProperty,
-            translateDoubleAnimation);
+        animatedUiElement.RenderTransform.BeginAnimation(TranslateTransform.XProperty, translateDoubleAnimation);
     }
 
     /// <summary>Provides the SlideLeftTransition member.</summary>
@@ -237,18 +232,16 @@ public static class TransitionAnimationProvider
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
-            animatedUiElement.SetCurrentValue(
-                UIElement.RenderTransformProperty,
-                new TranslateTransform(0, 0));
+            animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
         if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
         {
-            animatedUiElement.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(TransformOriginCenter, TransformOriginCenter));
+            animatedUiElement.SetCurrentValue(
+                UIElement.RenderTransformOriginProperty,
+                new Point(TransformOriginCenter, TransformOriginCenter));
         }
 
-        animatedUiElement.RenderTransform.BeginAnimation(
-            TranslateTransform.XProperty,
-            translateDoubleAnimation);
+        animatedUiElement.RenderTransform.BeginAnimation(TranslateTransform.XProperty, translateDoubleAnimation);
     }
 }

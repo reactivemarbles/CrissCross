@@ -9,6 +9,30 @@ namespace CrissCross.Tests;
 /// <summary>Coverage tests for gallery/example projects that double as manual QA documentation.</summary>
 public class GalleryExampleCoverageTests
 {
+    /// <summary>Provides the WPF gallery project name.</summary>
+    private const string WpfGalleryProject = "CrissCross.WPF.UI.Gallery";
+
+    /// <summary>Provides the Avalonia gallery project name.</summary>
+    private const string AvaloniaGalleryProject = "CrissCross.Avalonia.UI.Gallery";
+
+    /// <summary>Provides the MAUI example project name.</summary>
+    private const string MauiExampleProject = "CrissCross.MAUI.Test";
+
+    /// <summary>Provides the ViewModels directory name.</summary>
+    private const string ViewModelsDirectory = "ViewModels";
+
+    /// <summary>Provides the Views directory name.</summary>
+    private const string ViewsDirectory = "Views";
+
+    /// <summary>Provides the Pages directory name.</summary>
+    private const string PagesDirectory = "Pages";
+
+    /// <summary>Provides the reactive command factory marker.</summary>
+    private const string ReactiveCommandFactoryMarker = "ReactiveCommand.CreateFromTask";
+
+    /// <summary>Provides the observable property helper marker.</summary>
+    private const string ObservablePropertyHelperMarker = "ObservableAsPropertyHelper";
+
     /// <summary>Provides the SourceRoot member.</summary>
     private static readonly string SourceRoot = LocateSourceRoot();
 
@@ -17,12 +41,12 @@ public class GalleryExampleCoverageTests
     [Test]
     public async Task WpfGallery_IncludesCompleteReactiveFeaturePlayground()
     {
-        var viewModel = ReadSource("CrissCross.WPF.UI.Gallery", "ViewModels", "FeaturePlaygroundViewModel.cs");
-        var view = ReadSource("CrissCross.WPF.UI.Gallery", "Views", "FeaturePlaygroundView.xaml");
-        var navigation = ReadSource("CrissCross.WPF.UI.Gallery", "ViewModels", "MainWindowViewModel.cs");
+        var viewModel = ReadSource(WpfGalleryProject, ViewModelsDirectory, "FeaturePlaygroundViewModel.cs");
+        var view = ReadSource(WpfGalleryProject, ViewsDirectory, "FeaturePlaygroundView.xaml");
+        var navigation = ReadSource(WpfGalleryProject, ViewModelsDirectory, "MainWindowViewModel.cs");
 
-        await Assert.That(viewModel).Contains("ReactiveCommand.CreateFromTask");
-        await Assert.That(viewModel).Contains("ObservableAsPropertyHelper");
+        await Assert.That(viewModel).Contains(ReactiveCommandFactoryMarker);
+        await Assert.That(viewModel).Contains(ObservablePropertyHelperMarker);
         await Assert.That(view).Contains("ui:CommandButton");
         await Assert.That(view).Contains("ui:BusyOverlay");
         await Assert.That(view).Contains("ui:SearchBox");
@@ -39,12 +63,16 @@ public class GalleryExampleCoverageTests
     [Test]
     public async Task AvaloniaGallery_IncludesCompleteReactiveFeaturePlayground()
     {
-        var viewModel = ReadSource("CrissCross.Avalonia.UI.Gallery", "ViewModels", "FeaturePlaygroundPageViewModel.cs");
-        var view = ReadSource("CrissCross.Avalonia.UI.Gallery", "Views", "Pages", "FeaturePlaygroundPageView.axaml");
-        var navigation = ReadSource("CrissCross.Avalonia.UI.Gallery", "ViewModels", "MainViewModel.cs");
+        var viewModel = ReadSource(AvaloniaGalleryProject, ViewModelsDirectory, "FeaturePlaygroundPageViewModel.cs");
+        var view = ReadSource(
+            AvaloniaGalleryProject,
+            ViewsDirectory,
+            PagesDirectory,
+            "FeaturePlaygroundPageView.axaml");
+        var navigation = ReadSource(AvaloniaGalleryProject, ViewModelsDirectory, "MainViewModel.cs");
 
-        await Assert.That(viewModel).Contains("ReactiveCommand.CreateFromTask");
-        await Assert.That(viewModel).Contains("ObservableAsPropertyHelper");
+        await Assert.That(viewModel).Contains(ReactiveCommandFactoryMarker);
+        await Assert.That(viewModel).Contains(ObservablePropertyHelperMarker);
         await Assert.That(view).Contains("controls:CommandButton");
         await Assert.That(view).Contains("controls:BusyOverlay");
         await Assert.That(view).Contains("controls:SearchBox");
@@ -61,8 +89,8 @@ public class GalleryExampleCoverageTests
     [Test]
     public async Task AvaloniaGallery_RichTextBoxDemo_ShowcasesFullControlSurface()
     {
-        var view = ReadSource("CrissCross.Avalonia.UI.Gallery", "Views", "Pages", "InputPageView.axaml");
-        var codeBehind = ReadSource("CrissCross.Avalonia.UI.Gallery", "Views", "Pages", "InputPageView.axaml.cs");
+        var view = ReadSource(AvaloniaGalleryProject, ViewsDirectory, PagesDirectory, "InputPageView.axaml");
+        var codeBehind = ReadSource(AvaloniaGalleryProject, ViewsDirectory, PagesDirectory, "InputPageView.axaml.cs");
         var documentation = ReadSource("..", "docs", "gallery-examples.md");
 
         await Assert.That(view).Contains("Formatting toolbar and commands");
@@ -104,13 +132,13 @@ public class GalleryExampleCoverageTests
     [Test]
     public async Task MauiExample_IncludesUiGalleryWithSharedStylesAndPlatformNotes()
     {
-        var viewModel = ReadSource("CrissCross.MAUI.Test", "ViewModels", "ControlsGalleryViewModel.cs");
-        var view = ReadSource("CrissCross.MAUI.Test", "Views", "ControlsGalleryView.xaml");
-        var app = ReadSource("CrissCross.MAUI.Test", "App.xaml.cs");
-        var project = ReadSource("CrissCross.MAUI.Test", "CrissCross.MAUI.Example.csproj");
+        var viewModel = ReadSource(MauiExampleProject, ViewModelsDirectory, "ControlsGalleryViewModel.cs");
+        var view = ReadSource(MauiExampleProject, ViewsDirectory, "ControlsGalleryView.xaml");
+        var app = ReadSource(MauiExampleProject, "App.xaml.cs");
+        var project = ReadSource(MauiExampleProject, "CrissCross.MAUI.Example.csproj");
 
-        await Assert.That(viewModel).Contains("ReactiveCommand.CreateFromTask");
-        await Assert.That(viewModel).Contains("ObservableAsPropertyHelper");
+        await Assert.That(viewModel).Contains(ReactiveCommandFactoryMarker);
+        await Assert.That(viewModel).Contains(ObservablePropertyHelperMarker);
         await Assert.That(viewModel).Contains("OperatingSystem.IsAndroid");
         await Assert.That(view).Contains("mauiui:CommandButton");
         await Assert.That(view).Contains("mauiui:BusyOverlay");
@@ -132,9 +160,9 @@ public class GalleryExampleCoverageTests
     {
         var documentation = ReadSource("..", "docs", "gallery-examples.md");
 
-        await Assert.That(documentation).Contains("CrissCross.WPF.UI.Gallery");
-        await Assert.That(documentation).Contains("CrissCross.Avalonia.UI.Gallery");
-        await Assert.That(documentation).Contains("CrissCross.MAUI.Test");
+        await Assert.That(documentation).Contains(WpfGalleryProject);
+        await Assert.That(documentation).Contains(AvaloniaGalleryProject);
+        await Assert.That(documentation).Contains(MauiExampleProject);
         await Assert.That(documentation).Contains("ViewModel-based navigation");
         await Assert.That(documentation).Contains("View-based navigation");
         await Assert.That(documentation).Contains("async reactive commands");
@@ -150,7 +178,9 @@ public class GalleryExampleCoverageTests
         var path = Path.Combine(new[] { SourceRoot }.Concat(relativeSegments).ToArray());
         if (!File.Exists(path))
         {
-            throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Expected gallery source file was not found: {0}", path), path);
+            throw new FileNotFoundException(
+                string.Format(CultureInfo.InvariantCulture, "Expected gallery source file was not found: {0}", path),
+                path);
         }
 
         return File.ReadAllText(path);
@@ -172,6 +202,7 @@ public class GalleryExampleCoverageTests
             current = current.Parent;
         }
 
-        throw new DirectoryNotFoundException("Unable to locate CrissCross.slnx from the current test working directory.");
+        throw new DirectoryNotFoundException(
+            "Unable to locate CrissCross.slnx from the current test working directory.");
     }
 }

@@ -75,9 +75,7 @@ public class AlarmBanner : System.Windows.Controls.ContentControl
             AcknowledgeCommandProperty,
             ReactiveCommand.Create<object>(_ => SetCurrentValue(IsActiveProperty, false)));
 
-        SetValue(
-            CloseCommandProperty,
-            ReactiveCommand.Create<object>(_ => SetCurrentValue(IsActiveProperty, false)));
+        SetValue(CloseCommandProperty, ReactiveCommand.Create<object>(_ => SetCurrentValue(IsActiveProperty, false)));
     }
 
     /// <summary>Gets or sets a value indicating whether the alarm banner is active and visible.</summary>

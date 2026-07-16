@@ -11,6 +11,12 @@ namespace CrissCross.Tests;
 /// <summary>Tests for MAUI UI controls that project shared platform-neutral CrissCross control state.</summary>
 public class MauiUiControlBehaviorTests
 {
+    /// <summary>Provides the closed segment key.</summary>
+    private const string ClosedSegmentKey = "closed";
+
+    /// <summary>Provides the urgent chip key.</summary>
+    private const string UrgentChipKey = "urgent";
+
     /// <summary>Provides the busy operation progress value.</summary>
     private const double BusyOperationProgress = 0.25;
 
@@ -34,10 +40,7 @@ public class MauiUiControlBehaviorTests
     [Test]
     public async Task CommandButton_SettingIsExecuting_TransitionsToExecutingState()
     {
-        var button = new CommandButton
-        {
-            IsExecuting = true
-        };
+        var button = new CommandButton { IsExecuting = true };
 
         await Assert.That(button.State).IsEqualTo(CommandButtonState.Executing);
     }
@@ -47,10 +50,7 @@ public class MauiUiControlBehaviorTests
     [Test]
     public async Task BusyOverlay_ActiveOperation_ProjectsBusyState()
     {
-        var overlay = new BusyOverlay
-        {
-            Operation = new("Saving", "Writing values", progress: BusyOperationProgress)
-        };
+        var overlay = new BusyOverlay { Operation = new("Saving", "Writing values", progress: BusyOperationProgress) };
 
         await Assert.That(overlay.IsBusy).IsTrue();
     }
@@ -66,7 +66,7 @@ public class MauiUiControlBehaviorTests
             PaginationState = new(pageIndex: 1, pageSize: PageSize, totalItemCount: TotalItemCount),
             PageRequestCommand = command,
             SortKey = "name",
-            SortDescending = true
+            SortDescending = true,
         };
 
         pager.MoveToPage(RequestedPageIndex);
@@ -87,20 +87,17 @@ public class MauiUiControlBehaviorTests
         var target = new SegmentedControl
         {
             SelectionCommand = command,
-            State = new(
-                [
-                    new SegmentItem("open", "Open"),
-                    new SegmentItem("closed", "Closed")
-                ],
-                "open")
+            State = new([new SegmentItem("open", "Open"), new SegmentItem(ClosedSegmentKey, "Closed")], "open"),
         };
 
-        _ = target.SelectSegment("closed");
+        _ = target.SelectSegment(ClosedSegmentKey);
 
         await Assert.That(target.Children.Count).IsEqualTo(ExpectedRenderedItemCount);
-        await Assert.That(target.SelectedKey).IsEqualTo("closed");
-        await Assert.That(target.Children.OfType<Button>().Select(static button => button.Text)).IsEquivalentTo(["Open", "Closed"]);
-        await Assert.That(command.LastParameter).IsEqualTo("closed");
+        await Assert.That(target.SelectedKey).IsEqualTo(ClosedSegmentKey);
+        await Assert
+            .That(target.Children.OfType<Button>().Select(static button => button.Text))
+            .IsEquivalentTo(["Open", "Closed"]);
+        await Assert.That(command.LastParameter).IsEqualTo(ClosedSegmentKey);
     }
 
     /// <summary>Provides the ChipGroup_State_RendersChipsAndInvokesSelectionCommand member.</summary>
@@ -114,18 +111,19 @@ public class MauiUiControlBehaviorTests
             SelectionCommand = command,
             State = new(
                 [
-                    new ChipModel("urgent", "Urgent"),
-                    new ChipModel("review", "Needs review", isSelected: true)
-                ],
-                ChipGroupSelectionMode.Multiple)
+                    new ChipModel(UrgentChipKey, "Urgent"),
+                    new ChipModel("review", "Needs review", new ChipModelOptions { IsSelected = true }),],
+                ChipGroupSelectionMode.Multiple),
         };
 
-        _ = target.SelectChip("urgent");
+        _ = target.SelectChip(UrgentChipKey);
 
         await Assert.That(target.Children.Count).IsEqualTo(ExpectedRenderedItemCount);
         await Assert.That(target.SelectionMode).IsEqualTo(ChipGroupSelectionMode.Multiple);
-        await Assert.That(target.Children.OfType<Button>().Select(static button => button.Text)).IsEquivalentTo(["Urgent", "Needs review"]);
-        await Assert.That(command.LastParameter).IsEqualTo("urgent");
+        await Assert
+            .That(target.Children.OfType<Button>().Select(static button => button.Text))
+            .IsEquivalentTo(["Urgent", "Needs review"]);
+        await Assert.That(command.LastParameter).IsEqualTo(UrgentChipKey);
     }
 
     /// <summary>Provides the SearchBox_SubmitSearch_InvokesSubmitCommandWithNormalizedText member.</summary>
@@ -134,11 +132,7 @@ public class MauiUiControlBehaviorTests
     public async Task SearchBox_SubmitSearch_InvokesSubmitCommandWithNormalizedText()
     {
         var command = new CaptureCommand();
-        var target = new SearchBox
-        {
-            Text = "  pump  ",
-            SubmitCommand = command
-        };
+        var target = new SearchBox { Text = "  pump  ", SubmitCommand = command };
 
         _ = target.SubmitSearch();
 

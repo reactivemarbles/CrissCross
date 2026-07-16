@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved. -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/BBCodeBlock/Themes/BBCodeBlock.xaml" />
-    </ResourceDictionary.MergedDictionaries>
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/BBCodeBlock/Themes/BBCodeBlock.xaml" />
+  </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

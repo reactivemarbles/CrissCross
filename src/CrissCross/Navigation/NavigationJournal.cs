@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CrissCross;
 
-/// <summary>Provides platform-neutral navigation journal operations for controls that expose back and forward navigation.</summary>
+/// <summary>Provides platform-neutral back and forward navigation journal operations.</summary>
 public static class NavigationJournal
 {
     /// <summary>Gets a value indicating whether the journal can move to a previous entry.</summary>
@@ -67,7 +67,9 @@ public static class NavigationJournal
     /// <summary>Calculates the previous journal entry without mutating the journal.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
-    /// <param name="nextIndex">The index of the previous entry when one exists; otherwise, the supplied current index.</param>
+    /// <param name="nextIndex">
+    /// The index of the previous entry when one exists; otherwise, the supplied current index.
+    /// </param>
     /// <param name="entryId">The previous entry identifier when one exists; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> when a previous entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool TryMoveBack(
@@ -96,7 +98,9 @@ public static class NavigationJournal
     /// <summary>Calculates the next journal entry without mutating the journal.</summary>
     /// <param name="journal">The ordered journal entries.</param>
     /// <param name="currentIndex">The current entry index.</param>
-    /// <param name="nextIndex">The index of the next entry when one exists; otherwise, the supplied current index.</param>
+    /// <param name="nextIndex">
+    /// The index of the next entry when one exists; otherwise, the supplied current index.
+    /// </param>
     /// <param name="entryId">The next entry identifier when one exists; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> when a next entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool TryMoveForward(

@@ -72,15 +72,18 @@ public partial class MainWindow : INavigationWindow
     /// </returns>
     public INavigationView GetNavigation() => RootNavigation;
 
-    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="T:CrissCross.WPF.UI.IPageService" />.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see
+    /// cref="T:CrissCross.WPF.UI.IPageService" />.</summary>
     /// <param name="pageType"><see langword="Type" /> of the page.</param>
     /// <returns>
     ///   <see langword="true" /> if the operation succeeds. <see langword="false" /> otherwise.
     /// </returns>
     public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
-    /// <summary>Lets you attach the service that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
-    /// <param name="pageService">Instance of the <see cref="T:CrissCross.WPF.UI.IPageService" /> with attached service provider.</param>
+    /// <summary>Lets you attach the service that delivers page instances to <see
+    /// cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
+    /// <param name="pageService">Instance of the <see cref="T:CrissCross.WPF.UI.IPageService" /> with attached service
+    /// provider.</param>
     public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
 
     /// <summary>Triggers the command to open a window.</summary>
@@ -89,7 +92,8 @@ public partial class MainWindow : INavigationWindow
     /// <summary>Triggers the command to close a window.</summary>
     public void CloseWindow() => Close();
 
-    /// <summary>Lets you attach the service provider that delivers page instances to <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
+    /// <summary>Lets you attach the service provider that delivers page instances to <see
+    /// cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.</summary>
     /// <param name="serviceProvider">Instance of the <see cref="T:System.IServiceProvider" />.</param>
     public void SetServiceProvider(IServiceProvider serviceProvider)
     {

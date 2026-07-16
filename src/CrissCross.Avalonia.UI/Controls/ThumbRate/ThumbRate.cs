@@ -14,17 +14,22 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ThumbRate : TemplatedControl
 {
     /// <summary>Property for <see cref="State"/>.</summary>
-    public static readonly StyledProperty<ThumbRateState> StateProperty = AvaloniaProperty.Register<ThumbRate, ThumbRateState>(
-        nameof(State),
-        ThumbRateState.None);
+    public static readonly StyledProperty<ThumbRateState> StateProperty = AvaloniaProperty.Register<
+        ThumbRate,
+        ThumbRateState
+    >(nameof(State), ThumbRateState.None);
 
     /// <summary>Property for <see cref="ThumbUpCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ThumbUpCommandProperty = AvaloniaProperty.Register<ThumbRate, ICommand?>(
-        nameof(ThumbUpCommand));
+    public static readonly StyledProperty<ICommand?> ThumbUpCommandProperty = AvaloniaProperty.Register<
+        ThumbRate,
+        ICommand?
+    >(nameof(ThumbUpCommand));
 
     /// <summary>Property for <see cref="ThumbDownCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ThumbDownCommandProperty = AvaloniaProperty.Register<ThumbRate, ICommand?>(
-        nameof(ThumbDownCommand));
+    public static readonly StyledProperty<ICommand?> ThumbDownCommandProperty = AvaloniaProperty.Register<
+        ThumbRate,
+        ICommand?
+    >(nameof(ThumbDownCommand));
 
     /// <summary>Property for <see cref="ThumbSize"/>.</summary>
     public static readonly StyledProperty<double> ThumbSizeProperty = AvaloniaProperty.Register<ThumbRate, double>(
@@ -37,13 +42,16 @@ public class ThumbRate : TemplatedControl
         Brushes.DodgerBlue);
 
     /// <summary>Property for <see cref="UnselectedBrush"/>.</summary>
-    public static readonly StyledProperty<IBrush> UnselectedBrushProperty = AvaloniaProperty.Register<ThumbRate, IBrush>(
-        nameof(UnselectedBrush),
-        Brushes.Gray);
+    public static readonly StyledProperty<IBrush> UnselectedBrushProperty = AvaloniaProperty.Register<
+        ThumbRate,
+        IBrush
+    >(nameof(UnselectedBrush), Brushes.Gray);
 
     /// <summary>Defines the <see cref="StateChanged"/> event.</summary>
-    public static readonly RoutedEvent<RoutedEventArgs> StateChangedEvent =
-        RoutedEvent.Register<ThumbRate, RoutedEventArgs>(nameof(StateChanged), RoutingStrategies.Bubble);
+    public static readonly RoutedEvent<RoutedEventArgs> StateChangedEvent = RoutedEvent.Register<
+        ThumbRate,
+        RoutedEventArgs
+    >(nameof(StateChanged), RoutingStrategies.Bubble);
 
     /// <summary>Occurs when the state changes.</summary>
     public event EventHandler<RoutedEventArgs>? StateChanged

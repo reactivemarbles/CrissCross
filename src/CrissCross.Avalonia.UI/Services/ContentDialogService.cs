@@ -54,7 +54,7 @@ public class ContentDialogService : IContentDialogService
 
         dialog.ContentPresenter ??= _contentPresenter;
 
-        if (dialog.ContentPresenter != _contentPresenter)
+        if (!object.Equals(dialog.ContentPresenter, _contentPresenter))
         {
             throw new InvalidOperationException("The ContentPresenter is not the same as the previously set.");
         }

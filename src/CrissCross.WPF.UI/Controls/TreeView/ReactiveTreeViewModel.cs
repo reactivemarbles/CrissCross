@@ -14,7 +14,7 @@ public class ReactiveTreeViewModel : RxObject
     /// <value>
     /// The children.
     /// </value>
-    public ReactiveList<ReactiveTreeItem> Children { get; set; } = [];
+    public ReactiveList<ReactiveTreeItem> Children { get; } = [];
 
     /// <summary>
     /// Releases all resources used by the current instance, including child components, and optionally disposes managed
@@ -22,7 +22,8 @@ public class ReactiveTreeViewModel : RxObject
     /// </summary>
     /// <remarks>Overrides the base class implementation to ensure that child components are properly disposed
     /// when the instance is disposed.</remarks>
-    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged
+    /// resources.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)

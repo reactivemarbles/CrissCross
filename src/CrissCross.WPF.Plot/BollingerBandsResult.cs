@@ -8,7 +8,4 @@ namespace CrissCross.WPF.Plot;
 /// <param name="Middle">The simple moving average.</param>
 /// <param name="Upper">The upper standard-deviation band.</param>
 /// <param name="Lower">The lower standard-deviation band.</param>
-public sealed record BollingerBandsResult(
-    PlotSeriesData Middle,
-    PlotSeriesData Upper,
-    PlotSeriesData Lower);
+public sealed record BollingerBandsResult(PlotSeriesData Middle, PlotSeriesData Upper, PlotSeriesData Lower);

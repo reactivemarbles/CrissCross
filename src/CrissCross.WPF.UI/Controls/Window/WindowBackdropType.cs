@@ -20,5 +20,5 @@ public enum WindowBackdropType
     Acrylic,
 
     /// <summary>Windows 11 wallpaper blur effect.</summary>
-    Tabbed
+    Tabbed,
 }

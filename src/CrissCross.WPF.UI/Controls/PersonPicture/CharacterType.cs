@@ -17,5 +17,5 @@ internal enum CharacterType
     Symbolic = 2,
 
     /// <summary>Member of a character set which supports glyphs.</summary>
-    Glyph = 3
+    Glyph = 3,
 }

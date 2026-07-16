@@ -11,9 +11,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class VirtualizingGridView : global::Avalonia.Controls.ListBox
 {
     /// <summary>Property for <see cref="Orientation"/>.</summary>
-    public static readonly StyledProperty<Orientation> OrientationProperty = AvaloniaProperty.Register<VirtualizingGridView, Orientation>(
-        nameof(Orientation),
-        Orientation.Vertical);
+    public static readonly StyledProperty<Orientation> OrientationProperty = AvaloniaProperty.Register<
+        VirtualizingGridView,
+        Orientation
+    >(nameof(Orientation), Orientation.Vertical);
 
     /// <summary>Gets or sets the orientation.</summary>
     public Orientation Orientation

@@ -14,8 +14,7 @@ public static class NavigationServiceExtensions
         /// <summary>Sets the pane display mode of the navigation service.</summary>
         /// <param name="paneDisplayMode">The pane display mode.</param>
         /// <returns>Same <see cref="INavigationService"/> so multiple calls can be chained.</returns>
-        public INavigationService? SetPaneDisplayMode(
-            NavigationViewPaneDisplayMode paneDisplayMode)
+        public INavigationService? SetPaneDisplayMode(NavigationViewPaneDisplayMode paneDisplayMode)
         {
             var navigationControl = navigationService?.GetNavigationControl();
 

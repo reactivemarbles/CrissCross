@@ -6,56 +6,69 @@ using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a control that lets a user pick a color using a color spectrum, sliders, and text input.</summary>
+/// <summary>Represents the ColorPicker type.</summary>
 public class ColorPicker : Control
 {
     /// <summary>Identifies the <see cref="SelectedColor"/> dependency property.</summary>
-    public static readonly DependencyProperty SelectedColorProperty =
-        DependencyProperty.Register(
-            nameof(SelectedColor),
-            typeof(Color),
-            typeof(ColorPicker),
-            new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedColorChanged));
+    public static readonly DependencyProperty SelectedColorProperty = DependencyProperty.Register(
+        nameof(SelectedColor),
+        typeof(Color),
+        typeof(ColorPicker),
+        new FrameworkPropertyMetadata(
+            Colors.Black,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnSelectedColorChanged));
 
     /// <summary>Identifies the <see cref="ShowAlpha"/> dependency property.</summary>
-    public static readonly DependencyProperty ShowAlphaProperty =
-        DependencyProperty.Register(
-            nameof(ShowAlpha),
-            typeof(bool),
-            typeof(ColorPicker),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
+        nameof(ShowAlpha),
+        typeof(bool),
+        typeof(ColorPicker),
+        new PropertyMetadata(true));
 
     /// <summary>Identifies the <see cref="A"/> dependency property.</summary>
-    public static readonly DependencyProperty AProperty =
-        DependencyProperty.Register(
-            nameof(A),
-            typeof(double),
-            typeof(ColorPicker),
-            new FrameworkPropertyMetadata(MaximumColorChannelValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+    public static readonly DependencyProperty AProperty = DependencyProperty.Register(
+        nameof(A),
+        typeof(double),
+        typeof(ColorPicker),
+        new FrameworkPropertyMetadata(
+            MaximumColorChannelValue,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnChannelChanged,
+            (_, baseValue) => CoerceChannel(baseValue)));
 
     /// <summary>Identifies the <see cref="R"/> dependency property.</summary>
-    public static readonly DependencyProperty RProperty =
-        DependencyProperty.Register(
-            nameof(R),
-            typeof(double),
-            typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+    public static readonly DependencyProperty RProperty = DependencyProperty.Register(
+        nameof(R),
+        typeof(double),
+        typeof(ColorPicker),
+        new FrameworkPropertyMetadata(
+            0D,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnChannelChanged,
+            (_, baseValue) => CoerceChannel(baseValue)));
 
     /// <summary>Identifies the <see cref="G"/> dependency property.</summary>
-    public static readonly DependencyProperty GProperty =
-        DependencyProperty.Register(
-            nameof(G),
-            typeof(double),
-            typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+    public static readonly DependencyProperty GProperty = DependencyProperty.Register(
+        nameof(G),
+        typeof(double),
+        typeof(ColorPicker),
+        new FrameworkPropertyMetadata(
+            0D,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnChannelChanged,
+            (_, baseValue) => CoerceChannel(baseValue)));
 
     /// <summary>Identifies the <see cref="B"/> dependency property.</summary>
-    public static readonly DependencyProperty BProperty =
-        DependencyProperty.Register(
-            nameof(B),
-            typeof(double),
-            typeof(ColorPicker),
-            new FrameworkPropertyMetadata(0d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnChannelChanged, (_, baseValue) => CoerceChannel(baseValue)));
+    public static readonly DependencyProperty BProperty = DependencyProperty.Register(
+        nameof(B),
+        typeof(double),
+        typeof(ColorPicker),
+        new FrameworkPropertyMetadata(
+            0D,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnChannelChanged,
+            (_, baseValue) => CoerceChannel(baseValue)));
 
     /// <summary>The maximum value for an ARGB byte channel.</summary>
     private const double MaximumColorChannelValue = byte.MaxValue;
@@ -66,7 +79,9 @@ public class ColorPicker : Control
     /// <summary>Provides the ColorPicker member.</summary>
     static ColorPicker()
     {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(ColorPicker), new FrameworkPropertyMetadata(typeof(ColorPicker)));
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(ColorPicker),
+            new FrameworkPropertyMetadata(typeof(ColorPicker)));
     }
 
     /// <summary>Gets or sets the selected color.</summary>

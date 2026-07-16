@@ -25,7 +25,7 @@ public class ToggleSwitch : System.Windows.Controls.Primitives.ToggleButton
         typeof(ToggleSwitch),
         new PropertyMetadata(null));
 
-    /// <summary>Gets or sets provides the object content that should be displayed when this <see cref="ToggleSwitch" /> has state of "Off".</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     [Bindable(true)]
     public object OffContent
     {
@@ -33,7 +33,7 @@ public class ToggleSwitch : System.Windows.Controls.Primitives.ToggleButton
         set => SetValue(OffContentProperty, value);
     }
 
-    /// <summary>Gets or sets provides the object content that should be displayed when this <see cref="ToggleSwitch" /> has state of "On".</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     [Bindable(true)]
     public object OnContent
     {

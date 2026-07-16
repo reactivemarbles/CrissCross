@@ -17,18 +17,19 @@ public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
 
     /// <summary>Property for <see cref="Header"/>.</summary>
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<TitleBar, object?>(
-        nameof(Header),
-        null);
+        nameof(Header));
 
     /// <summary>Property for <see cref="ButtonsForeground"/>.</summary>
-    public static readonly StyledProperty<IBrush> ButtonsForegroundProperty = AvaloniaProperty.Register<TitleBar, IBrush>(
-        nameof(ButtonsForeground),
-        Brushes.Black);
+    public static readonly StyledProperty<IBrush> ButtonsForegroundProperty = AvaloniaProperty.Register<
+        TitleBar,
+        IBrush
+    >(nameof(ButtonsForeground), Brushes.Black);
 
     /// <summary>Property for <see cref="ButtonsBackground"/>.</summary>
-    public static readonly StyledProperty<IBrush> ButtonsBackgroundProperty = AvaloniaProperty.Register<TitleBar, IBrush>(
-        nameof(ButtonsBackground),
-        Brushes.White);
+    public static readonly StyledProperty<IBrush> ButtonsBackgroundProperty = AvaloniaProperty.Register<
+        TitleBar,
+        IBrush
+    >(nameof(ButtonsBackground), Brushes.White);
 
     /// <summary>Property for <see cref="IsMaximized"/>.</summary>
     public static readonly StyledProperty<bool> IsMaximizedProperty = AvaloniaProperty.Register<TitleBar, bool>(
@@ -52,8 +53,7 @@ public class TitleBar : global::Avalonia.Controls.Primitives.TemplatedControl
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<TitleBar, object?>(
-        nameof(Icon),
-        null);
+        nameof(Icon));
 
     /// <summary>Gets or sets the title.</summary>
     public string Title

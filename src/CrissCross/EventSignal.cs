@@ -10,7 +10,7 @@ namespace CrissCross;
 /// <summary>Creates observable event streams backed by ReactiveUI.Primitives.</summary>
 public static class EventSignal
 {
-    /// <summary>Creates an observable sequence for an event and projects each notification to its event arguments.</summary>
+    /// <summary>Creates a projected observable event sequence.</summary>
     /// <typeparam name="TEventHandler">The event handler delegate type.</typeparam>
     /// <typeparam name="TEventArgs">The event arguments type.</typeparam>
     /// <param name="handlerFactory">Creates the concrete event delegate from a standard event handler.</param>
@@ -40,16 +40,15 @@ public static class EventSignal
     public static IObservable<TEventArgs> From<TEventArgs>(
         Action<EventHandler<TEventArgs>> addHandler,
         Action<EventHandler<TEventArgs>> removeHandler)
-        where TEventArgs : EventArgs
-        => From<EventHandler<TEventArgs>, TEventArgs>(handler => handler, addHandler, removeHandler);
+        where TEventArgs : EventArgs =>
+        From<EventHandler<TEventArgs>, TEventArgs>(handler => handler, addHandler, removeHandler);
 
     /// <summary>Removes an event handler when the observable subscription is disposed.</summary>
     /// <typeparam name="TEventHandler">The event handler delegate type.</typeparam>
     /// <param name="removeHandler">The event unsubscription callback.</param>
     /// <param name="handler">The subscribed event handler.</param>
-    private sealed class EventSubscription<TEventHandler>(
-        Action<TEventHandler> removeHandler,
-        TEventHandler handler) : IDisposable
+    private sealed class EventSubscription<TEventHandler>(Action<TEventHandler> removeHandler, TEventHandler handler)
+        : IDisposable
         where TEventHandler : Delegate
     {
         /// <summary>The event unsubscription callback.</summary>

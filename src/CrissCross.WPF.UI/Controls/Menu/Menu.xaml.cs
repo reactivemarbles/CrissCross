@@ -7,7 +7,7 @@ namespace CrissCross.WPF.UI.Styles.Controls;
 /// <summary>Extension to the menu.</summary>
 public partial class Menu : ResourceDictionary
 {
-    /// <summary>Initializes a new instance of the <see cref="Menu"/> class. Sets menu alignment on initialization.</summary>
+    /// <summary>Initializes a new instance of the <see cref="Menu"/> class.</summary>
     public Menu() => Initialize();
 
     /// <summary>Provides the Initialize member.</summary>

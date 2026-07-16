@@ -15,25 +15,46 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class DateTimeRangePicker : TemplatedControl
 {
     /// <summary>Property for <see cref="Start"/>.</summary>
-    public static readonly StyledProperty<DateTimeOffset?> StartProperty = AvaloniaProperty.Register<DateTimeRangePicker, DateTimeOffset?>(nameof(Start), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<DateTimeOffset?> StartProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        DateTimeOffset?
+    >(nameof(Start), defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="End"/>.</summary>
-    public static readonly StyledProperty<DateTimeOffset?> EndProperty = AvaloniaProperty.Register<DateTimeRangePicker, DateTimeOffset?>(nameof(End), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<DateTimeOffset?> EndProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        DateTimeOffset?
+    >(nameof(End), defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="CurrentRange"/>.</summary>
-    public static readonly StyledProperty<DateTimeRange?> CurrentRangeProperty = AvaloniaProperty.Register<DateTimeRangePicker, DateTimeRange?>(nameof(CurrentRange));
+    public static readonly StyledProperty<DateTimeRange?> CurrentRangeProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        DateTimeRange?
+    >(nameof(CurrentRange));
 
     /// <summary>Property for <see cref="SelectedPreset"/>.</summary>
-    public static readonly StyledProperty<DateTimeRangePreset> SelectedPresetProperty = AvaloniaProperty.Register<DateTimeRangePicker, DateTimeRangePreset>(nameof(SelectedPreset), DateTimeRangePreset.Custom);
+    public static readonly StyledProperty<DateTimeRangePreset> SelectedPresetProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        DateTimeRangePreset
+    >(nameof(SelectedPreset), DateTimeRangePreset.Custom);
 
     /// <summary>Property for <see cref="RangeLabel"/>.</summary>
-    public static readonly StyledProperty<string?> RangeLabelProperty = AvaloniaProperty.Register<DateTimeRangePicker, string?>(nameof(RangeLabel));
+    public static readonly StyledProperty<string?> RangeLabelProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        string?
+    >(nameof(RangeLabel));
 
     /// <summary>Property for <see cref="ReferenceTime"/>.</summary>
-    public static readonly StyledProperty<DateTimeOffset> ReferenceTimeProperty = AvaloniaProperty.Register<DateTimeRangePicker, DateTimeOffset>(nameof(ReferenceTime));
+    public static readonly StyledProperty<DateTimeOffset> ReferenceTimeProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        DateTimeOffset
+    >(nameof(ReferenceTime));
 
     /// <summary>Property for <see cref="RangeChangedCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> RangeChangedCommandProperty = AvaloniaProperty.Register<DateTimeRangePicker, ICommand?>(nameof(RangeChangedCommand));
+    public static readonly StyledProperty<ICommand?> RangeChangedCommandProperty = AvaloniaProperty.Register<
+        DateTimeRangePicker,
+        ICommand?
+    >(nameof(RangeChangedCommand));
 
     /// <summary>Initializes a new instance of the <see cref="DateTimeRangePicker"/> class.</summary>
     public DateTimeRangePicker()
@@ -127,7 +148,11 @@ public class DateTimeRangePicker : TemplatedControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != StartProperty && change.Property != EndProperty && change.Property != SelectedPresetProperty && change.Property != RangeLabelProperty)
+        if (
+            change.Property != StartProperty
+            && change.Property != EndProperty
+            && change.Property != SelectedPresetProperty
+            && change.Property != RangeLabelProperty)
         {
             return;
         }
@@ -145,7 +170,10 @@ public class DateTimeRangePicker : TemplatedControl
             return preset;
         }
 
-        return Enum.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), ignoreCase: true, out DateTimeRangePreset parsed)
+        return Enum.TryParse(
+            Convert.ToString(value, CultureInfo.InvariantCulture),
+            ignoreCase: true,
+            out DateTimeRangePreset parsed)
             ? parsed
             : DateTimeRangePreset.Custom;
     }
@@ -153,14 +181,15 @@ public class DateTimeRangePicker : TemplatedControl
     /// <summary>Provides the ResolvePresetDefinition member.</summary>
     /// <param name="preset">The preset value.</param>
     /// <returns>The result.</returns>
-    private static DateTimeRangePresetDefinition ResolvePresetDefinition(DateTimeRangePreset preset) => preset switch
-    {
-        DateTimeRangePreset.Today => DateTimeRangePresetDefinition.Today,
-        DateTimeRangePreset.Yesterday => DateTimeRangePresetDefinition.Yesterday,
-        DateTimeRangePreset.LastSevenDays => DateTimeRangePresetDefinition.LastSevenDays,
-        DateTimeRangePreset.ThisMonth => DateTimeRangePresetDefinition.ThisMonth,
-        _ => DateTimeRangePresetDefinition.Custom
-    };
+    private static DateTimeRangePresetDefinition ResolvePresetDefinition(DateTimeRangePreset preset) =>
+        preset switch
+        {
+            DateTimeRangePreset.Today => DateTimeRangePresetDefinition.Today,
+            DateTimeRangePreset.Yesterday => DateTimeRangePresetDefinition.Yesterday,
+            DateTimeRangePreset.LastSevenDays => DateTimeRangePresetDefinition.LastSevenDays,
+            DateTimeRangePreset.ThisMonth => DateTimeRangePresetDefinition.ThisMonth,
+            _ => DateTimeRangePresetDefinition.Custom,
+        };
 
     /// <summary>Provides the EmitRange member.</summary>
     /// <param name="range">The range value.</param>

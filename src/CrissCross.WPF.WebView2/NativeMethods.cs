@@ -18,10 +18,10 @@ internal static class NativeMethods
     private const int GWLEXSTYLE = -0x14;
 
     /// <summary>Specifies the application-window extended style.</summary>
-    private const uint WSEXAPPWINDOW = 0x00040000u;
+    private const uint WSEXAPPWINDOW = 0x00040000U;
 
     /// <summary>Specifies the tool-window extended style.</summary>
-    private const uint WSEXTOOLWINDOW = 0x00000080u;
+    private const uint WSEXTOOLWINDOW = 0x00000080U;
 
 #if NET7_0_OR_GREATER
     /// <summary>Changes the parent window of the specified child window.</summary>
@@ -78,5 +78,8 @@ internal static class NativeMethods
     /// <summary>Removes the specified window from the Alt+Tab application list.</summary>
     /// <param name="windowHandle">The window handle.</param>
     internal static void HideFromAltTab(IntPtr windowHandle) =>
-        _ = SetWindowLong(windowHandle, GWLEXSTYLE, (GetWindowLong(windowHandle, GWLEXSTYLE) | WSEXTOOLWINDOW) & ~WSEXAPPWINDOW);
+        _ = SetWindowLong(
+            windowHandle,
+            GWLEXSTYLE,
+            (GetWindowLong(windowHandle, GWLEXSTYLE) | WSEXTOOLWINDOW) & ~WSEXAPPWINDOW);
 }

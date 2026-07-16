@@ -14,7 +14,8 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <param name="source">The source.</param>
 /// <param name="formatType">The type of formatting applied.</param>
 /// <param name="affectedText">The text that was formatted.</param>
-public class FormattingEventArgs(RoutedEvent routedEvent, object source, TextFormatType formatType, string affectedText) : RoutedEventArgs(routedEvent, source)
+public class FormattingEventArgs(RoutedEvent routedEvent, object source, TextFormatType formatType, string affectedText)
+    : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>Gets the type of formatting that was applied.</summary>
     public TextFormatType FormatType { get; } = formatType;

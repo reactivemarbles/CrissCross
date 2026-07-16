@@ -16,9 +16,14 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
     where TViewModel : class, IRxObject, new()
 {
     /// <summary>The view model dependency property.</summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("AvaloniaProperty", "AVP1002", Justification = "Generic avalonia property is expected here.")]
-    public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty
-        .Register<NavigationUserControl<TViewModel>, TViewModel?>(nameof(ViewModel));
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "AvaloniaProperty",
+        "AVP1002",
+        Justification = "Generic avalonia property is expected here.")]
+    public static readonly StyledProperty<TViewModel?> ViewModelProperty = AvaloniaProperty.Register<
+        NavigationUserControl<TViewModel>,
+        TViewModel?
+    >(nameof(ViewModel));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.</summary>
     public NavigationUserControl() => AttachedToVisualTree += OnAttachedToVisualTree;

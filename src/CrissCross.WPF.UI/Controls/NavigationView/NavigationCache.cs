@@ -35,8 +35,7 @@ internal sealed class NavigationCache
         if (!_entires.TryGetValue(entryType, out var value))
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine(
-                $"{entryType} not found in cache, generating instance using action...");
+            System.Diagnostics.Debug.WriteLine($"{entryType} not found in cache, generating instance using action...");
 #endif
 
             value = generate.Invoke();

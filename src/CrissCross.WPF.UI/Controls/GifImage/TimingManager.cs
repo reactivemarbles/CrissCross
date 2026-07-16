@@ -38,7 +38,6 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     public bool IsComplete
     {
         get => field;
-
         private set
         {
             field = value;

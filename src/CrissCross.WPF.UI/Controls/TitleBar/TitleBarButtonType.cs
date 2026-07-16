@@ -23,5 +23,5 @@ public enum TitleBarButtonType
     Restore,
 
     /// <summary>Help button.</summary>
-    Help
+    Help,
 }

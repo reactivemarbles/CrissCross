@@ -92,6 +92,7 @@
   <Project Path="CrissCross.MAUI/CrissCross.MAUI.csproj" />
   <Project Path="CrissCross.WinForms/CrissCross.WinForms.csproj" />
   <Project Path="CrissCross.WPF.Plot/CrissCross.WPF.Plot.csproj" />
+  <Project Path="CrissCross.WPF.UI.SymbolGenerator/CrissCross.WPF.UI.SymbolGenerator.csproj" />
   <Project Path="CrissCross.WPF.UI/CrissCross.WPF.UI.csproj" />
   <Project Path="CrissCross.WPF.WebView2/CrissCross.WPF.WebView2.csproj" />
   <Project Path="CrissCross.WPF/CrissCross.WPF.csproj" />

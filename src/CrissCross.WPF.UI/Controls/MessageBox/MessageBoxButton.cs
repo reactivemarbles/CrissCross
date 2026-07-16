@@ -14,5 +14,5 @@ public enum MessageBoxButton
     Secondary,
 
     /// <summary>The close button.</summary>
-    Close
+    Close,
 }

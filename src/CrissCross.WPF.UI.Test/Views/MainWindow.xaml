@@ -1,81 +1,73 @@
 <ui:FluentWindow
-    x:Class="CrissCross.WPF.UI.Test.Views.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:abb="clr-namespace:CrissCross.WPF.UI.Controls;assembly=CrissCross.WPF.UI"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
-    x:Name="mainWindow"
-    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
-    Width="1100"
-    Height="650"
-    d:DataContext="{d:DesignInstance local:MainWindow,
+  x:Class="CrissCross.WPF.UI.Test.Views.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:abb="clr-namespace:CrissCross.WPF.UI.Controls;assembly=CrissCross.WPF.UI"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:CrissCross.WPF.UI.Test.Views"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+  x:Name="mainWindow"
+  Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+  Width="1100"
+  Height="650"
+  d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=True}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
-    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    ExtendsContentIntoTitleBar="True"
-    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    WindowBackdropType="Mica"
-    WindowCornerPreference="Round"
-    mc:Ignorable="d">
-    <ui:FluentWindow.InputBindings>
-        <KeyBinding
-            Key="F"
-            Command="{Binding ElementName=AutoSuggestBox, Path=FocusCommand}"
-            Modifiers="Control" />
-    </ui:FluentWindow.InputBindings>
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+  ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+  ExtendsContentIntoTitleBar="True"
+  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+  WindowBackdropType="Mica"
+  WindowCornerPreference="Round"
+  mc:Ignorable="d"
+>
+  <ui:FluentWindow.InputBindings>
+    <KeyBinding Key="F" Command="{Binding ElementName=AutoSuggestBox, Path=FocusCommand}" Modifiers="Control" />
+  </ui:FluentWindow.InputBindings>
 
-    <ui:Grid>
-        <ui:Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </ui:Grid.RowDefinitions>
+  <ui:Grid>
+    <ui:Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </ui:Grid.RowDefinitions>
 
-        <ui:TitleBar Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}" Grid.Row="0">
-            <ui:TitleBar.Icon>
-                <ui:ImageIcon Source="/Assets/CrissCrossIcon_256.png" />
-            </ui:TitleBar.Icon>
-        </ui:TitleBar>
-        <ui:BreadcrumbBar x:Name="Breadcrumb" Grid.Row="1">
-            <ui:BreadcrumbBarItem Content="Home" />
-            <ui:BreadcrumbBarItem Content="Dashboard" />
-        </ui:BreadcrumbBar>
-        <ui:NavigationView
-            x:Name="RootNavigation"
-            Grid.Row="2"
-            FooterMenuItemsSource="{Binding ViewModel.NavigationFooter, Mode=OneWay}"
-            IsPaneOpen="False"
-            MenuItemsSource="{Binding ViewModel.NavigationItems, Mode=OneWay}">
-            <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
-                    <ui:AutoSuggestBox.Icon>
-                        <ui:IconSourceElement>
-                            <ui:SymbolIconSource Symbol="Search24" />
-                        </ui:IconSourceElement>
-                    </ui:AutoSuggestBox.Icon>
-                </ui:AutoSuggestBox>
-            </ui:NavigationView.AutoSuggestBox>
-            <ui:NavigationView.Header>
-                <ui:BreadcrumbBar
-                    Margin="42,32,0,0"
-                    FontSize="28"
-                    FontWeight="DemiBold" />
-            </ui:NavigationView.Header>
-        </ui:NavigationView>
-        <ui:AppBar
-            Grid.Row="2"
-            Grid.RowSpan="2"
-            Height="88"
-            VerticalAlignment="Bottom">
-            <ui:AppBar.AppBarLeft>
-                <ui:Button Content="Hello" />
-                <abb:AppBarButton Content="Hello" Icon="Ab_heart" />
-            </ui:AppBar.AppBarLeft>
-        </ui:AppBar>
-    </ui:Grid>
+    <ui:TitleBar Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}" Grid.Row="0">
+      <ui:TitleBar.Icon>
+        <ui:ImageIcon Source="/Assets/CrissCrossIcon_256.png" />
+      </ui:TitleBar.Icon>
+    </ui:TitleBar>
+    <ui:BreadcrumbBar x:Name="Breadcrumb" Grid.Row="1">
+      <ui:BreadcrumbBarItem Content="Home" />
+      <ui:BreadcrumbBarItem Content="Dashboard" />
+    </ui:BreadcrumbBar>
+    <ui:NavigationView
+      x:Name="RootNavigation"
+      Grid.Row="2"
+      FooterMenuItemsSource="{Binding ViewModel.NavigationFooter, Mode=OneWay}"
+      IsPaneOpen="False"
+      MenuItemsSource="{Binding ViewModel.NavigationItems, Mode=OneWay}"
+    >
+      <ui:NavigationView.AutoSuggestBox>
+        <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
+          <ui:AutoSuggestBox.Icon>
+            <ui:IconSourceElement>
+              <ui:SymbolIconSource Symbol="Search24" />
+            </ui:IconSourceElement>
+          </ui:AutoSuggestBox.Icon>
+        </ui:AutoSuggestBox>
+      </ui:NavigationView.AutoSuggestBox>
+      <ui:NavigationView.Header>
+        <ui:BreadcrumbBar Margin="42,32,0,0" FontSize="28" FontWeight="DemiBold" />
+      </ui:NavigationView.Header>
+    </ui:NavigationView>
+    <ui:AppBar Grid.Row="2" Grid.RowSpan="2" Height="88" VerticalAlignment="Bottom">
+      <ui:AppBar.AppBarLeft>
+        <ui:Button Content="Hello" />
+        <abb:AppBarButton Content="Hello" Icon="Ab_heart" />
+      </ui:AppBar.AppBarLeft>
+    </ui:AppBar>
+  </ui:Grid>
 </ui:FluentWindow>

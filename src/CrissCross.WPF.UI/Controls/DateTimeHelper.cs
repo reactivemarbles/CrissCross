@@ -123,11 +123,12 @@ internal static class DateTimeHelper
     /// <summary>Provides the DiscardTime member.</summary>
     /// <param name="d">The d value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? DiscardTime(DateTime? d) => d switch
-    {
-        null => null,
-        _ => d.Value.Date
-    };
+    public static DateTime? DiscardTime(DateTime? d) =>
+        d switch
+        {
+            null => null,
+            _ => new DateTime(d.Value.Year, d.Value.Month, d.Value.Day, 0, 0, 0, d.Value.Kind),
+        };
 
     /// <summary>Provides the EndOfDecade member.</summary>
     /// <param name="date">The date value.</param>
@@ -241,7 +242,7 @@ internal static class DateTimeHelper
 
         if (date.HasValue && format is not null)
         {
-            result = date.Value.Date.ToString(format.LongDatePattern, format);
+            result = date.Value.ToString(format.LongDatePattern, format);
         }
 
         return result;
@@ -258,16 +259,16 @@ internal static class DateTimeHelper
         }
 
         GregorianCalendar? foundCal = default;
-        foreach (var cal in culture.OptionalCalendars)
+        foreach (var optionalCalendar in culture.OptionalCalendars)
         {
-            if (cal is not GregorianCalendar)
+            if (optionalCalendar is not GregorianCalendar)
             {
                 continue;
             }
 
             // Return the first Gregorian calendar with CalendarType == Localized
             // Otherwise return the first Gregorian calendar
-            foundCal ??= cal as GregorianCalendar;
+            foundCal ??= optionalCalendar as GregorianCalendar;
 
             if (((GregorianCalendar)cal).CalendarType == GregorianCalendarTypes.Localized)
             {

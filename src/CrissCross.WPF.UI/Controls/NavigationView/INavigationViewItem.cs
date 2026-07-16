@@ -32,16 +32,17 @@ public interface INavigationViewItem
     /// <summary>Gets a value indicating whether gets information whether the current element is active.</summary>
     bool IsActive { get; }
 
-    /// <summary>Gets the Gets or sets a value indicating whether gets information whether the sub-<see cref="MenuItems"/> are expanded. value.</summary>
+    /// <summary>Gets the Gets or sets whether the sub-MenuItems are expanded. value.</summary>
     bool IsExpanded { get; internal set; }
 
-    /// <summary>Gets or sets a unique tag used by the parent navigation system for the purpose of searching and navigating.</summary>
+    /// <summary>Gets or sets a unique tag used by the parent navigation system to searching and navigating.</summary>
     string TargetPageTag { get; set; }
 
-    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="FrameworkElement"/>).</summary>
+    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from FrameworkElement).</summary>
     Type? TargetPageType { get; set; }
 
-    /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.</summary>
+    /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence
+    /// over TargetPageType.</summary>
     Type? TargetViewModelType { get; set; }
 
     /// <summary>

@@ -53,15 +53,47 @@ public partial class ScatterUI : RxObject, IPlottableUI
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class, configuring a scatter plot visualization and subscribing to. observable data updates.</summary>
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class, configuring a scatter plot
+    /// visualization and subscribing to. observable data updates.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="color">The color value.</param>
+    public ScatterUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        string color)
+        : this(plot, observable, color, true)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    public ScatterUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        string color,
+        bool autoscale)
+        : this(plot, observable, color, autoscale, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class.</summary>
     /// <param name="plot">The plot value.</param>
     /// <param name="observable">The observable value.</param>
     /// <param name="color">The color value.</param>
     /// <param name="autoscale">The autoscale value.</param>
     /// <param name="manualscale">The manualscale value.</param>
-    public ScatterUI(WpfPlot plot, IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable, string color, bool autoscale = true, bool manualscale = false)
+    public ScatterUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        string color,
+        bool autoscale,
+        bool manualscale)
     {
-        ChartSettings = new(color: color);
+        ChartSettings = new("---", color);
         ManualScale = manualscale;
         AutoScale = autoscale;
 
@@ -81,15 +113,46 @@ public partial class ScatterUI : RxObject, IPlottableUI
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
     }
 
-    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class to display a scatter plot with the specified data and. appearance settings.</summary>
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    public ScatterUI(
+        WpfPlot plot,
+        (string? Name, IList<double> X, IList<double> Y, int Axis) data,
+        string color)
+        : this(plot, data, color, true)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    public ScatterUI(
+        WpfPlot plot,
+        (string? Name, IList<double> X, IList<double> Y, int Axis) data,
+        string color,
+        bool autoscale)
+        : this(plot, data, color, autoscale, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ScatterUI"/> class.</summary>
     /// <param name="plot">The plot value.</param>
     /// <param name="data">The data value.</param>
     /// <param name="color">The color value.</param>
     /// <param name="autoscale">The autoscale value.</param>
     /// <param name="manualscale">The manualscale value.</param>
-    public ScatterUI(WpfPlot plot, (string? Name, IList<double> X, IList<double> Y, int Axis) data, string color, bool autoscale = true, bool manualscale = false)
+    public ScatterUI(
+        WpfPlot plot,
+        (string? Name, IList<double> X, IList<double> Y, int Axis) data,
+        string color,
+        bool autoscale,
+        bool manualscale)
     {
-        ChartSettings = new(color: color);
+        ChartSettings = new("---", color);
         ManualScale = manualscale;
         AutoScale = autoscale;
 
@@ -124,14 +187,15 @@ public partial class ScatterUI : RxObject, IPlottableUI
     /// <remarks>The scatter plot is initialized with a single data point at (0, 0). The line and marker sizes
     /// are set to minimal values for a simple visual representation. The color must be a valid hexadecimal color code;
     /// otherwise, an error may occur when parsing the color.</remarks>
-    /// <param name="color">A string representing the color of the scatter plot, specified in hexadecimal format (e.g., "#FF0000" for red).</param>
+    /// <param name="color">A string representing the color of the scatter plot, specified in hexadecimal format (e.g.,
+    /// "#FF0000" for red).</param>
     public void CreateScatter(string color)
     {
         double[] y = [0];
         double[] x = [0];
         PlotLine = Plot.Plot.Add.Scatter(x, y);
-        PlotLine.LineStyle.Width = 1f;
-        PlotLine.MarkerSize = 1f;
+        PlotLine.LineStyle.Width = 1F;
+        PlotLine.MarkerSize = 1F;
         PlotLine.Color = Color.FromHex(color);
     }
 
@@ -185,17 +249,23 @@ public partial class ScatterUI : RxObject, IPlottableUI
         }
 
         PlotLine = Plot.Plot.Add.Scatter(xs, ys);
-        PlotLine.LineStyle.Width = 1f;
+        PlotLine.LineStyle.Width = 1F;
         PlotLine.LineStyle.IsVisible = false;
-        PlotLine.MarkerSize = 1f;
+        PlotLine.MarkerSize = 1F;
         PlotLine!.Axes = Axes;
     }
 
-    /// <summary>Subscribes to an observable sequence of scatter plot data and updates the plot with new values as they arrive.</summary>
+    /// <summary>Provides the UpdateScatter member.</summary>
     /// <param name="observable">The observable value.</param>
     public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) =>
         observable
-            .Where(data => data.Name is not null && data.X is not null && data.Y is not null && data.X.Count > 0 && data.Y.Count > 0 && data.X.Count == data.Y.Count)
+            .Where(data =>
+                data.Name is not null
+                && data.X is not null
+                && data.Y is not null
+                && data.X.Count > 0
+                && data.Y.Count > 0
+                && data.X.Count == data.Y.Count)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(data =>
             {
@@ -222,7 +292,8 @@ public partial class ScatterUI : RxObject, IPlottableUI
                 }
 
                 Plot.Refresh();
-            }).DisposeWith(Disposables);
+            })
+            .DisposeWith(Disposables);
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing">The disposing value.</param>
@@ -242,8 +313,10 @@ public partial class ScatterUI : RxObject, IPlottableUI
     }
 
     /// <summary>Returns the minimum and maximum values from the specified collection of doubles.</summary>
-    /// <param name="values">A non-empty list of double values from which to determine the minimum and maximum. Cannot be null or empty.</param>
-    /// <returns>A tuple containing the smallest value as Min and the largest value as Max from the input list.</returns>
+    /// <param name="values">A non-empty list of double values from which to determine the minimum and maximum. Cannot
+    /// be null or empty.</param>
+    /// <returns>A tuple containing the smallest value as Min and the largest value as Max from the input
+    /// list.</returns>
     private static (double Min, double Max) GetMinMax(IList<double> values)
     {
         var min = values[0];

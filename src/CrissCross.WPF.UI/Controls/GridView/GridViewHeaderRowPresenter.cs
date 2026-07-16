@@ -6,16 +6,16 @@ using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extends <see cref="System.Windows.Controls.GridViewHeaderRowPresenter"/>, and adds layout support for <see cref="GridViewColumn"/>, which can have <see cref="GridViewColumn.MinWidth"/> and <see cref="GridViewColumn.MaxWidth"/>.</summary>
+/// <summary>Provides the GridViewHeaderRowPresenter member.</summary>
 public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeaderRowPresenter
 {
     /// <summary>The width of the column resize indicator.</summary>
-    private const double IndicatorWidth = 3d;
+    private const double IndicatorWidth = 3D;
 
     /// <summary>Initializes a new instance of the <see cref="GridViewHeaderRowPresenter"/> class.</summary>
     public GridViewHeaderRowPresenter() => Loaded += OnLoaded;
 
-    /// <summary>Arranges the content of the header row elements, and computes the actual size of the header row.</summary>
+    /// <summary>Provides the ArrangeOverride member.</summary>
     /// <param name="arrangeSize">The area that is available for the column header row.</param>
     /// <returns>
     /// The actual <see cref="T:System.Windows.Size" /> for the column header row.
@@ -78,13 +78,12 @@ public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeader
         indicator.Margin = new(0);
         indicator.Width = IndicatorWidth;
 
-        ResourceDictionary resourceDictionary =
-            new()
-            {
-                Source = new(
-                    "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewHeaderRowIndicator.xaml",
-                    UriKind.Absolute)
-            };
+        ResourceDictionary resourceDictionary = new()
+        {
+            Source = new(
+                "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewHeaderRowIndicator.xaml",
+                UriKind.Absolute),
+        };
 
         if (resourceDictionary["GridViewHeaderRowIndicatorTemplate"] is ControlTemplate template)
         {

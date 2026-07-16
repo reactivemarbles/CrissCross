@@ -14,5 +14,5 @@ public enum DisabledState
     UnChecked,
 
     /// <summary>The checked.</summary>
-    Checked
+    Checked,
 }

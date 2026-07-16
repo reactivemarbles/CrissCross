@@ -16,6 +16,7 @@ public partial class CheckBoxPageView : ReactiveUserControl<CheckBoxPageViewMode
     public CheckBoxPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<CheckBoxPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<CheckBoxPageViewModel>());
     }
 }

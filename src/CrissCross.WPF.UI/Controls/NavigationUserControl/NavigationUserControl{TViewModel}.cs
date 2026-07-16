@@ -16,16 +16,16 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
     where TViewModel : class, IRxObject, new()
 {
     /// <summary>The view model dependency property.</summary>
-    public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register(
-            nameof(ViewModel),
-            typeof(TViewModel),
-            typeof(NavigationUserControl<TViewModel>),
-            new PropertyMetadata(null));
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(TViewModel),
+        typeof(NavigationUserControl<TViewModel>),
+        new PropertyMetadata(null));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.</summary>
     public NavigationUserControl() =>
-        this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+        this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;

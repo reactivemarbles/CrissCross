@@ -8,12 +8,11 @@ namespace CrissCross.WPF.UI.UIExtensions;
 internal sealed class RgbColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderArgbTypeProperty member.</summary>
-    public static readonly DependencyProperty SliderArgbTypeProperty =
-        DependencyProperty.Register(
-            nameof(SliderArgbType),
-            typeof(string),
-            typeof(RgbColorSlider),
-            new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty SliderArgbTypeProperty = DependencyProperty.Register(
+        nameof(SliderArgbType),
+        typeof(string),
+        typeof(RgbColorSlider),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>Gets or sets SliderArgbType.</summary>
     public string SliderArgbType
@@ -28,11 +27,7 @@ internal sealed class RgbColorSlider : PreviewColorSlider
         var colorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
         LeftCapColor.Color = colorStart;
         RightCapColor.Color = colorEnd;
-        BackgroundGradient =
-        [
-            new GradientStop(colorStart, 0.0),
-            new GradientStop(colorEnd, 1)
-        ];
+        SetBackgroundGradient([new GradientStop(colorStart, 0.0), new GradientStop(colorEnd, 1)]);
     }
 
     /// <summary>Provides the GetColorForSelectedArgb member.</summary>

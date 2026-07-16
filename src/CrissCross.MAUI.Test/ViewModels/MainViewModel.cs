@@ -12,33 +12,35 @@ namespace CrissCross.MAUI.Test;
 /// <seealso cref="RxObject" />
 public class MainViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="MainViewModel"/> class.</summary>
-    public MainViewModel()
-    {
-        GotoFirst = ReactiveCommand.Create(() => this.NavigateToView<FirstViewModel>());
+    /// <summary>Provides the cached first-view navigation command.</summary>
+    private ICommand? _gotoFirst;
 
-        GotoControlsGallery = ReactiveCommand.Create(() => this.NavigateToView<ControlsGalleryViewModel>());
+    /// <summary>Provides the cached gallery navigation command.</summary>
+    private ICommand? _gotoControlsGallery;
 
-        GotoMain = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
-    }
+    /// <summary>Provides the cached back-navigation command.</summary>
+    private ICommand? _gotoMain;
 
     /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
-    public ICommand? GotoFirst { get; }
+    public ICommand GotoFirst => _gotoFirst ??= ReactiveCommand.Create(
+        () => this.NavigateToView(new NavigationKeyRequest<FirstViewModel>()));
 
     /// <summary>Gets the goto controls gallery command.</summary>
     /// <value>
     /// The goto controls gallery command.
     /// </value>
-    public ICommand? GotoControlsGallery { get; }
+    public ICommand GotoControlsGallery => _gotoControlsGallery ??=
+        ReactiveCommand.Create(
+            () => this.NavigateToView(new NavigationKeyRequest<ControlsGalleryViewModel>()));
 
     /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
-    public ICommand? GotoMain { get; }
+    public ICommand GotoMain => _gotoMain ??= ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
 
     /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />

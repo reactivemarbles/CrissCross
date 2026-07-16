@@ -7,25 +7,16 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents NavigationView.</summary>
 /// <seealso cref="System.Windows.Controls.Control" />
 /// <seealso cref="INavigationView" />
-[TemplatePart(
-    Name = TemplateElementNavigationViewContentPresenter,
-    Type = typeof(NavigationViewContentPresenter))]
-[TemplatePart(
-    Name = TemplateElementMenuItemsItemsControl,
-    Type = typeof(System.Windows.Controls.ItemsControl))]
-[TemplatePart(
-    Name = TemplateElementFooterMenuItemsItemsControl,
-    Type = typeof(System.Windows.Controls.ItemsControl))]
+[TemplatePart(Name = TemplateElementNavigationViewContentPresenter, Type = typeof(NavigationViewContentPresenter))]
+[TemplatePart(Name = TemplateElementMenuItemsItemsControl, Type = typeof(System.Windows.Controls.ItemsControl))]
+[TemplatePart(Name = TemplateElementFooterMenuItemsItemsControl, Type = typeof(System.Windows.Controls.ItemsControl))]
 [TemplatePart(Name = TemplateElementBackButton, Type = typeof(System.Windows.Controls.Button))]
 [TemplatePart(Name = TemplateElementToggleButton, Type = typeof(System.Windows.Controls.Button))]
-[TemplatePart(
-    Name = TemplateElementAutoSuggestBoxSymbolButton,
-    Type = typeof(System.Windows.Controls.Button))]
+[TemplatePart(Name = TemplateElementAutoSuggestBoxSymbolButton, Type = typeof(System.Windows.Controls.Button))]
 public partial class NavigationView
 {
     /// <summary>Template element represented by the <c>PART_MenuItemsItemsControl</c> name.</summary>
-    private const string TemplateElementNavigationViewContentPresenter =
-        "PART_NavigationViewContentPresenter";
+    private const string TemplateElementNavigationViewContentPresenter = "PART_NavigationViewContentPresenter";
 
     /// <summary>Template element represented by the <c>PART_MenuItemsItemsControl</c> name.</summary>
     private const string TemplateElementMenuItemsItemsControl = "PART_MenuItemsItemsControl";
@@ -65,12 +56,15 @@ public partial class NavigationView
     {
         base.OnApplyTemplate();
 
-        NavigationViewContentPresenter = GetTemplateChild<NavigationViewContentPresenter>(
-            TemplateElementNavigationViewContentPresenter);
-        MenuItemsItemsControl = GetTemplateChild<System.Windows.Controls.ItemsControl>(
-            TemplateElementMenuItemsItemsControl);
-        FooterMenuItemsItemsControl = GetTemplateChild<System.Windows.Controls.ItemsControl>(
-            TemplateElementFooterMenuItemsItemsControl);
+        NavigationViewContentPresenter = GetTemplateChild(
+            TemplateElementNavigationViewContentPresenter,
+            default(NavigationViewContentPresenter));
+        MenuItemsItemsControl = GetTemplateChild(
+            TemplateElementMenuItemsItemsControl,
+            default(System.Windows.Controls.ItemsControl));
+        FooterMenuItemsItemsControl = GetTemplateChild(
+            TemplateElementFooterMenuItemsItemsControl,
+            default(System.Windows.Controls.ItemsControl));
 
         MenuItemsItemsControl.ItemsSource = MenuItems;
         FooterMenuItemsItemsControl.ItemsSource = FooterMenuItems;
@@ -113,10 +107,12 @@ public partial class NavigationView
     /// <summary>Gets the template child.</summary>
     /// <typeparam name="T">The type.</typeparam>
     /// <param name="name">The name.</param>
+    /// <param name="typeHint">The typed template-child hint.</param>
     /// <returns>An instance of T.</returns>
-    protected T GetTemplateChild<T>(string name)
+    protected T GetTemplateChild<T>(string name, T? typeHint)
         where T : DependencyObject
     {
+        _ = typeHint;
         if (GetTemplateChild(name) is not T dependencyObject)
         {
             throw new ArgumentNullException(name);

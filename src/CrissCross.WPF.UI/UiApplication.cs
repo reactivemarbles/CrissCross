@@ -54,7 +54,7 @@ public class UiApplication
         }
     }
 
-    /// <summary>Gets a value indicating whether the application is running outside of the desktop app context.</summary>
+    /// <summary>Gets whether the application is running outside of the desktop app context.</summary>
     public bool IsApplication => _application is not null;
 
     /// <summary>Gets or sets the application's main window.</summary>
@@ -69,7 +69,7 @@ public class UiApplication
         }
     }
 
-    /// <summary>Gets or sets the application's resources.</summary>
+    /// <summary>Gets the application's resources.</summary>
     public ResourceDictionary Resources
     {
         get
@@ -94,13 +94,6 @@ public class UiApplication
 
             return _application?.Resources ?? field;
         }
-
-        set
-        {
-            _application?.Resources = value;
-
-            field = value;
-        }
     }
 
     /// <summary>Gets or sets the application's main window.</summary>
@@ -115,6 +108,8 @@ public class UiApplication
     /// <param name="application">The application value.</param>
     /// <returns>The result.</returns>
     private static bool ApplicationHasResources(Application application) =>
-        application.Resources.MergedDictionaries
-            .Any(e => e.Source?.ToString().Contains(Appearance.ApplicationThemeManager.LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true);
+        application.Resources.MergedDictionaries.Any(e =>
+            e.Source?.ToString()
+                .Contains(Appearance.ApplicationThemeManager.LibraryNamespace, StringComparison.OrdinalIgnoreCase)
+            == true);
 }

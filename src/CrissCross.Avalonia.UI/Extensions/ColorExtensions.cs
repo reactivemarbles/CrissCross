@@ -10,10 +10,10 @@ namespace CrissCross.Avalonia.UI.Extensions;
 public static class ColorExtensions
 {
     /// <summary>Provides the PercentFactorMaximum member.</summary>
-    private const float PercentFactorMaximum = 100f;
+    private const float PercentFactorMaximum = 100F;
 
     /// <summary>Provides the PercentFactorMinimum member.</summary>
-    private const float PercentFactorMinimum = -100f;
+    private const float PercentFactorMinimum = -100F;
 
     /// <summary>Provides the PercentDivisor member.</summary>
     private const double PercentDivisor = 100.0;
@@ -26,7 +26,7 @@ public static class ColorExtensions
         /// <returns>Brush converted to color.</returns>
         public SolidColorBrush ToBrush() => new(color);
 
-        /// <summary>Creates a <see cref="SolidColorBrush"/> from a <see cref="Color"/> with defined brush opacity.</summary>
+        /// <summary>Creates a SolidColorBrush from a Color with defined brush opacity.</summary>
         /// <param name="opacity">Degree of opacity.</param>
         /// <returns>Brush converted to color with modified opacity.</returns>
         public SolidColorBrush ToBrush(double opacity) => new(color, opacity);
@@ -108,8 +108,7 @@ public static class ColorExtensions
 
         /// <summary>Converts a Color to a hex string without alpha.</summary>
         /// <returns>The hex string representation without alpha.</returns>
-        public string ToHexWithoutAlpha() =>
-            $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        public string ToHexWithoutAlpha() => $"#{color.R:X2}{color.G:X2}{color.B:X2}";
     }
 
     /// <summary>Converts a hex string to a Color.</summary>

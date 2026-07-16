@@ -31,9 +31,7 @@ internal sealed class GifApplicationExtension : GifExtension
     private const int AuthenticationCodeByteCount = 3;
 
     /// <summary>Initializes a new instance of the <see cref="GifApplicationExtension"/> class.</summary>
-    private GifApplicationExtension()
-    {
-    }
+    private GifApplicationExtension() { }
 
     /// <summary>Gets the BlockSize value.</summary>
     public int BlockSize { get; private set; }
@@ -73,7 +71,10 @@ internal sealed class GifApplicationExtension : GifExtension
             throw GifHelpers.InvalidBlockSizeException("Application Extension", ApplicationBlockSize, BlockSize);
         }
 
-        ApplicationIdentifier = GifHelpers.GetString(bytes, ApplicationIdentifierOffset, ApplicationIdentifierByteCount);
+        ApplicationIdentifier = GifHelpers.GetString(
+            bytes,
+            ApplicationIdentifierOffset,
+            ApplicationIdentifierByteCount);
         var authCode = new byte[AuthenticationCodeByteCount];
         Array.Copy(bytes, AuthenticationCodeOffset, authCode, 0, AuthenticationCodeByteCount);
         AuthenticationCode = authCode;

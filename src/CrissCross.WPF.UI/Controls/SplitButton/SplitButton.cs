@@ -6,7 +6,8 @@ using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a button with two parts that can be invoked separately. One part behaves like a standard button and the other part invokes a flyout.</summary>
+/// <summary>Represents a button with two parts that can be invoked separately. One part behaves like a standard button
+/// and the other part invokes a flyout.</summary>
 [TemplatePart(Name = TemplateElementToggleButton, Type = typeof(ToggleButton))]
 public class SplitButton : Button, IDisposable
 {
@@ -46,7 +47,8 @@ public class SplitButton : Button, IDisposable
 
     /// <summary>Gets or sets a value indicating whether the drop-down for a button is currently open.</summary>
     /// <returns>
-    /// <see langword="true" /> if the drop-down is open; otherwise, <see langword="false" />. The default is <see langword="false" />.</returns>
+    /// <see langword="true" /> if the drop-down is open; otherwise, <see langword="false" />. The default is <see
+    /// langword="false" />.</returns>
     [Bindable(true)]
     [Browsable(false)]
     [Category("Appearance")]
@@ -74,11 +76,12 @@ public class SplitButton : Button, IDisposable
         else
         {
             throw new InvalidOperationException(
-                $"Element {nameof(TemplateElementToggleButton)} of type {typeof(ToggleButton)} not found in {typeof(SplitButton)}");
+                $"Element {nameof(TemplateElementToggleButton)} of type {typeof(ToggleButton)} "
+                    + $"not found in {typeof(SplitButton)}");
         }
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -100,16 +103,15 @@ public class SplitButton : Button, IDisposable
 
     /// <summary>Called when [is drop down open changed].</summary>
     /// <param name="currentValue">if set to <c>true</c> [current value].</param>
-    protected virtual void OnIsDropDownOpenChanged(bool currentValue)
-    {
-    }
+    protected virtual void OnIsDropDownOpenChanged(bool currentValue) { }
 
     /// <summary>Triggered when the control is unloaded. Releases resource bindings.</summary>
     protected virtual void ReleaseTemplateResources() =>
         SplitButtonToggleButton.Click -= OnSplitButtonToggleButtonOnClick;
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)

@@ -11,7 +11,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// </remarks>
 /// <param name="source">The source.</param>
 /// <param name="progress">The progress.</param>
-public class DownloadProgressEventArgs(object source, int progress) : RoutedEventArgs(AnimationBehavior.DownloadProgressEvent, source)
+public class DownloadProgressEventArgs(object source, int progress)
+    : RoutedEventArgs(AnimationBehavior.DownloadProgressEvent, source)
 {
     /// <summary>Gets or sets the progress.</summary>
     /// <value>

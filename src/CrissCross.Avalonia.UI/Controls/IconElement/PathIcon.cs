@@ -38,7 +38,7 @@ public class PathIcon : IconElement
             return;
         }
 
-        var pen = new Pen(Foreground, 1);
+        var pen = new Pen(Foreground);
         context.DrawGeometry(Foreground, pen, Data);
     }
 

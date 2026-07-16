@@ -48,10 +48,14 @@ public sealed class FilterExpression(
     /// <summary>Gets a stable expression key for reconciliation and saved-filter persistence.</summary>
     public string Key => string.Format(CultureInfo.InvariantCulture, "{0}:{1}:{2}", FieldKey, Operator, Value);
 
+    /// <summary>Creates a token for this expression without descriptor metadata.</summary>
+    /// <returns>The projected filter token.</returns>
+    public FilterToken ToToken() => ToToken(null);
+
     /// <summary>Creates a token for this expression using the supplied descriptor when available.</summary>
     /// <param name="descriptor">The optional descriptor for display metadata.</param>
     /// <returns>The projected filter token.</returns>
-    public FilterToken ToToken(FilterDescriptor? descriptor = null)
+    public FilterToken ToToken(FilterDescriptor? descriptor)
     {
         if (descriptor is not null)
         {

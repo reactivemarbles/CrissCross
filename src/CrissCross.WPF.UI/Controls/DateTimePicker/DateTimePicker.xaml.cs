@@ -14,25 +14,23 @@ public partial class DateTimePicker : UserControl
     /// <summary>The selected date property.</summary>
     public static readonly DependencyProperty SelectedDateProperty = DependencyProperty.Register(
         nameof(SelectedDate),
-        typeof(DateTime),
+        typeof(DateTimeOffset),
         typeof(DateTimePicker),
-        new FrameworkPropertyMetadata(DateTime.Now, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        new FrameworkPropertyMetadata(DateTimeOffset.Now, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     /// <summary>The display date start property.</summary>
-    public static readonly DependencyProperty DisplayDateStartProperty =
-        DependencyProperty.Register(
-            nameof(DisplayDateStart),
-            typeof(DateTime),
-            typeof(DateTimePicker),
-            new PropertyMetadata(DateTime.MinValue, DateChanged));
+    public static readonly DependencyProperty DisplayDateStartProperty = DependencyProperty.Register(
+        nameof(DisplayDateStart),
+        typeof(DateTimeOffset),
+        typeof(DateTimePicker),
+        new PropertyMetadata(DateTimeOffset.MinValue, DateChanged));
 
     /// <summary>The display date end property.</summary>
-    public static readonly DependencyProperty DisplayDateEndProperty =
-        DependencyProperty.Register(
-            nameof(DisplayDateEnd),
-            typeof(DateTime),
-            typeof(DateTimePicker),
-            new PropertyMetadata(DateTime.Now, DateChanged));
+    public static readonly DependencyProperty DisplayDateEndProperty = DependencyProperty.Register(
+        nameof(DisplayDateEnd),
+        typeof(DateTimeOffset),
+        typeof(DateTimePicker),
+        new PropertyMetadata(DateTimeOffset.Now, DateChanged));
 
     /// <summary>Provides the DateTimeFormat member.</summary>
     private const string DateTimeFormat = "dd.MM.yyyy HH:mm";
@@ -42,16 +40,16 @@ public partial class DateTimePicker : UserControl
     {
         InitializeComponent();
         CalDisplay.SelectedDatesChanged += CalDisplay_SelectedDatesChanged;
-        CalDisplay.SelectedDate = DateTime.Now;
+        CalDisplay.SelectedDate = DateTime.UtcNow;
     }
 
     /// <summary>Gets or sets the selected date.</summary>
     /// <value>
     /// The selected date.
     /// </value>
-    public DateTime SelectedDate
+    public DateTimeOffset SelectedDate
     {
-        get => (DateTime)GetValue(SelectedDateProperty);
+        get => (DateTimeOffset)GetValue(SelectedDateProperty);
         set => SetValue(SelectedDateProperty, value);
     }
 
@@ -59,9 +57,9 @@ public partial class DateTimePicker : UserControl
     /// <value>
     /// The display date start.
     /// </value>
-    public DateTime DisplayDateStart
+    public DateTimeOffset DisplayDateStart
     {
-        get => (DateTime)GetValue(DisplayDateStartProperty);
+        get => (DateTimeOffset)GetValue(DisplayDateStartProperty);
         set => SetValue(DisplayDateStartProperty, value);
     }
 
@@ -69,9 +67,9 @@ public partial class DateTimePicker : UserControl
     /// <value>
     /// The display date end.
     /// </value>
-    public DateTime DisplayDateEnd
+    public DateTimeOffset DisplayDateEnd
     {
-        get => (DateTime)GetValue(DisplayDateEndProperty);
+        get => (DateTimeOffset)GetValue(DisplayDateEndProperty);
         set => SetValue(DisplayDateEndProperty, value);
     }
 
@@ -101,6 +99,13 @@ public partial class DateTimePicker : UserControl
         dateTimePicker.CalDisplay_SelectedDatesChanged(null, EventArgs.Empty);
     }
 
+    /// <summary>Determines whether two values represent the same calendar date.</summary>
+    /// <param name="left">The first date.</param>
+    /// <param name="right">The second date.</param>
+    /// <returns><c>true</c> when the calendar dates match; otherwise, <c>false</c>.</returns>
+    private static bool IsSameDate(DateTime left, DateTime right) =>
+        left.Year == right.Year && left.Month == right.Month && left.Day == right.Day;
+
     /// <summary>Ensures the display date range is valid.</summary>
     private void CoerceDisplayDateRange() =>
         DisplayDateEnd = DisplayDateStart > DisplayDateEnd ? DisplayDateStart : DisplayDateEnd;
@@ -123,9 +128,11 @@ public partial class DateTimePicker : UserControl
             return;
         }
 
-        var date = selectedDate.Date + timeSpan;
+        var date =
+            new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, 0, 0, 0, selectedDate.Kind)
+            + timeSpan;
         DateDisplay.Text = date.ToString(DateTimeFormat);
-        SelectedDate = date;
+        SelectedDate = new(date);
     }
 
     /// <summary>Gets the selected time.</summary>
@@ -141,21 +148,19 @@ public partial class DateTimePicker : UserControl
     /// <param name="timeSpan">The selected time.</param>
     /// <returns>The coerced selected time.</returns>
     private TimeSpan CoerceSelectedTime(TimeSpan timeSpan) =>
-        ShouldUseSelectedTime(timeSpan)
-            ? timeSpan
-            : TimeSpan.FromHours(DateTime.Now.Hour + 1);
+        ShouldUseSelectedTime(timeSpan) ? timeSpan : TimeSpan.FromHours(DateTime.Now.Hour + 1);
 
     /// <summary>Determines whether the selected time can be used as-is.</summary>
     /// <param name="timeSpan">The selected time.</param>
     /// <returns><c>true</c> when the selected time can be used as-is; otherwise, <c>false</c>.</returns>
     private bool ShouldUseSelectedTime(TimeSpan timeSpan) =>
-        CalDisplay.SelectedDate!.Value.Date != DateTime.Today.Date ||
-        timeSpan.CompareTo(DateTime.Now.TimeOfDay) >= 0;
+        !IsSameDate(CalDisplay.SelectedDate!.Value, DateTime.Today) || timeSpan.CompareTo(DateTime.Now.TimeOfDay) >= 0;
 
     /// <summary>Provides the Time_SelectionChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
-    private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e) => CalDisplay_SelectedDatesChanged(sender, e);
+    private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
+        CalDisplay_SelectedDatesChanged(sender, e);
 
     /// <summary>Provides the CalDisplay_PreviewMouseUp member.</summary>
     /// <param name="sender">The event sender.</param>

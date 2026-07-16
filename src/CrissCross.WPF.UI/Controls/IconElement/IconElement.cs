@@ -43,35 +43,37 @@ public abstract class IconElement : FrameworkElement
     /// <summary>Gets the number of visual child elements within this element.</summary>
     protected override int VisualChildrenCount => 1;
 
-    /// <summary>Coerces the value of an Icon dependency property, allowing the use of either IconElement or IconSourceElement.</summary>
+    /// <summary>Provides the Coerce member.</summary>
     /// <param name="o">The dependency object (unused).</param>
     /// <param name="baseValue">The value to be coerced.</param>
     /// <returns>An IconElement, either directly or derived from an IconSourceElement.</returns>
-    public static object? Coerce(DependencyObject o, object? baseValue) => baseValue switch
-    {
-        IconSourceElement iconSourceElement => iconSourceElement.CreateIconElement(),
-        IconElement or null => baseValue,
-        _
-            => throw new ArgumentException(
-                message: $"Expected either '{typeof(IconSourceElement)}' or '{typeof(IconElement)}' but got '{baseValue.GetType()}'.",
-                paramName: nameof(baseValue))
-    };
+    public static object? Coerce(DependencyObject o, object? baseValue) =>
+        baseValue switch
+        {
+            IconSourceElement iconSourceElement => iconSourceElement.CreateIconElement(),
+            IconElement or null => baseValue,
+            _ => throw new ArgumentException(
+                message: $"Expected either '{typeof(IconSourceElement)}' or '{typeof(IconElement)}' "
+                    + $"but got '{baseValue.GetType()}'.",
+                paramName: nameof(baseValue)),
+        };
 
     /// <summary>Initializes the children.</summary>
     /// <returns>A UIElement.</returns>
     protected abstract UIElement InitializeChildren();
 
     /// <summary>Raises the <see cref="E:ForegroundChanged" /> event.</summary>
-    /// <param name="args">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-    protected virtual void OnForegroundChanged(DependencyPropertyChangedEventArgs args)
-    {
-    }
+    /// <param name="args">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event
+    /// data.</param>
+    protected virtual void OnForegroundChanged(DependencyPropertyChangedEventArgs args) { }
 
-    /// <summary>Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, and returns a child at the specified index from a collection of child elements.</summary>
+    /// <summary>Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, and returns a
+    /// child at the specified index from a collection of child elements.</summary>
     /// <exception cref="System.ArgumentOutOfRangeException">index - IconElement should have only 1 child.</exception>
     /// <param name="index">The zero-based index of the requested child element in the collection.</param>
     /// <returns>
-    /// The requested child element. This should not return null; if the provided index is out of range, an exception is thrown.
+    /// The requested child element. This should not return null; if the provided index is out of range, an exception is
+    /// thrown.
     /// </returns>
     protected override Visual GetVisualChild(int index)
     {
@@ -84,8 +86,10 @@ public abstract class IconElement : FrameworkElement
         return _layoutRoot!;
     }
 
-    /// <summary>When overridden in a derived class, measures the size in layout required for child elements and determines a size for the <see cref="T:System.Windows.FrameworkElement" />-derived class.</summary>
-    /// <param name="availableSize">The available size that this element can give to child elements. Infinity can be specified as a value to indicate that the element will size to whatever content is available.</param>
+    /// <summary>When overridden in a derived class, measures the size in layout required for child elements and
+    /// determines a size for the <see cref="T:System.Windows.FrameworkElement" />-derived class.</summary>
+    /// <param name="availableSize">The available size that this element can give to child elements. Infinity can be
+    /// specified as a value to indicate that the element will size to whatever content is available.</param>
     /// <returns>
     /// The size that this element determines it needs during layout, based on its calculations of child element sizes.
     /// </returns>
@@ -97,8 +101,10 @@ public abstract class IconElement : FrameworkElement
         return _layoutRoot.DesiredSize;
     }
 
-    /// <summary>When overridden in a derived class, positions child elements and determines a size for a <see cref="T:System.Windows.FrameworkElement" /> derived class.</summary>
-    /// <param name="finalSize">The final area within the parent that this element should use to arrange itself and its children.</param>
+    /// <summary>When overridden in a derived class, positions child elements and determines a size for a <see
+    /// cref="T:System.Windows.FrameworkElement" /> derived class.</summary>
+    /// <param name="finalSize">The final area within the parent that this element should use to arrange itself and its
+    /// children.</param>
     /// <returns>
     /// The actual size used.
     /// </returns>
@@ -118,7 +124,7 @@ public abstract class IconElement : FrameworkElement
             return;
         }
 
-        _layoutRoot = new Grid { Background = Brushes.Transparent, SnapsToDevicePixels = true, };
+        _layoutRoot = new Grid { Background = Brushes.Transparent, SnapsToDevicePixels = true };
 
         _ = _layoutRoot.Children.Add(InitializeChildren());
 

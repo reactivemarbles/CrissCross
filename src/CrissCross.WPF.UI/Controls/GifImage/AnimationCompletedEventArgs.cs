@@ -10,4 +10,5 @@ namespace CrissCross.WPF.UI.Controls;
 /// Initializes a new instance of the <see cref="AnimationCompletedEventArgs"/> class.
 /// </remarks>
 /// <param name="source">The source.</param>
-public class AnimationCompletedEventArgs(object source) : RoutedEventArgs(AnimationBehavior.AnimationCompletedEvent, source);
+public class AnimationCompletedEventArgs(object source)
+    : RoutedEventArgs(AnimationBehavior.AnimationCompletedEvent, source);

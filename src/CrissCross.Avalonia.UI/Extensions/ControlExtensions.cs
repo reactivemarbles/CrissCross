@@ -16,17 +16,17 @@ public static class ControlExtensions
     extension(Control control)
     {
         /// <summary>Finds a parent of the given type.</summary>
-        /// <typeparam name="T">The type of parent to find.</typeparam>
+        /// <param name="controlType">The type of parent to find.</param>
         /// <returns>The parent of the specified type, or null if not found.</returns>
-        public T? FindParent<T>()
-            where T : Control
+        public Control? FindParent(Type controlType)
         {
             ArgumentNullException.ThrowIfNull(control);
+            ArgumentNullException.ThrowIfNull(controlType);
 
             var parent = control.Parent;
             while (parent is not null)
             {
-                if (parent is T typedParent)
+                if (parent is Control typedParent && controlType.IsInstanceOfType(typedParent))
                 {
                     return typedParent;
                 }
@@ -38,12 +38,12 @@ public static class ControlExtensions
         }
 
         /// <summary>Finds a child of the given type.</summary>
-        /// <typeparam name="T">The type of child to find.</typeparam>
+        /// <param name="controlType">The type of child to find.</param>
         /// <returns>The child of the specified type, or null if not found.</returns>
-        public T? FindChild<T>()
-            where T : Control
+        public Control? FindChild(Type controlType)
         {
             ArgumentNullException.ThrowIfNull(control);
+            ArgumentNullException.ThrowIfNull(controlType);
 
             if (control is not Panel panel)
             {
@@ -52,14 +52,14 @@ public static class ControlExtensions
 
             foreach (var child in panel.Children)
             {
-                if (child is T typedChild)
+                if (controlType.IsInstanceOfType(child))
                 {
-                    return typedChild;
+                    return child;
                 }
 
                 if (child is Control childControl)
                 {
-                    var result = childControl.FindChild<T>();
+                    var result = childControl.FindChild(controlType);
                     if (result is not null)
                     {
                         return result;

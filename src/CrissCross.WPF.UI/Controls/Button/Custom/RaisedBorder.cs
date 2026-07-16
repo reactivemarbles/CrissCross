@@ -11,25 +11,49 @@ namespace CrissCross.WPF.UI.Controls;
 public class RaisedBorder : ContentControl
 {
     /// <summary>The corner radius1 property.</summary>
-    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(nameof(CornerRadius1), typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(10.0)));
+    public static readonly DependencyProperty CornerRadius1Property = DependencyProperty.Register(
+        nameof(CornerRadius1),
+        typeof(CornerRadius),
+        typeof(RaisedBorder),
+        new PropertyMetadata(new CornerRadius(10.0)));
 
     /// <summary>The corner radius2 property.</summary>
-    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(nameof(CornerRadius2), typeof(CornerRadius), typeof(RaisedBorder), new PropertyMetadata(new CornerRadius(20.0)));
+    public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(
+        nameof(CornerRadius2),
+        typeof(CornerRadius),
+        typeof(RaisedBorder),
+        new PropertyMetadata(new CornerRadius(20.0)));
 
     /// <summary>The glare brush property.</summary>
-    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(nameof(GlareBrush), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(
+        nameof(GlareBrush),
+        typeof(Brush),
+        typeof(RaisedBorder),
+        new PropertyMetadata(null));
 
     /// <summary>The glare opacity mask property.</summary>
-    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(nameof(GlareOpacityMask), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(
+        nameof(GlareOpacityMask),
+        typeof(Brush),
+        typeof(RaisedBorder),
+        new PropertyMetadata(null));
 
     /// <summary>The minor border brush1 property.</summary>
-    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(nameof(MinorBorderBrush1), typeof(Brush), typeof(RaisedBorder), new PropertyMetadata(null));
+    public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(
+        nameof(MinorBorderBrush1),
+        typeof(Brush),
+        typeof(RaisedBorder),
+        new PropertyMetadata(null));
 
     /// <summary>The minor border thickness1 property.</summary>
-    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(nameof(MinorBorderThickness1), typeof(Thickness), typeof(RaisedBorder), new PropertyMetadata(new Thickness(0.0)));
+    public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(
+        nameof(MinorBorderThickness1),
+        typeof(Thickness),
+        typeof(RaisedBorder),
+        new PropertyMetadata(new Thickness(0.0)));
 
     /// <summary>The pen thickness used to draw raised border outlines.</summary>
-    private const double BorderPenThickness = 0.5d;
+    private const double BorderPenThickness = 0.5D;
 
     /// <summary>Initializes a new instance of the <see cref="RaisedBorder"/> class.</summary>
     public RaisedBorder()
@@ -98,7 +122,11 @@ public class RaisedBorder : ContentControl
         set => SetValue(MinorBorderThickness1Property, value);
     }
 
-    /// <summary>Invoked whenever the effective value of any dependency property on this <see cref="T:System.Windows.FrameworkElement" /> has been updated. The specific dependency property that changed is reported in the arguments parameter. Overrides <see cref="M:System.Windows.DependencyObject.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)" />.</summary>
+    /// <summary>Invoked whenever the effective value of any dependency property on this <see
+    /// cref="T:System.Windows.FrameworkElement" /> has been updated. The specific dependency property that changed is
+    /// reported in the arguments parameter. Overrides <see
+    /// cref="M:System.Windows.DependencyObject.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)"
+    /// />.</summary>
     /// <param name="e">The event data that describes the property that changed, as well as old and new values.</param>
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -106,8 +134,11 @@ public class RaisedBorder : ContentControl
         InvalidateVisual();
     }
 
-    /// <summary>When overridden in a derived class, participates in rendering operations that are directed by the layout system. The rendering instructions for this element are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.</summary>
-    /// <param name="drawingContext">The drawing instructions for a specific element. This context is provided to the layout system.</param>
+    /// <summary>When overridden in a derived class, participates in rendering operations that are directed by the
+    /// layout system. The rendering instructions for this element are not used directly when this method is invoked,
+    /// and are instead preserved for later asynchronous use by layout and drawing.</summary>
+    /// <param name="drawingContext">The drawing instructions for a specific element. This context is provided to the
+    /// layout system.</param>
     protected override void OnRender(DrawingContext drawingContext)
     {
         if (drawingContext is null)
@@ -151,7 +182,8 @@ public class RaisedBorder : ContentControl
         base.OnRender(drawingContext);
     }
 
-    /// <summary>Returns a value that indicates whether serialization processes should serialize the value for the provided dependency property.</summary>
+    /// <summary>Returns a value that indicates whether serialization processes should serialize the value for the
+    /// provided dependency property.</summary>
     /// <param name="dp">The identifier for the dependency property that should be serialized.</param>
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
@@ -166,7 +198,8 @@ public class RaisedBorder : ContentControl
     /// <param name="height">The height value.</param>
     /// <param name="cornerRadius">The cornerRadius value.</param>
     /// <returns>The result.</returns>
-    private static PathGeometry CreateGeometryForPath(double width, double height, CornerRadius cornerRadius) => CreateGeometryForPath(width, height, cornerRadius, new Thickness(0));
+    private static PathGeometry CreateGeometryForPath(double width, double height, CornerRadius cornerRadius) =>
+        CreateGeometryForPath(width, height, cornerRadius, new Thickness(0));
 
     /// <summary>Provides the CreateGeometryForPath member.</summary>
     /// <param name="actualWidth">The actualWidth value.</param>
@@ -174,7 +207,11 @@ public class RaisedBorder : ContentControl
     /// <param name="cornerRadius">The cornerRadius value.</param>
     /// <param name="borderThickness">The borderThickness value.</param>
     /// <returns>The result.</returns>
-    private static PathGeometry CreateGeometryForPath(double actualWidth, double actualHeight, CornerRadius cornerRadius, Thickness borderThickness)
+    private static PathGeometry CreateGeometryForPath(
+        double actualWidth,
+        double actualHeight,
+        CornerRadius cornerRadius,
+        Thickness borderThickness)
     {
         var bounds = new Rect(
             borderThickness.Left,
@@ -182,11 +219,7 @@ public class RaisedBorder : ContentControl
             Math.Max(0, actualWidth - borderThickness.Left - borderThickness.Right),
             Math.Max(0, actualHeight - borderThickness.Top - borderThickness.Bottom));
         var radius = NormalizeCornerRadius(cornerRadius, bounds.Width, bounds.Height);
-        var figure = new PathFigure
-        {
-            StartPoint = new(bounds.Left + radius.TopLeft, bounds.Top),
-            IsClosed = true
-        };
+        var figure = new PathFigure { StartPoint = new(bounds.Left + radius.TopLeft, bounds.Top), IsClosed = true };
 
         AddLine(figure, new(bounds.Right - radius.TopRight, bounds.Top));
         AddArc(figure, new(bounds.Right, bounds.Top + radius.TopRight), radius.TopRight);
@@ -220,8 +253,7 @@ public class RaisedBorder : ContentControl
     /// <summary>Adds a line segment.</summary>
     /// <param name="figure">The path figure.</param>
     /// <param name="point">The end point.</param>
-    private static void AddLine(PathFigure figure, Point point) =>
-        figure.Segments.Add(new LineSegment(point, false));
+    private static void AddLine(PathFigure figure, Point point) => figure.Segments.Add(new LineSegment(point, false));
 
     /// <summary>Calculates a scale factor for adjacent corner radii.</summary>
     /// <param name="length">The available length.</param>
@@ -238,8 +270,12 @@ public class RaisedBorder : ContentControl
     private static CornerRadius NormalizeCornerRadius(CornerRadius cornerRadius, double width, double height)
     {
         var scale = Math.Min(
-            Math.Min(GetRadiusScale(width, cornerRadius.TopLeft + cornerRadius.TopRight), GetRadiusScale(width, cornerRadius.BottomLeft + cornerRadius.BottomRight)),
-            Math.Min(GetRadiusScale(height, cornerRadius.TopLeft + cornerRadius.BottomLeft), GetRadiusScale(height, cornerRadius.TopRight + cornerRadius.BottomRight)));
+            Math.Min(
+                GetRadiusScale(width, cornerRadius.TopLeft + cornerRadius.TopRight),
+                GetRadiusScale(width, cornerRadius.BottomLeft + cornerRadius.BottomRight)),
+            Math.Min(
+                GetRadiusScale(height, cornerRadius.TopLeft + cornerRadius.BottomLeft),
+                GetRadiusScale(height, cornerRadius.TopRight + cornerRadius.BottomRight)));
 
         return new(
             Math.Max(0, cornerRadius.TopLeft * scale),

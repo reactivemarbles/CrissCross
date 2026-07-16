@@ -6,23 +6,24 @@ using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Inherited from the <see cref="global::Avalonia.Controls.Expander"/> control which can hide the collapsible content.</summary>
+/// <summary>Inherited from the Expander control which can hide the collapsible content.</summary>
 public class CardExpander : global::Avalonia.Controls.Expander
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardExpander, object?>(
-        nameof(Icon),
-        null);
+        nameof(Icon));
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<CardExpander, CornerRadius>(
-        nameof(CornerRadius),
-        new CornerRadius(4));
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<
+        CardExpander,
+        CornerRadius
+    >(nameof(CornerRadius), new CornerRadius(4));
 
     /// <summary>Property for <see cref="ContentPadding"/>.</summary>
-    public static readonly StyledProperty<Thickness> ContentPaddingProperty = AvaloniaProperty.Register<CardExpander, Thickness>(
-        nameof(ContentPadding),
-        default);
+    public static readonly StyledProperty<Thickness> ContentPaddingProperty = AvaloniaProperty.Register<
+        CardExpander,
+        Thickness
+    >(nameof(ContentPadding), default);
 
     /// <summary>Gets or sets displayed icon.</summary>
     public object? Icon

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Custom <see cref="System.Windows.Controls.Primitives.ScrollBar"/> with events depending on actions taken by the user.</summary>
+/// <summary>Custom ScrollBar with events depending on actions taken by the user.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(DynamicScrollBar), "DynamicScrollBar.bmp")]
 public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
@@ -42,14 +42,15 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
     /// <summary>Stores the _isInteracted value.</summary>
     private bool _isInteracted;
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling for the last few seconds.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling for the
+    /// last few seconds.</summary>
     public bool IsScrolling
     {
         get => (bool)GetValue(IsScrollingProperty);
         set => SetValue(IsScrollingProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether informs whether the user has taken an action related to scrolling.</summary>
+    /// <summary>Gets or sets whether informs whether the user has taken an action related to scrolling.</summary>
     public bool IsInteracted
     {
         get => (bool)GetValue(IsInteractedProperty);
@@ -64,7 +65,7 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
         }
     }
 
-    /// <summary>Gets or sets additional delay after which the <see cref="DynamicScrollBar"/> should be hidden.</summary>
+    /// <summary>Gets or sets additional delay after which the DynamicScrollBar should be hidden.</summary>
     public int Timeout
     {
         get => (int)GetValue(TimeoutProperty);
@@ -113,9 +114,7 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
     /// <summary>Provides the IsInteractedProperty_OnChange member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void IsInteractedProperty_OnChange(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void IsInteractedProperty_OnChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         _ = e;
         if (d is not DynamicScrollBar bar)

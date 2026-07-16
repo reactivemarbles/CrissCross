@@ -53,14 +53,14 @@ public class BBCodeBlock : TextBlock, ICommandSource
     private const int CommandPrefixLength = 4;
 
     /// <summary>Initializes static members of the <see cref="BBCodeBlock"/> class.</summary>
-    static BBCodeBlock() => DefaultStyleKeyProperty.OverrideMetadata(
-        typeof(BBCodeBlock),
-        new FrameworkPropertyMetadata(typeof(BBCodeBlock)));
+    static BBCodeBlock() =>
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(BBCodeBlock),
+            new FrameworkPropertyMetadata(typeof(BBCodeBlock)));
 
     /// <summary>Initializes a new instance of the <see cref="BBCodeBlock"/> class.</summary>
-    public BBCodeBlock() => AddHandler(
-        Hyperlink.RequestNavigateEvent,
-        new RequestNavigateEventHandler(OnRequestNavigate));
+    public BBCodeBlock() =>
+        AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(OnRequestNavigate));
 
     /// <summary>Occurs when an allowed external link cannot be opened.</summary>
     public event EventHandler<BBCodeNavigationFailedEventArgs>? NavigationFailed;

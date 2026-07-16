@@ -12,16 +12,28 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ChipGroup : ItemsControl
 {
     /// <summary>Property for <see cref="GroupState"/>.</summary>
-    public static readonly StyledProperty<ChipGroupState?> GroupStateProperty = AvaloniaProperty.Register<ChipGroup, ChipGroupState?>(nameof(GroupState));
+    public static readonly StyledProperty<ChipGroupState?> GroupStateProperty = AvaloniaProperty.Register<
+        ChipGroup,
+        ChipGroupState?
+    >(nameof(GroupState));
 
     /// <summary>Property for <see cref="SelectionMode"/>.</summary>
-    public static readonly StyledProperty<ChipGroupSelectionMode> SelectionModeProperty = AvaloniaProperty.Register<ChipGroup, ChipGroupSelectionMode>(nameof(SelectionMode));
+    public static readonly StyledProperty<ChipGroupSelectionMode> SelectionModeProperty = AvaloniaProperty.Register<
+        ChipGroup,
+        ChipGroupSelectionMode
+    >(nameof(SelectionMode));
 
     /// <summary>Property for <see cref="SelectChipCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> SelectChipCommandProperty = AvaloniaProperty.Register<ChipGroup, ICommand?>(nameof(SelectChipCommand));
+    public static readonly StyledProperty<ICommand?> SelectChipCommandProperty = AvaloniaProperty.Register<
+        ChipGroup,
+        ICommand?
+    >(nameof(SelectChipCommand));
 
     /// <summary>Property for <see cref="RemoveChipCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> RemoveChipCommandProperty = AvaloniaProperty.Register<ChipGroup, ICommand?>(nameof(RemoveChipCommand));
+    public static readonly StyledProperty<ICommand?> RemoveChipCommandProperty = AvaloniaProperty.Register<
+        ChipGroup,
+        ICommand?
+    >(nameof(RemoveChipCommand));
 
     /// <summary>Gets or sets the shared chip group state.</summary>
     public ChipGroupState? GroupState

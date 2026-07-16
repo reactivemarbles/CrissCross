@@ -1,41 +1,36 @@
 ﻿<ui:FluentNavigationWindow
-    x:Class="CrissCross.WPF.UI.CC_Nav.Test.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrissCross.WPF.UI.CC_Nav.Test"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
-    x:Name="mainWindow"
-    Title="ViewModel Navigation Test"
-    Width="800"
-    Height="450"
-    x:TypeArguments="local:MainWindowViewModel"
-    TitleIcon="/Assets/CrissCrossIcon_256.png"
-    mc:Ignorable="d">
-    <ui:FluentNavigationWindow.TitleContent>
-        <StackPanel ui:MarginSetter.Margin="5,0" Orientation="Horizontal">
-            <ui:Button
-                x:Name="NavBack"
-                Height="80"
-                Content="Back" />
-        </StackPanel>
-    </ui:FluentNavigationWindow.TitleContent>
-    <ui:FluentNavigationWindow.TopContent>
-        <ui:BreadcrumbBar x:Name="Breadcrumb" Margin="20,0,0,0">
-            <ui:BreadcrumbBarItem Content="Home" />
-        </ui:BreadcrumbBar>
-    </ui:FluentNavigationWindow.TopContent>
-    <ui:FluentNavigationWindow.BottomContent>
-        <ui:Button
-            Height="40"
-            HorizontalAlignment="Stretch"
-            Content="BOTTOM CONTENT" />
-    </ui:FluentNavigationWindow.BottomContent>
-    <ui:FluentNavigationWindow.LeftContent>
-        <ui:Button Height="40" Content="LEFT CONTENT" />
-    </ui:FluentNavigationWindow.LeftContent>
-    <ui:FluentNavigationWindow.RightContent>
-        <ui:Button Height="40" Content="RIGHT CONTENT" />
-    </ui:FluentNavigationWindow.RightContent>
+  x:Class="CrissCross.WPF.UI.CC_Nav.Test.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:CrissCross.WPF.UI.CC_Nav.Test"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+  x:Name="mainWindow"
+  Title="ViewModel Navigation Test"
+  Width="800"
+  Height="450"
+  x:TypeArguments="local:MainWindowViewModel"
+  TitleIcon="/Assets/CrissCrossIcon_256.png"
+  mc:Ignorable="d"
+>
+  <ui:FluentNavigationWindow.TitleContent>
+    <StackPanel ui:MarginSetter.Margin="5,0" Orientation="Horizontal">
+      <ui:Button x:Name="NavBack" Height="80" Content="Back" />
+    </StackPanel>
+  </ui:FluentNavigationWindow.TitleContent>
+  <ui:FluentNavigationWindow.TopContent>
+    <ui:BreadcrumbBar x:Name="Breadcrumb" Margin="20,0,0,0">
+      <ui:BreadcrumbBarItem Content="Home" />
+    </ui:BreadcrumbBar>
+  </ui:FluentNavigationWindow.TopContent>
+  <ui:FluentNavigationWindow.BottomContent>
+    <ui:Button Height="40" HorizontalAlignment="Stretch" Content="BOTTOM CONTENT" />
+  </ui:FluentNavigationWindow.BottomContent>
+  <ui:FluentNavigationWindow.LeftContent>
+    <ui:Button Height="40" Content="LEFT CONTENT" />
+  </ui:FluentNavigationWindow.LeftContent>
+  <ui:FluentNavigationWindow.RightContent>
+    <ui:Button Height="40" Content="RIGHT CONTENT" />
+  </ui:FluentNavigationWindow.RightContent>
 </ui:FluentNavigationWindow>

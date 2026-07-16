@@ -43,10 +43,7 @@ public static class TechnicalIndicators
     /// <param name="period">The rolling period.</param>
     /// <param name="key">An optional output key.</param>
     /// <returns>The moving-average series.</returns>
-    public static PlotSeriesData SimpleMovingAverage(
-        PlotSeriesData source,
-        int period,
-        PlotSeriesKey? key)
+    public static PlotSeriesData SimpleMovingAverage(PlotSeriesData source, int period, PlotSeriesKey? key)
     {
         Validate(source, period);
         var output = CreateMissingValues(source.Y.Count);
@@ -81,10 +78,7 @@ public static class TechnicalIndicators
     /// <param name="period">The smoothing period.</param>
     /// <param name="key">An optional output key.</param>
     /// <returns>The exponential moving-average series.</returns>
-    public static PlotSeriesData ExponentialMovingAverage(
-        PlotSeriesData source,
-        int period,
-        PlotSeriesKey? key)
+    public static PlotSeriesData ExponentialMovingAverage(PlotSeriesData source, int period, PlotSeriesKey? key)
     {
         Validate(source, period);
         var output = CreateMissingValues(source.Y.Count);
@@ -126,10 +120,7 @@ public static class TechnicalIndicators
     /// <param name="period">The RSI period.</param>
     /// <param name="key">An optional output key.</param>
     /// <returns>The zero-to-one-hundred RSI series.</returns>
-    public static PlotSeriesData RelativeStrengthIndex(
-        PlotSeriesData source,
-        int period,
-        PlotSeriesKey? key)
+    public static PlotSeriesData RelativeStrengthIndex(PlotSeriesData source, int period, PlotSeriesKey? key)
     {
         Validate(source, period);
         var output = CreateMissingValues(source.Y.Count);
@@ -188,9 +179,7 @@ public static class TechnicalIndicators
         Validate(source, signalPeriod);
         if (fastPeriod >= slowPeriod)
         {
-            throw new ArgumentException(
-                "The MACD fast period must be less than the slow period.",
-                nameof(fastPeriod));
+            throw new ArgumentException("The MACD fast period must be less than the slow period.", nameof(fastPeriod));
         }
 
         var fast = ExponentialMovingAverage(source, fastPeriod);
@@ -202,10 +191,7 @@ public static class TechnicalIndicators
         }
 
         var macd = source.Derive(Suffix(source.Key, "MACD"), macdValues);
-        var signal = ExponentialMovingAverage(
-            macd,
-            signalPeriod,
-            Suffix(source.Key, "MACD Signal"));
+        var signal = ExponentialMovingAverage(macd, signalPeriod, Suffix(source.Key, "MACD Signal"));
         var histogram = new double[source.Y.Count];
         for (var i = 0; i < histogram.Length; i++)
         {
@@ -219,10 +205,7 @@ public static class TechnicalIndicators
     /// <param name="source">The source series.</param>
     /// <returns>The middle, upper, and lower bands.</returns>
     public static BollingerBandsResult BollingerBands(PlotSeriesData source) =>
-        BollingerBands(
-            source,
-            DefaultBollingerBandPeriod,
-            DefaultBollingerBandDeviations);
+        BollingerBands(source, DefaultBollingerBandPeriod, DefaultBollingerBandDeviations);
 
     /// <summary>Calculates Bollinger Bands using the conventional deviation multiplier.</summary>
     /// <param name="source">The source series.</param>
@@ -236,10 +219,7 @@ public static class TechnicalIndicators
     /// <param name="period">The rolling period.</param>
     /// <param name="standardDeviations">The standard-deviation multiplier.</param>
     /// <returns>The middle, upper, and lower bands.</returns>
-    public static BollingerBandsResult BollingerBands(
-        PlotSeriesData source,
-        int period,
-        double standardDeviations)
+    public static BollingerBandsResult BollingerBands(PlotSeriesData source, int period, double standardDeviations)
     {
         Validate(source, period);
         if (!IsFinite(standardDeviations) || standardDeviations <= 0)
@@ -348,18 +328,14 @@ public static class TechnicalIndicators
             return;
         }
 
-        throw new ArgumentOutOfRangeException(
-            nameof(period),
-            period,
-            "Indicator periods must be positive.");
+        throw new ArgumentOutOfRangeException(nameof(period), period, "Indicator periods must be positive.");
     }
 
     /// <summary>Creates a result key from a source key and suffix.</summary>
     /// <param name="key">The source key.</param>
     /// <param name="suffix">The display suffix.</param>
     /// <returns>The result key.</returns>
-    private static PlotSeriesKey Suffix(PlotSeriesKey key, string suffix) =>
-        new($"{key.Name} {suffix}", key.Axis);
+    private static PlotSeriesKey Suffix(PlotSeriesKey key, string suffix) => new($"{key.Name} {suffix}", key.Axis);
 
     /// <summary>Creates an array initialized with missing values.</summary>
     /// <param name="count">The array size.</param>
@@ -412,8 +388,7 @@ public static class TechnicalIndicators
     private static double CalculateRsi(double averageGain, double averageLoss) =>
         averageLoss == 0
             ? MaximumRelativeStrengthIndex
-            : MaximumRelativeStrengthIndex
-                - (MaximumRelativeStrengthIndex / (1 + (averageGain / averageLoss)));
+            : MaximumRelativeStrengthIndex - (MaximumRelativeStrengthIndex / (1 + (averageGain / averageLoss)));
 
     /// <summary>Determines whether a value is neither NaN nor infinite.</summary>
     /// <param name="value">The value to inspect.</param>

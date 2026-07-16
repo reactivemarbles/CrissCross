@@ -13,7 +13,8 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
 /// Represents the container for an item in a NavigationView control.
-/// When needed, it can be used as a normal button with a <see cref="System.Windows.Controls.Primitives.ButtonBase.Click"/> action.
+/// When needed, it can be used as a normal button with a <see
+/// cref="System.Windows.Controls.Primitives.ButtonBase.Click"/> action.
 /// </summary>
 [ToolboxItem(true)]
 [System.Drawing.ToolboxBitmap(typeof(NavigationViewItem), "NavigationViewItem.bmp")]
@@ -108,7 +109,7 @@ public class NavigationViewItem
         new PropertyMetadata(string.Empty));
 
     /// <summary>The template element chevron grid.</summary>
-    protected const string TemplateElementChevronGrid = "PART_ChevronGrid";
+    private const string TemplateElementChevronGrid = "PART_ChevronGrid";
 
     /// <summary>Provides the HasMenuItemsPropertyKey member.</summary>
     private static readonly DependencyPropertyKey HasMenuItemsPropertyKey;
@@ -150,10 +151,12 @@ public class NavigationViewItem
         Id = Guid.NewGuid().ToString("n");
 
         // Reactive lifecycle handling (avoid .Events() to keep compatibility)
-        _ = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
+        _ = Observable
+            .FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Loaded += h, h => Loaded -= h)
             .Take(1)
             .Subscribe(_ => InitializeNavigationViewEvents());
-        _ = Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
+        _ = Observable
+            .FromEventPattern<RoutedEventHandler, RoutedEventArgs>(h => Unloaded += h, h => Unloaded -= h)
             .Subscribe(_ => OnReactiveUnloaded());
 
         // Initialize the `Items` collection
@@ -162,18 +165,18 @@ public class NavigationViewItem
         SetValue(MenuItemsPropertyKey, menuItems);
     }
 
-    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class with target page type.</summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="targetPageType">Target page type.</param>
     public NavigationViewItem(Type targetPageType)
         : this() => SetValue(TargetPageTypeProperty, targetPageType);
 
-    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class with a name and target page type.</summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="name">Display name.</param>
     /// <param name="targetPageType">Target page type.</param>
     public NavigationViewItem(string name, Type targetPageType)
         : this(targetPageType) => SetValue(ContentProperty, name);
 
-    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class with name, icon and target page type.</summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="name">Display name.</param>
     /// <param name="icon">Symbol icon.</param>
     /// <param name="targetPageType">Target page type.</param>
@@ -184,7 +187,7 @@ public class NavigationViewItem
         SetValue(IconProperty, new SymbolIcon { Symbol = icon });
     }
 
-    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class with name, icon, target page type and menu items.</summary>
+    /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
     /// <param name="name">Display name.</param>
     /// <param name="icon">Symbol icon.</param>
     /// <param name="targetPageType">Target page type.</param>
@@ -279,7 +282,7 @@ public class NavigationViewItem
         set => SetValue(TargetPageTypeProperty, value);
     }
 
-    /// <summary>Gets or sets the target ViewModel type (ViewModel-first navigation). When set it overrides page navigation.</summary>
+    /// <summary>Gets or sets the target ViewModel type (ViewModel-first navigation).</summary>
     public Type? TargetViewModelType
     {
         get => (Type?)GetValue(TargetViewModelTypeProperty);
@@ -335,9 +338,12 @@ public class NavigationViewItem
             NavigationViewItemParent.Activate(navigationView);
         }
 
-        NavigationViewItemParent?.IsExpanded = navigationView.IsPaneOpen && navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
+        NavigationViewItemParent?.IsExpanded =
+            navigationView.IsPaneOpen && navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.Top;
 
-        if (Icon is not SymbolIcon symbolIcon || navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.LeftFluent)
+        if (
+            Icon is not SymbolIcon symbolIcon
+            || navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.LeftFluent)
         {
             return;
         }
@@ -362,7 +368,9 @@ public class NavigationViewItem
             IsExpanded = false;
         }
 
-        if (Icon is not SymbolIcon symbolIcon || navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.LeftFluent)
+        if (
+            Icon is not SymbolIcon symbolIcon
+            || navigationView.PaneDisplayMode != NavigationViewPaneDisplayMode.LeftFluent)
         {
             return;
         }
@@ -578,13 +586,15 @@ public class NavigationViewItem
 
         IsPaneOpen = nav.IsPaneOpen;
 
-        _ = Observable.FromEventPattern<EventHandler<RoutedEventArgs>, RoutedEventArgs>(
+        _ = Observable
+            .FromEventPattern<EventHandler<RoutedEventArgs>, RoutedEventArgs>(
                 h => nav.PaneOpened += h,
                 h => nav.PaneOpened -= h)
             .Subscribe(_ => IsPaneOpen = true)
             .DisposeWith(_subscriptions);
 
-        _ = Observable.FromEventPattern<EventHandler<RoutedEventArgs>, RoutedEventArgs>(
+        _ = Observable
+            .FromEventPattern<EventHandler<RoutedEventArgs>, RoutedEventArgs>(
                 h => nav.PaneClosed += h,
                 h => nav.PaneClosed -= h)
             .Subscribe(_ => IsPaneOpen = false)

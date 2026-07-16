@@ -24,7 +24,8 @@ internal static class UnsafeReflection
         };
     }
 
-    /// <summary>Casts <see cref="WindowCornerPreference"/> to <see cref="Dwmapi.DWM_WINDOW_CORNER_PREFERENCE"/>.</summary>
+    /// <summary>Casts <see cref="WindowCornerPreference"/> to <see
+    /// cref="Dwmapi.DWM_WINDOW_CORNER_PREFERENCE"/>.</summary>
     public static Dwmapi.DWM_WINDOW_CORNER_PREFERENCE Cast(WindowCornerPreference cornerPreference)
     {
         return cornerPreference switch

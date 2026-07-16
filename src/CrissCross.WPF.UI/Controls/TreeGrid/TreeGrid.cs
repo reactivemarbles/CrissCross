@@ -25,14 +25,10 @@ public class TreeGrid : System.Windows.Controls.Primitives.Selector
     }
 
     /// <summary>Called when [headers changed].</summary>
-    protected virtual void OnHeadersChanged()
-    {
-    }
+    protected virtual void OnHeadersChanged() { }
 
     /// <summary>Called when [content changed].</summary>
-    protected virtual void OnContentChanged()
-    {
-    }
+    protected virtual void OnContentChanged() { }
 
     /// <summary>Provides the OnHeadersChanged member.</summary>
     /// <param name="d">The d value.</param>

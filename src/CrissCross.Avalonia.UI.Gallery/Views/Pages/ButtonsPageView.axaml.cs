@@ -16,6 +16,7 @@ public partial class ButtonsPageView : ReactiveUserControl<ButtonsPageViewModel>
     public ButtonsPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ButtonsPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ButtonsPageViewModel>());
     }
 }

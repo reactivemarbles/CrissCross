@@ -31,8 +31,8 @@ internal static class BidirectionalNavigationResolverHelpers
             return descriptor;
         }
 
-        var knownContracts = registrations.Keys
-            .Where(candidate => candidate.SourceKind == sourceKind && candidate.ServiceType == sourceKey)
+        var knownContracts = registrations
+            .Keys.Where(candidate => candidate.SourceKind == sourceKind && candidate.ServiceType == sourceKey)
             .Select(candidate => candidate.Contract)
             .ToArray();
 
@@ -46,5 +46,11 @@ internal static class BidirectionalNavigationResolverHelpers
     /// <returns>The typed resolution.</returns>
     public static NavigationResolution<TViewModel, TView> ToTyped<TViewModel, TView>(NavigationResolution resolution)
         where TViewModel : class, IRxObject
-        where TView : class, IViewFor<TViewModel> => new((TViewModel)resolution.ViewModel, (TView)resolution.View, resolution.Contract, resolution.Parameter, resolution.NavigationType);
+        where TView : class, IViewFor<TViewModel> =>
+        new(
+            (TViewModel)resolution.ViewModel,
+            (TView)resolution.View,
+            resolution.Contract,
+            resolution.Parameter,
+            resolution.NavigationType);
 }

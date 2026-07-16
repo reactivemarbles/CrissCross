@@ -16,6 +16,7 @@ public partial class RadioButtonPageView : ReactiveUserControl<RadioButtonPageVi
     public RadioButtonPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<RadioButtonPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<RadioButtonPageViewModel>());
     }
 }

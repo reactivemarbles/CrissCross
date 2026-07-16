@@ -16,119 +16,145 @@ public class ContentDialog : ContentControl
 {
     /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly StyledProperty<object?> TitleProperty = AvaloniaProperty.Register<ContentDialog, object?>(
-        nameof(Title),
-        null);
+        nameof(Title));
 
     /// <summary>Property for <see cref="TitleTemplate"/>.</summary>
-    public static readonly StyledProperty<IDataTemplate?> TitleTemplateProperty = AvaloniaProperty.Register<ContentDialog, IDataTemplate?>(
-        nameof(TitleTemplate),
-        null);
+    public static readonly StyledProperty<IDataTemplate?> TitleTemplateProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        IDataTemplate?
+    >(nameof(TitleTemplate));
 
     /// <summary>Property for <see cref="PrimaryButtonText"/>.</summary>
-    public static readonly StyledProperty<string> PrimaryButtonTextProperty = AvaloniaProperty.Register<ContentDialog, string>(
-        nameof(PrimaryButtonText),
-        string.Empty);
+    public static readonly StyledProperty<string> PrimaryButtonTextProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        string
+    >(nameof(PrimaryButtonText), string.Empty);
 
     /// <summary>Property for <see cref="SecondaryButtonText"/>.</summary>
-    public static readonly StyledProperty<string> SecondaryButtonTextProperty = AvaloniaProperty.Register<ContentDialog, string>(
-        nameof(SecondaryButtonText),
-        string.Empty);
+    public static readonly StyledProperty<string> SecondaryButtonTextProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        string
+    >(nameof(SecondaryButtonText), string.Empty);
 
     /// <summary>Property for <see cref="CloseButtonText"/>.</summary>
-    public static readonly StyledProperty<string> CloseButtonTextProperty = AvaloniaProperty.Register<ContentDialog, string>(
-        nameof(CloseButtonText),
-        "Close");
+    public static readonly StyledProperty<string> CloseButtonTextProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        string
+    >(nameof(CloseButtonText), "Close");
 
     /// <summary>Property for <see cref="PrimaryButtonCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> PrimaryButtonCommandProperty = AvaloniaProperty.Register<ContentDialog, ICommand?>(
-        nameof(PrimaryButtonCommand),
-        null);
+    public static readonly StyledProperty<ICommand?> PrimaryButtonCommandProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        ICommand?
+    >(nameof(PrimaryButtonCommand));
 
     /// <summary>Property for <see cref="SecondaryButtonCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> SecondaryButtonCommandProperty = AvaloniaProperty.Register<ContentDialog, ICommand?>(
-        nameof(SecondaryButtonCommand),
-        null);
+    public static readonly StyledProperty<ICommand?> SecondaryButtonCommandProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        ICommand?
+    >(nameof(SecondaryButtonCommand));
 
     /// <summary>Property for <see cref="CloseButtonCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> CloseButtonCommandProperty = AvaloniaProperty.Register<ContentDialog, ICommand?>(
-        nameof(CloseButtonCommand),
-        null);
+    public static readonly StyledProperty<ICommand?> CloseButtonCommandProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        ICommand?
+    >(nameof(CloseButtonCommand));
 
     /// <summary>Property for <see cref="IsPrimaryButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsPrimaryButtonEnabledProperty = AvaloniaProperty.Register<ContentDialog, bool>(
-        nameof(IsPrimaryButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> IsPrimaryButtonEnabledProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        bool
+    >(nameof(IsPrimaryButtonEnabled), true);
 
     /// <summary>Property for <see cref="IsSecondaryButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsSecondaryButtonEnabledProperty = AvaloniaProperty.Register<ContentDialog, bool>(
-        nameof(IsSecondaryButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> IsSecondaryButtonEnabledProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        bool
+    >(nameof(IsSecondaryButtonEnabled), true);
 
     /// <summary>Property for <see cref="DefaultButton"/>.</summary>
-    public static readonly StyledProperty<ContentDialogButton> DefaultButtonProperty = AvaloniaProperty.Register<ContentDialog, ContentDialogButton>(
-        nameof(DefaultButton),
-        ContentDialogButton.Primary);
+    public static readonly StyledProperty<ContentDialogButton> DefaultButtonProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        ContentDialogButton
+    >(nameof(DefaultButton), ContentDialogButton.Primary);
 
     /// <summary>Property for <see cref="PrimaryButtonAppearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> PrimaryButtonAppearanceProperty = AvaloniaProperty.Register<ContentDialog, ControlAppearance>(
-        nameof(PrimaryButtonAppearance),
-        ControlAppearance.Primary);
+    public static readonly StyledProperty<ControlAppearance> PrimaryButtonAppearanceProperty =
+        AvaloniaProperty.Register<ContentDialog, ControlAppearance>(
+            nameof(PrimaryButtonAppearance),
+            ControlAppearance.Primary);
 
     /// <summary>Property for <see cref="SecondaryButtonAppearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> SecondaryButtonAppearanceProperty = AvaloniaProperty.Register<ContentDialog, ControlAppearance>(
-        nameof(SecondaryButtonAppearance),
-        ControlAppearance.Secondary);
+    public static readonly StyledProperty<ControlAppearance> SecondaryButtonAppearanceProperty =
+        AvaloniaProperty.Register<ContentDialog, ControlAppearance>(
+            nameof(SecondaryButtonAppearance),
+            ControlAppearance.Secondary);
 
     /// <summary>Property for <see cref="CloseButtonAppearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> CloseButtonAppearanceProperty = AvaloniaProperty.Register<ContentDialog, ControlAppearance>(
-        nameof(CloseButtonAppearance),
-        ControlAppearance.Secondary);
+    public static readonly StyledProperty<ControlAppearance> CloseButtonAppearanceProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        ControlAppearance
+    >(nameof(CloseButtonAppearance), ControlAppearance.Secondary);
 
     /// <summary>Property for <see cref="DialogWidth"/>.</summary>
-    public static readonly StyledProperty<double> DialogWidthProperty = AvaloniaProperty.Register<ContentDialog, double>(
-        nameof(DialogWidth),
-        double.PositiveInfinity);
+    public static readonly StyledProperty<double> DialogWidthProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        double
+    >(nameof(DialogWidth), double.PositiveInfinity);
 
     /// <summary>Property for <see cref="DialogHeight"/>.</summary>
-    public static readonly StyledProperty<double> DialogHeightProperty = AvaloniaProperty.Register<ContentDialog, double>(
-        nameof(DialogHeight),
-        double.PositiveInfinity);
+    public static readonly StyledProperty<double> DialogHeightProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        double
+    >(nameof(DialogHeight), double.PositiveInfinity);
 
     /// <summary>Property for <see cref="DialogMaxWidth"/>.</summary>
-    public static readonly StyledProperty<double> DialogMaxWidthProperty = AvaloniaProperty.Register<ContentDialog, double>(
-        nameof(DialogMaxWidth),
-        double.PositiveInfinity);
+    public static readonly StyledProperty<double> DialogMaxWidthProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        double
+    >(nameof(DialogMaxWidth), double.PositiveInfinity);
 
     /// <summary>Property for <see cref="DialogMaxHeight"/>.</summary>
-    public static readonly StyledProperty<double> DialogMaxHeightProperty = AvaloniaProperty.Register<ContentDialog, double>(
-        nameof(DialogMaxHeight),
-        double.PositiveInfinity);
+    public static readonly StyledProperty<double> DialogMaxHeightProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        double
+    >(nameof(DialogMaxHeight), double.PositiveInfinity);
 
     /// <summary>Property for <see cref="DialogMargin"/>.</summary>
-    public static readonly StyledProperty<Thickness> DialogMarginProperty = AvaloniaProperty.Register<ContentDialog, Thickness>(
-        nameof(DialogMargin),
-        default);
+    public static readonly StyledProperty<Thickness> DialogMarginProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        Thickness
+    >(nameof(DialogMargin), default);
 
     /// <summary>Property for <see cref="IsFooterVisible"/>.</summary>
-    public static readonly StyledProperty<bool> IsFooterVisibleProperty = AvaloniaProperty.Register<ContentDialog, bool>(
-        nameof(IsFooterVisible),
-        true);
+    public static readonly StyledProperty<bool> IsFooterVisibleProperty = AvaloniaProperty.Register<
+        ContentDialog,
+        bool
+    >(nameof(IsFooterVisible), true);
 
     /// <summary>Routed event for <see cref="Opened"/>.</summary>
-    public static readonly RoutedEvent<RoutedEventArgs> OpenedEvent =
-        RoutedEvent.Register<ContentDialog, RoutedEventArgs>(nameof(Opened), RoutingStrategies.Bubble);
+    public static readonly RoutedEvent<RoutedEventArgs> OpenedEvent = RoutedEvent.Register<
+        ContentDialog,
+        RoutedEventArgs
+    >(nameof(Opened), RoutingStrategies.Bubble);
 
     /// <summary>Routed event for <see cref="Closing"/>.</summary>
-    public static readonly RoutedEvent<ContentDialogClosingEventArgs> ClosingEvent =
-        RoutedEvent.Register<ContentDialog, ContentDialogClosingEventArgs>(nameof(Closing), RoutingStrategies.Bubble);
+    public static readonly RoutedEvent<ContentDialogClosingEventArgs> ClosingEvent = RoutedEvent.Register<
+        ContentDialog,
+        ContentDialogClosingEventArgs
+    >(nameof(Closing), RoutingStrategies.Bubble);
 
     /// <summary>Routed event for <see cref="Closed"/>.</summary>
-    public static readonly RoutedEvent<ContentDialogClosedEventArgs> ClosedEvent =
-        RoutedEvent.Register<ContentDialog, ContentDialogClosedEventArgs>(nameof(Closed), RoutingStrategies.Bubble);
+    public static readonly RoutedEvent<ContentDialogClosedEventArgs> ClosedEvent = RoutedEvent.Register<
+        ContentDialog,
+        ContentDialogClosedEventArgs
+    >(nameof(Closed), RoutingStrategies.Bubble);
 
     /// <summary>Routed event for <see cref="ButtonClicked"/>.</summary>
-    public static readonly RoutedEvent<ContentDialogButtonClickEventArgs> ButtonClickedEvent =
-        RoutedEvent.Register<ContentDialog, ContentDialogButtonClickEventArgs>(nameof(ButtonClicked), RoutingStrategies.Bubble);
+    public static readonly RoutedEvent<ContentDialogButtonClickEventArgs> ButtonClickedEvent = RoutedEvent.Register<
+        ContentDialog,
+        ContentDialogButtonClickEventArgs
+    >(nameof(ButtonClicked), RoutingStrategies.Bubble);
 
     /// <summary>Provides the _tcs member.</summary>
     private TaskCompletionSource<ContentDialogResult>? _tcs;
@@ -304,18 +330,14 @@ public class ContentDialog : ContentControl
     /// <summary>Gets or sets the content presenter for displaying the dialog.</summary>
     public ContentPresenter? ContentPresenter { get; set; }
 
-    /// <summary>Gets or sets the content presenter for displaying the dialog.</summary>
-    [Obsolete("Use ContentPresenter instead.")]
-    public ContentPresenter? DialogPresenter
-    {
-        get => ContentPresenter;
-        set => ContentPresenter = value;
-    }
+    /// <summary>Shows the dialog asynchronously.</summary>
+    /// <returns>A ContentDialogResult.</returns>
+    public Task<ContentDialogResult> ShowAsync() => ShowAsync(CancellationToken.None);
 
     /// <summary>Shows the dialog asynchronously.</summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A ContentDialogResult.</returns>
-    public async Task<ContentDialogResult> ShowAsync(CancellationToken cancellationToken = default)
+    public async Task<ContentDialogResult> ShowAsync(CancellationToken cancellationToken)
     {
         if (ContentPresenter is null)
         {
@@ -344,9 +366,12 @@ public class ContentDialog : ContentControl
         }
     }
 
+    /// <summary>Hides the dialog.</summary>
+    public void Hide() => Hide(ContentDialogResult.None);
+
     /// <summary>Hides the dialog with result.</summary>
     /// <param name="result">The result.</param>
-    public virtual void Hide(ContentDialogResult result = ContentDialogResult.None)
+    public virtual void Hide(ContentDialogResult result)
     {
         var closingEventArgs = new ContentDialogClosingEventArgs(result);
         RaiseEvent(closingEventArgs);
@@ -370,7 +395,7 @@ public class ContentDialog : ContentControl
         {
             ContentDialogButton.Primary => ContentDialogResult.Primary,
             ContentDialogButton.Secondary => ContentDialogResult.Secondary,
-            _ => ContentDialogResult.None
+            _ => ContentDialogResult.None,
         };
 
         Hide(result);

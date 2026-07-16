@@ -226,7 +226,8 @@ public class ContentDialog : ContentControl
     }
 
     /// <summary>Initializes a new instance of the <see cref="ContentDialog"/> class.</summary>
-    /// <param name="contentPresenter"><see cref="ContentPresenter"/> inside of which the dialogue will be placed. The new <see cref="ContentDialog"/> will replace the current <see cref="ContentPresenter.Content"/>.</param>
+    /// <param name="contentPresenter"><see cref="ContentPresenter"/> inside of which the dialogue will be placed. The
+    /// new <see cref="ContentDialog"/> will replace the current <see cref="ContentPresenter.Content"/>.</param>
     public ContentDialog(ContentPresenter contentPresenter)
     {
         ContentPresenter = contentPresenter;
@@ -247,7 +248,7 @@ public class ContentDialog : ContentControl
         remove => RemoveHandler(OpenedEvent, value);
     }
 
-    /// <summary>Occurs after the dialog starts to close, but before it is closed and before the <see cref="Closed"/> event occurs.</summary>
+    /// <summary>Provides the AddHandler member.</summary>
     public event EventHandler<ContentDialogClosingEventArgs> Closing
     {
         add => AddHandler(ClosingEvent, value);
@@ -359,14 +360,14 @@ public class ContentDialog : ContentControl
         set => SetValue(CloseButtonIconProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets whether the <see cref="ContentDialog"/> primary button is enabled.</summary>
+    /// <summary>Gets or sets whether gets or sets whether the ContentDialog primary button is enabled.</summary>
     public bool IsPrimaryButtonEnabled
     {
         get => (bool)GetValue(IsPrimaryButtonEnabledProperty);
         set => SetValue(IsPrimaryButtonEnabledProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets whether the <see cref="ContentDialog"/> secondary button is enabled.</summary>
+    /// <summary>Gets or sets whether gets or sets whether the ContentDialog secondary button is enabled.</summary>
     public bool IsSecondaryButtonEnabled
     {
         get => (bool)GetValue(IsSecondaryButtonEnabledProperty);
@@ -401,7 +402,7 @@ public class ContentDialog : ContentControl
         set => SetValue(DefaultButtonProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates the visibility of the footer buttons.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public bool IsFooterVisible
     {
         get => (bool)GetValue(IsFooterVisibleProperty);
@@ -411,7 +412,7 @@ public class ContentDialog : ContentControl
     /// <summary>Gets command triggered after clicking the button in the template.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
-    /// <summary>Gets or sets <see cref="ContentPresenter"/> inside of which the dialogue will be placed. The new <see cref="ContentDialog"/> will replace the current <see cref="ContentPresenter.Content"/>.</summary>
+    /// <summary>Gets or sets ContentPresenter inside of which the dialogue will be placed.</summary>
     public ContentPresenter? ContentPresenter { get; set; }
 
     /// <summary>Gets or sets the task completion source.</summary>
@@ -419,9 +420,14 @@ public class ContentDialog : ContentControl
 
     /// <summary>Shows the dialog.</summary>
     /// <exception cref="InvalidOperationException">ContentPresenter is not set.</exception>
+    /// <returns>A ContentDialogResult.</returns>
+    public Task<ContentDialogResult> ShowAsync() => ShowAsync(CancellationToken.None);
+
+    /// <summary>Shows the dialog asynchronously.</summary>
+    /// <exception cref="InvalidOperationException">ContentPresenter is not set.</exception>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A ContentDialogResult.</returns>
-    public async Task<ContentDialogResult> ShowAsync(CancellationToken cancellationToken = default)
+    public async Task<ContentDialogResult> ShowAsync(CancellationToken cancellationToken)
     {
         if (ContentPresenter is null)
         {
@@ -455,13 +461,13 @@ public class ContentDialog : ContentControl
     }
 
     /// <summary>Hides the dialog with result.</summary>
+    public void Hide() => Hide(ContentDialogResult.None);
+
+    /// <summary>Hides the dialog with result.</summary>
     /// <param name="result">The result.</param>
-    public virtual void Hide(ContentDialogResult result = ContentDialogResult.None)
+    public virtual void Hide(ContentDialogResult result)
     {
-        var closingEventArgs = new ContentDialogClosingEventArgs(ClosingEvent, this)
-        {
-            Result = result
-        };
+        var closingEventArgs = new ContentDialogClosingEventArgs(ClosingEvent, this) { Result = result };
 
         RaiseEvent(closingEventArgs);
 
@@ -477,10 +483,7 @@ public class ContentDialog : ContentControl
     /// <param name="result">The result.</param>
     protected virtual void OnClosed(ContentDialogResult result)
     {
-        var closedEventArgs = new ContentDialogClosedEventArgs(ClosedEvent, this)
-        {
-            Result = result
-        };
+        var closedEventArgs = new ContentDialogClosedEventArgs(ClosedEvent, this) { Result = result };
 
         RaiseEvent(closedEventArgs);
     }
@@ -489,12 +492,7 @@ public class ContentDialog : ContentControl
     /// <param name="button">The button.</param>
     protected virtual void OnButtonClick(ContentDialogButton button)
     {
-        var buttonClickEventArgs = new ContentDialogButtonClickEventArgs(
-            ButtonClickedEvent,
-            this)
-        {
-            Button = button
-        };
+        var buttonClickEventArgs = new ContentDialogButtonClickEventArgs(ButtonClickedEvent, this) { Button = button };
 
         RaiseEvent(buttonClickEventArgs);
 
@@ -502,7 +500,7 @@ public class ContentDialog : ContentControl
         {
             ContentDialogButton.Primary => ContentDialogResult.Primary,
             ContentDialogButton.Secondary => ContentDialogResult.Secondary,
-            _ => ContentDialogResult.None
+            _ => ContentDialogResult.None,
         };
 
         Hide(result);

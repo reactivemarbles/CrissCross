@@ -4,19 +4,19 @@
 
 namespace CrissCross.WPF.UI;
 
-/// <summary>Represents a contract with a <see cref="System.Windows.Window"/> that contains <see cref="INavigationView"/>. Through defined <see cref="IPageService"/> service allows you to use the MVVM model in navigation.</summary>
+/// <summary>Represents a contract with a Window that contains INavigationView.</summary>
 public interface INavigationWindow
 {
     /// <summary>Provides direct access to the control responsible for navigation.</summary>
     /// <returns>Instance of the <see cref="INavigationView"/> control.</returns>
     INavigationView GetNavigation();
 
-    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with IPageService.</summary>
     /// <param name="pageType">The pageType value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType);
 
-    /// <summary>Lets you attach the service provider that delivers page instances to <see cref="INavigationView"/>.</summary>
+    /// <summary>Lets you attach the service provider that delivers page instances to INavigationView.</summary>
     /// <param name="serviceProvider">The serviceProvider value.</param>
     void SetServiceProvider(IServiceProvider serviceProvider);
 

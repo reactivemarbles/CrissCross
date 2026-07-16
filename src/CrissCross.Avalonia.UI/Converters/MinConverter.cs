@@ -22,7 +22,9 @@ public class MinConverter : IValueConverter
             return Math.Min(doubleValue, paramDouble);
         }
 
-        return value is double val && double.TryParse(parameter?.ToString(), out var paramValue) ? Math.Min(val, paramValue) : value;
+        return value is double val && double.TryParse(parameter?.ToString(), out var paramValue)
+            ? Math.Min(val, paramValue)
+            : value;
     }
 
     /// <inheritdoc/>

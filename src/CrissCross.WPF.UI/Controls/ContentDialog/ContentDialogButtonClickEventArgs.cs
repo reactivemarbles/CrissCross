@@ -8,7 +8,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="RoutedEventArgs" />
 /// <param name="routedEvent">The routedEvent value.</param>
 /// <param name="source">The source value.</param>
-public class ContentDialogButtonClickEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
+public class ContentDialogButtonClickEventArgs(RoutedEvent routedEvent, object source)
+    : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>Gets the button.</summary>
     /// <value>

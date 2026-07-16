@@ -47,7 +47,8 @@ public class App : Application
         AppLocator.CurrentMutable.Register<IViewFor<SliderPageViewModel>>(() => new SliderPageView());
         AppLocator.CurrentMutable.Register<IViewFor<DatePickerPageViewModel>>(() => new DatePickerPageView());
         AppLocator.CurrentMutable.Register<IViewFor<ColorPickerPageViewModel>>(() => new ColorPickerPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(() => new FeaturePlaygroundPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(() =>
+            new FeaturePlaygroundPageView());
 
         // NOTE: SetupComplete is called in OnFrameworkInitializationCompleted() to ensure
         // the MainWindow and navigation host are created before BuildComplete callbacks fire

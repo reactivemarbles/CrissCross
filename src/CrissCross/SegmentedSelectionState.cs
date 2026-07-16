@@ -11,10 +11,14 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral selection state for a segmented control.</summary>
 public sealed class SegmentedSelectionState
 {
+    /// <inheritdoc />
+    public SegmentedSelectionState(IEnumerable<SegmentItem> items)
+        : this(items, null) { }
+
     /// <summary>Initializes a new instance of the <see cref="SegmentedSelectionState"/> class.</summary>
     /// <param name="items">The available segments.</param>
     /// <param name="selectedKey">The selected segment key.</param>
-    public SegmentedSelectionState(IEnumerable<SegmentItem> items, string? selectedKey = null)
+    public SegmentedSelectionState(IEnumerable<SegmentItem> items, string? selectedKey)
     {
         if (items is null)
         {
@@ -45,5 +49,6 @@ public sealed class SegmentedSelectionState
     /// <summary>Gets the segment with the specified key.</summary>
     /// <param name="key">The stable segment key.</param>
     /// <returns>The matching segment, or <c>null</c> when no segment has the key.</returns>
-    public SegmentItem? GetItem(string key) => Items.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal));
+    public SegmentItem? GetItem(string key) =>
+        Items.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal));
 }

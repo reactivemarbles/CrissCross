@@ -70,44 +70,19 @@ public partial class MainViewModel : RxObject
     private const int SignalXyAxisIndex = 4;
 
     /// <summary>Provides signal demo points.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Value,
-        IList<double> X,
-        int Axis
-    )> _signalPoints = new();
+    private readonly Signal<(string? Name, IList<double>? Value, IList<double> X, int Axis)> _signalPoints = new();
 
     /// <summary>Provides scatter demo points.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? X,
-        IList<double> Y,
-        int Axis
-    )> _scatterPoints = new();
+    private readonly Signal<(string? Name, IList<double>? X, IList<double> Y, int Axis)> _scatterPoints = new();
 
     /// <summary>Provides data logger demo points.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Value,
-        int Axis,
-        int nMaxPoints
-    )> _dataLoggerPoints = new();
+    private readonly Signal<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)> _dataLoggerPoints = new();
 
     /// <summary>Provides streamer demo points.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Y,
-        IList<double> X,
-        int Axis
-    )> _streamerPoints = new();
+    private readonly Signal<(string? Name, IList<double>? Y, IList<double> X, int Axis)> _streamerPoints = new();
 
     /// <summary>Provides signal XY demo points.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Y,
-        IList<double> X,
-        int Axis
-    )> _signalXyPoints = new();
+    private readonly Signal<(string? Name, IList<double>? Y, IList<double> X, int Axis)> _signalXyPoints = new();
 
     /// <summary>Stores scatter X history for the rolling demo window.</summary>
     private readonly List<double> _scatterXHistory = [];
@@ -172,31 +147,25 @@ public partial class MainViewModel : RxObject
     {
         YAxisNames = (
             ["[Live]", "[Static XY]", "[Historic]", "[Studies]", "[Oscillator]", "[Bars]"],
-            ["#377eb8", "#ff7f00", "#4daf4a", "#984ea3", "#e41a1c", "#a65628"]
-        );
+            ["#377eb8", "#ff7f00", "#4daf4a", "#984ea3", "#e41a1c", "#a65628"]);
         _liveSources =
         [
             ReactivePlotSource.FromSignalPoints(_signalPoints),
             ReactivePlotSource.FromScatterPoints(_scatterPoints),
             ReactivePlotSource.FromDataLoggerPoints(_dataLoggerPoints),
             ReactivePlotSource.FromStreamerPoints(_streamerPoints),
-            ReactivePlotSource.FromSignalXyPoints(_signalXyPoints),
-        ];
+            ReactivePlotSource.FromSignalXyPoints(_signalXyPoints),];
         _allChartSources = CreateAllChartTypeSources(_liveSources);
         _historicSources = CreateHistoricSources();
         _indicatorSources = CreateIndicatorSources();
         ActiveSources = _allChartSources;
-        ReactivePlotSources = this.WhenAnyValue(viewModel => viewModel.ActiveSources)
-            .Select(static sources => sources);
+        ReactivePlotSources = this.WhenAnyValue(viewModel => viewModel.ActiveSources).Select(static sources => sources);
 
-        ShowAllChartTypesCommand = ReactiveCommand.Create(() =>
-            SelectScenario("All chart types", _allChartSources));
-        ShowLiveCommand = ReactiveCommand.Create(() =>
-            SelectScenario("Live reactive streams", _liveSources));
+        ShowAllChartTypesCommand = ReactiveCommand.Create(() => SelectScenario("All chart types", _allChartSources));
+        ShowLiveCommand = ReactiveCommand.Create(() => SelectScenario("Live reactive streams", _liveSources));
         ShowHistoricCommand = ReactiveCommand.Create(() =>
             SelectScenario("Large-span DateTime history", _historicSources));
-        ShowIndicatorsCommand = ReactiveCommand.Create(() =>
-            SelectScenario("Technical indicators", _indicatorSources));
+        ShowIndicatorsCommand = ReactiveCommand.Create(() => SelectScenario("Technical indicators", _indicatorSources));
         ToggleThemeCommand = ReactiveCommand.Create(ToggleTheme);
         _ = ShowAllChartTypesCommand.DisposeWith(Disposables);
         _ = ShowLiveCommand.DisposeWith(Disposables);
@@ -230,9 +199,11 @@ public partial class MainViewModel : RxObject
     public ReactiveCommand<Unit, Unit> ToggleThemeCommand { get; }
 
     /// <summary>Gets the legacy live chart subject retained for backwards-compatible examples.</summary>
-    public IEnumerable<
-        Signal<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
-    > LiveChartSubject { get; private set; }
+    public IEnumerable<Signal<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> LiveChartSubject
+    {
+        get;
+        private set;
+    }
 
     /// <summary>Gets the y axis names.</summary>
     /// <value>
@@ -268,9 +239,7 @@ public partial class MainViewModel : RxObject
 #else
         RandomNumberGenerator.Fill(bytes);
 #endif
-        return BitConverter.ToUInt64(bytes, RandomUInt64StartIndex)
-            / (double)ulong.MaxValue
-            * RandomLoggerMaximumValue;
+        return BitConverter.ToUInt64(bytes, RandomUInt64StartIndex) / (double)ulong.MaxValue * RandomLoggerMaximumValue;
     }
 
     /// <summary>Adds a value to a rolling demo point buffer.</summary>
@@ -294,19 +263,13 @@ public partial class MainViewModel : RxObject
         IReadOnlyList<IReactivePlotSource> liveSources)
     {
         var samples = CreateChartTypeSamples();
-        return
-        [
-            .. liveSources,
-            .. CreateContinuousChartTypeSources(samples),
-            .. CreateSparseChartTypeSources(samples),
-        ];
+        return [.. liveSources, .. CreateContinuousChartTypeSources(samples), .. CreateSparseChartTypeSources(samples)];
     }
 
     /// <summary>Creates the continuous line, step, and area examples.</summary>
     /// <param name="samples">The shared static sample data.</param>
     /// <returns>The continuous plot sources.</returns>
-    private static IReadOnlyList<IReactivePlotSource> CreateContinuousChartTypeSources(
-        ChartTypeSamples samples)
+    private static IReadOnlyList<IReactivePlotSource> CreateContinuousChartTypeSources(ChartTypeSamples samples)
     {
         const int primaryAxis = 1;
         const float lineWidth = 2;
@@ -333,15 +296,13 @@ public partial class MainViewModel : RxObject
                     Color = "#66BB6A",
                     BaselineMode = PlotBaselineMode.Custom,
                     Baseline = areaOffset,
-                }),
-        ];
+                }),];
     }
 
     /// <summary>Creates the bar, stem, and points examples.</summary>
     /// <param name="samples">The shared static sample data.</param>
     /// <returns>The sparse plot sources.</returns>
-    private static IReadOnlyList<IReactivePlotSource> CreateSparseChartTypeSources(
-        ChartTypeSamples samples)
+    private static IReadOnlyList<IReactivePlotSource> CreateSparseChartTypeSources(ChartTypeSamples samples)
     {
         const int sparseAxis = 5;
         const double stemOffset = 20;
@@ -373,8 +334,7 @@ public partial class MainViewModel : RxObject
                     Color = "#26C6DA",
                     LineMode = PlotLineMode.MarkersOnly,
                     MarkerSize = markerSize,
-                }),
-        ];
+                }),];
     }
 
     /// <summary>Creates the shared samples for the static chart type examples.</summary>
@@ -392,17 +352,11 @@ public partial class MainViewModel : RxObject
         const double sparsePeriod = 7;
         const double sparseAmplitude = 15;
         var x = Enumerable.Range(0, sampleCount).Select(static value => (double)value).ToArray();
-        var wave = x
-            .Select(static value => waveBaseline + (Math.Sin(value / wavePeriod) * waveAmplitude))
-            .ToArray();
+        var wave = x.Select(static value => waveBaseline + (Math.Sin(value / wavePeriod) * waveAmplitude)).ToArray();
         var step = x.Select(static value => Math.Floor(value / stepWidth) * stepWidth).ToArray();
-        var sparseX = Enumerable
-            .Range(0, sparseSampleCount)
-            .Select(static value => value * sparseSpacing)
-            .ToArray();
+        var sparseX = Enumerable.Range(0, sparseSampleCount).Select(static value => value * sparseSpacing).ToArray();
         var sparseY = sparseX
-            .Select(static value =>
-                sparseBaseline + (Math.Sin(value / sparsePeriod) * sparseAmplitude))
+            .Select(static value => sparseBaseline + (Math.Sin(value / sparsePeriod) * sparseAmplitude))
             .ToArray();
         return new(x, wave, step, sparseX, sparseY);
     }
@@ -440,8 +394,7 @@ public partial class MainViewModel : RxObject
                 history,
                 renderedPointBudget,
                 PlotType.Line,
-                new() { Color = "#4CAF50", LineWidth = lineWidth }),
-        ];
+                new() { Color = "#4CAF50", LineWidth = lineWidth }),];
     }
 
     /// <summary>Creates static price data with all supported technical studies.</summary>
@@ -475,9 +428,7 @@ public partial class MainViewModel : RxObject
             new() { Color = "#ECEFF1", LineWidth = lineWidth });
         var bollinger = ReactivePlotStudies.BollingerBands(priceSource, axis: priceAxis);
         var ichimoku = ReactivePlotStudies.Ichimoku(priceSource, axis: priceAxis);
-        var macd = ReactivePlotStudies.MovingAverageConvergenceDivergence(
-            priceSource,
-            axis: oscillatorAxis);
+        var macd = ReactivePlotStudies.MovingAverageConvergenceDivergence(priceSource, axis: oscillatorAxis);
         return
         [
             priceSource,
@@ -498,8 +449,7 @@ public partial class MainViewModel : RxObject
                 relativeStrengthIndexPeriod,
                 oscillatorAxis,
                 new() { Color = "#26A69A" }),
-            .. macd,
-        ];
+            .. macd,];
     }
 
     /// <summary>Starts the reactive demo data streams.</summary>
@@ -517,16 +467,11 @@ public partial class MainViewModel : RxObject
             {
                 var x = (double)index;
                 var plotX = x * DemoPlotXScale;
-                var signal =
-                    DemoWaveBaseline + (Math.Sin(index / SignalWavePeriod) * DemoWaveAmplitude);
-                var scatter =
-                    DemoWaveBaseline + (Math.Cos(index / ScatterWavePeriod) * DemoWaveAmplitude);
+                var signal = DemoWaveBaseline + (Math.Sin(index / SignalWavePeriod) * DemoWaveAmplitude);
+                var scatter = DemoWaveBaseline + (Math.Cos(index / ScatterWavePeriod) * DemoWaveAmplitude);
                 var logger = NextRandomValue();
-                var streamer =
-                    DemoWaveBaseline
-                    + (Math.Sin(index / StreamerWavePeriod) * StreamerWaveAmplitude);
-                var signalXy =
-                    DemoWaveBaseline + (Math.Sin(index / SignalXyWavePeriod) * DemoWaveAmplitude);
+                var streamer = DemoWaveBaseline + (Math.Sin(index / StreamerWavePeriod) * StreamerWaveAmplitude);
+                var signalXy = DemoWaveBaseline + (Math.Sin(index / SignalXyWavePeriod) * DemoWaveAmplitude);
 
                 AddDemoPoint(_scatterXHistory, plotX);
                 AddDemoPoint(_scatterYHistory, scatter);
@@ -535,21 +480,11 @@ public partial class MainViewModel : RxObject
 
                 _signalPoints.OnNext(("Signal points", [signal], [plotX], SignalAxisIndex));
                 _scatterPoints.OnNext(
-                    (
-                        "Scatter points",
-                        _scatterXHistory.ToArray(),
-                        _scatterYHistory.ToArray(),
-                        ScatterAxisIndex
-                    ));
+                    ("Scatter points", _scatterXHistory.ToArray(), _scatterYHistory.ToArray(), ScatterAxisIndex));
                 _dataLoggerPoints.OnNext(("Data logger", [logger], LoggerAxisIndex, DemoMaxPoints));
                 _streamerPoints.OnNext(("Streamer", [streamer], [plotX], StreamerAxisIndex));
                 _signalXyPoints.OnNext(
-                    (
-                        "SignalXY",
-                        _signalXyYHistory.ToArray(),
-                        _signalXyXHistory.ToArray(),
-                        SignalXyAxisIndex
-                    ));
+                    ("SignalXY", _signalXyYHistory.ToArray(), _signalXyXHistory.ToArray(), SignalXyAxisIndex));
             });
     }
 
@@ -567,8 +502,7 @@ public partial class MainViewModel : RxObject
     {
         IsLightTheme = !IsLightTheme;
         ThemeButtonText = IsLightTheme ? "Use dark theme" : "Use light theme";
-        LiveChartViewModel?.ApplyTheme(
-            IsLightTheme ? ReactivePlotTheme.Light : ReactivePlotTheme.Dark);
+        LiveChartViewModel?.ApplyTheme(IsLightTheme ? ReactivePlotTheme.Light : ReactivePlotTheme.Dark);
     }
 
     /// <summary>Contains shared samples used by the static chart type examples.</summary>

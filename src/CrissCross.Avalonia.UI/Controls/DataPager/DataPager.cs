@@ -13,30 +13,50 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class DataPager : TemplatedControl
 {
     /// <summary>Property for <see cref="PaginationState"/>.</summary>
-    public static readonly StyledProperty<PaginationState?> PaginationStateProperty = AvaloniaProperty.Register<DataPager, PaginationState?>(nameof(PaginationState));
+    public static readonly StyledProperty<PaginationState?> PaginationStateProperty = AvaloniaProperty.Register<
+        DataPager,
+        PaginationState?
+    >(nameof(PaginationState));
 
     /// <summary>Property for <see cref="CurrentRequest"/>.</summary>
-    public static readonly StyledProperty<PageRequest?> CurrentRequestProperty = AvaloniaProperty.Register<DataPager, PageRequest?>(nameof(CurrentRequest));
+    public static readonly StyledProperty<PageRequest?> CurrentRequestProperty = AvaloniaProperty.Register<
+        DataPager,
+        PageRequest?
+    >(nameof(CurrentRequest));
 
     /// <summary>Property for <see cref="PageRequestCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> PageRequestCommandProperty = AvaloniaProperty.Register<DataPager, ICommand?>(nameof(PageRequestCommand));
+    public static readonly StyledProperty<ICommand?> PageRequestCommandProperty = AvaloniaProperty.Register<
+        DataPager,
+        ICommand?
+    >(nameof(PageRequestCommand));
 
     /// <summary>Property for <see cref="SortKey"/>.</summary>
-    public static readonly StyledProperty<string?> SortKeyProperty = AvaloniaProperty.Register<DataPager, string?>(nameof(SortKey));
+    public static readonly StyledProperty<string?> SortKeyProperty = AvaloniaProperty.Register<DataPager, string?>(
+        nameof(SortKey));
 
     /// <summary>Property for <see cref="SortDescending"/>.</summary>
-    public static readonly StyledProperty<bool> SortDescendingProperty = AvaloniaProperty.Register<DataPager, bool>(nameof(SortDescending));
+    public static readonly StyledProperty<bool> SortDescendingProperty = AvaloniaProperty.Register<DataPager, bool>(
+        nameof(SortDescending));
 
     /// <summary>Property for <see cref="QueryState"/>.</summary>
-    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<DataPager, SearchQueryState?>(nameof(QueryState));
+    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<
+        DataPager,
+        SearchQueryState?
+    >(nameof(QueryState));
 
     /// <summary>Initializes a new instance of the <see cref="DataPager"/> class.</summary>
     public DataPager()
     {
         FirstPageCommand = new PageNavigationCommand(() => MoveToPage(0), () => PaginationState?.CanGoFirst == true);
-        PreviousPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) - 1), () => PaginationState?.CanGoPrevious == true);
-        NextPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) + 1), () => PaginationState?.CanGoNext == true);
-        LastPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.TotalPages ?? 1) - 1), () => PaginationState?.CanGoLast == true);
+        PreviousPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) - 1),
+            () => PaginationState?.CanGoPrevious == true);
+        NextPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) + 1),
+            () => PaginationState?.CanGoNext == true);
+        LastPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.TotalPages ?? 1) - 1),
+            () => PaginationState?.CanGoLast == true);
     }
 
     /// <summary>Gets or sets the shared pagination state projected by the control.</summary>

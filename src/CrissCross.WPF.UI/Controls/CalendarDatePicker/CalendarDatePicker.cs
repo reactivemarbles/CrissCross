@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
@@ -34,7 +35,7 @@ public class CalendarDatePicker : Button
     /// <summary>Property for <see cref="Date"/>.</summary>
     public static readonly DependencyProperty DateProperty = DependencyProperty.Register(
         nameof(Date),
-        typeof(DateTime?),
+        typeof(DateTimeOffset?),
         typeof(CalendarDatePicker),
         new PropertyMetadata(null));
 
@@ -55,7 +56,7 @@ public class CalendarDatePicker : Button
         set => SetValue(IsTodayHighlightedProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the calendar view of the <see cref="CalendarDatePicker"/> is currently shown.</summary>
+    /// <summary>Gets or sets whether the calendar view of the CalendarDatePicker is currently shown.</summary>
     [Bindable(true)]
     public bool IsCalendarOpen
     {
@@ -72,9 +73,9 @@ public class CalendarDatePicker : Button
 
     /// <summary>Gets or sets the date currently set in the calendar picker.</summary>
     [Bindable(true)]
-    public DateTime? Date
+    public DateTimeOffset? Date
     {
-        get => (DateTime?)GetValue(DateProperty);
+        get => (DateTimeOffset?)GetValue(DateProperty);
         set => SetValue(DateProperty, value);
     }
 
@@ -135,7 +136,8 @@ public class CalendarDatePicker : Button
             {
                 Source = this,
                 Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                Converter = new DateTimeOffsetToDateTimeConverter(),
             });
         _ = calendar.SetBinding(
             System.Windows.Controls.Calendar.IsTodayHighlightedProperty,
@@ -143,7 +145,7 @@ public class CalendarDatePicker : Button
             {
                 Source = this,
                 Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             });
         _ = calendar.SetBinding(
             System.Windows.Controls.Calendar.FirstDayOfWeekProperty,
@@ -151,7 +153,7 @@ public class CalendarDatePicker : Button
             {
                 Source = this,
                 Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             });
 
         calendar.SelectedDatesChanged += OnSelectedDatesChanged;
@@ -166,7 +168,7 @@ public class CalendarDatePicker : Button
             VerticalOffset = 1D,
             VerticalAlignment = VerticalAlignment.Center,
             PopupAnimation = PopupAnimation.None,
-            AllowsTransparency = true
+            AllowsTransparency = true,
         };
 
         _ = _popup.SetBinding(
@@ -175,7 +177,7 @@ public class CalendarDatePicker : Button
             {
                 Source = this,
                 Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             });
     }
 }

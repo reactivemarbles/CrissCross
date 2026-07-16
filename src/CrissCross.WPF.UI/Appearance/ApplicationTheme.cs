@@ -17,5 +17,5 @@ public enum ApplicationTheme
     Light,
 
     /// <summary>High contract application theme.</summary>
-    HighContrast
+    HighContrast,
 }

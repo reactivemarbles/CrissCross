@@ -11,49 +11,49 @@ public static class ColorExtensions
     private const float ByteMax = (float)byte.MaxValue;
 
     /// <summary>Provides the maximum percentage value.</summary>
-    private const float MaximumPercentage = 100f;
+    private const float MaximumPercentage = 100F;
 
     /// <summary>Provides the minimum percentage adjustment.</summary>
     private const float MinimumAdjustmentPercentage = -MaximumPercentage;
 
     /// <summary>Provides the angle of a complete hue rotation in degrees.</summary>
-    private const float FullHueAngle = 360f;
+    private const float FullHueAngle = 360F;
 
     /// <summary>Provides the angle of one hue sector in degrees.</summary>
-    private const float HueSectorAngle = 60f;
+    private const float HueSectorAngle = 60F;
 
     /// <summary>Provides the number of hue sectors.</summary>
-    private const float HueSectorCount = 6f;
+    private const float HueSectorCount = 6F;
 
     /// <summary>Provides the green hue-sector offset.</summary>
-    private const float GreenHueOffset = 2f;
+    private const float GreenHueOffset = 2F;
 
     /// <summary>Provides the blue hue-sector offset.</summary>
-    private const float BlueHueOffset = 4f;
+    private const float BlueHueOffset = 4F;
 
     /// <summary>Provides one third of a normalized hue rotation.</summary>
-    private const float OneThirdHue = 1f / 3f;
+    private const float OneThirdHue = 1F / 3F;
 
     /// <summary>Provides two thirds of a normalized hue rotation.</summary>
-    private const float TwoThirdsHue = 2f / 3f;
+    private const float TwoThirdsHue = 2F / 3F;
 
     /// <summary>Provides the divisor used to average minimum and maximum channels.</summary>
-    private const float LightnessAverageDivisor = 2f;
+    private const float LightnessAverageDivisor = 2F;
 
     /// <summary>Provides the midpoint of a normalized channel.</summary>
-    private const float NormalizedMidpoint = 0.5f;
+    private const float NormalizedMidpoint = 0.5F;
 
     /// <summary>Provides the tolerance used to compare color-channel values.</summary>
-    private const float ColorComparisonTolerance = 0.01f;
+    private const float ColorComparisonTolerance = 0.01F;
 
     /// <summary>Provides the offset used to round normalized channels to byte values.</summary>
-    private const float ChannelRoundingOffset = 0.5f;
+    private const float ChannelRoundingOffset = 0.5F;
 
     /// <summary>Provides the scale used to test the upper HSL segment.</summary>
-    private const float HslUpperSegmentScale = 3f;
+    private const float HslUpperSegmentScale = 3F;
 
     /// <summary>Provides the boundary used to test the upper HSL segment.</summary>
-    private const float HslUpperSegmentBoundary = 2f;
+    private const float HslUpperSegmentBoundary = 2F;
 
     /// <summary>Provides the blue HSV sector index.</summary>
     private const int BlueHueSector = 2;
@@ -75,7 +75,7 @@ public static class ColorExtensions
         /// <returns>Brush converted to color.</returns>
         public SolidColorBrush ToBrush() => new(color);
 
-        /// <summary>Creates a <see cref="SolidColorBrush"/> from a <see cref="Color"/> with defined brush opacity.</summary>
+        /// <summary>Creates a SolidColorBrush from a Color with defined brush opacity.</summary>
         /// <param name="opacity">Degree of opacity.</param>
         /// <returns>Brush converted to color with modified opacity.</returns>
         public SolidColorBrush ToBrush(double opacity) => new() { Color = color, Opacity = opacity };
@@ -117,7 +117,8 @@ public static class ColorExtensions
         }
 
         /// <summary>Allows to change the luminance by a factor based on the HSL color space.</summary>
-        /// <param name="factor">The value of the luminance change factor from <see langword="100"/> to <see langword="-100"/>.</param>
+        /// <param name="factor">The value of the luminance change factor from <see langword="100"/> to <see
+        /// langword="-100"/>.</param>
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateLuminance(float factor)
         {
@@ -134,7 +135,8 @@ public static class ColorExtensions
         }
 
         /// <summary>Allows to change the saturation by a factor based on the HSL color space.</summary>
-        /// <param name="factor">The value of the saturation change factor from <see langword="100"/> to <see langword="-100"/>.</param>
+        /// <param name="factor">The value of the saturation change factor from <see langword="100"/> to <see
+        /// langword="-100"/>.</param>
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateSaturation(float factor)
         {
@@ -151,7 +153,8 @@ public static class ColorExtensions
         }
 
         /// <summary>Allows to change the brightness by a factor based on the HSV color space.</summary>
-        /// <param name="factor">The value of the brightness change factor from <see langword="100"/> to <see langword="-100"/>.</param>
+        /// <param name="factor">The value of the brightness change factor from <see langword="100"/> to <see
+        /// langword="-100"/>.</param>
         /// <returns>Updated <see cref="Color"/>.</returns>
         public Color UpdateBrightness(float factor)
         {
@@ -167,15 +170,25 @@ public static class ColorExtensions
             return Color.FromArgb(color.A, ToColorByte(red), ToColorByte(green), ToColorByte(blue));
         }
 
-        /// <summary>Allows to change the brightness, saturation and luminance by a factors based on the HSL and HSV color space.</summary>
-        /// <param name="brightnessFactor">The value of the brightness change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-        /// <param name="saturationFactor">The value of the saturation change factor from <see langword="100"/> to <see langword="-100"/>.</param>
-        /// <param name="luminanceFactor">The value of the luminance change factor from <see langword="100"/> to <see langword="-100"/>.</param>
+        /// <summary>Provides the Update member.</summary>
+        /// <param name="brightnessFactor">The value of the brightness change factor from <see langword="100"/> to <see
+        /// langword="-100"/>.</param>
         /// <returns>Updated <see cref="Color"/>.</returns>
-        public Color Update(
-            float brightnessFactor,
-            float saturationFactor = 0,
-            float luminanceFactor = 0)
+        public Color Update(float brightnessFactor) => color.Update(brightnessFactor, 0, 0);
+
+        /// <summary>Updates the color brightness and saturation.</summary>
+        /// <param name="brightnessFactor">The brightness change factor.</param>
+        /// <param name="saturationFactor">The saturation change factor.</param>
+        /// <returns>Updated <see cref="Color"/>.</returns>
+        public Color Update(float brightnessFactor, float saturationFactor) =>
+            color.Update(brightnessFactor, saturationFactor, 0);
+
+        /// <summary>Updates the color brightness, saturation, and luminance.</summary>
+        /// <param name="brightnessFactor">The brightness change factor.</param>
+        /// <param name="saturationFactor">The saturation change factor.</param>
+        /// <param name="luminanceFactor">The luminance change factor.</param>
+        /// <returns>Updated <see cref="Color"/>.</returns>
+        public Color Update(float brightnessFactor, float saturationFactor, float luminanceFactor)
         {
             if (brightnessFactor > MaximumPercentage || brightnessFactor < MinimumAdjustmentPercentage)
             {
@@ -237,15 +250,15 @@ public static class ColorExtensions
 
             if (max <= 0)
             {
-                return (0f, 0f, 0f);
+                return (0F, 0F, 0F);
             }
 
-            saturation = 0.0f;
+            saturation = 0.0F;
             lightness = (max + min) / ByteMax / LightnessAverageDivisor;
 
             if (delta <= 0.0)
             {
-                return (0f, saturation * MaximumPercentage, lightness * MaximumPercentage);
+                return (0F, saturation * MaximumPercentage, lightness * MaximumPercentage);
             }
 
             saturation = delta / (max / ByteMax);
@@ -254,7 +267,7 @@ public static class ColorExtensions
             {
                 _ when max == red => (green - blue) / ByteMax / delta,
                 _ when max == green => GreenHueOffset + ((blue - red) / ByteMax / delta),
-                _ => BlueHueOffset + ((red - green) / ByteMax / delta)
+                _ => BlueHueOffset + ((red - green) / ByteMax / delta),
             };
 
             if (hue < 0)
@@ -286,7 +299,7 @@ public static class ColorExtensions
 
             if (max <= 0)
             {
-                return (0f, 0f, 0f);
+                return (0F, 0F, 0F);
             }
 
             saturation = delta / (max / ByteMax);
@@ -294,14 +307,14 @@ public static class ColorExtensions
 
             if (delta <= 0.0)
             {
-                return (0f, saturation * MaximumPercentage, value * MaximumPercentage);
+                return (0F, saturation * MaximumPercentage, value * MaximumPercentage);
             }
 
             hue = max switch
             {
                 _ when max == red => (green - blue) / ByteMax / delta,
                 _ when max == green => GreenHueOffset + ((blue - red) / ByteMax / delta),
-                _ => BlueHueOffset + ((red - green) / ByteMax / delta)
+                _ => BlueHueOffset + ((red - green) / ByteMax / delta),
             };
 
             if (hue < 0)
@@ -349,17 +362,11 @@ public static class ColorExtensions
     /// </returns>
     public static (int R, int G, int B) FromHsvToRgb(float hue, float saturation, float brightness)
     {
-        var red = 0;
-        var green = 0;
-        var blue = 0;
-
         if (AlmostEquals(saturation, 0, ColorComparisonTolerance))
         {
-            red = (int)((brightness / MaximumPercentage * ByteMax) + ChannelRoundingOffset);
-            green = red;
-            blue = red;
+            var channel = ToHsvChannel(brightness / MaximumPercentage);
 
-            return (red, green, blue);
+            return (channel, channel, channel);
         }
 
         hue /= FullHueAngle;
@@ -369,69 +376,34 @@ public static class ColorExtensions
         var hueAngle = (hue - (float)Math.Floor(hue)) * HueSectorCount;
         var f = hueAngle - (float)Math.Floor(hueAngle);
 
-        var p = brightness * (1.0f - saturation);
-        var q = brightness * (1.0f - (saturation * f));
-        var t = brightness * (1.0f - (saturation * (1.0f - f)));
+        var p = brightness * (1.0F - saturation);
+        var q = brightness * (1.0F - (saturation * f));
+        var t = brightness * (1.0F - (saturation * (1.0F - f)));
 
-        switch ((int)hueAngle)
+        return (int)hueAngle switch
         {
-            case 0:
-                {
-                    red = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((t * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((p * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-
-            case 1:
-                {
-                    red = (int)((q * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((p * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-
-            case BlueHueSector:
-                {
-                    red = (int)((p * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((t * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-
-            case MagentaHueSector:
-                {
-                    red = (int)((p * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((q * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-
-            case RedHueSector:
-                {
-                    red = (int)((t * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((p * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-
-            case YellowHueSector:
-                {
-                    red = (int)((brightness * ByteMax) + ChannelRoundingOffset);
-                    green = (int)((p * ByteMax) + ChannelRoundingOffset);
-                    blue = (int)((q * ByteMax) + ChannelRoundingOffset);
-
-                    break;
-                }
-        }
-
-        return (red, green, blue);
+            0 => ToHsvRgb(brightness, t, p),
+            1 => ToHsvRgb(q, brightness, p),
+            BlueHueSector => ToHsvRgb(p, brightness, t),
+            MagentaHueSector => ToHsvRgb(p, q, brightness),
+            RedHueSector => ToHsvRgb(t, p, brightness),
+            YellowHueSector => ToHsvRgb(brightness, p, q),
+            _ => (0, 0, 0),
+        };
     }
+
+    /// <summary>Converts normalized HSV channels to RGB bytes.</summary>
+    /// <param name="red">The red channel.</param>
+    /// <param name="green">The green channel.</param>
+    /// <param name="blue">The blue channel.</param>
+    /// <returns>The RGB channels.</returns>
+    private static (int R, int G, int B) ToHsvRgb(float red, float green, float blue) =>
+        (ToHsvChannel(red), ToHsvChannel(green), ToHsvChannel(blue));
+
+    /// <summary>Converts a normalized HSV channel to a byte-range integer.</summary>
+    /// <param name="channel">The normalized channel.</param>
+    /// <returns>The byte-range channel.</returns>
+    private static int ToHsvChannel(float channel) => (int)((channel * ByteMax) + ChannelRoundingOffset);
 
     /// <summary>Calculates the color component for HSL.</summary>
     /// <param name="color">The color value.</param>
@@ -453,7 +425,10 @@ public static class ColorExtensions
             color++;
         }
 
-        num1 = lightness < NormalizedMidpoint ? lightness * (1f + saturation) : lightness + saturation - (lightness * saturation);
+        num1 =
+            lightness < NormalizedMidpoint
+                ? lightness * (1F + saturation)
+                : lightness + saturation - (lightness * saturation);
 
         num2 = lightness + lightness - num1;
 
@@ -467,7 +442,9 @@ public static class ColorExtensions
             return (int)(num1 * ByteMax);
         }
 
-        return color * HslUpperSegmentScale < HslUpperSegmentBoundary ? (int)((num2 + ((num1 - num2) * (TwoThirdsHue - color) * HueSectorCount)) * ByteMax) : (int)(num2 * ByteMax);
+        return color * HslUpperSegmentScale < HslUpperSegmentBoundary
+            ? (int)((num2 + ((num1 - num2) * (TwoThirdsHue - color) * HueSectorCount)) * ByteMax)
+            : (int)(num2 * ByteMax);
     }
 
     /// <summary>Whether the floating point number is about the same.</summary>
@@ -488,12 +465,13 @@ public static class ColorExtensions
     /// <summary>Absolute percentage.</summary>
     /// <param name="value">The value.</param>
     /// <returns>The result.</returns>
-    private static float ToPercentage(float value) => value switch
-    {
-        > MaximumPercentage => MaximumPercentage,
-        < 0f => 0f,
-        _ => value
-    };
+    private static float ToPercentage(float value) =>
+        value switch
+        {
+            > MaximumPercentage => MaximumPercentage,
+            < 0F => 0F,
+            _ => value,
+        };
 
     /// <summary>Absolute byte.</summary>
     /// <param name="value">The value.</param>

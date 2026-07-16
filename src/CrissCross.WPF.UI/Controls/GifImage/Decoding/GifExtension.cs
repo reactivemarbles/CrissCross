@@ -25,10 +25,16 @@ internal abstract class GifExtension : GifBlock
 
         return label switch
         {
-            GifGraphicControlExtension.ExtensionLabel => await GifGraphicControlExtension.ReadAsync(stream).ConfigureAwait(false),
+            GifGraphicControlExtension.ExtensionLabel => await GifGraphicControlExtension
+                .ReadAsync(stream)
+                .ConfigureAwait(false),
             GifCommentExtension.ExtensionLabel => await GifCommentExtension.ReadAsync(stream).ConfigureAwait(false),
-            GifPlainTextExtension.ExtensionLabel => await GifPlainTextExtension.ReadAsync(stream, controlExtensions).ConfigureAwait(false),
-            GifApplicationExtension.ExtensionLabel => await GifApplicationExtension.ReadAsync(stream).ConfigureAwait(false),
+            GifPlainTextExtension.ExtensionLabel => await GifPlainTextExtension
+                .ReadAsync(stream, controlExtensions)
+                .ConfigureAwait(false),
+            GifApplicationExtension.ExtensionLabel => await GifApplicationExtension
+                .ReadAsync(stream)
+                .ConfigureAwait(false),
             _ => throw GifHelpers.UnknownExtensionTypeException(label),
         };
     }

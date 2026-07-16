@@ -55,7 +55,6 @@ internal sealed class BbCodeNode
 
     /// <summary>Returns all descendant text without formatting.</summary>
     /// <returns>The concatenated text.</returns>
-    public string GetText() => IsText
-        ? Text ?? string.Empty
-        : string.Concat(Children.Select(static child => child.GetText()));
+    public string GetText() =>
+        IsText ? Text ?? string.Empty : string.Concat(Children.Select(static child => child.GetText()));
 }

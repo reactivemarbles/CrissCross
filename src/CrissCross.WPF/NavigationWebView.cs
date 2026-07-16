@@ -22,12 +22,11 @@ namespace CrissCross.WPF;
 public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IActivatableView
 {
     /// <summary>The automatic dispose property.</summary>
-    public static readonly DependencyProperty AutoDisposeProperty =
-        DependencyProperty.Register(
-            nameof(AutoDispose),
-            typeof(bool),
-            typeof(NavigationWebView),
-            new PropertyMetadata(true, AutoDisposePropertyChanged));
+    public static readonly DependencyProperty AutoDisposeProperty = DependencyProperty.Register(
+        nameof(AutoDispose),
+        typeof(bool),
+        typeof(NavigationWebView),
+        new PropertyMetadata(true, AutoDisposePropertyChanged));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
@@ -56,7 +55,7 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         typeof(NavigationWebView),
         new PropertyMetadata(SourceChanged));
 
-    /// <summary>The WPF DependencyProperty which backs the Microsoft.Web.WebView2.Wpf.WebView2.ZoomFactor property.</summary>
+    /// <summary>Provides the Register member.</summary>
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
@@ -72,17 +71,17 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
 
     /// <summary>The default background color property.</summary>
     public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
-            nameof(DefaultBackgroundColor),
-            typeof(System.Drawing.Color),
-            typeof(NavigationWebView),
-            new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+        nameof(DefaultBackgroundColor),
+        typeof(System.Drawing.Color),
+        typeof(NavigationWebView),
+        new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
 
     /// <summary>The allow external drop property.</summary>
     public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
-            nameof(AllowExternalDrop),
-            typeof(bool),
-            typeof(NavigationWebView),
-            new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+        nameof(AllowExternalDrop),
+        typeof(bool),
+        typeof(NavigationWebView),
+        new PropertyMetadata(true, AllowExternalDropPropertyChanged));
 
     /// <summary>The design mode foreground color property.</summary>
     public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
@@ -101,18 +100,18 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     private bool _disposedValue;
 
     /// <summary>Initializes a new instance of the <see cref="NavigationWebView"/> class.</summary>
-    public NavigationWebView() => _webBrowser = new()
-    {
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        VerticalAlignment = VerticalAlignment.Stretch
-    };
+    public NavigationWebView() =>
+        _webBrowser = new()
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
-    public IObservable<bool?> CanNavigateBack =>
-        _navigationWindowHost!.Window.CanNavigateBack;
+    public IObservable<bool?> CanNavigateBack => _navigationWindowHost!.Window.CanNavigateBack;
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -173,7 +172,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// Gets a value indicating whether this instance can go back.
     /// if the WebView can navigate to a previous page in the navigation
     ///     history. Wrapper around the Microsoft.Web.WebView2.Core.CoreWebView2.CanGoBack
-    ///     property of Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2. If Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    /// property of Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2. If
+    /// Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     isn't initialized yet then returns false.
     /// </summary>
     /// <value>
@@ -296,14 +296,15 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
 
     /// <summary>
     /// Navigates the WebView to the previous page in the navigation history. Equivalent
-    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    /// to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoBack on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
     public void GoBack() => _webBrowser?.GoBack();
 
     /// <summary>
     /// Navigates the WebView to the next page in the navigation history. Equivalent
-    ///     to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoForward on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
+    /// to calling Microsoft.Web.WebView2.Core.CoreWebView2.GoForward on
+    /// Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2
     ///     If CoreWebView2 hasn't been initialized yet then does nothing.
     /// </summary>
     public void GoForward() => _webBrowser?.GoForward();
@@ -315,7 +316,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     public void Reload() => _webBrowser?.Reload();
 
     /// <summary>
-    /// Stops all navigations and pending resource fetches. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.Stop
+    /// Stops all navigations and pending resource fetches. Equivalent to calling
+    /// Microsoft.Web.WebView2.Core.CoreWebView2.Stop
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
     public void Stop() => _webBrowser?.Stop();
@@ -330,7 +332,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
 
     /// <summary>
     /// Executes JavaScript code from the javaScript parameter in the current top level
-    ///     document rendered in the WebView. Equivalent to calling Microsoft.Web.WebView2.Core.CoreWebView2.ExecuteScriptAsync(System.String)
+    /// document rendered in the WebView. Equivalent to calling
+    /// Microsoft.Web.WebView2.Core.CoreWebView2.ExecuteScriptAsync(System.String)
     ///     on Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2.
     /// </summary>
     /// <param name="javaScript">The java script.</param>
@@ -338,31 +341,42 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     public Task<string> ExecuteScriptAsync(string javaScript) => _webBrowser.ExecuteScriptAsync(javaScript);
 
     /// <summary>Ensures the core web view2 asynchronous.</summary>
-    /// <param name="environment">The environment.</param>
-    /// <param name="controllerOptions">The controller options.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
     ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
-    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    /// for use (i.e. non-null). Note that the control's
+    /// Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
-    public Task EnsureCoreWebView2Async(CoreWebView2Environment? environment = null, CoreWebView2ControllerOptions? controllerOptions = null) =>
+    public Task EnsureCoreWebView2Async() => _webBrowser.EnsureCoreWebView2Async();
+
+    /// <summary>Ensures the core web view is initialized with controller options.</summary>
+    /// <param name="environment">The environment.</param>
+    /// <param name="controllerOptions">The controller options.</param>
+    /// <returns>A task that represents the initialization.</returns>
+    public Task EnsureCoreWebView2Async(
+        CoreWebView2Environment? environment,
+        CoreWebView2ControllerOptions? controllerOptions) =>
         _webBrowser.EnsureCoreWebView2Async(environment, controllerOptions);
 
     /// <summary>Ensures the core web view2 asynchronous.</summary>
     /// <param name="environment">The environment.</param>
     /// <returns>A Task that represents the background initialization process. When the task completes
     ///     then the Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2 property will be available
-    ///     for use (i.e. non-null). Note that the control's Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
+    /// for use (i.e. non-null). Note that the control's
+    /// Microsoft.Web.WebView2.Wpf.WebView2.CoreWebView2InitializationCompleted
     ///     event will be invoked before the task completes.</returns>
-    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) => _webBrowser.EnsureCoreWebView2Async(environment);
+    public Task EnsureCoreWebView2Async(CoreWebView2Environment environment) =>
+        _webBrowser.EnsureCoreWebView2Async(environment);
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     public void Dispose()
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" /> internally.</summary>
+    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked
+    /// whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to <see langword="true" />
+    /// internally.</summary>
     /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {
@@ -382,7 +396,8 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -403,7 +418,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>Runs the default Background Color Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void DefaultBackgroundColorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void DefaultBackgroundColorPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not NavigationWebView browser || args.NewValue is not System.Drawing.Color color)
         {
@@ -416,7 +433,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>Runs the zoom Factor Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void ZoomFactorPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void ZoomFactorPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not NavigationWebView browser || args.NewValue is not double zoom)
         {
@@ -429,7 +448,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>Runs the allow External Drop Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void AllowExternalDropPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void AllowExternalDropPropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not NavigationWebView browser || args.NewValue is not bool allowDrop)
         {
@@ -442,7 +463,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>Runs the design Mode Foreground Color Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void DesignModeForegroundColorChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void DesignModeForegroundColorChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not NavigationWebView browser || args.NewValue is not System.Drawing.Color color)
         {
@@ -483,7 +506,10 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <param name="args">The dependency property changed event arguments.</param>
     private static void TransitionChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
     {
-        if (dependencyObject is not NavigationWebView browser || browser._navigationWindowHost?.Window is null || args.NewValue is not TransitionType transition)
+        if (
+            dependencyObject is not NavigationWebView browser
+            || browser._navigationWindowHost?.Window is null
+            || args.NewValue is not TransitionType transition)
         {
             return;
         }
@@ -507,7 +533,9 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
     /// <summary>Runs the auto Dispose Property Changed operation.</summary>
     /// <param name="dependencyObject">The dependency object.</param>
     /// <param name="args">The dependency property changed event arguments.</param>
-    private static void AutoDisposePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void AutoDisposePropertyChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not NavigationWebView browser)
         {

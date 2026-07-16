@@ -12,28 +12,25 @@ namespace CrissCross.WPF.UI.Controls;
 public partial class NumberPad : IDisposable
 {
     /// <summary>The hide mask property.</summary>
-    public static readonly DependencyProperty HideMaskProperty =
-        DependencyProperty.Register(
-            nameof(HideMask),
-            typeof(bool),
-            typeof(NumberPad),
-            new PropertyMetadata(false));
+    public static readonly DependencyProperty HideMaskProperty = DependencyProperty.Register(
+        nameof(HideMask),
+        typeof(bool),
+        typeof(NumberPad),
+        new PropertyMetadata(false));
 
     /// <summary>The mask color property.</summary>
-    public static readonly DependencyProperty MaskColorProperty =
-        DependencyProperty.Register(
-            nameof(MaskColor),
-            typeof(Brush),
-            typeof(NumberPad),
-            new PropertyMetadata(Brushes.Black, UpdateMask));
+    public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register(
+        nameof(MaskColor),
+        typeof(Brush),
+        typeof(NumberPad),
+        new PropertyMetadata(Brushes.Black, UpdateMask));
 
     /// <summary>The use criss cross theme manager property.</summary>
-    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
-        DependencyProperty.Register(
-            nameof(UseCrissCrossThemeManager),
-            typeof(bool?),
-            typeof(NumberPad),
-            new PropertyMetadata(null, UpdateTheme));
+    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty = DependencyProperty.Register(
+        nameof(UseCrissCrossThemeManager),
+        typeof(bool?),
+        typeof(NumberPad),
+        new PropertyMetadata(null, UpdateTheme));
 
     /// <summary>Delay used before and after keypad fade operations.</summary>
     private const int CloseAnimationDelayMilliseconds = 20;
@@ -59,14 +56,14 @@ public partial class NumberPad : IDisposable
     /// <summary>Stores the _disposables value.</summary>
     private readonly CompositeDisposable _disposables = [];
 
-    /// <summary>Stores the _limitsTimer value.</summary>
-    private readonly DispatcherTimer _limitsTimer;
-
     /// <summary>Stores the _margin value.</summary>
     private readonly double[] _margin = new double[KeypadMarginCount];
 
     /// <summary>Stores the _owner value.</summary>
     private readonly INumberPadButton _owner;
+
+    /// <summary>Stores the _limitsTimer value.</summary>
+    private DispatcherTimer _limitsTimer = null!;
 
     /// <summary>Stores the _currentvalue.</summary>
     private string? _currentValue;
@@ -88,66 +85,14 @@ public partial class NumberPad : IDisposable
         DataContext = this;
 
         InitializeComponent();
-        Unit.Content = _owner.Units;
-        _owner.IsEnabled = false;
-        _ = EventSignal
-            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => MouseLeftButtonDown += handler, handler => MouseLeftButtonDown -= handler)
-            .Merge(EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => Mask.MouseLeftButtonDown += handler, handler => Mask.MouseLeftButtonDown -= handler))
-            .Subscribe(e =>
-            {
-                var mouse = e.GetPosition(this);
-                var gridposition = WGrid.Margin;
-
-                if (mouse.X >= gridposition.Left && mouse.X <= gridposition.Left + WGrid.Width && mouse.Y >= gridposition.Top && mouse.Y <= gridposition.Top + WGrid.Height)
-                {
-                    return;
-                }
-
-                CloseKeypad();
-            }).DisposeWith(_disposables);
-        _ = EventSignal
-            .From<KeyEventHandler, KeyEventArgs>(handler => handler.Invoke, handler => PreviewKeyDown += handler, handler => PreviewKeyDown -= handler)
-            .Subscribe(Window_PreviewKeyDown)
-            .DisposeWith(_disposables);
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.GotFocus += handler, handler => Value.GotFocus -= handler)
-            .Select(_ => true)
-            .Merge(EventSignal.From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Value.LostFocus += handler, handler => Value.LostFocus -= handler).Select(_ => false))
-            .Subscribe(x => _hasFocus = x)
-            .DisposeWith(_disposables);
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Accept.Click += handler, handler => Accept.Click -= handler)
-            .Subscribe(_ => AcceptResult())
-            .DisposeWith(_disposables);
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => CancelBtn.Click += handler, handler => CancelBtn.Click -= handler)
-            .Subscribe(_ => CloseKeypad())
-            .DisposeWith(_disposables);
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => ClearBtn.Click += handler, handler => ClearBtn.Click -= handler)
-            .Subscribe(_ => ClearValues())
-            .DisposeWith(_disposables);
-        _limitsTimer = new(
-            TimeSpan.FromSeconds(1),
-            DispatcherPriority.Normal,
-            (s, e) =>
-            {
-                if (!Value.Value.HasValue || !(Value.Value!.Value <= _owner.Maximum) || !(Value.Value.Value >= _owner.Minimum))
-                {
-                    return;
-                }
-
-                _limitsTimer?.Stop();
-            },
-            Dispatcher);
-        Showkeypad();
     }
 
     /// <summary>Gets or sets a value indicating whether [hide mask].</summary>
     /// <value><c>true</c> if [hide mask]; otherwise, <c>false</c>.</value>
     public bool HideMask
     {
-        get => (bool)GetValue(HideMaskProperty); set => SetValue(HideMaskProperty, value);
+        get => (bool)GetValue(HideMaskProperty);
+        set => SetValue(HideMaskProperty, value);
     }
 
     /// <summary>Gets or sets the color of the mask.</summary>
@@ -156,7 +101,8 @@ public partial class NumberPad : IDisposable
     [Category("Brush")]
     public Brush MaskColor
     {
-        get => (Brush)GetValue(MaskColorProperty); set => SetValue(MaskColorProperty, value);
+        get => (Brush)GetValue(MaskColorProperty);
+        set => SetValue(MaskColorProperty, value);
     }
 
     /// <summary>Gets or sets a value indicating whether [use criss cross theme manager].</summary>
@@ -171,7 +117,7 @@ public partial class NumberPad : IDisposable
         set => SetValue(UseCrissCrossThemeManagerProperty, value);
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     public void Dispose()
     {
         Dispose(true);
@@ -179,7 +125,8 @@ public partial class NumberPad : IDisposable
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -211,27 +158,27 @@ public partial class NumberPad : IDisposable
         switch (key)
         {
             case ".":
+            {
+                var value = Value.Value;
+                if (value is not null)
                 {
-                    var value = Value.Value;
-                    if (value is not null)
-                    {
-                        _currentValue = $"{(int)value}{key}";
-                    }
-
-                    break;
+                    _currentValue = $"{(int)value}{key}";
                 }
+
+                break;
+            }
 
             case "-":
-                {
-                    InvertValue(key);
-                    break;
-                }
+            {
+                InvertValue(key);
+                break;
+            }
 
             default:
-                {
-                    AddDigit(key);
-                    break;
-                }
+            {
+                AddDigit(key);
+                break;
+            }
         }
     }
 
@@ -280,7 +227,10 @@ public partial class NumberPad : IDisposable
         else
         {
             _ = EventSignal
-                .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => c.Loaded += handler, handler => c.Loaded -= handler)
+                .From<RoutedEventHandler, RoutedEventArgs>(
+                    handler => handler.Invoke,
+                    handler => c.Loaded += handler,
+                    handler => c.Loaded -= handler)
                 .Take(1)
                 .Subscribe(_ => SystemThemeWatcher.UnWatch(c))
                 .DisposeWith(c._disposables);
@@ -405,9 +355,10 @@ public partial class NumberPad : IDisposable
         _currentValue = string.Empty;
         Value.Value = GetInitialValue(_owner.Minimum, _owner.Maximum);
 
-        if (_owner is not System.Windows.Controls.Button button ||
-            Window.GetWindow(button) is not { } window ||
-            PresentationSource.FromVisual(button) is not { } presentationSource)
+        if (
+            _owner is not System.Windows.Controls.Button button
+            || Window.GetWindow(button) is not { } window
+            || PresentationSource.FromVisual(button) is not { } presentationSource)
         {
             return;
         }
@@ -442,38 +393,39 @@ public partial class NumberPad : IDisposable
         switch (e.Key)
         {
             case Key.Enter or Key.Return:
-                {
-                    AcceptResult();
-                    break;
-                }
+            {
+                AcceptResult();
+                break;
+            }
 
             case Key.Escape:
-                {
-                    CloseKeypad();
-                    break;
-                }
+            {
+                CloseKeypad();
+                break;
+            }
 
             case Key.OemMinus:
+            {
+                InvertValue("-");
+                break;
+            }
+
+            case Key.OemPeriod
+            or Key.Decimal:
+            {
+                var value = Value.Value;
+                if (value is not null)
                 {
-                    InvertValue("-");
-                    break;
+                    _currentValue = $"{(int)value}.";
                 }
 
-            case Key.OemPeriod or Key.Decimal:
-                {
-                    var value = Value.Value;
-                    if (value is not null)
-                    {
-                        _currentValue = $"{(int)value}.";
-                    }
-
-                    break;
-                }
+                break;
+            }
 
             default:
-                {
-                    break;
-                }
+            {
+                break;
+            }
         }
 
         static string? GetDigitFromKey(Key key)
@@ -494,7 +446,9 @@ public partial class NumberPad : IDisposable
         if (window.WindowState == WindowState.Maximized)
         {
             WindowInteropHelper wih = new(window);
-            if (User32.MonitorFromWindow(wih.Handle, User32.MONITOR_DEFAULTTONEAREST) is IntPtr monitor && monitor != IntPtr.Zero)
+            if (
+                User32.MonitorFromWindow(wih.Handle, User32.MONITOR_DEFAULTTONEAREST) is IntPtr monitor
+                && monitor != IntPtr.Zero)
             {
                 var monitorInfo = new User32.NativeMonitorInfo();
                 _ = User32.GetMonitorInfo(monitor, monitorInfo);
@@ -521,15 +475,24 @@ public partial class NumberPad : IDisposable
         if (element is not null)
         {
             var scaledWidth = element.ActualWidth / element.Child.DesiredSize.Width;
-            _margin[MarginLeftIndex] = ownerPosition.X + (button.ActualWidth * (scaledWidth > ViewboxScaleFallback ? scaledWidth : ViewboxScaleFallback)) + KeypadHorizontalMargin;
+            _margin[MarginLeftIndex] =
+                ownerPosition.X
+                + (button.ActualWidth * (scaledWidth > ViewboxScaleFallback ? scaledWidth : ViewboxScaleFallback))
+                + KeypadHorizontalMargin;
         }
         else
         {
             _margin[MarginLeftIndex] = ownerPosition.X + button.ActualWidth + KeypadHorizontalMargin;
         }
 
-        _margin[MarginLeftIndex] = (_margin[MarginLeftIndex] + WGrid.Width) > (window.ActualWidth - KeypadHorizontalMargin) ? ownerPosition.X - WGrid.Width : _margin[MarginLeftIndex];
-        _margin[MarginLeftIndex] = _margin[MarginLeftIndex] > (window.ActualWidth - KeypadHorizontalMargin) ? window.ActualWidth - WGrid.Width - KeypadHorizontalMargin : _margin[MarginLeftIndex];
+        _margin[MarginLeftIndex] =
+            (_margin[MarginLeftIndex] + WGrid.Width) > (window.ActualWidth - KeypadHorizontalMargin)
+                ? ownerPosition.X - WGrid.Width
+                : _margin[MarginLeftIndex];
+        _margin[MarginLeftIndex] =
+            _margin[MarginLeftIndex] > (window.ActualWidth - KeypadHorizontalMargin)
+                ? window.ActualWidth - WGrid.Width - KeypadHorizontalMargin
+                : _margin[MarginLeftIndex];
     }
 
     /// <summary>Sets the keypad top margin near the owner button.</summary>
@@ -537,6 +500,8 @@ public partial class NumberPad : IDisposable
     /// <param name="ownerPosition">The owner position.</param>
     private void SetTopMargin(System.Windows.Window window, Point ownerPosition)
     {
-        _margin[MarginTopIndex] = Math.Min(ownerPosition.Y - KeypadVerticalOffset, window.ActualHeight - WGrid.Height - KeypadHorizontalMargin);
+        _margin[MarginTopIndex] = Math.Min(
+            ownerPosition.Y - KeypadVerticalOffset,
+            window.ActualHeight - WGrid.Height - KeypadHorizontalMargin);
     }
 }

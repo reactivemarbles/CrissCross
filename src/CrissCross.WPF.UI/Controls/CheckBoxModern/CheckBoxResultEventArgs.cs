@@ -8,9 +8,7 @@ namespace CrissCross.WPF.UI.Controls;
 public class CheckBoxResultEventArgs : EventArgs
 {
     /// <summary>Initializes a new instance of the <see cref="CheckBoxResultEventArgs"/> class.</summary>
-    public CheckBoxResultEventArgs()
-    {
-    }
+    public CheckBoxResultEventArgs() { }
 
     /// <summary>Initializes a new instance of the <see cref="CheckBoxResultEventArgs"/> class.</summary>
     /// <param name="userClicked">if set to <c>true</c> [user clicked].</param>
@@ -21,7 +19,7 @@ public class CheckBoxResultEventArgs : EventArgs
         Checked = result;
     }
 
-    /// <summary>Gets or sets a value indicating whether this <see cref="CheckBoxResultEventArgs"/> is checked.</summary>
+    /// <summary>Gets or sets whether this CheckBoxResultEventArgs is checked.</summary>
     /// <value><c>true</c> if checked; otherwise, <c>false</c>.</value>
     public bool Checked { get; set; }
 

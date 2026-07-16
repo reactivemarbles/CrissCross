@@ -136,7 +136,8 @@ public partial class NavigationView : IUseHostedNavigation, IDisposable
 
     /// <summary>Provides the HasAnyViewModelTargets member.</summary>
     /// <returns>The result.</returns>
-    private bool HasAnyViewModelTargets() => EnumerateAllItems().Any(i => i is NavigationViewItem { TargetViewModelType: not null });
+    private bool HasAnyViewModelTargets() =>
+        EnumerateAllItems().Any(i => i is NavigationViewItem { TargetViewModelType: not null });
 
     /// <summary>Provides the EnumerateAllItems member.</summary>
     /// <returns>The result.</returns>

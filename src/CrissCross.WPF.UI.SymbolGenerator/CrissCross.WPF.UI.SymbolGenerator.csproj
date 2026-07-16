@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="Microsoft.SourceLink.GitHub" />
+    <PackageReference Remove="ReactiveUI.Disposables" />
+    <PackageReference Remove="ReactiveUI.Primitives" />
+    <PackageReference Remove="ReactiveUI.Primitives.Core" />
+    <PackageReference Remove="ReactiveUI.Primitives.Extensions" />
+    <PackageReference Remove="ReactiveUI.Primitives.Extensions.Core" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Remove="ReactiveUI.Primitives" />
+    <Using Remove="ReactiveUI.Primitives.Concurrency" />
+    <Using Remove="ReactiveUI.Primitives.Core" />
+    <Using Remove="ReactiveUI.Primitives.Disposables" />
+    <Using Remove="ReactiveUI.Primitives.Extensions" />
+    <Using Remove="ReactiveUI.Primitives.Signals" />
+    <Using Remove="ReactiveUI.Primitives.Concurrency.ISequencer" />
+    <Using Remove="ReactiveUI.Primitives.Concurrency.ImmediateSequencer" />
+    <Using Remove="ReactiveUI.Primitives.Disposables.MultipleDisposable" />
+    <Using Remove="ReactiveUI.Primitives.Disposables.SwapDisposable" />
+    <Using Remove="ReactiveUI.Primitives.Disposables.Scope" />
+    <Using Remove="ReactiveUI.Primitives.Signals.Signal" />
+    <Using Remove="ReactiveUI.Primitives.RxVoid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+</Project>

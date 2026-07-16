@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>PersonPicture Control. Displays the Profile Picture, or in its absence Initials, for a given Contact.</summary>
+/// <summary>PersonPicture Control.</summary>
 internal static class InitialsGeneratorExtensions
 {
     /// <summary>Maximum leading characters inspected for character type detection.</summary>
@@ -31,8 +31,7 @@ internal static class InitialsGeneratorExtensions
         (0x0D00, 0x0D7F),
         (0x0D80, 0x0DFF),
         (0x0E00, 0x0E7F),
-        (0x0E80, 0x0EFF)
-    ];
+        (0x0E80, 0x0EFF),];
 
     /// <summary>Unicode ranges treated as symbolic character sets.</summary>
     private static readonly (int Start, int End)[] _symbolicRanges =
@@ -52,8 +51,7 @@ internal static class InitialsGeneratorExtensions
         (0x2F800, 0x2FA1F),
         (0x0370, 0x03FF),
         (0x0590, 0x05FF),
-        (0x0530, 0x058F)
-    ];
+        (0x0530, 0x058F),];
 
     /// <summary>Unicode ranges treated as standard Latin-compatible character sets.</summary>
     private static readonly (int Start, int End)[] _standardRanges =
@@ -68,8 +66,7 @@ internal static class InitialsGeneratorExtensions
         (0x1E00, 0x1EFF),
         (0x0400, 0x04FF),
         (0x0500, 0x052F),
-        (0x0300, 0x036F)
-    ];
+        (0x0300, 0x036F),];
 
     /// <summary>Provides extension members.</summary>
     /// <param name="s">The s value.</param>
@@ -78,8 +75,7 @@ internal static class InitialsGeneratorExtensions
         /// <summary>Provides the SafeSubstring member.</summary>
         /// <param name="startIndex">The startIndex value.</param>
         /// <returns>The result.</returns>
-        public string SafeSubstring(int startIndex) =>
-            s.SafeSubstring(startIndex, s.Length - startIndex);
+        public string SafeSubstring(int startIndex) => s.SafeSubstring(startIndex, s.Length - startIndex);
 
         /// <summary>Provides the SafeSubstring member.</summary>
         /// <param name="startIndex">The startIndex value.</param>
@@ -185,42 +181,42 @@ internal static class InitialsGeneratorExtensions
             switch (GetCharacterType(str[i]))
             {
                 case CharacterType.Glyph:
-                    {
-                        result = CharacterType.Glyph;
-                        break;
-                    }
+                {
+                    result = CharacterType.Glyph;
+                    break;
+                }
 
                 case CharacterType.Symbolic:
+                {
+                    // Don't override a Glyph state with a Symbolic State.
+                    if (result != CharacterType.Glyph)
                     {
-                        // Don't override a Glyph state with a Symbolic State.
-                        if (result != CharacterType.Glyph)
-                        {
-                            result = CharacterType.Symbolic;
-                        }
-
-                        break;
+                        result = CharacterType.Symbolic;
                     }
+
+                    break;
+                }
 
                 case CharacterType.Standard:
+                {
+                    // Don't override a Glyph or Symbolic state with a Latin state.
+                    if ((result != CharacterType.Glyph) && (result != CharacterType.Symbolic))
                     {
-                        // Don't override a Glyph or Symbolic state with a Latin state.
-                        if ((result != CharacterType.Glyph) && (result != CharacterType.Symbolic))
-                        {
-                            result = CharacterType.Standard;
-                        }
-
-                        break;
+                        result = CharacterType.Standard;
                     }
+
+                    break;
+                }
 
                 case CharacterType.Other:
-                    {
-                        break;
-                    }
+                {
+                    break;
+                }
 
                 default:
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(str), str, null);
-                    }
+                {
+                    throw new ArgumentOutOfRangeException(nameof(str), str, null);
+                }
             }
         }
 
@@ -247,14 +243,15 @@ internal static class InitialsGeneratorExtensions
         return IsInAnyRange(character, _standardRanges) ? CharacterType.Standard : CharacterType.Other;
     }
 
-    /// <summary>Helper function which takes in a string and returns a vector of pieces, separated by delimiter.</summary>
+    /// <summary>Provides the Split member.</summary>
     /// <param name="source">String on which to perform the split operation.</param>
     /// <param name="delim">The delimiter.</param>
     /// <param name="maxIterations">Maximum number of times to perform a <c>getline</c> loop.</param>
     /// <returns>
     /// A vector of pieces from the source string, separated by delimiter.
     /// </returns>
-    private static string[] Split(string source, char delim, int maxIterations = 25) => source.Split([delim], maxIterations);
+    private static string[] Split(string source, char delim, int maxIterations = 25) =>
+        source.Split([delim], maxIterations);
 
     /// <summary>Helper function to remove bracket qualifier from the end of a display name if present.</summary>
     /// <param name="source">String on which to perform the operation.</param>
@@ -287,7 +284,7 @@ internal static class InitialsGeneratorExtensions
         }
     }
 
-    /// <summary>Extracts the first full character from a given string, including any diacritics or combining characters.</summary>
+    /// <summary>Provides the GetFirstFullCharacter member.</summary>
     /// <param name="str">String from which to extract the character.</param>
     /// <returns>A wstring which represents a given character.</returns>
     private static string GetFirstFullCharacter(string str)
@@ -347,15 +344,14 @@ internal static class InitialsGeneratorExtensions
     /// <summary>Determines whether the character is a combining diacritical mark.</summary>
     /// <param name="character">The character to inspect.</param>
     /// <returns><c>true</c> for combining diacritical marks; otherwise, <c>false</c>.</returns>
-    private static bool IsCombiningDiacriticalMark(char character) =>
-        character is >= (char)0x0300 and <= (char)0x036F;
+    private static bool IsCombiningDiacriticalMark(char character) => character is >= (char)0x0300 and <= (char)0x036F;
 
     /// <summary>Determines whether the character should be skipped at the beginning of initials.</summary>
     /// <param name="character">The character to inspect.</param>
     /// <returns><c>true</c> when the character should be omitted; otherwise, <c>false</c>.</returns>
     private static bool IsOmittedInitialCharacter(char character) =>
-        character is
-            (>= (char)0x0021 and <= (char)0x002F) or
-            (>= (char)0x003A and <= (char)0x0040) or
-            (>= (char)0x007B and <= (char)0x007E);
+        character
+            is (>= (char)0x0021 and <= (char)0x002F)
+                or (>= (char)0x003A and <= (char)0x0040)
+                or (>= (char)0x007B and <= (char)0x007E);
 }

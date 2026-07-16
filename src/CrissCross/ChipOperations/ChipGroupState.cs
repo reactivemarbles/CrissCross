@@ -11,10 +11,14 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for a group of chip/tag items.</summary>
 public sealed class ChipGroupState
 {
+    /// <inheritdoc cref="ChipGroupState(IEnumerable{ChipModel}, ChipGroupSelectionMode)"/>
+    public ChipGroupState(IEnumerable<ChipModel> chips)
+        : this(chips, ChipGroupSelectionMode.None) { }
+
     /// <summary>Initializes a new instance of the <see cref="ChipGroupState"/> class.</summary>
     /// <param name="chips">The chips displayed by the group.</param>
     /// <param name="selectionMode">The selection mode used by the group.</param>
-    public ChipGroupState(IEnumerable<ChipModel> chips, ChipGroupSelectionMode selectionMode = ChipGroupSelectionMode.None)
+    public ChipGroupState(IEnumerable<ChipModel> chips, ChipGroupSelectionMode selectionMode)
     {
         if (chips is null)
         {
@@ -48,5 +52,6 @@ public sealed class ChipGroupState
     /// <summary>Gets the chip with the specified key.</summary>
     /// <param name="key">The stable chip key.</param>
     /// <returns>The matching chip, or <c>null</c> when no chip has the key.</returns>
-    public ChipModel? GetChip(string key) => Chips.FirstOrDefault(chip => string.Equals(chip.Key, key, StringComparison.Ordinal));
+    public ChipModel? GetChip(string key) =>
+        Chips.FirstOrDefault(chip => string.Equals(chip.Key, key, StringComparison.Ordinal));
 }

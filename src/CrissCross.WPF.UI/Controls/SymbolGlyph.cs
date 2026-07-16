@@ -8,10 +8,10 @@ namespace CrissCross.WPF.UI.Controls;
 public static class SymbolGlyph
 {
     /// <summary>If the icon is not found in some places, this one will be displayed.</summary>
-    public const SymbolRegular DefaultIcon = SymbolRegular.BorderNone24;
+    public static readonly SymbolRegular DefaultIcon = SymbolRegular.BorderNone24;
 
     /// <summary>If the filled icon is not found in some places, this one will be displayed.</summary>
-    public const SymbolFilled DefaultFilledIcon = SymbolFilled.BorderNone24;
+    public static readonly SymbolFilled DefaultFilledIcon = SymbolFilled.BorderNone24;
 
     /// <summary>Finds icon based on name.</summary>
     /// <param name="name">Name of the icon.</param>
@@ -33,7 +33,9 @@ public static class SymbolGlyph
 #if DEBUG
         return string.IsNullOrEmpty(name) ? DefaultFilledIcon : Enum.Parse<SymbolFilled>(name);
 #else
-        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolFilled>(name, out var symbol) ? symbol : DefaultFilledIcon;
+        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolFilled>(name, out var symbol)
+            ? symbol
+            : DefaultFilledIcon;
 #endif
     }
 }

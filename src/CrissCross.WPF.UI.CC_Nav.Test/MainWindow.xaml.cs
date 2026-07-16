@@ -33,10 +33,12 @@ public partial class MainWindow
     /// <param name="disposables">The activation disposables.</param>
     private void Activate(CompositeDisposable disposables)
     {
-        var navigation = Navigation ?? throw new InvalidOperationException("The navigation control must be initialized before activation.");
+        var navigation =
+            Navigation
+            ?? throw new InvalidOperationException("The navigation control must be initialized before activation.");
         var navigateBack = ReactiveCommand.Create(() => navigation.NavigateBack(), this.CanNavigateBack());
         NavBack.Command = navigateBack;
         _ = navigateBack.DisposeWith(disposables);
-        navigation.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main View");
+        navigation.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "Main View");
     }
 }

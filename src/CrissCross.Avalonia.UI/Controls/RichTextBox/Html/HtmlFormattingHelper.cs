@@ -15,7 +15,11 @@ internal static class HtmlFormattingHelper
     /// <param name="length">The length value.</param>
     /// <param name="formatType">The formatType value.</param>
     /// <returns>The result.</returns>
-    public static (string? Content, bool Applied) Toggle(string source, int start, int length, TextFormatType formatType)
+    public static (string? Content, bool Applied) Toggle(
+        string source,
+        int start,
+        int length,
+        TextFormatType formatType)
     {
         var projection = HtmlTextProjection.Create(source);
         if (string.IsNullOrEmpty(source) || length <= 0 || start < 0 || start >= projection.Length)
@@ -36,8 +40,9 @@ internal static class HtmlFormattingHelper
             return (source, false);
         }
 
-        if (selection.StartsWith(openTag, StringComparison.OrdinalIgnoreCase) &&
-            selection.EndsWith(closeTag, StringComparison.OrdinalIgnoreCase))
+        if (
+            selection.StartsWith(openTag, StringComparison.OrdinalIgnoreCase)
+            && selection.EndsWith(closeTag, StringComparison.OrdinalIgnoreCase))
         {
             var inner = selection[openTag.Length..(selection.Length - closeTag.Length)];
             var builder = new StringBuilder(source.Length - openTag.Length - closeTag.Length);
@@ -59,12 +64,13 @@ internal static class HtmlFormattingHelper
     /// <summary>Provides the GetTags member.</summary>
     /// <param name="formatType">The formatType value.</param>
     /// <returns>The result.</returns>
-    private static (string OpenTag, string CloseTag) GetTags(TextFormatType formatType) => formatType switch
-    {
-        TextFormatType.Bold => ("<strong>", "</strong>"),
-        TextFormatType.Italic => ("<em>", "</em>"),
-        TextFormatType.Underline => ("<u>", "</u>"),
-        TextFormatType.Strikethrough => ("<s>", "</s>"),
-        _ => (string.Empty, string.Empty),
-    };
+    private static (string OpenTag, string CloseTag) GetTags(TextFormatType formatType) =>
+        formatType switch
+        {
+            TextFormatType.Bold => ("<strong>", "</strong>"),
+            TextFormatType.Italic => ("<em>", "</em>"),
+            TextFormatType.Underline => ("<u>", "</u>"),
+            TextFormatType.Strikethrough => ("<s>", "</s>"),
+            _ => (string.Empty, string.Empty),
+        };
 }

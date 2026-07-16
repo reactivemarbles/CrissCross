@@ -46,7 +46,7 @@ public class Card : System.Windows.Controls.ContentControl
         set => SetValue(FooterProperty, value);
     }
 
-    /// <summary>Gets a value indicating whether gets information whether the <see cref="Card"/> has a <see cref="Footer"/>.</summary>
+    /// <summary>Gets whether the Card has a Footer.</summary>
     public bool HasFooter
     {
         get => (bool)GetValue(HasFooterProperty);

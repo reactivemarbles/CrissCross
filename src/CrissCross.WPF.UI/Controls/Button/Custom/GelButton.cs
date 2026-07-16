@@ -10,7 +10,5 @@ public class GelButton : CommonButtonBase
 {
     /// <summary>Initializes a new instance of the <see cref="GelButton"/> class.</summary>
     public GelButton()
-        : base(nameof(GelButton))
-    {
-    }
+        : base(nameof(GelButton)) { }
 }

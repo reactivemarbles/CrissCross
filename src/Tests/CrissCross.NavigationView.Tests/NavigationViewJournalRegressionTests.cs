@@ -23,7 +23,11 @@ public class NavigationViewJournalRegressionTests
             var navigationView = new TestWpfNavigationView();
             SeedWpfAlreadyCurrentJournalMove(navigationView, item, currentIndex: 0);
             var moved = navigationView.GoForward();
-            return new JournalMoveResult(moved, navigationView.CanGoBack, navigationView.CanGoForward, navigationView.IsBackEnabled);
+            return new JournalMoveResult(
+                moved,
+                navigationView.CanGoBack,
+                navigationView.CanGoForward,
+                navigationView.IsBackEnabled);
         });
 
         await Assert.That(result.Moved).IsTrue();
@@ -43,7 +47,11 @@ public class NavigationViewJournalRegressionTests
             var navigationView = new TestWpfNavigationView();
             SeedWpfAlreadyCurrentJournalMove(navigationView, item, currentIndex: 1);
             var moved = navigationView.GoBack();
-            return new JournalMoveResult(moved, navigationView.CanGoBack, navigationView.CanGoForward, navigationView.IsBackEnabled);
+            return new JournalMoveResult(
+                moved,
+                navigationView.CanGoBack,
+                navigationView.CanGoForward,
+                navigationView.IsBackEnabled);
         });
 
         await Assert.That(result.Moved).IsTrue();
@@ -52,7 +60,7 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(result.IsBackEnabled).IsFalse();
     }
 
-    /// <summary>Provides the AvaloniaGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <summary>Verifies the Avalonia forward journal move.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
@@ -69,7 +77,7 @@ public class NavigationViewJournalRegressionTests
         await Assert.That(navigationView.IsBackEnabled).IsTrue();
     }
 
-    /// <summary>Provides the AvaloniaGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
+    /// <summary>Verifies the Avalonia backward journal move.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task AvaloniaGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
@@ -123,9 +131,8 @@ public class NavigationViewJournalRegressionTests
         GetFieldValue<Dictionary<string, WpfControls.INavigationViewItem>>(
             navigationView,
             "_pageIdOrTargetTagNavigationViewsDictionary")[item.Id] = item;
-        GetFieldValue<ObservableCollection<WpfControls.INavigationViewItem>>(
-            navigationView,
-            "_navigationStack").Add(item);
+        GetFieldValue<ObservableCollection<WpfControls.INavigationViewItem>>(navigationView, "_navigationStack")
+            .Add(item);
         SeedJournal(navigationView, item.Id, currentIndex);
     }
 
@@ -141,9 +148,8 @@ public class NavigationViewJournalRegressionTests
         GetFieldValue<Dictionary<string, AvaloniaControls.INavigationViewItem>>(
             navigationView,
             "_pageIdOrTargetTagNavigationViewsDictionary")[item.Id] = item;
-        GetFieldValue<ObservableCollection<AvaloniaControls.INavigationViewItem>>(
-            navigationView,
-            "_navigationStack").Add(item);
+        GetFieldValue<ObservableCollection<AvaloniaControls.INavigationViewItem>>(navigationView, "_navigationStack")
+            .Add(item);
         SeedJournal(navigationView, item.Id, currentIndex);
     }
 

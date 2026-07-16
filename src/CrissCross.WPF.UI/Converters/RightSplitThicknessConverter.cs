@@ -17,7 +17,9 @@ internal sealed class RightSplitThicknessConverter : IValueConverter
     /// <returns>The result.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is not Thickness thickness ? value : new Thickness(thickness.Left, thickness.Top, thickness.Right, thickness.Bottom);
+        return value is not Thickness thickness
+            ? value
+            : new Thickness(thickness.Left, thickness.Top, thickness.Right, thickness.Bottom);
     }
 
     /// <summary>Provides the ConvertBack member.</summary>
@@ -26,5 +28,6 @@ internal sealed class RightSplitThicknessConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 }

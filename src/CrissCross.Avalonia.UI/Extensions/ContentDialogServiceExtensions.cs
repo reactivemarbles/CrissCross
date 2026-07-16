@@ -15,7 +15,8 @@ public static class ContentDialogServiceExtensions
     {
         /// <summary>Shows the content dialog asynchronously.</summary>
         /// <param name="dialog">The dialog to show.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the dialog result.</returns>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the dialog
+        /// result.</returns>
         public Task<ContentDialogResult> ShowAsync(ContentDialog dialog)
         {
             ArgumentNullException.ThrowIfNull(contentDialogService);

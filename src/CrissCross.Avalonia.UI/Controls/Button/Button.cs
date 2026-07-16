@@ -23,37 +23,52 @@ public class Button : global::Avalonia.Controls.Button, IAppearanceControl, IIco
         coerce: IconElement.Coerce);
 
     /// <summary>Property for <see cref="Appearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<Button, ControlAppearance>(
-        nameof(Appearance),
-        ControlAppearance.Primary);
+    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<
+        Button,
+        ControlAppearance
+    >(nameof(Appearance), ControlAppearance.Primary);
 
     /// <summary>Property for <see cref="MouseOverBackground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> MouseOverBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(MouseOverBackground));
+    public static readonly StyledProperty<IBrush?> MouseOverBackgroundProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(MouseOverBackground));
 
     /// <summary>Property for <see cref="MouseOverBorderBrush"/>.</summary>
-    public static readonly StyledProperty<IBrush?> MouseOverBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(MouseOverBorderBrush));
+    public static readonly StyledProperty<IBrush?> MouseOverBorderBrushProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(MouseOverBorderBrush));
 
     /// <summary>Property for <see cref="MouseOverForeground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> MouseOverForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(MouseOverForeground));
+    public static readonly StyledProperty<IBrush?> MouseOverForegroundProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(MouseOverForeground));
 
     /// <summary>Property for <see cref="PressedForeground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> PressedForegroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(PressedForeground));
+    public static readonly StyledProperty<IBrush?> PressedForegroundProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(PressedForeground));
 
     /// <summary>Property for <see cref="PressedBackground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> PressedBackgroundProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(PressedBackground));
+    public static readonly StyledProperty<IBrush?> PressedBackgroundProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(PressedBackground));
 
     /// <summary>Property for <see cref="PressedBorderBrush"/>.</summary>
-    public static readonly StyledProperty<IBrush?> PressedBorderBrushProperty = AvaloniaProperty.Register<Button, IBrush?>(
-        nameof(PressedBorderBrush));
+    public static readonly StyledProperty<IBrush?> PressedBorderBrushProperty = AvaloniaProperty.Register<
+        Button,
+        IBrush?
+    >(nameof(PressedBorderBrush));
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<Button, CornerRadius>(
-        nameof(CornerRadius));
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<
+        Button,
+        CornerRadius
+    >(nameof(CornerRadius));
 
     /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     public object? Icon

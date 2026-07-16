@@ -24,6 +24,18 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class ChartObjects : RxObject, IAppearance
 {
+    /// <summary>The default chart item name.</summary>
+    private const string DefaultItemName = "---";
+
+    /// <summary>The default chart item color.</summary>
+    private const string DefaultColor = "Green";
+
+    /// <summary>The visible state value.</summary>
+    private const string VisibleState = "Visible";
+
+    /// <summary>The invisible state value.</summary>
+    private const string InvisibleState = "Invisible";
+
     /// <summary>The default chart line width.</summary>
     private const double DefaultLineWidth = 3;
 
@@ -88,10 +100,23 @@ public partial class ChartObjects : RxObject, IAppearance
     [Reactive]
     private string? _opacityCheckBox;
 
-    /// <summary>Initializes a new instance of the <see cref="ChartObjects"/> class with the specified item name and color.</summary>
-    /// <param name="itemName">The name of the chart item to be displayed. If not specified, defaults to "---".</param>
-    /// <param name="color">The color used to represent the chart item. If not specified, defaults to "Green".</param>
-    public ChartObjects(string itemName = "---", string color = "Green")
+    /// <summary>Initializes a new instance of the <see cref="ChartObjects"/> class.</summary>
+    public ChartObjects()
+        : this(DefaultItemName)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ChartObjects"/> class.</summary>
+    /// <param name="itemName">The name of the chart item to be displayed.</param>
+    public ChartObjects(string itemName)
+        : this(itemName, DefaultColor)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ChartObjects"/> class.</summary>
+    /// <param name="itemName">The name of the chart item to be displayed.</param>
+    /// <param name="color">The color used to represent the chart item.</param>
+    public ChartObjects(string itemName, string color)
     {
         Color = color;
         ItemName = itemName;
@@ -101,7 +126,7 @@ public partial class ChartObjects : RxObject, IAppearance
         IsVisible = true;
         IsChecked = true;
         DisplayedValue = 0;
-        Visibility = "Visible";
+        Visibility = VisibleState;
         AutoScale = false;
         IsPaused = false;
         IsCrossHairVisible = false;
@@ -124,7 +149,8 @@ public partial class ChartObjects : RxObject, IAppearance
     /// as toggling a checkbox. The command executes with no parameters and does not return a value.</remarks>
     public ReactiveCommand<Unit, Unit>? IsCheckedCmd { get; set; }
 
-    /// <summary>Initializes visual elements on the specified plot to highlight cursor positions, including a crosshair, marker, and text label using the provided color.</summary>
+    /// <summary>Initializes visual elements on the specified plot to highlight cursor positions, including a crosshair,
+    /// marker, and text label using the provided color.</summary>
     /// <param name="wpfPlot">The wpfPlot value.</param>
     /// <param name="colorName">The colorName value.</param>
     public void CreateCursorValues(WpfPlot wpfPlot, string colorName)
@@ -158,7 +184,8 @@ public partial class ChartObjects : RxObject, IAppearance
         MarkerText.LabelStyle.BackgroundColor = Colors.White;
     }
 
-    /// <summary>Synchronizes the appearance and visibility properties of the specified plotable object with the current view model state and updates the provided WpfPlot accordingly.</summary>
+    /// <summary>Synchronizes the appearance and visibility properties of the specified plotable object with the current
+    /// view model state and updates the provided WpfPlot accordingly.</summary>
     /// <typeparam name="T">The T type.</typeparam>
     /// <param name="plot">The plot value.</param>
     /// <param name="plotable">The plotable value.</param>
@@ -171,29 +198,31 @@ public partial class ChartObjects : RxObject, IAppearance
                 var color = ResolveColor(x.Value2);
                 plotable!.LineStyle.Width = (float)x.Value1;
                 plotable!.LineStyle.Color = color;
-                IsChecked = x.Value3 != "Invisible";
-                plotable!.IsVisible = x.Value3 != "Invisible";
+                IsChecked = x.Value3 != InvisibleState;
+                plotable!.IsVisible = x.Value3 != InvisibleState;
                 Crosshair!.LineColor = color;
                 Marker!.Color = color;
                 MarkerText!.LabelFontColor = color;
                 plot.Refresh();
-            }).DisposeWith(Disposables);
+            })
+            .DisposeWith(Disposables);
 
         _ = this.WhenAnyValue(x => x.IsChecked)
-            .Subscribe(x => Visibility = !x ? "Invisible" : "Visible")
+            .Subscribe(x => Visibility = !x ? InvisibleState : VisibleState)
             .DisposeWith(Disposables);
 
         _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
             .Subscribe(x =>
             {
-                var visibility = x.Value1 && x.Value2 != "Invisible";
+                var visibility = x.Value1 && x.Value2 != InvisibleState;
                 Marker.IsVisible = visibility;
                 Crosshair.IsVisible = visibility;
                 MarkerText.IsVisible = visibility;
-            }).DisposeWith(Disposables);
+            })
+            .DisposeWith(Disposables);
     }
 
-    /// <summary>Subscribes to property changes related to appearance and updates the specified plot control accordingly.</summary>
+    /// <summary>Provides the AppearanceSubsriptions member.</summary>
     /// <remarks>This method establishes reactive subscriptions to properties such as line width, color,
     /// visibility, and crosshair state. When these properties change, the plot control is refreshed to reflect the
     /// updated appearance. This ensures that UI elements remain synchronized with the underlying data model.</remarks>
@@ -204,31 +233,31 @@ public partial class ChartObjects : RxObject, IAppearance
             .Subscribe(x =>
             {
                 var color = ResolveColor(x.Value2);
-                IsChecked = x.Value3 != "Invisible";
+                IsChecked = x.Value3 != InvisibleState;
                 Crosshair!.LineColor = color;
                 Marker!.Color = color;
                 MarkerText!.LabelFontColor = color;
                 wpfPlot.Refresh();
-            }).DisposeWith(Disposables);
+            })
+            .DisposeWith(Disposables);
 
         _ = this.WhenAnyValue(x => x.IsChecked)
-            .Subscribe(x => Visibility = !x ? "Invisible" : "Visible")
+            .Subscribe(x => Visibility = !x ? InvisibleState : VisibleState)
             .DisposeWith(Disposables);
 
         _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility)
             .Subscribe(x =>
             {
-                var visibility = x.Value1 && x.Value2 != "Invisible";
+                var visibility = x.Value1 && x.Value2 != InvisibleState;
                 Marker.IsVisible = visibility;
                 Crosshair.IsVisible = visibility;
                 MarkerText.IsVisible = visibility;
-            }).DisposeWith(Disposables);
+            })
+            .DisposeWith(Disposables);
     }
 
     /// <summary>Subsriptions for appearance.</summary>
-    public void CrosshairSubscription()
-    {
-    }
+    public void CrosshairSubscription() { }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing">The disposing value.</param>
@@ -261,7 +290,11 @@ public partial class ChartObjects : RxObject, IAppearance
         }
 
         var systemColor = System.Drawing.Color.FromName(colorName);
-        return systemColor.A == 0 && !string.Equals(colorName, nameof(System.Drawing.Color.Transparent), StringComparison.OrdinalIgnoreCase)
+        return systemColor.A == 0
+               && !string.Equals(
+                   colorName,
+                   nameof(System.Drawing.Color.Transparent),
+                   StringComparison.OrdinalIgnoreCase)
             ? Colors.White
             : PlotColor.FromColor(systemColor);
     }

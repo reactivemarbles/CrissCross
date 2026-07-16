@@ -32,7 +32,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
         nameof(MinimalChange),
         typeof(double),
         typeof(DynamicScrollViewer),
-        new PropertyMetadata(40d, MinimalChangeProperty_OnChanged));
+        new PropertyMetadata(40D, MinimalChangeProperty_OnChanged));
 
     /// <summary>Property for <see cref="Timeout"/>.</summary>
     public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
@@ -63,16 +63,18 @@ public class DynamicScrollViewer : PassiveScrollViewer
     private int _timeout = 1200;
 
     /// <summary>Stores the _minimalChange value.</summary>
-    private double _minimalChange = 40d;
+    private double _minimalChange = 40D;
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling vertically for the last few seconds.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling
+    /// vertically for the last few seconds.</summary>
     public bool IsScrollingVertically
     {
         get => (bool)GetValue(IsScrollingVerticallyProperty);
         set => SetValue(IsScrollingVerticallyProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling horizontally for the last few seconds.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets information whether the user was scrolling
+    /// horizontally for the last few seconds.</summary>
     public bool IsScrollingHorizontally
     {
         get => (bool)GetValue(IsScrollingHorizontallyProperty);
@@ -93,7 +95,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
         set => SetValue(TimeoutProperty, value);
     }
 
-    /// <summary>OnScrollChanged is an override called whenever scrolling state changes on this <see cref="DynamicScrollViewer"/>.</summary>
+    /// <summary>Provides the OnScrollChanged member.</summary>
     /// <remarks>
     /// OnScrollChanged fires the ScrollChangedEvent. Overriders of this method should call
     /// base.OnScrollChanged(args) if they want the event to be fired.
@@ -135,9 +137,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
     /// <summary>Provides the IsScrollingHorizontally_OnChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void IsScrollingHorizontally_OnChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void IsScrollingHorizontally_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         _ = e;
         if (d is not DynamicScrollViewer scroll)
@@ -151,9 +151,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
     /// <summary>Provides the MinimalChangeProperty_OnChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void MinimalChangeProperty_OnChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void MinimalChangeProperty_OnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         _ = e;
         if (d is not DynamicScrollViewer scroll)

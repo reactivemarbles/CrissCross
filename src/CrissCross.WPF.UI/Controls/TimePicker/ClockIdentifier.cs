@@ -11,5 +11,5 @@ public enum ClockIdentifier
     Clock12Hour,
 
     /// <summary>The clock24 hour.</summary>
-    Clock24Hour
+    Clock24Hour,
 }

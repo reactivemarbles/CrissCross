@@ -4,7 +4,7 @@
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Represents a control that lets the user select from a range of values by moving a thumb along a track.</summary>
+/// <summary>Represents the Slider type.</summary>
 public class Slider : global::Avalonia.Controls.Slider
 {
     // Inherits all functionality from Avalonia Slider

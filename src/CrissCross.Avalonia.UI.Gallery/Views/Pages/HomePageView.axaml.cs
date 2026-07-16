@@ -16,6 +16,7 @@ public partial class HomePageView : ReactiveUserControl<HomePageViewModel>
     public HomePageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<HomePageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<HomePageViewModel>());
     }
 }

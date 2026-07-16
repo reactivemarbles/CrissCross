@@ -12,12 +12,11 @@ namespace CrissCross.WPF.UI;
 public partial class ColorDisplay : DualPickerControlBase
 {
     /// <summary>The corner radius property.</summary>
-    public static readonly DependencyProperty CornerRadiusProperty =
-        DependencyProperty.Register(
-            nameof(CornerRadius),
-            typeof(double),
-            typeof(ColorDisplay),
-            new PropertyMetadata(0d));
+    public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
+        nameof(CornerRadius),
+        typeof(double),
+        typeof(ColorDisplay),
+        new PropertyMetadata(0D));
 
     /// <summary>Initializes a new instance of the <see cref="ColorDisplay"/> class.</summary>
     public ColorDisplay() => InitializeComponent();

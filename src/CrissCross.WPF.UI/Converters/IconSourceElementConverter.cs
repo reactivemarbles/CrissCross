@@ -10,13 +10,12 @@ namespace CrissCross.WPF.UI.Converters;
 public class IconSourceElementConverter : IValueConverter
 {
     /// <summary>Converts a value to an <see cref="IconElement" />.</summary>
-    /// <param name="e">The e.</param>
+    /// <param name="_">Unused dependency object required by the coercion callback signature.</param>
     /// <param name="baseValue">The base value to convert.</param>
     /// <returns>
     /// The converted IconElement.
     /// </returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Roslynator", "RCS1163:Unused parameter", Justification = "Unused")]
-    public static object ConvertToIconElement(DependencyObject e, object baseValue) => ConvertToIconElement(baseValue);
+    public static object ConvertToIconElement(DependencyObject _, object baseValue) => ConvertToIconElement(baseValue);
 
     /// <summary>Converts a value to an <see cref="IconElement"/>.</summary>
     /// <param name="value">The value to convert.</param>
@@ -24,7 +23,8 @@ public class IconSourceElementConverter : IValueConverter
     /// <param name="parameter">The converter parameter.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>The converted <see cref="IconElement"/>.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ConvertToIconElement(value);
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        ConvertToIconElement(value);
 
     /// <summary>Converts an <see cref="IconElement"/> back to an IconSourceElement.</summary>
     /// <param name="value">The value to convert.</param>
@@ -32,7 +32,8 @@ public class IconSourceElementConverter : IValueConverter
     /// <param name="parameter">The converter parameter.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>The converted IconSourceElement.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 
     /// <summary>Provides the ConvertToIconElement member.</summary>
     /// <param name="value">The value.</param>

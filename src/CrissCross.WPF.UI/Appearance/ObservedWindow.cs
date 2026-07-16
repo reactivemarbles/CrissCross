@@ -17,11 +17,7 @@ internal sealed class ObservedWindow
     /// <param name="backdrop">The backdrop value.</param>
     /// <param name="forceBackgroundReplace">The forceBackgroundReplace value.</param>
     /// <param name="updateAccents">The updateAccents value.</param>
-    public ObservedWindow(
-        IntPtr handle,
-        WindowBackdropType backdrop,
-        bool forceBackgroundReplace,
-        bool updateAccents)
+    public ObservedWindow(IntPtr handle, WindowBackdropType backdrop, bool forceBackgroundReplace, bool updateAccents)
     {
         Handle = handle;
         Backdrop = backdrop;
@@ -30,8 +26,7 @@ internal sealed class ObservedWindow
         HasHook = false;
 
         var windowSource = HwndSource.FromHwnd(handle);
-        _source =
-            windowSource ?? throw new InvalidOperationException("Unable to determine the window source.");
+        _source = windowSource ?? throw new InvalidOperationException("Unable to determine the window source.");
     }
 
     /// <summary>Gets the RootVisual value.</summary>

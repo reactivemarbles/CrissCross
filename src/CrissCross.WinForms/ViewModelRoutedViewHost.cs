@@ -55,8 +55,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     {
         InitializeComponent();
         ViewLocator = AppLocator.Current.GetService<IViewLocator>();
-        _ = CurrentViewModel.Subscribe(
-            vm =>
+        _ = CurrentViewModel.Subscribe(vm =>
         {
             if (vm is IRxObject && !_navigateBack)
             {
@@ -155,19 +154,12 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         _navigationViews.Clear();
     }
 
-    /// <summary>Navigates the ViewModel contract.</summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public void Navigate<T>(string? contract = null, object? parameter = null)
-        where T : class, IRxObject => InternalNavigate<T>(contract, parameter);
-
     /// <summary>Navigates a view model instance whose type is known at compile time.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
-    public void Navigate<T>(T viewModel, string? contract = null, object? parameter = null)
+    public void Navigate<T>(T viewModel, string? contract, object? parameter)
         where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
 
     /// <summary>Navigates the ViewModel contract.</summary>
@@ -175,11 +167,13 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
 #if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode(
+        "Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+        "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    public void Navigate(IRxObject viewModel, string? contract = null, object? parameter = null)
-        => InternalNavigate(viewModel, contract, parameter);
+    public void Navigate(IRxObject viewModel, string? contract, object? parameter) =>
+        InternalNavigate(viewModel, contract, parameter);
 
     /// <summary>Navigates the resolved ViewModel/View pair.</summary>
     /// <param name="resolution">The resolved navigation pair.</param>
@@ -189,23 +183,12 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
     }
 
-    /// <summary>Navigates and resets.</summary>
-    /// <typeparam name="T">The Type.</typeparam>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The parameter.</param>
-    public void NavigateAndReset<T>(string? contract = null, object? parameter = null)
-        where T : class, IRxObject
-    {
-        _resetStack = true;
-        InternalNavigate<T>(contract, parameter);
-    }
-
     /// <summary>Navigates a view model instance whose type is known at compile time and resets history.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
-    public void NavigateAndReset<T>(T viewModel, string? contract = null, object? parameter = null)
+    public void NavigateAndReset<T>(T viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
         _resetStack = true;
@@ -217,10 +200,12 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
 #if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode(
+        "Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+        "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    public void NavigateAndReset(IRxObject viewModel, string? contract = null, object? parameter = null)
+    public void NavigateAndReset(IRxObject viewModel, string? contract, object? parameter)
     {
         _resetStack = true;
         InternalNavigate(viewModel, contract, parameter);
@@ -248,7 +233,13 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
             var count = NavigationStack.Count - PreviousEntryOffset;
             _toViewModel = AppLocator.Current.GetService(NavigationStack[count]) as IRxObject;
 
-            var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.Back, _lastView, HostName, parameter);
+            var ea = new ViewModelNavigatingEventArgs(
+                _activeViewModel,
+                _toViewModel,
+                NavigationType.Back,
+                _lastView,
+                HostName,
+                parameter);
             if (_currentView is INotifiyNavigation { ISetupNavigating: true })
             {
                 ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -303,90 +294,168 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
 #endif
 
         // requested should return result here
-        _ = ViewModelRoutedViewHostMixins.ResultNavigating[HostName].DistinctUntilChanged().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(e =>
-        {
-            var fromView = _currentView as INotifiyNavigation;
-            if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating is null)
-            {
-                // No view is setup for reciving navigation notifications.
-                _activeViewModel?.WhenNavigating(e);
-            }
-
-            if (!e.Cancel)
-            {
-                var nea = new ViewModelNavigationEventArgs(_activeViewModel, _toViewModel, _navigateBack ? NavigationType.Back : NavigationType.New, e.View, HostName, e.NavigationParameter);
-                var toView = e.View as INotifiyNavigation;
-                var callVmNavTo = toView is null || !toView!.ISetupNavigatedTo;
-                var callVmNavFrom = fromView is null || !fromView!.ISetupNavigatedTo;
-                var cvm = _activeViewModel;
-                _toViewModel ??= e.View?.ViewModel as IRxObject;
-                var tvm = _toViewModel;
-
-                if (_navigateBack)
-                {
-                    // Remove the current
-                    var currentIndex = NavigationStack.Count - 1;
-                    NavigationStack.RemoveAt(currentIndex);
-                    if (_navigationViews.Count > currentIndex)
-                    {
-                        _navigationViews.RemoveAt(currentIndex);
-                    }
-
-                    if (_toViewModel is not null)
-                    {
-                        _currentView = _navigationViews.Count > 0 ? _navigationViews[_navigationViews.Count - 1] : null;
-                        if (_currentView is not null)
-                        {
-                            _currentView.ViewModel = _toViewModel;
-                        }
-
-                        _currentViewModel.OnNext(_toViewModel);
-                        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Where(x => x.Key != HostName).Select(x => x.Key))
-                        {
-                            ViewModelRoutedViewHostMixins.NavigationHost[host].Refresh();
-                        }
-                    }
-                }
-                else if (_toViewModel is not null && _resetStack)
-                {
-                    NavigationStack.Clear();
-                    _navigationViews.Clear();
-                    _currentViewModel.OnNext(_toViewModel);
-                }
-                else if (_toViewModel is not null && _currentView is not null)
-                {
-                    _currentViewModel.OnNext(_toViewModel);
-                }
-
-                if (toView?.ISetupNavigatedTo == true || fromView?.ISetupNavigatedFrom == true)
-                {
-                    ViewModelRoutedViewHostMixins.SetWhenNavigated.OnNext(nea);
-                }
-
-                if (callVmNavTo)
-                {
-                    tvm?.WhenNavigatedTo(nea, ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName]);
-                }
-
-                if (callVmNavFrom)
-                {
-                    cvm?.WhenNavigatedFrom(nea);
-                }
-            }
-
-            CanNavigateBack = NavigationStack?.Count > 1;
-            _canNavigateBackSubject.OnNext(CanNavigateBack);
-            _resetStack = false;
-            _navigateBack = false;
-        });
+        _ = ViewModelRoutedViewHostMixins
+            .ResultNavigating[HostName]
+            .DistinctUntilChanged()
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(HandleNavigationResult);
     }
 
-    /// <summary>Runs the internal Navigate operation.</summary>
-    /// <typeparam name="T">The view model type.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    private void InternalNavigate<T>(string? contract, object? parameter)
-        where T : class, IRxObject => InternalNavigate(AppLocator.Current.GetService<T>(contract), contract, parameter);
+    /// <summary>Applies a completed navigation request to the active WinForms host.</summary>
+    /// <param name="eventArgs">The navigation request.</param>
+    private void HandleNavigationResult(IViewModelNavigatingEventArgs eventArgs)
+    {
+        var fromView = _currentView as INotifiyNavigation;
+        if (fromView?.ISetupNavigating == false || fromView?.ISetupNavigating is null)
+        {
+            // No view is setup for receiving navigation notifications.
+            _activeViewModel?.WhenNavigating(eventArgs);
+        }
+
+        if (!eventArgs.Cancel)
+        {
+            ApplyNavigationResult(eventArgs, fromView);
+        }
+
+        CanNavigateBack = NavigationStack?.Count > 1;
+        _canNavigateBackSubject.OnNext(CanNavigateBack);
+        _resetStack = false;
+        _navigateBack = false;
+    }
+
+    /// <summary>Applies a non-cancelled navigation result.</summary>
+    /// <param name="eventArgs">The navigation request.</param>
+    /// <param name="fromView">The view being left.</param>
+    private void ApplyNavigationResult(IViewModelNavigatingEventArgs eventArgs, INotifiyNavigation? fromView)
+    {
+        var navigationEvent = new ViewModelNavigationEventArgs(
+            _activeViewModel,
+            _toViewModel,
+            _navigateBack ? NavigationType.Back : NavigationType.New,
+            eventArgs.View,
+            HostName,
+            eventArgs.NavigationParameter);
+        var toView = eventArgs.View as INotifiyNavigation;
+        var callViewModelNavigatedTo = toView?.ISetupNavigatedTo != true;
+        var callViewModelNavigatedFrom = fromView?.ISetupNavigatedTo != true;
+        var currentViewModel = _activeViewModel;
+        _toViewModel ??= eventArgs.View?.ViewModel as IRxObject;
+        var targetViewModel = _toViewModel;
+
+        ApplyNavigationStack();
+        NotifyNavigationParticipants(
+            navigationEvent,
+            fromView,
+            toView,
+            currentViewModel,
+            targetViewModel,
+            callViewModelNavigatedTo,
+            callViewModelNavigatedFrom);
+    }
+
+    /// <summary>Updates the navigation stack and active view model for the pending navigation.</summary>
+    private void ApplyNavigationStack()
+    {
+        if (_navigateBack)
+        {
+            ApplyBackNavigation();
+            return;
+        }
+
+        if (_toViewModel is null)
+        {
+            return;
+        }
+
+        if (_resetStack)
+        {
+            NavigationStack.Clear();
+            _navigationViews.Clear();
+            _currentViewModel.OnNext(_toViewModel);
+            return;
+        }
+
+        if (_currentView is null)
+        {
+            return;
+        }
+
+        _currentViewModel.OnNext(_toViewModel);
+    }
+
+    /// <summary>Removes the current view and activates its predecessor.</summary>
+    private void ApplyBackNavigation()
+    {
+        var currentIndex = NavigationStack.Count - 1;
+        NavigationStack.RemoveAt(currentIndex);
+        if (_navigationViews.Count > currentIndex)
+        {
+            _navigationViews.RemoveAt(currentIndex);
+        }
+
+        if (_toViewModel is null)
+        {
+            return;
+        }
+
+        _currentView = _navigationViews.Count > 0 ? _navigationViews[_navigationViews.Count - 1] : null;
+        if (_currentView is not null)
+        {
+            _currentView.ViewModel = _toViewModel;
+        }
+
+        _currentViewModel.OnNext(_toViewModel);
+        RefreshOtherNavigationHosts();
+    }
+
+    /// <summary>Notifies the view and view model participants after navigation.</summary>
+    /// <param name="navigationEvent">The completed navigation event.</param>
+    /// <param name="fromView">The view being left.</param>
+    /// <param name="toView">The view being entered.</param>
+    /// <param name="currentViewModel">The view model being left.</param>
+    /// <param name="targetViewModel">The view model being entered.</param>
+    /// <param name="callViewModelNavigatedTo">Whether to notify the target view model directly.</param>
+    /// <param name="callViewModelNavigatedFrom">Whether to notify the current view model directly.</param>
+    private void NotifyNavigationParticipants(
+        IViewModelNavigationEventArgs navigationEvent,
+        INotifiyNavigation? fromView,
+        INotifiyNavigation? toView,
+        IRxObject? currentViewModel,
+        IRxObject? targetViewModel,
+        bool callViewModelNavigatedTo,
+        bool callViewModelNavigatedFrom)
+    {
+        if (toView?.ISetupNavigatedTo == true || fromView?.ISetupNavigatedFrom == true)
+        {
+            ViewModelRoutedViewHostMixins.SetWhenNavigated.OnNext(navigationEvent);
+        }
+
+        if (callViewModelNavigatedTo)
+        {
+            targetViewModel?.WhenNavigatedTo(
+                navigationEvent,
+                ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName]);
+        }
+
+        if (!callViewModelNavigatedFrom)
+        {
+            return;
+        }
+
+        currentViewModel?.WhenNavigatedFrom(navigationEvent);
+    }
+
+    /// <summary>Refreshes every registered navigation host except this host.</summary>
+    private void RefreshOtherNavigationHosts()
+    {
+        foreach (
+            var hostName in ViewModelRoutedViewHostMixins
+                .NavigationHost.Where(pair => pair.Key != HostName)
+                .Select(pair => pair.Key))
+        {
+            ViewModelRoutedViewHostMixins.NavigationHost[hostName].Refresh();
+        }
+    }
 
     /// <summary>Runs typed navigation for a supplied view model instance.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
@@ -405,7 +474,13 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
             _currentView.ViewModel = _toViewModel;
         }
 
-        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(
+            _activeViewModel,
+            _toViewModel,
+            NavigationType.New,
+            _currentView,
+            HostName,
+            parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -421,8 +496,10 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
 #if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Resolving a view from a runtime view model instance may require members removed by trimming.")]
+    [System.Diagnostics.CodeAnalysis.RequiresDynamicCode(
+        "Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
+    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+        "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
     private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
     {
@@ -432,7 +509,13 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         // NOTE: This gets a new instance of the View
         _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
 
-        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(
+            _activeViewModel,
+            _toViewModel,
+            NavigationType.New,
+            _currentView,
+            HostName,
+            parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
@@ -454,7 +537,13 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         _currentView = view;
         _currentView.ViewModel = viewModel;
 
-        var ea = new ViewModelNavigatingEventArgs(_activeViewModel, _toViewModel, NavigationType.New, _currentView, HostName, parameter);
+        var ea = new ViewModelNavigatingEventArgs(
+            _activeViewModel,
+            _toViewModel,
+            NavigationType.New,
+            _currentView,
+            HostName,
+            parameter);
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);

@@ -11,8 +11,14 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="RxObject" />
 public abstract partial class ReactiveTreeItem : RxObject
 {
+    /// <summary>Stores the child collection.</summary>
+    private readonly ReactiveList<ReactiveTreeItem> _children = [];
+
     /// <summary>Stores the _parent value.</summary>
     private ReactiveTreeItem? _parent;
+
+    /// <summary>Indicates whether initial parent links have been established.</summary>
+    private bool _parentLinksInitialized;
 
     /// <summary>Gets or sets a value indicating whether this instance is expanded.</summary>
     /// <value>
@@ -33,23 +39,13 @@ public abstract partial class ReactiveTreeItem : RxObject
     private IconElement? _icon;
 
     /// <summary>Initializes a new instance of the <see cref="ReactiveTreeItem"/> class.</summary>
-    /// <param name="children">The children.</param>
-    protected ReactiveTreeItem(IEnumerable<ReactiveTreeItem>? children = null)
-    {
-        Children = [];
-        if (children is null)
-        {
-            return;
-        }
+    protected ReactiveTreeItem() { }
 
-        Children.Edit(a =>
-        {
-            foreach (var child in children)
-            {
-                child._parent = this;
-                a.Add(child);
-            }
-        });
+    /// <summary>Initializes a new instance of the <see cref="ReactiveTreeItem"/> class.</summary>
+    /// <param name="children">The children.</param>
+    protected ReactiveTreeItem(IEnumerable<ReactiveTreeItem> children)
+    {
+        _children.AddRange(children);
     }
 
     /// <summary>Gets the view model.</summary>
@@ -62,7 +58,14 @@ public abstract partial class ReactiveTreeItem : RxObject
     /// <value>
     /// The children.
     /// </value>
-    public ReactiveList<ReactiveTreeItem> Children { get; }
+    public ReactiveList<ReactiveTreeItem> Children
+    {
+        get
+        {
+            EnsureParentLinks();
+            return _children;
+        }
+    }
 
     /// <summary>Adds the child.</summary>
     /// <param name="child">The child.</param>
@@ -100,9 +103,25 @@ public abstract partial class ReactiveTreeItem : RxObject
     {
         if (disposing)
         {
-            Children.Dispose();
+            _children.Dispose();
         }
 
         base.Dispose(disposing);
+    }
+
+    /// <summary>Establishes parent links for children supplied during construction.</summary>
+    private void EnsureParentLinks()
+    {
+        if (_parentLinksInitialized)
+        {
+            return;
+        }
+
+        foreach (var child in _children)
+        {
+            child._parent = this;
+        }
+
+        _parentLinksInitialized = true;
     }
 }

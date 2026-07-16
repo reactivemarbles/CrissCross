@@ -14,7 +14,11 @@ namespace CrissCross;
 /// <param name="message">Optional operation details.</param>
 /// <param name="progress">Optional normalized progress from 0.0 to 1.0.</param>
 /// <param name="cancelCommand">Optional command used to request operation cancellation.</param>
-public sealed class BusyOperation(string title, string? message = null, double? progress = null, ICommand? cancelCommand = null)
+public sealed class BusyOperation(
+    string title,
+    string? message = null,
+    double? progress = null,
+    ICommand? cancelCommand = null)
 {
     /// <summary>Gets the operation title displayed by the overlay.</summary>
     public string Title { get; } = title;
@@ -32,7 +36,7 @@ public sealed class BusyOperation(string title, string? message = null, double? 
     public bool IsActive => !string.IsNullOrWhiteSpace(Title);
 
     /// <summary>Gets a value indicating whether the operation has determinate progress.</summary>
-    public bool IsDeterminate => Progress is >= 0d and <= 1d;
+    public bool IsDeterminate => Progress is >= 0D and <= 1D;
 
     /// <summary>Gets a value indicating whether the operation can be cancelled by the user.</summary>
     public bool IsCancellable => CancelCommand is not null;

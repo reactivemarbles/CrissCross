@@ -9,28 +9,25 @@ namespace CrissCross.WPF.UI.Controls;
 public class NavigationVMBase : System.Windows.Controls.Control
 {
     /// <summary>The items source property.</summary>
-    public static readonly DependencyProperty ItemsSourceProperty =
-        DependencyProperty.Register(
-            nameof(ItemsSource),
-            typeof(IEnumerable<NavigationModel>),
-            typeof(NavigationVMBase),
-            new PropertyMetadata(null, ItemsSourceChanged));
+    public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+        nameof(ItemsSource),
+        typeof(IEnumerable<NavigationModel>),
+        typeof(NavigationVMBase),
+        new PropertyMetadata(null, ItemsSourceChanged));
 
     /// <summary>The is expanded property.</summary>
-    public static readonly DependencyProperty IsExpandedProperty =
-        DependencyProperty.Register(
-            nameof(IsExpanded),
-            typeof(bool),
-            typeof(NavigationVMBase),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
+        nameof(IsExpanded),
+        typeof(bool),
+        typeof(NavigationVMBase),
+        new PropertyMetadata(true));
 
     /// <summary>The filter property.</summary>
-    public static readonly DependencyProperty FilterProperty =
-        DependencyProperty.Register(
-            nameof(Filter),
-            typeof(string),
-            typeof(NavigationVMBase),
-            new PropertyMetadata(string.Empty, FilterChanged));
+    public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
+        nameof(Filter),
+        typeof(string),
+        typeof(NavigationVMBase),
+        new PropertyMetadata(string.Empty, FilterChanged));
 
     /// <summary>Gets or sets the items source.</summary>
     /// <value>

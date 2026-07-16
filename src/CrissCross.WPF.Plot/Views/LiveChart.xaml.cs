@@ -71,12 +71,9 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         };
         DataContext = ViewModel;
         ToolTipService.SetInitialShowDelay(ViewModel.WpfPlot1vm!, 0);
-        ToolTipService.SetShowDuration(
-            ViewModel.WpfPlot1vm!,
-            HoverTooltipDurationMilliseconds);
+        ToolTipService.SetShowDuration(ViewModel.WpfPlot1vm!, HoverTooltipDurationMilliseconds);
         _ = ViewModel
-            .ThrownExceptions.Subscribe(ex =>
-                Debug.WriteLine($"Exception in LiveChart: {ex.Message}"))
+            .ThrownExceptions.Subscribe(ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}"))
             .DisposeWith(_dd);
         ExecuteLockUnlock();
         ExecuteManAutoScale();
@@ -106,16 +103,11 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindCommands(CompositeDisposable disposables)
     {
-        _ = this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.AddCrosshairBtn, v => v.AddCrosshairBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings)
-            .DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, vm => vm.AddCrosshairBtn, v => v.AddCrosshairBtn).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings).DisposeWith(disposables);
     }
 
     /// <summary>Binds menu expansion to command visibility.</summary>
@@ -152,10 +144,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindRightProperties(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(
-                ViewModel,
-                vm => vm.RightPropertyVisibility,
-                v => v.RightProperties.Visibility)
+        _ = this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility)
             .DisposeWith(disposables);
 
         _ = this.WhenAnyValue(x => x.ViewModel!.SelectedSetting)
@@ -177,8 +166,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindChartMetadata(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text)
-            .DisposeWith(disposables);
+        _ = this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text).DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
                 vm => vm.Title,
@@ -200,8 +188,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
         _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.UseFixedNumberOfPoints)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted)
-            .DisposeWith(disposables);
+        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted).DisposeWith(disposables);
     }
 
     /// <summary>Handles the IndexText_MouseUp operation.</summary>
@@ -261,9 +248,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
         _needCrossHairOff = !(_needCrossHairOff && _crosshairOff);
         EnableMarkerBtn.ToolTip = _crosshairOff ? "Marker off" : "Marker";
-        EnableMarkerBtn.Icon = _crosshairOff
-            ? AppBarIcons.Md_crosshairs_off
-            : AppBarIcons.Md_crosshairs;
+        EnableMarkerBtn.Icon = _crosshairOff ? AppBarIcons.Md_crosshairs_off : AppBarIcons.Md_crosshairs;
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 
@@ -345,10 +330,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
         foreach (var verticalAxis in ViewModel.YAxisList)
         {
-            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(
-                -ManualScaleBoundary,
-                ManualScaleBoundary,
-                verticalAxis);
+            ViewModel!.WpfPlot1vm?.Plot.Axes.SetLimitsY(-ManualScaleBoundary, ManualScaleBoundary, verticalAxis);
         }
 
         ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleX(
@@ -365,8 +347,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         }
 
         ViewModel!.WpfPlot1vm!.Plot.Axes.ContinuouslyAutoscale = true;
-        ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction =
-            LiveChartViewModel.AutoScaleAll();
+        ViewModel.WpfPlot1vm!.Plot.Axes.ContinuousAutoscaleAction = LiveChartViewModel.AutoScaleAll();
         _autoScaled = true;
     }
 
@@ -374,13 +355,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     private void YAxisSetup()
     {
         var (yNames, hexColors) = YAxisName;
-        if (
-            ViewModel is null
-            || yNames is null
-            || hexColors is null
-            || yNames.Count == 0
-            || hexColors.Count == 0
-        )
+        if (ViewModel is null || yNames is null || hexColors is null || yNames.Count == 0 || hexColors.Count == 0)
         {
             return;
         }

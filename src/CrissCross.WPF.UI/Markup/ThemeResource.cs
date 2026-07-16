@@ -547,5 +547,5 @@ public enum ThemeResource
     CircleElevationBorderBrush,
 
     /// <summary>Gradient <see cref="Brush"/>.</summary>
-    AccentControlElevationBorderBrush
+    AccentControlElevationBorderBrush,
 }

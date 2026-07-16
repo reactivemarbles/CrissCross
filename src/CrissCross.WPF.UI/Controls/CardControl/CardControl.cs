@@ -7,7 +7,7 @@ using CrissCross.WPF.UI.AutomationPeers;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Inherited from the <see cref="System.Windows.Controls.Primitives.ButtonBase"/> control which displays an additional control on the right side of the card.</summary>
+/// <summary>Provides the CardControl member.</summary>
 public class CardControl : System.Windows.Controls.Primitives.ButtonBase, IIconControl
 {
     /// <summary>Property for <see cref="Header"/>.</summary>
@@ -57,7 +57,8 @@ public class CardControl : System.Windows.Controls.Primitives.ButtonBase, IIconC
         set => SetValue(CornerRadiusProperty, value);
     }
 
-    /// <summary>Returns class-specific <see cref="T:System.Windows.Automation.Peers.AutomationPeer" /> implementations for the Windows Presentation Foundation (WPF) infrastructure.</summary>
+    /// <summary>Returns class-specific <see cref="T:System.Windows.Automation.Peers.AutomationPeer" /> implementations
+    /// for the Windows Presentation Foundation (WPF) infrastructure.</summary>
     /// <returns>
     /// The type-specific <see cref="T:System.Windows.Automation.Peers.AutomationPeer" /> implementation.
     /// </returns>

@@ -33,17 +33,13 @@ public static class ControlMixins
             }
 #endif
 
-            return list
-                .Flatten()
-                .SelectMany(item => selector(item)?.Skip(1) ?? Observable.Empty<T>());
+            return list.Flatten().SelectMany(item => selector(item)?.Skip(1) ?? Observable.Empty<T>());
         }
 
         /// <summary>Flattens the specified list of reactive tree roots.</summary>
         /// <returns>An observable sequence of flattened tree items.</returns>
         private IObservable<ReactiveTreeItem> Flatten() =>
-            list
-                .Select(items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>()))
-                .Switch();
+            list.Select(items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>())).Switch();
     }
 
     /// <summary>Provides the FlattenItems member.</summary>
@@ -51,23 +47,19 @@ public static class ControlMixins
     /// <returns>The result.</returns>
     private static IObservable<ReactiveTreeItem> FlattenItems(IEnumerable<ReactiveTreeItem> items)
     {
-        var streams = items
-            .Where(static item => item is not null)
-            .Select(FlattenItem)
-            .ToArray();
+        var streams = items.Where(static item => item is not null).Select(FlattenItem).ToArray();
 
-        return streams.Length == 0
-            ? Observable.Empty<ReactiveTreeItem>()
-            : streams.Merge();
+        return streams.Length == 0 ? Observable.Empty<ReactiveTreeItem>() : streams.Merge();
     }
 
     /// <summary>Provides the FlattenItem member.</summary>
     /// <param name="item">The item value.</param>
     /// <returns>The result.</returns>
     private static IObservable<ReactiveTreeItem> FlattenItem(ReactiveTreeItem item) =>
-        Observable.Return(item)
+        Observable
+            .Return(item)
             .Concat(
-                item.Children.CurrentItems
-                    .Select(children => FlattenItems(children ?? Enumerable.Empty<ReactiveTreeItem>()))
+                item.Children.CurrentItems.Select(children =>
+                        FlattenItems(children ?? Enumerable.Empty<ReactiveTreeItem>()))
                     .Switch());
 }

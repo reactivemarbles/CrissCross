@@ -24,12 +24,11 @@ public partial class LiveChart
     /// </summary>
     /// <remarks>This field is typically used when interacting with the WPF property system, such as when
     /// calling methods like SetValue or GetValue. The default value is <see langword="false"/>.</remarks>
-    public static readonly DependencyProperty UseFixedNumberOfPointsProperty =
-        DependencyProperty.Register(
-            nameof(UseFixedNumberOfPoints),
-            typeof(bool),
-            typeof(LiveChart),
-            new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
+    public static readonly DependencyProperty UseFixedNumberOfPointsProperty = DependencyProperty.Register(
+        nameof(UseFixedNumberOfPoints),
+        typeof(bool),
+        typeof(LiveChart),
+        new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
 
     /// <summary>
     /// Identifies the NumberPointsPlotted dependency property, which specifies the maximum number of data points to
@@ -38,12 +37,11 @@ public partial class LiveChart
     /// <remarks>This field is used when referencing the NumberPointsPlotted property in code, such as for
     /// data binding or property metadata operations. The default value is 600. Changing this property affects how many
     /// points are rendered in the chart at any given time.</remarks>
-    public static readonly DependencyProperty NumberPointsPlottedProperty =
-        DependencyProperty.Register(
-            nameof(NumberPointsPlotted),
-            typeof(int),
-            typeof(LiveChart),
-            new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
+    public static readonly DependencyProperty NumberPointsPlottedProperty = DependencyProperty.Register(
+        nameof(NumberPointsPlotted),
+        typeof(int),
+        typeof(LiveChart),
+        new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
 
     /// <summary>Identifies the dependency property for the displayed chart title.</summary>
     /// <remarks>This field is typically used when interacting with the LiveChart control's title in XAML or
@@ -115,12 +113,11 @@ public partial class LiveChart
         typeof(LiveChart));
 
     /// <summary>Identifies the dependency property for normalized reactive plot sources.</summary>
-    public static readonly DependencyProperty ReactivePlotSourcesProperty =
-        DependencyProperty.Register(
-            nameof(ReactivePlotSources),
-            typeof(IEnumerable<IReactivePlotSource>),
-            typeof(LiveChart),
-            new PropertyMetadata(null, new PropertyChangedCallback(ReactivePlotSourcesCallback)));
+    public static readonly DependencyProperty ReactivePlotSourcesProperty = DependencyProperty.Register(
+        nameof(ReactivePlotSources),
+        typeof(IEnumerable<IReactivePlotSource>),
+        typeof(LiveChart),
+        new PropertyMetadata(null, new PropertyChangedCallback(ReactivePlotSourcesCallback)));
 
     /// <summary>
     /// Identifies the SignalObservablesWithTimeStamp dependency property, which enables binding to a collection of
@@ -129,13 +126,10 @@ public partial class LiveChart
     /// <remarks>Each observable in the collection emits a tuple containing an optional signal name, optional
     /// X values, Y values, and a time stamp index. This property is typically used to display real-time or historical
     /// signal data in the chart. The property is intended for use with data binding in XAML or code-behind.</remarks>
-    public static readonly DependencyProperty SignalObservablesWithTimeStampProperty =
-        DependencyProperty.Register(
-            nameof(SignalObservablesWithTimeStamp),
-            typeof(IEnumerable<
-                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
-            >),
-            typeof(LiveChart));
+    public static readonly DependencyProperty SignalObservablesWithTimeStampProperty = DependencyProperty.Register(
+        nameof(SignalObservablesWithTimeStamp),
+        typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the DataLoggerObservablesWithPoints dependency property, which enables binding a collection of
@@ -144,13 +138,10 @@ public partial class LiveChart
     /// <remarks>Each observable in the collection provides a tuple containing a series name, a list of data
     /// point values, and two integer values representing additional metadata. This property is typically used to supply
     /// dynamic or real-time data to the chart through data binding.</remarks>
-    public static readonly DependencyProperty DataLoggerObservablesWithPointsProperty =
-        DependencyProperty.Register(
-            nameof(DataLoggerObservablesWithPoints),
-            typeof(IEnumerable<
-                IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
-            >),
-            typeof(LiveChart));
+    public static readonly DependencyProperty DataLoggerObservablesWithPointsProperty = DependencyProperty.Register(
+        nameof(DataLoggerObservablesWithPoints),
+        typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>>),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the DataWithTimeStamp dependency property, which stores a tuple containing optional string data,
@@ -160,11 +151,10 @@ public partial class LiveChart
     /// DataWithTimeStamp property in LiveChart. The tuple consists of four elements: a nullable string, a nullable list
     /// of doubles, a non-nullable list of doubles, and an integer. The property is typically used to represent chart
     /// data along with associated timestamps and metadata.</remarks>
-    public static readonly DependencyProperty DataWithTimeStampProperty =
-        DependencyProperty.Register(
-            nameof(DataWithTimeStamp),
-            typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
-            typeof(LiveChart));
+    public static readonly DependencyProperty DataWithTimeStampProperty = DependencyProperty.Register(
+        nameof(DataWithTimeStamp),
+        typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalWithPoints dependency property, which stores a tuple containing a signal name, optional X
@@ -175,11 +165,10 @@ public partial class LiveChart
     /// required list of Y coordinates, and an integer representing the number of points. The property is intended for
     /// scenarios where both the signal's identity and its associated data points need to be provided to the chart
     /// control.</remarks>
-    public static readonly DependencyProperty SignalWithPointsProperty =
-        DependencyProperty.Register(
-            nameof(SignalWithPoints),
-            typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
-            typeof(LiveChart));
+    public static readonly DependencyProperty SignalWithPointsProperty = DependencyProperty.Register(
+        nameof(SignalWithPoints),
+        typeof((string? Name, IList<double>? Value, IList<double> DateTime, int Axis)),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalsWithPoints dependency property, which represents a collection of signal data points to be
@@ -188,16 +177,10 @@ public partial class LiveChart
     /// <remarks>Each item in the collection is a tuple containing a signal name, optional X values, Y values,
     /// and a color index. This property enables data binding for multiple signals with associated points in a LiveChart
     /// control.</remarks>
-    public static readonly DependencyProperty SignalsWithPointsProperty =
-        DependencyProperty.Register(
-            nameof(SignalsWithPoints),
-            typeof(IEnumerable<(
-                string? Name,
-                IList<double>? Value,
-                IList<double> DateTime,
-                int Axis
-            )>),
-            typeof(LiveChart));
+    public static readonly DependencyProperty SignalsWithPointsProperty = DependencyProperty.Register(
+        nameof(SignalsWithPoints),
+        typeof(IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the SignalObservablesWithPoints dependency property, which enables data binding for a collection of
@@ -208,13 +191,10 @@ public partial class LiveChart
     /// used to bind dynamic data streams to the chart for real-time updates. The expected value is an enumerable of
     /// observables, where each observable emits a tuple containing a series name, optional X values, Y values, and a
     /// point count.</remarks>
-    public static readonly DependencyProperty SignalObservablesWithPointsProperty =
-        DependencyProperty.Register(
-            nameof(SignalObservablesWithPoints),
-            typeof(IEnumerable<
-                IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>
-            >),
-            typeof(LiveChart));
+    public static readonly DependencyProperty SignalObservablesWithPointsProperty = DependencyProperty.Register(
+        nameof(SignalObservablesWithPoints),
+        typeof(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>>),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the ScatterObservablesWithTimeStamp dependency property, which enables data binding for a collection
@@ -225,13 +205,10 @@ public partial class LiveChart
     /// values, and a timestamp. The property supports dynamic updates to the chart as new data arrives. The expected
     /// value is an enumerable of IObservable sequences, each producing a tuple of (string?, IList{double}?,
     /// IList{double}, int).</remarks>
-    public static readonly DependencyProperty ScatterObservablesWithTimeStampProperty =
-        DependencyProperty.Register(
-            nameof(ScatterObservablesWithTimeStamp),
-            typeof(IEnumerable<
-                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
-            >),
-            typeof(LiveChart));
+    public static readonly DependencyProperty ScatterObservablesWithTimeStampProperty = DependencyProperty.Register(
+        nameof(ScatterObservablesWithTimeStamp),
+        typeof(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>),
+        typeof(LiveChart));
 
     /// <summary>
     /// Identifies the ScatterWithPoints dependency property, which stores the configuration for a scatter plot with
@@ -240,11 +217,10 @@ public partial class LiveChart
     /// <remarks>The value of this property is a tuple containing an optional series name, two lists of double
     /// values representing the X and Y coordinates of the points, and an integer specifying the series index. This
     /// property is typically used to bind scatter plot data to a LiveChart control in XAML or code-behind.</remarks>
-    public static readonly DependencyProperty ScatterWithPointsProperty =
-        DependencyProperty.Register(
-            nameof(ScatterWithPoints),
-            typeof((string? Name, IList<double>? X, IList<double> Y, int Axis)),
-            typeof(LiveChart));
+    public static readonly DependencyProperty ScatterWithPointsProperty = DependencyProperty.Register(
+        nameof(ScatterWithPoints),
+        typeof((string? Name, IList<double>? X, IList<double> Y, int Axis)),
+        typeof(LiveChart));
 
     /// <summary>Identifies the dependency property for Y-axis names.</summary>
     /// <remarks>This dependency property is used to associate a pair of string lists representing Y axis
@@ -296,9 +272,7 @@ public partial class LiveChart
     /// <summary>Handles reactive plot source collection changes by rebinding the chart connection.</summary>
     /// <param name="d">The dependency object on which the property changed.</param>
     /// <param name="e">The dependency property change event arguments.</param>
-    private static void ReactivePlotSourcesCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void ReactivePlotSourcesCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart)
         {
@@ -324,9 +298,7 @@ public partial class LiveChart
     /// <summary>Updates the chart's right legend width.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The e value.</param>
-    private static void LegendWidthCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void LegendWidthCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not double gridLength)
         {
@@ -374,9 +346,7 @@ public partial class LiveChart
     /// <summary>Updates the plotted-point count on the chart and its view model.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The plotted-point change event data.</param>
-    private static void NumberPointsPlottedCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void NumberPointsPlottedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not int numberOfSamples)
         {
@@ -405,9 +375,7 @@ public partial class LiveChart
     /// <summary>Handles changes to the legend position dependency property for a LiveChart control.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The e value.</param>
-    private static void LegendPositionCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void LegendPositionCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not LegendPosition position)
         {
@@ -426,9 +394,7 @@ public partial class LiveChart
     /// the new value to be of type Boolean.</remarks>
     /// <param name="d">The changed LiveChart dependency object.</param>
     /// <param name="e">The graph-count change event data.</param>
-    private static void UseFixedNumberOfPointsCallback(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void UseFixedNumberOfPointsCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not LiveChart livechart || e.NewValue is not bool fixedNumberOfSamples)
         {
@@ -484,8 +450,7 @@ public partial class LiveChart
 
     /// <summary>Applies the legend position.</summary>
     /// <param name="position">The legend position.</param>
-    private void ApplyLegendPosition(LegendPosition position) =>
-        ViewModel?.LegendPosition = position;
+    private void ApplyLegendPosition(LegendPosition position) => ViewModel?.LegendPosition = position;
 
     /// <summary>Applies fixed point rendering configuration.</summary>
     /// <param name="fixedNumberOfSamples">A value indicating whether fixed point rendering is enabled.</param>

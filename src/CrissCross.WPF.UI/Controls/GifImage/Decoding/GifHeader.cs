@@ -14,9 +14,7 @@ internal sealed class GifHeader : GifBlock
     private const int VersionByteCount = 3;
 
     /// <summary>Initializes a new instance of the <see cref="GifHeader"/> class.</summary>
-    private GifHeader()
-    {
-    }
+    private GifHeader() { }
 
     /// <summary>Gets the Signature value.</summary>
     public string? Signature { get; private set; }

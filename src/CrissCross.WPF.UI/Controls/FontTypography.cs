@@ -29,5 +29,5 @@ public enum FontTypography
     TitleLarge,
 
     /// <summary>The display.</summary>
-    Display
+    Display,
 }

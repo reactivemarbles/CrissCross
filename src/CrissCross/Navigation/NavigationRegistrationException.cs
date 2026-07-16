@@ -40,7 +40,9 @@ public sealed class NavigationRegistrationException : InvalidOperationException
     /// <param name="serviceType">The duplicated source key.</param>
     /// <param name="contract">The duplicated navigation contract.</param>
     public NavigationRegistrationException(NavigationSourceKind sourceKind, Type serviceType, string? contract)
-        : base($"A {sourceKind} navigation registration already exists for '{serviceType?.FullName}' with contract '{NavigationContract.ToDisplay(contract)}'.")
+        : base(
+            $"A {sourceKind} navigation registration already exists for '{serviceType?.FullName}' "
+                + $"with contract '{NavigationContract.ToDisplay(contract)}'.")
     {
         SourceKind = sourceKind;
         ServiceType = serviceType ?? throw new ArgumentNullException(nameof(serviceType));

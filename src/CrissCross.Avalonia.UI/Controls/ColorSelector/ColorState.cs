@@ -5,52 +5,67 @@
 namespace CrissCross.Avalonia.UI;
 
 /// <summary>Represents the state of a color in multiple color spaces (RGB, HSV, HSL).</summary>
-/// <param name="rgbR">The RGB red component.</param>
-/// <param name="rgbG">The RGB green component.</param>
-/// <param name="rgbB">The RGB blue component.</param>
-/// <param name="a">The alpha component.</param>
-/// <param name="hsvH">The HSV hue component.</param>
-/// <param name="hsvS">The HSV saturation component.</param>
-/// <param name="hsvV">The HSV value component.</param>
-/// <param name="hslH">The HSL hue component.</param>
-/// <param name="hslS">The HSL saturation component.</param>
-/// <param name="hslL">The HSL lightness component.</param>
-public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double hsvH, double hsvS, double hsvV, double hslH, double hslS, double hslL) : IEquatable<ColorState>
+public sealed class ColorState
 {
+    /// <summary>The sentinel used for an undefined color channel.</summary>
+    private const double UndefinedChannel = -1D;
+
+    /// <summary>Tolerance used when testing the undefined-channel sentinel.</summary>
+    private const double ComparisonTolerance = 1E-10D;
+
     /// <summary>Provides the _rgbR member.</summary>
-    private double _rgbR = rgbR;
+    private double _rgbR;
 
     /// <summary>Provides the _rgbG member.</summary>
-    private double _rgbG = rgbG;
+    private double _rgbG;
 
     /// <summary>Provides the _rgbB member.</summary>
-    private double _rgbB = rgbB;
+    private double _rgbB;
 
     /// <summary>Provides the _hsvH member.</summary>
-    private double _hsvH = hsvH;
+    private double _hsvH;
 
     /// <summary>Provides the _hsvS member.</summary>
-    private double _hsvS = hsvS;
+    private double _hsvS;
 
     /// <summary>Provides the _hsvV member.</summary>
-    private double _hsvV = hsvV;
+    private double _hsvV;
 
     /// <summary>Provides the _hslH member.</summary>
-    private double _hslH = hslH;
+    private double _hslH;
 
     /// <summary>Provides the _hslS member.</summary>
-    private double _hslS = hslS;
+    private double _hslS;
 
     /// <summary>Provides the _hslL member.</summary>
-    private double _hslL = hslL;
+    private double _hslL;
+
+    /// <summary>Initializes a new instance of the <see cref="ColorState"/> class.</summary>
+    /// <param name="rgb">The RGB components.</param>
+    /// <param name="a">The alpha component.</param>
+    /// <param name="hsv">The HSV components.</param>
+    /// <param name="hsl">The HSL components.</param>
+    public ColorState(RgbColorComponents rgb, double a, HsvColorComponents hsv, HslColorComponents hsl)
+    {
+        _rgbR = rgb.Red;
+        _rgbG = rgb.Green;
+        _rgbB = rgb.Blue;
+        A = a;
+        _hsvH = hsv.Hue;
+        _hsvS = hsv.Saturation;
+        _hsvV = hsv.Value;
+        _hslH = hsl.Hue;
+        _hslS = hsl.Saturation;
+        _hslL = hsl.Lightness;
+    }
 
     /// <summary>Gets or sets the alpha component.</summary>
-    public double A { get; set; } = a;
+    public double A { get; set; }
 
     /// <summary>Gets or sets the RGB red component.</summary>
     public double RGB_R
     {
-        readonly get => _rgbR;
+        get => _rgbR;
         set
         {
             _rgbR = value;
@@ -62,7 +77,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the RGB green component.</summary>
     public double RGB_G
     {
-        readonly get => _rgbG;
+        get => _rgbG;
         set
         {
             _rgbG = value;
@@ -74,7 +89,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the RGB blue component.</summary>
     public double RGB_B
     {
-        readonly get => _rgbB;
+        get => _rgbB;
         set
         {
             _rgbB = value;
@@ -86,7 +101,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSV hue component.</summary>
     public double HSV_H
     {
-        readonly get => _hsvH;
+        get => _hsvH;
         set
         {
             _hsvH = value;
@@ -98,7 +113,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSV saturation component.</summary>
     public double HSV_S
     {
-        readonly get => _hsvS;
+        get => _hsvS;
         set
         {
             _hsvS = value;
@@ -110,7 +125,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSV value component.</summary>
     public double HSV_V
     {
-        readonly get => _hsvV;
+        get => _hsvV;
         set
         {
             _hsvV = value;
@@ -122,7 +137,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSL hue component.</summary>
     public double HSL_H
     {
-        readonly get => _hslH;
+        get => _hslH;
         set
         {
             _hslH = value;
@@ -134,7 +149,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSL saturation component.</summary>
     public double HSL_S
     {
-        readonly get => _hslS;
+        get => _hslS;
         set
         {
             _hslS = value;
@@ -146,7 +161,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     /// <summary>Gets or sets the HSL lightness component.</summary>
     public double HSL_L
     {
-        readonly get => _hslL;
+        get => _hslL;
         set
         {
             _hslL = value;
@@ -154,18 +169,6 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
             RecalculateHSVFromHSL();
         }
     }
-
-    /// <summary>Determines whether two color states are equal.</summary>
-    /// <param name="left">The left color state.</param>
-    /// <param name="right">The right color state.</param>
-    /// <returns><see langword="true"/> when the states are equal.</returns>
-    public static bool operator ==(ColorState left, ColorState right) => left.Equals(right);
-
-    /// <summary>Determines whether two color states are not equal.</summary>
-    /// <param name="left">The left color state.</param>
-    /// <param name="right">The right color state.</param>
-    /// <returns><see langword="true"/> when the states are not equal.</returns>
-    public static bool operator !=(ColorState left, ColorState right) => !left.Equals(right);
 
     /// <summary>Sets the ARGB values.</summary>
     /// <param name="a">The alpha component.</param>
@@ -182,44 +185,16 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
         RecalculateHSLFromRGB();
     }
 
-    /// <inheritdoc/>
-    public readonly bool Equals(ColorState other) =>
-        _rgbR.Equals(other._rgbR) &&
-        _rgbG.Equals(other._rgbG) &&
-        _rgbB.Equals(other._rgbB) &&
-        A.Equals(other.A) &&
-        _hsvH.Equals(other._hsvH) &&
-        _hsvS.Equals(other._hsvS) &&
-        _hsvV.Equals(other._hsvV) &&
-        _hslH.Equals(other._hslH) &&
-        _hslS.Equals(other._hslS) &&
-        _hslL.Equals(other._hslL);
-
-    /// <inheritdoc/>
-    public override readonly bool Equals(object? obj) => obj is ColorState other && Equals(other);
-
-    /// <inheritdoc/>
-    public override readonly int GetHashCode() =>
-        HashCode.Combine(
-            _rgbR,
-            _rgbG,
-            _rgbB,
-            A,
-            _hsvH,
-            _hsvS,
-            _hsvV,
-            HashCode.Combine(_hslH, _hslS, _hslL));
-
     /// <summary>Provides the RecalculateHSLFromRGB member.</summary>
     private void RecalculateHSLFromRGB()
     {
         var (h, s, l) = ColorSpaceHelper.RgbToHsl(_rgbR, _rgbG, _rgbB);
-        if (h != -1)
+        if (Math.Abs(h - UndefinedChannel) > ComparisonTolerance)
         {
             _hslH = h;
         }
 
-        if (s != -1)
+        if (Math.Abs(s - UndefinedChannel) > ComparisonTolerance)
         {
             _hslS = s;
         }
@@ -232,7 +207,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     {
         var (h, s, l) = ColorSpaceHelper.HsvToHsl(_hsvH, _hsvS, _hsvV);
         _hslH = h;
-        if (s != -1)
+        if (Math.Abs(s - UndefinedChannel) > ComparisonTolerance)
         {
             _hslS = s;
         }
@@ -244,12 +219,12 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     private void RecalculateHSVFromRGB()
     {
         var (h, s, v) = ColorSpaceHelper.RgbToHsv(_rgbR, _rgbG, _rgbB);
-        if (h != -1)
+        if (Math.Abs(h - UndefinedChannel) > ComparisonTolerance)
         {
             _hsvH = h;
         }
 
-        if (s != -1)
+        if (Math.Abs(s - UndefinedChannel) > ComparisonTolerance)
         {
             _hsvS = s;
         }
@@ -262,7 +237,7 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
     {
         var (h, s, v) = ColorSpaceHelper.HslToHsv(_hslH, _hslS, _hslL);
         _hsvH = h;
-        if (s != -1)
+        if (Math.Abs(s - UndefinedChannel) > ComparisonTolerance)
         {
             _hsvS = s;
         }
@@ -287,4 +262,22 @@ public struct ColorState(double rgbR, double rgbG, double rgbB, double a, double
         _rgbG = g;
         _rgbB = b;
     }
+
+    /// <summary>Represents normalized RGB color components.</summary>
+    /// <param name="Red">The red component.</param>
+    /// <param name="Green">The green component.</param>
+    /// <param name="Blue">The blue component.</param>
+    public readonly record struct RgbColorComponents(double Red, double Green, double Blue);
+
+    /// <summary>Represents normalized HSV color components.</summary>
+    /// <param name="Hue">The hue component.</param>
+    /// <param name="Saturation">The saturation component.</param>
+    /// <param name="Value">The value component.</param>
+    public readonly record struct HsvColorComponents(double Hue, double Saturation, double Value);
+
+    /// <summary>Represents normalized HSL color components.</summary>
+    /// <param name="Hue">The hue component.</param>
+    /// <param name="Saturation">The saturation component.</param>
+    /// <param name="Lightness">The lightness component.</param>
+    public readonly record struct HslColorComponents(double Hue, double Saturation, double Lightness);
 }

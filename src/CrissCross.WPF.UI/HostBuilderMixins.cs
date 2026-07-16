@@ -20,33 +20,39 @@ public static class HostBuilderMixins
         /// <summary>Configures CrissSCross for Page Navigation.</summary>
         /// <typeparam name="TWindow">The type of the window.</typeparam>
         /// <typeparam name="TPage">The TPage type.</typeparam>
+        /// <param name="registration">The typed navigation registration.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        public IHostBuilder ConfigureCrissCrossForPageNavigation<TWindow, TPage>()
+        public IHostBuilder ConfigureCrissCrossForPageNavigation<TWindow, TPage>(
+            PageNavigationRegistration<TWindow, TPage> registration)
             where TWindow : Window, INavigationWindow
-            where TPage : Page => hostBuilder
-            .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-            .ConfigureServices(
-            services =>
-                services.AddHostedService<ApplicationHostService<TWindow, TPage>>() // App Host
-                .AddSingleton<IPageService, PageService>() // Page resolver service
-                .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
-                .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
-                .AddSingleton<INavigationService, NavigationService>() // Service containing navigation, same as INavigationWindow... but without window
-                .AddSingleton<INavigationWindow, TWindow>());
+            where TPage : Page =>
+            hostBuilder
+                .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+                .ConfigureServices(services =>
+                    services
+                        .AddHostedService<ApplicationHostService<TWindow, TPage>>() // App Host
+                        .AddSingleton<IPageService, PageService>() // Page resolver service
+                        .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
+                        .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
+                        .AddSingleton<INavigationService, NavigationService>() // Window-independent navigation
+                        .AddSingleton<INavigationWindow, TWindow>());
 
         /// <summary>Configures the criss cross for view model navigation.</summary>
         /// <typeparam name="TWindow">The type of the window.</typeparam>
         /// <typeparam name="TViewModel">The TViewModel type.</typeparam>
+        /// <param name="registration">The typed navigation registration.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        public IHostBuilder ConfigureCrissCrossForViewModelNavigation<TWindow, TViewModel>()
+        public IHostBuilder ConfigureCrissCrossForViewModelNavigation<TWindow, TViewModel>(
+            ViewModelNavigationRegistration<TWindow, TViewModel> registration)
             where TWindow : NavigationWindow
-            where TViewModel : class, IRxObject, new() => hostBuilder
-            .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-            .ConfigureServices(
-            services =>
-                services.AddHostedService<ApplicationVMHostService<TWindow, TViewModel>>() // App Host
-                .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
-                .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
-                .AddSingleton<NavigationWindow, TWindow>());
+            where TViewModel : class, IRxObject, new() =>
+            hostBuilder
+                .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+                .ConfigureServices(services =>
+                    services
+                        .AddHostedService<ApplicationVMHostService<TWindow, TViewModel>>() // App Host
+                        .AddSingleton<IThemeService, ThemeService>() // Theme manipulation
+                        .AddSingleton<ITaskBarService, TaskBarService>() // TaskBar manipulation
+                        .AddSingleton<NavigationWindow, TWindow>());
     }
 }

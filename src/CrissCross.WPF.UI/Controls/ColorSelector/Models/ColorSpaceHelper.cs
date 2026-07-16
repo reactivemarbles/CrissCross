@@ -8,31 +8,31 @@ namespace CrissCross.WPF.UI;
 internal static class ColorSpaceHelper
 {
     /// <summary>The hue-sector offset used when blue is the largest RGB component.</summary>
-    private const double BlueHueSectorOffset = 4d;
+    private const double BlueHueSectorOffset = 4D;
 
     /// <summary>The number of degrees in a complete hue circle.</summary>
-    private const double DegreesInFullCircle = 360d;
+    private const double DegreesInFullCircle = 360D;
 
     /// <summary>The number of degrees in each HSV hue sector.</summary>
-    private const double DegreesPerHueSector = 60d;
+    private const double DegreesPerHueSector = 60D;
 
     /// <summary>The halfway point in normalized color calculations.</summary>
-    private const double Half = 0.5d;
+    private const double Half = 0.5D;
 
     /// <summary>The number of hue sectors used by the HSL conversion formula.</summary>
-    private const double HslHueSectorCount = 6d;
+    private const double HslHueSectorCount = 6D;
 
     /// <summary>The scale used when calculating normalized lightness.</summary>
-    private const double LightnessScale = 2d;
+    private const double LightnessScale = 2D;
 
     /// <summary>The normalized HSL hue offset for green.</summary>
-    private const double OneThird = 1d / 3d;
+    private const double OneThird = 1D / 3D;
 
     /// <summary>The normalized HSL hue offset for blue.</summary>
-    private const double TwoThirds = 2d / 3d;
+    private const double TwoThirds = 2D / 3D;
 
     /// <summary>The hue-sector offset used when green is the largest RGB component.</summary>
-    private const double GreenHueSectorOffset = 2d;
+    private const double GreenHueSectorOffset = 2D;
 
     /// <summary>The integer hue sector for cyan in RGB conversion switch expressions.</summary>
     private const int CyanHueSector = 3;
@@ -75,9 +75,9 @@ internal static class ColorSpaceHelper
 
         h = max switch
         {
-            _ when r == max => (g - b) / delta,
-            _ when g == max => GreenHueSectorOffset + ((b - r) / delta),
-            _ => BlueHueSectorOffset + ((r - g) / delta)
+            _ when DoubleComparison.AreClose(r, max) => (g - b) / delta,
+            _ when DoubleComparison.AreClose(g, max) => GreenHueSectorOffset + ((b - r) / delta),
+            _ => BlueHueSectorOffset + ((r - g) / delta),
         };
 
         h *= DegreesPerHueSector;
@@ -128,9 +128,9 @@ internal static class ColorSpaceHelper
 
         h = max switch
         {
-            _ when r == max => (g - b) / HslHueSectorCount / delta,
-            _ when g == max => OneThird + ((b - r) / HslHueSectorCount / delta),
-            _ => TwoThirds + ((r - g) / HslHueSectorCount / delta)
+            _ when DoubleComparison.AreClose(r, max) => (g - b) / HslHueSectorCount / delta,
+            _ when DoubleComparison.AreClose(g, max) => OneThird + ((b - r) / HslHueSectorCount / delta),
+            _ => TwoThirds + ((r - g) / HslHueSectorCount / delta),
         };
 
         if (h < 0)
@@ -192,7 +192,10 @@ internal static class ColorSpaceHelper
     public static Tuple<double, double, double> HsvToHsl(double h, double s, double v)
     {
         var hsl_l = v * (1 - (s / LightnessScale));
-        var hsl_s = hsl_l == 0 || hsl_l == 1 ? -1 : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
+        var hsl_s =
+            DoubleComparison.AreClose(hsl_l, 0D) || DoubleComparison.AreClose(hsl_l, 1D)
+                ? -1
+                : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
 
         return new Tuple<double, double, double>(h, hsl_s, hsl_l);
     }
@@ -213,12 +216,30 @@ internal static class ColorSpaceHelper
 
         return hueCircleSegment switch
         {
-            0 => new Tuple<double, double, double>(maxRGB, (delta * circleSegmentFraction) + minRGB, minRGB), // red-yellow
-            1 => new Tuple<double, double, double>((delta * (1 - circleSegmentFraction)) + minRGB, maxRGB, minRGB), // yellow-green
-            GreenHueSector => new Tuple<double, double, double>(minRGB, maxRGB, (delta * circleSegmentFraction) + minRGB), // green-cyan
-            CyanHueSector => new Tuple<double, double, double>(minRGB, (delta * (1 - circleSegmentFraction)) + minRGB, maxRGB), // cyan-blue
-            PurpleHueSector => new Tuple<double, double, double>((delta * circleSegmentFraction) + minRGB, minRGB, maxRGB), // blue-purple
-            _ => new Tuple<double, double, double>(maxRGB, minRGB, (delta * (1 - circleSegmentFraction)) + minRGB), // purple-red and invalid values
+            0 => new Tuple<double, double, double>(
+                maxRGB,
+                (delta * circleSegmentFraction) + minRGB,
+                minRGB),
+            1 => new Tuple<double, double, double>(
+                (delta * (1 - circleSegmentFraction)) + minRGB,
+                maxRGB,
+                minRGB),
+            GreenHueSector => new Tuple<double, double, double>(
+                minRGB,
+                maxRGB,
+                (delta * circleSegmentFraction) + minRGB), // green-cyan
+            CyanHueSector => new Tuple<double, double, double>(
+                minRGB,
+                (delta * (1 - circleSegmentFraction)) + minRGB,
+                maxRGB), // cyan-blue
+            PurpleHueSector => new Tuple<double, double, double>(
+                (delta * circleSegmentFraction) + minRGB,
+                minRGB,
+                maxRGB), // blue-purple
+            _ => new Tuple<double, double, double>(
+                maxRGB,
+                minRGB,
+                (delta * (1 - circleSegmentFraction)) + minRGB),
         };
     }
 

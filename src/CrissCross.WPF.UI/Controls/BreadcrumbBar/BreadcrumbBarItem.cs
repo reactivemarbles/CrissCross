@@ -31,20 +31,18 @@ public class BreadcrumbBarItem : System.Windows.Controls.ContentControl
         new PropertyMetadata(false));
 
     /// <summary>The self property.</summary>
-    public static readonly DependencyProperty SelfProperty =
-        DependencyProperty.Register(
-            nameof(Self),
-            typeof(BreadcrumbBarItem),
-            typeof(BreadcrumbBarItem),
-            new PropertyMetadata(null));
+    public static readonly DependencyProperty SelfProperty = DependencyProperty.Register(
+        nameof(Self),
+        typeof(BreadcrumbBarItem),
+        typeof(BreadcrumbBarItem),
+        new PropertyMetadata(null));
 
     /// <summary>The navigation type property.</summary>
-    public static readonly DependencyProperty NavigationTypeProperty =
-        DependencyProperty.Register(
-            nameof(NavigationType),
-            typeof(Type),
-            typeof(BreadcrumbBarItem),
-            new PropertyMetadata(null));
+    public static readonly DependencyProperty NavigationTypeProperty = DependencyProperty.Register(
+        nameof(NavigationType),
+        typeof(Type),
+        typeof(BreadcrumbBarItem),
+        new PropertyMetadata(null));
 
     /// <summary>Initializes a new instance of the <see cref="BreadcrumbBarItem"/> class.</summary>
     public BreadcrumbBarItem() => Self = this;

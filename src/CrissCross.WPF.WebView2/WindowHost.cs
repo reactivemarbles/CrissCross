@@ -20,12 +20,17 @@ public class WindowHost<TWindow> : HwndHost
     private const int GWLSTYLE = -0x10;
 
     /// <summary>Stores the wSCHILD value.</summary>
-    private const uint WSCHILD = 0x40000000u;
+    private const uint WSCHILD = 0x40000000U;
+
+    /// <summary>Initializes a new instance of the <see cref="WindowHost{TWindow}" /> class.</summary>
+    /// <param name="name">The name.</param>
+    public WindowHost(string name)
+        : this(name, null) { }
 
     /// <summary>Initializes a new instance of the <see cref="WindowHost{TWindow}" /> class.</summary>
     /// <param name="name">The name.</param>
     /// <param name="window">The window.</param>
-    public WindowHost(string name, TWindow? window = null)
+    public WindowHost(string name, TWindow? window)
     {
         Window = window ??= new();
         Window.Name = name;

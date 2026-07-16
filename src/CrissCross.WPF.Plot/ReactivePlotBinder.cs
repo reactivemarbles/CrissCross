@@ -28,9 +28,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
     }
 
     /// <inheritdoc />
-    public IReactivePlotConnection Bind(
-        LiveChartViewModel chart,
-        IEnumerable<IReactivePlotSource> sources) =>
+    public IReactivePlotConnection Bind(LiveChartViewModel chart, IEnumerable<IReactivePlotSource> sources) =>
         Bind(chart, sources, null);
 
     /// <inheritdoc />
@@ -50,21 +48,17 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
     /// <summary>Binds the supplied sources using the adapter factory supplied to the constructor.</summary>
     /// <param name="sources">The sources to bind.</param>
     /// <returns>An owned connection.</returns>
-    public IReactivePlotConnection Bind(IEnumerable<IReactivePlotSource> sources) =>
-        Bind(sources, null);
+    public IReactivePlotConnection Bind(IEnumerable<IReactivePlotSource> sources) => Bind(sources, null);
 
     /// <summary>Binds the supplied sources using the adapter factory supplied to the constructor.</summary>
     /// <param name="sources">The sources to bind.</param>
     /// <param name="options">Optional binding options.</param>
     /// <returns>An owned connection.</returns>
-    public IReactivePlotConnection Bind(
-        IEnumerable<IReactivePlotSource> sources,
-        ReactivePlotBindingOptions? options)
+    public IReactivePlotConnection Bind(IEnumerable<IReactivePlotSource> sources, ReactivePlotBindingOptions? options)
     {
         if (_adapterFactory is null)
         {
-            throw new InvalidOperationException(
-                "This binder was not created with an adapter factory.");
+            throw new InvalidOperationException("This binder was not created with an adapter factory.");
         }
 
         return BindCore(sources, _adapterFactory, options);
@@ -109,28 +103,18 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             }
 
             updateStream = ApplyBatching(updateStream, bindingOptions);
-            updateStream = updateStream.ObserveOn(
-                bindingOptions.UiScheduler ?? RxSchedulers.MainThreadScheduler);
+            updateStream = updateStream.ObserveOn(bindingOptions.UiScheduler ?? RxSchedulers.MainThreadScheduler);
 
             var subscription = updateStream.Subscribe(
                 update =>
-                    ApplyUpdate(
-                        update,
-                        bindingOptions,
-                        adapterFactory,
-                        adapters,
-                        retained,
-                        stoppedSeries,
-                        connection),
-                error =>
-                    HandleSourceError(source, error, bindingOptions, stoppedSeries, connection),
+                    ApplyUpdate(update, bindingOptions, adapterFactory, adapters, retained, stoppedSeries, connection),
+                error => HandleSourceError(source, error, bindingOptions, stoppedSeries, connection),
                 () =>
                 {
                     completed++;
                     if (
                         completed != sourceArray.Length
-                        || connection.CurrentState == ReactivePlotConnectionState.Faulted
-                    )
+                        || connection.CurrentState == ReactivePlotConnectionState.Faulted)
                     {
                         return;
                     }
@@ -186,10 +170,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         }
 
         return options.MaxBatchSize > 1
-            ? updates
-                .Buffer(options.MaxBatchSize)
-                .Where(batch => batch.Count > 0)
-                .SelectMany(AggregateBatch)
+            ? updates.Buffer(options.MaxBatchSize).Where(batch => batch.Count > 0).SelectMany(AggregateBatch)
             : updates;
     }
 
@@ -240,9 +221,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
     /// <param name="pendingAppend">The pending append update.</param>
     /// <param name="update">The next update.</param>
     /// <returns><see langword="true"/> when aggregation was applied; otherwise, <see langword="false"/>.</returns>
-    private static bool TryAggregateAppend(
-        ref ReactivePlotUpdate? pendingAppend,
-        ReactivePlotUpdate update)
+    private static bool TryAggregateAppend(ref ReactivePlotUpdate? pendingAppend, ReactivePlotUpdate update)
     {
         if (pendingAppend is null || !CanAggregateAppend(pendingAppend, update))
         {
@@ -403,8 +382,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         }
 
         connection.AddError(
-            new InvalidOperationException(
-                $"{message} Series='{update.Key.Name}', PlotType='{update.PlotType}'."));
+            new InvalidOperationException($"{message} Series='{update.Key.Name}', PlotType='{update.PlotType}'."));
         if (options.ErrorMode != ReactivePlotErrorMode.SurfaceAndStopSeries)
         {
             return false;
@@ -470,22 +448,14 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             return update with { MaxPoints = visiblePoints };
         }
 
-        if (
-            !retained.TryGetValue(update.Key, out var series)
-            || update.Kind == ReactivePlotUpdateKind.Replace
-        )
+        if (!retained.TryGetValue(update.Key, out var series) || update.Kind == ReactivePlotUpdateKind.Replace)
         {
             series = new();
             retained[update.Key] = series;
         }
 
         series.Append(update.X, update.Y, visiblePoints, options.OverflowStrategy);
-        return update with
-        {
-            X = series.X.ToArray(),
-            Y = series.Y.ToArray(),
-            MaxPoints = visiblePoints,
-        };
+        return update with { X = series.X.ToArray(), Y = series.Y.ToArray(), MaxPoints = visiblePoints };
     }
 
     /// <summary>Provides the <see cref="RetainedSeries"/> type.</summary>
@@ -508,10 +478,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             int maxVisiblePoints,
             ReactivePlotOverflowStrategy overflowStrategy)
         {
-            if (
-                overflowStrategy == ReactivePlotOverflowStrategy.DropNewest
-                && X.Count >= maxVisiblePoints
-            )
+            if (overflowStrategy == ReactivePlotOverflowStrategy.DropNewest && X.Count >= maxVisiblePoints)
             {
                 return;
             }

@@ -7,6 +7,9 @@ namespace CrissCross.Avalonia.UI;
 /// <summary>Helper class for color space conversions.</summary>
 internal static class ColorSpaceHelper
 {
+    /// <summary>Tolerance used when comparing normalized color components.</summary>
+    private const double ComparisonTolerance = 1E-10D;
+
     /// <summary>Converts RGB to HSV, returns -1 for undefined channels.</summary>
     /// <param name="r">Red channel.</param>
     /// <param name="g">Green channel.</param>
@@ -31,7 +34,7 @@ internal static class ColorSpaceHelper
         max = Math.Max(r, Math.Max(g, b));
         v = max;
         delta = max - min;
-        if (max != 0)
+        if (!AreClose(max, 0D))
         {
             s = delta / max;
         }
@@ -45,8 +48,8 @@ internal static class ColorSpaceHelper
 
         h = max switch
         {
-            _ when r == max => (g - b) / delta,
-            _ when g == max => rgbToHsvGreenSector + ((b - r) / delta),
+            _ when AreClose(r, max) => (g - b) / delta,
+            _ when AreClose(g, max) => rgbToHsvGreenSector + ((b - r) / delta),
             _ => rgbToHsvBlueSector + ((r - g) / delta),
         };
 
@@ -90,13 +93,13 @@ internal static class ColorSpaceHelper
         var delta = max - min;
         l = (max + min) / half;
 
-        if (max == 0)
+        if (AreClose(max, 0D))
         {
             // pure black
             return (undefinedChannel, undefinedChannel, 0);
         }
 
-        if (delta == 0)
+        if (AreClose(delta, 0D))
         {
             // gray
             return (undefinedChannel, 0, l);
@@ -107,8 +110,8 @@ internal static class ColorSpaceHelper
 
         h = max switch
         {
-            _ when r == max => (g - b) / hueSectorCount / delta,
-            _ when g == max => hslGreenOffset + ((b - r) / hueSectorCount / delta),
+            _ when AreClose(r, max) => (g - b) / hueSectorCount / delta,
+            _ when AreClose(g, max) => hslGreenOffset + ((b - r) / hueSectorCount / delta),
             _ => hslBlueOffset + ((r - g) / hueSectorCount / delta),
         };
 
@@ -142,7 +145,7 @@ internal static class ColorSpaceHelper
         const double hueDegreesPerSector = 60.0;
         const double hueDegrees = 360.0;
 
-        if (s == 0)
+        if (AreClose(s, 0D))
         {
             // achromatic (grey)
             return (v, v, v);
@@ -182,7 +185,9 @@ internal static class ColorSpaceHelper
         const double doubleScale = 2.0;
 
         var hsl_l = v * (1 - (s / doubleScale));
-        double hsl_s = hsl_l == 0 || hsl_l == 1 ? undefinedChannel : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
+        double hsl_s = AreClose(hsl_l, 0D) || AreClose(hsl_l, 1D)
+            ? undefinedChannel
+            : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
 
         return (h, hsl_s, hsl_l);
     }
@@ -232,8 +237,14 @@ internal static class ColorSpaceHelper
         const double doubleScale = 2.0;
 
         var hsv_v = l + (s * Math.Min(l, 1 - l));
-        double hsv_s = hsv_v == 0 ? undefinedChannel : doubleScale * (1 - (l / hsv_v));
+        double hsv_s = AreClose(hsv_v, 0D) ? undefinedChannel : doubleScale * (1 - (l / hsv_v));
 
         return (h, hsv_s, hsv_v);
     }
+
+    /// <summary>Determines whether two color components are effectively equal.</summary>
+    /// <param name="left">The first component.</param>
+    /// <param name="right">The second component.</param>
+    /// <returns><see langword="true"/> when the components are within the comparison tolerance.</returns>
+    private static bool AreClose(double left, double right) => Math.Abs(left - right) <= ComparisonTolerance;
 }

@@ -8,7 +8,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="RoutedEventArgs" />
 /// <param name="routedEvent">The routedEvent value.</param>
 /// <param name="source">The source value.</param>
-public class ContentDialogClosingEventArgs(RoutedEvent routedEvent, object source) : RoutedEventArgs(routedEvent, source)
+public class ContentDialogClosingEventArgs(RoutedEvent routedEvent, object source)
+    : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>Gets the result.</summary>
     /// <value>
@@ -16,7 +17,7 @@ public class ContentDialogClosingEventArgs(RoutedEvent routedEvent, object sourc
     /// </value>
     public required ContentDialogResult Result { get; init; }
 
-    /// <summary>Gets or sets a value indicating whether this <see cref="ContentDialogClosingEventArgs"/> is cancel.</summary>
+    /// <summary>Gets or sets whether this ContentDialogClosingEventArgs is cancel.</summary>
     /// <value>
     ///   <c>true</c> if cancel; otherwise, <c>false</c>.
     /// </value>

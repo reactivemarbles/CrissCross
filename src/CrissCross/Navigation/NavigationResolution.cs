@@ -16,7 +16,12 @@ namespace CrissCross;
 /// <param name="contract">The normalized navigation contract.</param>
 /// <param name="parameter">The optional navigation parameter.</param>
 /// <param name="navigationType">The requested navigation operation type.</param>
-public sealed class NavigationResolution(IRxObject viewModel, IViewFor view, string? contract, object? parameter, NavigationType navigationType)
+public sealed class NavigationResolution(
+    IRxObject viewModel,
+    IViewFor view,
+    string? contract,
+    object? parameter,
+    NavigationType navigationType)
 {
     /// <summary>Gets the resolved view model.</summary>
     public IRxObject ViewModel { get; } = viewModel ?? throw new ArgumentNullException(nameof(viewModel));

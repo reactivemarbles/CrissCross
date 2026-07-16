@@ -15,12 +15,14 @@ public class FirstViewModel : RxObject
     /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
     public FirstViewModel() =>
         this.BuildComplete(() =>
-            {
-                DisplayName = "First View";
-                GotoMain = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<MainViewModel>(breadcrumbItemContent: "First View"));
+        {
+            DisplayName = "First View";
+            GotoMain = ReactiveCommand.Create(() =>
+                MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "First View"));
 
-                GotoFirst = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateTo<FirstViewModel>(breadcrumbItemContent: DisplayName));
-            });
+            GotoFirst = ReactiveCommand.Create(() =>
+                MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<FirstViewModel>(), DisplayName));
+        });
 
     /// <summary>Gets the goto main.</summary>
     /// <value>

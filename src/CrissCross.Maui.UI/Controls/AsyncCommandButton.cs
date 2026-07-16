@@ -4,7 +4,7 @@
 
 namespace CrissCross.Maui.UI.Controls;
 
-/// <summary>Represents a command button with an optional cancellation command for long-running async operations.</summary>
+/// <summary>Represents the AsyncCommandButton type.</summary>
 public class AsyncCommandButton : CommandButton
 {
     /// <summary>Bindable property for <see cref="CancelCommand"/>.</summary>

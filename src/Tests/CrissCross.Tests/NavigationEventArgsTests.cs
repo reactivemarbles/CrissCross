@@ -43,7 +43,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_Constructor_AllowsNullValues()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs.From).IsNull();
@@ -59,7 +59,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_HostName_CanBeModified()
     {
         // Arrange
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, "Original", null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, "Original");
 
         // Act
         eventArgs.HostName = "Modified";
@@ -76,7 +76,7 @@ public class NavigationEventArgsTests
         // Arrange
         var view1 = new TestView();
         var view2 = new TestView();
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, view1, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, view1, null);
 
         // Act
         eventArgs.View = view2;
@@ -91,7 +91,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_NavigationType_New_IsSet()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.New);
@@ -103,7 +103,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_NavigationType_Back_IsSet()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.Back, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.Back, null, null);
 
         // Assert
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.Back);
@@ -115,7 +115,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_NavigationType_Refresh_IsSet()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.Refresh, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.Refresh, null, null);
 
         // Assert
         await Assert.That(eventArgs.NavigationType).IsEqualTo(NavigationType.Refresh);
@@ -152,7 +152,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigatingEventArgs_Cancel_IsFalseByDefault()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs.Cancel).IsFalse();
@@ -164,7 +164,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigatingEventArgs_Cancel_CanBeSet()
     {
         // Arrange
-        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null);
 
         // Act
         eventArgs.Cancel = true;
@@ -179,7 +179,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigatingEventArgs_InheritsFromViewModelNavigationEventArgs()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs).IsAssignableTo<ViewModelNavigationEventArgs>();
@@ -191,7 +191,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigatingEventArgs_ImplementsIViewModelNavigatingEventArgs()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigatingEventArgs>();
@@ -203,19 +203,19 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigationEventArgs_ImplementsIViewModelNavigationEventArgs()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigationEventArgs>();
     }
 
-    /// <summary>Provides the ViewModelNavigationBaseEventArgs_ImplementsIViewModelNavigationBaseEventArgs member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ViewModelNavigationBaseEventArgs_ImplementsIViewModelNavigationBaseEventArgs()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigationEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs).IsAssignableTo<IViewModelNavigationBaseEventArgs>();
@@ -238,7 +238,7 @@ public class NavigationEventArgsTests
     public async Task ViewModelNavigatingEventArgs_AllowsNullParameters()
     {
         // Arrange & Act
-        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null, null);
+        var eventArgs = new ViewModelNavigatingEventArgs(null, null, NavigationType.New, null, null);
 
         // Assert
         await Assert.That(eventArgs.From).IsNull();

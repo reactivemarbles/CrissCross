@@ -10,7 +10,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ToolBar : StackPanel
 {
     /// <summary>Default spacing between toolbar items.</summary>
-    private const double DefaultSpacing = 4d;
+    private const double DefaultSpacing = 4D;
 
     /// <summary>Initializes a new instance of the <see cref="ToolBar"/> class.</summary>
     public ToolBar()

@@ -37,15 +37,13 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         new PropertyMetadata(TransitionType.Fade));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationWindow"/> class.</summary>
-    public NavigationWindow() =>
-        DefaultStyleKey = typeof(NavigationWindow);
+    public NavigationWindow() => DefaultStyleKey = typeof(NavigationWindow);
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
-    public IObservable<bool?> CanNavigateBack =>
-        NavigationFrame.CanNavigateBackObservable;
+    public IObservable<bool?> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -81,8 +79,11 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        NavigationFrame = (Template.FindName(nameof(NavigationFrame), this) as ViewModelRoutedViewHost)
-            ?? throw new InvalidOperationException($"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} is missing from the Style template.");
+        NavigationFrame =
+            (Template.FindName(nameof(NavigationFrame), this) as ViewModelRoutedViewHost)
+            ?? throw new InvalidOperationException(
+                $"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "
+                    + "is missing from the Style template.");
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);

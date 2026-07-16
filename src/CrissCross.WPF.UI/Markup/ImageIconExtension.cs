@@ -51,8 +51,10 @@ public class ImageIconExtension(ImageSource? source) : MarkupExtension
     /// </value>
     public double Height { get; set; } = 16D;
 
-    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.</summary>
-    /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target
+    /// property for this markup extension.</summary>
+    /// <param name="serviceProvider">A service provider helper that can provide services for the markup
+    /// extension.</param>
     /// <returns>
     /// The object value to set on the property where the extension is applied.
     /// </returns>
@@ -66,7 +68,7 @@ public class ImageIconExtension(ImageSource? source) : MarkupExtension
         {
             Source = source,
             Width = width,
-            Height = height
+            Height = height,
         };
     }
 }

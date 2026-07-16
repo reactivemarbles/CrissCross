@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extends <see cref="System.Windows.Controls.GridViewColumn"/> with MinWidth and MaxWidth properties. It can be used with <see cref="ListView"/> when in GridView mode.</summary>
+/// <summary>Extends GridViewColumn with MinWidth and MaxWidth properties.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:ListView&gt;
@@ -37,18 +37,18 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
         new FrameworkPropertyMetadata(double.PositiveInfinity, OnMaxWidthChanged));
 
     /// <summary>Uses reflection to get the `_desiredWidth` private field.</summary>
-    private static readonly Lazy<FieldInfo> _desiredWidthField =
-        new(
-            () =>
-                typeof(System.Windows.Controls.GridViewColumn).GetField(
-                    "_desiredWidth",
-                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `_desiredWidth` field was not found."));
+    private static readonly Lazy<FieldInfo> _desiredWidthField = new(() =>
+        typeof(System.Windows.Controls.GridViewColumn).GetField(
+            "_desiredWidth",
+            BindingFlags.NonPublic | BindingFlags.Instance)
+            ?? throw new InvalidOperationException("The `_desiredWidth` field was not found."));
 
     /// <summary>Uses reflection to get the `UpdateActualWidth` private method.</summary>
-    private static readonly Lazy<MethodInfo> _updateActualWidthMethod =
-        new(() => typeof(System.Windows.Controls.GridViewColumn).GetMethod(
-                    "UpdateActualWidth",
-                    BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found."));
+    private static readonly Lazy<MethodInfo> _updateActualWidthMethod = new(() =>
+        typeof(System.Windows.Controls.GridViewColumn).GetMethod(
+            "UpdateActualWidth",
+            BindingFlags.NonPublic | BindingFlags.Instance)
+            ?? throw new InvalidOperationException("The `UpdateActualWidth` method was not found."));
 
     /// <summary>Gets or sets the minimum width of the column.</summary>
     public double MinWidth
@@ -72,7 +72,8 @@ public class GridViewColumn : System.Windows.Controls.GridViewColumn
 
     /// <summary>Updates the desired width of the column to be clamped between MinWidth and MaxWidth).</summary>
     /// <remarks>
-    /// Uses reflection to directly set the private `_desiredWidth` field on the `System.Windows.Controls.GridViewColumn`.
+    /// Uses reflection to directly set the private `_desiredWidth` field on the
+    /// `System.Windows.Controls.GridViewColumn`.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if reflection fails to access the `_desiredWidth` field.

@@ -14,8 +14,12 @@ public static class Make
 
     /// <summary>Makes the specified application Single Instance.</summary>
     /// <param name="appName">Name of the application, use a Guid in the Name to ensure unique.</param>
+    public static void SingleInstance(string appName) => SingleInstance(appName, true);
+
+    /// <summary>Ensures that only one application instance is running.</summary>
+    /// <param name="appName">Name of the application.</param>
     /// <param name="uniquePerUser">if set to <c>true</c> [unique per user].</param>
-    public static void SingleInstance(string appName, bool uniquePerUser = true)
+    public static void SingleInstance(string appName, bool uniquePerUser)
     {
         if (_mainInstanceRunning)
         {
@@ -52,8 +56,11 @@ public static class Make
 
     /// <summary>Signals the first application instance to activate its window.</summary>
     /// <param name="eventWaitHandle">The first-instance event handle.</param>
-    private static void ActivateFirstInstanceWindow(EventWaitHandle? eventWaitHandle) =>
-        _ = eventWaitHandle?.Set(); // Let's notify the first instance to activate its main window.
+    private static void ActivateFirstInstanceWindow(EventWaitHandle? eventWaitHandle)
+    {
+        // Notify the first instance to activate its main window.
+        _ = eventWaitHandle?.Set();
+    }
 
     /// <summary>Registers activation for the first application instance.</summary>
     /// <param name="app">The WPF application.</param>
@@ -75,6 +82,7 @@ public static class Make
             return;
         }
 
-        _ = ((Application?)state)?.Dispatcher.BeginInvoke(new Action(() => _ = Application.Current.MainWindow.Activate()));
+        _ = ((Application?)state)?.Dispatcher.BeginInvoke(
+            new Action(() => _ = Application.Current.MainWindow.Activate()));
     }
 }

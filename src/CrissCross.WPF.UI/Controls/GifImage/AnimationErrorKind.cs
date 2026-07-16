@@ -11,5 +11,5 @@ public enum AnimationErrorKind
     Loading,
 
     /// <summary>The rendering.</summary>
-    Rendering
+    Rendering,
 }

@@ -66,7 +66,7 @@ public static class SystemThemeManager
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return DetectMacOSTheme();
+            return SystemTheme.Light;
         }
 
         return RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? DetectLinuxTheme() : SystemTheme.Light;
@@ -76,29 +76,29 @@ public static class SystemThemeManager
     /// <returns>The result.</returns>
     private static SystemTheme DetectWindowsTheme()
     {
-#if WINDOWS
+        if (!OperatingSystem.IsWindows())
+        {
+            return SystemTheme.Light;
+        }
+
         try
         {
-            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
             if (key?.GetValue("AppsUseLightTheme") is int useLightTheme)
             {
                 return useLightTheme == 0 ? SystemTheme.Dark : SystemTheme.Light;
             }
         }
-        catch
+        catch (UnauthorizedAccessException)
         {
-            // Registry access might fail on some systems
+            return SystemTheme.Light;
         }
-#endif
-        return SystemTheme.Light;
-    }
+        catch (System.Security.SecurityException)
+        {
+            return SystemTheme.Light;
+        }
 
-    /// <summary>Provides the DetectMacOSTheme member.</summary>
-    /// <returns>The result.</returns>
-    private static SystemTheme DetectMacOSTheme()
-    {
-        // On macOS, we'd typically use NSAppearance
-        // For now, default to Light
         return SystemTheme.Light;
     }
 

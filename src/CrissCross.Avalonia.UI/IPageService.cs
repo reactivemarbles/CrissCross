@@ -6,13 +6,14 @@ using Avalonia.Controls;
 
 namespace CrissCross.Avalonia.UI;
 
-/// <summary>Represents a contract with the service that provides the pages for <see cref="Controls.INavigationView"/>.</summary>
+/// <summary>Represents a contract with the service that provides the pages for INavigationView.</summary>
 public interface IPageService
 {
     /// <summary>Takes a page of the given type.</summary>
     /// <typeparam name="T">Page type.</typeparam>
+    /// <param name="request">The typed page request.</param>
     /// <returns>Instance of the registered page service.</returns>
-    T? GetPage<T>()
+    T? GetPage<T>(PageNavigationRequest<T> request)
         where T : class;
 
     /// <summary>Takes a page of the given type.</summary>

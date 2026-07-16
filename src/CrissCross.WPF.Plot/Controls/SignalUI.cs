@@ -15,7 +15,8 @@ namespace CrissCross.WPF.Plot;
 /// Provides a Windows UI component for plotting and streaming time-series signal data, supporting real-time updates,
 /// autoscaling, and interactive features. Nice for historical data (performance).
 /// </summary>
-/// <remarks>SignalUI integrates with ScottPlot and ReactiveUI.Primitives to visualize data streams in WPF applications. It
+/// <remarks>SignalUI integrates with ScottPlot and ReactiveUI.Primitives to visualize data streams in WPF applications.
+/// It
 /// manages plot appearance, data buffering, and user interaction such as crosshair and marker updates based on mouse
 /// coordinates. The class supports both automatic and manual scaling, and can limit the number of displayed points for
 /// performance. Thread safety is maintained for UI updates via scheduler usage. SignalUI is intended for use on Windows
@@ -68,29 +69,109 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// <param name="observable">The observable.</param>
     /// <param name="coordinatesObs">The coordinates obs.</param>
     /// <param name="color">The color.</param>
-    /// <param name="autoscale">if set to <c>true</c> [autoscale].</param>
-    /// <param name="manualscale">if set to <c>true</c> [manualscale].</param>
-    /// <param name="fixedPoints">if set to <c>true</c> [fixed points].</param>
-    /// <param name="numberPointsPlotted">The number points plotted.</param>
-    /// <param name="ticks">if set to <c>true</c> [ticks].</param>
+    public SignalUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        IObservable<Coordinates> coordinatesObs,
+        string color)
+        : this(plot, observable, coordinatesObs, color, new SignalUIOptions())
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalUI"/> class.</summary>
+    /// <param name="plot">The plot.</param>
+    /// <param name="observable">The observable.</param>
+    /// <param name="coordinatesObs">The coordinates observable.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="autoscale">A value indicating whether automatic scaling is enabled.</param>
     public SignalUI(
         WpfPlot plot,
         IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
         IObservable<Coordinates> coordinatesObs,
         string color,
-        bool autoscale = true,
-        bool manualscale = false,
-        IObservable<bool>? fixedPoints = null,
-        IObservable<int>? numberPointsPlotted = null,
-        bool ticks = true)
+        bool autoscale)
+        : this(plot, observable, coordinatesObs, color, new SignalUIOptions { AutoScale = autoscale })
     {
-        ChartSettings = new(color: color);
-        ManualScale = manualscale;
-        AutoScale = autoscale;
-        fixedPoints?.Subscribe(x => UseFixedNumberOfPoints = x).DisposeWith(Disposables);
-        numberPointsPlotted?.Subscribe(x => NumberPointsPlotted = x).DisposeWith(Disposables);
+    }
 
-        _ticks = ticks;
+    /// <summary>Initializes a new instance of the <see cref="SignalUI"/> class.</summary>
+    /// <param name="plot">The plot.</param>
+    /// <param name="observable">The observable.</param>
+    /// <param name="coordinatesObs">The coordinates observable.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="autoscale">A value indicating whether automatic scaling is enabled.</param>
+    /// <param name="manualscale">A value indicating whether manual scaling is enabled.</param>
+    public SignalUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        IObservable<Coordinates> coordinatesObs,
+        string color,
+        bool autoscale,
+        bool manualscale)
+        : this(
+            plot,
+            observable,
+            coordinatesObs,
+            color,
+            new SignalUIOptions { AutoScale = autoscale, ManualScale = manualscale })
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalUI"/> class.</summary>
+    /// <param name="plot">The plot.</param>
+    /// <param name="observable">The observable.</param>
+    /// <param name="coordinatesObs">The coordinates observable.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="autoscale">A value indicating whether automatic scaling is enabled.</param>
+    /// <param name="manualscale">A value indicating whether manual scaling is enabled.</param>
+    /// <param name="fixedPoints">The optional stream controlling fixed-point display mode.</param>
+    public SignalUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        IObservable<Coordinates> coordinatesObs,
+        string color,
+        bool autoscale,
+        bool manualscale,
+        IObservable<bool>? fixedPoints)
+        : this(
+            plot,
+            observable,
+            coordinatesObs,
+            color,
+            new SignalUIOptions
+            {
+                AutoScale = autoscale,
+                ManualScale = manualscale,
+                FixedPoints = fixedPoints,
+            })
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalUI"/> class.</summary>
+    /// <param name="plot">The plot.</param>
+    /// <param name="observable">The observable.</param>
+    /// <param name="coordinatesObs">The coordinates observable.</param>
+    /// <param name="color">The color.</param>
+    /// <param name="options">The signal configuration.</param>
+    public SignalUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable,
+        IObservable<Coordinates> coordinatesObs,
+        string color,
+        SignalUIOptions options)
+    {
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        ChartSettings = new("---", color);
+        ManualScale = options.ManualScale;
+        AutoScale = options.AutoScale;
+        options.FixedPoints?.Subscribe(x => UseFixedNumberOfPoints = x).DisposeWith(Disposables);
+        options.NumberPointsPlotted?.Subscribe(x => NumberPointsPlotted = x).DisposeWith(Disposables);
+
+        _ticks = options.Ticks;
         Plot = plot;
         CreateDataLogger(color);
 
@@ -106,26 +187,29 @@ public partial class SignalUI : RxObject, IPlottableUI
         ChartSettings.CreateCursorValues(Plot, color);
         ChartSettings.AppearanceSubsriptions(Plot, PlotLine!);
 
-        MouseCoordinatesObs = coordinatesObs.Retry(int.MaxValue).Subscribe(x =>
-        {
-            var coordinates = PlotLine?.Data?.Coordinates;
-            if (coordinates is null || coordinates.Count == 0)
+        MouseCoordinatesObs = coordinatesObs
+            .Retry(int.MaxValue)
+            .Subscribe(x =>
             {
-                return;
-            }
+                var coordinates = PlotLine?.Data?.Coordinates;
+                if (coordinates is null || coordinates.Count == 0)
+                {
+                    return;
+                }
 
-            // Find closest coordinate using binary search-like approach for better performance
-            var closestCoordinate = FindClosestCoordinate(coordinates, x.X);
+                // Find closest coordinate using binary search-like approach for better performance
+                var closestCoordinate = FindClosestCoordinate(coordinates, x.X);
 
-            ChartSettings.Crosshair!.Position = closestCoordinate;
-            ChartSettings.Marker!.Position = closestCoordinate;
-            ChartSettings.MarkerText!.Location = closestCoordinate;
-            ChartSettings.MarkerText!.LabelText = _ticks
-                ? $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}"
-                : $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
+                ChartSettings.Crosshair!.Position = closestCoordinate;
+                ChartSettings.Marker!.Position = closestCoordinate;
+                ChartSettings.MarkerText!.Location = closestCoordinate;
+                ChartSettings.MarkerText!.LabelText = _ticks
+                    ? $"{closestCoordinate.Y:0.##}\n{DateTime.FromOADate(closestCoordinate.X)}"
+                    : $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
 
-            Plot?.Refresh();
-        }).DisposeWith(Disposables);
+                Plot?.Refresh();
+            })
+            .DisposeWith(Disposables);
     }
 
     /// <summary>Gets or sets the WpfPlot control used for rendering interactive plots within the application.</summary>
@@ -141,7 +225,7 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// resources. The property may be null if no subscription is active.</remarks>
     public IDisposable? MouseCoordinatesObs { get; set; }
 
-    /// <summary>Clears plotted coordinates and duplicate-time tracking so subsequent updates can reuse prior X values.</summary>
+    /// <summary>Provides the ClearData member.</summary>
     public void ClearData()
     {
         PlotLine!.Data.Coordinates.Clear();
@@ -150,7 +234,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         _uniqueTimeBuffer.Clear();
     }
 
-    /// <summary>Initializes a new data logger line on the plot and sets its color using the specified hex value.</summary>
+    /// <summary>Provides the CreateDataLogger member.</summary>
     /// <param name="color">The color value.</param>
     public void CreateDataLogger(string color)
     {
@@ -162,89 +246,24 @@ public partial class SignalUI : RxObject, IPlottableUI
         PlotLine.ViewSlide(InitialViewPointCount);
     }
 
-    /// <summary>Subscribes to an observable sequence of signal data and updates the plot with new values as they arrive.</summary>
+    /// <summary>Provides the UpdateSignal member.</summary>
     /// <param name="observable">The observable value.</param>
-    public void UpdateSignal(IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) => observable
-        .ObserveOn(RxSchedulers.TaskpoolScheduler)
-        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Value is not null && d.DateTime is not null && d.Value.Count > 0 && d.DateTime.Count > 0 && d.Value.Count == d.DateTime.Count)
-        .Select(data =>
-        {
-            var dateTimeList = data.DateTime;
-            var valueList = data.Value!;
-            var count = dateTimeList.Count;
-
-            // Pre-allocate arrays to avoid repeated allocations
-            var datetime = new double[count];
-
-            if (_ticks)
-            {
-                // Convert ticks to OADate
-                for (var i = 0; i < count; i++)
-                {
-                    datetime[i] = new DateTime(Convert.ToInt64(dateTimeList[i]), DateTimeKind.Local).ToOADate();
-                }
-            }
-            else
-            {
-                // Direct copy for timestamp mode
-                for (var i = 0; i < count; i++)
-                {
-                    datetime[i] = dateTimeList[i];
-                }
-            }
-
-            return (valueList, datetime, data.Name);
-        })
-        .Retry(int.MaxValue)
-        .ObserveOn(RxSchedulers.MainThreadScheduler)
-        .Subscribe(d =>
-        {
-            // Clear and reuse buffers to avoid allocations
-            _uniqueDataBuffer.Clear();
-            _uniqueTimeBuffer.Clear();
-
-            var valueList = d.valueList;
-            var datetime = d.datetime;
-
-            // Filter unique values using HashSet for O(1) lookup
-            for (var i = 0; i < datetime.Length; i++)
-            {
-                var timeValue = datetime[i];
-                if (_timeSet.Add(timeValue))
-                {
-                    _uniqueTimeBuffer.Add(timeValue);
-                    _uniqueDataBuffer.Add(valueList[i]);
-                }
-            }
-
-            if (_uniqueTimeBuffer.Count == 0)
-            {
-                return;
-            }
-
-            // Sort by time if needed (maintaining order)
-            if (_uniqueTimeBuffer.Count > 1)
-            {
-                SortBuffersByTime();
-            }
-
-            if (UseFixedNumberOfPoints && PlotLine!.Data.Coordinates.Count > NumberPointsPlotted)
-            {
-                PlotLine!.Data.Coordinates.RemoveRange(0, PlotLine!.Data.Coordinates.Count - NumberPointsPlotted);
-            }
-
-            // Use ToArray since ScottPlot DataLogger doesn't have Span overload
-            PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
-
-            PlotLine!.ManageAxisLimits = false;
-
-            if (ChartSettings.IsPaused)
-            {
-                return;
-            }
-
-            Plot.Refresh();
-        }).DisposeWith(Disposables);
+    public void UpdateSignal(
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) =>
+        observable
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
+            .Where(d =>
+                !string.IsNullOrEmpty(d.Name)
+                && d.Value is not null
+                && d.DateTime is not null
+                && d.Value.Count > 0
+                && d.DateTime.Count > 0
+                && d.Value.Count == d.DateTime.Count)
+            .Select(data => (Value: data.Value!, Time: CreateTimeValues(data.DateTime)))
+            .Retry(int.MaxValue)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(data => AppendSignalData(data.Value, data.Time))
+            .DisposeWith(Disposables);
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing">The disposing value.</param>
@@ -264,7 +283,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         base.Dispose(disposing);
     }
 
-    /// <summary>Finds the coordinate in the specified collection whose X value is closest to the given target X value.</summary>
+    /// <summary>Provides the FindClosestCoordinate member.</summary>
     /// <remarks>If multiple coordinates are equally close to the target X value, the first such coordinate in
     /// the collection is returned. The method does not perform any validation on the input collection; callers should
     /// ensure it is not empty.</remarks>
@@ -287,6 +306,72 @@ public partial class SignalUI : RxObject, IPlottableUI
         }
 
         return closest;
+    }
+
+    /// <summary>Converts source X values to the representation used by the plot.</summary>
+    /// <param name="source">The source X values.</param>
+    /// <returns>The converted X values.</returns>
+    private double[] CreateTimeValues(IList<double> source)
+    {
+        var result = new double[source.Count];
+        for (var i = 0; i < source.Count; i++)
+        {
+            result[i] = _ticks
+                ? new DateTime(Convert.ToInt64(source[i]), DateTimeKind.Local).ToOADate()
+                : source[i];
+        }
+
+        return result;
+    }
+
+    /// <summary>Adds a validated signal batch to the plot.</summary>
+    /// <param name="values">The Y values.</param>
+    /// <param name="timeValues">The converted X values.</param>
+    private void AppendSignalData(IList<double> values, double[] timeValues)
+    {
+        _uniqueDataBuffer.Clear();
+        _uniqueTimeBuffer.Clear();
+
+        for (var i = 0; i < timeValues.Length; i++)
+        {
+            var timeValue = timeValues[i];
+            if (!_timeSet.Add(timeValue))
+            {
+                continue;
+            }
+
+            _uniqueTimeBuffer.Add(timeValue);
+            _uniqueDataBuffer.Add(values[i]);
+        }
+
+        if (_uniqueTimeBuffer.Count == 0)
+        {
+            return;
+        }
+
+        SortBuffersByTime();
+
+        TrimDisplayedPoints();
+        PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
+        PlotLine.ManageAxisLimits = false;
+
+        if (ChartSettings.IsPaused)
+        {
+            return;
+        }
+
+        Plot.Refresh();
+    }
+
+    /// <summary>Trims plotted coordinates when fixed-point display mode is active.</summary>
+    private void TrimDisplayedPoints()
+    {
+        if (!UseFixedNumberOfPoints || PlotLine!.Data.Coordinates.Count <= NumberPointsPlotted)
+        {
+            return;
+        }
+
+        PlotLine.Data.Coordinates.RemoveRange(0, PlotLine.Data.Coordinates.Count - NumberPointsPlotted);
     }
 
     /// <summary>Sorts the internal time and data buffers in ascending order of time values.</summary>

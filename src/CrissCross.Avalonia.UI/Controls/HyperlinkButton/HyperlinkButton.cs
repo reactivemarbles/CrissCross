@@ -11,9 +11,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class HyperlinkButton : global::Avalonia.Controls.Button
 {
     /// <summary>Property for <see cref="NavigateUri"/>.</summary>
-    public static readonly StyledProperty<string> NavigateUriProperty = AvaloniaProperty.Register<HyperlinkButton, string>(
-        nameof(NavigateUri),
-        string.Empty);
+    public static readonly StyledProperty<string> NavigateUriProperty = AvaloniaProperty.Register<
+        HyperlinkButton,
+        string
+    >(nameof(NavigateUri), string.Empty);
 
     /// <summary>Gets or sets the URL (or application shortcut) to open.</summary>
     public string NavigateUri

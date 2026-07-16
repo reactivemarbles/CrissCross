@@ -8,7 +8,8 @@ using Size = System.Windows.Size;
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>
-/// If you use <see cref="WindowChrome"/> to extend the UI elements to the non-client area, you can include this container
+/// If you use <see cref="WindowChrome"/> to extend the UI elements to the non-client area, you can include this
+/// container
 /// in the template of <see cref="Window"/> so that the content inside automatically fills the client area.
 /// Using this container can let you get rid of various margin adaptations done in
 /// Setter/Trigger of the style of <see cref="Window"/> when the window state changes.
@@ -105,8 +106,11 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     }
 
     /// <summary>
-    /// Gets if you use a <see cref="WindowChrome"/> to extend the client area of a window to the non-client area, you need to handle the edge margin issue when the window is maximized.
-    /// Use this property to get the correct margin value when the window is maximized, so that when the window is maximized, the client area can completely cover the screen client area by no less than a single pixel at any DPI.
+    /// Gets if you use a <see cref="WindowChrome"/> to extend the client area of a window to the non-client area, you
+    /// need to handle the edge margin issue when the window is maximized.
+    /// Use this property to get the correct margin value when the window is maximized, so that when the window is
+    /// maximized, the client area can completely cover the screen client area by no less than a single pixel at any
+    /// DPI.
     /// The<see cref="User32.GetSystemMetrics"/> method cannot obtain this value directly.
     /// </summary>
     public Thickness WindowChromeNonClientFrameThickness =>
@@ -133,10 +137,16 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         {
             _windowStateChangedSubscription?.Dispose();
             _windowStateChangedSubscription = EventSignal
-                .From<EventHandler, EventArgs>(handler => handler.Invoke, handler => newWindow.StateChanged += handler, handler => newWindow.StateChanged -= handler)
+                .From<EventHandler, EventArgs>(
+                    handler => handler.Invoke,
+                    handler => newWindow.StateChanged += handler,
+                    handler => newWindow.StateChanged -= handler)
                 .Subscribe(e => OnWindowStateChanged(newWindow, e));
             _windowClosingSubscription = EventSignal
-                .From<CancelEventHandler, CancelEventArgs>(handler => handler.Invoke, handler => newWindow.Closing += handler, handler => newWindow.Closing -= handler)
+                .From<CancelEventHandler, CancelEventArgs>(
+                    handler => handler.Invoke,
+                    handler => newWindow.Closing += handler,
+                    handler => newWindow.Closing -= handler)
                 .Subscribe(OnWindowClosing);
         }
 

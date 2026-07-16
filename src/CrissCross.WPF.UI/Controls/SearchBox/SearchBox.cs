@@ -8,7 +8,7 @@ using CrissCross;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a lightweight search input surface that projects shared <see cref="SearchQueryState"/>.</summary>
+/// <summary>Represents a lightweight search input surface that projects shared SearchQueryState.</summary>
 public class SearchBox : Control
 {
     /// <summary>Property for <see cref="Text"/>.</summary>

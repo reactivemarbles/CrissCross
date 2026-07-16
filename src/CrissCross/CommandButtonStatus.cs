@@ -14,7 +14,11 @@ namespace CrissCross;
 /// <param name="canExecute">A value indicating whether the underlying command can execute.</param>
 /// <param name="isExecuting">A value indicating whether the command is currently executing.</param>
 /// <param name="error">The most recent command error, when the state is failed.</param>
-public sealed class CommandButtonStatus(CommandButtonState state, bool canExecute, bool isExecuting, Exception? error = null)
+public sealed class CommandButtonStatus(
+    CommandButtonState state,
+    bool canExecute,
+    bool isExecuting,
+    Exception? error = null)
 {
     /// <summary>Gets the current command execution state.</summary>
     public CommandButtonState State { get; } = state;
@@ -47,7 +51,8 @@ public sealed class CommandButtonStatus(CommandButtonState state, bool canExecut
     /// <summary>Creates a succeeded status snapshot.</summary>
     /// <param name="canExecute">A value indicating whether the underlying command can execute.</param>
     /// <returns>A succeeded command status.</returns>
-    public static CommandButtonStatus Succeeded(bool canExecute) => new(CommandButtonState.Succeeded, canExecute, false);
+    public static CommandButtonStatus Succeeded(bool canExecute) =>
+        new(CommandButtonState.Succeeded, canExecute, false);
 
     /// <summary>Creates a failed status snapshot.</summary>
     /// <param name="error">The command failure.</param>
@@ -66,5 +71,6 @@ public sealed class CommandButtonStatus(CommandButtonState state, bool canExecut
     /// <summary>Creates a cancelled status snapshot.</summary>
     /// <param name="canExecute">A value indicating whether the underlying command can execute.</param>
     /// <returns>A cancelled command status.</returns>
-    public static CommandButtonStatus Cancelled(bool canExecute) => new(CommandButtonState.Cancelled, canExecute, false);
+    public static CommandButtonStatus Cancelled(bool canExecute) =>
+        new(CommandButtonState.Cancelled, canExecute, false);
 }

@@ -9,7 +9,7 @@ namespace CrissCross.WPF.UI;
 /// <summary>Represents a contract with the service that provides global <see cref="Snackbar"/>.</summary>
 public interface ISnackbarService
 {
-    /// <summary>Gets or sets a time for which the <see cref="Snackbar"/> should be visible. (By default 2 seconds).</summary>
+    /// <summary>Gets or sets a time for which the Snackbar should be visible. (By default 2 seconds).</summary>
     TimeSpan DefaultTimeOut { get; set; }
 
     /// <summary>Sets the <see cref="SnackbarPresenter"/>.</summary>
@@ -20,16 +20,12 @@ public interface ISnackbarService
     /// <returns><see cref="Snackbar"/> currently in use.</returns>
     SnackbarPresenter GetSnackbarPresenter();
 
-    /// <summary>Shows the snackbar. If it is already visible, firstly hides it for a moment, changes its content, and then shows it again.</summary>
+    /// <summary>Shows the snackbar. If it is already visible, firstly hides it for a moment, changes its content, and
+    /// then shows it again.</summary>
     /// <param name="title">The title value.</param>
     /// <param name="message">The message value.</param>
     /// <param name="appearance">The appearance value.</param>
     /// <param name="icon">The icon value.</param>
     /// <param name="timeout">The timeout value.</param>
-    void Show(
-        string title,
-        string message,
-        ControlAppearance appearance,
-        IconElement? icon,
-        TimeSpan timeout);
+    void Show(string title, string message, ControlAppearance appearance, IconElement? icon, TimeSpan timeout);
 }

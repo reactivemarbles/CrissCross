@@ -11,7 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents a control that can be used to display and edit numbers.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(NumberBox), "NumberBox.bmp")]
-public class NumberBox : TextBox
+public partial class NumberBox : TextBox
 {
     /// <summary>Property for <see cref="Value"/>.</summary>
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
@@ -38,14 +38,14 @@ public class NumberBox : TextBox
         nameof(SmallChange),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(1.0d));
+        new PropertyMetadata(1.0D));
 
     /// <summary>Property for <see cref="LargeChange"/>.</summary>
     public static readonly DependencyProperty LargeChangeProperty = DependencyProperty.Register(
         nameof(LargeChange),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(10.0d));
+        new PropertyMetadata(10.0D));
 
     /// <summary>Property for <see cref="Maximum"/>.</summary>
     public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
@@ -111,11 +111,10 @@ public class NumberBox : TextBox
     public NumberBox()
     {
         NumberFormatter ??= GetRegionalSettingsAwareDecimalFormatter();
-
-        DataObject.AddPastingHandler(this, OnClipboardPaste);
     }
 
-    /// <summary>Occurs after the user triggers evaluation of new input by pressing the Enter key, clicking a spin button, or by changing focus.</summary>
+    /// <summary>Occurs after the user triggers evaluation of new input by pressing the Enter key, clicking a spin
+    /// button, or by changing focus.</summary>
     public event RoutedEventHandler ValueChanged
     {
         add => AddHandler(ValueChangedEvent, value);
@@ -136,14 +135,16 @@ public class NumberBox : TextBox
         set => SetValue(MaxDecimalPlacesProperty, value);
     }
 
-    /// <summary>Gets or sets the value that is added to or subtracted from <see cref="Value"/> when a small change is made, such as with an arrow key or scrolling.</summary>
+    /// <summary>Gets or sets the value that is added to or subtracted from <see cref="Value"/> when a small change is
+    /// made, such as with an arrow key or scrolling.</summary>
     public double SmallChange
     {
         get => (double)GetValue(SmallChangeProperty);
         set => SetValue(SmallChangeProperty, value);
     }
 
-    /// <summary>Gets or sets the value that is added to or subtracted from <see cref="Value"/> when a large change is made, such as with the PageUP and PageDown keys.</summary>
+    /// <summary>Gets or sets the value that is added to or subtracted from <see cref="Value"/> when a large change is
+    /// made, such as with the PageUP and PageDown keys.</summary>
     public double LargeChange
     {
         get => (double)GetValue(LargeChangeProperty);
@@ -164,7 +165,8 @@ public class NumberBox : TextBox
         set => SetValue(MinimumProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets whether the control will accept and evaluate a basic formulaic expression entered as input.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets whether the control will accept and evaluate a
+    /// basic formulaic expression entered as input.</summary>
     public bool AcceptsExpression
     {
         get => (bool)GetValue(AcceptsExpressionProperty);
@@ -178,7 +180,7 @@ public class NumberBox : TextBox
         set => SetValue(NumberFormatterProperty, value);
     }
 
-    /// <summary>Gets or sets a value that indicates the placement of buttons used to increment or decrement the <see cref="Value"/> property.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
     {
         get => (NumberBoxSpinButtonPlacementMode)GetValue(SpinButtonPlacementModeProperty);
@@ -205,39 +207,39 @@ public class NumberBox : TextBox
         switch (e?.Key)
         {
             case Key.PageUp:
-                {
-                    StepValue(LargeChange);
-                    break;
-                }
+            {
+                StepValue(LargeChange);
+                break;
+            }
 
             case Key.PageDown:
-                {
-                    StepValue(-LargeChange);
-                    break;
-                }
+            {
+                StepValue(-LargeChange);
+                break;
+            }
 
             case Key.Up:
-                {
-                    StepValue(SmallChange);
-                    break;
-                }
+            {
+                StepValue(SmallChange);
+                break;
+            }
 
             case Key.Down:
-                {
-                    StepValue(-SmallChange);
-                    break;
-                }
+            {
+                StepValue(-SmallChange);
+                break;
+            }
 
             case Key.Enter:
+            {
+                if (TextWrapping != TextWrapping.Wrap)
                 {
-                    if (TextWrapping != TextWrapping.Wrap)
-                    {
-                        ValidateInput();
-                        MoveCaretToTextEnd();
-                    }
-
-                    break;
+                    ValidateInput();
+                    MoveCaretToTextEnd();
                 }
+
+                break;
+            }
         }
     }
 
@@ -253,25 +255,25 @@ public class NumberBox : TextBox
         switch (parameter)
         {
             case "clear":
-                {
-                    OnClearButtonClick();
+            {
+                OnClearButtonClick();
 
-                    break;
-                }
+                break;
+            }
 
             case "increment":
-                {
-                    StepValue(SmallChange);
+            {
+                StepValue(SmallChange);
 
-                    break;
-                }
+                break;
+            }
 
             case "decrement":
-                {
-                    StepValue(-SmallChange);
+            {
+                StepValue(-SmallChange);
 
-                    break;
-                }
+                break;
+            }
         }
 
         // NOTE: Focus looks and works well with mouse and Clear button. But it sucks for spin buttons

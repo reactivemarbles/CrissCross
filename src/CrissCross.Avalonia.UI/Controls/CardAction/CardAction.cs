@@ -6,7 +6,7 @@ using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Represents a button control designed for use within a card layout, supporting an optional icon and chevron indicator.</summary>
+/// <summary>Represents the CardAction type.</summary>
 /// <remarks>CardAction extends the standard button functionality to provide a consistent action element for
 /// card-based user interfaces. It allows developers to display an icon and an optional chevron, commonly used to
 /// indicate navigation or additional actions. This control is typically used within card containers to present
@@ -20,10 +20,10 @@ public class CardAction : global::Avalonia.Controls.Button
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<CardAction, object?>(
-        nameof(Icon),
-        null);
+        nameof(Icon));
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to display the chevron icon on the right side of the card.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets information whether to display the chevron icon on
+    /// the right side of the card.</summary>
     public bool IsChevronVisible
     {
         get => GetValue(IsChevronVisibleProperty);

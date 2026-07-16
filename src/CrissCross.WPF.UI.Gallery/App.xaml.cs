@@ -9,8 +9,7 @@ namespace CrissCross.WPF.UI.Gallery;
 /// <summary>Interaction logic for App.xaml.</summary>
 public partial class App
 {
-    /// <summary>Initializes a new instance of the <see cref="App"/> class and configures the application to use ReactiveUI with WPF support.</summary>
-    /// <remarks>This constructor sets up the application's dependency injection and platform integration
-    /// using the ReactiveUI framework. It should be called once during application startup.</remarks>
+    /// <summary>Initializes a new instance of the <see cref="App"/> class.</summary>
+    /// <remarks>Configures ReactiveUI dependency injection and WPF integration during application startup.</remarks>
     public App() => RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
 }

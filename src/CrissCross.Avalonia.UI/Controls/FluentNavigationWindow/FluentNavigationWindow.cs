@@ -12,8 +12,7 @@ public class FluentNavigationWindow : FluentWindow
     /// <summary>Property for <see cref="NavigationView"/>.</summary>
     public static readonly StyledProperty<NavigationView?> NavigationViewProperty =
         AvaloniaProperty.Register<FluentNavigationWindow, NavigationView?>(
-            nameof(NavigationView),
-            null);
+            nameof(NavigationView));
 
     /// <summary>Gets or sets the navigation view for this window.</summary>
     public NavigationView? NavigationView

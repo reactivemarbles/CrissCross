@@ -12,6 +12,37 @@ namespace CrissCross;
 /// <summary>Describes a field that can participate in descriptor-driven data filtering.</summary>
 public sealed class FilterDescriptor
 {
+    /// <inheritdoc />
+    public FilterDescriptor(string key, string displayName, FilterEditorKind editorKind)
+        : this(key, displayName, editorKind, null, null, null, false) { }
+
+    /// <inheritdoc />
+    public FilterDescriptor(
+        string key,
+        string displayName,
+        FilterEditorKind editorKind,
+        IReadOnlyList<FilterOperator>? supportedOperators)
+        : this(key, displayName, editorKind, supportedOperators, null, null, false) { }
+
+    /// <inheritdoc />
+    public FilterDescriptor(
+        string key,
+        string displayName,
+        FilterEditorKind editorKind,
+        IReadOnlyList<FilterOperator>? supportedOperators,
+        IReadOnlyList<object?>? choices)
+        : this(key, displayName, editorKind, supportedOperators, choices, null, false) { }
+
+    /// <inheritdoc />
+    public FilterDescriptor(
+        string key,
+        string displayName,
+        FilterEditorKind editorKind,
+        IReadOnlyList<FilterOperator>? supportedOperators,
+        IReadOnlyList<object?>? choices,
+        object? defaultValue)
+        : this(key, displayName, editorKind, supportedOperators, choices, defaultValue, false) { }
+
     /// <summary>Initializes a new instance of the <see cref="FilterDescriptor"/> class.</summary>
     /// <param name="key">The stable field key.</param>
     /// <param name="displayName">The user-facing field name.</param>
@@ -24,15 +55,17 @@ public sealed class FilterDescriptor
         string key,
         string displayName,
         FilterEditorKind editorKind,
-        IReadOnlyList<FilterOperator>? supportedOperators = null,
-        IReadOnlyList<object?>? choices = null,
-        object? defaultValue = null,
-        bool isRequired = false)
+        IReadOnlyList<FilterOperator>? supportedOperators,
+        IReadOnlyList<object?>? choices,
+        object? defaultValue,
+        bool isRequired)
     {
         Key = key;
         DisplayName = displayName;
         EditorKind = editorKind;
-        SupportedOperators = supportedOperators is { Count: > 0 } ? supportedOperators : GetDefaultOperators(editorKind);
+        SupportedOperators = supportedOperators is { Count: > 0 }
+            ? supportedOperators
+            : GetDefaultOperators(editorKind);
         Choices = choices;
         DefaultValue = defaultValue;
         IsRequired = isRequired;
@@ -70,12 +103,23 @@ public sealed class FilterDescriptor
     /// <returns><c>true</c> when the operator is supported; otherwise, <c>false</c>.</returns>
     public bool SupportsOperator(FilterOperator @operator) => SupportedOperators.Contains(@operator);
 
+    /// <summary>Creates a removable filter token using the descriptor's default operator.</summary>
+    /// <param name="value">The filter value.</param>
+    /// <returns>The filter token projected from this descriptor.</returns>
+    public FilterToken CreateToken(object? value) => CreateToken(value, null, true);
+
+    /// <summary>Creates a removable filter token using the supplied operator.</summary>
+    /// <param name="value">The filter value.</param>
+    /// <param name="operator">The optional operator; the default operator is used when omitted.</param>
+    /// <returns>The filter token projected from this descriptor.</returns>
+    public FilterToken CreateToken(object? value, FilterOperator? @operator) => CreateToken(value, @operator, true);
+
     /// <summary>Creates a filter token for this descriptor.</summary>
     /// <param name="value">The filter value.</param>
     /// <param name="operator">The optional operator; the default operator is used when omitted.</param>
     /// <param name="isRemovable">A value indicating whether the token may be removed.</param>
     /// <returns>The filter token projected from this descriptor.</returns>
-    public FilterToken CreateToken(object? value, FilterOperator? @operator = null, bool isRemovable = true)
+    public FilterToken CreateToken(object? value, FilterOperator? @operator, bool isRemovable)
     {
         var resolvedOperator = @operator ?? DefaultOperator;
         return new FilterToken(Key, resolvedOperator, value, CreateDisplayText(resolvedOperator, value), isRemovable);
@@ -85,7 +129,8 @@ public sealed class FilterDescriptor
     /// <param name="operator">The comparison operator.</param>
     /// <param name="value">The filter value.</param>
     /// <returns>The user-facing display text.</returns>
-    public string CreateDisplayText(FilterOperator @operator, object? value) => string.Format(
+    public string CreateDisplayText(FilterOperator @operator, object? value) =>
+        string.Format(
             CultureInfo.InvariantCulture,
             "{0} {1} {2}",
             DisplayName,
@@ -95,41 +140,59 @@ public sealed class FilterDescriptor
     /// <summary>Gets the default operators for an editor kind.</summary>
     /// <param name="editorKind">The editor kind.</param>
     /// <returns>The default operators.</returns>
-    private static IReadOnlyList<FilterOperator> GetDefaultOperators(FilterEditorKind editorKind) => editorKind switch
-    {
-        FilterEditorKind.Text => [FilterOperator.Contains, FilterOperator.Equals, FilterOperator.StartsWith, FilterOperator.EndsWith],
-        FilterEditorKind.Number => [FilterOperator.Equals, FilterOperator.GreaterThan, FilterOperator.GreaterThanOrEqual, FilterOperator.LessThan, FilterOperator.LessThanOrEqual],
-        FilterEditorKind.Date or FilterEditorKind.DateTime => [FilterOperator.Equals, FilterOperator.GreaterThanOrEqual, FilterOperator.LessThanOrEqual],
-        FilterEditorKind.DateRange => [FilterOperator.Between],
-        _ => [FilterOperator.Equals]
-    };
+    private static IReadOnlyList<FilterOperator> GetDefaultOperators(FilterEditorKind editorKind) =>
+        editorKind switch
+        {
+            FilterEditorKind.Text =>
+            [
+                FilterOperator.Contains,
+                FilterOperator.Equals,
+                FilterOperator.StartsWith,
+                FilterOperator.EndsWith,],
+            FilterEditorKind.Number =>
+            [
+                FilterOperator.Equals,
+                FilterOperator.GreaterThan,
+                FilterOperator.GreaterThanOrEqual,
+                FilterOperator.LessThan,
+                FilterOperator.LessThanOrEqual,],
+            FilterEditorKind.Date or FilterEditorKind.DateTime =>
+            [
+                FilterOperator.Equals,
+                FilterOperator.GreaterThanOrEqual,
+                FilterOperator.LessThanOrEqual,],
+            FilterEditorKind.DateRange => [FilterOperator.Between],
+            _ => [FilterOperator.Equals],
+        };
 
     /// <summary>Gets display text for an operator.</summary>
     /// <param name="operator">The operator.</param>
     /// <returns>The display text.</returns>
-    private static string GetOperatorDisplayText(FilterOperator @operator) => @operator switch
-    {
-        FilterOperator.Equals => "equals",
-        FilterOperator.NotEquals => "does not equal",
-        FilterOperator.Contains => "contains",
-        FilterOperator.StartsWith => "starts with",
-        FilterOperator.EndsWith => "ends with",
-        FilterOperator.GreaterThan => "is greater than",
-        FilterOperator.GreaterThanOrEqual => "is greater than or equal to",
-        FilterOperator.LessThan => "is less than",
-        FilterOperator.LessThanOrEqual => "is less than or equal to",
-        FilterOperator.Between => "between",
-        _ => @operator.ToString()
-    };
+    private static string GetOperatorDisplayText(FilterOperator @operator) =>
+        @operator switch
+        {
+            FilterOperator.Equals => "equals",
+            FilterOperator.NotEquals => "does not equal",
+            FilterOperator.Contains => "contains",
+            FilterOperator.StartsWith => "starts with",
+            FilterOperator.EndsWith => "ends with",
+            FilterOperator.GreaterThan => "is greater than",
+            FilterOperator.GreaterThanOrEqual => "is greater than or equal to",
+            FilterOperator.LessThan => "is less than",
+            FilterOperator.LessThanOrEqual => "is less than or equal to",
+            FilterOperator.Between => "between",
+            _ => @operator.ToString(),
+        };
 
     /// <summary>Formats a filter value for display.</summary>
     /// <param name="value">The filter value.</param>
     /// <returns>The formatted value.</returns>
-    private static string FormatValue(object? value) => value switch
-    {
-        null => string.Empty,
-        DateTime dateTime => dateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
-        DateTimeOffset dateTimeOffset => dateTimeOffset.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
-        _ => Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty
-    };
+    private static string FormatValue(object? value) =>
+        value switch
+        {
+            null => string.Empty,
+            DateTime dateTime => dateTime.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+            DateTimeOffset dateTimeOffset => dateTimeOffset.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+            _ => Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty,
+        };
 }

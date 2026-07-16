@@ -10,22 +10,16 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 public class UnsupportedGifVersionException : GifDecoderException
 {
     /// <summary>Initializes a new instance of the <see cref="UnsupportedGifVersionException"/> class.</summary>
-    public UnsupportedGifVersionException()
-    {
-    }
+    public UnsupportedGifVersionException() { }
 
     /// <summary>Initializes a new instance of the <see cref="UnsupportedGifVersionException"/> class.</summary>
     /// <param name="message">The message value.</param>
     public UnsupportedGifVersionException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the <see cref="UnsupportedGifVersionException"/> class.</summary>
     /// <param name="message">The message value.</param>
     /// <param name="inner">The inner value.</param>
     public UnsupportedGifVersionException(string message, Exception inner)
-        : base(message, inner)
-    {
-    }
+        : base(message, inner) { }
 }

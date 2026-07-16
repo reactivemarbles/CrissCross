@@ -12,7 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
 /// <seealso cref="IActivatableView" />
-public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigation, IActivatableView, IAmBuilt
+public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigation, IActivatableView
 {
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
@@ -105,20 +105,19 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         new PropertyMetadata(true));
 
     /// <summary>Provides the FluentNavigationWindow member.</summary>
-    static FluentNavigationWindow() => DefaultStyleKeyProperty.OverrideMetadata(
-           typeof(FluentNavigationWindow),
-           new FrameworkPropertyMetadata(typeof(FluentNavigationWindow)));
+    static FluentNavigationWindow() =>
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(FluentNavigationWindow),
+            new FrameworkPropertyMetadata(typeof(FluentNavigationWindow)));
 
     /// <summary>Initializes a new instance of the <see cref="FluentNavigationWindow"/> class.</summary>
-    public FluentNavigationWindow() =>
-        SetResourceReference(StyleProperty, typeof(FluentNavigationWindow));
+    public FluentNavigationWindow() => SetResourceReference(StyleProperty, typeof(FluentNavigationWindow));
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
-    public IObservable<bool?> CanNavigateBack =>
-        NavigationFrame.CanNavigateBackObservable;
+    public IObservable<bool?> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -197,14 +196,14 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         set => SetValue(TitleHeaderProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show maximize button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show maximize button.</summary>
     public bool ShowMaximize
     {
         get => (bool)GetValue(ShowMaximizeProperty);
         set => SetValue(ShowMaximizeProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show minimize button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show minimize button.</summary>
     public bool ShowMinimize
     {
         get => (bool)GetValue(ShowMinimizeProperty);
@@ -218,7 +217,7 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         set => SetValue(ShowHelpProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show close button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show close button.</summary>
     public bool ShowClose
     {
         get => (bool)GetValue(ShowCloseProperty);
@@ -249,7 +248,11 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        NavigationFrame = (ViewModelRoutedViewHost)Template.FindName(nameof(NavigationFrame), this) ?? throw new InvalidOperationException($"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} is missing from the Style template.");
+        NavigationFrame =
+            (ViewModelRoutedViewHost)Template.FindName(nameof(NavigationFrame), this)
+            ?? throw new InvalidOperationException(
+                $"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "
+                    + "is missing from the Style template.");
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);

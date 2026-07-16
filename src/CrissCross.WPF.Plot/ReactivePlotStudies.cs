@@ -29,9 +29,7 @@ public static class ReactivePlotStudies
     /// <param name="source">The source to study.</param>
     /// <param name="period">The rolling period.</param>
     /// <returns>The derived plot source.</returns>
-    public static IReactivePlotSource SimpleMovingAverage(
-        IReactivePlotSource source,
-        int period) =>
+    public static IReactivePlotSource SimpleMovingAverage(IReactivePlotSource source, int period) =>
         SimpleMovingAverage(source, period, null, null);
 
     /// <summary>Creates a reactive simple-moving-average overlay.</summary>
@@ -57,9 +55,7 @@ public static class ReactivePlotStudies
     /// <param name="source">The source to study.</param>
     /// <param name="period">The smoothing period.</param>
     /// <returns>The derived plot source.</returns>
-    public static IReactivePlotSource ExponentialMovingAverage(
-        IReactivePlotSource source,
-        int period) =>
+    public static IReactivePlotSource ExponentialMovingAverage(IReactivePlotSource source, int period) =>
         ExponentialMovingAverage(source, period, null, null);
 
     /// <summary>Creates a reactive exponential-moving-average overlay.</summary>
@@ -91,9 +87,7 @@ public static class ReactivePlotStudies
     /// <param name="source">The source to study.</param>
     /// <param name="period">The RSI period.</param>
     /// <returns>The derived plot source.</returns>
-    public static IReactivePlotSource RelativeStrengthIndex(
-        IReactivePlotSource source,
-        int period) =>
+    public static IReactivePlotSource RelativeStrengthIndex(IReactivePlotSource source, int period) =>
         RelativeStrengthIndex(source, period, null, null);
 
     /// <summary>Creates a reactive Relative Strength Index study.</summary>
@@ -118,8 +112,7 @@ public static class ReactivePlotStudies
     /// <summary>Creates reactive MACD studies using conventional periods.</summary>
     /// <param name="source">The source to study.</param>
     /// <returns>The MACD line, signal line, and histogram sources.</returns>
-    public static IReadOnlyList<IReactivePlotSource> MovingAverageConvergenceDivergence(
-        IReactivePlotSource source) =>
+    public static IReadOnlyList<IReactivePlotSource> MovingAverageConvergenceDivergence(IReactivePlotSource source) =>
         MovingAverageConvergenceDivergence(
             source,
             DefaultMacdFastPeriod,
@@ -163,11 +156,7 @@ public static class ReactivePlotStudies
                 "MACD",
                 data =>
                     TechnicalIndicators
-                        .MovingAverageConvergenceDivergence(
-                            data,
-                            fastPeriod,
-                            slowPeriod,
-                            signalPeriod)
+                        .MovingAverageConvergenceDivergence(data, fastPeriod, slowPeriod, signalPeriod)
                         .Macd,
                 axis,
                 PlotType.Line,
@@ -177,11 +166,7 @@ public static class ReactivePlotStudies
                 "MACD Signal",
                 data =>
                     TechnicalIndicators
-                        .MovingAverageConvergenceDivergence(
-                            data,
-                            fastPeriod,
-                            slowPeriod,
-                            signalPeriod)
+                        .MovingAverageConvergenceDivergence(data, fastPeriod, slowPeriod, signalPeriod)
                         .Signal,
                 axis,
                 PlotType.Line,
@@ -191,40 +176,25 @@ public static class ReactivePlotStudies
                 "MACD Histogram",
                 data =>
                     TechnicalIndicators
-                        .MovingAverageConvergenceDivergence(
-                            data,
-                            fastPeriod,
-                            slowPeriod,
-                            signalPeriod)
+                        .MovingAverageConvergenceDivergence(data, fastPeriod, slowPeriod, signalPeriod)
                         .Histogram,
                 axis,
                 PlotType.Bar,
-                new() { Color = "#66BB6A" }),
-        ];
+                new() { Color = "#66BB6A" }),];
     }
 
     /// <summary>Creates reactive Bollinger Bands using conventional settings.</summary>
     /// <param name="source">The source to study.</param>
     /// <returns>The three band sources.</returns>
     public static IReadOnlyList<IReactivePlotSource> BollingerBands(IReactivePlotSource source) =>
-        BollingerBands(
-            source,
-            DefaultBollingerBandPeriod,
-            DefaultBollingerBandDeviations,
-            null);
+        BollingerBands(source, DefaultBollingerBandPeriod, DefaultBollingerBandDeviations, null);
 
     /// <summary>Creates reactive Bollinger Bands on a selected output axis.</summary>
     /// <param name="source">The source to study.</param>
     /// <param name="axis">The output Y-axis index.</param>
     /// <returns>The three band sources.</returns>
-    public static IReadOnlyList<IReactivePlotSource> BollingerBands(
-        IReactivePlotSource source,
-        int? axis) =>
-        BollingerBands(
-            source,
-            DefaultBollingerBandPeriod,
-            DefaultBollingerBandDeviations,
-            axis);
+    public static IReadOnlyList<IReactivePlotSource> BollingerBands(IReactivePlotSource source, int? axis) =>
+        BollingerBands(source, DefaultBollingerBandPeriod, DefaultBollingerBandDeviations, axis);
 
     /// <summary>Creates reactive middle, upper, and lower Bollinger Band studies.</summary>
     /// <param name="source">The source to study.</param>
@@ -261,23 +231,19 @@ public static class ReactivePlotStudies
                 data => TechnicalIndicators.BollingerBands(data, period, standardDeviations).Lower,
                 axis,
                 PlotType.Line,
-                new() { Color = "#90CAF9" }),
-        ];
+                new() { Color = "#90CAF9" }),];
     }
 
     /// <summary>Creates the five reactive Ichimoku study sources.</summary>
     /// <param name="source">The source to study.</param>
     /// <returns>The conversion, base, leading-span, and lagging sources.</returns>
-    public static IReadOnlyList<IReactivePlotSource> Ichimoku(IReactivePlotSource source) =>
-        Ichimoku(source, null);
+    public static IReadOnlyList<IReactivePlotSource> Ichimoku(IReactivePlotSource source) => Ichimoku(source, null);
 
     /// <summary>Creates the five reactive Ichimoku study sources.</summary>
     /// <param name="source">The source to study.</param>
     /// <param name="axis">An optional output Y-axis index.</param>
     /// <returns>The conversion, base, leading-span, and lagging sources.</returns>
-    public static IReadOnlyList<IReactivePlotSource> Ichimoku(
-        IReactivePlotSource source,
-        int? axis)
+    public static IReadOnlyList<IReactivePlotSource> Ichimoku(IReactivePlotSource source, int? axis)
     {
         var shared = Share(source);
         return
@@ -316,8 +282,7 @@ public static class ReactivePlotStudies
                 data => TechnicalIndicators.Ichimoku(data).Lagging,
                 axis,
                 PlotType.Line,
-                new() { Color = "#AB47BC" }),
-        ];
+                new() { Color = "#AB47BC" }),];
     }
 
     /// <summary>Creates one stateful derived source.</summary>
@@ -350,10 +315,7 @@ public static class ReactivePlotStudies
             return source.Updates.Select(update => Transform(update, x, y, definition));
         });
 
-        return new ReactivePlotSource(declaredKey, plotType, updates)
-        {
-            XAxisKind = source.XAxisKind,
-        };
+        return new ReactivePlotSource(declaredKey, plotType, updates) { XAxisKind = source.XAxisKind };
     }
 
     /// <summary>Transforms one source update into a derived replacement update.</summary>
@@ -405,9 +367,7 @@ public static class ReactivePlotStudies
     /// <param name="axis">The optional output axis.</param>
     /// <returns>The output key.</returns>
     private static PlotSeriesKey CreateKey(PlotSeriesKey sourceKey, string suffix, int? axis) =>
-        new(
-            string.IsNullOrWhiteSpace(sourceKey.Name) ? suffix : $"{sourceKey.Name} {suffix}",
-            axis ?? sourceKey.Axis);
+        new(string.IsNullOrWhiteSpace(sourceKey.Name) ? suffix : $"{sourceKey.Name} {suffix}", axis ?? sourceKey.Axis);
 
     /// <summary>Shares a source update subscription between a related group of studies.</summary>
     /// <param name="source">The source to share.</param>
@@ -419,10 +379,7 @@ public static class ReactivePlotStudies
             throw new ArgumentNullException(nameof(source));
         }
 
-        return new ReactivePlotSource(
-            source.Key,
-            source.PlotType,
-            source.Updates.Publish().RefCount())
+        return new ReactivePlotSource(source.Key, source.PlotType, source.Updates.Publish().RefCount())
         {
             XAxisKind = source.XAxisKind,
         };

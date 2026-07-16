@@ -21,9 +21,10 @@ public class CardColor : global::Avalonia.Controls.Primitives.TemplatedControl
         string.Empty);
 
     /// <summary>Property for <see cref="SubtitleFontSize"/>.</summary>
-    public static readonly StyledProperty<double> SubtitleFontSizeProperty = AvaloniaProperty.Register<CardColor, double>(
-        nameof(SubtitleFontSize),
-        11.0d);
+    public static readonly StyledProperty<double> SubtitleFontSizeProperty = AvaloniaProperty.Register<
+        CardColor,
+        double
+    >(nameof(SubtitleFontSize), 11.0D);
 
     /// <summary>Property for <see cref="Color"/>.</summary>
     public static readonly StyledProperty<Color> ColorProperty = AvaloniaProperty.Register<CardColor, Color>(
@@ -91,9 +92,7 @@ public class CardColor : global::Avalonia.Controls.Primitives.TemplatedControl
     }
 
     /// <summary>Virtual method triggered when <see cref="Subtitle"/> is changed.</summary>
-    protected virtual void OnSubtitlePropertyChanged()
-    {
-    }
+    protected virtual void OnSubtitlePropertyChanged() { }
 
     /// <summary>Virtual method triggered when <see cref="Color"/> is changed.</summary>
     protected virtual void OnColorPropertyChanged() => CardBrush = new SolidColorBrush(Color);

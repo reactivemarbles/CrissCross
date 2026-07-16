@@ -6,7 +6,7 @@ using System;
 
 namespace CrissCross;
 
-/// <summary>Describes a reusable date/time range preset that can create a range from a deterministic reference instant.</summary>
+/// <summary>Describes a reusable range preset based on a reference instant.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="DateTimeRangePresetDefinition"/> class.
 /// </remarks>
@@ -21,10 +21,12 @@ public sealed class DateTimeRangePresetDefinition(DateTimeRangePreset preset, st
     public static DateTimeRangePresetDefinition Today { get; } = new(DateTimeRangePreset.Today, nameof(Today));
 
     /// <summary>Gets the yesterday preset definition.</summary>
-    public static DateTimeRangePresetDefinition Yesterday { get; } = new(DateTimeRangePreset.Yesterday, nameof(Yesterday));
+    public static DateTimeRangePresetDefinition Yesterday { get; } =
+        new(DateTimeRangePreset.Yesterday, nameof(Yesterday));
 
     /// <summary>Gets the trailing seven-day preset definition.</summary>
-    public static DateTimeRangePresetDefinition LastSevenDays { get; } = new(DateTimeRangePreset.LastSevenDays, "Last 7 days");
+    public static DateTimeRangePresetDefinition LastSevenDays { get; } =
+        new(DateTimeRangePreset.LastSevenDays, "Last 7 days");
 
     /// <summary>Gets the current-month preset definition.</summary>
     public static DateTimeRangePresetDefinition ThisMonth { get; } = new(DateTimeRangePreset.ThisMonth, "This month");
@@ -51,22 +53,52 @@ public sealed class DateTimeRangePresetDefinition(DateTimeRangePreset preset, st
     /// <summary>Resolves the preset start instant.</summary>
     /// <param name="referenceTime">The reference instant.</param>
     /// <returns>The preset start instant.</returns>
-    private DateTimeOffset? ResolveStart(DateTimeOffset referenceTime) => Preset switch
-    {
-        DateTimeRangePreset.Today => new DateTimeOffset(referenceTime.Year, referenceTime.Month, referenceTime.Day, 0, 0, 0, referenceTime.Offset),
-        DateTimeRangePreset.Yesterday => new DateTimeOffset(referenceTime.Year, referenceTime.Month, referenceTime.Day, 0, 0, 0, referenceTime.Offset).AddDays(-1),
-        DateTimeRangePreset.LastSevenDays => referenceTime.AddDays(LastSevenDaysOffset),
-        DateTimeRangePreset.ThisMonth => new DateTimeOffset(referenceTime.Year, referenceTime.Month, 1, 0, 0, 0, referenceTime.Offset),
-        _ => null
-    };
+    private DateTimeOffset? ResolveStart(DateTimeOffset referenceTime) =>
+        Preset switch
+        {
+            DateTimeRangePreset.Today => new DateTimeOffset(
+                referenceTime.Year,
+                referenceTime.Month,
+                referenceTime.Day,
+                0,
+                0,
+                0,
+                referenceTime.Offset),
+            DateTimeRangePreset.Yesterday => new DateTimeOffset(
+                referenceTime.Year,
+                referenceTime.Month,
+                referenceTime.Day,
+                0,
+                0,
+                0,
+                referenceTime.Offset).AddDays(-1),
+            DateTimeRangePreset.LastSevenDays => referenceTime.AddDays(LastSevenDaysOffset),
+            DateTimeRangePreset.ThisMonth => new DateTimeOffset(
+                referenceTime.Year,
+                referenceTime.Month,
+                1,
+                0,
+                0,
+                0,
+                referenceTime.Offset),
+            _ => null,
+        };
 
     /// <summary>Resolves the preset end instant.</summary>
     /// <param name="referenceTime">The reference instant.</param>
     /// <returns>The preset end instant.</returns>
-    private DateTimeOffset? ResolveEnd(DateTimeOffset referenceTime) => Preset switch
-    {
-        DateTimeRangePreset.Yesterday => new DateTimeOffset(referenceTime.Year, referenceTime.Month, referenceTime.Day, 0, 0, 0, referenceTime.Offset).AddTicks(-1),
-        DateTimeRangePreset.Custom => null,
-        _ => referenceTime
-    };
+    private DateTimeOffset? ResolveEnd(DateTimeOffset referenceTime) =>
+        Preset switch
+        {
+            DateTimeRangePreset.Yesterday => new DateTimeOffset(
+                referenceTime.Year,
+                referenceTime.Month,
+                referenceTime.Day,
+                0,
+                0,
+                0,
+                referenceTime.Offset).AddTicks(-1),
+            DateTimeRangePreset.Custom => null,
+            _ => referenceTime,
+        };
 }

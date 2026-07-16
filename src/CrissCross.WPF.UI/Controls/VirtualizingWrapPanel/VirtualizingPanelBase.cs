@@ -9,7 +9,7 @@ using System.Windows.Controls.Primitives;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Base abstract class for creating virtualized panels. <para>Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</para></summary>
+/// <summary>Base abstract class for creating virtualized panels.</summary>
 public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
 {
     /// <summary>Property for <see cref="ScrollLineDelta"/>.</summary>
@@ -52,10 +52,12 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <summary>Gets or sets the scroll owner.</summary>
     public ScrollViewer? ScrollOwner { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be vertically scrolled.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be
+    /// vertically scrolled.</summary>
     public bool CanVerticallyScroll { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be horizontally scrolled.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that indicates whether the content can be
+    /// horizontally scrolled.</summary>
     public bool CanHorizontallyScroll { get; set; }
 
     /// <summary>Gets or sets scroll line delta for pixel based scrolling. The default value is 16 dp.</summary>
@@ -113,13 +115,13 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <summary>Gets or sets the direction in which the panel scrolls when user turns the mouse wheel.</summary>
     protected ScrollDirection MouseWheelScrollDirection { get; set; } = ScrollDirection.Vertical;
 
-    /// <summary>Gets a value indicating whether gets a value that inidicates whether the virtualizing is enabled.</summary>
+    /// <summary>Gets whether gets a value that inidicates whether the virtualizing is enabled.</summary>
     protected bool IsVirtualizing => GetIsVirtualizing(ItemsControl);
 
     /// <summary>Gets the virtualization mode.</summary>
     protected VirtualizationMode VirtualizationMode => GetVirtualizationMode(ItemsControl);
 
-    /// <summary>Gets a value indicating whether returns true if the panel is in VirtualizationMode.Recycling, otherwise false.</summary>
+    /// <summary>Gets whether returns true if the panel is in VirtualizationMode.Recycling, otherwise false.</summary>
     protected bool IsRecycling => VirtualizationMode == VirtualizationMode.Recycling;
 
     /// <summary>Gets the cache length before and after the viewport.</summary>
@@ -204,8 +206,8 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
 
         var pos = visual.TransformToAncestor(this).Transform(Offset);
 
-        var scrollAmountX = 0d;
-        var scrollAmountY = 0d;
+        var scrollAmountX = 0D;
+        var scrollAmountY = 0D;
 
         if (pos.X < Offset.X)
         {
@@ -276,8 +278,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     }
 
     /// <inheritdoc />
-    public void LineUp() =>
-        ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -ScrollLineDelta : GetLineUpScrollAmount());
+    public void LineUp() => ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -ScrollLineDelta : GetLineUpScrollAmount());
 
     /// <inheritdoc />
     public void LineDown() =>
@@ -326,8 +327,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         ScrollHorizontal(ScrollUnit == ScrollUnit.Pixel ? MouseWheelDelta : GetMouseWheelRightScrollAmount());
 
     /// <inheritdoc />
-    public void PageUp() =>
-        ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -ViewportHeight : GetPageUpScrollAmount());
+    public void PageUp() => ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -ViewportHeight : GetPageUpScrollAmount());
 
     /// <inheritdoc />
     public void PageDown() =>
@@ -347,16 +347,16 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         switch (args?.Action)
         {
             case NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace:
-                {
-                    RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
-                    break;
-                }
+            {
+                RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
+                break;
+            }
 
             case NotifyCollectionChangedAction.Move:
-                {
-                    RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
-                    break;
-                }
+            {
+                RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
+                break;
+            }
         }
     }
 
@@ -392,8 +392,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <returns>
     /// A GeneratorPosition.
     /// </returns>
-    protected virtual GeneratorPosition GetGeneratorPositionFromChildIndex(int childIndex) =>
-        new(childIndex, 0);
+    protected virtual GeneratorPosition GetGeneratorPositionFromChildIndex(int childIndex) => new(childIndex, 0);
 
     /// <inheritdoc />
     protected override Size MeasureOverride(Size availableSize)
@@ -410,8 +409,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
             var horizontalScrollBarGotHidden =
                 ScrollOwner.HorizontalScrollBarVisibility == ScrollBarVisibility.Auto
                 && ScrollOwner.ComputedHorizontalScrollBarVisibility != Visibility.Visible
-                && ScrollOwner.ComputedHorizontalScrollBarVisibility
-                    != _previousHorizontalScrollBarVisibility;
+                && ScrollOwner.ComputedHorizontalScrollBarVisibility != _previousHorizontalScrollBarVisibility;
 
             _previousVerticalScrollBarVisibility = ScrollOwner.ComputedVerticalScrollBarVisibility;
             _previousHorizontalScrollBarVisibility = ScrollOwner.ComputedHorizontalScrollBarVisibility;
@@ -471,10 +469,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         var startPosition = ItemContainerGenerator.GeneratorPositionFromIndex(ItemRange.StartIndex);
         var childIndex = startPosition.Offset == 0 ? startPosition.Index : startPosition.Index + 1;
 
-        using var at = ItemContainerGenerator.StartAt(
-            startPosition,
-            GeneratorDirection.Forward,
-            true);
+        using var at = ItemContainerGenerator.StartAt(startPosition, GeneratorDirection.Forward, true);
 
         for (var i = ItemRange.StartIndex; i <= ItemRange.EndIndex; i++, childIndex++)
         {
@@ -611,9 +606,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <returns><c>true</c> if the offset changed; otherwise, <c>false</c>.</returns>
     private bool CoerceHorizontalOffset(Size availableSize, Size extent)
     {
-        if (ViewportWidth == 0 ||
-            HorizontalOffset == 0 ||
-            HorizontalOffset + ViewportWidth + 1 < ExtentWidth)
+        if (ViewportWidth == 0 || HorizontalOffset == 0 || HorizontalOffset + ViewportWidth + 1 < ExtentWidth)
         {
             return false;
         }
@@ -628,9 +621,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <returns><c>true</c> if the offset changed; otherwise, <c>false</c>.</returns>
     private bool CoerceVerticalOffset(Size availableSize, Size extent)
     {
-        if (ViewportHeight == 0 ||
-            VerticalOffset == 0 ||
-            VerticalOffset + ViewportHeight + 1 < ExtentHeight)
+        if (ViewportHeight == 0 || VerticalOffset == 0 || VerticalOffset + ViewportHeight + 1 < ExtentHeight)
         {
             return false;
         }

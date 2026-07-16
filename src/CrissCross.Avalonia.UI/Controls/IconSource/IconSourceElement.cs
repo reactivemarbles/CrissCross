@@ -10,9 +10,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class IconSourceElement : IconElement
 {
     /// <summary>Property for <see cref="IconSource"/>.</summary>
-    public static readonly StyledProperty<IconSource?> IconSourceProperty = AvaloniaProperty.Register<IconSourceElement, IconSource?>(
-        nameof(IconSource),
-        null);
+    public static readonly StyledProperty<IconSource?> IconSourceProperty = AvaloniaProperty.Register<
+        IconSourceElement,
+        IconSource?
+    >(nameof(IconSource));
 
     /// <summary>Gets or sets the IconSource.</summary>
     public IconSource? IconSource

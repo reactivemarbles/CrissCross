@@ -8,7 +8,6 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CrissCross.Avalonia.UI.Gallery.ViewModels;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.Avalonia.UI.Gallery.Views;
@@ -60,21 +59,19 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
 
         // Set the DataContext to the MainViewModel
         DataContext = AppLocator.Current.GetService<MainViewModel>();
-
-        // Use WhenActivated to navigate after the window is fully loaded
-        // This matches the pattern used in the working CrissCross.Avalonia.Test app
-        _ = this.WhenActivated(disposables =>
-        {
-            // Navigate to home page initially
-            _ = this.WhenSetup()
-                .Where(x => x)
-                .Take(1)
-                .Subscribe(_ => this.NavigateToView<HomePageViewModel>())
-                .DisposeWith(disposables);
-        });
     }
 
-    /// <summary>Registers the content presenter. Override to create custom layout with navigation menu alongside the NavigationFrame.</summary>
+    /// <inheritdoc/>
+    protected override void OnOpened(System.EventArgs e)
+    {
+        base.OnOpened(e);
+        _ = this.WhenSetup()
+            .Where(x => x)
+            .Take(1)
+            .Subscribe(_ => this.NavigateToView(new NavigationKeyRequest<HomePageViewModel>()));
+    }
+
+    /// <summary>Registers the content presenter for the navigation layout.</summary>
     /// <param name="presenter">The presenter.</param>
     /// <returns>A bool indicating whether registration was successful.</returns>
     protected override bool RegisterContentPresenter(ContentPresenter presenter)
@@ -100,16 +97,13 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
 
             // Title Bar using CrissCross Border
-            var titleBorder = new UI.Controls.Border
-            {
-                Padding = new(LargeHorizontalSpacing, TitleVerticalPadding)
-            };
+            var titleBorder = new UI.Controls.Border { Padding = new(LargeHorizontalSpacing, TitleVerticalPadding) };
             titleBorder.Classes.Add("gallery-title");
             var titleText = new UI.Controls.TextBlock
             {
                 Text = "CrissCross Avalonia UI Gallery",
                 FontSize = TitleFontSize,
-                FontWeight = FontWeight.Bold
+                FontWeight = FontWeight.Bold,
             };
             titleText.Classes.Add("gallery-shell-text");
             titleBorder.Child = titleText;
@@ -123,105 +117,12 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             mainGrid.Children.Add(contentGrid);
             Grid.SetRow(contentGrid, 1);
 
-            // Navigation Menu using CrissCross Border
-            var navBorder = new UI.Controls.Border
-            {
-                BorderThickness = new(0, 0, NavigationBorderThickness, 0)
-            };
-            navBorder.Classes.Add("gallery-navigation");
-            var navScrollViewer = new ScrollViewer();
-            var navStack = new UI.Controls.StackPanel { Margin = new(MediumSpacing) };
-
-            // Navigation header using CrissCross TextBlock
-            var navHeader = new UI.Controls.TextBlock
-            {
-                Text = "Control Categories",
-                FontSize = NavigationHeaderFontSize,
-                FontWeight = FontWeight.Bold,
-                Margin = new(MediumSpacing, MediumSpacing, MediumSpacing, LargeHorizontalSpacing)
-            };
-            navHeader.Classes.Add("gallery-shell-text");
-            navStack.Children.Add(navHeader);
-
-            // Home button using CrissCross Button
-            AddNavigationButton(navStack, "🏠 Home", "GotoHome");
-
-            // Basic Controls Expander using CrissCross Expander
-            var basicExpander = new UI.Controls.Expander
-            {
-                Header = "Basic Controls",
-                IsExpanded = true,
-                Margin = new(0, MediumSpacing, 0, MediumSpacing)
-            };
-            var basicStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
-            AddNavigationButton(basicStack, "Button", "GotoButtons");
-            AddNavigationButton(basicStack, "CheckBox", "GotoCheckBox");
-            AddNavigationButton(basicStack, "RadioButton", "GotoRadioButton");
-            basicExpander.Content = basicStack;
-            navStack.Children.Add(basicExpander);
-
-            // Input Controls Expander using CrissCross Expander
-            var inputExpander = new UI.Controls.Expander
-            {
-                Header = "Input Controls",
-                IsExpanded = true,
-                Margin = new(0, 0, 0, MediumSpacing)
-            };
-            var inputStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
-            AddNavigationButton(inputStack, "TextBox", "GotoInput");
-            AddNavigationButton(inputStack, "ComboBox", "GotoComboBox");
-            AddNavigationButton(inputStack, "Slider", "GotoSlider");
-            inputExpander.Content = inputStack;
-            navStack.Children.Add(inputExpander);
-
-            // Date & Time Expander using CrissCross Expander
-            var dateExpander = new UI.Controls.Expander
-            {
-                Header = "Date & Time",
-                IsExpanded = true,
-                Margin = new(0, 0, 0, MediumSpacing)
-            };
-            var dateStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
-            AddNavigationButton(dateStack, "DatePicker", "GotoDatePicker");
-            dateExpander.Content = dateStack;
-            navStack.Children.Add(dateExpander);
-
-            // Color Expander using CrissCross Expander
-            var colorExpander = new UI.Controls.Expander
-            {
-                Header = "Color Controls",
-                IsExpanded = true,
-                Margin = new(0, 0, 0, MediumSpacing)
-            };
-            var colorStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
-            AddNavigationButton(colorStack, "ColorPicker", "GotoColorPicker");
-            colorExpander.Content = colorStack;
-            navStack.Children.Add(colorExpander);
-
-            // Progress Expander using CrissCross Expander
-            var progressExpander = new UI.Controls.Expander
-            {
-                Header = "Progress",
-                Margin = new(0, 0, 0, MediumSpacing)
-            };
-            var progressStack = new UI.Controls.StackPanel { Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing) };
-            AddNavigationButton(progressStack, "ProgressBar", "GotoProgress");
-            progressExpander.Content = progressStack;
-            navStack.Children.Add(progressExpander);
-
-            AddNavigationButton(navStack, "✨ Reactive Feature Playground", "GotoFeaturePlayground");
-
-            navScrollViewer.Content = navStack;
-            navBorder.Child = navScrollViewer;
+            var navBorder = CreateNavigationBorder();
             contentGrid.Children.Add(navBorder);
             Grid.SetColumn(navBorder, 0);
 
             // Content Display Area with NavigationFrame from base class using CrissCross Border
-            var contentBorder = new UI.Controls.Border
-            {
-                Padding = new(0),
-                Child = NavigationFrame
-            };
+            var contentBorder = new UI.Controls.Border { Padding = new(0), Child = NavigationFrame };
             contentBorder.Classes.Add("gallery-content");
             contentGrid.Children.Add(contentBorder);
             Grid.SetColumn(contentBorder, 1);
@@ -230,6 +131,76 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
         }
 
         return base.RegisterContentPresenter(presenter);
+    }
+
+    /// <summary>Creates the gallery navigation pane.</summary>
+    /// <returns>The navigation pane border.</returns>
+    private static UI.Controls.Border CreateNavigationBorder()
+    {
+        var navStack = new UI.Controls.StackPanel { Margin = new(MediumSpacing) };
+        var navHeader = new UI.Controls.TextBlock
+        {
+            Text = "Control Categories",
+            FontSize = NavigationHeaderFontSize,
+            FontWeight = FontWeight.Bold,
+            Margin = new(MediumSpacing, MediumSpacing, MediumSpacing, LargeHorizontalSpacing),
+        };
+        navHeader.Classes.Add("gallery-shell-text");
+        navStack.Children.Add(navHeader);
+        AddNavigationButton(navStack, "🏠 Home", "GotoHome");
+        navStack.Children.Add(
+            CreateNavigationExpander(
+                "Basic Controls",
+                includeTopMargin: true,
+                [("Button", "GotoButtons"), ("CheckBox", "GotoCheckBox"), ("RadioButton", "GotoRadioButton")]));
+        navStack.Children.Add(
+            CreateNavigationExpander(
+                "Input Controls",
+                includeTopMargin: false,
+                [("TextBox", "GotoInput"), ("ComboBox", "GotoComboBox"), ("Slider", "GotoSlider")]));
+        navStack.Children.Add(
+            CreateNavigationExpander("Date & Time", includeTopMargin: false, [("DatePicker", "GotoDatePicker")]));
+        navStack.Children.Add(
+            CreateNavigationExpander("Color Controls", includeTopMargin: false, [("ColorPicker", "GotoColorPicker")]));
+        navStack.Children.Add(
+            CreateNavigationExpander("Progress", includeTopMargin: false, [("ProgressBar", "GotoProgress")]));
+        AddNavigationButton(navStack, "✨ Reactive Feature Playground", "GotoFeaturePlayground");
+
+        var border = new UI.Controls.Border
+        {
+            BorderThickness = new(0, 0, NavigationBorderThickness, 0),
+            Child = new ScrollViewer { Content = navStack },
+        };
+        border.Classes.Add("gallery-navigation");
+        return border;
+    }
+
+    /// <summary>Creates a navigation category and its bound navigation buttons.</summary>
+    /// <param name="header">The category header.</param>
+    /// <param name="includeTopMargin">Whether to include spacing above the category.</param>
+    /// <param name="items">The button labels and command bindings.</param>
+    /// <returns>The configured navigation expander.</returns>
+    private static UI.Controls.Expander CreateNavigationExpander(
+        string header,
+        bool includeTopMargin,
+        (string Content, string CommandBinding)[] items)
+    {
+        var stack = new UI.Controls.StackPanel
+        {
+            Margin = new(LargeHorizontalSpacing, MediumSpacing, 0, MediumSpacing),
+        };
+        foreach (var item in items)
+        {
+            AddNavigationButton(stack, item.Content, item.CommandBinding);
+        }
+
+        return new()
+        {
+            Header = header,
+            IsExpanded = true,
+            Margin = new(0, includeTopMargin ? MediumSpacing : 0, 0, MediumSpacing),
+            Content = stack,
+        };
     }
 
     /// <summary>Provides the AddNavigationButton member.</summary>
@@ -244,7 +215,7 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             Margin = new(0, SmallSpacing),
             HorizontalAlignment = HorizontalAlignment.Stretch,
             HorizontalContentAlignment = HorizontalAlignment.Left,
-            Padding = new(TitleVerticalPadding, MediumSpacing)
+            Padding = new(TitleVerticalPadding, MediumSpacing),
         };
         _ = button.Bind(Button.CommandProperty, new Binding(commandBinding));
         stack.Children.Add(button);

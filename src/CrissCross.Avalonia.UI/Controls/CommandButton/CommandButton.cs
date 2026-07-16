@@ -12,9 +12,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class CommandButton : Button
 {
     /// <summary>Property for <see cref="State"/>.</summary>
-    public static readonly StyledProperty<CommandButtonState> StateProperty = AvaloniaProperty.Register<CommandButton, CommandButtonState>(
-        nameof(State),
-        CommandButtonState.Idle);
+    public static readonly StyledProperty<CommandButtonState> StateProperty = AvaloniaProperty.Register<
+        CommandButton,
+        CommandButtonState
+    >(nameof(State), CommandButtonState.Idle);
 
     /// <summary>Property for <see cref="IsExecuting"/>.</summary>
     public static readonly StyledProperty<bool> IsExecutingProperty = AvaloniaProperty.Register<CommandButton, bool>(
@@ -25,13 +26,16 @@ public class CommandButton : Button
         nameof(Progress));
 
     /// <summary>Property for <see cref="ExecutingContent"/>.</summary>
-    public static readonly StyledProperty<object?> ExecutingContentProperty = AvaloniaProperty.Register<CommandButton, object?>(
-        nameof(ExecutingContent),
-        "Working...");
+    public static readonly StyledProperty<object?> ExecutingContentProperty = AvaloniaProperty.Register<
+        CommandButton,
+        object?
+    >(nameof(ExecutingContent), "Working...");
 
     /// <summary>Property for <see cref="ErrorContent"/>.</summary>
-    public static readonly StyledProperty<object?> ErrorContentProperty = AvaloniaProperty.Register<CommandButton, object?>(
-        nameof(ErrorContent));
+    public static readonly StyledProperty<object?> ErrorContentProperty = AvaloniaProperty.Register<
+        CommandButton,
+        object?
+    >(nameof(ErrorContent));
 
     /// <summary>Gets or sets the command execution state displayed by the button.</summary>
     public CommandButtonState State

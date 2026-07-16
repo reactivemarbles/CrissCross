@@ -6,12 +6,15 @@ using CrissCross.WPF.UI.Extensions;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Tries to convert <see cref="SymbolRegular"/> and <seealso cref="SymbolFilled"/>  to <see cref="SymbolRegular"/>.</summary>
+/// <summary>Tries to convert SymbolRegular and <seealso cref="SymbolFilled"/> to SymbolRegular.</summary>
 public class IconElementConverter : TypeConverter
 {
-    /// <summary>Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.</summary>
-    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
-    /// <param name="sourceType">A <see cref="T:System.Type" /> that represents the type you want to convert from.</param>
+    /// <summary>Returns whether this converter can convert an object of the given type to the type of this converter,
+    /// using the specified context.</summary>
+    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format
+    /// context.</param>
+    /// <param name="sourceType">A <see cref="T:System.Type" /> that represents the type you want to convert
+    /// from.</param>
     /// <returns>
     /// true if this converter can perform the conversion; otherwise, false.
     /// </returns>
@@ -20,37 +23,41 @@ public class IconElementConverter : TypeConverter
         return sourceType == typeof(SymbolRegular) || sourceType == typeof(SymbolFilled);
     }
 
-    /// <summary>Returns whether this converter can convert the object to the specified type, using the specified context.</summary>
-    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
-    /// <param name="destinationType">A <see cref="T:System.Type" /> that represents the type you want to convert to.</param>
+    /// <summary>Provides the CanConvertTo member.</summary>
+    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format
+    /// context.</param>
+    /// <param name="destinationType">A <see cref="T:System.Type" /> that represents the type you want to convert
+    /// to.</param>
     /// <returns>
     /// true if this converter can perform the conversion; otherwise, false.
     /// </returns>
     public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType) => false;
 
-    /// <summary>Converts the given object to the type of this converter, using the specified context and culture information.</summary>
-    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
-    /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo" /> to use as the current culture.</param>
+    /// <summary>Provides the ConvertFrom member.</summary>
+    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format
+    /// context.</param>
+    /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo" /> to use as the current
+    /// culture.</param>
     /// <param name="value">The <see cref="T:System.Object" /> to convert.</param>
     /// <returns>
     /// An <see cref="T:System.Object" /> that represents the converted value.
     /// </returns>
-    public override object? ConvertFrom(
-        ITypeDescriptorContext? context,
-        CultureInfo? culture,
-        object? value) =>
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object? value) =>
         value switch
         {
             SymbolRegular symbolRegular => new SymbolIcon(symbolRegular),
-            SymbolFilled symbolFilled => new SymbolIcon(symbolFilled.Swap(), filled: true),
-            _ => null
+            SymbolFilled symbolFilled => new SymbolIcon(symbolFilled.Swap(), SymbolIcon.DefaultFontSize, true),
+            _ => null,
         };
 
-    /// <summary>Converts the given value object to the specified type, using the specified context and culture information.</summary>
-    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format context.</param>
-    /// <param name="culture">A <see cref="T:System.Globalization.CultureInfo" />. If null is passed, the current culture is assumed.</param>
+    /// <summary>Provides the ConvertTo member.</summary>
+    /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext" /> that provides a format
+    /// context.</param>
+    /// <param name="culture">A <see cref="T:System.Globalization.CultureInfo" />. If null is passed, the current
+    /// culture is assumed.</param>
     /// <param name="value">The <see cref="T:System.Object" /> to convert.</param>
-    /// <param name="destinationType">The <see cref="T:System.Type" /> to convert the <paramref name="value" /> parameter to.</param>
+    /// <param name="destinationType">The <see cref="T:System.Type" /> to convert the <paramref name="value" />
+    /// parameter to.</param>
     /// <returns>
     /// An <see cref="T:System.Object" /> that represents the converted value.
     /// </returns>

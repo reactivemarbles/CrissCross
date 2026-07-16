@@ -9,12 +9,13 @@ public interface IPageService
 {
     /// <summary>Takes a page of the given type.</summary>
     /// <typeparam name="T">Page type.</typeparam>
+    /// <param name="request">The typed page request.</param>
     /// <returns>Instance of the registered page service.</returns>
-    public T? GetPage<T>()
+    T? GetPage<T>(PageNavigationRequest<T> request)
         where T : class;
 
     /// <summary>Takes a page of the given type.</summary>
     /// <param name="pageType">Page type.</param>
     /// <returns>Instance of the registered page service.</returns>
-    public FrameworkElement? GetPage(Type pageType);
+    FrameworkElement? GetPage(Type pageType);
 }

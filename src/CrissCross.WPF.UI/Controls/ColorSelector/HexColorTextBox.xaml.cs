@@ -10,12 +10,11 @@ namespace CrissCross.WPF.UI;
 public partial class HexColorTextBox : PickerControlBase
 {
     /// <summary>The show alpha property.</summary>
-    public static readonly DependencyProperty ShowAlphaProperty =
-        DependencyProperty.Register(
-            nameof(ShowAlpha),
-            typeof(bool),
-            typeof(HexColorTextBox),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
+        nameof(ShowAlpha),
+        typeof(bool),
+        typeof(HexColorTextBox),
+        new PropertyMetadata(true));
 
     /// <summary>Initializes a new instance of the <see cref="HexColorTextBox"/> class.</summary>
     public HexColorTextBox() => InitializeComponent();

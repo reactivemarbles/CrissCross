@@ -11,7 +11,9 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a text control that makes suggestions to users as they enter text using a keyboard. The app is notified when text has been changed by the user and is responsible for providing relevant suggestions for this control to display.</summary>
+/// <summary>Represents a text control that makes suggestions to users as they enter text using a keyboard. The app is
+/// notified when text has been changed by the user and is responsible for providing relevant suggestions for this
+/// control to display.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search"&gt;
@@ -70,7 +72,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
         nameof(MaxSuggestionListHeight),
         typeof(double),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(0d));
+        new PropertyMetadata(0D));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
@@ -108,13 +110,13 @@ public class AutoSuggestBox : ItemsControl, IIconControl
         typeof(AutoSuggestBox));
 
     /// <summary>The element text box.</summary>
-    protected const string ElementTextBox = "PART_TextBox";
+    private const string ElementTextBox = "PART_TextBox";
 
     /// <summary>The element suggestions popup.</summary>
-    protected const string ElementSuggestionsPopup = "PART_SuggestionsPopup";
+    private const string ElementSuggestionsPopup = "PART_SuggestionsPopup";
 
     /// <summary>The element suggestions list.</summary>
-    protected const string ElementSuggestionsList = "PART_SuggestionsList";
+    private const string ElementSuggestionsList = "PART_SuggestionsList";
 
     /// <summary>Stores the _changingTextAfterSuggestionChosen value.</summary>
     private bool _changingTextAfterSuggestionChosen;
@@ -174,7 +176,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
         set => SetValue(OriginalItemsSourceProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the drop-down portion of the <see cref="AutoSuggestBox"/> is open.</summary>
+    /// <summary>Gets or sets whether the drop-down portion of the AutoSuggestBox is open.</summary>
     public bool IsSuggestionListOpen
     {
         get => (bool)GetValue(IsSuggestionListOpenProperty);
@@ -201,14 +203,15 @@ public class AutoSuggestBox : ItemsControl, IIconControl
         set => SetValue(PlaceholderTextProperty, value);
     }
 
-    /// <summary>Gets or sets the maximum height for the drop-down portion of the <see cref="AutoSuggestBox"/> control.</summary>
+    /// <summary>Gets or sets the maximum height for the drop-down portion of the AutoSuggestBox control.</summary>
     public double MaxSuggestionListHeight
     {
         get => (double)GetValue(MaxSuggestionListHeightProperty);
         set => SetValue(MaxSuggestionListHeightProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether items in the view will trigger an update of the editable text part of the <see cref="AutoSuggestBox"/> when clicked.</summary>
+    /// <summary>Gets or sets a value indicating whether items in the view will trigger an update of the editable text
+    /// part of the <see cref="AutoSuggestBox"/> when clicked.</summary>
     public bool UpdateTextOnSelect
     {
         get => (bool)GetValue(UpdateTextOnSelectProperty);
@@ -236,9 +239,9 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     {
         base.OnApplyTemplate();
 
-        TextBox = GetTemplateChild<TextBox>(ElementTextBox);
-        _ = GetTemplateChild<Popup>(ElementSuggestionsPopup);
-        SuggestionsList = GetTemplateChild<ListView>(ElementSuggestionsList);
+        TextBox = GetTemplateChild(ElementTextBox, default(TextBox));
+        _ = GetTemplateChild(ElementSuggestionsPopup, default(Popup));
+        SuggestionsList = GetTemplateChild(ElementSuggestionsList, default(ListView));
         _isHwndHookSubscribed = false;
 
         AcquireTemplateResources();
@@ -251,11 +254,13 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <summary>Gets the template child.</summary>
     /// <typeparam name="T">The type.</typeparam>
     /// <param name="name">The name.</param>
+    /// <param name="typeHint">The typed template-child hint.</param>
     /// <returns>The child.</returns>
     /// <exception cref="ArgumentNullException">name.</exception>
-    protected T GetTemplateChild<T>(string name)
+    protected T GetTemplateChild<T>(string name, T? typeHint)
         where T : DependencyObject
     {
+        _ = typeHint;
         if (GetTemplateChild(name) is not T dependencyObject)
         {
             throw new ArgumentNullException(name);
@@ -332,10 +337,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <param name="queryText">Currently submitted query text.</param>
     protected virtual void OnQuerySubmitted(string queryText)
     {
-        var args = new AutoSuggestBoxQuerySubmittedEventArgs(QuerySubmittedEvent, this)
-        {
-            QueryText = queryText
-        };
+        var args = new AutoSuggestBoxQuerySubmittedEventArgs(QuerySubmittedEvent, this) { QueryText = queryText };
 
         RaiseEvent(args);
     }
@@ -346,7 +348,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     {
         var args = new AutoSuggestBoxSuggestionChosenEventArgs(SuggestionChosenEvent, this)
         {
-            SelectedItem = selectedItem
+            SelectedItem = selectedItem,
         };
 
         RaiseEvent(args);
@@ -364,11 +366,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <param name="text">Changed text.</param>
     protected virtual void OnTextChanged(AutoSuggestionBoxTextChangeReason reason, string text)
     {
-        var args = new AutoSuggestBoxTextChangedEventArgs(TextChangedEvent, this)
-        {
-            Reason = reason,
-            Text = text
-        };
+        var args = new AutoSuggestBoxTextChangedEventArgs(TextChangedEvent, this) { Reason = reason, Text = text };
 
         RaiseEvent(args);
 
@@ -621,13 +619,12 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     {
         var text = string.Empty;
 
-        if (!string.IsNullOrEmpty(DisplayMemberPath))
+        // Maybe it needs some optimization?
+        if (
+            !string.IsNullOrEmpty(DisplayMemberPath)
+            && obj.GetType().GetProperty(DisplayMemberPath)?.GetValue(obj) is string value)
         {
-            // Maybe it needs some optimization?
-            if (obj.GetType().GetProperty(DisplayMemberPath)?.GetValue(obj) is string value)
-            {
-                text = value;
-            }
+            text = value;
         }
 
         if (string.IsNullOrEmpty(text))

@@ -10,10 +10,12 @@ namespace CrissCross.WPF.UI.Controls;
 /// <remarks>
 /// <para>
 /// This class is a <see cref="Page"/> that is also reactive. That is, it implements <see cref="IViewFor{TViewModel}"/>.
-/// You can extend this class to get an implementation of <see cref="IViewFor{TViewModel}"/> rather than writing one yourself.
+/// You can extend this class to get an implementation of <see cref="IViewFor{TViewModel}"/> rather than writing one
+/// yourself.
 /// </para>
 /// <para>
-/// Note that the XAML for your control must specify the same base class, including the generic argument you provide for your view
+/// Note that the XAML for your control must specify the same base class, including the generic argument you provide for
+/// your view
 /// model. To do this, use the <c>TypeArguments</c> attribute as follows:
 /// <code>
 /// <![CDATA[
@@ -36,17 +38,15 @@ namespace CrissCross.WPF.UI.Controls;
 /// <typeparam name="TViewModel">
 /// The type of the view model backing the view.
 /// </typeparam>
-public class ReactivePage<TViewModel> :
-    Page, IViewFor<TViewModel>
+public class ReactivePage<TViewModel> : Page, IViewFor<TViewModel>
     where TViewModel : class
 {
     /// <summary>The view model dependency property.</summary>
-    public static readonly DependencyProperty ViewModelProperty =
-        DependencyProperty.Register(
-                                    nameof(ViewModel),
-                                    typeof(TViewModel),
-                                    typeof(ReactivePage<TViewModel>),
-                                    new PropertyMetadata(null));
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(TViewModel),
+        typeof(ReactivePage<TViewModel>),
+        new PropertyMetadata(null));
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;

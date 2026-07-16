@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
-using Avalonia.Media;
 using CrissCross.Avalonia.UI.Extensions;
 
 namespace CrissCross.Avalonia.UI.Controls;
@@ -18,6 +17,9 @@ public class SymbolIcon : FontIcon
     /// <summary>Property for <see cref="Filled"/>.</summary>
     public static readonly StyledProperty<bool> FilledProperty =
         AvaloniaProperty.Register<SymbolIcon, bool>(nameof(Filled), false);
+
+    /// <summary>Default icon font size.</summary>
+    private const double DefaultFontSize = 14D;
 
     /// <summary>Provides the SymbolIcon member.</summary>
     static SymbolIcon()
@@ -34,9 +36,24 @@ public class SymbolIcon : FontIcon
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
     /// <param name="symbol">The symbol.</param>
+    public SymbolIcon(SymbolRegular symbol)
+        : this(symbol, DefaultFontSize, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="fontSize">Size of the font.</param>
+    public SymbolIcon(SymbolRegular symbol, double fontSize)
+        : this(symbol, fontSize, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
+    /// <param name="symbol">The symbol.</param>
     /// <param name="fontSize">Size of the font.</param>
     /// <param name="filled">if set to <c>true</c> use filled variant.</param>
-    public SymbolIcon(SymbolRegular symbol, double fontSize = 14, bool filled = false)
+    public SymbolIcon(SymbolRegular symbol, double fontSize, bool filled)
         : this()
     {
         Symbol = symbol;

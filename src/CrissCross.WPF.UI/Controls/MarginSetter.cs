@@ -10,7 +10,11 @@ namespace CrissCross.WPF.UI;
 public static class MarginSetter
 {
     /// <summary>The margin property.</summary>
-    public static readonly DependencyProperty MarginProperty = DependencyProperty.RegisterAttached("Margin", typeof(Thickness), typeof(MarginSetter), new UIPropertyMetadata(default(Thickness), MarginChangedCallback));
+    public static readonly DependencyProperty MarginProperty = DependencyProperty.RegisterAttached(
+        "Margin",
+        typeof(Thickness),
+        typeof(MarginSetter),
+        new UIPropertyMetadata(default(Thickness), MarginChangedCallback));
 
     /// <summary>Gets the margin.</summary>
     /// <param name="obj">The object.</param>

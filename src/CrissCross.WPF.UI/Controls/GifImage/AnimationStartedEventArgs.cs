@@ -10,4 +10,5 @@ namespace CrissCross.WPF.UI.Controls;
 /// Initializes a new instance of the <see cref="AnimationStartedEventArgs"/> class.
 /// </remarks>
 /// <param name="source">The source.</param>
-public class AnimationStartedEventArgs(object source) : RoutedEventArgs(AnimationBehavior.AnimationStartedEvent, source);
+public class AnimationStartedEventArgs(object source)
+    : RoutedEventArgs(AnimationBehavior.AnimationStartedEvent, source);

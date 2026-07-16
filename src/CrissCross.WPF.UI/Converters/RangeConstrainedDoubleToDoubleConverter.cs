@@ -13,20 +13,18 @@ namespace CrissCross.WPF.UI.Converters;
 internal sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, IValueConverter
 {
     /// <summary>The minimum property.</summary>
-    private static readonly DependencyProperty _minProperty =
-        DependencyProperty.Register(
-            nameof(Min),
-            typeof(double),
-            typeof(RangeConstrainedDoubleToDoubleConverter),
-            new PropertyMetadata(0.0));
+    private static readonly DependencyProperty _minProperty = DependencyProperty.Register(
+        nameof(Min),
+        typeof(double),
+        typeof(RangeConstrainedDoubleToDoubleConverter),
+        new PropertyMetadata(0.0));
 
     /// <summary>The maximum property.</summary>
-    private static readonly DependencyProperty _maxProperty =
-        DependencyProperty.Register(
-            nameof(Max),
-            typeof(double),
-            typeof(RangeConstrainedDoubleToDoubleConverter),
-            new PropertyMetadata(1.0));
+    private static readonly DependencyProperty _maxProperty = DependencyProperty.Register(
+        nameof(Max),
+        typeof(double),
+        typeof(RangeConstrainedDoubleToDoubleConverter),
+        new PropertyMetadata(1.0));
 
     /// <summary>Gets or sets determines the minimum of the parameters.</summary>
     /// <value>
@@ -73,6 +71,12 @@ internal sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject
             throw new ArgumentNullException(nameof(value));
         }
 
-        return !double.TryParse(((string)value).Replace(',', '.'), NumberStyles.Float, CultureInfo.InvariantCulture, out var result) ? DependencyProperty.UnsetValue : MathExtensions.Clamp(result, Min, Max);
+        return !double.TryParse(
+            ((string)value).Replace(',', '.'),
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture,
+            out var result)
+            ? DependencyProperty.UnsetValue
+            : MathExtensions.Clamp(result, Min, Max);
     }
 }

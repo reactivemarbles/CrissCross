@@ -14,24 +14,28 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class CalendarDatePicker : global::Avalonia.Controls.Button
 {
     /// <summary>Property for <see cref="IsCalendarOpen"/>.</summary>
-    public static readonly StyledProperty<bool> IsCalendarOpenProperty = AvaloniaProperty.Register<CalendarDatePicker, bool>(
-        nameof(IsCalendarOpen),
-        false);
+    public static readonly StyledProperty<bool> IsCalendarOpenProperty = AvaloniaProperty.Register<
+        CalendarDatePicker,
+        bool
+    >(nameof(IsCalendarOpen), false);
 
     /// <summary>Property for <see cref="IsTodayHighlighted"/>.</summary>
-    public static readonly StyledProperty<bool> IsTodayHighlightedProperty = AvaloniaProperty.Register<CalendarDatePicker, bool>(
-        nameof(IsTodayHighlighted),
-        true);
+    public static readonly StyledProperty<bool> IsTodayHighlightedProperty = AvaloniaProperty.Register<
+        CalendarDatePicker,
+        bool
+    >(nameof(IsTodayHighlighted), true);
 
     /// <summary>Property for <see cref="Date"/>.</summary>
-    public static readonly StyledProperty<DateTime?> DateProperty = AvaloniaProperty.Register<CalendarDatePicker, DateTime?>(
-        nameof(Date),
-        null);
+    public static readonly StyledProperty<DateTimeOffset?> DateProperty = AvaloniaProperty.Register<
+        CalendarDatePicker,
+        DateTimeOffset?
+    >(nameof(Date));
 
     /// <summary>Property for <see cref="FirstDayOfWeek"/>.</summary>
-    public static readonly StyledProperty<DayOfWeek> FirstDayOfWeekProperty = AvaloniaProperty.Register<CalendarDatePicker, DayOfWeek>(
-        nameof(FirstDayOfWeek),
-        DayOfWeek.Sunday);
+    public static readonly StyledProperty<DayOfWeek> FirstDayOfWeekProperty = AvaloniaProperty.Register<
+        CalendarDatePicker,
+        DayOfWeek
+    >(nameof(FirstDayOfWeek), DayOfWeek.Sunday);
 
     /// <summary>Provides the _popup member.</summary>
     private Popup? _popup;
@@ -46,7 +50,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         set => SetValue(IsTodayHighlightedProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the calendar view of the <see cref="CalendarDatePicker"/> is currently shown.</summary>
+    /// <summary>Gets or sets whether the calendar view of the CalendarDatePicker is currently shown.</summary>
     public bool IsCalendarOpen
     {
         get => GetValue(IsCalendarOpenProperty);
@@ -61,7 +65,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
     }
 
     /// <summary>Gets or sets the date currently set in the calendar picker.</summary>
-    public DateTime? Date
+    public DateTimeOffset? Date
     {
         get => GetValue(DateProperty);
         set => SetValue(DateProperty, value);
@@ -93,7 +97,10 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
     {
         if (_calendar?.SelectedDate is not null)
         {
-            SetCurrentValue(DateProperty, _calendar.SelectedDate);
+            var selectedDate = DateTime.SpecifyKind(_calendar.SelectedDate.Value, DateTimeKind.Unspecified);
+            SetCurrentValue(
+                DateProperty,
+                new DateTimeOffset(selectedDate, TimeZoneInfo.Local.GetUtcOffset(selectedDate)));
         }
 
         if (!IsCalendarOpen)
@@ -119,15 +126,19 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         {
             IsTodayHighlighted = isTodayHighlighted,
             FirstDayOfWeek = firstDayOfWeek,
-            SelectedDate = Date
+            SelectedDate = Date?.DateTime,
         };
 
         var calendar = _calendar;
         _ = this.GetObservable(DateProperty).Subscribe(SyncCalendarDate);
         _ = this.GetObservable(IsTodayHighlightedProperty).Subscribe(SyncCalendarTodayHighlight);
-        _ = calendar.GetObservable(global::Avalonia.Controls.Calendar.IsTodayHighlightedProperty).Subscribe(SyncPickerTodayHighlight);
+        _ = calendar
+            .GetObservable(global::Avalonia.Controls.Calendar.IsTodayHighlightedProperty)
+            .Subscribe(SyncPickerTodayHighlight);
         _ = this.GetObservable(FirstDayOfWeekProperty).Subscribe(SyncCalendarFirstDayOfWeek);
-        _ = calendar.GetObservable(global::Avalonia.Controls.Calendar.FirstDayOfWeekProperty).Subscribe(SyncPickerFirstDayOfWeek);
+        _ = calendar
+            .GetObservable(global::Avalonia.Controls.Calendar.FirstDayOfWeekProperty)
+            .Subscribe(SyncPickerFirstDayOfWeek);
 
         _calendar.SelectedDatesChanged += OnSelectedDatesChanged;
 
@@ -160,14 +171,14 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
 
     /// <summary>Synchronizes the calendar date from the picker.</summary>
     /// <param name="value">The selected date.</param>
-    private void SyncCalendarDate(DateTime? value)
+    private void SyncCalendarDate(DateTimeOffset? value)
     {
-        if (_calendar?.SelectedDate == value)
+        if (_calendar?.SelectedDate == value?.DateTime)
         {
             return;
         }
 
-        _calendar!.SelectedDate = value;
+        _calendar!.SelectedDate = value?.DateTime;
     }
 
     /// <summary>Synchronizes the calendar highlight setting from the picker.</summary>

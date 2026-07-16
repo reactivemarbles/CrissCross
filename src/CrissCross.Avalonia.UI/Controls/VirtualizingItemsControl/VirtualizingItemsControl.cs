@@ -17,9 +17,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class VirtualizingItemsControl : global::Avalonia.Controls.ItemsControl
 {
     /// <summary>Property for <see cref="CacheLengthUnit"/>.</summary>
-    public static readonly StyledProperty<bool> CacheLengthUnitProperty = AvaloniaProperty.Register<VirtualizingItemsControl, bool>(
-        nameof(CacheLengthUnit),
-        false);
+    public static readonly StyledProperty<bool> CacheLengthUnitProperty = AvaloniaProperty.Register<
+        VirtualizingItemsControl,
+        bool
+    >(nameof(CacheLengthUnit), false);
 
     /// <summary>Gets or sets a value indicating whether the cache length unit is enabled.</summary>
     public bool CacheLengthUnit

@@ -14,20 +14,23 @@ public static class Design
     private static bool? _inDesignMode;
 
     /// <summary>Gets the background property.</summary>
-    public static DependencyProperty BackgroundProperty { get; } = DependencyProperty.RegisterAttached(
-        "Background",
-        typeof(Brush),
-        typeof(Design),
-        new PropertyMetadata(OnBackgroundPropertyChanged));
+    public static DependencyProperty BackgroundProperty { get; } =
+        DependencyProperty.RegisterAttached(
+            "Background",
+            typeof(Brush),
+            typeof(Design),
+            new PropertyMetadata(OnBackgroundPropertyChanged));
 
     /// <summary>Gets the foreground property.</summary>
-    public static DependencyProperty ForegroundProperty { get; } = DependencyProperty.RegisterAttached(
-        "Foreground",
-        typeof(Brush),
-        typeof(Design),
-        new PropertyMetadata(OnForegroundPropertyChanged));
+    public static DependencyProperty ForegroundProperty { get; } =
+        DependencyProperty.RegisterAttached(
+            "Foreground",
+            typeof(Brush),
+            typeof(Design),
+            new PropertyMetadata(OnForegroundPropertyChanged));
 
-    /// <summary>Gets a value indicating whether indicates whether or not the framework is in design-time mode. (Caliburn.Micro implementation).</summary>
+    /// <summary>Gets a value indicating whether indicates whether or not the framework is in design-time mode.
+    /// (Caliburn.Micro implementation).</summary>
     private static bool InDesignMode
     {
         get
@@ -37,13 +40,15 @@ public static class Design
                 return _inDesignMode.Value;
             }
 
-            var inDesignMode = (bool)DependencyPropertyDescriptor
+            var inDesignMode = (bool)
+                DependencyPropertyDescriptor
                     .FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement))
                     .Metadata.DefaultValue;
 
             if (
                 !inDesignMode
-                && Process.GetCurrentProcess()
+                && Process
+                    .GetCurrentProcess()
                     .ProcessName.StartsWith(DesignProcessName, System.StringComparison.Ordinal))
             {
                 inDesignMode = true;

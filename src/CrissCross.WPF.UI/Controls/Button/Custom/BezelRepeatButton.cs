@@ -8,16 +8,22 @@ namespace CrissCross.WPF.UI.Controls;
 public class BezelRepeatButton : CommonRepeatButtonBase
 {
     /// <summary>The glare opacity mask property.</summary>
-    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(nameof(GlareOpacityMask), typeof(Brush), typeof(BezelRepeatButton), new PropertyMetadata(null));
+    public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(
+        nameof(GlareOpacityMask),
+        typeof(Brush),
+        typeof(BezelRepeatButton),
+        new PropertyMetadata(null));
 
     /// <summary>The pressed brush property.</summary>
-    public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(nameof(PressedBrush), typeof(Brush), typeof(BezelRepeatButton), new PropertyMetadata(Brushes.Green));
+    public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(
+        nameof(PressedBrush),
+        typeof(Brush),
+        typeof(BezelRepeatButton),
+        new PropertyMetadata(Brushes.Green));
 
     /// <summary>Initializes a new instance of the <see cref="BezelRepeatButton"/> class.</summary>
     public BezelRepeatButton()
-        : base(typeof(BezelRepeatButton).FullName!)
-    {
-    }
+        : base(typeof(BezelRepeatButton).FullName!) { }
 
     /// <summary>Gets or sets the glare opacity mask.</summary>
     /// <value>

@@ -23,11 +23,11 @@ public class GridView : System.Windows.Controls.GridView
     /// <summary>Provides the GridView member.</summary>
     static GridView()
     {
-        ResourceDictionary resourceDict =
-            new()
-            {
-                Source = new("pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml")
-            };
+        ResourceDictionary resourceDict = new()
+        {
+            Source = new(
+                "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml"),
+        };
 
         var defaultStyle = (Style)resourceDict["UiGridViewColumnHeaderStyle"];
 

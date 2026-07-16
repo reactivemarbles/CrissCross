@@ -10,12 +10,11 @@ namespace CrissCross.WPF.UI.Controls;
 public partial class NavigationView
 {
     /// <summary>Attached property for <see cref="NavigationView"/>'s to get its parent.</summary>
-    internal static readonly DependencyProperty NavigationParentProperty =
-        DependencyProperty.RegisterAttached(
-            nameof(NavigationParent),
-            typeof(INavigationView),
-            typeof(INavigationView),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+    internal static readonly DependencyProperty NavigationParentProperty = DependencyProperty.RegisterAttached(
+        nameof(NavigationParent),
+        typeof(INavigationView),
+        typeof(INavigationView),
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Gets the parent navigation view.</summary>
     internal INavigationView NavigationParent
@@ -24,7 +23,7 @@ public partial class NavigationView
         private set => SetValue(NavigationParentProperty, value);
     }
 
-    /// <summary>Gets the <see cref="NavigationView" /> parent view for its <see cref="INavigationViewItem" /> children.</summary>
+    /// <summary>Gets the NavigationView parent view for its INavigationViewItem children.</summary>
     /// <typeparam name="T">The type.</typeparam>
     /// <param name="navigationItem">The navigation item.</param>
     /// <returns>

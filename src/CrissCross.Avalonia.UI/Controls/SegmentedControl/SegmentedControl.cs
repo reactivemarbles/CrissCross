@@ -13,13 +13,22 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class SegmentedControl : ItemsControl
 {
     /// <summary>Property for <see cref="SelectionState"/>.</summary>
-    public static readonly StyledProperty<SegmentedSelectionState?> SelectionStateProperty = AvaloniaProperty.Register<SegmentedControl, SegmentedSelectionState?>(nameof(SelectionState));
+    public static readonly StyledProperty<SegmentedSelectionState?> SelectionStateProperty = AvaloniaProperty.Register<
+        SegmentedControl,
+        SegmentedSelectionState?
+    >(nameof(SelectionState));
 
     /// <summary>Property for <see cref="SelectedKey"/>.</summary>
-    public static readonly StyledProperty<string?> SelectedKeyProperty = AvaloniaProperty.Register<SegmentedControl, string?>(nameof(SelectedKey), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<string?> SelectedKeyProperty = AvaloniaProperty.Register<
+        SegmentedControl,
+        string?
+    >(nameof(SelectedKey), defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="SelectionChangedCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> SelectionChangedCommandProperty = AvaloniaProperty.Register<SegmentedControl, ICommand?>(nameof(SelectionChangedCommand));
+    public static readonly StyledProperty<ICommand?> SelectionChangedCommandProperty = AvaloniaProperty.Register<
+        SegmentedControl,
+        ICommand?
+    >(nameof(SelectionChangedCommand));
 
     /// <summary>Gets or sets the shared segmented selection state.</summary>
     public SegmentedSelectionState? SelectionState
@@ -49,7 +58,9 @@ public class SegmentedControl : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != SelectionStateProperty || change.GetNewValue<SegmentedSelectionState?>() is not { } state)
+        if (
+            change.Property != SelectionStateProperty
+            || change.GetNewValue<SegmentedSelectionState?>() is not { } state)
         {
             return;
         }

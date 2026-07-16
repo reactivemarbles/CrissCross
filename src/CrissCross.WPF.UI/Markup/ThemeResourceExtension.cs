@@ -26,7 +26,7 @@ public class ThemeResourceExtension : DynamicResourceExtension
     /// <summary>Initializes a new instance of the <see cref="ThemeResourceExtension"/> class.</summary>
     public ThemeResourceExtension() => ResourceKey = nameof(ThemeResource.ApplicationBackgroundBrush);
 
-    /// <summary>Initializes a new instance of the <see cref="ThemeResourceExtension" /> class. Takes the resource key that this is a static reference to.</summary>
+    /// <summary>Initializes a new instance of the <see cref="ThemeResourceExtension"/> class.</summary>
     /// <exception cref="ArgumentNullException">resourceKey.</exception>
     /// <param name="resourceKey">The resource key.</param>
     public ThemeResourceExtension(ThemeResource resourceKey)

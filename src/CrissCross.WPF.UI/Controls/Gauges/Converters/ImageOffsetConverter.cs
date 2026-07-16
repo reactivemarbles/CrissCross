@@ -15,7 +15,8 @@ public class ImageOffsetConverter : IValueConverter
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new TranslateTransform { Y = (double)value };
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        new TranslateTransform { Y = (double)value };
 
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>

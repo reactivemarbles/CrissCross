@@ -54,8 +54,7 @@ public partial class RightPropertiesViewModel : RxObject
             System.Drawing.Color.Brown.Name,
             System.Drawing.Color.Violet.Name,
             System.Drawing.Color.Pink.Name,
-            System.Drawing.Color.Gray.Name,
-        ];
+            System.Drawing.Color.Gray.Name,];
 
         Visibilities = ["Visible", "Invisible"];
 

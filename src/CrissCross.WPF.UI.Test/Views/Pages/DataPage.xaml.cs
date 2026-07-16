@@ -17,12 +17,20 @@ public partial class DataPage : INavigableView<DataViewModel>, ICanShowMessages
         DataContext = this;
 
         InitializeComponent();
-        Loaded += async (_, _) => await this.MessageBoxShow("I am a Custom message box", "Custom Message Box", "Custom Button");
+        Loaded += async (_, _) =>
+            await this.MessageBoxShow(
+                new CustomMessageBoxRequest
+                {
+                    BBCode = "I am a Custom message box",
+                    Title = "Custom Message Box",
+                    Buttons = new[] { "Custom Button" },
+                });
     }
 
     /// <summary>
     /// Gets viewModel used by the view.
-    /// Optionally, it may implement <see cref="T:CrissCross.WPF.UI.Controls.INavigationAware" /> and be navigated by <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
+    /// Optionally, it may implement <see cref="T:CrissCross.WPF.UI.Controls.INavigationAware" /> and be navigated by
+    /// <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
     public DataViewModel ViewModel { get; }
 

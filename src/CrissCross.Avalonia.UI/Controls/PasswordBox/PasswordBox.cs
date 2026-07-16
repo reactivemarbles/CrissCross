@@ -5,10 +5,12 @@
 using System.Diagnostics;
 using Avalonia;
 using AvaloniaInteractivity = global::Avalonia.Interactivity;
+using RoutedEventArgs = global::Avalonia.Interactivity.RoutedEventArgs;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set to true, PasswordProperty always contains raw password.</summary>
+/// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set
+/// to true, PasswordProperty always contains raw password.</summary>
 public class PasswordBox : TextBox
 {
     /// <summary>Property for <see cref="Password"/>.</summary>
@@ -22,23 +24,26 @@ public class PasswordBox : TextBox
         '�');
 
     /// <summary>Property for <see cref="IsPasswordRevealed"/>.</summary>
-    public static readonly StyledProperty<bool> IsPasswordRevealedProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(IsPasswordRevealed),
-        false);
+    public static readonly StyledProperty<bool> IsPasswordRevealedProperty = AvaloniaProperty.Register<
+        PasswordBox,
+        bool
+    >(nameof(IsPasswordRevealed), false);
 
     /// <summary>Property for <see cref="RevealButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> RevealButtonEnabledProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(RevealButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> RevealButtonEnabledProperty = AvaloniaProperty.Register<
+        PasswordBox,
+        bool
+    >(nameof(RevealButtonEnabled), true);
 
-    /// <summary>Property for <see cref="RevealPassword"/> (alias for IsPasswordRevealed for XAML compatibility).</summary>
-    public static new readonly StyledProperty<bool> RevealPasswordProperty = AvaloniaProperty.Register<PasswordBox, bool>(
-        nameof(RevealPassword),
-        false);
+    /// <summary>Property for RevealPassword (alias for IsPasswordRevealed for XAML compatibility).</summary>
+    public static new readonly StyledProperty<bool> RevealPasswordProperty = AvaloniaProperty.Register<
+        PasswordBox,
+        bool
+    >(nameof(RevealPassword), false);
 
     /// <summary>Event for "Password has changed".</summary>
-    public static readonly AvaloniaInteractivity.RoutedEvent<AvaloniaInteractivity.RoutedEventArgs> PasswordChangedEvent =
-        AvaloniaInteractivity.RoutedEvent.Register<PasswordBox, AvaloniaInteractivity.RoutedEventArgs>(
+    public static readonly AvaloniaInteractivity.RoutedEvent<RoutedEventArgs> PasswordChangedEvent =
+        AvaloniaInteractivity.RoutedEvent.Register<PasswordBox, RoutedEventArgs>(
             nameof(PasswordChanged),
             AvaloniaInteractivity.RoutingStrategies.Bubble);
 
@@ -52,7 +57,7 @@ public class PasswordBox : TextBox
     public PasswordBox()
     {
         _lockUpdatingContents = false;
-        _passwordHelper = new(this);
+        _passwordHelper = new();
     }
 
     /// <summary>Event fired from this text box when its inner content has been changed.</summary>
@@ -170,24 +175,26 @@ public class PasswordBox : TextBox
     /// <param name="parameter">Additional parameters.</param>
     protected override void OnTemplateButtonClick(string? parameter)
     {
-        Debug.WriteLine($"INFO: {typeof(PasswordBox)} button clicked with param: {parameter}", "CrissCross.Avalonia.UI.PasswordBox");
+        Debug.WriteLine(
+            $"INFO: {typeof(PasswordBox)} button clicked with param: {parameter}",
+            "CrissCross.Avalonia.UI.PasswordBox");
 
         switch (parameter)
         {
             case "reveal":
-                {
-                    IsPasswordRevealed = !IsPasswordRevealed;
-                    RevealPassword = IsPasswordRevealed;
-                    _ = Focus();
-                    CaretIndex = (Text ?? string.Empty).Length;
-                    break;
-                }
+            {
+                IsPasswordRevealed = !IsPasswordRevealed;
+                RevealPassword = IsPasswordRevealed;
+                _ = Focus();
+                CaretIndex = (Text ?? string.Empty).Length;
+                break;
+            }
 
             default:
-                {
-                    base.OnTemplateButtonClick(parameter);
-                    break;
-                }
+            {
+                base.OnTemplateButtonClick(parameter);
+                break;
+            }
         }
     }
 
@@ -238,11 +245,15 @@ public class PasswordBox : TextBox
     private void UpdateMaskedTextContents(bool isTriggeredByTextInput)
     {
         var caretIndex = CaretIndex;
-        var newPasswordValue = _passwordHelper.GetPassword();
+        var newPasswordValue = Password;
 
         if (isTriggeredByTextInput)
         {
-            newPasswordValue = _passwordHelper.GetNewPassword();
+            newPasswordValue = _passwordHelper.GetNewPassword(
+                Password,
+                Text ?? string.Empty,
+                SelectionStart,
+                PasswordChar);
         }
 
         _lockUpdatingContents = true;
@@ -256,8 +267,7 @@ public class PasswordBox : TextBox
     }
 
     /// <summary>Provides the PasswordHelper member.</summary>
-    /// <param name="passwordBox">The passwordBox value.</param>
-    private sealed class PasswordHelper(PasswordBox passwordBox)
+    private sealed class PasswordHelper
     {
         /// <summary>Provides the _currentText member.</summary>
         private string _currentText = string.Empty;
@@ -269,14 +279,16 @@ public class PasswordBox : TextBox
         private string _currentPassword = string.Empty;
 
         /// <summary>Provides the GetNewPassword member.</summary>
+        /// <param name="password">The current password.</param>
+        /// <param name="text">The current displayed text.</param>
+        /// <param name="selectionIndex">The current selection index.</param>
+        /// <param name="passwordChar">The masking character.</param>
         /// <returns>The result.</returns>
-        public string GetNewPassword()
+        public string GetNewPassword(string password, string text, int selectionIndex, char passwordChar)
         {
-            _currentPassword = GetPassword();
+            _currentPassword = password;
             _newPasswordValue = _currentPassword;
-            _currentText = passwordBox.Text ?? string.Empty;
-            var selectionIndex = passwordBox.SelectionStart;
-            var passwordChar = passwordBox.PasswordChar;
+            _currentText = text;
             var newCharacters = _currentText.Replace(passwordChar.ToString(), string.Empty);
             var isDeleted = false;
 
@@ -291,59 +303,53 @@ public class PasswordBox : TextBox
             switch (newCharacters.Length)
             {
                 case > 1:
-                    {
-                        var index = _currentText.IndexOf(newCharacters[0]);
+                {
+                    var index = _currentText.IndexOf(newCharacters[0]);
 
-                        _newPasswordValue =
-                            index > _newPasswordValue.Length - 1
-                                ? _newPasswordValue + newCharacters
-                                : _newPasswordValue.Insert(index, newCharacters);
-                        break;
-                    }
+                    _newPasswordValue =
+                        index > _newPasswordValue.Length - 1
+                            ? _newPasswordValue + newCharacters
+                            : _newPasswordValue.Insert(index, newCharacters);
+                    break;
+                }
 
                 case 1:
+                {
+                    for (var i = 0; i < _currentText.Length; i++)
                     {
-                        for (var i = 0; i < _currentText.Length; i++)
+                        if (_currentText[i] == passwordChar)
                         {
-                            if (_currentText[i] == passwordChar)
-                            {
-                                continue;
-                            }
-
-                            UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
-                            break;
+                            continue;
                         }
 
+                        UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
                         break;
                     }
+
+                    break;
+                }
 
                 case 0 when !isDeleted:
+                {
+                    // The input is a PasswordChar, which is to be inserted at the designated position.
+                    var insertIndex = selectionIndex - 1;
+                    if (insertIndex >= 0)
                     {
-                        // The input is a PasswordChar, which is to be inserted at the designated position.
-                        var insertIndex = selectionIndex - 1;
-                        if (insertIndex >= 0)
-                        {
-                            UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
-                        }
-
-                        break;
+                        UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
                     }
+
+                    break;
+                }
             }
 
             return _newPasswordValue;
         }
-
-        /// <summary>Provides the GetPassword member.</summary>
-        /// <returns>The result.</returns>
-        public string GetPassword() => passwordBox.Password ?? string.Empty;
 
         /// <summary>Provides the UpdatePasswordWithInputCharacter member.</summary>
         /// <param name="insertIndex">The insertIndex value.</param>
         /// <param name="insertValue">The insertvalue.</param>
         private void UpdatePasswordWithInputCharacter(int insertIndex, string insertValue)
         {
-            Debug.Assert(_currentText == (passwordBox.Text ?? string.Empty), "_currentText == passwordBox.Text");
-
             if (_currentText.Length == _newPasswordValue.Length)
             {
                 // If it's a direct character replacement, remove the existing one before inserting the new one.
@@ -359,9 +365,6 @@ public class PasswordBox : TextBox
         /// <returns>The result.</returns>
         private bool IsDeleteOption()
         {
-            Debug.Assert(_currentText == (passwordBox.Text ?? string.Empty), "_currentText == passwordBox.Text");
-            Debug.Assert(_currentPassword == (passwordBox.Password ?? string.Empty), "_currentPassword == passwordBox.Password");
-
             return _currentText.Length < _currentPassword.Length;
         }
     }

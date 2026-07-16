@@ -14,27 +14,31 @@ public class CheckBoxModern : global::Avalonia.Controls.CheckBox
     /// <summary>The box size property.</summary>
     public static readonly StyledProperty<double> BoxSizeProperty = AvaloniaProperty.Register<CheckBoxModern, double>(
         nameof(BoxSize),
-        40d);
+        40D);
 
     /// <summary>The check background property.</summary>
-    public static readonly StyledProperty<IBrush> CheckBackgroundProperty = AvaloniaProperty.Register<CheckBoxModern, IBrush>(
-        nameof(CheckBackground),
-        Brushes.White);
+    public static readonly StyledProperty<IBrush> CheckBackgroundProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        IBrush
+    >(nameof(CheckBackground), Brushes.White);
 
     /// <summary>The is checked background property.</summary>
-    public static readonly StyledProperty<IBrush> IsCheckedBackgroundProperty = AvaloniaProperty.Register<CheckBoxModern, IBrush>(
-        nameof(IsCheckedBackground),
-        Brushes.LightGray);
+    public static readonly StyledProperty<IBrush> IsCheckedBackgroundProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        IBrush
+    >(nameof(IsCheckedBackground), Brushes.LightGray);
 
     /// <summary>The checked symbol property.</summary>
-    public static readonly StyledProperty<Icons> CheckedSymbolProperty = AvaloniaProperty.Register<CheckBoxModern, Icons>(
-        nameof(CheckedSymbol),
-        Icons.Tick);
+    public static readonly StyledProperty<Icons> CheckedSymbolProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        Icons
+    >(nameof(CheckedSymbol), Icons.Tick);
 
     /// <summary>The disabled state property.</summary>
-    public static readonly StyledProperty<DisabledState> DisabledStateProperty = AvaloniaProperty.Register<CheckBoxModern, DisabledState>(
-        nameof(DisabledState),
-        DisabledState.Ignore);
+    public static readonly StyledProperty<DisabledState> DisabledStateProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        DisabledState
+    >(nameof(DisabledState), DisabledState.Ignore);
 
     /// <summary>The dock side property.</summary>
     public static readonly StyledProperty<Dock> DockSideProperty = AvaloniaProperty.Register<CheckBoxModern, Dock>(
@@ -42,9 +46,10 @@ public class CheckBoxModern : global::Avalonia.Controls.CheckBox
         Dock.Left);
 
     /// <summary>The RadioButton style property.</summary>
-    public static readonly StyledProperty<bool> RadioButtonStyleProperty = AvaloniaProperty.Register<CheckBoxModern, bool>(
-        nameof(RadioButtonStyle),
-        false);
+    public static readonly StyledProperty<bool> RadioButtonStyleProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        bool
+    >(nameof(RadioButtonStyle), false);
 
     /// <summary>The stroke property.</summary>
     public static readonly StyledProperty<IBrush> StrokeProperty = AvaloniaProperty.Register<CheckBoxModern, IBrush>(
@@ -52,14 +57,16 @@ public class CheckBoxModern : global::Avalonia.Controls.CheckBox
         Brushes.Black);
 
     /// <summary>The stroke thickness property.</summary>
-    public static readonly StyledProperty<double> StrokeThicknessProperty = AvaloniaProperty.Register<CheckBoxModern, double>(
-        nameof(StrokeThickness),
-        1d);
+    public static readonly StyledProperty<double> StrokeThicknessProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        double
+    >(nameof(StrokeThickness), 1D);
 
     /// <summary>The unchecked symbol property.</summary>
-    public static readonly StyledProperty<Icons> UncheckedSymbolProperty = AvaloniaProperty.Register<CheckBoxModern, Icons>(
-        nameof(UncheckedSymbol),
-        Icons.None);
+    public static readonly StyledProperty<Icons> UncheckedSymbolProperty = AvaloniaProperty.Register<
+        CheckBoxModern,
+        Icons
+    >(nameof(UncheckedSymbol), Icons.None);
 
     /// <summary>Gets or sets the size of the box.</summary>
     public double BoxSize

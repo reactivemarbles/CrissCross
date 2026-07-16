@@ -14,28 +14,50 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class DataFilterPanel : TemplatedControl
 {
     /// <summary>Property for <see cref="FilterState"/>.</summary>
-    public static readonly StyledProperty<DataFilterPanelState?> FilterStateProperty = AvaloniaProperty.Register<DataFilterPanel, DataFilterPanelState?>(nameof(FilterState));
+    public static readonly StyledProperty<DataFilterPanelState?> FilterStateProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        DataFilterPanelState?
+    >(nameof(FilterState));
 
     /// <summary>Property for <see cref="SearchText"/>.</summary>
-    public static readonly StyledProperty<string?> SearchTextProperty = AvaloniaProperty.Register<DataFilterPanel, string?>(nameof(SearchText));
+    public static readonly StyledProperty<string?> SearchTextProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        string?
+    >(nameof(SearchText));
 
     /// <summary>Property for <see cref="ResultCount"/>.</summary>
-    public static readonly StyledProperty<int?> ResultCountProperty = AvaloniaProperty.Register<DataFilterPanel, int?>(nameof(ResultCount));
+    public static readonly StyledProperty<int?> ResultCountProperty = AvaloniaProperty.Register<DataFilterPanel, int?>(
+        nameof(ResultCount));
 
     /// <summary>Property for <see cref="SubmittedQueryState"/>.</summary>
-    public static readonly StyledProperty<SearchQueryState?> SubmittedQueryStateProperty = AvaloniaProperty.Register<DataFilterPanel, SearchQueryState?>(nameof(SubmittedQueryState));
+    public static readonly StyledProperty<SearchQueryState?> SubmittedQueryStateProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        SearchQueryState?
+    >(nameof(SubmittedQueryState));
 
     /// <summary>Property for <see cref="ApplyFiltersCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ApplyFiltersCommandProperty = AvaloniaProperty.Register<DataFilterPanel, ICommand?>(nameof(ApplyFiltersCommand));
+    public static readonly StyledProperty<ICommand?> ApplyFiltersCommandProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        ICommand?
+    >(nameof(ApplyFiltersCommand));
 
     /// <summary>Property for <see cref="ClearFiltersCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ClearFiltersCommandProperty = AvaloniaProperty.Register<DataFilterPanel, ICommand?>(nameof(ClearFiltersCommand));
+    public static readonly StyledProperty<ICommand?> ClearFiltersCommandProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        ICommand?
+    >(nameof(ClearFiltersCommand));
 
     /// <summary>Property for <see cref="AddFilterCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> AddFilterCommandProperty = AvaloniaProperty.Register<DataFilterPanel, ICommand?>(nameof(AddFilterCommand));
+    public static readonly StyledProperty<ICommand?> AddFilterCommandProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        ICommand?
+    >(nameof(AddFilterCommand));
 
     /// <summary>Property for <see cref="RemoveFilterCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> RemoveFilterCommandProperty = AvaloniaProperty.Register<DataFilterPanel, ICommand?>(nameof(RemoveFilterCommand));
+    public static readonly StyledProperty<ICommand?> RemoveFilterCommandProperty = AvaloniaProperty.Register<
+        DataFilterPanel,
+        ICommand?
+    >(nameof(RemoveFilterCommand));
 
     /// <summary>Initializes a new instance of the <see cref="DataFilterPanel"/> class.</summary>
     public DataFilterPanel()
@@ -108,7 +130,9 @@ public class DataFilterPanel : TemplatedControl
 
     /// <summary>Creates a search query snapshot from the current filter state.</summary>
     /// <returns>The query state snapshot.</returns>
-    public SearchQueryState CreateQueryState() => FilterState?.ToSearchQueryState(SearchText, ResultCount) ?? new SearchQueryState(SearchText, submittedText: SearchText, resultCount: ResultCount);
+    public SearchQueryState CreateQueryState() =>
+        FilterState?.ToSearchQueryState(SearchText, ResultCount)
+        ?? new SearchQueryState(SearchText, submittedText: SearchText, resultCount: ResultCount);
 
     /// <summary>Applies the current filters and emits a query-state snapshot.</summary>
     public void ApplyFilters()

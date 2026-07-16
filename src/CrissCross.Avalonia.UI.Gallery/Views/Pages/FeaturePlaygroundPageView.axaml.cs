@@ -16,6 +16,7 @@ public partial class FeaturePlaygroundPageView : ReactiveUserControl<FeaturePlay
     public FeaturePlaygroundPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<FeaturePlaygroundPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<FeaturePlaygroundPageViewModel>());
     }
 }

@@ -26,7 +26,9 @@ internal abstract class GifBlock
 
         return blockId switch
         {
-            GifExtension.ExtensionIntroducer => await GifExtension.ReadAsync(stream, controlExtensions).ConfigureAwait(false),
+            GifExtension.ExtensionIntroducer => await GifExtension
+                .ReadAsync(stream, controlExtensions)
+                .ConfigureAwait(false),
             GifFrame.ImageSeparator => await GifFrame.ReadAsync(stream, controlExtensions).ConfigureAwait(false),
             GifTrailer.TrailerByte => await GifTrailer.ReadAsync().ConfigureAwait(false),
             _ => throw GifHelpers.UnknownBlockTypeException(blockId),

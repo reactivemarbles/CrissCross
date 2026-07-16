@@ -20,33 +20,36 @@ public class TimePicker : global::Avalonia.Controls.TimePicker
         TimeSpan.Zero);
 
     /// <summary>Property for <see cref="ClockIdentifier"/>.</summary>
-    public static new readonly StyledProperty<ClockIdentifier> ClockIdentifierProperty = AvaloniaProperty.Register<TimePicker, ClockIdentifier>(
-        nameof(ClockIdentifier),
-        ClockIdentifier.Clock24Hour);
+    public static new readonly StyledProperty<ClockIdentifier> ClockIdentifierProperty = AvaloniaProperty.Register<
+        TimePicker,
+        ClockIdentifier
+    >(nameof(ClockIdentifier), ClockIdentifier.Clock24Hour);
 
     /// <summary>Initializes a new instance of the <see cref="TimePicker"/> class.</summary>
     public TimePicker()
     {
         // Sync Time property with SelectedTime
-        _ = this.GetObservable(SelectedTimeProperty).Subscribe(selectedTime =>
-        {
-            if (!selectedTime.HasValue)
+        _ = this.GetObservable(SelectedTimeProperty)
+            .Subscribe(selectedTime =>
             {
-                return;
-            }
+                if (!selectedTime.HasValue)
+                {
+                    return;
+                }
 
-            Time = selectedTime.Value;
-        });
+                Time = selectedTime.Value;
+            });
 
-        _ = this.GetObservable(TimeProperty).Subscribe(time =>
-        {
-            if (SelectedTime == time)
+        _ = this.GetObservable(TimeProperty)
+            .Subscribe(time =>
             {
-                return;
-            }
+                if (SelectedTime == time)
+                {
+                    return;
+                }
 
-            SelectedTime = time;
-        });
+                SelectedTime = time;
+            });
     }
 
     /// <summary>Gets or sets the content for the control's header.</summary>

@@ -55,8 +55,7 @@ public class AllControlsViewModel : RxObject
     {
         get => field;
         set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-= string.Empty;
+    } = string.Empty;
 
     /// <summary>Gets the collection view over all controls applying the current filter.</summary>
     public ICollectionView FilteredControls { get; }
@@ -114,21 +113,150 @@ public class AllControlsViewModel : RxObject
             return;
         }
 
-        _controls.Add(new ControlItem { Name = "AppBarButton", Icon = "/Assets/ControlImages/AppBarButton.png", Command = AppBarButtonCommand, Description = "Circular command buttons with embedded icons and glyphs." });
-        _controls.Add(new ControlItem { Name = "BBCodeBlock", Icon = "/Assets/ControlImages/RichTextBlock.png", Command = BBCodeBlockCommand, Description = "Theme-aware BBCode reference and extension rendering." });
-        _controls.Add(new ControlItem { Name = "Buttons", Icon = "/Assets/ControlImages/Button.png", Command = ButtonsCommand, Description = "Push buttons, repeat buttons and styles." });
-        _controls.Add(new ControlItem { Name = "CheckBox", Icon = "/Assets/ControlImages/CheckBox.png", Command = CheckBoxCommand, Description = "Standard and tri-state check boxes." });
-        _controls.Add(new ControlItem { Name = "ComboBox", Icon = "/Assets/ControlImages/ComboBox.png", Command = ComboBoxCommand, Description = "ComboBox / AutoSuggest scenarios." });
-        _controls.Add(new ControlItem { Name = "DatePicker", Icon = "/Assets/ControlImages/DatePicker.png", Command = DatePickerCommand, Description = "Date / calendar pickers." });
-        _controls.Add(new ControlItem { Name = "Image", Icon = "/Assets/ControlImages/Image.png", Command = ImageCommand, Description = "Static, animated and icon imagery." });
-        _controls.Add(new ControlItem { Name = "Numeric", Icon = "/Assets/ControlImages/NumberBox.png", Command = NumericPushButtonCommand, Description = "Numeric input controls (pads / number box)." });
-        _controls.Add(new ControlItem { Name = "PasswordBox", Icon = "/Assets/ControlImages/PasswordBox.png", Command = PasswordBoxCommand, Description = "Password entry field." });
-        _controls.Add(new ControlItem { Name = "RadioButton", Icon = "/Assets/ControlImages/RadioButton.png", Command = RadioButtonCommand, Description = "Grouped radio button selection." });
-        _controls.Add(new ControlItem { Name = "Slider", Icon = "/Assets/ControlImages/Slider.png", Command = SliderCommand, Description = "Slider, progress and related indicators." });
-        _controls.Add(new ControlItem { Name = "TextBlock", Icon = "/Assets/ControlImages/TextBlock.png", Command = TextBlockCommand, Description = "Static text, formatting examples." });
-        _controls.Add(new ControlItem { Name = "TextBox", Icon = "/Assets/ControlImages/TextBox.png", Command = TextBoxCommand, Description = "Rich text, multi-line and validation." });
-        _controls.Add(new ControlItem { Name = "ToggleButton", Icon = "/Assets/ControlImages/ToggleButton.png", Command = ToggleButtonCommand, Description = "Toggle / switch states." });
-        _controls.Add(new ControlItem { Name = "ColorPicker", Icon = "/Assets/ControlImages/ColorPicker.png", Command = ColorPickerCommand, Description = "Color selection variants." });
+        PopulateCommandControls();
+        PopulateInputControls();
+        PopulateSelectionControls();
+        PopulateTextControls();
+    }
+
+    /// <summary>Adds command-oriented controls to the gallery.</summary>
+    private void PopulateCommandControls()
+    {
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "AppBarButton",
+                Icon = "/Assets/ControlImages/AppBarButton.png",
+                Command = AppBarButtonCommand,
+                Description = "Circular command buttons with embedded icons and glyphs.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "BBCodeBlock",
+                Icon = "/Assets/ControlImages/RichTextBlock.png",
+                Command = BBCodeBlockCommand,
+                Description = "Theme-aware BBCode reference and extension rendering.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "Buttons",
+                Icon = "/Assets/ControlImages/Button.png",
+                Command = ButtonsCommand,
+                Description = "Push buttons, repeat buttons and styles.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "CheckBox",
+                Icon = "/Assets/ControlImages/CheckBox.png",
+                Command = CheckBoxCommand,
+                Description = "Standard and tri-state check boxes.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "ComboBox",
+                Icon = "/Assets/ControlImages/ComboBox.png",
+                Command = ComboBoxCommand,
+                Description = "ComboBox / AutoSuggest scenarios.",
+            });
+    }
+
+    /// <summary>Adds input and media controls to the gallery.</summary>
+    private void PopulateInputControls()
+    {
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "DatePicker",
+                Icon = "/Assets/ControlImages/DatePicker.png",
+                Command = DatePickerCommand,
+                Description = "Date / calendar pickers.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "Image",
+                Icon = "/Assets/ControlImages/Image.png",
+                Command = ImageCommand,
+                Description = "Static, animated and icon imagery.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "Numeric",
+                Icon = "/Assets/ControlImages/NumberBox.png",
+                Command = NumericPushButtonCommand,
+                Description = "Numeric input controls (pads / number box).",
+            });
+    }
+
+    /// <summary>Adds selection controls to the gallery.</summary>
+    private void PopulateSelectionControls()
+    {
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "PasswordBox",
+                Icon = "/Assets/ControlImages/PasswordBox.png",
+                Command = PasswordBoxCommand,
+                Description = "Password entry field.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "RadioButton",
+                Icon = "/Assets/ControlImages/RadioButton.png",
+                Command = RadioButtonCommand,
+                Description = "Grouped radio button selection.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "Slider",
+                Icon = "/Assets/ControlImages/Slider.png",
+                Command = SliderCommand,
+                Description = "Slider, progress and related indicators.",
+            });
+    }
+
+    /// <summary>Adds text and color controls to the gallery.</summary>
+    private void PopulateTextControls()
+    {
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "TextBlock",
+                Icon = "/Assets/ControlImages/TextBlock.png",
+                Command = TextBlockCommand,
+                Description = "Static text, formatting examples.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "TextBox",
+                Icon = "/Assets/ControlImages/TextBox.png",
+                Command = TextBoxCommand,
+                Description = "Rich text, multi-line and validation.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "ToggleButton",
+                Icon = "/Assets/ControlImages/ToggleButton.png",
+                Command = ToggleButtonCommand,
+                Description = "Toggle / switch states.",
+            });
+        _controls.Add(
+            new ControlItem
+            {
+                Name = "ColorPicker",
+                Icon = "/Assets/ControlImages/ColorPicker.png",
+                Command = ColorPickerCommand,
+                Description = "Color selection variants.",
+            });
     }
 
     /// <summary>Filters a control item by the current search text.</summary>
@@ -141,52 +269,67 @@ public class AllControlsViewModel : RxObject
             return false;
         }
 
-        return string.IsNullOrWhiteSpace(FilterText) ? true : item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
-               (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false);
+        return string.IsNullOrWhiteSpace(FilterText)
+            ? true
+            : item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
+                || (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false);
     }
 
     /// <summary>Navigates to the app bar button demo.</summary>
-    private void AppBarButton() => MainWindow.Navigation?.NavigateTo<AppBarButtonViewModel>(breadcrumbItemContent: "AppBarButton");
+    private void AppBarButton() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<AppBarButtonViewModel>(), "AppBarButton");
 
     /// <summary>Navigates to the BBCode block demo.</summary>
-    private void BBCodeBlock() => MainWindow.Navigation?.NavigateTo<BBCodeBlockViewModel>(breadcrumbItemContent: "BBCodeBlock");
+    private void BBCodeBlock() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<BBCodeBlockViewModel>(), "BBCodeBlock");
 
     /// <summary>Navigates to the buttons demo.</summary>
-    private void Buttons() => MainWindow.Navigation?.NavigateTo<ButtonsViewModel>(breadcrumbItemContent: "Buttons");
+    private void Buttons() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<ButtonsViewModel>(), "Buttons");
 
     /// <summary>Navigates to the check box demo.</summary>
-    private void CheckBox() => MainWindow.Navigation?.NavigateTo<CheckBoxViewModel>(breadcrumbItemContent: "CheckBox");
+    private void CheckBox() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<CheckBoxViewModel>(), "CheckBox");
 
     /// <summary>Navigates to the combo box demo.</summary>
-    private void ComboBox() => MainWindow.Navigation?.NavigateTo<ComboBoxViewModel>(breadcrumbItemContent: "ComboBox");
+    private void ComboBox() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<ComboBoxViewModel>(), "ComboBox");
 
     /// <summary>Navigates to the date picker demo.</summary>
-    private void DatePicker() => MainWindow.Navigation?.NavigateTo<DatePickerViewModel>(breadcrumbItemContent: "DatePicker");
+    private void DatePicker() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<DatePickerViewModel>(), "DatePicker");
 
     /// <summary>Navigates to the image demo.</summary>
-    private void Image() => MainWindow.Navigation?.NavigateTo<ImageViewModel>(breadcrumbItemContent: "Image");
+    private void Image() => MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<ImageViewModel>(), "Image");
 
     /// <summary>Navigates to the numeric push button demo.</summary>
-    private void NumericPushButton() => MainWindow.Navigation?.NavigateTo<NumericPushButtonViewModel>(breadcrumbItemContent: "NumericPushButton");
+    private void NumericPushButton() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<NumericPushButtonViewModel>(), "NumericPushButton");
 
     /// <summary>Navigates to the password box demo.</summary>
-    private void PasswordBox() => MainWindow.Navigation?.NavigateTo<PasswordBoxViewModel>(breadcrumbItemContent: "PasswordBox");
+    private void PasswordBox() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<PasswordBoxViewModel>(), "PasswordBox");
 
     /// <summary>Navigates to the radio button demo.</summary>
-    private void RadioButton() => MainWindow.Navigation?.NavigateTo<RadioButtonViewModel>(breadcrumbItemContent: "RadioButton");
+    private void RadioButton() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<RadioButtonViewModel>(), "RadioButton");
 
     /// <summary>Navigates to the slider demo.</summary>
-    private void Slider() => MainWindow.Navigation?.NavigateTo<SliderViewModel>(breadcrumbItemContent: "Slider");
+    private void Slider() => MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<SliderViewModel>(), "Slider");
 
     /// <summary>Navigates to the text block demo.</summary>
-    private void TextBlock() => MainWindow.Navigation?.NavigateTo<TextBlockViewModel>(breadcrumbItemContent: "TextBlock");
+    private void TextBlock() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<TextBlockViewModel>(), "TextBlock");
 
     /// <summary>Navigates to the text box demo.</summary>
-    private void TextBox() => MainWindow.Navigation?.NavigateTo<TextBoxViewModel>(breadcrumbItemContent: "TextBox");
+    private void TextBox() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<TextBoxViewModel>(), "TextBox");
 
     /// <summary>Navigates to the toggle button demo.</summary>
-    private void ToggleButton() => MainWindow.Navigation?.NavigateTo<ToggleButtonViewModel>(breadcrumbItemContent: "ToggleButton");
+    private void ToggleButton() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<ToggleButtonViewModel>(), "ToggleButton");
 
     /// <summary>Navigates to the color picker demo.</summary>
-    private void ColorPicker() => MainWindow.Navigation?.NavigateTo<ColorPickersViewModel>(breadcrumbItemContent: "ColorPicker");
+    private void ColorPicker() =>
+        MainWindow.Navigation?.NavigateTo(new NavigationKeyRequest<ColorPickersViewModel>(), "ColorPicker");
 }

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
     <Nullable>enable</Nullable>
@@ -30,5 +29,4 @@
   <ItemGroup>
     <Resource Include="Images\*.png" />
   </ItemGroup>
-
 </Project>

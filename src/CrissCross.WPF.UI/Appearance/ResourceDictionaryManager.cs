@@ -42,7 +42,8 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
                 return dictionary;
             }
 
-            var mergedDictionary = dictionary.MergedDictionaries.FirstOrDefault(child => IsMatchingDictionary(child, resourceLookup));
+            var mergedDictionary = dictionary.MergedDictionaries.FirstOrDefault(child =>
+                IsMatchingDictionary(child, resourceLookup));
             if (mergedDictionary is not null)
             {
                 return mergedDictionary;
@@ -55,13 +56,11 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
     /// <summary>Shows whether the application contains the <see cref="ResourceDictionary"/>.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <param name="newResourceUri">A valid <see cref="Uri"/> for the replaced resource.</param>
-    /// <returns><see langword="true"/> if the dictionary <see cref="Uri"/> was updated. <see langword="false"/> otherwise.</returns>
+    /// <returns><see langword="true"/> if the dictionary <see cref="Uri"/> was updated. <see langword="false"/>
+    /// otherwise.</returns>
     public bool UpdateDictionary(string resourceLookup, Uri? newResourceUri)
     {
-        var applicationDictionaries = UiApplication
-            .Current
-            .Resources
-            .MergedDictionaries;
+        var applicationDictionaries = UiApplication.Current.Resources.MergedDictionaries;
 
         if (applicationDictionaries.Count == 0 || newResourceUri is null)
         {
@@ -75,7 +74,8 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
 
     /// <summary>Provides the GetApplicationMergedDictionaries member.</summary>
     /// <returns>The result.</returns>
-    private static Collection<ResourceDictionary> GetApplicationMergedDictionaries() => UiApplication.Current.Resources.MergedDictionaries;
+    private static Collection<ResourceDictionary> GetApplicationMergedDictionaries() =>
+        UiApplication.Current.Resources.MergedDictionaries;
 
     /// <summary>Determines whether the dictionary source matches the lookup.</summary>
     /// <param name="dictionary">The resource dictionary.</param>
@@ -92,7 +92,10 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
     /// <param name="resourceLookup">The resource lookup text.</param>
     /// <param name="newResourceUri">The replacement resource URI.</param>
     /// <returns><c>true</c> if a dictionary was updated; otherwise, <c>false</c>.</returns>
-    private bool TryUpdateDictionary(Collection<ResourceDictionary> dictionaries, string resourceLookup, Uri newResourceUri)
+    private bool TryUpdateDictionary(
+        Collection<ResourceDictionary> dictionaries,
+        string resourceLookup,
+        Uri newResourceUri)
     {
         for (var i = 0; i < dictionaries.Count; i++)
         {

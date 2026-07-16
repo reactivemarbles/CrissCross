@@ -31,8 +31,7 @@ public static class SystemThemeManager
         ("themea.theme", SystemTheme.Glow),
         ("themeb.theme", SystemTheme.CapturedMotion),
         ("themec.theme", SystemTheme.Sunrise),
-        ("themed.theme", SystemTheme.Flow)
-    ];
+        ("themed.theme", SystemTheme.Flow),];
 
     /// <summary>Stores the _cachedTheme value.</summary>
     private static SystemTheme _cachedTheme = SystemTheme.Unknown;
@@ -43,7 +42,8 @@ public static class SystemThemeManager
     /// <summary>Gets a value indicating whether the system is currently using the high contrast theme.</summary>
     public static bool HighContrast => SystemParameters.HighContrast;
 
-    /// <summary>Returns the Windows theme retrieved from the registry. If it has not been cached before, invokes the <see cref="UpdateSystemThemeCache"/> and then returns the currently obtained theme.</summary>
+    /// <summary>Returns the Windows theme retrieved from the registry. If it has not been cached before, invokes the
+    /// <see cref="UpdateSystemThemeCache"/> and then returns the currently obtained theme.</summary>
     /// <returns>Currently cached Windows theme.</returns>
     public static SystemTheme GetCachedSystemTheme()
     {
@@ -65,11 +65,11 @@ public static class SystemThemeManager
     private static SystemTheme GetCurrentSystemTheme()
     {
         var currentTheme =
-            (Registry.GetValue(
-                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes",
-                "CurrentTheme",
-                "aero.theme") as string)
-            ?? string.Empty;
+            (
+                Registry.GetValue(
+                    "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes",
+                    "CurrentTheme",
+                    "aero.theme") as string) ?? string.Empty;
 
         if (!string.IsNullOrEmpty(currentTheme))
         {

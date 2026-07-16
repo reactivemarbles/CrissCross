@@ -14,15 +14,16 @@ public static class WindowBackdrop
     /// <returns>
     ///   <see langword="true" /> if the selected backdrop type is supported on current platform.
     /// </returns>
-    public static bool IsSupported(WindowBackdropType backdropType) => backdropType switch
-    {
-        WindowBackdropType.Auto => Win32.Utilities.IsOSWindows11Insider1OrNewer,
-        WindowBackdropType.Tabbed => Win32.Utilities.IsOSWindows11Insider1OrNewer,
-        WindowBackdropType.Mica => Win32.Utilities.IsOSWindows11OrNewer,
-        WindowBackdropType.Acrylic => Win32.Utilities.IsOSWindows7OrNewer,
-        WindowBackdropType.None => true,
-        _ => false
-    };
+    public static bool IsSupported(WindowBackdropType backdropType) =>
+        backdropType switch
+        {
+            WindowBackdropType.Auto => Win32.Utilities.IsOSWindows11Insider1OrNewer,
+            WindowBackdropType.Tabbed => Win32.Utilities.IsOSWindows11Insider1OrNewer,
+            WindowBackdropType.Mica => Win32.Utilities.IsOSWindows11OrNewer,
+            WindowBackdropType.Acrylic => Win32.Utilities.IsOSWindows7OrNewer,
+            WindowBackdropType.None => true,
+            _ => false,
+        };
 
     /// <summary>Applies backdrop effect to the selected <see cref="System.Windows.Window" />.</summary>
     /// <param name="window">Selected window.</param>
@@ -218,8 +219,9 @@ public static class WindowBackdrop
         }
 
         // NOTE: https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
-        // Specifying DWMWA_COLOR_DEFAULT (value 0xFFFFFFFF) for the color will reset the window back to using the system's default behavior for the caption color.
-        var titlebarPvAttribute = 0xFFFFFFFEu;
+        // Specifying DWMWA_COLOR_DEFAULT (value 0xFFFFFFFF) for the color will reset the window back to using the
+        // system's default behavior for the caption color.
+        var titlebarPvAttribute = 0xFFFFFFFEU;
 
         _ = Dwmapi.DwmSetWindowAttribute(
             windowSource.Handle,
@@ -317,16 +319,17 @@ public static class WindowBackdrop
 
     /// <summary>Provides the GetFallbackBackgroundBrush member.</summary>
     /// <returns>The result.</returns>
-    private static SolidColorBrush GetFallbackBackgroundBrush() => ApplicationThemeManager.GetAppTheme() switch
-    {
-        ApplicationTheme.HighContrast => ApplicationThemeManager.GetSystemTheme() switch
+    private static SolidColorBrush GetFallbackBackgroundBrush() =>
+        ApplicationThemeManager.GetAppTheme() switch
         {
-            SystemTheme.HC1 => new SolidColorBrush(Color.FromArgb(0xFF, 0x2D, 0x32, 0x36)),
-            SystemTheme.HC2 => new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00)),
-            SystemTheme.HCBlack => new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20)),
-            _ => new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFA, 0xEF)),
-        },
-        ApplicationTheme.Dark => new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20)),
-        _ => new SolidColorBrush(Color.FromArgb(0xFF, 0xFA, 0xFA, 0xFA))
-    };
+            ApplicationTheme.HighContrast => ApplicationThemeManager.GetSystemTheme() switch
+            {
+                SystemTheme.HC1 => new SolidColorBrush(Color.FromArgb(0xFF, 0x2D, 0x32, 0x36)),
+                SystemTheme.HC2 => new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00)),
+                SystemTheme.HCBlack => new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20)),
+                _ => new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFA, 0xEF)),
+            },
+            ApplicationTheme.Dark => new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20)),
+            _ => new SolidColorBrush(Color.FromArgb(0xFF, 0xFA, 0xFA, 0xFA)),
+        };
 }

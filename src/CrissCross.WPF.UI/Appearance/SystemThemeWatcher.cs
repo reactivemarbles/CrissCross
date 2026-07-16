@@ -8,7 +8,8 @@ namespace CrissCross.WPF.UI.Appearance;
 
 /// <summary>
 /// Automatically updates the application background if the system theme or color is changed.
-/// <para><see cref="SystemThemeWatcher"/> settings work globally and cannot be changed for each <see cref="Window"/>.</para>
+/// <para><see cref="SystemThemeWatcher"/> settings work globally and cannot be changed for each <see
+/// cref="Window"/>.</para>
 /// </summary>
 /// <example>
 /// <code lang="csharp">
@@ -23,19 +24,38 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class SystemThemeWatcher
 {
+    /// <summary>The error reported when a native window handle is unavailable.</summary>
+    private const string WindowHandleUnavailableMessage = "Could not get window handle.";
+
     /// <summary>Stores the _observedWindows value.</summary>
     private static readonly ICollection<ObservedWindow> _observedWindows = [];
 
-    /// <summary>Watches the <see cref="Window"/> and applies the background effect and theme according to the system theme.</summary>
+    /// <summary>Watches the Window and applies the background effect and theme according to the system theme.</summary>
+    /// <param name="window">The window that will be updated.</param>
+    public static void Watch(Window? window) => Watch(window, WindowBackdropType.Mica, true, false);
+
+    /// <summary>Watches the window for system theme changes.</summary>
+    /// <param name="window">The window that will be updated.</param>
+    /// <param name="backdrop">Background effect to apply when changing the theme.</param>
+    public static void Watch(Window? window, WindowBackdropType backdrop) => Watch(window, backdrop, true, false);
+
+    /// <summary>Watches the window for system theme changes.</summary>
+    /// <param name="window">The window that will be updated.</param>
+    /// <param name="backdrop">Background effect to apply when changing the theme.</param>
+    /// <param name="updateAccents">Whether accents are updated.</param>
+    public static void Watch(Window? window, WindowBackdropType backdrop, bool updateAccents) =>
+        Watch(window, backdrop, updateAccents, false);
+
+    /// <summary>Watches the window for system theme changes.</summary>
     /// <param name="window">The window that will be updated.</param>
     /// <param name="backdrop">Background effect to be applied when changing the theme.</param>
-    /// <param name="updateAccents">If <see langword="true"/>, the accents will be updated when the change is detected.</param>
-    /// <param name="forceBackgroundReplace">If <see langword="true"/>, bypasses the app's theme compatibility check and tries to force the change of a background effect.</param>
+    /// <param name="updateAccents">Whether accents are updated.</param>
+    /// <param name="forceBackgroundReplace">Whether to force replacement of the background effect.</param>
     public static void Watch(
         Window? window,
-        WindowBackdropType backdrop = WindowBackdropType.Mica,
-        bool updateAccents = true,
-        bool forceBackgroundReplace = false)
+        WindowBackdropType backdrop,
+        bool updateAccents,
+        bool forceBackgroundReplace)
     {
         if (window is null)
         {
@@ -86,7 +106,7 @@ public static class SystemThemeWatcher
         var windowHandle = new WindowInteropHelper(window).Handle;
         if (windowHandle == IntPtr.Zero)
         {
-            throw new InvalidOperationException("Could not get window handle.");
+            throw new InvalidOperationException(WindowHandleUnavailableMessage);
         }
 
         var observedWindow = _observedWindows.FirstOrDefault(x => x.Handle == windowHandle);
@@ -115,7 +135,7 @@ public static class SystemThemeWatcher
         var windowHandle = new WindowInteropHelper(window).Handle;
         if (windowHandle == IntPtr.Zero)
         {
-            throw new InvalidOperationException("Could not get window handle.");
+            throw new InvalidOperationException(WindowHandleUnavailableMessage);
         }
 
         ObserveLoadedHandle(new ObservedWindow(windowHandle, backdrop, forceBackgroundReplace, updateAccents));
@@ -131,16 +151,16 @@ public static class SystemThemeWatcher
         WindowBackdropType backdrop,
         bool updateAccents,
         bool forceBackgroundReplace) =>
-            window.Loaded += (_, _) =>
+        window.Loaded += (_, _) =>
+        {
+            var windowHandle = new WindowInteropHelper(window).Handle;
+            if (windowHandle == IntPtr.Zero)
             {
-                var windowHandle = new WindowInteropHelper(window).Handle;
-                if (windowHandle == IntPtr.Zero)
-                {
-                    throw new InvalidOperationException("Could not get window handle.");
-                }
+                throw new InvalidOperationException(WindowHandleUnavailableMessage);
+            }
 
-                ObserveLoadedHandle(new ObservedWindow(windowHandle, backdrop, forceBackgroundReplace, updateAccents));
-            };
+            ObserveLoadedHandle(new ObservedWindow(windowHandle, backdrop, forceBackgroundReplace, updateAccents));
+        };
 
     /// <summary>Provides the ObserveLoadedHandle member.</summary>
     /// <param name="observedWindow">The observedWindow value.</param>
@@ -178,7 +198,12 @@ public static class SystemThemeWatcher
     /// <param name="longParameter">The long parameter value.</param>
     /// <param name="handled">The handled value.</param>
     /// <returns>The result.</returns>
-    private static IntPtr WndProc(IntPtr windowHandle, int msg, IntPtr wordParameter, IntPtr longParameter, ref bool handled)
+    private static IntPtr WndProc(
+        IntPtr windowHandle,
+        int msg,
+        IntPtr wordParameter,
+        IntPtr longParameter,
+        ref bool handled)
     {
         _ = wordParameter;
         _ = longParameter;
@@ -212,7 +237,8 @@ public static class SystemThemeWatcher
 
 #if DEBUG
         System.Diagnostics.Debug.WriteLine(
-            $"INFO | {observedWindow.Handle} ({observedWindow.RootVisual?.Title}) triggered the application theme change to {ApplicationThemeManager.GetSystemTheme()}.",
+            $"INFO | {observedWindow.Handle} ({observedWindow.RootVisual?.Title}) triggered "
+                + $"the application theme change to {ApplicationThemeManager.GetSystemTheme()}.",
             nameof(SystemThemeWatcher));
 #endif
 

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
     <UseWpf>true</UseWpf>
@@ -17,5 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CrissCross\CrissCross.csproj" />
   </ItemGroup>
-
 </Project>

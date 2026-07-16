@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extended <see cref="System.Windows.Controls.TreeViewItem"/> with <see cref="SymbolRegular"/> properties.</summary>
+/// <summary>Extended TreeViewItem with SymbolRegular properties.</summary>
 public class TreeViewItem : System.Windows.Controls.TreeViewItem
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>

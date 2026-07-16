@@ -74,11 +74,7 @@ public static class TaskBarProgress
     /// <param name="current">Current value to display.</param>
     /// <param name="total">Total number for division.</param>
     /// <returns>A bool.</returns>
-    public static bool SetValue(
-        Window? window,
-        TaskBarProgressState taskBarProgressState,
-        int current,
-        int total)
+    public static bool SetValue(Window? window, TaskBarProgressState taskBarProgressState, int current, int total)
     {
         if (window is null)
         {
@@ -90,7 +86,8 @@ public static class TaskBarProgress
             return SetValue(new WindowInteropHelper(window).Handle, taskBarProgressState, current, total);
         }
 
-        window.Loaded += (_, _) => _ = SetValue(new WindowInteropHelper(window).Handle, taskBarProgressState, current, total);
+        window.Loaded += (_, _) =>
+            _ = SetValue(new WindowInteropHelper(window).Handle, taskBarProgressState, current, total);
 
         return false;
     }
@@ -122,11 +119,7 @@ public static class TaskBarProgress
     /// <param name="current">Current value to display.</param>
     /// <param name="total">Total number for division.</param>
     /// <returns>A bool.</returns>
-    public static bool SetValue(
-        IntPtr windowHandle,
-        TaskBarProgressState taskBarProgressState,
-        int current,
-        int total)
+    public static bool SetValue(IntPtr windowHandle, TaskBarProgressState taskBarProgressState, int current, int total)
     {
         if (!IsSupported())
         {

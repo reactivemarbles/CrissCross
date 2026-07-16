@@ -9,83 +9,143 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Check Box Modern.</summary>
 /// <seealso cref="Control"/>
-public class CheckBoxModern : Control, ICommandSource, IDisposable
+public partial class CheckBoxModern : Control, ICommandSource, IDisposable
 {
     /// <summary>The automatic text font size property.</summary>
-    public static readonly DependencyProperty AutoTextFontSizeProperty =
-        DependencyProperty.Register(nameof(AutoTextFontSize), typeof(bool), typeof(CheckBoxModern), new PropertyMetadata(false, UpdateFontSize));
+    public static readonly DependencyProperty AutoTextFontSizeProperty = DependencyProperty.Register(
+        nameof(AutoTextFontSize),
+        typeof(bool),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(false, UpdateFontSize));
 
     /// <summary>The box size property.</summary>
-    public static readonly DependencyProperty BoxSizeProperty =
-        DependencyProperty.Register(nameof(BoxSize), typeof(double), typeof(CheckBoxModern), new PropertyMetadata(40d, UpdateBoxSize));
+    public static readonly DependencyProperty BoxSizeProperty = DependencyProperty.Register(
+        nameof(BoxSize),
+        typeof(double),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(40D, UpdateBoxSize));
 
     /// <summary>The check background property.</summary>
-    public static readonly DependencyProperty CheckBackgroundProperty =
-        DependencyProperty.Register(nameof(CheckBackground), typeof(Brush), typeof(CheckBoxModern), new PropertyMetadata(Brushes.White));
+    public static readonly DependencyProperty CheckBackgroundProperty = DependencyProperty.Register(
+        nameof(CheckBackground),
+        typeof(Brush),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Brushes.White));
 
     /// <summary>The is checked background property.</summary>
-    public static readonly DependencyProperty IsCheckedBackgroundProperty =
-        DependencyProperty.Register(nameof(IsCheckedBackground), typeof(Brush), typeof(CheckBoxModern), new PropertyMetadata(Brushes.LightGray));
+    public static readonly DependencyProperty IsCheckedBackgroundProperty = DependencyProperty.Register(
+        nameof(IsCheckedBackground),
+        typeof(Brush),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Brushes.LightGray));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty CheckBoxTickFontSizeProperty =
-        DependencyProperty.Register(nameof(CheckBoxTickFontSize), typeof(double), typeof(CheckBoxModern), new UIPropertyMetadata(40d));
+    public static readonly DependencyProperty CheckBoxTickFontSizeProperty = DependencyProperty.Register(
+        nameof(CheckBoxTickFontSize),
+        typeof(double),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(40D));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty CheckedProperty =
-        DependencyProperty.Register(nameof(Checked), typeof(bool), typeof(CheckBoxModern), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, CheckedPropertyChanged));
+    public static readonly DependencyProperty CheckedProperty = DependencyProperty.Register(
+        nameof(Checked),
+        typeof(bool),
+        typeof(CheckBoxModern),
+        new FrameworkPropertyMetadata(
+            false,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            CheckedPropertyChanged));
 
     /// <summary>The tick symbol property.</summary>
-    public static readonly DependencyProperty CheckedSymbolProperty =
-        DependencyProperty.Register(nameof(CheckedSymbol), typeof(Icons), typeof(CheckBoxModern), new PropertyMetadata(Icons.Tick, UpdateTickSymbol));
+    public static readonly DependencyProperty CheckedSymbolProperty = DependencyProperty.Register(
+        nameof(CheckedSymbol),
+        typeof(Icons),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Icons.Tick, UpdateTickSymbol));
 
     /// <summary>The command parameter property.</summary>
-    public static readonly DependencyProperty CommandParameterProperty =
-        DependencyProperty.Register(nameof(CommandParameter), typeof(object), typeof(CheckBoxModern), new UIPropertyMetadata(null));
+    public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
+        nameof(CommandParameter),
+        typeof(object),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(null));
 
     /// <summary>The command property.</summary>
-    public static readonly DependencyProperty CommandProperty =
-                DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(CheckBoxModern), new UIPropertyMetadata(null));
+    public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+        nameof(Command),
+        typeof(ICommand),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(null));
 
     /// <summary>The command target property.</summary>
-    public static readonly DependencyProperty CommandTargetProperty =
-        DependencyProperty.Register(nameof(CommandTarget), typeof(IInputElement), typeof(CheckBoxModern), new UIPropertyMetadata(null));
+    public static readonly DependencyProperty CommandTargetProperty = DependencyProperty.Register(
+        nameof(CommandTarget),
+        typeof(IInputElement),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(null));
 
     /// <summary>The disabled state property.</summary>
-    public static readonly DependencyProperty DisabledStateProperty =
-        DependencyProperty.Register(nameof(DisabledState), typeof(DisabledState), typeof(CheckBoxModern), new PropertyMetadata(DisabledState.Ignore));
+    public static readonly DependencyProperty DisabledStateProperty = DependencyProperty.Register(
+        nameof(DisabledState),
+        typeof(DisabledState),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(DisabledState.Ignore));
 
     /// <summary>The dock side property.</summary>
-    public static readonly DependencyProperty DockSideProperty =
-        DependencyProperty.Register(nameof(DockSide), typeof(Dock), typeof(CheckBoxModern), new PropertyMetadata(Dock.Left));
+    public static readonly DependencyProperty DockSideProperty = DependencyProperty.Register(
+        nameof(DockSide),
+        typeof(Dock),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Dock.Left));
 
     /// <summary>The RadioButton style property.</summary>
-    public static readonly DependencyProperty RadioButtonStyleProperty =
-        DependencyProperty.Register(nameof(RadioButtonStyle), typeof(bool), typeof(CheckBoxModern), new PropertyMetadata(false));
+    public static readonly DependencyProperty RadioButtonStyleProperty = DependencyProperty.Register(
+        nameof(RadioButtonStyle),
+        typeof(bool),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(false));
 
     /// <summary>The stroke property.</summary>
-    public static readonly DependencyProperty StrokeProperty =
-        DependencyProperty.Register(nameof(Stroke), typeof(Brush), typeof(CheckBoxModern), new UIPropertyMetadata(Brushes.Black));
+    public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
+        nameof(Stroke),
+        typeof(Brush),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(Brushes.Black));
 
     /// <summary>The stroke thickness property.</summary>
-    public static readonly DependencyProperty StrokeThicknessProperty =
-        DependencyProperty.Register(nameof(StrokeThickness), typeof(double), typeof(CheckBoxModern), new UIPropertyMetadata(1d));
+    public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register(
+        nameof(StrokeThickness),
+        typeof(double),
+        typeof(CheckBoxModern),
+        new UIPropertyMetadata(1D));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty TextProperty =
-        DependencyProperty.Register(nameof(Text), typeof(string), typeof(CheckBoxModern), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+        nameof(Text),
+        typeof(string),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty TickTextProperty =
-        DependencyProperty.Register(nameof(TickText), typeof(string), typeof(CheckBoxModern), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty TickTextProperty = DependencyProperty.Register(
+        nameof(TickText),
+        typeof(string),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>The unchecked symbol property.</summary>
-    public static readonly DependencyProperty UncheckedSymbolProperty =
-        DependencyProperty.Register(nameof(UncheckedSymbol), typeof(Icons), typeof(CheckBoxModern), new PropertyMetadata(Icons.None, UpdateTickSymbol));
+    public static readonly DependencyProperty UncheckedSymbolProperty = DependencyProperty.Register(
+        nameof(UncheckedSymbol),
+        typeof(Icons),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Icons.None, UpdateTickSymbol));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty WarningVisibleProperty =
-        DependencyProperty.Register(nameof(WarningVisible), typeof(Visibility), typeof(CheckBoxModern), new PropertyMetadata(Visibility.Collapsed));
+    public static readonly DependencyProperty WarningVisibleProperty = DependencyProperty.Register(
+        nameof(WarningVisible),
+        typeof(Visibility),
+        typeof(CheckBoxModern),
+        new PropertyMetadata(Visibility.Collapsed));
 
     /// <summary>The RGB channel used for the disabled check background.</summary>
     private const byte DisabledColorChannel = 137;
@@ -100,7 +160,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     private const byte HoverRedChannel = 190;
 
     /// <summary>The font-size scale used when automatic text sizing is enabled.</summary>
-    private const double AutomaticFontSizeScale = 0.6d;
+    private const double AutomaticFontSizeScale = 0.6D;
 
     /// <summary>The delay before applying disabled-state behavior.</summary>
     private const int DisabledStateDelayMilliseconds = 100;
@@ -124,77 +184,17 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     private bool _disposedValue;
 
     /// <summary>Provides the CheckBoxModern member.</summary>
-    static CheckBoxModern() => DefaultStyleKeyProperty.OverrideMetadata(typeof(CheckBoxModern), new FrameworkPropertyMetadata(typeof(CheckBoxModern)));
+    static CheckBoxModern() =>
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(CheckBoxModern),
+            new FrameworkPropertyMetadata(typeof(CheckBoxModern)));
 
     /// <summary>Initializes a new instance of the <see cref="CheckBoxModern"/> class.</summary>
     public CheckBoxModern()
     {
-        _ = EventSignal
-            .From<MouseButtonEventHandler, MouseButtonEventArgs>(handler => handler.Invoke, handler => PreviewMouseLeftButtonDown += handler, handler => PreviewMouseLeftButtonDown -= handler)
-            .Subscribe(_ =>
-        {
-            if (Command?.CanExecute(null) == false)
-            {
-                return;
-            }
-
-            UpdateValue(true, !Checked);
-        }).DisposeWith(_disposables);
-
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Loaded += handler, handler => Loaded -= handler)
-            .Subscribe(async loadedArgs =>
-        {
-            _ = loadedArgs;
-
-            if (_isChecked.HasObservers)
-            {
-                _isChecked.OnNext(new CheckBoxResultEventArgs(false, Checked));
-            }
-
-            await EnableChange(IsEnabled);
-
-            IsEnabledChanged += async (_, e) => await EnableChange((bool)e.NewValue);
-
-            if (Command is null)
-            {
-                return;
-            }
-
-            if (!Command.CanExecute(null))
-            {
-                await EnableChange(false);
-            }
-
-            _ = EventSignal
-                .From<EventHandler, EventArgs>(handler => handler.Invoke, handler => Command.CanExecuteChanged += handler, handler => Command.CanExecuteChanged -= handler)
-                .Subscribe(async _ => await EnableChange(IsEnabled && Command.CanExecute(null)))
-                .DisposeWith(_disposables);
-        }).DisposeWith(_disposables);
-
-        _ = EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => MouseEnter += handler, handler => MouseEnter -= handler)
-            .Subscribe(_ =>
-        {
-            if (Command?.CanExecute(null) == false || !IsEnabled)
-            {
-                return;
-            }
-
-            CheckBackground = new SolidColorBrush(Color.FromRgb(HoverRedChannel, HoverGreenChannel, HoverBlueChannel));
-        }).DisposeWith(_disposables);
-
-        _ = EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => MouseLeave += handler, handler => MouseLeave -= handler)
-            .Subscribe(_ =>
-        {
-            if (Command?.CanExecute(null) == false || !IsEnabled)
-            {
-                return;
-            }
-
-            CheckBackground = Brushes.White;
-        }).DisposeWith(_disposables);
+        ObserveInput();
+        ObserveLoaded();
+        ObservePointerState();
     }
 
     /// <summary>Occurs when [value changed].</summary>
@@ -206,7 +206,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public bool AutoTextFontSize
     {
-        get => (bool)GetValue(AutoTextFontSizeProperty); set => SetValue(AutoTextFontSizeProperty, value);
+        get => (bool)GetValue(AutoTextFontSizeProperty);
+        set => SetValue(AutoTextFontSizeProperty, value);
     }
 
     /// <summary>Gets or sets the size of the box.</summary>
@@ -215,21 +216,24 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public double BoxSize
     {
-        get => (double)GetValue(BoxSizeProperty); set => SetValue(BoxSizeProperty, value);
+        get => (double)GetValue(BoxSizeProperty);
+        set => SetValue(BoxSizeProperty, value);
     }
 
     /// <summary>Gets or sets the check background.</summary>
     /// <value>The check background.</value>
     public Brush CheckBackground
     {
-        get => (Brush)GetValue(CheckBackgroundProperty); set => SetValue(CheckBackgroundProperty, value);
+        get => (Brush)GetValue(CheckBackgroundProperty);
+        set => SetValue(CheckBackgroundProperty, value);
     }
 
     /// <summary>Gets or sets the checked background.</summary>
     /// <value>The check background.</value>
     public Brush IsCheckedBackground
     {
-        get => (Brush)GetValue(IsCheckedBackgroundProperty); set => SetValue(IsCheckedBackgroundProperty, value);
+        get => (Brush)GetValue(IsCheckedBackgroundProperty);
+        set => SetValue(IsCheckedBackgroundProperty, value);
     }
 
     /// <summary>
@@ -237,11 +241,14 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     /// automatic updating of this font size.
     /// </summary>
     /// <value>The size of the CheckBox tick font.</value>
-    [Description("Gets the size of the CheckBox tick font. Reset this when changing the box size for automatic updating of this font size.")]
+    [Description(
+        "Gets the size of the CheckBox tick font. Reset this when changing the box size "
+            + "to update the font size automatically.")]
     [Category("Common")]
     public double CheckBoxTickFontSize
     {
-        get => (double)GetValue(CheckBoxTickFontSizeProperty); set => SetValue(CheckBoxTickFontSizeProperty, value);
+        get => (double)GetValue(CheckBoxTickFontSizeProperty);
+        set => SetValue(CheckBoxTickFontSizeProperty, value);
     }
 
     /// <summary>Gets or sets a value indicating whether the value of the box is checked.</summary>
@@ -249,7 +256,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public bool Checked
     {
-        get => (bool)GetValue(CheckedProperty); set => SetValue(CheckedProperty, value);
+        get => (bool)GetValue(CheckedProperty);
+        set => SetValue(CheckedProperty, value);
     }
 
     /// <summary>Gets or sets the checked symbol.</summary>
@@ -258,25 +266,29 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public Icons CheckedSymbol
     {
-        get => (Icons)GetValue(CheckedSymbolProperty); set => SetValue(CheckedSymbolProperty, value);
+        get => (Icons)GetValue(CheckedSymbolProperty);
+        set => SetValue(CheckedSymbolProperty, value);
     }
 
     /// <summary>Gets or sets the command that will be executed when the command source is invoked.</summary>
     public ICommand Command
     {
-        get => (ICommand)GetValue(CommandProperty); set => SetValue(CommandProperty, value);
+        get => (ICommand)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
     }
 
-    /// <summary>Gets or sets represents a user defined data value that can be passed to the command when it is executed.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public object CommandParameter
     {
-        get => GetValue(CommandParameterProperty); set => SetValue(CommandParameterProperty, value);
+        get => GetValue(CommandParameterProperty);
+        set => SetValue(CommandParameterProperty, value);
     }
 
     /// <summary>Gets or sets the object that the command is being executed on.</summary>
     public IInputElement CommandTarget
     {
-        get => (IInputElement)GetValue(CommandTargetProperty); set => SetValue(CommandTargetProperty, value);
+        get => (IInputElement)GetValue(CommandTargetProperty);
+        set => SetValue(CommandTargetProperty, value);
     }
 
     /// <summary>Gets or sets the disabled the state.</summary>
@@ -285,7 +297,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public DisabledState DisabledState
     {
-        get => (DisabledState)GetValue(DisabledStateProperty); set => SetValue(DisabledStateProperty, value);
+        get => (DisabledState)GetValue(DisabledStateProperty);
+        set => SetValue(DisabledStateProperty, value);
     }
 
     /// <summary>Gets or sets the dock side.</summary>
@@ -294,7 +307,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public Dock DockSide
     {
-        get => (Dock)GetValue(DockSideProperty); set => SetValue(DockSideProperty, value);
+        get => (Dock)GetValue(DockSideProperty);
+        set => SetValue(DockSideProperty, value);
     }
 
     /// <summary>Gets the is checked.</summary>
@@ -309,7 +323,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public bool RadioButtonStyle
     {
-        get => (bool)GetValue(RadioButtonStyleProperty); set => SetValue(RadioButtonStyleProperty, value);
+        get => (bool)GetValue(RadioButtonStyleProperty);
+        set => SetValue(RadioButtonStyleProperty, value);
     }
 
     /// <summary>Gets or sets the stroke.</summary>
@@ -317,7 +332,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Description("Gets or sets the stroke of the border.")]
     public Brush Stroke
     {
-        get => (Brush)GetValue(StrokeProperty); set => SetValue(StrokeProperty, value);
+        get => (Brush)GetValue(StrokeProperty);
+        set => SetValue(StrokeProperty, value);
     }
 
     /// <summary>Gets or sets the stroke thickness.</summary>
@@ -326,7 +342,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public double StrokeThickness
     {
-        get => (double)GetValue(StrokeThicknessProperty); set => SetValue(StrokeThicknessProperty, value);
+        get => (double)GetValue(StrokeThicknessProperty);
+        set => SetValue(StrokeThicknessProperty, value);
     }
 
     /// <summary>Gets or sets the Text of the Check box.</summary>
@@ -334,7 +351,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public string Text
     {
-        get => (string)GetValue(TextProperty); set => SetValue(TextProperty, value);
+        get => (string)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
     }
 
     /// <summary>Gets the tick text.</summary>
@@ -343,7 +361,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public string TickText
     {
-        get => (string)GetValue(TickTextProperty); private set => SetValue(TickTextProperty, value);
+        get => (string)GetValue(TickTextProperty);
+        private set => SetValue(TickTextProperty, value);
     }
 
     /// <summary>Gets or sets a value indicating whether [trigger disabled].</summary>
@@ -358,7 +377,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public Icons UncheckedSymbol
     {
-        get => (Icons)GetValue(UncheckedSymbolProperty); set => SetValue(UncheckedSymbolProperty, value);
+        get => (Icons)GetValue(UncheckedSymbolProperty);
+        set => SetValue(UncheckedSymbolProperty, value);
     }
 
     /// <summary>Gets the warning visible.</summary>
@@ -367,49 +387,55 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     [Category("Common")]
     public Visibility WarningVisible
     {
-        get => (Visibility)GetValue(WarningVisibleProperty); private set => SetValue(WarningVisibleProperty, value);
+        get => (Visibility)GetValue(WarningVisibleProperty);
+        private set => SetValue(WarningVisibleProperty, value);
     }
 
     /// <summary>Gets the icon.</summary>
     /// <param name="icon">The icon.</param>
     /// <returns>string from list.</returns>
-    public static string GetIcon(Icons icon) => icon switch
-    {
-        Icons.Tick => "P",
-        Icons.Cross => "O",
-        Icons.StopSign => "X",
-        Icons.Bin => "3",
-        Icons.Hand => "N",
-        Icons.ThumbsDown => "=",
-        Icons.ZeroCircle => "i",
-        Icons.OneCircle => "j",
-        Icons.TwoCircle => "k",
-        Icons.ThreeCircle => "l",
-        Icons.FourCircle => "m",
-        Icons.FiveCircle => "n",
-        Icons.SixCircle => "o",
-        Icons.SevenCircle => "p",
-        Icons.EightCircle => "q",
-        Icons.NineCircle => "r",
-        Icons.TenCircle => "s",
-        Icons.ZeroSolid => "t",
-        Icons.OneSolid => "u",
-        Icons.TwoSolid => "v",
-        Icons.ThreeSolid => "w",
-        Icons.FourSolid => "x",
-        Icons.FiveSolid => "y",
-        Icons.SixSolid => "z",
-        Icons.SevenSolid => "{",
-        Icons.EightSolid => "|",
-        Icons.NineSolid => "}",
-        Icons.TenSolid => "~",
-        _ => string.Empty,
-    };
+    public static string GetIcon(Icons icon) =>
+        icon switch
+        {
+            Icons.Tick => "P",
+            Icons.Cross => "O",
+            Icons.StopSign => "X",
+            Icons.Bin => "3",
+            Icons.Hand => "N",
+            Icons.ThumbsDown => "=",
+            Icons.ZeroCircle => "i",
+            Icons.OneCircle => "j",
+            Icons.TwoCircle => "k",
+            Icons.ThreeCircle => "l",
+            Icons.FourCircle => "m",
+            Icons.FiveCircle => "n",
+            Icons.SixCircle => "o",
+            Icons.SevenCircle => "p",
+            Icons.EightCircle => "q",
+            Icons.NineCircle => "r",
+            Icons.TenCircle => "s",
+            Icons.ZeroSolid => "t",
+            Icons.OneSolid => "u",
+            Icons.TwoSolid => "v",
+            Icons.ThreeSolid => "w",
+            Icons.FourSolid => "x",
+            Icons.FiveSolid => "y",
+            Icons.SixSolid => "z",
+            Icons.SevenSolid => "{",
+            Icons.EightSolid => "|",
+            Icons.NineSolid => "}",
+            Icons.TenSolid => "~",
+            _ => string.Empty,
+        };
+
+    /// <summary>Shows the warning.</summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public Task ShowWarning() => ShowWarning(false);
 
     /// <summary>Shows the warning.</summary>
     /// <param name="checkedAfterwards">if set to <c>true</c> [checked afterwards].</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ShowWarning(bool checkedAfterwards = false)
+    public async Task ShowWarning(bool checkedAfterwards)
     {
         WarningVisible = Visibility.Visible;
         await Task.Delay(WarningDisplayMilliseconds);
@@ -417,7 +443,7 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         WarningVisible = Visibility.Collapsed;
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     public void Dispose()
     {
         Dispose(disposing: true);
@@ -425,7 +451,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -522,7 +549,8 @@ public class CheckBoxModern : Control, ICommandSource, IDisposable
         }
         else
         {
-            CheckBackground = new SolidColorBrush(Color.FromRgb(DisabledColorChannel, DisabledColorChannel, DisabledColorChannel));
+            CheckBackground = new SolidColorBrush(
+                Color.FromRgb(DisabledColorChannel, DisabledColorChannel, DisabledColorChannel));
             await StarTimer();
         }
     }

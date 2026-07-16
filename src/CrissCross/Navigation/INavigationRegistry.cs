@@ -20,7 +20,7 @@ public interface INavigationRegistry
     INavigationRegistry Register<TViewModel, TView>(
         Func<IServiceProvider, TViewModel> createViewModel,
         Func<IServiceProvider, TView> createView,
-        string? contract = null)
+        string? contract)
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel>;
 
@@ -29,14 +29,10 @@ public interface INavigationRegistry
     /// <typeparam name="TViewModel">The concrete view model implementation type.</typeparam>
     /// <typeparam name="TViewKey">The caller-facing view lookup key.</typeparam>
     /// <typeparam name="TView">The concrete view implementation type.</typeparam>
-    /// <param name="createViewModel">The view model factory.</param>
-    /// <param name="createView">The view factory.</param>
-    /// <param name="contract">The optional navigation contract.</param>
+    /// <param name="registration">The typed registration.</param>
     /// <returns>The registry for chained registrations.</returns>
     INavigationRegistry Register<TViewModelKey, TViewModel, TViewKey, TView>(
-        Func<IServiceProvider, TViewModel> createViewModel,
-        Func<IServiceProvider, TView> createView,
-        string? contract = null)
+        NavigationRegistration<TViewModelKey, TViewModel, TViewKey, TView> registration)
         where TViewModelKey : class
         where TViewModel : class, TViewModelKey, IRxObject
         where TViewKey : class
@@ -45,5 +41,5 @@ public interface INavigationRegistry
     /// <summary>Creates a navigator over the current registrations.</summary>
     /// <param name="serviceProvider">The optional service provider for navigation factories.</param>
     /// <returns>A bidirectional navigator.</returns>
-    IBidirectionalNavigator CreateNavigator(IServiceProvider? serviceProvider = null);
+    IBidirectionalNavigator CreateNavigator(IServiceProvider? serviceProvider);
 }

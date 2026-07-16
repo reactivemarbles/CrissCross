@@ -10,104 +10,143 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>A circular gauge control that displays a value within a specified range using a radial scale and pointer.</summary>
+/// <summary>Provides the CircularGauge member.</summary>
 public class CircularGauge : TemplatedControl
 {
     /// <summary>Property for <see cref="Value"/>.</summary>
-    public static readonly StyledProperty<double> ValueProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(Value), 0.0);
+    public static readonly StyledProperty<double> ValueProperty = AvaloniaProperty.Register<CircularGauge, double>(
+        nameof(Value),
+        0.0);
 
     /// <summary>Property for <see cref="MinValue"/>.</summary>
-    public static readonly StyledProperty<double> MinValueProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(MinValue), 0.0);
+    public static readonly StyledProperty<double> MinValueProperty = AvaloniaProperty.Register<CircularGauge, double>(
+        nameof(MinValue),
+        0.0);
 
     /// <summary>Property for <see cref="MaxValue"/>.</summary>
-    public static readonly StyledProperty<double> MaxValueProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(MaxValue), 100.0);
+    public static readonly StyledProperty<double> MaxValueProperty = AvaloniaProperty.Register<CircularGauge, double>(
+        nameof(MaxValue),
+        100.0);
 
     /// <summary>Property for <see cref="Radius"/>.</summary>
-    public static readonly StyledProperty<double> RadiusProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(Radius), 100.0);
+    public static readonly StyledProperty<double> RadiusProperty = AvaloniaProperty.Register<CircularGauge, double>(
+        nameof(Radius),
+        100.0);
 
     /// <summary>Property for <see cref="ScaleStartAngle"/>.</summary>
-    public static readonly StyledProperty<double> ScaleStartAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleStartAngle), 120.0);
+    public static readonly StyledProperty<double> ScaleStartAngleProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(ScaleStartAngle), 120.0);
 
     /// <summary>Property for <see cref="ScaleSweepAngle"/>.</summary>
-    public static readonly StyledProperty<double> ScaleSweepAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleSweepAngle), 300.0);
+    public static readonly StyledProperty<double> ScaleSweepAngleProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(ScaleSweepAngle), 300.0);
 
     /// <summary>Property for <see cref="MajorDivisionsCount"/>.</summary>
-    public static readonly StyledProperty<int> MajorDivisionsCountProperty =
-        AvaloniaProperty.Register<CircularGauge, int>(nameof(MajorDivisionsCount), 10);
+    public static readonly StyledProperty<int> MajorDivisionsCountProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        int
+    >(nameof(MajorDivisionsCount), 10);
 
     /// <summary>Property for <see cref="MinorDivisionsCount"/>.</summary>
-    public static readonly StyledProperty<int> MinorDivisionsCountProperty =
-        AvaloniaProperty.Register<CircularGauge, int>(nameof(MinorDivisionsCount), 5);
+    public static readonly StyledProperty<int> MinorDivisionsCountProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        int
+    >(nameof(MinorDivisionsCount), 5);
 
     /// <summary>Property for <see cref="PointerLength"/>.</summary>
-    public static readonly StyledProperty<double> PointerLengthProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerLength), 70.0);
+    public static readonly StyledProperty<double> PointerLengthProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(PointerLength), 70.0);
 
     /// <summary>Property for <see cref="PointerCapRadius"/>.</summary>
-    public static readonly StyledProperty<double> PointerCapRadiusProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerCapRadius), 16.0);
+    public static readonly StyledProperty<double> PointerCapRadiusProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(PointerCapRadius), 16.0);
 
     /// <summary>Property for <see cref="PointerColor"/>.</summary>
-    public static readonly StyledProperty<IBrush> PointerColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(PointerColor), Brushes.Red);
+    public static readonly StyledProperty<IBrush> PointerColorProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        IBrush
+    >(nameof(PointerColor), Brushes.Red);
 
     /// <summary>Property for <see cref="ScaleColor"/>.</summary>
-    public static readonly StyledProperty<IBrush> ScaleColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(ScaleColor), Brushes.White);
+    public static readonly StyledProperty<IBrush> ScaleColorProperty = AvaloniaProperty.Register<CircularGauge, IBrush>(
+        nameof(ScaleColor),
+        Brushes.White);
 
     /// <summary>Property for <see cref="OptimalRangeColor"/>.</summary>
-    public static readonly StyledProperty<IBrush> OptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(OptimalRangeColor), Brushes.Transparent);
+    public static readonly StyledProperty<IBrush> OptimalRangeColorProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        IBrush
+    >(nameof(OptimalRangeColor), Brushes.Transparent);
 
     /// <summary>Property for <see cref="BelowOptimalRangeColor"/>.</summary>
-    public static readonly StyledProperty<IBrush> BelowOptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(BelowOptimalRangeColor), Brushes.Transparent);
+    public static readonly StyledProperty<IBrush> BelowOptimalRangeColorProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        IBrush
+    >(nameof(BelowOptimalRangeColor), Brushes.Transparent);
 
     /// <summary>Property for <see cref="AboveOptimalRangeColor"/>.</summary>
-    public static readonly StyledProperty<IBrush> AboveOptimalRangeColorProperty =
-        AvaloniaProperty.Register<CircularGauge, IBrush>(nameof(AboveOptimalRangeColor), Brushes.Transparent);
+    public static readonly StyledProperty<IBrush> AboveOptimalRangeColorProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        IBrush
+    >(nameof(AboveOptimalRangeColor), Brushes.Transparent);
 
     /// <summary>Property for <see cref="OptimalRangeStartValue"/>.</summary>
-    public static readonly StyledProperty<double> OptimalRangeStartValueProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(OptimalRangeStartValue), 20.0);
+    public static readonly StyledProperty<double> OptimalRangeStartValueProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(OptimalRangeStartValue), 20.0);
 
     /// <summary>Property for <see cref="OptimalRangeEndValue"/>.</summary>
-    public static readonly StyledProperty<double> OptimalRangeEndValueProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(OptimalRangeEndValue), 80.0);
+    public static readonly StyledProperty<double> OptimalRangeEndValueProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(OptimalRangeEndValue), 80.0);
 
     /// <summary>Property for <see cref="DialText"/>.</summary>
-    public static readonly StyledProperty<string> DialTextProperty =
-        AvaloniaProperty.Register<CircularGauge, string>(nameof(DialText), "Gauge");
+    public static readonly StyledProperty<string> DialTextProperty = AvaloniaProperty.Register<CircularGauge, string>(
+        nameof(DialText),
+        "Gauge");
 
     /// <summary>Property for <see cref="Unit"/>.</summary>
-    public static readonly StyledProperty<string> UnitProperty =
-        AvaloniaProperty.Register<CircularGauge, string>(nameof(Unit), string.Empty);
+    public static readonly StyledProperty<string> UnitProperty = AvaloniaProperty.Register<CircularGauge, string>(
+        nameof(Unit),
+        string.Empty);
 
     /// <summary>Property for <see cref="ShowValue"/>.</summary>
-    public static readonly StyledProperty<bool> ShowValueProperty =
-        AvaloniaProperty.Register<CircularGauge, bool>(nameof(ShowValue), true);
+    public static readonly StyledProperty<bool> ShowValueProperty = AvaloniaProperty.Register<CircularGauge, bool>(
+        nameof(ShowValue),
+        true);
 
     /// <summary>Property for <see cref="Decimals"/>.</summary>
-    public static readonly StyledProperty<int> DecimalsProperty =
-        AvaloniaProperty.Register<CircularGauge, int>(nameof(Decimals), 0);
+    public static readonly StyledProperty<int> DecimalsProperty = AvaloniaProperty.Register<CircularGauge, int>(
+        nameof(Decimals),
+        0);
 
     /// <summary>Property for <see cref="PointerAngle"/>.</summary>
-    public static readonly StyledProperty<double> PointerAngleProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(PointerAngle), 120.0);
+    public static readonly StyledProperty<double> PointerAngleProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(PointerAngle), 120.0);
 
     /// <summary>Property for <see cref="ScaleRadius"/>.</summary>
-    public static readonly StyledProperty<double> ScaleRadiusProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleRadius), 75.0);
+    public static readonly StyledProperty<double> ScaleRadiusProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(ScaleRadius), 75.0);
 
     /// <summary>Property for <see cref="ScaleLabelRadius"/>.</summary>
-    public static readonly StyledProperty<double> ScaleLabelRadiusProperty =
-        AvaloniaProperty.Register<CircularGauge, double>(nameof(ScaleLabelRadius), 60.0);
+    public static readonly StyledProperty<double> ScaleLabelRadiusProperty = AvaloniaProperty.Register<
+        CircularGauge,
+        double
+    >(nameof(ScaleLabelRadius), 60.0);
 
     /// <summary>Provides the _scaleCanvas member.</summary>
     private Canvas? _scaleCanvas;
@@ -155,7 +194,7 @@ public class CircularGauge : TemplatedControl
         set => SetValue(RadiusProperty, value);
     }
 
-    /// <summary>Gets or sets the start angle of the scale in degrees (0 = right, 90 = bottom, 180 = left, 270 = top).</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public double ScaleStartAngle
     {
         get => GetValue(ScaleStartAngleProperty);
@@ -335,13 +374,9 @@ public class CircularGauge : TemplatedControl
         const double canvasCenterX = 100.0;
         const double canvasCenterY = 100.0;
         const double degreesInHalfCircle = 180.0;
-        const double majorTickStrokeThickness = 2.0;
         const double minorTickStrokeThickness = 1.0;
         const double majorTickLength = 10.0;
         const double minorTickLength = 5.0;
-        const double labelFontSize = 10.0;
-        const double labelHorizontalOffset = 12.0;
-        const double labelVerticalOffset = 6.0;
 
         if (_scaleCanvas is null)
         {
@@ -359,64 +394,102 @@ public class CircularGauge : TemplatedControl
             var angle = ScaleStartAngle + (i * majorTickUnitAngle);
             var angleRadian = angle * Math.PI / degreesInHalfCircle;
 
-            // Major tick - drawn as rotated rectangle centered at the tick position
-            var startX = canvasCenterX + (ScaleRadius * Math.Cos(angleRadian));
-            var startY = canvasCenterY + (ScaleRadius * Math.Sin(angleRadian));
-            var endX = canvasCenterX + ((ScaleRadius - majorTickLength) * Math.Cos(angleRadian));
-            var endY = canvasCenterY + ((ScaleRadius - majorTickLength) * Math.Sin(angleRadian));
-
-            var majorTick = new Line
-            {
-                StartPoint = new(startX, startY),
-                EndPoint = new(endX, endY),
-                Stroke = ScaleColor,
-                StrokeThickness = majorTickStrokeThickness
-            };
-            _scaleCanvas.Children.Add(majorTick);
-
-            // Scale label
-            var labelRadius = ScaleLabelRadius;
-            var labelX = canvasCenterX + (labelRadius * Math.Cos(angleRadian));
-            var labelY = canvasCenterY + (labelRadius * Math.Sin(angleRadian));
-
             var labelValue = MinValue + (i * majorTicksUnitValue);
-            var label = new TextBlock
-            {
-                Text = labelValue.ToString($"F{Decimals}"),
-                FontSize = labelFontSize,
-                Foreground = ScaleColor,
-                TextAlignment = TextAlignment.Center,
-            };
-
-            // Offset label to center it on the position
-            Canvas.SetLeft(label, labelX - labelHorizontalOffset);
-            Canvas.SetTop(label, labelY - labelVerticalOffset);
-            _scaleCanvas.Children.Add(label);
+            DrawMajorTickAndLabel(angleRadian, labelValue, canvasCenterX, canvasCenterY, majorTickLength);
 
             // Minor ticks (except after last major tick)
             if (i < MajorDivisionsCount)
             {
-                var minorTickUnitAngle = majorTickUnitAngle / MinorDivisionsCount;
-                for (var j = 1; j < MinorDivisionsCount; j++)
-                {
-                    var minorAngle = angle + (j * minorTickUnitAngle);
-                    var minorAngleRadian = minorAngle * Math.PI / degreesInHalfCircle;
-
-                    var minorStartX = canvasCenterX + (ScaleRadius * Math.Cos(minorAngleRadian));
-                    var minorStartY = canvasCenterY + (ScaleRadius * Math.Sin(minorAngleRadian));
-                    var minorEndX = canvasCenterX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
-                    var minorEndY = canvasCenterY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
-
-                    var minorTick = new Line
-                    {
-                        StartPoint = new(minorStartX, minorStartY),
-                        EndPoint = new(minorEndX, minorEndY),
-                        Stroke = ScaleColor,
-                        StrokeThickness = minorTickStrokeThickness
-                    };
-                    _scaleCanvas.Children.Add(minorTick);
-                }
+                DrawMinorTicks(
+                    angle,
+                    majorTickUnitAngle,
+                    canvasCenterX,
+                    canvasCenterY,
+                    degreesInHalfCircle,
+                    minorTickLength,
+                    minorTickStrokeThickness);
             }
+        }
+    }
+
+    /// <summary>Draws a major tick and its scale label.</summary>
+    /// <param name="angleRadian">The tick angle in radians.</param>
+    /// <param name="labelValue">The scale value displayed for the tick.</param>
+    /// <param name="canvasCenterX">The horizontal canvas center.</param>
+    /// <param name="canvasCenterY">The vertical canvas center.</param>
+    /// <param name="majorTickLength">The major tick length.</param>
+    private void DrawMajorTickAndLabel(
+        double angleRadian,
+        double labelValue,
+        double canvasCenterX,
+        double canvasCenterY,
+        double majorTickLength)
+    {
+        const double majorTickStrokeThickness = 2.0;
+        const double labelFontSize = 10.0;
+        const double labelHorizontalOffset = 12.0;
+        const double labelVerticalOffset = 6.0;
+        var angleCosine = Math.Cos(angleRadian);
+        var angleSine = Math.Sin(angleRadian);
+        var majorTick = new Line
+        {
+            StartPoint = new(
+                canvasCenterX + (ScaleRadius * angleCosine),
+                canvasCenterY + (ScaleRadius * angleSine)),
+            EndPoint = new(
+                canvasCenterX + ((ScaleRadius - majorTickLength) * angleCosine),
+                canvasCenterY + ((ScaleRadius - majorTickLength) * angleSine)),
+            Stroke = ScaleColor,
+            StrokeThickness = majorTickStrokeThickness,
+        };
+        _scaleCanvas!.Children.Add(majorTick);
+
+        var label = new TextBlock
+        {
+            Text = labelValue.ToString($"F{Decimals}"),
+            FontSize = labelFontSize,
+            Foreground = ScaleColor,
+            TextAlignment = TextAlignment.Center,
+        };
+        Canvas.SetLeft(label, canvasCenterX + (ScaleLabelRadius * angleCosine) - labelHorizontalOffset);
+        Canvas.SetTop(label, canvasCenterY + (ScaleLabelRadius * angleSine) - labelVerticalOffset);
+        _scaleCanvas.Children.Add(label);
+    }
+
+    /// <summary>Draws the minor tick marks following a major tick.</summary>
+    /// <param name="angle">The major tick angle.</param>
+    /// <param name="majorTickUnitAngle">The angle between major ticks.</param>
+    /// <param name="canvasCenterX">The horizontal canvas center.</param>
+    /// <param name="canvasCenterY">The vertical canvas center.</param>
+    /// <param name="degreesInHalfCircle">The number of degrees in a half circle.</param>
+    /// <param name="minorTickLength">The minor tick length.</param>
+    /// <param name="minorTickStrokeThickness">The minor tick stroke thickness.</param>
+    private void DrawMinorTicks(
+        double angle,
+        double majorTickUnitAngle,
+        double canvasCenterX,
+        double canvasCenterY,
+        double degreesInHalfCircle,
+        double minorTickLength,
+        double minorTickStrokeThickness)
+    {
+        var minorTickUnitAngle = majorTickUnitAngle / MinorDivisionsCount;
+        for (var index = 1; index < MinorDivisionsCount; index++)
+        {
+            var minorAngle = angle + (index * minorTickUnitAngle);
+            var minorAngleRadian = minorAngle * Math.PI / degreesInHalfCircle;
+            var minorStartX = canvasCenterX + (ScaleRadius * Math.Cos(minorAngleRadian));
+            var minorStartY = canvasCenterY + (ScaleRadius * Math.Sin(minorAngleRadian));
+            var minorEndX = canvasCenterX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
+            var minorEndY = canvasCenterY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
+            var minorTick = new Line
+            {
+                StartPoint = new(minorStartX, minorStartY),
+                EndPoint = new(minorEndX, minorEndY),
+                Stroke = ScaleColor,
+                StrokeThickness = minorTickStrokeThickness,
+            };
+            _scaleCanvas!.Children.Add(minorTick);
         }
     }
 }

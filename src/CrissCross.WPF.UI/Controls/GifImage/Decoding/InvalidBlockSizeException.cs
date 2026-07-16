@@ -10,22 +10,16 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 public class InvalidBlockSizeException : GifDecoderException
 {
     /// <summary>Initializes a new instance of the <see cref="InvalidBlockSizeException"/> class.</summary>
-    public InvalidBlockSizeException()
-    {
-    }
+    public InvalidBlockSizeException() { }
 
     /// <summary>Initializes a new instance of the <see cref="InvalidBlockSizeException"/> class.</summary>
     /// <param name="message">The message value.</param>
     public InvalidBlockSizeException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the <see cref="InvalidBlockSizeException"/> class.</summary>
     /// <param name="message">The message value.</param>
     /// <param name="inner">The inner value.</param>
     public InvalidBlockSizeException(string message, Exception inner)
-        : base(message, inner)
-    {
-    }
+        : base(message, inner) { }
 }

@@ -16,6 +16,7 @@ public partial class ProgressPageView : ReactiveUserControl<ProgressPageViewMode
     public ProgressPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ProgressPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ProgressPageViewModel>());
     }
 }

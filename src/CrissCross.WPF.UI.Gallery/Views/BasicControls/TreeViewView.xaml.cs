@@ -13,6 +13,9 @@ namespace CrissCross.WPF.UI.Gallery.Views;
 [IViewFor<TreeViewViewModel>]
 public partial class TreeViewView
 {
+    /// <summary>Tracks whether reactive bindings have been configured.</summary>
+    private bool _bindingsConfigured;
+
     /// <summary>Initializes a new instance of the <see cref="TreeViewView"/> class.</summary>
     public TreeViewView()
     {
@@ -23,11 +26,27 @@ public partial class TreeViewView
         AppLocator.CurrentMutable.Register(() => new PersonView(), typeof(IViewFor<Person>));
         AppLocator.CurrentMutable.Register(() => new PetView(), typeof(IViewFor<Pet>));
 
+        Loaded += OnLoaded;
+    }
+
+    /// <summary>Configures reactive bindings after construction has completed.</summary>
+    /// <param name="sender">The loaded view.</param>
+    /// <param name="e">The routed event data.</param>
+    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_bindingsConfigured)
+        {
+            return;
+        }
+
+        _bindingsConfigured = true;
         _ = this.WhenActivated(d =>
         {
             // Bind viewmodel to Treeview
             _ = this.OneWayBind(ViewModel, vm => vm.Family, v => v.FamilyTree.ViewModel!.Children).DisposeWith(d);
-            _ = this.WhenAnyValue(x => x.FamilyTree.SelectedItem).BindTo(this, x => x.ViewModel!.SelectedItem).DisposeWith(d);
+            _ = this.WhenAnyValue(x => x.FamilyTree.SelectedItem)
+                .BindTo(this, x => x.ViewModel!.SelectedItem)
+                .DisposeWith(d);
             _ = this.Bind(ViewModel, vm => vm.NewName, v => v.NewName.Text).DisposeWith(d);
             _ = this.Bind(ViewModel, vm => vm.PetName, v => v.PetName.Text).DisposeWith(d);
             _ = this.Bind(ViewModel, vm => vm.SelectedElement, v => v.Selected.Text).DisposeWith(d);

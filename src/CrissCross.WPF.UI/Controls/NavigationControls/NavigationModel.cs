@@ -67,8 +67,17 @@ public partial class NavigationModel : RxObject
     /// <exception cref="System.ArgumentNullException">navigationModels.</exception>
     /// <param name="viewModel">The view model.</param>
     /// <param name="navigationModels">The navigation models.</param>
+    public NavigationModel(Type? viewModel, ICollection<NavigationModel> navigationModels)
+        : this(viewModel, navigationModels, null) { }
+
+    /// <summary>Initializes a new instance of the <see cref="NavigationModel"/> class.</summary>
+    /// <param name="viewModel">The view model type.</param>
+    /// <param name="navigationModels">The navigation models.</param>
     /// <param name="navigationService">The navigation service.</param>
-    public NavigationModel(Type? viewModel, ICollection<NavigationModel> navigationModels, IUseHostedNavigation? navigationService = null)
+    public NavigationModel(
+        Type? viewModel,
+        ICollection<NavigationModel> navigationModels,
+        IUseHostedNavigation? navigationService)
     {
         InitializeOAPH();
         _viewModel = viewModel;
@@ -85,22 +94,27 @@ public partial class NavigationModel : RxObject
     ///   <c>true</c> if [is name visible]; otherwise, <c>false</c>.
     /// </returns>
     [ObservableAsProperty]
-    private IObservable<Visibility> IsNameVisible() => this.WhenAnyValue(x => x.IsExpanded, x => x.IsExpander).Select(x => (x.Value1 && !x.Value2) ? Visibility.Visible : Visibility.Collapsed);
+    private IObservable<Visibility> IsNameVisible() =>
+        this.WhenAnyValue(x => x.IsExpanded, x => x.IsExpander)
+            .Select(x => (x.Value1 && !x.Value2) ? Visibility.Visible : Visibility.Collapsed);
 
     /// <summary>Provides the IsSelectedVisible member.</summary>
     /// <returns>The result.</returns>
     [ObservableAsProperty]
-    private IObservable<Visibility> IsSelectedVisible() => this.WhenAnyValue(x => x.IsSelected).Select(x => x ? Visibility.Visible : Visibility.Hidden);
+    private IObservable<Visibility> IsSelectedVisible() =>
+        this.WhenAnyValue(x => x.IsSelected).Select(x => x ? Visibility.Visible : Visibility.Hidden);
 
     /// <summary>Provides the IsExpanderHorizontalAlignment member.</summary>
     /// <returns>The result.</returns>
     [ObservableAsProperty]
-    private IObservable<HorizontalAlignment> IsExpanderHorizontalAlignment() => this.WhenAnyValue(x => x.IsExpander).Select(x => x ? HorizontalAlignment.Left : HorizontalAlignment.Stretch);
+    private IObservable<HorizontalAlignment> IsExpanderHorizontalAlignment() =>
+        this.WhenAnyValue(x => x.IsExpander).Select(x => x ? HorizontalAlignment.Left : HorizontalAlignment.Stretch);
 
     /// <summary>Provides the IsExpanderVerticalAlignment member.</summary>
     /// <returns>The result.</returns>
     [ObservableAsProperty]
-    private IObservable<VerticalAlignment> IsExpanderVerticalAlignment() => this.WhenAnyValue(x => x.IsExpander).Select(x => x ? VerticalAlignment.Top : VerticalAlignment.Stretch);
+    private IObservable<VerticalAlignment> IsExpanderVerticalAlignment() =>
+        this.WhenAnyValue(x => x.IsExpander).Select(x => x ? VerticalAlignment.Top : VerticalAlignment.Stretch);
 
     /// <summary>Provides the Navigate member.</summary>
     private void Navigate()
@@ -125,11 +139,14 @@ public partial class NavigationModel : RxObject
 
         if (_navigationService is BreadcrumbBar breadcrumbBar)
         {
-            breadcrumbBar.NavigateTo(_viewModel, parameter: Parameter, breadcrumbItemContent: Name);
+            breadcrumbBar.NavigateTo(_viewModel, null, Parameter, Name);
         }
         else
         {
-            _navigationService.NavigateToView(_viewModel, hostName: NavigationHost, parameter: Parameter);
+            var navigationParameter = Parameter;
+            _navigationService.NavigateToView(
+                _viewModel,
+                new NavigationRequestOptions { HostName = NavigationHost, Parameter = navigationParameter });
         }
 
         IsSelected = true;

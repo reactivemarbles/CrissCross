@@ -25,44 +25,44 @@ namespace CrissCross.WPF.UI.Appearance;
 /// </example>
 public static class ApplicationAccentColorManager
 {
-    /// <summary>The maximum value of the background HSV brightness after which the text on the accent will be turned dark.</summary>
-    private const double BackgroundBrightnessThresholdValue = 80d;
+    /// <summary>Provides the BackgroundBrightnessThresholdValue member.</summary>
+    private const double BackgroundBrightnessThresholdValue = 80D;
 
     /// <summary>Provides the brightness correction applied to the system glass color.</summary>
-    private const float SystemGlassBrightnessAdjustment = 6f;
+    private const float SystemGlassBrightnessAdjustment = 6F;
 
     /// <summary>Provides the dark-theme primary accent brightness adjustment.</summary>
-    private const float DarkPrimaryBrightnessAdjustment = 15f;
+    private const float DarkPrimaryBrightnessAdjustment = 15F;
 
     /// <summary>Provides the dark-theme primary accent saturation adjustment.</summary>
-    private const float DarkPrimarySaturationAdjustment = -12f;
+    private const float DarkPrimarySaturationAdjustment = -12F;
 
     /// <summary>Provides the dark-theme secondary accent brightness adjustment.</summary>
-    private const float DarkSecondaryBrightnessAdjustment = 30f;
+    private const float DarkSecondaryBrightnessAdjustment = 30F;
 
     /// <summary>Provides the dark-theme secondary accent saturation adjustment.</summary>
-    private const float DarkSecondarySaturationAdjustment = -24f;
+    private const float DarkSecondarySaturationAdjustment = -24F;
 
     /// <summary>Provides the dark-theme tertiary accent brightness adjustment.</summary>
-    private const float DarkTertiaryBrightnessAdjustment = 45f;
+    private const float DarkTertiaryBrightnessAdjustment = 45F;
 
     /// <summary>Provides the dark-theme tertiary accent saturation adjustment.</summary>
-    private const float DarkTertiarySaturationAdjustment = -36f;
+    private const float DarkTertiarySaturationAdjustment = -36F;
 
     /// <summary>Provides the light-theme primary accent brightness adjustment.</summary>
-    private const float LightPrimaryBrightnessAdjustment = -5f;
+    private const float LightPrimaryBrightnessAdjustment = -5F;
 
     /// <summary>Provides the light-theme secondary accent brightness adjustment.</summary>
-    private const float LightSecondaryBrightnessAdjustment = -10f;
+    private const float LightSecondaryBrightnessAdjustment = -10F;
 
     /// <summary>Provides the light-theme tertiary accent brightness adjustment.</summary>
-    private const float LightTertiaryBrightnessAdjustment = -15f;
+    private const float LightTertiaryBrightnessAdjustment = -15F;
 
     /// <summary>Provides the secondary accent brush opacity.</summary>
-    private const double SecondaryAccentBrushOpacity = 0.9d;
+    private const double SecondaryAccentBrushOpacity = 0.9D;
 
     /// <summary>Provides the tertiary accent brush opacity.</summary>
-    private const double TertiaryAccentBrushOpacity = 0.8d;
+    private const double TertiaryAccentBrushOpacity = 0.8D;
 
     /// <summary>Gets the SystemAccentColor.</summary>
     public static Color SystemAccent
@@ -122,12 +122,19 @@ public static class ApplicationAccentColorManager
 
     /// <summary>Changes the color accents of the application based on the color entered.</summary>
     /// <param name="systemAccent">Primary accent color.</param>
+    public static void Apply(Color systemAccent) => Apply(systemAccent, ApplicationTheme.Light, false);
+
+    /// <summary>Applies an accent color for the specified application theme.</summary>
+    /// <param name="systemAccent">Primary accent color.</param>
+    /// <param name="applicationTheme">The application theme.</param>
+    public static void Apply(Color systemAccent, ApplicationTheme applicationTheme) =>
+        Apply(systemAccent, applicationTheme, false);
+
+    /// <summary>Applies an accent color for the specified application theme.</summary>
+    /// <param name="systemAccent">Primary accent color.</param>
     /// <param name="applicationTheme">If <see cref="ApplicationTheme.Dark"/>, the colors will be different.</param>
-    /// <param name="systemGlassColor">If the color is taken from the Glass Color System, its brightness will be increased with the help of the operations on HSV space.</param>
-    public static void Apply(
-        Color systemAccent,
-        ApplicationTheme applicationTheme = ApplicationTheme.Light,
-        bool systemGlassColor = false)
+    /// <param name="systemGlassColor">If the color comes from the system glass color.</param>
+    public static void Apply(Color systemAccent, ApplicationTheme applicationTheme, bool systemGlassColor)
     {
         if (systemGlassColor)
         {
@@ -160,16 +167,13 @@ public static class ApplicationAccentColorManager
     /// <param name="primaryAccent">Alternative light or dark color.</param>
     /// <param name="secondaryAccent">Second alternative light or dark color (most used).</param>
     /// <param name="tertiaryAccent">Third alternative light or dark color.</param>
-    public static void Apply(
-        Color systemAccent,
-        Color primaryAccent,
-        Color secondaryAccent,
-        Color tertiaryAccent) => UpdateColorResources(systemAccent, primaryAccent, secondaryAccent, tertiaryAccent);
+    public static void Apply(Color systemAccent, Color primaryAccent, Color secondaryAccent, Color tertiaryAccent) =>
+        UpdateColorResources(systemAccent, primaryAccent, secondaryAccent, tertiaryAccent);
 
     /// <summary>Applies system accent color to the application.</summary>
     public static void ApplySystemAccent() => Apply(GetColorizationColor(), ApplicationThemeManager.GetAppTheme());
 
-    /// <summary>Gets current Desktop Window Manager colorization color. <para>It should be the color defined in the system Personalization.</para></summary>
+    /// <summary>Gets current Desktop Window Manager colorization color.</summary>
     /// <returns>A color.</returns>
     public static Color GetColorizationColor() => UnsafeNativeMethods.GetDwmColor();
 
@@ -202,62 +206,30 @@ public static class ApplicationAccentColorManager
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("INFO | Text on accent is DARK", "CrissCross.WPF.UI.Accent");
 #endif
-            UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(
-                0xFF,
-                0x00,
-                0x00,
-                0x00);
-            UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(
-                0x80,
-                0x00,
-                0x00,
-                0x00);
-            UiApplication.Current.Resources["TextOnAccentFillColorDisabled"] = Color.FromArgb(
-                0x77,
-                0x00,
-                0x00,
-                0x00);
+            UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
+            UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(0x80, 0x00, 0x00, 0x00);
+            UiApplication.Current.Resources["TextOnAccentFillColorDisabled"] = Color.FromArgb(0x77, 0x00, 0x00, 0x00);
             UiApplication.Current.Resources["TextOnAccentFillColorSelectedText"] = Color.FromArgb(
                 0x00,
                 0x00,
                 0x00,
                 0x00);
-            UiApplication.Current.Resources["AccentTextFillColorDisabled"] = Color.FromArgb(
-                0x5D,
-                0x00,
-                0x00,
-                0x00);
+            UiApplication.Current.Resources["AccentTextFillColorDisabled"] = Color.FromArgb(0x5D, 0x00, 0x00, 0x00);
         }
         else
         {
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("INFO | Text on accent is LIGHT", "CrissCross.WPF.UI.Accent");
 #endif
-            UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(
-                0xFF,
-                0xFF,
-                0xFF,
-                0xFF);
-            UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(
-                0x80,
-                0xFF,
-                0xFF,
-                0xFF);
-            UiApplication.Current.Resources["TextOnAccentFillColorDisabled"] = Color.FromArgb(
-                0x87,
-                0xFF,
-                0xFF,
-                0xFF);
+            UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF);
+            UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF);
+            UiApplication.Current.Resources["TextOnAccentFillColorDisabled"] = Color.FromArgb(0x87, 0xFF, 0xFF, 0xFF);
             UiApplication.Current.Resources["TextOnAccentFillColorSelectedText"] = Color.FromArgb(
                 0xFF,
                 0xFF,
                 0xFF,
                 0xFF);
-            UiApplication.Current.Resources["AccentTextFillColorDisabled"] = Color.FromArgb(
-                0x5D,
-                0xFF,
-                0xFF,
-                0xFF);
+            UiApplication.Current.Resources["AccentTextFillColorDisabled"] = Color.FromArgb(0x5D, 0xFF, 0xFF, 0xFF);
         }
 
         UiApplication.Current.Resources["SystemAccentColor"] = systemAccent;
@@ -270,11 +242,12 @@ public static class ApplicationAccentColorManager
         UiApplication.Current.Resources["AccentTextFillColorPrimaryBrush"] = tertiaryAccent.ToBrush();
         UiApplication.Current.Resources["AccentTextFillColorSecondaryBrush"] = tertiaryAccent.ToBrush();
         UiApplication.Current.Resources["AccentTextFillColorTertiaryBrush"] = secondaryAccent.ToBrush();
-        UiApplication.Current.Resources["AccentFillColorSelectedTextBackgroundBrush"] =
-            systemAccent.ToBrush();
+        UiApplication.Current.Resources["AccentFillColorSelectedTextBackgroundBrush"] = systemAccent.ToBrush();
         UiApplication.Current.Resources["AccentFillColorDefaultBrush"] = secondaryAccent.ToBrush();
 
-        UiApplication.Current.Resources["AccentFillColorSecondaryBrush"] = secondaryAccent.ToBrush(SecondaryAccentBrushOpacity);
-        UiApplication.Current.Resources["AccentFillColorTertiaryBrush"] = secondaryAccent.ToBrush(TertiaryAccentBrushOpacity);
+        UiApplication.Current.Resources["AccentFillColorSecondaryBrush"] = secondaryAccent.ToBrush(
+            SecondaryAccentBrushOpacity);
+        UiApplication.Current.Resources["AccentFillColorTertiaryBrush"] = secondaryAccent.ToBrush(
+            TertiaryAccentBrushOpacity);
     }
 }

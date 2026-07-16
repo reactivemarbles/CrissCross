@@ -15,7 +15,7 @@ public partial class App
 {
     /// <summary>The application host and service provider.</summary>
     private static readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureCrissCrossForPageNavigation<MainWindow, DashboardPage>()
+        .ConfigureCrissCrossForPageNavigation(new PageNavigationRegistration<MainWindow, DashboardPage>())
         .ConfigureServices(
             (context, services) =>
             {
@@ -66,11 +66,14 @@ public partial class App
     /// <param name="e">The event data.</param>
     private async void OnStartup(object sender, StartupEventArgs e)
     {
-        _tracker?.Configure<MainWindow>()
-                .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
-                .Properties(w => ValueTuple.Create(w.Height, w.Width, w.Left, w.Top, w.WindowState))
-                .PersistOn(w => nameof(w.Closing))
-                .StopTrackingOn(w => nameof(w.Closing));
+        _tracker
+            ?.Configure(new TrackingRequest<MainWindow>())
+            .Id(
+                w => w.Name,
+                $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
+            .Properties(w => ValueTuple.Create(w.Height, w.Width, w.Left, w.Top, w.WindowState))
+            .PersistOn(w => nameof(w.Closing))
+            .StopTrackingOn(w => nameof(w.Closing));
 
         await _host.StartAsync();
     }
@@ -80,6 +83,6 @@ public partial class App
     /// <param name="e">The event data.</param>
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
+        // For more information, see the DispatcherUnhandledException API documentation.
     }
 }

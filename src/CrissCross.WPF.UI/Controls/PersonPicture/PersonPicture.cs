@@ -49,6 +49,9 @@ public partial class PersonPicture : Control, IDisposable
     /// <summary>Badge text font size ratio relative to the badge ellipse height.</summary>
     private const double BadgeFontSizeRatio = 0.6;
 
+    /// <summary>The visual state used when no badge is displayed.</summary>
+    private const string NoBadgeVisualState = "NoBadge";
+
     /// <summary>Provides the ResourceAccessor member.</summary>
     private static readonly ResourceAccessor ResourceAccessor = new(typeof(PersonPicture));
 
@@ -143,8 +146,9 @@ public partial class PersonPicture : Control, IDisposable
             >= BadgeItemPluralFiveStart and <= BadgeItemPluralFiveEnd => ResourceAccessor.BadgeItemPlural5,
             >= BadgeItemPluralSixStart and <= BadgeItemPluralSixEnd => ResourceAccessor.BadgeItemPlural6,
             _ when valueMod10 == 1 => ResourceAccessor.BadgeItemPlural1,
-            _ when valueMod10 is >= BadgeItemPluralThreeStart and <= BadgeItemPluralTwoEnd => ResourceAccessor.BadgeItemPlural3,
-            _ => ResourceAccessor.BadgeItemPlural4
+            _ when valueMod10 is >= BadgeItemPluralThreeStart and <= BadgeItemPluralTwoEnd =>
+                ResourceAccessor.BadgeItemPlural3,
+            _ => ResourceAccessor.BadgeItemPlural4,
         };
 
         return ResourceAccessor.GetLocalizedStringResource(resourceName);
@@ -155,15 +159,15 @@ public partial class PersonPicture : Control, IDisposable
     /// <returns>The square size, or <see langword="null"/> when neither dimension changed.</returns>
     private static double? GetSquareSize(SizeChangedEventArgs args)
     {
-        var widthChanged = args.NewSize.Width != args.PreviousSize.Width;
-        var heightChanged = args.NewSize.Height != args.PreviousSize.Height;
+        var widthChanged = !DoubleComparison.AreClose(args.NewSize.Width, args.PreviousSize.Width);
+        var heightChanged = !DoubleComparison.AreClose(args.NewSize.Height, args.PreviousSize.Height);
 
         return (widthChanged, heightChanged) switch
         {
             (true, true) => Math.Min(args.NewSize.Width, args.NewSize.Height),
             (true, false) => args.NewSize.Width,
             (false, true) => args.NewSize.Height,
-            _ => null
+            _ => null,
         };
     }
 
@@ -174,7 +178,7 @@ public partial class PersonPicture : Control, IDisposable
         {
             ({ Length: > 0 } initials, _) => initials,
             (_, { Length: > 0 } displayNameInitials) => displayNameInitials,
-            _ => null
+            _ => null,
         };
 
     /// <summary>Helper to determine the image source that should be shown.</summary>
@@ -194,10 +198,7 @@ public partial class PersonPicture : Control, IDisposable
             var imageBrush = templateSettings.ActualImageBrush;
             if (imageBrush is null)
             {
-                imageBrush = new ImageBrush
-                {
-                    Stretch = Stretch.UniformToFill
-                };
+                imageBrush = new ImageBrush { Stretch = Stretch.UniformToFill };
                 templateSettings.ActualImageBrush = imageBrush;
             }
 
@@ -246,8 +247,8 @@ public partial class PersonPicture : Control, IDisposable
             UpdateBadgeGlyph();
         }
         else
-        {// No badge properties set, so clear the badge XAML
-            _ = VisualStateManager.GoToState(this, "NoBadge", false);
+        { // No badge properties set, so clear the badge XAML
+            _ = VisualStateManager.GoToState(this, NoBadgeVisualState, false);
 
             var badgeNumberTextBlock = _m_badgeNumberTextBlock;
             if (badgeNumberTextBlock is not null)
@@ -277,7 +278,7 @@ public partial class PersonPicture : Control, IDisposable
 
         if (badgeNumber <= 0)
         {
-            _ = VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, NoBadgeVisualState, false);
             _m_badgeNumberTextBlock.Text = string.Empty;
             return;
         }
@@ -307,7 +308,7 @@ public partial class PersonPicture : Control, IDisposable
 
         if (string.IsNullOrEmpty(badgeGlyph))
         {
-            _ = VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, NoBadgeVisualState, false);
             _m_badgeGlyphIcon.Glyph = string.Empty;
             return;
         }
@@ -336,7 +337,7 @@ public partial class PersonPicture : Control, IDisposable
         }
         else
         {
-            _ = VisualStateManager.GoToState(this, "NoBadge", false);
+            _ = VisualStateManager.GoToState(this, NoBadgeVisualState, false);
         }
     }
 
@@ -351,7 +352,7 @@ public partial class PersonPicture : Control, IDisposable
             true => ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.GroupName),
             _ when !string.IsNullOrEmpty(DisplayName) => DisplayName,
             _ when !string.IsNullOrEmpty(Initials) => Initials,
-            _ => ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.PersonName)
+            _ => ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.PersonName),
         };
 
         // BadgeInformation portion of the AutomationName is set to 'n items' if there is a BadgeNumber,
@@ -360,22 +361,20 @@ public partial class PersonPicture : Control, IDisposable
         var automationName = BadgeNumber switch
         {
             > 0 when !string.IsNullOrEmpty(BadgeText) => string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeItemTextOverride)!,
-                    contactName,
-                    BadgeNumber,
-                    BadgeText),
-            > 0 => string.Format(
-                    GetLocalizedPluralBadgeItemStringResource(BadgeNumber)!,
-                    contactName,
-                    BadgeNumber),
-            _ when (!string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource is not null) && !string.IsNullOrEmpty(BadgeText) => string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIconTextOverride)!,
-                    contactName,
-                    BadgeText),
+                ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeItemTextOverride)!,
+                contactName,
+                BadgeNumber,
+                BadgeText),
+            > 0 => string.Format(GetLocalizedPluralBadgeItemStringResource(BadgeNumber)!, contactName, BadgeNumber),
+            _ when (!string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource is not null)
+                    && !string.IsNullOrEmpty(BadgeText) => string.Format(
+                ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIconTextOverride)!,
+                contactName,
+                BadgeText),
             _ when !string.IsNullOrEmpty(BadgeGlyph) || BadgeImageSource is not null => string.Format(
-                    ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIcon)!,
-                    contactName),
-            _ => contactName
+                ResourceAccessor.GetLocalizedStringResource(ResourceAccessor.BadgeIcon)!,
+                contactName),
+            _ => contactName,
         };
 
         AutomationProperties.SetName(this, automationName);
@@ -387,9 +386,7 @@ public partial class PersonPicture : Control, IDisposable
     {
         var property = args.Property;
 
-        if (property == BadgeNumberProperty ||
-            property == BadgeGlyphProperty ||
-            property == BadgeImageSourceProperty)
+        if (property == BadgeNumberProperty || property == BadgeGlyphProperty || property == BadgeImageSourceProperty)
         {
             UpdateBadge();
         }
@@ -401,9 +398,7 @@ public partial class PersonPicture : Control, IDisposable
         {
             OnDisplayNameChanged();
         }
-        else if (property == ProfilePictureProperty ||
-            property == InitialsProperty ||
-            property == IsGroupProperty)
+        else if (property == ProfilePictureProperty || property == InitialsProperty || property == IsGroupProperty)
         {
             UpdateIfReady();
         }
@@ -450,10 +445,11 @@ public partial class PersonPicture : Control, IDisposable
     /// <param name="newControlSize">The new control size.</param>
     private void UpdateBadgeSize(Size newControlSize)
     {
-        if (_m_badgingEllipse is null ||
-            _m_badgingBackgroundEllipse is null ||
-            _m_badgeNumberTextBlock is null ||
-            _m_badgeGlyphIcon is null)
+        if (
+            _m_badgingEllipse is null
+            || _m_badgingBackgroundEllipse is null
+            || _m_badgeNumberTextBlock is null
+            || _m_badgeGlyphIcon is null)
         {
             return;
         }

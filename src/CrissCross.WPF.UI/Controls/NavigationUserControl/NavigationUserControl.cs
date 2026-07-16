@@ -103,7 +103,7 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
             VerticalContentAlignment = VerticalAlignment.Stretch,
             HostName = Name,
             NavigateBackIsEnabled = navigateBackIsEnabled,
-            Transition = transition
+            Transition = transition,
         };
 
         // Adopt as content if none set by the consumer

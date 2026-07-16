@@ -41,5 +41,5 @@ public enum CustomMessageBoxResult
     Custom9,
 
     /// <summary>The cancel.</summary>
-    Cancel
+    Cancel,
 }

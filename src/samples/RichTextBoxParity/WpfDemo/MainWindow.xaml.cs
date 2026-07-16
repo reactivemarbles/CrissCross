@@ -47,7 +47,7 @@ public partial class MainWindow : Window
         ".png",
         ".tif",
         ".tiff",
-        ".wdp"
+        ".wdp",
     };
 
     /// <summary>Timer used to refresh clipboard availability state.</summary>
@@ -70,7 +70,7 @@ public partial class MainWindow : Window
 
         _clipboardTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(ClipboardPollIntervalMilliseconds)
+            Interval = TimeSpan.FromMilliseconds(ClipboardPollIntervalMilliseconds),
         };
         _clipboardTimer.Tick += ClipboardTimerTick;
         _clipboardTimer.Start();
@@ -81,11 +81,12 @@ public partial class MainWindow : Window
 
     /// <summary>Returns whether a drag/drop payload contains data this demo can process.</summary>
     /// <param name="data">The drag/drop data object.</param>
-    /// <returns><see langword="true"/> when supported drop data is present; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when supported drop data is present; otherwise, <see
+    /// langword="false"/>.</returns>
     private static bool HasSupportedDropData(IDataObject data) =>
-        data.GetDataPresent(DataFormats.UnicodeText) ||
-        data.GetDataPresent(DataFormats.Text) ||
-        data.GetDataPresent(DataFormats.FileDrop);
+        data.GetDataPresent(DataFormats.UnicodeText)
+        || data.GetDataPresent(DataFormats.Text)
+        || data.GetDataPresent(DataFormats.FileDrop);
 
     /// <summary>Builds a display string containing the data formats on a drag/drop payload.</summary>
     /// <param name="data">The drag/drop data object.</param>
@@ -128,7 +129,7 @@ public partial class MainWindow : Window
     /// <summary>Counts logical lines in a plain text snapshot.</summary>
     /// <param name="text">The plain text snapshot.</param>
     /// <returns>The logical line count.</returns>
-    private static int CountLines(string text) => text.Length == 0 ? 0 : text.Split(Environment.NewLine, StringSplitOptions.None).Length;
+    private static int CountLines(string text) => text.Length == 0 ? 0 : text.Split(Environment.NewLine).Length;
 
     /// <summary>Returns a compact escaped preview for selected text.</summary>
     /// <param name="text">The selected text.</param>
@@ -143,7 +144,8 @@ public partial class MainWindow : Window
 
     /// <summary>Returns whether the file is a supported image file for inline rendering.</summary>
     /// <param name="file">The dropped file path.</param>
-    /// <returns><see langword="true"/> when the file is a decodable image candidate; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when the file is a decodable image candidate; otherwise, <see
+    /// langword="false"/>.</returns>
     private static bool IsSupportedImageFile(string file)
     {
         string extension = Path.GetExtension(file);
@@ -170,7 +172,7 @@ public partial class MainWindow : Window
             Margin = new(DroppedImageMargin),
             Stretch = Stretch.Uniform,
             StretchDirection = StretchDirection.DownOnly,
-            ToolTip = Path.GetFileName(file)
+            ToolTip = Path.GetFileName(file),
         };
     }
 
@@ -204,7 +206,7 @@ public partial class MainWindow : Window
             "Paste" => (ApplicationCommands.Paste, "paste", false),
             "SelectAll" => (ApplicationCommands.SelectAll, "select all", false),
             "Reset" => (null, "reset", true),
-            _ => (null, action, false)
+            _ => (null, action, false),
         };
 
         if (reset)
@@ -326,9 +328,10 @@ public partial class MainWindow : Window
         if (e.Data.GetDataPresent(DataFormats.FileDrop) && e.Data.GetData(DataFormats.FileDrop) is string[] files)
         {
             int insertedImages = InsertDroppedImages(files, GetDropInsertionPosition(e));
-            _lastDropState = insertedImages == 0
-                ? $"dropped files: {files.Length}"
-                : $"dropped files: {files.Length}; inserted images: {insertedImages}";
+            _lastDropState =
+                insertedImages == 0
+                    ? $"dropped files: {files.Length}"
+                    : $"dropped files: {files.Length}; inserted images: {insertedImages}";
         }
         else if (e.Data.GetDataPresent(DataFormats.UnicodeText))
         {
@@ -374,7 +377,8 @@ public partial class MainWindow : Window
             try
             {
                 InlineUIContainer container = new(CreateDroppedImage(file), currentPosition);
-                currentPosition = container.ElementEnd.GetInsertionPosition(LogicalDirection.Forward) ?? container.ElementEnd;
+                currentPosition =
+                    container.ElementEnd.GetInsertionPosition(LogicalDirection.Forward) ?? container.ElementEnd;
                 Editor.CaretPosition = currentPosition;
                 insertedImages++;
             }
@@ -442,9 +446,15 @@ public partial class MainWindow : Window
         int selectionEnd = new TextRange(Editor.Document.ContentStart, Editor.Selection.End).Text.Length;
 
         FocusStateText.Text = $"Reason: {reason}; keyboard focus={Editor.IsKeyboardFocusWithin}";
-        TextStateText.Text = $"Text: chars={plainText.Length}; lines={CountLines(plainText)}; blocks={Editor.Document.Blocks.Count}";
-        SelectionStateText.Text = $"Selection: start={selectionStart}; end={selectionEnd}; length={selectedText.Length}; caret={caretOffset}; text=\"{Preview(selectedText)}\"";
-        FormattingStateText.Text = $"Formatting: bold={IsSelectionPropertyActive(TextElement.FontWeightProperty, FontWeights.Bold)}; italic={IsSelectionPropertyActive(TextElement.FontStyleProperty, FontStyles.Italic)}; underline={IsUnderlineActive()}";
+        TextStateText.Text =
+            $"Text: chars={plainText.Length}; lines={CountLines(plainText)}; blocks={Editor.Document.Blocks.Count}";
+        SelectionStateText.Text =
+            $"Selection: start={selectionStart}; end={selectionEnd}; length={selectedText.Length}; "
+            + $"caret={caretOffset}; text=\"{Preview(selectedText)}\"";
+        FormattingStateText.Text =
+            $"Formatting: bold={IsSelectionPropertyActive(TextElement.FontWeightProperty, FontWeights.Bold)}; "
+            + $"italic={IsSelectionPropertyActive(TextElement.FontStyleProperty, FontStyles.Italic)}; "
+            + $"underline={IsUnderlineActive()}";
         UndoStateText.Text = $"Undo: canUndo={Editor.CanUndo}; canRedo={Editor.CanRedo}";
         ClipboardStateText.Text = $"Clipboard: {DescribeClipboard()}; lastAction={_lastClipboardAction}";
         DropStateText.Text = $"Drop: {_lastDropState}";
@@ -454,7 +464,8 @@ public partial class MainWindow : Window
     /// <summary>Returns whether the current selection has the expected dependency property value.</summary>
     /// <param name="property">The dependency property to inspect.</param>
     /// <param name="expectedValue">The expected property value.</param>
-    /// <returns><see langword="true"/> when the selection property matches; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when the selection property matches; otherwise, <see
+    /// langword="false"/>.</returns>
     private bool IsSelectionPropertyActive(DependencyProperty property, object expectedValue)
     {
         object value = Editor.Selection.GetPropertyValue(property);
@@ -462,7 +473,8 @@ public partial class MainWindow : Window
     }
 
     /// <summary>Returns whether underline formatting is active at the current selection.</summary>
-    /// <returns><see langword="true"/> when underline formatting is active; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> when underline formatting is active; otherwise, <see
+    /// langword="false"/>.</returns>
     private bool IsUnderlineActive()
     {
         object value = Editor.Selection.GetPropertyValue(Inline.TextDecorationsProperty);

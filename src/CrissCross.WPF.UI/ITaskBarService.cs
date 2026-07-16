@@ -25,6 +25,12 @@ public interface ITaskBarService
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool SetState(IntPtr windowHandle, TaskBarProgressState taskBarProgressState);
 
+    /// <summary>Sets taskbar state of the selected window.</summary>
+    /// <param name="window">The window value.</param>
+    /// <param name="taskBarProgressState">The taskBarProgressState value.</param>
+    /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
+    bool SetState(Window? window, TaskBarProgressState taskBarProgressState);
+
     /// <summary>Sets taskbar value of the selected window handle.</summary>
     /// <param name="windowHandle">The windowHandle value.</param>
     /// <param name="taskBarProgressState">The taskBarProgressState value.</param>
@@ -39,12 +45,6 @@ public interface ITaskBarService
     /// <param name="max">The max value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool SetValue(IntPtr windowHandle, int current, int max);
-
-    /// <summary>Sets taskbar state of the selected window.</summary>
-    /// <param name="window">The window value.</param>
-    /// <param name="taskBarProgressState">The taskBarProgressState value.</param>
-    /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
-    bool SetState(Window? window, TaskBarProgressState taskBarProgressState);
 
     /// <summary>Sets taskbar value of the selected window.</summary>
     /// <param name="window">The window value.</param>

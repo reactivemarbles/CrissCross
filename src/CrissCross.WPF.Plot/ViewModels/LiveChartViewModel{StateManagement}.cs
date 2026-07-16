@@ -83,9 +83,7 @@ public partial class LiveChartViewModel
     public void UpdateChartObjectsCollection()
     {
         // Get existing collection (items remain alive, owned by PlotLinesCollectionUI)
-        var chartSettings = PlotLinesCollectionUI
-            .Select(pl => pl.ChartSettings)
-            .Where(cs => cs is not null);
+        var chartSettings = PlotLinesCollectionUI.Select(pl => pl.ChartSettings).Where(cs => cs is not null);
 
         // Populate from current plot lines (snapshot to avoid concurrent modification)
         ChartObjectsCollection.ReplaceAll(chartSettings);

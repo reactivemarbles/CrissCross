@@ -8,12 +8,11 @@ namespace CrissCross.WPF.UI.UIExtensions;
 internal sealed class HslColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderHslTypeProperty member.</summary>
-    public static readonly DependencyProperty SliderHslTypeProperty =
-        DependencyProperty.Register(
-            nameof(SliderHslType),
-            typeof(string),
-            typeof(HslColorSlider),
-            new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty SliderHslTypeProperty = DependencyProperty.Register(
+        nameof(SliderHslType),
+        typeof(string),
+        typeof(HslColorSlider),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>Gets or sets SliderHslType.</summary>
     public string SliderHslType
@@ -30,16 +29,14 @@ internal sealed class HslColorSlider : PreviewColorSlider
             var colorEnd = GetColorForSelectedArgb(FullHueDegrees);
             LeftCapColor.Color = colorStart;
             RightCapColor.Color = colorEnd;
-            BackgroundGradient =
-            [
+            SetBackgroundGradient([
                 new GradientStop(colorStart, 0),
                 new GradientStop(GetColorForSelectedArgb(YellowHueDegrees), YellowGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(GreenHueDegrees), GreenGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(CyanHueDegrees), CyanGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(BlueHueDegrees), BlueGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(MagentaHueDegrees), MagentaGradientOffset),
-                new GradientStop(colorEnd, 1)
-            ];
+                new GradientStop(colorEnd, 1),]);
             return;
         }
 
@@ -49,12 +46,10 @@ internal sealed class HslColorSlider : PreviewColorSlider
             var colorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
             LeftCapColor.Color = colorStart;
             RightCapColor.Color = colorEnd;
-            BackgroundGradient =
-            [
+            SetBackgroundGradient([
                 new GradientStop(colorStart, 0),
                 new GradientStop(GetColorForSelectedArgb(MidpointColorChannelValue), CyanGradientOffset),
-                new GradientStop(colorEnd, 1)
-            ];
+                new GradientStop(colorEnd, 1),]);
             return;
         }
 
@@ -62,11 +57,7 @@ internal sealed class HslColorSlider : PreviewColorSlider
         var fallbackColorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
         LeftCapColor.Color = fallbackColorStart;
         RightCapColor.Color = fallbackColorEnd;
-        BackgroundGradient =
-        [
-            new GradientStop(fallbackColorStart, 0.0),
-            new GradientStop(fallbackColorEnd, 1)
-        ];
+        SetBackgroundGradient([new GradientStop(fallbackColorStart, 0.0), new GradientStop(fallbackColorEnd, 1)]);
     }
 
     /// <summary>Provides the GetColorForSelectedArgb member.</summary>
@@ -77,34 +68,56 @@ internal sealed class HslColorSlider : PreviewColorSlider
         switch (SliderHslType)
         {
             case "H":
-                {
-                    var rgbtuple = ColorSpaceHelper.HslToRgb(value, CurrentColorState.HSL_S, CurrentColorState.HSL_L);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HslToRgb(value, CurrentColorState.HSL_S, CurrentColorState.HSL_L);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             case "S":
-                {
-                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, value / ColorChannelScale, CurrentColorState.HSL_L);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HslToRgb(
+                    CurrentColorState.HSL_H,
+                    value / ColorChannelScale,
+                    CurrentColorState.HSL_L);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             case "L":
-                {
-                    var rgbtuple = ColorSpaceHelper.HslToRgb(CurrentColorState.HSL_H, CurrentColorState.HSL_S, value / ColorChannelScale);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HslToRgb(
+                    CurrentColorState.HSL_H,
+                    CurrentColorState.HSL_S,
+                    value / ColorChannelScale);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             default:
-                return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(CurrentColorState.RGB_R * ColorChannelScale), (byte)(CurrentColorState.RGB_G * ColorChannelScale), (byte)(CurrentColorState.RGB_B * ColorChannelScale));
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_R * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_G * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_B * ColorChannelScale));
         }
     }
 }

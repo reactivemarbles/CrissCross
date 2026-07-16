@@ -9,7 +9,12 @@ namespace CrissCross;
 
 /// <summary>Provides the base contract for CrissCross reactive view models.</summary>
 /// <seealso cref="System.IDisposable"/>
-public interface IRxObject : IReactiveNotifyPropertyChanged<IReactiveObject>, IHandleObservableErrors, INotifiyRoutableViewModel, IDisposable, IAmBuilt
+public interface IRxObject
+    : IReactiveNotifyPropertyChanged<IReactiveObject>,
+        IHandleObservableErrors,
+        INotifiyRoutableViewModel,
+        IDisposable,
+        IAmBuilt
 {
     /// <summary>Gets or sets the display name.</summary>
     /// <value>

@@ -6,29 +6,30 @@ using System.Windows.Controls;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set to true, PasswordProperty always contains raw password.</summary>
-public class PasswordBox : TextBox
+/// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set
+/// to true, PasswordProperty always contains raw password.</summary>
+public partial class PasswordBox : TextBox
 {
     /// <summary>Property for <see cref="Password"/>.</summary>
     public static readonly DependencyProperty PasswordProperty = DependencyProperty.Register(
         nameof(Password),
         typeof(string),
         typeof(PasswordBox),
-            new PropertyMetadata(string.Empty, static (d, _) => OnPasswordPropertyChanged((PasswordBox)d)));
+        new PropertyMetadata(string.Empty, static (d, _) => OnPasswordPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="PasswordChar"/>.</summary>
     public static readonly DependencyProperty PasswordCharProperty = DependencyProperty.Register(
         nameof(PasswordChar),
         typeof(char),
         typeof(PasswordBox),
-            new PropertyMetadata('*', static (d, _) => OnPasswordCharPropertyChanged((PasswordBox)d)));
+        new PropertyMetadata('*', static (d, _) => OnPasswordCharPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="IsPasswordRevealed"/>.</summary>
     public static readonly DependencyProperty IsPasswordRevealedProperty = DependencyProperty.Register(
         nameof(IsPasswordRevealed),
         typeof(bool),
         typeof(PasswordBox),
-            new PropertyMetadata(false, static (d, _) => OnPasswordRevealModePropertyChanged((PasswordBox)d)));
+        new PropertyMetadata(false, static (d, _) => OnPasswordRevealModePropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="RevealButtonEnabled"/>.</summary>
     public static readonly DependencyProperty RevealButtonEnabledProperty = DependencyProperty.Register(
@@ -45,7 +46,7 @@ public class PasswordBox : TextBox
         typeof(PasswordBox));
 
     /// <summary>Stores the _passwordHelper value.</summary>
-    private readonly PasswordHelper _passwordHelper;
+    private PasswordHelper _passwordHelper = null!;
 
     /// <summary>Stores the _lockUpdatingContents value.</summary>
     private bool _lockUpdatingContents;
@@ -54,7 +55,6 @@ public class PasswordBox : TextBox
     public PasswordBox()
     {
         _lockUpdatingContents = false;
-        _passwordHelper = new(this);
     }
 
     /// <summary>Event fired from this text box when its inner content has been changed.</summary>
@@ -88,7 +88,7 @@ public class PasswordBox : TextBox
         private set => SetValue(IsPasswordRevealedProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets a value deciding whether to display the reveal password button.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public bool RevealButtonEnabled
     {
         get => (bool)GetValue(RevealButtonEnabledProperty);
@@ -154,18 +154,18 @@ public class PasswordBox : TextBox
         switch (parameter)
         {
             case "reveal":
-                {
-                    IsPasswordRevealed = !IsPasswordRevealed;
-                    _ = Focus();
-                    CaretIndex = Text.Length;
-                    break;
-                }
+            {
+                IsPasswordRevealed = !IsPasswordRevealed;
+                _ = Focus();
+                CaretIndex = Text.Length;
+                break;
+            }
 
             default:
-                {
-                    base.OnTemplateButtonClick(parameter);
-                    break;
-                }
+            {
+                base.OnTemplateButtonClick(parameter);
+                break;
+            }
         }
     }
 
@@ -280,39 +280,39 @@ public class PasswordBox : TextBox
             switch (newCharacters.Length)
             {
                 case > 1:
-                    {
-                        var index = _currentText.IndexOf(newCharacters[0]);
+                {
+                    var index = _currentText.IndexOf(newCharacters[0]);
 
-                        _newPasswordValue =
-                            index > _newPasswordValue.Length - 1
-                                ? _newPasswordValue + newCharacters
-                                : _newPasswordValue.Insert(index, newCharacters);
-                        break;
-                    }
+                    _newPasswordValue =
+                        index > _newPasswordValue.Length - 1
+                            ? _newPasswordValue + newCharacters
+                            : _newPasswordValue.Insert(index, newCharacters);
+                    break;
+                }
 
                 case 1:
+                {
+                    for (var i = 0; i < _currentText.Length; i++)
                     {
-                        for (var i = 0; i < _currentText.Length; i++)
+                        if (_currentText[i] == passwordChar)
                         {
-                            if (_currentText[i] == passwordChar)
-                            {
-                                continue;
-                            }
-
-                            UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
-                            break;
+                            continue;
                         }
 
+                        UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
                         break;
                     }
 
+                    break;
+                }
+
                 case 0 when !isDeleted:
-                    {
-                        // The input is a PasswordChar, which is to be inserted at the designated position.
-                        var insertIndex = selectionIndex - 1;
-                        UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
-                        break;
-                    }
+                {
+                    // The input is a PasswordChar, which is to be inserted at the designated position.
+                    var insertIndex = selectionIndex - 1;
+                    UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
+                    break;
+                }
             }
 
             return _newPasswordValue;
@@ -327,9 +327,7 @@ public class PasswordBox : TextBox
         /// <param name="insertValue">The insertvalue.</param>
         private void UpdatePasswordWithInputCharacter(int insertIndex, string insertValue)
         {
-            Debug.Assert(
-                _currentText == passwordBox.Text,
-                "_currentText == _passwordBox.Text");
+            Debug.Assert(_currentText == passwordBox.Text, "_currentText == _passwordBox.Text");
 
             if (_currentText.Length == _newPasswordValue.Length)
             {
@@ -346,12 +344,8 @@ public class PasswordBox : TextBox
         /// <returns>The result.</returns>
         private bool IsDeleteOption()
         {
-            Debug.Assert(
-                _currentText == passwordBox.Text,
-                "_currentText == _passwordBox.Text");
-            Debug.Assert(
-                _currentPassword == passwordBox.Password,
-                "_currentPassword == _passwordBox.Password");
+            Debug.Assert(_currentText == passwordBox.Text, "_currentText == _passwordBox.Text");
+            Debug.Assert(_currentPassword == passwordBox.Password, "_currentPassword == _passwordBox.Password");
 
             return _currentText.Length < _currentPassword.Length;
         }

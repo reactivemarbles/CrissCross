@@ -9,20 +9,18 @@ namespace CrissCross.WPF.UI.Controls;
 public sealed class PersonPictureTemplateSettings : DependencyObject
 {
     /// <summary>Provides the ActualImageBrushPropertyKey member.</summary>
-    public static readonly DependencyPropertyKey ActualImageBrushPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(ActualImageBrush),
-            typeof(ImageBrush),
-            typeof(PersonPictureTemplateSettings),
-            null);
+    public static readonly DependencyPropertyKey ActualImageBrushPropertyKey = DependencyProperty.RegisterReadOnly(
+        nameof(ActualImageBrush),
+        typeof(ImageBrush),
+        typeof(PersonPictureTemplateSettings),
+        null);
 
     /// <summary>Provides the ActualInitialsPropertyKey member.</summary>
-    public static readonly DependencyPropertyKey ActualInitialsPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(ActualInitials),
-            typeof(string),
-            typeof(PersonPictureTemplateSettings),
-            new PropertyMetadata(string.Empty));
+    public static readonly DependencyPropertyKey ActualInitialsPropertyKey = DependencyProperty.RegisterReadOnly(
+        nameof(ActualInitials),
+        typeof(string),
+        typeof(PersonPictureTemplateSettings),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>The actual image brush property.</summary>
     public static readonly DependencyProperty ActualImageBrushProperty = ActualImageBrushPropertyKey.DependencyProperty;

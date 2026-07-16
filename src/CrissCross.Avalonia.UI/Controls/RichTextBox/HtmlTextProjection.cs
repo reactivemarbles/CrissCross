@@ -153,7 +153,11 @@ internal sealed class HtmlTextProjection
     /// <param name="sourceIndex">The sourceIndex value.</param>
     /// <param name="text">The text value.</param>
     /// <param name="characters">The characters value.</param>
-    private static void AppendLiteral(string source, int sourceIndex, StringBuilder text, List<RenderedCharacter> characters)
+    private static void AppendLiteral(
+        string source,
+        int sourceIndex,
+        StringBuilder text,
+        List<RenderedCharacter> characters)
     {
         _ = text.Append(source[sourceIndex]);
         characters.Add(new RenderedCharacter(sourceIndex, sourceIndex + 1));
@@ -165,7 +169,12 @@ internal sealed class HtmlTextProjection
     /// <param name="sourceEnd">The sourceEnd value.</param>
     /// <param name="text">The text value.</param>
     /// <param name="characters">The characters value.</param>
-    private static void AppendMapped(string rendered, int sourceStart, int sourceEnd, StringBuilder text, List<RenderedCharacter> characters)
+    private static void AppendMapped(
+        string rendered,
+        int sourceStart,
+        int sourceEnd,
+        StringBuilder text,
+        List<RenderedCharacter> characters)
     {
         foreach (var character in rendered)
         {
@@ -180,7 +189,11 @@ internal sealed class HtmlTextProjection
     /// <param name="text">The rendered text builder.</param>
     /// <param name="characters">The source map.</param>
     /// <returns><see langword="true"/> when a tag was consumed.</returns>
-    private static bool TryAppendTag(string source, ref int index, StringBuilder text, List<RenderedCharacter> characters)
+    private static bool TryAppendTag(
+        string source,
+        ref int index,
+        StringBuilder text,
+        List<RenderedCharacter> characters)
     {
         if (source[index] != '<')
         {
@@ -207,7 +220,12 @@ internal sealed class HtmlTextProjection
     /// <param name="sourceEnd">The source end offset.</param>
     /// <param name="text">The rendered text builder.</param>
     /// <param name="characters">The source map.</param>
-    private static void AppendKnownTag(string tagContent, int sourceStart, int sourceEnd, StringBuilder text, List<RenderedCharacter> characters)
+    private static void AppendKnownTag(
+        string tagContent,
+        int sourceStart,
+        int sourceEnd,
+        StringBuilder text,
+        List<RenderedCharacter> characters)
     {
         if (IsBreakTag(tagContent))
         {
@@ -235,7 +253,11 @@ internal sealed class HtmlTextProjection
     /// <param name="text">The rendered text builder.</param>
     /// <param name="characters">The source map.</param>
     /// <returns><see langword="true"/> when an entity was consumed.</returns>
-    private static bool TryAppendEntity(string source, ref int index, StringBuilder text, List<RenderedCharacter> characters)
+    private static bool TryAppendEntity(
+        string source,
+        ref int index,
+        StringBuilder text,
+        List<RenderedCharacter> characters)
     {
         if (source[index] != '&')
         {
@@ -270,7 +292,10 @@ internal sealed class HtmlTextProjection
             return false;
         }
 
-        var tagName = tagContent.TrimStart('/').Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        var tagName = tagContent
+            .TrimStart('/')
+            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
         return string.Equals(tagName, "br", StringComparison.OrdinalIgnoreCase);
     }
 
@@ -284,7 +309,9 @@ internal sealed class HtmlTextProjection
             return false;
         }
 
-        var tagName = tagContent[1..].Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        var tagName = tagContent[1..]
+            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
         return tagName is not null && BlockEndTags.Contains(tagName);
     }
 
@@ -298,7 +325,10 @@ internal sealed class HtmlTextProjection
             return false;
         }
 
-        var tagName = tagContent.TrimStart('/').Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        var tagName = tagContent
+            .TrimStart('/')
+            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault();
         return string.Equals(tagName, "img", StringComparison.OrdinalIgnoreCase);
     }
 

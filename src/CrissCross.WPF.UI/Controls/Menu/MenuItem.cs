@@ -4,12 +4,11 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extended <see cref="System.Windows.Controls.MenuItem"/> with <see cref="SymbolRegular"/> properties.</summary>
+/// <summary>Extended MenuItem with SymbolRegular properties.</summary>
 public class MenuItem : System.Windows.Controls.MenuItem
 {
     /// <summary>Provides the MenuItem member.</summary>
-    static MenuItem() =>
-        IconProperty.OverrideMetadata(typeof(MenuItem), new FrameworkPropertyMetadata(null));
+    static MenuItem() => IconProperty.OverrideMetadata(typeof(MenuItem), new FrameworkPropertyMetadata(null));
 
     /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     public new IconElement Icon

@@ -28,51 +28,25 @@ public partial class MainWindowViewModel : RxObject
         _tracker = new();
         SetupTracker();
         NavigationModels = [];
-        NavigationModels.AddRange(
-        [
-            new NavigationModel(null, NavigationModels, MainWindow.Navigation) { IsExpander = true, Icon = new SymbolIcon(SymbolRegular.LineHorizontal320) },
-            new NavigationModel(typeof(MainViewModel), NavigationModels, MainWindow.Navigation) { Name = "Main", Icon = new SymbolIcon(SymbolRegular.Home20), IsSelected = true },
-            new NavigationModel(typeof(AllControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "All Controls", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
-            new NavigationModel(typeof(InputControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Input", Icon = new SymbolIcon(SymbolRegular.Keyboard20) },
-            new NavigationModel(typeof(DateTimeControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Date / Time", Icon = new SymbolIcon(SymbolRegular.CalendarLtr20) },
-            new NavigationModel(typeof(MediaControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Media", Icon = new SymbolIcon(SymbolRegular.Image20) },
-            new NavigationModel(typeof(ColorControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Color", Icon = new SymbolIcon(SymbolRegular.Color24) },
-            new NavigationModel(typeof(IndicatorsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Indicators", Icon = new SymbolIcon(SymbolRegular.Gauge20) },
-            new NavigationModel(typeof(NavigationControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Navigation", Icon = new SymbolIcon(SymbolRegular.Navigation20) },
-            new NavigationModel(typeof(ContainerControlsViewModel), NavigationModels, MainWindow.Navigation) { Name = "Containers", Icon = new SymbolIcon(SymbolRegular.AppFolder20) },
-            new NavigationModel(typeof(FeaturePlaygroundViewModel), NavigationModels, MainWindow.Navigation) { Name = "Feature Playground", Icon = new SymbolIcon(SymbolRegular.ControlButton20) },
-            new NavigationModel(typeof(TreeViewViewModel), NavigationModels, MainWindow.Navigation) { Name = "TreeViews", Icon = new SymbolIcon(SymbolRegular.DataTreemap20), },
-        ]);
+        NavigationModels.AddRange([
+            CreateNavigationModel(null, null, SymbolRegular.LineHorizontal320, isExpander: true),
+            CreateNavigationModel(typeof(MainViewModel), "Main", SymbolRegular.Home20, isSelected: true),
+            CreateNavigationModel(typeof(AllControlsViewModel), "All Controls", SymbolRegular.ControlButton20),
+            CreateNavigationModel(typeof(InputControlsViewModel), "Input", SymbolRegular.Keyboard20),
+            CreateNavigationModel(typeof(DateTimeControlsViewModel), "Date / Time", SymbolRegular.CalendarLtr20),
+            CreateNavigationModel(typeof(MediaControlsViewModel), "Media", SymbolRegular.Image20),
+            CreateNavigationModel(typeof(ColorControlsViewModel), "Color", SymbolRegular.Color24),
+            CreateNavigationModel(typeof(IndicatorsViewModel), "Indicators", SymbolRegular.Gauge20),
+            CreateNavigationModel(typeof(NavigationControlsViewModel), "Navigation", SymbolRegular.Navigation20),
+            CreateNavigationModel(typeof(ContainerControlsViewModel), "Containers", SymbolRegular.AppFolder20),
+            CreateNavigationModel(
+                typeof(FeaturePlaygroundViewModel),
+                "Feature Playground",
+                SymbolRegular.ControlButton20),
+            CreateNavigationModel(typeof(TreeViewViewModel), "TreeViews", SymbolRegular.DataTreemap20),]);
 
-        // Register ViewModels and Views (basic demos)
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AllControlsViewModel()).Register<IViewFor<AllControlsViewModel>>(static () => new AllControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AppBarButtonViewModel()).Register<IViewFor<AppBarButtonViewModel>>(static () => new AppBarButtonView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new BBCodeBlockViewModel()).Register<IViewFor<BBCodeBlockViewModel>>(static () => new BBCodeBlockView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ButtonsViewModel()).Register<IViewFor<ButtonsViewModel>>(static () => new ButtonsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new CheckBoxViewModel()).Register<IViewFor<CheckBoxViewModel>>(static () => new CheckBoxView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ComboBoxViewModel()).Register<IViewFor<ComboBoxViewModel>>(static () => new ComboBoxView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new DatePickerViewModel()).Register<IViewFor<DatePickerViewModel>>(static () => new DatePickerView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ImageViewModel()).Register<IViewFor<ImageViewModel>>(static () => new ImageView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new NumericPushButtonViewModel()).Register<IViewFor<NumericPushButtonViewModel>>(static () => new NumericPushButtonView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new PasswordBoxViewModel()).Register<IViewFor<PasswordBoxViewModel>>(static () => new PasswordBoxView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new RadioButtonViewModel()).Register<IViewFor<RadioButtonViewModel>>(static () => new RadioButtonView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new SliderViewModel()).Register<IViewFor<SliderViewModel>>(static () => new SliderView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new TextBlockViewModel()).Register<IViewFor<TextBlockViewModel>>(static () => new TextBlockView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new TextBoxViewModel()).Register<IViewFor<TextBoxViewModel>>(static () => new TextBoxView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ToggleButtonViewModel()).Register<IViewFor<ToggleButtonViewModel>>(static () => new ToggleButtonView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorPickersViewModel()).Register<IViewFor<ColorPickersViewModel>>(static () => new ColorPickersView());
-
-        // Group/category views
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new InputControlsViewModel()).Register<IViewFor<InputControlsViewModel>>(static () => new InputControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new DateTimeControlsViewModel()).Register<IViewFor<DateTimeControlsViewModel>>(static () => new DateTimeControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MediaControlsViewModel()).Register<IViewFor<MediaControlsViewModel>>(static () => new MediaControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new IndicatorsViewModel()).Register<IViewFor<IndicatorsViewModel>>(static () => new IndicatorsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new NavigationControlsViewModel()).Register<IViewFor<NavigationControlsViewModel>>(static () => new NavigationControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ContainerControlsViewModel()).Register<IViewFor<ContainerControlsViewModel>>(static () => new ContainerControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ColorControlsViewModel()).Register<IViewFor<ColorControlsViewModel>>(static () => new ColorControlsView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new FeaturePlaygroundViewModel()).Register<IViewFor<FeaturePlaygroundViewModel>>(static () => new FeaturePlaygroundView());
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new TreeViewViewModel()).Register<IViewFor<TreeViewViewModel>>(static () => new TreeViewView());
+        RegisterBasicViews();
+        RegisterCategoryViews();
 
         AppLocator.CurrentMutable.SetupComplete();
     }
@@ -83,12 +57,82 @@ public partial class MainWindowViewModel : RxObject
     /// </value>
     public List<NavigationModel> NavigationModels { get; }
 
+    /// <summary>Registers the individual control demo views.</summary>
+    private static void RegisterBasicViews()
+    {
+        Register<MainViewModel, MainView>();
+        Register<AllControlsViewModel, AllControlsView>();
+        Register<AppBarButtonViewModel, AppBarButtonView>();
+        Register<BBCodeBlockViewModel, BBCodeBlockView>();
+        Register<ButtonsViewModel, ButtonsView>();
+        Register<CheckBoxViewModel, CheckBoxView>();
+        Register<ComboBoxViewModel, ComboBoxView>();
+        Register<DatePickerViewModel, DatePickerView>();
+        Register<ImageViewModel, ImageView>();
+        Register<NumericPushButtonViewModel, NumericPushButtonView>();
+        Register<PasswordBoxViewModel, PasswordBoxView>();
+        Register<RadioButtonViewModel, RadioButtonView>();
+        Register<SliderViewModel, SliderView>();
+        Register<TextBlockViewModel, TextBlockView>();
+        Register<TextBoxViewModel, TextBoxView>();
+        Register<ToggleButtonViewModel, ToggleButtonView>();
+        Register<ColorPickersViewModel, ColorPickersView>();
+    }
+
+    /// <summary>Registers the grouped and feature demo views.</summary>
+    private static void RegisterCategoryViews()
+    {
+        Register<InputControlsViewModel, InputControlsView>();
+        Register<DateTimeControlsViewModel, DateTimeControlsView>();
+        Register<MediaControlsViewModel, MediaControlsView>();
+        Register<IndicatorsViewModel, IndicatorsView>();
+        Register<NavigationControlsViewModel, NavigationControlsView>();
+        Register<ContainerControlsViewModel, ContainerControlsView>();
+        Register<ColorControlsViewModel, ColorControlsView>();
+        Register<FeaturePlaygroundViewModel, FeaturePlaygroundView>();
+        Register<TreeViewViewModel, TreeViewView>();
+    }
+
+    /// <summary>Registers one view model and its corresponding view.</summary>
+    /// <typeparam name="TViewModel">The registered view model type.</typeparam>
+    /// <typeparam name="TView">The registered view type.</typeparam>
+    private static void Register<TViewModel, TView>()
+        where TViewModel : class, IRxObject, new()
+        where TView : class, IViewFor<TViewModel>, new() =>
+        AppLocator
+            .CurrentMutable.RegisterLazySingletonAnd(static () => new TViewModel())
+            .Register<IViewFor<TViewModel>>(static () => new TView());
+
+    /// <summary>Creates a configured navigation model.</summary>
+    /// <param name="viewModelType">The destination view model type.</param>
+    /// <param name="name">The navigation label.</param>
+    /// <param name="symbol">The navigation icon.</param>
+    /// <param name="isSelected">Whether the item is initially selected.</param>
+    /// <param name="isExpander">Whether the item represents an expander.</param>
+    /// <returns>The configured navigation model.</returns>
+    private NavigationModel CreateNavigationModel(
+        Type? viewModelType,
+        string? name,
+        SymbolRegular symbol,
+        bool isSelected = false,
+        bool isExpander = false) =>
+        new(viewModelType, NavigationModels, MainWindow.Navigation)
+        {
+            Name = name ?? string.Empty,
+            Icon = new SymbolIcon(symbol),
+            IsSelected = isSelected,
+            IsExpander = isExpander,
+        };
+
     /// <summary>Configures persisted main window tracking.</summary>
     private void SetupTracker()
     {
         AppLocator.CurrentMutable.RegisterConstant(_tracker);
-        _tracker?.Configure<MainWindow>()
-            .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
+        _tracker
+            ?.Configure(new TrackingRequest<MainWindow>())
+            .Id(
+                w => w.Name,
+                $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
             .Property(w => w.Height)
             .Property(w => w.Width)
             .Property(w => w.Left)

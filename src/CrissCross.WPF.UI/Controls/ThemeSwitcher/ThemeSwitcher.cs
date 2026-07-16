@@ -18,7 +18,10 @@ public class ThemeSwitcher : Control
         nameof(SelectedChoice),
         typeof(ThemeChoice),
         typeof(ThemeSwitcher),
-        new FrameworkPropertyMetadata(ThemeChoice.System, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnThemeInputChanged));
+        new FrameworkPropertyMetadata(
+            ThemeChoice.System,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnThemeInputChanged));
 
     /// <summary>Property for <see cref="SystemChoice"/>.</summary>
     public static readonly DependencyProperty SystemChoiceProperty = DependencyProperty.Register(
@@ -156,7 +159,10 @@ public class ThemeSwitcher : Control
             return choice;
         }
 
-        return Enum.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), ignoreCase: true, out ThemeChoice parsed)
+        return Enum.TryParse(
+            Convert.ToString(value, CultureInfo.InvariantCulture),
+            ignoreCase: true,
+            out ThemeChoice parsed)
             ? parsed
             : ThemeChoice.System;
     }
@@ -165,31 +171,34 @@ public class ThemeSwitcher : Control
     /// <param name="themeService">The themeService value.</param>
     /// <param name="selectedChoice">The selectedChoice value.</param>
     /// <param name="effectiveChoice">The effectiveChoice value.</param>
-    private static void ApplyTheme(IThemeService themeService, ThemeChoice selectedChoice, ThemeChoice effectiveChoice) =>
+    private static void ApplyTheme(
+        IThemeService themeService,
+        ThemeChoice selectedChoice,
+        ThemeChoice effectiveChoice) =>
         themeService.SetTheme(
-            selectedChoice == ThemeChoice.System
-                ? themeService.GetSystemTheme()
-                : ToApplicationTheme(effectiveChoice));
+            selectedChoice == ThemeChoice.System ? themeService.GetSystemTheme() : ToApplicationTheme(effectiveChoice));
 
     /// <summary>Provides the ToApplicationTheme member.</summary>
     /// <param name="choice">The choice value.</param>
     /// <returns>The result.</returns>
-    private static ApplicationTheme ToApplicationTheme(ThemeChoice choice) => choice switch
-    {
-        ThemeChoice.Dark => ApplicationTheme.Dark,
-        ThemeChoice.HighContrast => ApplicationTheme.HighContrast,
-        _ => ApplicationTheme.Light
-    };
+    private static ApplicationTheme ToApplicationTheme(ThemeChoice choice) =>
+        choice switch
+        {
+            ThemeChoice.Dark => ApplicationTheme.Dark,
+            ThemeChoice.HighContrast => ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Light,
+        };
 
     /// <summary>Provides the ToThemeChoice member.</summary>
     /// <param name="theme">The theme value.</param>
     /// <returns>The result.</returns>
-    private static ThemeChoice ToThemeChoice(ApplicationTheme theme) => theme switch
-    {
-        ApplicationTheme.Dark => ThemeChoice.Dark,
-        ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
-        _ => ThemeChoice.Light
-    };
+    private static ThemeChoice ToThemeChoice(ApplicationTheme theme) =>
+        theme switch
+        {
+            ApplicationTheme.Dark => ThemeChoice.Dark,
+            ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
+            _ => ThemeChoice.Light,
+        };
 
     /// <summary>Provides the ThemeSwitcherCommand member.</summary>
     private sealed class ThemeSwitcherCommand : ICommand

@@ -6,56 +6,43 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Input;
 
 namespace CrissCross;
 
 /// <summary>Describes a single AOT-friendly property inspector field without reflection-based discovery.</summary>
 public sealed class PropertyDescriptorModel
 {
+    /// <inheritdoc />
+    public PropertyDescriptorModel(string key, string displayName)
+        : this(key, displayName, new PropertyDescriptorOptions())
+    {
+    }
+
     /// <summary>Initializes a new instance of the <see cref="PropertyDescriptorModel"/> class.</summary>
     /// <param name="key">The stable property key.</param>
     /// <param name="displayName">The user-facing property name.</param>
-    /// <param name="category">The category used for grouping.</param>
-    /// <param name="editorKind">The editor kind used by platform presenters.</param>
-    /// <param name="value">The current property value snapshot.</param>
-    /// <param name="originalValue">The original value snapshot used for modified-state calculation.</param>
-    /// <param name="isReadOnly">A value indicating whether the property is read-only.</param>
-    /// <param name="choices">Optional explicit choices for enum-like editors.</param>
-    /// <param name="setValueCommand">An optional command used to set a new value.</param>
-    /// <param name="resetCommand">An optional command used to reset the property.</param>
-    /// <param name="validationMessages">Optional validation messages for the property.</param>
-    /// <param name="templateKey">An optional platform template key for custom editors.</param>
+    /// <param name="options">The editing, value, command, and validation options.</param>
     public PropertyDescriptorModel(
         string key,
         string displayName,
-        string? category = null,
-        PropertyEditorKind editorKind = PropertyEditorKind.Text,
-        object? value = null,
-        object? originalValue = null,
-        bool isReadOnly = false,
-        IReadOnlyList<object?>? choices = null,
-        ICommand? setValueCommand = null,
-        ICommand? resetCommand = null,
-        IReadOnlyList<ValidationMessage>? validationMessages = null,
-        string? templateKey = null)
+        PropertyDescriptorOptions options)
     {
         ThrowHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
-
         ThrowHelper.ThrowIfNullOrWhiteSpace(displayName, nameof(displayName));
+        ThrowHelper.ThrowIfNull(options, nameof(options));
 
         Key = key.Trim();
         DisplayName = displayName.Trim();
-        Category = string.IsNullOrWhiteSpace(category) ? "General" : category!.Trim();
-        EditorKind = editorKind;
-        Value = value;
-        OriginalValue = originalValue;
-        IsReadOnly = isReadOnly;
-        Choices = choices ?? [];
-        SetValueCommand = setValueCommand;
-        ResetCommand = resetCommand;
-        ValidationMessages = validationMessages ?? [];
-        TemplateKey = string.IsNullOrWhiteSpace(templateKey) ? null : templateKey!.Trim();
+        Category = string.IsNullOrWhiteSpace(options.Category) ? "General" : options.Category!.Trim();
+        EditorKind = options.EditorKind;
+        Value = options.Value;
+        OriginalValue = options.OriginalValue;
+        IsReadOnly = options.IsReadOnly;
+        Choices = options.Choices ?? [];
+        SetValueCommand = options.SetValueCommand;
+        ResetCommand = options.ResetCommand;
+        ValidationMessages = options.ValidationMessages ?? [];
+        TemplateKey = string.IsNullOrWhiteSpace(options.TemplateKey) ? null : options.TemplateKey!.Trim();
     }
 
     /// <summary>Gets the stable property key.</summary>
@@ -83,10 +70,10 @@ public sealed class PropertyDescriptorModel
     public IReadOnlyList<object?> Choices { get; }
 
     /// <summary>Gets an optional command used to set a new value.</summary>
-    public ICommand? SetValueCommand { get; }
+    public System.Windows.Input.ICommand? SetValueCommand { get; }
 
     /// <summary>Gets an optional command used to reset the property.</summary>
-    public ICommand? ResetCommand { get; }
+    public System.Windows.Input.ICommand? ResetCommand { get; }
 
     /// <summary>Gets validation messages for the property.</summary>
     public IReadOnlyList<ValidationMessage> ValidationMessages { get; }
@@ -127,19 +114,35 @@ public sealed class PropertyDescriptorModel
     /// <summary>Creates a descriptor snapshot with an updated value.</summary>
     /// <param name="value">The updated value.</param>
     /// <returns>The descriptor snapshot.</returns>
-    public PropertyDescriptorModel WithValue(object? value) => new(
+    public PropertyDescriptorModel WithValue(object? value)
+    {
+        var currentCategory = Category;
+        var currentEditorKind = EditorKind;
+        var currentOriginalValue = OriginalValue;
+        var currentIsReadOnly = IsReadOnly;
+        var currentChoices = Choices;
+        var currentSetValueCommand = SetValueCommand;
+        var currentResetCommand = ResetCommand;
+        var currentValidationMessages = ValidationMessages;
+        var currentTemplateKey = TemplateKey;
+
+        return new(
             Key,
             DisplayName,
-            Category,
-            EditorKind,
-            value,
-            OriginalValue,
-            IsReadOnly,
-            Choices,
-            SetValueCommand,
-            ResetCommand,
-            ValidationMessages,
-            TemplateKey);
+            new PropertyDescriptorOptions
+            {
+                Category = currentCategory,
+                EditorKind = currentEditorKind,
+                Value = value,
+                OriginalValue = currentOriginalValue,
+                IsReadOnly = currentIsReadOnly,
+                Choices = currentChoices,
+                SetValueCommand = currentSetValueCommand,
+                ResetCommand = currentResetCommand,
+                ValidationMessages = currentValidationMessages,
+                TemplateKey = currentTemplateKey
+            });
+    }
 
     /// <summary>Compares two property values for equality.</summary>
     /// <param name="left">The left value.</param>

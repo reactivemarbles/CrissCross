@@ -16,12 +16,13 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
 #endif
 {
     /// <summary>DependencyProperty to control whether alpha should be included.</summary>
-    public static readonly DependencyProperty ShowAlphaProperty =
-        DependencyProperty.Register(
-            nameof(ShowAlpha),
-            typeof(bool),
-            typeof(ColorToHexConverter),
-            new PropertyMetadata(true, static (dependencyObject, _) => ((ColorToHexConverter)dependencyObject).RaiseShowAlphaChange()));
+    public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
+        nameof(ShowAlpha),
+        typeof(bool),
+        typeof(ColorToHexConverter),
+        new PropertyMetadata(
+            true,
+            static (dependencyObject, _) => ((ColorToHexConverter)dependencyObject).RaiseShowAlphaChange()));
 
     /// <summary>Provides the red character index in a short RGB color.</summary>
     private const int ShortRgbRedIndex = 0;
@@ -105,10 +106,14 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
         // short hex
         if (text.Length == ShortRgbLength)
         {
-            _ = final.Append("#FF")
-                .Append(text[ShortRgbRedIndex]).Append(text[ShortRgbRedIndex])
-                .Append(text[ShortRgbGreenIndex]).Append(text[ShortRgbGreenIndex])
-                .Append(text[ShortRgbBlueIndex]).Append(text[ShortRgbBlueIndex]);
+            _ = final
+                .Append("#FF")
+                .Append(text[ShortRgbRedIndex])
+                .Append(text[ShortRgbRedIndex])
+                .Append(text[ShortRgbGreenIndex])
+                .Append(text[ShortRgbGreenIndex])
+                .Append(text[ShortRgbBlueIndex])
+                .Append(text[ShortRgbBlueIndex]);
         }
 
         if (text.Length is ShortArgbLength or > RgbLength)
@@ -165,19 +170,28 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
         if (text.Length == ShortRgbLength)
         {
             // short hex with no alpha
-            _ = final.Append("#FF")
-                .Append(text[ShortRgbRedIndex]).Append(text[ShortRgbRedIndex])
-                .Append(text[ShortRgbGreenIndex]).Append(text[ShortRgbGreenIndex])
-                .Append(text[ShortRgbBlueIndex]).Append(text[ShortRgbBlueIndex]);
+            _ = final
+                .Append("#FF")
+                .Append(text[ShortRgbRedIndex])
+                .Append(text[ShortRgbRedIndex])
+                .Append(text[ShortRgbGreenIndex])
+                .Append(text[ShortRgbGreenIndex])
+                .Append(text[ShortRgbBlueIndex])
+                .Append(text[ShortRgbBlueIndex]);
         }
         else if (text.Length == ShortArgbLength)
         {
             // short hex with alpha
-            _ = final.Append('#')
-                .Append(text[ShortArgbAlphaIndex]).Append(text[ShortArgbAlphaIndex])
-                .Append(text[ShortArgbRedIndex]).Append(text[ShortArgbRedIndex])
-                .Append(text[ShortArgbGreenIndex]).Append(text[ShortArgbGreenIndex])
-                .Append(text[ShortArgbBlueIndex]).Append(text[ShortArgbBlueIndex]);
+            _ = final
+                .Append('#')
+                .Append(text[ShortArgbAlphaIndex])
+                .Append(text[ShortArgbAlphaIndex])
+                .Append(text[ShortArgbRedIndex])
+                .Append(text[ShortArgbRedIndex])
+                .Append(text[ShortArgbGreenIndex])
+                .Append(text[ShortArgbGreenIndex])
+                .Append(text[ShortArgbBlueIndex])
+                .Append(text[ShortArgbBlueIndex]);
         }
         else if (text.Length == RgbLength)
         {

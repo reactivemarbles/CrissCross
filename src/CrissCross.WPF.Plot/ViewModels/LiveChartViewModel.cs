@@ -212,8 +212,7 @@ public partial class LiveChartViewModel : RxObject
     /// <param name="xaxis">The X-axis configuration to use for auto-scaling. Cannot be null.</param>
     /// <returns>An action that automatically scales the plot X-axis.
     /// based on the provided configuration.</returns>
-    public static Action<RenderPack> AutoScaleX(IXAxis xaxis) =>
-        rp => rp.Plot.Axes.AutoScaleX(xaxis);
+    public static Action<RenderPack> AutoScaleX(IXAxis xaxis) => rp => rp.Plot.Axes.AutoScaleX(xaxis);
 
     /// <summary>Creates an action that automatically scales the plot Y-axis.</summary>
     /// <remarks>This method is useful for ensuring that all data points are visible along the Y-axis after
@@ -515,8 +514,7 @@ public partial class LiveChartViewModel : RxObject
             "GreenYellow",
             "BlueViolet",
             "Gray",
-            "Red",
-        ];
+            "Red",];
 
         // add data
         var n = legend.Count() % colors.Count;
@@ -556,8 +554,7 @@ public partial class LiveChartViewModel : RxObject
         {
             foreach (var plotLine in PlotLinesCollectionUI)
             {
-                plotLine.ChartSettings.IsCrossHairVisible =
-                    !plotLine.ChartSettings.IsCrossHairVisible;
+                plotLine.ChartSettings.IsCrossHairVisible = !plotLine.ChartSettings.IsCrossHairVisible;
             }
         });
         AddCrosshairBtn = ReactiveCommand.Create(AddCrosshair);

@@ -41,5 +41,6 @@ internal sealed class AnimationFactorToValueConverter : IMultiValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [Binding.DoNothing];
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+        [Binding.DoNothing];
 }

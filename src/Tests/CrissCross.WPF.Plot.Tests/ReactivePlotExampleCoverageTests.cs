@@ -9,6 +9,12 @@ namespace CrissCross.WPF.Plot.Tests;
 /// <summary>Static coverage tests for reactive WPF plot example and public control binding surface.</summary>
 public sealed class ReactivePlotExampleCoverageTests
 {
+    /// <summary>The WPF plot project name.</summary>
+    private const string PlotProjectName = "CrissCross.WPF.Plot";
+
+    /// <summary>The views directory name.</summary>
+    private const string ViewsDirectoryName = "Views";
+
     /// <summary>Stores the source root.</summary>
     private static readonly string SourceRoot = LocateSourceRoot();
 
@@ -18,9 +24,9 @@ public sealed class ReactivePlotExampleCoverageTests
     public async Task WpfPlotExample_DemonstratesObservableFirstSourcesForEveryChartType()
     {
         var viewModel = ReadSource("CrissCross.WPF.Plot.Test", "ViewModels", "MainViewModel.cs");
-        var view = ReadSource("CrissCross.WPF.Plot.Test", "Views", "MainView.xaml.cs");
-        var properties = ReadSource("CrissCross.WPF.Plot", "Views", "LiveChart{Properties}.cs");
-        var dependencies = ReadSource("CrissCross.WPF.Plot", "Views", "LiveChart{Dependencies}.cs");
+        var view = ReadSource("CrissCross.WPF.Plot.Test", ViewsDirectoryName, "MainView.xaml.cs");
+        var properties = ReadSource(PlotProjectName, ViewsDirectoryName, "LiveChart{Properties}.cs");
+        var dependencies = ReadSource(PlotProjectName, ViewsDirectoryName, "LiveChart{Dependencies}.cs");
         var documentation = ReadRepositoryFile("docs", "reactive-wpf-plot-streams.md");
 
         await Assert.That(viewModel).Contains("ReactivePlotSource.FromSignalPoints");
@@ -43,7 +49,7 @@ public sealed class ReactivePlotExampleCoverageTests
     [Test]
     public async Task LiveChart_DisposesReactivePlotConnectionOnActivationTeardownAndUnload()
     {
-        var control = ReadSource("CrissCross.WPF.Plot", "Views", "LiveChart.xaml.cs");
+        var control = ReadSource(PlotProjectName, ViewsDirectoryName, "LiveChart.xaml.cs");
 
         await Assert.That(control).Contains("DisposeReactivePlotConnection");
         await Assert.That(control).Contains("new ActionDisposable(DisposeReactivePlotConnection).DisposeWith(d)");
@@ -55,9 +61,9 @@ public sealed class ReactivePlotExampleCoverageTests
     [Test]
     public async Task WpfAdapters_DocumentRetentionAndClearStateResetContracts()
     {
-        var adapter = ReadSource("CrissCross.WPF.Plot", "WpfReactivePlotAdapter.cs");
-        var dataLogger = ReadSource("CrissCross.WPF.Plot", "Controls", "DataLoggerUI.cs");
-        var signal = ReadSource("CrissCross.WPF.Plot", "Controls", "SignalUI.cs");
+        var adapter = ReadSource(PlotProjectName, "WpfReactivePlotAdapter.cs");
+        var dataLogger = ReadSource(PlotProjectName, "Controls", "DataLoggerUI.cs");
+        var signal = ReadSource(PlotProjectName, "Controls", "SignalUI.cs");
 
         await Assert.That(adapter).Contains("PrepareSnapshotUpdate");
         await Assert.That(adapter).Contains("update.MaxPoints ?? int.MaxValue");
@@ -110,6 +116,7 @@ public sealed class ReactivePlotExampleCoverageTests
             current = current.Parent;
         }
 
-        throw new DirectoryNotFoundException("Unable to locate CrissCross.slnx from the current test working directory.");
+        throw new DirectoryNotFoundException(
+            "Unable to locate CrissCross.slnx from the current test working directory.");
     }
 }

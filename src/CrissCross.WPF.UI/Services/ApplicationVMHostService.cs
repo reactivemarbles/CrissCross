@@ -39,11 +39,13 @@ public sealed class ApplicationVMHostService<TWindow, TViewModel>(IServiceProvid
 
         if (!Application.Current.Windows.OfType<TWindow>().Any())
         {
-            _navigationWindow = (serviceProvider.GetService(typeof(NavigationWindow)) as NavigationWindow) ?? throw new InvalidOperationException("Navigation Window not registered.");
+            _navigationWindow =
+                (serviceProvider.GetService(typeof(NavigationWindow)) as NavigationWindow)
+                ?? throw new InvalidOperationException("Navigation Window not registered.");
 
             _navigationWindow.Show();
 
-            _navigationWindow.NavigateToView<TViewModel>();
+            _navigationWindow.NavigateToView(new NavigationKeyRequest<TViewModel>());
         }
 
         await Task.CompletedTask;

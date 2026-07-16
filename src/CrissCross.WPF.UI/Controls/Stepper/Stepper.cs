@@ -225,7 +225,7 @@ public class Stepper : ItemsControl
             {
                 StepDescriptor step => step.Key,
                 string value => value,
-                _ => null
+                _ => null,
             };
 
             _execute(key);

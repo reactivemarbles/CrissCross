@@ -10,7 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents a text element containing an icon glyph.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(SymbolIcon), "SymbolIcon.bmp")]
-public class SymbolIcon : FontIcon
+public partial class SymbolIcon : FontIcon
 {
     /// <summary>Property for <see cref="Symbol"/>.</summary>
     public static readonly DependencyProperty SymbolProperty = DependencyProperty.Register(
@@ -27,15 +27,24 @@ public class SymbolIcon : FontIcon
         new PropertyMetadata(false, OnFilledChanged));
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
-    public SymbolIcon()
-    {
-    }
+    public SymbolIcon() { }
+
+    /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
+    /// <param name="symbol">The symbol.</param>
+    public SymbolIcon(SymbolRegular symbol)
+        : this(symbol, DefaultFontSize, false) { }
+
+    /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="fontSize">Size of the font.</param>
+    public SymbolIcon(SymbolRegular symbol, double fontSize)
+        : this(symbol, fontSize, false) { }
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
     /// <param name="symbol">The symbol.</param>
     /// <param name="fontSize">Size of the font.</param>
     /// <param name="filled">if set to <c>true</c> [filled].</param>
-    public SymbolIcon(SymbolRegular symbol, double fontSize = 14, bool filled = false)
+    public SymbolIcon(SymbolRegular symbol, double fontSize, bool filled)
     {
         Symbol = symbol;
         Filled = filled;
@@ -49,14 +58,15 @@ public class SymbolIcon : FontIcon
         set => SetValue(SymbolProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether defines whether or not we should use the <see cref="SymbolFilled"/>.</summary>
+    /// <summary>Gets or sets whether defines whether we should use the SymbolFilled.</summary>
     public bool Filled
     {
         get => (bool)GetValue(FilledProperty);
         set => SetValue(FilledProperty, value);
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to true internally.</summary>
+    /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked
+    /// whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to true internally.</summary>
     /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>
     protected override void OnInitialized(EventArgs e)
     {

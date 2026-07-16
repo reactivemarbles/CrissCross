@@ -32,5 +32,5 @@ public enum ControlAppearance
     Caution,
 
     /// <summary>Transparent color theme.</summary>
-    Transparent
+    Transparent,
 }

@@ -19,36 +19,16 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     private readonly string _color;
 
     /// <summary>Stores the signal subject value.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Value,
-        IList<double> X,
-        int Axis
-    )>? _signalSubject;
+    private readonly Signal<(string? Name, IList<double>? Value, IList<double> X, int Axis)>? _signalSubject;
 
     /// <summary>Stores the scatter subject value.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? X,
-        IList<double> Y,
-        int Axis
-    )>? _scatterSubject;
+    private readonly Signal<(string? Name, IList<double>? X, IList<double> Y, int Axis)>? _scatterSubject;
 
     /// <summary>Stores the data logger subject value.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Value,
-        int Axis,
-        int nPoints
-    )>? _dataLoggerSubject;
+    private readonly Signal<(string? Name, IList<double>? Value, int Axis, int nPoints)>? _dataLoggerSubject;
 
     /// <summary>Stores the streamer subject value.</summary>
-    private readonly Signal<(
-        string? Name,
-        IList<double>? Y,
-        IList<double> X,
-        int Axis
-    )>? _streamerSubject;
+    private readonly Signal<(string? Name, IList<double>? Y, IList<double> X, int Axis)>? _streamerSubject;
 
     /// <summary>Stores retained X values for append operations.</summary>
     private readonly List<double> _retainedX = [];
@@ -73,11 +53,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="key">The key value.</param>
     /// <param name="plotType">The plotType value.</param>
     /// <param name="color">The color value.</param>
-    public WpfReactivePlotAdapter(
-        LiveChartViewModel chart,
-        PlotSeriesKey key,
-        PlotType plotType,
-        string color)
+    public WpfReactivePlotAdapter(LiveChartViewModel chart, PlotSeriesKey key, PlotType plotType, string color)
     {
         _chart = chart ?? throw new ArgumentNullException(nameof(chart));
         _color = color;
@@ -131,10 +107,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             or PlotType.Points:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(plotType),
-                    plotType,
-                    "Unsupported reactive plot type.");
+                throw new ArgumentOutOfRangeException(nameof(plotType), plotType, "Unsupported reactive plot type.");
         }
     }
 
@@ -291,8 +264,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         var x = ConvertXValues(snapshot.X, snapshot.XAxisKind);
         var y = snapshot.Y.ToArray();
         var plot =
-            _chart.WpfPlot1vm?.Plot
-            ?? throw new InvalidOperationException("The WPF plot has not been initialized.");
+            _chart.WpfPlot1vm?.Plot ?? throw new InvalidOperationException("The WPF plot has not been initialized.");
         RemoveSnapshotPlottable();
         _snapshotPlottable = PlotType switch
         {
@@ -302,8 +274,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             PlotType.Bar => plot.Add.Bars(y, x),
             PlotType.Stem => plot.Add.Lollipop(x, y),
             PlotType.Points => plot.Add.ScatterPoints(x, y),
-            _ => throw new InvalidOperationException(
-                $"Plot type '{PlotType}' is not a snapshot chart type."),
+            _ => throw new InvalidOperationException($"Plot type '{PlotType}' is not a snapshot chart type."),
         };
 
         SetLegendText(_snapshotPlottable, snapshot.Key.Name, snapshot.Style?.ShowInLegend ?? true);
@@ -322,8 +293,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         {
             _ui.ChartSettings.LineWidth = style.LineWidth;
             _ui.ChartSettings.IsChecked = style.LineMode != PlotLineMode.Hidden;
-            _ui.ChartSettings.Visibility =
-                style.LineMode == PlotLineMode.Hidden ? "Invisible" : "Visible";
+            _ui.ChartSettings.Visibility = style.LineMode == PlotLineMode.Hidden ? "Invisible" : "Visible";
             if (!string.IsNullOrWhiteSpace(style.Color))
             {
                 _ui.ChartSettings.Color = style.Color;
@@ -343,8 +313,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             {
                 scatter.LineColor = color;
                 scatter.MarkerColor = color;
-                scatter.LineWidth =
-                    style.LineMode == PlotLineMode.MarkersOnly ? 0 : style.LineWidth;
+                scatter.LineWidth = style.LineMode == PlotLineMode.MarkersOnly ? 0 : style.LineWidth;
                 scatter.MarkerSize = style.LineMode == PlotLineMode.LineOnly ? 0 : style.MarkerSize;
                 break;
             }
@@ -371,8 +340,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     private void ApplySignal(ReactivePlotUpdate update)
     {
         EnsureSignalUi(update.XAxisKind);
-        _signalSubject?.OnNext(
-            (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _signalSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
     }
 
     /// <summary>Applies a scatter update.</summary>
@@ -381,12 +349,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     {
         var scatterUpdate = PrepareSnapshotUpdate(update);
         _scatterSubject?.OnNext(
-            (
-                scatterUpdate.Key.Name,
-                scatterUpdate.X.ToList(),
-                scatterUpdate.Y.ToList(),
-                scatterUpdate.Key.Axis
-            ));
+            (scatterUpdate.Key.Name, scatterUpdate.X.ToList(), scatterUpdate.Y.ToList(), scatterUpdate.Key.Axis));
     }
 
     /// <summary>Applies a data logger update.</summary>
@@ -398,8 +361,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <summary>Applies a streamer update.</summary>
     /// <param name="update">The update value.</param>
     private void ApplyStreamer(ReactivePlotUpdate update) =>
-        _streamerSubject?.OnNext(
-            (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _streamerSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
 
     /// <summary>Handles the AddUi operation.</summary>
     private void AddUi()
@@ -437,9 +399,12 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             _signalSubject!,
             _chart.MouseCoordinatesObservable,
             _color,
-            fixedPoints: _chart.WhenAnyValue(x => x.UseFixedNumberOfPoints),
-            numberPointsPlotted: _chart.WhenAnyValue(x => x.NumberPointsPlotted),
-            ticks: axisKind == PlotXAxisKind.Ticks);
+            new SignalUIOptions
+            {
+                FixedPoints = _chart.WhenAnyValue(x => x.UseFixedNumberOfPoints),
+                NumberPointsPlotted = _chart.WhenAnyValue(x => x.NumberPointsPlotted),
+                Ticks = axisKind == PlotXAxisKind.Ticks,
+            });
         AddUi();
     }
 
@@ -454,10 +419,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             _retainedY.Clear();
         }
 
-        if (
-            update.Kind != ReactivePlotUpdateKind.Append
-            && update.Kind != ReactivePlotUpdateKind.Replace
-        )
+        if (update.Kind != ReactivePlotUpdateKind.Append && update.Kind != ReactivePlotUpdateKind.Replace)
         {
             return update;
         }
@@ -493,9 +455,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             return;
         }
 
-        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(
-            update.X.ToArray(),
-            update.Y.ToArray());
+        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(update.X.ToArray(), update.Y.ToArray());
     }
 
     /// <summary>Handles the ApplyClear operation.</summary>

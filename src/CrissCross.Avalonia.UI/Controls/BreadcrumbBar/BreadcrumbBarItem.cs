@@ -14,9 +14,10 @@ public class BreadcrumbBarItem : global::Avalonia.Controls.ContentControl
         nameof(Icon));
 
     /// <summary>Property for <see cref="IconMargin"/>.</summary>
-    public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<BreadcrumbBarItem, Thickness>(
-        nameof(IconMargin),
-        new Thickness(0));
+    public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<
+        BreadcrumbBarItem,
+        Thickness
+    >(nameof(IconMargin), new Thickness(0));
 
     /// <summary>Property for <see cref="IsLast"/>.</summary>
     public static readonly StyledProperty<bool> IsLastProperty = AvaloniaProperty.Register<BreadcrumbBarItem, bool>(
@@ -24,12 +25,16 @@ public class BreadcrumbBarItem : global::Avalonia.Controls.ContentControl
         false);
 
     /// <summary>The self property.</summary>
-    public static readonly StyledProperty<BreadcrumbBarItem> SelfProperty = AvaloniaProperty.Register<BreadcrumbBarItem, BreadcrumbBarItem>(
-        nameof(Self));
+    public static readonly StyledProperty<BreadcrumbBarItem> SelfProperty = AvaloniaProperty.Register<
+        BreadcrumbBarItem,
+        BreadcrumbBarItem
+    >(nameof(Self));
 
     /// <summary>The navigation type property.</summary>
-    public static readonly StyledProperty<Type> NavigationTypeProperty = AvaloniaProperty.Register<BreadcrumbBarItem, Type>(
-        nameof(NavigationType));
+    public static readonly StyledProperty<Type> NavigationTypeProperty = AvaloniaProperty.Register<
+        BreadcrumbBarItem,
+        Type
+    >(nameof(NavigationType));
 
     /// <summary>Initializes a new instance of the <see cref="BreadcrumbBarItem"/> class.</summary>
     public BreadcrumbBarItem() => Self = this;

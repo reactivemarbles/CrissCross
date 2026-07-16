@@ -1,114 +1,123 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ccwpf="https://github.com/reactivemarbles/CrissCross"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
-    xmlns:mb="clr-namespace:CrissCross.WPF.UI">
-    <Style
-        x:Key="DefaultFluentNavigationWindowStyle"
-        BasedOn="{StaticResource {x:Type Window}}"
-        TargetType="{x:Type controls:FluentNavigationWindow}">
-        <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource WindowForeground}" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Height" Value="600" />
-        <Setter Property="MinHeight" Value="320" />
-        <Setter Property="Width" Value="970" />
-        <Setter Property="MinWidth" Value="518" />
-        <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="UseLayoutRounding" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:FluentNavigationWindow}">
-                    <AdornerDecorator>
-                        <controls:ClientAreaBorder
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid>
-                                <Grid.Background>
-                                    <LinearGradientBrush Opacity=".1" StartPoint="0, 0" EndPoint="0, 0.1">
-                                        <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorPrimary}" />
-                                        <GradientStop Offset=".3" Color="{DynamicResource SystemAccentColorPrimary}" />
-                                        <GradientStop Offset="1" Color="Transparent" />
-                                    </LinearGradientBrush>
-                                </Grid.Background>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <controls:TitleBar
-                                    x:Name="PART_TitleBar"
-                                    Title="{TemplateBinding Title}"
-                                    Grid.Row="0"
-                                    Header="{TemplateBinding TitleHeader}"
-                                    ShowClose="{TemplateBinding ShowClose}"
-                                    ShowHelp="{TemplateBinding ShowHelp}"
-                                    ShowMaximize="{TemplateBinding ShowMaximize}"
-                                    ShowMinimize="{TemplateBinding ShowMinimize}"
-                                    TitleContent="{TemplateBinding TitleContent}">
-                                    <controls:TitleBar.Icon>
-                                        <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />
-                                    </controls:TitleBar.Icon>
-                                </controls:TitleBar>
-                                <ContentPresenter
-                                    x:Name="ContentPresenter"
-                                    Grid.Row="1"
-                                    Content="{TemplateBinding Content}" />
-                                <Grid Grid.Row="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <ContentPresenter
-                                        x:Name="TopContentPresenter"
-                                        Grid.Row="0"
-                                        Grid.ColumnSpan="3"
-                                        Content="{TemplateBinding TopContent}" />
-                                    <ContentPresenter
-                                        x:Name="LeftContentPresenter"
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Content="{TemplateBinding LeftContent}" />
-                                    <ContentPresenter
-                                        x:Name="RightContentPresenter"
-                                        Grid.Row="1"
-                                        Grid.Column="2"
-                                        Content="{TemplateBinding RightContent}" />
-                                    <ccwpf:ViewModelRoutedViewHost
-                                        x:Name="NavigationFrame"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        HostName="{TemplateBinding Name}"
-                                        NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
-                                        Transition="{TemplateBinding Transition}" />
-                                    <ContentPresenter
-                                        x:Name="BottomContentPresenter"
-                                        Grid.Row="2"
-                                        Grid.ColumnSpan="3"
-                                        Content="{TemplateBinding BottomContent}" />
-                                </Grid>
-                                <mb:MessageBoxAsync Grid.Row="1" />
-                            </Grid>
-                        </controls:ClientAreaBorder>
-                    </AdornerDecorator>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ccwpf="https://github.com/reactivemarbles/CrissCross"
+  xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
+  xmlns:mb="clr-namespace:CrissCross.WPF.UI"
+>
+  <Style
+    x:Key="DefaultFluentNavigationWindowStyle"
+    BasedOn="{StaticResource {x:Type Window}}"
+    TargetType="{x:Type controls:FluentNavigationWindow}"
+  >
+    <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+    <Setter Property="Foreground" Value="{DynamicResource WindowForeground}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Height" Value="600" />
+    <Setter Property="MinHeight" Value="320" />
+    <Setter Property="Width" Value="970" />
+    <Setter Property="MinWidth" Value="518" />
+    <Setter Property="Margin" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="FontWeight" Value="Normal" />
+    <Setter Property="UseLayoutRounding" Value="True" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="OverridesDefaultStyle" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type controls:FluentNavigationWindow}">
+          <AdornerDecorator>
+            <controls:ClientAreaBorder
+              Background="{TemplateBinding Background}"
+              BorderBrush="{TemplateBinding BorderBrush}"
+              BorderThickness="{TemplateBinding BorderThickness}"
+            >
+              <Grid>
+                <Grid.Background>
+                  <LinearGradientBrush Opacity=".1" StartPoint="0, 0" EndPoint="0, 0.1">
+                    <GradientStop Offset="0" Color="{DynamicResource SystemAccentColorPrimary}" />
+                    <GradientStop Offset=".3" Color="{DynamicResource SystemAccentColorPrimary}" />
+                    <GradientStop Offset="1" Color="Transparent" />
+                  </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <controls:TitleBar
+                  x:Name="PART_TitleBar"
+                  Title="{TemplateBinding Title}"
+                  Grid.Row="0"
+                  Header="{TemplateBinding TitleHeader}"
+                  ShowClose="{TemplateBinding ShowClose}"
+                  ShowHelp="{TemplateBinding ShowHelp}"
+                  ShowMaximize="{TemplateBinding ShowMaximize}"
+                  ShowMinimize="{TemplateBinding ShowMinimize}"
+                  TitleContent="{TemplateBinding TitleContent}"
+                >
+                  <controls:TitleBar.Icon>
+                    <controls:ImageIcon Source="{TemplateBinding TitleIcon}" />
+                  </controls:TitleBar.Icon>
+                </controls:TitleBar>
+                <ContentPresenter x:Name="ContentPresenter" Grid.Row="1" Content="{TemplateBinding Content}" />
+                <Grid Grid.Row="1">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <ContentPresenter
+                    x:Name="TopContentPresenter"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="3"
+                    Content="{TemplateBinding TopContent}"
+                  />
+                  <ContentPresenter
+                    x:Name="LeftContentPresenter"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="{TemplateBinding LeftContent}"
+                  />
+                  <ContentPresenter
+                    x:Name="RightContentPresenter"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Content="{TemplateBinding RightContent}"
+                  />
+                  <ccwpf:ViewModelRoutedViewHost
+                    x:Name="NavigationFrame"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HostName="{TemplateBinding Name}"
+                    NavigateBackIsEnabled="{TemplateBinding NavigateBackIsEnabled}"
+                    Transition="{TemplateBinding Transition}"
+                  />
+                  <ContentPresenter
+                    x:Name="BottomContentPresenter"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="3"
+                    Content="{TemplateBinding BottomContent}"
+                  />
+                </Grid>
+                <mb:MessageBoxAsync Grid.Row="1" />
+              </Grid>
+            </controls:ClientAreaBorder>
+          </AdornerDecorator>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 
-    <Style BasedOn="{StaticResource DefaultFluentNavigationWindowStyle}" TargetType="{x:Type controls:FluentNavigationWindow}" />
+  <Style
+    BasedOn="{StaticResource DefaultFluentNavigationWindowStyle}"
+    TargetType="{x:Type controls:FluentNavigationWindow}"
+  />
 </ResourceDictionary>

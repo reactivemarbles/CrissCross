@@ -111,8 +111,11 @@ public static class AppBarMixins
         }
 
         /// <summary>Shows the application bar.</summary>
+        public void ShowAppBar() => dummy.ShowAppBar(false);
+
+        /// <summary>Shows the application bar.</summary>
         /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
-        public void ShowAppBar(bool isSticky = false)
+        public void ShowAppBar(bool isSticky)
         {
             if (dummy is null)
             {

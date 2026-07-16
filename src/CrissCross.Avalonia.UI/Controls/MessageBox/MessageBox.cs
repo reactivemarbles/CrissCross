@@ -15,29 +15,34 @@ public class MessageBox : Window
         true);
 
     /// <summary>Property for <see cref="PrimaryButtonText"/>.</summary>
-    public static readonly StyledProperty<string> PrimaryButtonTextProperty = AvaloniaProperty.Register<MessageBox, string>(
-        nameof(PrimaryButtonText),
-        string.Empty);
+    public static readonly StyledProperty<string> PrimaryButtonTextProperty = AvaloniaProperty.Register<
+        MessageBox,
+        string
+    >(nameof(PrimaryButtonText), string.Empty);
 
     /// <summary>Property for <see cref="SecondaryButtonText"/>.</summary>
-    public static readonly StyledProperty<string> SecondaryButtonTextProperty = AvaloniaProperty.Register<MessageBox, string>(
-        nameof(SecondaryButtonText),
-        string.Empty);
+    public static readonly StyledProperty<string> SecondaryButtonTextProperty = AvaloniaProperty.Register<
+        MessageBox,
+        string
+    >(nameof(SecondaryButtonText), string.Empty);
 
     /// <summary>Property for <see cref="CloseButtonText"/>.</summary>
-    public static readonly StyledProperty<string> CloseButtonTextProperty = AvaloniaProperty.Register<MessageBox, string>(
-        nameof(CloseButtonText),
-        "Close");
+    public static readonly StyledProperty<string> CloseButtonTextProperty = AvaloniaProperty.Register<
+        MessageBox,
+        string
+    >(nameof(CloseButtonText), "Close");
 
     /// <summary>Property for <see cref="IsPrimaryButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsPrimaryButtonEnabledProperty = AvaloniaProperty.Register<MessageBox, bool>(
-        nameof(IsPrimaryButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> IsPrimaryButtonEnabledProperty = AvaloniaProperty.Register<
+        MessageBox,
+        bool
+    >(nameof(IsPrimaryButtonEnabled), true);
 
     /// <summary>Property for <see cref="IsSecondaryButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsSecondaryButtonEnabledProperty = AvaloniaProperty.Register<MessageBox, bool>(
-        nameof(IsSecondaryButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> IsSecondaryButtonEnabledProperty = AvaloniaProperty.Register<
+        MessageBox,
+        bool
+    >(nameof(IsSecondaryButtonEnabled), true);
 
     /// <summary>Provides the _tcs member.</summary>
     private TaskCompletionSource<MessageBoxResult>? _tcs;
@@ -91,10 +96,25 @@ public class MessageBox : Window
     }
 
     /// <summary>Displays a message box.</summary>
+    /// <returns>MessageBoxResult.</returns>
+    public Task<MessageBoxResult> ShowDialogAsync() => ShowDialogAsync(null, CancellationToken.None);
+
+    /// <summary>Displays a message box.</summary>
+    /// <param name="owner">The owner window.</param>
+    /// <returns>MessageBoxResult.</returns>
+    public Task<MessageBoxResult> ShowDialogAsync(Window? owner) => ShowDialogAsync(owner, CancellationToken.None);
+
+    /// <summary>Displays a message box.</summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>MessageBoxResult.</returns>
+    public Task<MessageBoxResult> ShowDialogAsync(CancellationToken cancellationToken) =>
+        ShowDialogAsync(null, cancellationToken);
+
+    /// <summary>Displays a message box.</summary>
     /// <param name="owner">The owner window.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>MessageBoxResult.</returns>
-    public async Task<MessageBoxResult> ShowDialogAsync(Window? owner = null, CancellationToken cancellationToken = default)
+    public async Task<MessageBoxResult> ShowDialogAsync(Window? owner, CancellationToken cancellationToken)
     {
         _tcs = new();
 
@@ -137,7 +157,7 @@ public class MessageBox : Window
         {
             MessageBoxButton.Primary => MessageBoxResult.Primary,
             MessageBoxButton.Secondary => MessageBoxResult.Secondary,
-            _ => MessageBoxResult.None
+            _ => MessageBoxResult.None,
         };
 
         Close(result);

@@ -16,34 +16,36 @@ namespace CrissCross.Avalonia.UI;
 /// UI.</remarks>
 public interface INavigationService
 {
-    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with IPageService.</summary>
     /// <param name="pageType">The page type.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType);
 
-    /// <summary>Lets you navigate to the selected page based on it's type, Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type, Should be used with IPageService.</summary>
     /// <param name="pageType">The page type.</param>
     /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType, object? dataContext);
 
-    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with IPageService.</summary>
     /// <param name="pageIdOrTargetTag">The page id or target tag.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag);
 
-    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with IPageService.</summary>
     /// <param name="pageIdOrTargetTag">The page id or target tag.</param>
     /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag, object? dataContext);
 
-    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the
+    /// page represented by the element.</summary>
     /// <param name="pageType">The page type.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool NavigateWithHierarchy(Type pageType);
 
-    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the
+    /// page represented by the element.</summary>
     /// <param name="pageType">The page type.</param>
     /// <param name="dataContext">The data context.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
@@ -57,7 +59,7 @@ public interface INavigationService
     /// <param name="navigation">The navigation control.</param>
     void SetNavigationControl(Controls.INavigationView navigation);
 
-    /// <summary>Lets you attach the service that delivers page instances to <see cref="Controls.INavigationView"/>.</summary>
+    /// <summary>Lets you attach the service that delivers page instances to INavigationView.</summary>
     /// <param name="pageService">The page service.</param>
     void SetPageService(IPageService pageService);
 

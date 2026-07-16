@@ -9,7 +9,8 @@ using System.Windows.Input;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main content, and a menu pane for navigation commands.</summary>
+/// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main
+/// content, and a menu pane for navigation commands.</summary>
 [ToolboxItem(true)]
 [System.Drawing.ToolboxBitmap(typeof(NavigationView), "NavigationView.bmp")]
 public partial class NavigationView : System.Windows.Controls.Control, INavigationView
@@ -125,10 +126,12 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     protected static void UpdateVisualState(NavigationView navigationView)
     {
         // Skip display modes that don't have multiple states
-        if (navigationView is null || navigationView.PaneDisplayMode is
-            NavigationViewPaneDisplayMode.LeftFluent or
-            NavigationViewPaneDisplayMode.Top or
-            NavigationViewPaneDisplayMode.Bottom)
+        if (
+            navigationView is null
+            || navigationView.PaneDisplayMode
+                is NavigationViewPaneDisplayMode.LeftFluent
+                    or NavigationViewPaneDisplayMode.Top
+                    or NavigationViewPaneDisplayMode.Bottom)
         {
             return;
         }
@@ -207,8 +210,11 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         AutoSuggestBoxSymbolButton.Click -= AutoSuggestBoxSymbolButtonOnClick;
     }
 
-    /// <summary>Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />�attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</summary>
-    /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data. This event data reports details about the mouse button that was pressed and the handled state.</param>
+    /// <summary>Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />�attached event reaches
+    /// an element in its route that is derived from this class. Implement this method to add class handling for this
+    /// event.</summary>
+    /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data.
+    /// This event data reports details about the mouse button that was pressed and the handled state.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         // Back button
@@ -254,24 +260,24 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         switch (PaneDisplayMode)
         {
             case NavigationViewPaneDisplayMode.LeftFluent:
-                {
-                    IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
-                    IsPaneToggleVisible = false;
-                    break;
-                }
+            {
+                IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
+                IsPaneToggleVisible = false;
+                break;
+            }
 
-            case NavigationViewPaneDisplayMode.Left or
-                NavigationViewPaneDisplayMode.LeftMinimal or
-                NavigationViewPaneDisplayMode.Top or
-                NavigationViewPaneDisplayMode.Bottom:
-                {
-                    break;
-                }
+            case NavigationViewPaneDisplayMode.Left
+            or NavigationViewPaneDisplayMode.LeftMinimal
+            or NavigationViewPaneDisplayMode.Top
+            or NavigationViewPaneDisplayMode.Bottom:
+            {
+                break;
+            }
 
             default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(PaneDisplayMode), PaneDisplayMode, null);
-                }
+            {
+                throw new ArgumentOutOfRangeException(nameof(PaneDisplayMode), PaneDisplayMode, null);
+            }
         }
     }
 
@@ -281,9 +287,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <summary>Breadcrumbs the bar on item clicked.</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="BreadcrumbBarItemClickedEventArgs"/> instance containing the event data.</param>
-    protected virtual void BreadcrumbBarOnItemClicked(
-        object? sender,
-        BreadcrumbBarItemClickedEventArgs e)
+    protected virtual void BreadcrumbBarOnItemClicked(object? sender, BreadcrumbBarItemClickedEventArgs e)
     {
         if (e?.Item is not NavigationViewBreadcrumbItem item)
         {
@@ -306,14 +310,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         {
             if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
             {
-                _pageIdOrTargetTagNavigationViewsDictionary.Add(
-                    singleNavigationViewItem.Id,
-                    singleNavigationViewItem);
+                _pageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.Id, singleNavigationViewItem);
             }
 
-            if (
-                !_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(
-                    singleNavigationViewItem.TargetPageTag))
+            if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageTag))
             {
                 _pageIdOrTargetTagNavigationViewsDictionary.Add(
                     singleNavigationViewItem.TargetPageTag,
@@ -521,9 +521,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <summary>Navigate to the page after its name is selected in <see cref="AutoSuggestBox"/>.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private void AutoSuggestBoxOnSuggestionChosen(
-        object? sender,
-        AutoSuggestBoxSuggestionChosenEventArgs args)
+    private void AutoSuggestBoxOnSuggestionChosen(object? sender, AutoSuggestBoxSuggestionChosenEventArgs args)
     {
         if (sender is not AutoSuggestBox autoSuggestBox || autoSuggestBox.IsSuggestionListOpen)
         {
@@ -546,9 +544,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <summary>Provides the AutoSuggestBoxOnQuerySubmitted member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private void AutoSuggestBoxOnQuerySubmitted(
-        object? sender,
-        AutoSuggestBoxQuerySubmittedEventArgs args)
+    private void AutoSuggestBoxOnQuerySubmitted(object? sender, AutoSuggestBoxQuerySubmittedEventArgs args)
     {
         var suggestions = new List<string>();
         var querySplit = args.QueryText.Split(' ');
@@ -595,32 +591,30 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         switch (e.Action)
         {
             case NotifyCollectionChangedAction.Add:
-                {
-                    _breadcrumbBarItems.Add(
-                                    new NavigationViewBreadcrumbItem((INavigationViewItem)e.NewItems![0]!));
-                    break;
-                }
+            {
+                _breadcrumbBarItems.Add(new NavigationViewBreadcrumbItem((INavigationViewItem)e.NewItems![0]!));
+                break;
+            }
 
             case NotifyCollectionChangedAction.Remove:
-                {
-                    _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
-                    break;
-                }
+            {
+                _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
+                break;
+            }
 
             case NotifyCollectionChangedAction.Replace:
-                {
-                    _breadcrumbBarItems[0] = new(
-                                    (INavigationViewItem)e.NewItems![0]!);
-                    break;
-                }
+            {
+                _breadcrumbBarItems[0] = new((INavigationViewItem)e.NewItems![0]!);
+                break;
+            }
 
             case NotifyCollectionChangedAction.Move:
                 break;
             case NotifyCollectionChangedAction.Reset:
-                {
-                    _breadcrumbBarItems.Clear();
-                    break;
-                }
+            {
+                _breadcrumbBarItems.Clear();
+                break;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException();

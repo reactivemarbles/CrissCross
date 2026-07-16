@@ -58,30 +58,78 @@ public partial class StreamerUI : RxObject, IPlottableUI
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>Initializes a new instance of the <see cref="StreamerUI"/> class to display and update a streaming plot based on observable. data.</summary>
+    /// <summary>Initializes a new instance of the <see cref="StreamerUI"/> class.</summary>
     /// <param name="plot">The plot value.</param>
     /// <param name="observable">The observable value.</param>
     /// <param name="fs">The sampling frequency, in Hz, used for interpreting the data stream.</param>
-    /// <param name="sampleCount">The number of samples to buffer for the streaming plot. Must be greater than 0.</param>
+    /// <param name="sampleCount">The number of samples to buffer for the streaming plot. Must be greater than
+    /// 0.</param>
     /// <param name="plottedPointCount">The initial number of data points to display on the plot.</param>
     /// <param name="color">The color used for the plot line and chart appearance.</param>
-    /// <param name="autoscale">true to enable automatic scaling of the plot axes; otherwise, false.</param>
-    /// <param name="manualscale">true to enable manual scaling of the plot axes; otherwise, false.</param>
-    /// <param name="fixedPoints">true to fix the number of points displayed on the plot; otherwise, false.</param>
     public StreamerUI(
-                        WpfPlot plot,
-                        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
-                        int fs,
-                        uint sampleCount,
-                        int plottedPointCount,
-                        string color,
-                        bool autoscale = true,
-                        bool manualscale = false,
-                        bool fixedPoints = false)
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
+        int fs,
+        uint sampleCount,
+        int plottedPointCount,
+        string color)
+        : this(plot, observable, fs, sampleCount, plottedPointCount, color, new StreamerUIOptions())
     {
-        ChartSettings = new(color: color);
-        ManualScale = manualscale;
-        AutoScale = autoscale;
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="StreamerUI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="fs">The sampling frequency.</param>
+    /// <param name="sampleCount">The sample count.</param>
+    /// <param name="plottedPointCount">The plotted point count.</param>
+    /// <param name="color">The plot color.</param>
+    /// <param name="autoscale">A value indicating whether automatic scaling is enabled.</param>
+    public StreamerUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
+        int fs,
+        uint sampleCount,
+        int plottedPointCount,
+        string color,
+        bool autoscale)
+        : this(
+            plot,
+            observable,
+            fs,
+            sampleCount,
+            plottedPointCount,
+            color,
+            new StreamerUIOptions { AutoScale = autoscale })
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="StreamerUI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="observable">The observable value.</param>
+    /// <param name="fs">The sampling frequency.</param>
+    /// <param name="sampleCount">The sample count.</param>
+    /// <param name="plottedPointCount">The plotted point count.</param>
+    /// <param name="color">The plot color.</param>
+    /// <param name="options">The streamer configuration.</param>
+    public StreamerUI(
+        WpfPlot plot,
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable,
+        int fs,
+        uint sampleCount,
+        int plottedPointCount,
+        string color,
+        StreamerUIOptions options)
+    {
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        ChartSettings = new("---", color);
+        ManualScale = options.ManualScale;
+        AutoScale = options.AutoScale;
+        UseFixedNumberOfPoints = options.FixedPoints;
 
         if (sampleCount <= 0)
         {
@@ -122,7 +170,8 @@ public partial class StreamerUI : RxObject, IPlottableUI
     /// <remarks>The method configures the streamer line with default width and period settings, and scrolls
     /// the view to the left to display the most recent data points. The color parameter must be a valid hexadecimal
     /// color code; otherwise, an exception may be thrown by the color parsing logic.</remarks>
-    /// <param name="color">A string representing the color of the streamer line, specified in hexadecimal format (e.g., "#FF0000" for red).</param>
+    /// <param name="color">A string representing the color of the streamer line, specified in hexadecimal format (e.g.,
+    /// "#FF0000" for red).</param>
     public void CreateStreamer(string color)
     {
         PlotLine = Plot.Plot.Add.DataStreamer(_numberPointsPlottedSaved);
@@ -130,42 +179,50 @@ public partial class StreamerUI : RxObject, IPlottableUI
         PlotLine.Data = new(darray);
         PlotLine.ViewScrollLeft();
         PlotLine.Period = (double)_fs / _sampleCount;
-        PlotLine.LineStyle.Width = 1f;
+        PlotLine.LineStyle.Width = 1F;
         PlotLine.Color = Color.FromHex(color);
     }
 
-    /// <summary>Subscribes to an observable sequence of fixed-point data and updates the streamer plot with new values as they arrive.</summary>
+    /// <summary>Provides the UpdateStreamerFixedPoints member.</summary>
     /// <param name="observable">The observable value.</param>
-    public void UpdateStreamerFixedPoints(IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
+    public void UpdateStreamerFixedPoints(
+        IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> observable) =>
         observable
-        .ObserveOn(RxSchedulers.TaskpoolScheduler)
-        .Where(d => !string.IsNullOrEmpty(d.Name) && d.Y is not null && d.X is not null && d.Y.Count > 0 && d.X.Count > 0 && d.Y.Count == d.X.Count)
-        .Retry(int.MaxValue)
-        .ObserveOn(RxSchedulers.MainThreadScheduler)
-        .Subscribe(d =>
-        {
-            var sourceList = d.Y!;
-            var count = Math.Min(sourceList.Count, _numberPointsPlottedSaved);
-
-            // Copy to pre-allocated buffer to avoid allocations
-            for (var i = 0; i < count; i++)
+            .ObserveOn(RxSchedulers.TaskpoolScheduler)
+            .Where(d =>
+                !string.IsNullOrEmpty(d.Name)
+                && d.Y is not null
+                && d.X is not null
+                && d.Y.Count > 0
+                && d.X.Count > 0
+                && d.Y.Count == d.X.Count)
+            .Retry(int.MaxValue)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(d =>
             {
-                _valueBuffer[i] = sourceList[i];
-            }
+                var sourceList = d.Y!;
+                var count = Math.Min(sourceList.Count, _numberPointsPlottedSaved);
 
-            // For DataStreamer, we need to provide an IEnumerable<double>
-            // Use ArraySegment which implements IEnumerable without allocation
-            var segment = new ArraySegment<double>(_valueBuffer, 0, count);
-            PlotLine!.AddRange(segment);
-            PlotLine!.ManageAxisLimits = false;
+                // Copy to pre-allocated buffer to avoid allocations
+                for (var i = 0; i < count; i++)
+                {
+                    _valueBuffer[i] = sourceList[i];
+                }
 
-            if (ChartSettings.IsPaused)
-            {
-                return;
-            }
+                // For DataStreamer, we need to provide an IEnumerable<double>
+                // Use ArraySegment which implements IEnumerable without allocation
+                var segment = new ArraySegment<double>(_valueBuffer, 0, count);
+                PlotLine!.AddRange(segment);
+                PlotLine!.ManageAxisLimits = false;
 
-            Plot.Refresh();
-        }).DisposeWith(Disposables);
+                if (ChartSettings.IsPaused)
+                {
+                    return;
+                }
+
+                Plot.Refresh();
+            })
+            .DisposeWith(Disposables);
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
     /// <param name="disposing">The disposing value.</param>

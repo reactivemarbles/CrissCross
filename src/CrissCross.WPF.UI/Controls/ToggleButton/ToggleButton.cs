@@ -9,12 +9,11 @@ namespace CrissCross.WPF.UI.Controls;
 public class ToggleButton : System.Windows.Controls.Primitives.ToggleButton
 {
     /// <summary>The TreeView item chevron size property.</summary>
-    public static readonly DependencyProperty ChevronSizeProperty =
-        DependencyProperty.Register(
-            nameof(ChevronSize),
-            typeof(double),
-            typeof(ToggleButton),
-            new PropertyMetadata(10d));
+    public static readonly DependencyProperty ChevronSizeProperty = DependencyProperty.Register(
+        nameof(ChevronSize),
+        typeof(double),
+        typeof(ToggleButton),
+        new PropertyMetadata(10D));
 
     /// <summary>Gets or sets the size of the TreeView item chevron.</summary>
     /// <value>

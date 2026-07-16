@@ -11,29 +11,27 @@ namespace CrissCross.WPF.UI;
 internal sealed partial class HueSlider : UserControl
 {
     /// <summary>Provides the ValueProperty member.</summary>
-    public static readonly DependencyProperty ValueProperty =
-        DependencyProperty.Register(
-            nameof(Value),
-            typeof(double),
-            typeof(HueSlider),
-            new PropertyMetadata(0.0));
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+        nameof(Value),
+        typeof(double),
+        typeof(HueSlider),
+        new PropertyMetadata(0.0));
 
     /// <summary>Provides the SmallChangeProperty member.</summary>
-    public static readonly DependencyProperty SmallChangeProperty =
-        DependencyProperty.Register(
-            nameof(SmallChange),
-            typeof(double),
-            typeof(HueSlider),
-            new PropertyMetadata(1.0));
+    public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
+        nameof(SmallChange),
+        typeof(double),
+        typeof(HueSlider),
+        new PropertyMetadata(1.0));
 
     /// <summary>The number of degrees in a complete hue circle.</summary>
-    private const double DegreesInFullCircle = 360d;
+    private const double DegreesInFullCircle = 360D;
 
     /// <summary>The number of degrees in a half hue circle.</summary>
-    private const double DegreesInHalfCircle = 180d;
+    private const double DegreesInHalfCircle = 180D;
 
     /// <summary>The scale used to convert pointer coordinates into the centered hue circle coordinate space.</summary>
-    private const double PositionScale = 2d;
+    private const double PositionScale = 2D;
 
     /// <summary>The WPF mouse wheel delta value for one wheel notch.</summary>
     private const int MouseWheelDelta = 120;

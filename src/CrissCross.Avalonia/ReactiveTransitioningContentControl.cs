@@ -16,10 +16,10 @@ namespace CrissCross.Avalonia;
 public class ReactiveTransitioningContentControl : ContentControl, IDisposable
 {
     /// <summary>The animation timer interval in milliseconds.</summary>
-    private const double AnimationIntervalMilliseconds = 10d;
+    private const double AnimationIntervalMilliseconds = 10D;
 
     /// <summary>The opacity increment applied for each animation tick.</summary>
-    private const double OpacityIncrement = 0.08d;
+    private const double OpacityIncrement = 0.08D;
 
     /// <summary>Stores the opacity Subject value.</summary>
     private readonly Signal<double> _opacitySubject = new();
@@ -42,7 +42,7 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
     /// <summary>Gets a value indicating whether gets a value that indicates whether the object is disposed.</summary>
     public bool IsDisposed => _animationDisposable.IsDisposed;
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Releases resources used by this instance.</summary>
     public void Dispose()
     {
         Dispose(disposing: true);
@@ -50,7 +50,8 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (IsDisposed || !disposing)
@@ -66,9 +67,10 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
     /// <inheritdoc/>
     protected override bool RegisterContentPresenter(ContentPresenter presenter)
     {
-        if (base.RegisterContentPresenter(presenter) ||
-            presenter is not ContentPresenter p2 ||
-            p2.Name != "PART_ContentPresenter2")
+        if (
+            base.RegisterContentPresenter(presenter)
+            || presenter is not ContentPresenter p2
+            || p2.Name != "PART_ContentPresenter2")
         {
             return false;
         }
@@ -109,7 +111,7 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
             to.Content = Content;
             if (withTransition)
             {
-                to.Opacity = 0d;
+                to.Opacity = 0D;
                 to.IsVisible = true;
                 from!.IsVisible = false;
                 AnimateContent();
@@ -136,21 +138,25 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
         _animationDisposable = [];
         var (from, to, current) = GetPresenters();
         _ = to!.Bind(OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
-        var opacity = 0d;
-        _ = Observable.Interval(TimeSpan.FromMilliseconds(AnimationIntervalMilliseconds)).Subscribe(_ =>
-        {
-            opacity += OpacityIncrement;
-            if (opacity > 1d)
+        var opacity = 0D;
+        _ = Observable
+            .Interval(TimeSpan.FromMilliseconds(AnimationIntervalMilliseconds))
+            .Subscribe(_ =>
             {
-                opacity = 1d;
-            }
+                opacity += OpacityIncrement;
+                if (opacity > 1D)
+                {
+                    opacity = 1D;
+                }
 
-            _opacitySubject.OnNext(opacity);
-        }).DisposeWith(_animationDisposable);
-        _ = new ActionDisposable(() => RxSchedulers.MainThreadScheduler.Schedule(() =>
+                _opacitySubject.OnNext(opacity);
+            })
+            .DisposeWith(_animationDisposable);
+        _ = new ActionDisposable(() =>
+            RxSchedulers.MainThreadScheduler.Schedule(() =>
             {
-                to!.Opacity = 1d;
-                from!.Opacity = 1d;
+                to!.Opacity = 1D;
+                from!.Opacity = 1D;
                 to.IsVisible = true;
                 from.IsVisible = false;
                 from.Content = null;
@@ -158,7 +164,7 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
                 _ = _animationSemaphore.Release();
             })).DisposeWith(_animationDisposable);
         _ = _opacitySubject
-            .Where(x => x >= 1d)
+            .Where(x => x >= 1D)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
@@ -168,7 +174,8 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
                 }
 
                 _animationDisposable.Dispose();
-            }).DisposeWith(_animationDisposable);
+            })
+            .DisposeWith(_animationDisposable);
     }
 
     /// <summary>Gets the current and next content presenters.</summary>

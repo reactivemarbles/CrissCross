@@ -12,6 +12,9 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>Provides the HtmlClipboardUtilities member.</summary>
 internal static class HtmlClipboardUtilities
 {
+    /// <summary>HTML line-break element used for plain-text line endings.</summary>
+    private const string HtmlLineBreak = "<br />";
+
     /// <summary>Provides the ExtractFragment member.</summary>
     /// <param name="html">The html value.</param>
     /// <returns>The result.</returns>
@@ -25,9 +28,11 @@ internal static class HtmlClipboardUtilities
         const string startMarker = "<!--StartFragment-->";
         const string endMarker = "<!--EndFragment-->";
         var startMarkerIndex = html.IndexOf(startMarker, StringComparison.OrdinalIgnoreCase);
-        if (startMarkerIndex >= 0 &&
-            html.IndexOf(endMarker, startMarkerIndex + startMarker.Length, StringComparison.OrdinalIgnoreCase) is var endMarkerIndex &&
-            endMarkerIndex >= startMarkerIndex + startMarker.Length)
+        if (
+            startMarkerIndex >= 0
+            && html.IndexOf(endMarker, startMarkerIndex + startMarker.Length, StringComparison.OrdinalIgnoreCase)
+                is var endMarkerIndex
+            && endMarkerIndex >= startMarkerIndex + startMarker.Length)
         {
             startMarkerIndex += startMarker.Length;
             return html[startMarkerIndex..endMarkerIndex];
@@ -45,7 +50,8 @@ internal static class HtmlClipboardUtilities
     {
         ArgumentNullException.ThrowIfNull(fragment);
 
-        const string headerTemplate = "Version:1.0\r\nStartHTML:{0:D10}\r\nEndHTML:{1:D10}\r\nStartFragment:{2:D10}\r\nEndFragment:{3:D10}\r\n";
+        const string headerTemplate =
+            "Version:1.0\r\nStartHTML:{0:D10}\r\nEndHTML:{1:D10}\r\nStartFragment:{2:D10}\r\nEndFragment:{3:D10}\r\n";
         const string startMarker = "<!--StartFragment-->";
         const string endMarker = "<!--EndFragment-->";
         var body = $"<html><body>{startMarker}{fragment}{endMarker}</body></html>";
@@ -54,7 +60,13 @@ internal static class HtmlClipboardUtilities
         var startFragment = startHtml + Encoding.UTF8.GetByteCount("<html><body>" + startMarker);
         var endFragment = startFragment + Encoding.UTF8.GetByteCount(fragment);
         var endHtml = startHtml + Encoding.UTF8.GetByteCount(body);
-        var header = string.Format(CultureInfo.InvariantCulture, headerTemplate, startHtml, endHtml, startFragment, endFragment);
+        var header = string.Format(
+            CultureInfo.InvariantCulture,
+            headerTemplate,
+            startHtml,
+            endHtml,
+            startFragment,
+            endFragment);
         return header + body;
     }
 
@@ -69,9 +81,10 @@ internal static class HtmlClipboardUtilities
         }
 
         var encoded = WebUtility.HtmlEncode(text);
-        return encoded.Replace("\r\n", "<br />", StringComparison.Ordinal)
-                      .Replace("\n", "<br />", StringComparison.Ordinal)
-                      .Replace("\r", "<br />", StringComparison.Ordinal);
+        return encoded
+            .Replace("\r\n", HtmlLineBreak, StringComparison.Ordinal)
+            .Replace("\n", HtmlLineBreak, StringComparison.Ordinal)
+            .Replace("\r", HtmlLineBreak, StringComparison.Ordinal);
     }
 
     /// <summary>Provides the GetFragmentIndex member.</summary>
@@ -93,7 +106,13 @@ internal static class HtmlClipboardUtilities
             indexEnd++;
         }
 
-        return indexEnd > indexStart &&
-            int.TryParse(html[indexStart..indexEnd], NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) ? value : -1;
+        return indexEnd > indexStart
+            && int.TryParse(
+                html[indexStart..indexEnd],
+                NumberStyles.Integer,
+                CultureInfo.InvariantCulture,
+                out var value)
+            ? value
+            : -1;
     }
 }

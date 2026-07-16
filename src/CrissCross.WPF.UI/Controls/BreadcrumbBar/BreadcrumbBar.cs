@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>The <see cref="BreadcrumbBar"/> control provides the direct path of pages or folders to the current location.</summary>
+/// <summary>Provides the BreadcrumbBar member.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:BreadcrumbBar x:Name="BreadcrumbBar" /&gt;
@@ -41,6 +41,10 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
 
     /// <summary>The offset from the end used to update the item before the current last item.</summary>
     private const int PreviousItemOffset = 2;
+
+    /// <summary>The error reported when navigation has not been configured.</summary>
+    private const string HostNotConfiguredMessage =
+        "Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.";
 
     /// <summary>Stores the _hostName value.</summary>
     private string? _hostName;
@@ -91,33 +95,55 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
 
     /// <summary>Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.</summary>
     /// <typeparam name="T">Type of ViewModel.</typeparam>
-    /// <param name="contract">The viewmodel contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
+    /// <param name="request">The typed navigation request.</param>
+    public void NavigateTo<T>(NavigationKeyRequest<T> request)
+        where T : class, IRxObject => NavigateTo(request, null);
+
+    /// <summary>Navigates to the specified view and updates the breadcrumb.</summary>
+    /// <typeparam name="T">Type of ViewModel.</typeparam>
+    /// <param name="request">The typed navigation request.</param>
     /// <param name="breadcrumbItemContent">Content of the breadcrumb item.</param>
-    public void NavigateTo<T>(string? contract = null, object? parameter = null, string? breadcrumbItemContent = null)
+    public void NavigateTo<T>(NavigationKeyRequest<T> request, string? breadcrumbItemContent)
         where T : class, IRxObject
     {
         if (string.IsNullOrEmpty(_hostName))
         {
-            throw new InvalidOperationException("Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.");
+            throw new InvalidOperationException(HostNotConfiguredMessage);
         }
 
-        UpdateItems(typeof(T), breadcrumbItemContent);
-
-        this.NavigateToView<T>(_hostName, contract, parameter);
+        UpdateItems(request.Key, breadcrumbItemContent);
+        request.Options.HostName = _hostName;
+        this.NavigateToView(request);
     }
 
     /// <summary>Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.</summary>
     /// <exception cref="System.ArgumentNullException">type.</exception>
     /// <param name="type">Type of ViewModel.</param>
+    public void NavigateTo(Type type) => NavigateTo(type, null, null, null);
+
+    /// <summary>Navigates to the specified view and updates the breadcrumb.</summary>
+    /// <param name="type">Type of ViewModel.</param>
+    /// <param name="contract">The viewmodel contract.</param>
+    public void NavigateTo(Type type, string? contract) => NavigateTo(type, contract, null, null);
+
+    /// <summary>Navigates to the specified view and updates the breadcrumb.</summary>
+    /// <param name="type">Type of ViewModel.</param>
+    /// <param name="contract">The viewmodel contract.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    public void NavigateTo(Type type, string? contract, object? parameter) =>
+        NavigateTo(type, contract, parameter, null);
+
+    /// <summary>Navigates to the specified view and updates the breadcrumb.</summary>
+    /// <exception cref="System.ArgumentNullException">type.</exception>
+    /// <param name="type">Type of ViewModel.</param>
     /// <param name="contract">The viewmodel contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
     /// <param name="breadcrumbItemContent">Content of the breadcrumb item.</param>
-    public void NavigateTo(Type type, string? contract = null, object? parameter = null, string? breadcrumbItemContent = null)
+    public void NavigateTo(Type type, string? contract, object? parameter, string? breadcrumbItemContent)
     {
         if (string.IsNullOrEmpty(_hostName))
         {
-            throw new InvalidOperationException("Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.");
+            throw new InvalidOperationException(HostNotConfiguredMessage);
         }
 
         if (type is null)
@@ -127,18 +153,31 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
 
         UpdateItems(type, breadcrumbItemContent);
 
-        this.NavigateToView(type, _hostName, contract, parameter);
+        this.NavigateToView(
+            type,
+            new NavigationRequestOptions
+            {
+                HostName = _hostName,
+                Contract = contract,
+                Parameter = parameter,
+            });
     }
 
     /// <summary>Navigates back and updates the Breadcrumb to remove the last item.</summary>
-    /// <exception cref="System.InvalidOperationException">Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.</exception>
+    /// <exception cref="System.InvalidOperationException">Host name is not set. Call SetupNavigation and pass the Host
+    /// Name of the Navigation host.</exception>
+    /// <returns>The target ViewModel.</returns>
+    public IRxObject? NavigateBack() => NavigateBack(null);
+
+    /// <summary>Navigates back and updates the Breadcrumb to remove the last item.</summary>
+    /// <exception cref="System.InvalidOperationException">The host name is not set.</exception>
     /// <param name="parameter">The parameter.</param>
     /// <returns>The target ViewModel.</returns>
-    public IRxObject? NavigateBack(object? parameter = null)
+    public IRxObject? NavigateBack(object? parameter)
     {
         if (string.IsNullOrEmpty(_hostName))
         {
-            throw new InvalidOperationException("Host name is not set. Call SetupNavigation and pass the Host Name of the Navigation host.");
+            throw new InvalidOperationException(HostNotConfiguredMessage);
         }
 
         if (Items.Count == 0)

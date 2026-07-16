@@ -7,7 +7,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>InfoBarSeverity member.</summary>
 public enum InfoBarSeverity
 {
-    /// <summary>Communicates that the InfoBar is displaying general information that requires the user's attention.</summary>
+    /// <summary>Indicates the InfoBar is displaying general information that requires the user's attention.</summary>
     Informational = 0,
 
     /// <summary>
@@ -16,9 +16,9 @@ public enum InfoBarSeverity
     /// </summary>
     Success = 1,
 
-    /// <summary>Communicates that the InfoBar is displaying information regarding a condition that might cause a problem in the future.</summary>
+    /// <summary>Provides the Warning member.</summary>
     Warning = 2,
 
-    /// <summary>Communicates that the InfoBar is displaying information regarding an error or problem that has occurred.</summary>
-    Error = 3
+    /// <summary>Provides the Error member.</summary>
+    Error = 3,
 }

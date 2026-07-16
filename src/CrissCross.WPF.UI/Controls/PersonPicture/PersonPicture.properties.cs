@@ -9,76 +9,67 @@ namespace CrissCross.WPF.UI.Controls;
 public partial class PersonPicture
 {
     /// <summary>The badge glyph property.</summary>
-    public static readonly DependencyProperty BadgeGlyphProperty =
-        DependencyProperty.Register(
-            nameof(BadgeGlyph),
-            typeof(string),
-            typeof(PersonPicture),
-            new PropertyMetadata(string.Empty, OnBadgeGlyphPropertyChanged, CoerceStringProperty));
+    public static readonly DependencyProperty BadgeGlyphProperty = DependencyProperty.Register(
+        nameof(BadgeGlyph),
+        typeof(string),
+        typeof(PersonPicture),
+        new PropertyMetadata(string.Empty, OnBadgeGlyphPropertyChanged, CoerceStringProperty));
 
     /// <summary>The badge image source property.</summary>
-    public static readonly DependencyProperty BadgeImageSourceProperty =
-        DependencyProperty.Register(
-            nameof(BadgeImageSource),
-            typeof(ImageSource),
-            typeof(PersonPicture),
-            new PropertyMetadata(null, OnBadgeImageSourcePropertyChanged));
+    public static readonly DependencyProperty BadgeImageSourceProperty = DependencyProperty.Register(
+        nameof(BadgeImageSource),
+        typeof(ImageSource),
+        typeof(PersonPicture),
+        new PropertyMetadata(null, OnBadgeImageSourcePropertyChanged));
 
     /// <summary>The badge number property.</summary>
-    public static readonly DependencyProperty BadgeNumberProperty =
-        DependencyProperty.Register(
-            nameof(BadgeNumber),
-            typeof(int),
-            typeof(PersonPicture),
-            new PropertyMetadata(0, OnBadgeNumberPropertyChanged));
+    public static readonly DependencyProperty BadgeNumberProperty = DependencyProperty.Register(
+        nameof(BadgeNumber),
+        typeof(int),
+        typeof(PersonPicture),
+        new PropertyMetadata(0, OnBadgeNumberPropertyChanged));
 
     /// <summary>The badge text property.</summary>
-    public static readonly DependencyProperty BadgeTextProperty =
-        DependencyProperty.Register(
-            nameof(BadgeText),
-            typeof(string),
-            typeof(PersonPicture),
-            new PropertyMetadata(string.Empty, OnBadgeTextPropertyChanged, CoerceStringProperty));
+    public static readonly DependencyProperty BadgeTextProperty = DependencyProperty.Register(
+        nameof(BadgeText),
+        typeof(string),
+        typeof(PersonPicture),
+        new PropertyMetadata(string.Empty, OnBadgeTextPropertyChanged, CoerceStringProperty));
 
     /// <summary>The display name property.</summary>
-    public static readonly DependencyProperty DisplayNameProperty =
-        DependencyProperty.Register(
-            nameof(DisplayName),
-            typeof(string),
-            typeof(PersonPicture),
-            new PropertyMetadata(string.Empty, OnDisplayNamePropertyChanged, CoerceStringProperty));
+    public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(
+        nameof(DisplayName),
+        typeof(string),
+        typeof(PersonPicture),
+        new PropertyMetadata(string.Empty, OnDisplayNamePropertyChanged, CoerceStringProperty));
 
     /// <summary>The initials property.</summary>
-    public static readonly DependencyProperty InitialsProperty =
-        DependencyProperty.Register(
-            nameof(Initials),
-            typeof(string),
-            typeof(PersonPicture),
-            new PropertyMetadata(string.Empty, OnInitialsPropertyChanged, CoerceStringProperty));
+    public static readonly DependencyProperty InitialsProperty = DependencyProperty.Register(
+        nameof(Initials),
+        typeof(string),
+        typeof(PersonPicture),
+        new PropertyMetadata(string.Empty, OnInitialsPropertyChanged, CoerceStringProperty));
 
     /// <summary>The is group property.</summary>
-    public static readonly DependencyProperty IsGroupProperty =
-        DependencyProperty.Register(
-            nameof(IsGroup),
-            typeof(bool),
-            typeof(PersonPicture),
-            new PropertyMetadata(false, OnIsGroupPropertyChanged));
+    public static readonly DependencyProperty IsGroupProperty = DependencyProperty.Register(
+        nameof(IsGroup),
+        typeof(bool),
+        typeof(PersonPicture),
+        new PropertyMetadata(false, OnIsGroupPropertyChanged));
 
     /// <summary>The profile picture property.</summary>
-    public static readonly DependencyProperty ProfilePictureProperty =
-        DependencyProperty.Register(
-            nameof(ProfilePicture),
-            typeof(ImageSource),
-            typeof(PersonPicture),
-            new PropertyMetadata(null, OnProfilePicturePropertyChanged));
+    public static readonly DependencyProperty ProfilePictureProperty = DependencyProperty.Register(
+        nameof(ProfilePicture),
+        typeof(ImageSource),
+        typeof(PersonPicture),
+        new PropertyMetadata(null, OnProfilePicturePropertyChanged));
 
     /// <summary>Provides the TemplateSettingsPropertyKey member.</summary>
-    public static readonly DependencyPropertyKey TemplateSettingsPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(TemplateSettings),
-            typeof(PersonPictureTemplateSettings),
-            typeof(PersonPicture),
-            new PropertyMetadata(null));
+    public static readonly DependencyPropertyKey TemplateSettingsPropertyKey = DependencyProperty.RegisterReadOnly(
+        nameof(TemplateSettings),
+        typeof(PersonPictureTemplateSettings),
+        typeof(PersonPicture),
+        new PropertyMetadata(null));
 
     /// <summary>The template settings property.</summary>
     public static readonly DependencyProperty TemplateSettingsProperty = TemplateSettingsPropertyKey.DependencyProperty;
@@ -176,7 +167,9 @@ public partial class PersonPicture
     /// <summary>Provides the OnBadgeImageSourcePropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnBadgeImageSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    private static void OnBadgeImageSourcePropertyChanged(
+        DependencyObject sender,
+        DependencyPropertyChangedEventArgs args)
     {
         var owner = (PersonPicture)sender;
         owner.PrivateOnPropertyChanged(args);
@@ -239,7 +232,9 @@ public partial class PersonPicture
     /// <summary>Provides the OnProfilePicturePropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnProfilePicturePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    private static void OnProfilePicturePropertyChanged(
+        DependencyObject sender,
+        DependencyPropertyChangedEventArgs args)
     {
         var owner = (PersonPicture)sender;
         owner.PrivateOnPropertyChanged(args);

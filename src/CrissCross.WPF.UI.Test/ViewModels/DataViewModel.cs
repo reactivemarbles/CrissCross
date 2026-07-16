@@ -47,9 +47,7 @@ public class DataViewModel : RxObject, INavigationAware
     }
 
     /// <summary>Method triggered when the navigation leaves the current class.</summary>
-    public void OnNavigatedFrom()
-    {
-    }
+    public void OnNavigatedFrom() { }
 
     /// <summary>Generates the sample color collection.</summary>
     private void InitializeViewModel()
@@ -76,7 +74,7 @@ public class DataViewModel : RxObject, INavigationAware
                             GeneratedColorAlpha,
                             GetRandomByte(0, GeneratedChannelUpperBound),
                             GetRandomByte(0, GeneratedChannelUpperBound),
-                            GetRandomByte(0, GeneratedChannelUpperBound)))
+                            GetRandomByte(0, GeneratedChannelUpperBound))),
                 });
         }
 

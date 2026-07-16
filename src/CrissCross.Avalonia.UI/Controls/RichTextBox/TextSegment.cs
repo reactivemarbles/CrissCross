@@ -16,6 +16,9 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <param name="startIndex">The start index in the document.</param>
 public class TextSegment(string text, int startIndex)
 {
+    /// <summary>Tolerance used when comparing optional font sizes.</summary>
+    private const double FontSizeComparisonTolerance = 1E-10D;
+
     /// <summary>Gets or sets the text content.</summary>
     public string Text { get; set; } = text ?? string.Empty;
 
@@ -91,20 +94,19 @@ public class TextSegment(string text, int startIndex)
     /// <summary>Creates a line break segment used for block separation.</summary>
     /// <param name="offset">The document offset associated with the break.</param>
     /// <returns>A <see cref="TextSegment"/> representing a line break.</returns>
-    public static TextSegment CreateLineBreak(int offset) => new(Environment.NewLine, offset)
-    {
-        IsLineBreak = true,
-    };
+    public static TextSegment CreateLineBreak(int offset) => new(Environment.NewLine, offset) { IsLineBreak = true };
 
     /// <summary>Creates a paragraph break marker.</summary>
     /// <param name="offset">The document offset associated with the break.</param>
-    /// <param name="alignment">Optional alignment metadata for the paragraph.</param>
     /// <returns>A <see cref="TextSegment"/> describing the break.</returns>
-    public static TextSegment CreateParagraphBreak(int offset, TextAlignment? alignment = null) => new(string.Empty, offset)
-    {
-        IsParagraphBreak = true,
-        ParagraphAlignment = alignment,
-    };
+    public static TextSegment CreateParagraphBreak(int offset) => CreateParagraphBreak(offset, null);
+
+    /// <summary>Creates a paragraph break marker.</summary>
+    /// <param name="offset">The document offset associated with the break.</param>
+    /// <param name="alignment">Alignment metadata for the paragraph.</param>
+    /// <returns>A <see cref="TextSegment"/> describing the break.</returns>
+    public static TextSegment CreateParagraphBreak(int offset, TextAlignment? alignment) =>
+        new(string.Empty, offset) { IsParagraphBreak = true, ParagraphAlignment = alignment };
 
     /// <summary>Creates an inline image segment.</summary>
     /// <param name="offset">The document offset where the image is injected.</param>
@@ -113,14 +115,20 @@ public class TextSegment(string text, int startIndex)
     /// <param name="width">Optional explicit width in device independent pixels.</param>
     /// <param name="height">Optional explicit height in device independent pixels.</param>
     /// <returns>A <see cref="TextSegment"/> describing the image.</returns>
-    public static TextSegment CreateImage(int offset, string source, HorizontalAlignment alignment, double? width, double? height) => new(string.Empty, offset)
-    {
-        IsImage = true,
-        ImageSource = source,
-        ImageAlignment = alignment,
-        ImageWidth = width,
-        ImageHeight = height,
-    };
+    public static TextSegment CreateImage(
+        int offset,
+        string source,
+        HorizontalAlignment alignment,
+        double? width,
+        double? height) =>
+        new(string.Empty, offset)
+        {
+            IsImage = true,
+            ImageSource = source,
+            ImageAlignment = alignment,
+            ImageWidth = width,
+            ImageHeight = height,
+        };
 
     /// <summary>Creates a clone of this segment.</summary>
     /// <returns>A new TextSegment with the same properties.</returns>
@@ -153,10 +161,10 @@ public class TextSegment(string text, int startIndex)
     /// <returns>True if formatting matches.</returns>
     public bool HasSameFormatting(TextSegment other)
     {
-        return other is not null &&
-            HasSameTextFormatting(other) &&
-            HasSameBlockFormatting(other) &&
-            HasSameImageFormatting(other);
+        return other is not null
+            && HasSameTextFormatting(other)
+            && HasSameBlockFormatting(other)
+            && HasSameImageFormatting(other);
     }
 
     /// <summary>Creates text decorations for underline and strikethrough state.</summary>
@@ -180,7 +188,10 @@ public class TextSegment(string text, int startIndex)
     /// <param name="decorations">The target collection.</param>
     /// <param name="enabled">Whether the decoration should be added.</param>
     /// <param name="location">The decoration location.</param>
-    private static void AddDecoration(TextDecorationCollection decorations, bool enabled, TextDecorationLocation location)
+    private static void AddDecoration(
+        TextDecorationCollection decorations,
+        bool enabled,
+        TextDecorationLocation location)
     {
         if (!enabled)
         {
@@ -190,30 +201,36 @@ public class TextSegment(string text, int startIndex)
         decorations.Add(new TextDecoration { Location = location });
     }
 
+    /// <summary>Compares optional font sizes using a floating-point tolerance.</summary>
+    /// <param name="left">The first font size.</param>
+    /// <param name="right">The second font size.</param>
+    /// <returns><see langword="true"/> when both values are absent or effectively equal.</returns>
+    private static bool HaveEqualFontSize(double? left, double? right) =>
+        left.HasValue == right.HasValue
+        && (!left.HasValue || Math.Abs(left.Value - right!.Value) <= FontSizeComparisonTolerance);
+
     /// <summary>Compares character formatting options.</summary>
     /// <param name="other">The other segment.</param>
     /// <returns><see langword="true"/> when character formatting matches.</returns>
     private bool HasSameTextFormatting(TextSegment other) =>
-        IsBold == other.IsBold &&
-        IsItalic == other.IsItalic &&
-        IsUnderline == other.IsUnderline &&
-        IsStrikethrough == other.IsStrikethrough &&
-        Equals(Foreground, other.Foreground) &&
-        Equals(Background, other.Background) &&
-        FontSize == other.FontSize &&
-        Equals(FontFamily, other.FontFamily);
+        IsBold == other.IsBold
+        && IsItalic == other.IsItalic
+        && IsUnderline == other.IsUnderline
+        && IsStrikethrough == other.IsStrikethrough
+        && Equals(Foreground, other.Foreground)
+        && Equals(Background, other.Background)
+        && HaveEqualFontSize(FontSize, other.FontSize)
+        && Equals(FontFamily, other.FontFamily);
 
     /// <summary>Compares line and paragraph formatting options.</summary>
     /// <param name="other">The other segment.</param>
     /// <returns><see langword="true"/> when block formatting matches.</returns>
     private bool HasSameBlockFormatting(TextSegment other) =>
-        IsLineBreak == other.IsLineBreak &&
-        IsParagraphBreak == other.IsParagraphBreak;
+        IsLineBreak == other.IsLineBreak && IsParagraphBreak == other.IsParagraphBreak;
 
     /// <summary>Compares image formatting options.</summary>
     /// <param name="other">The other segment.</param>
     /// <returns><see langword="true"/> when image formatting matches.</returns>
     private bool HasSameImageFormatting(TextSegment other) =>
-        IsImage == other.IsImage &&
-        ImageAlignment == other.ImageAlignment;
+        IsImage == other.IsImage && ImageAlignment == other.ImageAlignment;
 }

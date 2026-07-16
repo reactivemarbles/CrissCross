@@ -9,6 +9,14 @@ namespace CrissCross;
 /// <summary>Immutable validation feedback for a named form field or form-level rule.</summary>
 public sealed class ValidationMessage
 {
+    /// <inheritdoc />
+    public ValidationMessage(string? fieldKey, string? fieldDisplayName, string message)
+        : this(fieldKey, fieldDisplayName, message, ValidationSeverity.Error, null) { }
+
+    /// <inheritdoc />
+    public ValidationMessage(string? fieldKey, string? fieldDisplayName, string message, ValidationSeverity severity)
+        : this(fieldKey, fieldDisplayName, message, severity, null) { }
+
     /// <summary>Initializes a new instance of the <see cref="ValidationMessage"/> class.</summary>
     /// <param name="fieldKey">The stable field key associated with the message.</param>
     /// <param name="fieldDisplayName">The human-readable field display name.</param>
@@ -19,8 +27,8 @@ public sealed class ValidationMessage
         string? fieldKey,
         string? fieldDisplayName,
         string message,
-        ValidationSeverity severity = ValidationSeverity.Error,
-        ICommand? remediationCommand = null)
+        ValidationSeverity severity,
+        ICommand? remediationCommand)
     {
         ThrowHelper.ThrowIfNullOrWhiteSpace(message, nameof(message));
 
@@ -56,10 +64,12 @@ public sealed class ValidationMessage
     public bool HasRemediation => RemediationCommand is not null;
 
     /// <summary>Gets the message text with field context when available.</summary>
-    public string DisplayText => string.IsNullOrWhiteSpace(FieldDisplayName) ? Message : $"{FieldDisplayName}: {Message}";
+    public string DisplayText =>
+        string.IsNullOrWhiteSpace(FieldDisplayName) ? Message : $"{FieldDisplayName}: {Message}";
 
     /// <summary>Normalizes optional user-facing text.</summary>
     /// <param name="value">The optional text.</param>
     /// <returns>The normalized text, or <c>null</c> when blank.</returns>
-    private static string? NormalizeOptionalText(string? value) => string.IsNullOrWhiteSpace(value) ? null : value!.Trim();
+    private static string? NormalizeOptionalText(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value!.Trim();
 }

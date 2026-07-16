@@ -12,77 +12,156 @@ using ReactiveUI;
 namespace CrissCross.WPF.UI;
 
 /// <summary>Represents a Modern UI styled window.</summary>
-public class ModernWindow
-    : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, IDisposable
+public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, IDisposable
 {
     /// <summary>The application bar enabled property.</summary>
-    public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(nameof(AppBarEnabled), typeof(bool), typeof(ModernWindow), new PropertyMetadata(true));
+    public static readonly DependencyProperty AppBarEnabledProperty = DependencyProperty.Register(
+        nameof(AppBarEnabled),
+        typeof(bool),
+        typeof(ModernWindow),
+        new PropertyMetadata(true));
 
     /// <summary>Holds AppBar open until explicitly closed.</summary>
-    public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(nameof(AppBarIsSticky), typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
+    public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(
+        nameof(AppBarIsSticky),
+        typeof(bool),
+        typeof(ModernWindow),
+        new PropertyMetadata(false));
 
     /// <summary>Recommended Height 88.</summary>
-    public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(nameof(AppBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(
+        nameof(AppBarLeft),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>Recommended Height 88.</summary>
-    public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(nameof(AppBarRight), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty AppBarRightProperty = DependencyProperty.Register(
+        nameof(AppBarRight),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>Identifies the BackgroundContent dependency property.</summary>
-    public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register(nameof(BackgroundContent), typeof(object), typeof(ModernWindow));
+    public static readonly DependencyProperty BackgroundContentProperty = DependencyProperty.Register(
+        nameof(BackgroundContent),
+        typeof(object),
+        typeof(ModernWindow));
 
     /// <summary>The foreground content property.</summary>
-    public static readonly DependencyProperty ForegroundContentProperty = DependencyProperty.Register(nameof(ForegroundContent), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty ForegroundContentProperty = DependencyProperty.Register(
+        nameof(ForegroundContent),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>Identifies the IsTitleVisible dependency property.</summary>
-    public static readonly DependencyProperty IsTitleVisibleProperty = DependencyProperty.Register(nameof(IsTitleVisible), typeof(bool), typeof(ModernWindow), new PropertyMetadata(false));
+    public static readonly DependencyProperty IsTitleVisibleProperty = DependencyProperty.Register(
+        nameof(IsTitleVisible),
+        typeof(bool),
+        typeof(ModernWindow),
+        new PropertyMetadata(false));
 
     /// <summary>Identifies the LogoData dependency property.</summary>
-    public static readonly DependencyProperty LogoDataProperty = DependencyProperty.Register(nameof(LogoData), typeof(Geometry), typeof(ModernWindow));
+    public static readonly DependencyProperty LogoDataProperty = DependencyProperty.Register(
+        nameof(LogoData),
+        typeof(Geometry),
+        typeof(ModernWindow));
 
     /// <summary>Identifies the Logo dependency property.</summary>
-    public static readonly DependencyProperty LogoProperty = DependencyProperty.Register(nameof(Logo), typeof(ImageSource), typeof(ModernWindow));
+    public static readonly DependencyProperty LogoProperty = DependencyProperty.Register(
+        nameof(Logo),
+        typeof(ImageSource),
+        typeof(ModernWindow));
 
     /// <summary>The main menu visible property.</summary>
-    public static readonly DependencyProperty MainMenuVisibleProperty = DependencyProperty.Register(nameof(MainMenuVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
+    public static readonly DependencyProperty MainMenuVisibleProperty = DependencyProperty.Register(
+        nameof(MainMenuVisible),
+        typeof(Visibility),
+        typeof(ModernWindow),
+        new PropertyMetadata(Visibility.Visible));
 
     /// <summary>The main title font property.</summary>
-    public static readonly DependencyProperty MainTitleFontProperty = DependencyProperty.Register(nameof(MainTitleFont), typeof(FontFamily), typeof(ModernWindow), new PropertyMetadata(new FontFamily("Segoe UI")));
+    public static readonly DependencyProperty MainTitleFontProperty = DependencyProperty.Register(
+        nameof(MainTitleFont),
+        typeof(FontFamily),
+        typeof(ModernWindow),
+        new PropertyMetadata(new FontFamily("Segoe UI")));
 
     /// <summary>The main title property.</summary>
-    public static readonly DependencyProperty MainTitleProperty = DependencyProperty.Register(nameof(MainTitle), typeof(string), typeof(ModernWindow), new PropertyMetadata("CrissCross"));
+    public static readonly DependencyProperty MainTitleProperty = DependencyProperty.Register(
+        nameof(MainTitle),
+        typeof(string),
+        typeof(ModernWindow),
+        new PropertyMetadata("CrissCross"));
 
     /// <summary>Identifies the MenuLinkGroups dependency property.</summary>
-    public static readonly DependencyProperty MainMenuProperty = DependencyProperty.Register(nameof(MainMenu), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty MainMenuProperty = DependencyProperty.Register(
+        nameof(MainMenu),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>The navigation bar back button visible property.</summary>
-    public static readonly DependencyProperty NavBarBackButtonVisibleProperty = DependencyProperty.Register(nameof(NavBarBackButtonVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
+    public static readonly DependencyProperty NavBarBackButtonVisibleProperty = DependencyProperty.Register(
+        nameof(NavBarBackButtonVisible),
+        typeof(Visibility),
+        typeof(ModernWindow),
+        new PropertyMetadata(Visibility.Visible));
 
     /// <summary>The navigation bar left property.</summary>
-    public static readonly DependencyProperty NavBarLeftProperty = DependencyProperty.Register(nameof(NavBarLeft), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty NavBarLeftProperty = DependencyProperty.Register(
+        nameof(NavBarLeft),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>The navigation bar logo visible property.</summary>
-    public static readonly DependencyProperty NavBarLogoVisibleProperty = DependencyProperty.Register(nameof(NavBarLogoVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
+    public static readonly DependencyProperty NavBarLogoVisibleProperty = DependencyProperty.Register(
+        nameof(NavBarLogoVisible),
+        typeof(Visibility),
+        typeof(ModernWindow),
+        new PropertyMetadata(Visibility.Visible));
 
     /// <summary>The navigation bar property.</summary>
-    public static readonly DependencyProperty NavBarProperty = DependencyProperty.Register(nameof(NavBar), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty NavBarProperty = DependencyProperty.Register(
+        nameof(NavBar),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>The navigation bar visible property.</summary>
-    public static readonly DependencyProperty NavBarVisibleProperty = DependencyProperty.Register(nameof(NavBarVisible), typeof(Visibility), typeof(ModernWindow), new PropertyMetadata(Visibility.Visible));
+    public static readonly DependencyProperty NavBarVisibleProperty = DependencyProperty.Register(
+        nameof(NavBarVisible),
+        typeof(Visibility),
+        typeof(ModernWindow),
+        new PropertyMetadata(Visibility.Visible));
 
     /// <summary>The status bar property.</summary>
-    public static readonly DependencyProperty StatusBarProperty = DependencyProperty.Register(nameof(StatusBar), typeof(ObservableCollection<FrameworkElement>), typeof(ModernWindow));
+    public static readonly DependencyProperty StatusBarProperty = DependencyProperty.Register(
+        nameof(StatusBar),
+        typeof(ObservableCollection<FrameworkElement>),
+        typeof(ModernWindow));
 
     /// <summary>The title logo data property.</summary>
-    public static readonly DependencyProperty TitleLogoDataProperty = DependencyProperty.Register(nameof(TitleLogoData), typeof(Geometry), typeof(ModernWindow));
+    public static readonly DependencyProperty TitleLogoDataProperty = DependencyProperty.Register(
+        nameof(TitleLogoData),
+        typeof(Geometry),
+        typeof(ModernWindow));
 
     /// <summary>The title logo property.</summary>
-    public static readonly DependencyProperty TitleLogoProperty = DependencyProperty.Register(nameof(TitleLogo), typeof(ImageSource), typeof(ModernWindow));
+    public static readonly DependencyProperty TitleLogoProperty = DependencyProperty.Register(
+        nameof(TitleLogo),
+        typeof(ImageSource),
+        typeof(ModernWindow));
 
     /// <summary>The title margin property.</summary>
-    public static readonly DependencyProperty TitleMarginProperty = DependencyProperty.Register(nameof(TitleMargin), typeof(Thickness), typeof(ModernWindow), new PropertyMetadata(new Thickness(0)));
+    public static readonly DependencyProperty TitleMarginProperty = DependencyProperty.Register(
+        nameof(TitleMargin),
+        typeof(Thickness),
+        typeof(ModernWindow),
+        new PropertyMetadata(new Thickness(0)));
 
     /// <summary>The browse back property.</summary>
-    public static readonly DependencyProperty BrowseBackProperty = DependencyProperty.Register(nameof(BrowseBack), typeof(ICommand), typeof(ModernWindow), new PropertyMetadata(null));
+    public static readonly DependencyProperty BrowseBackProperty = DependencyProperty.Register(
+        nameof(BrowseBack),
+        typeof(ICommand),
+        typeof(ModernWindow),
+        new PropertyMetadata(null));
 
     /// <summary>Stores the _busyStatusTextSubject value.</summary>
     private readonly ReplaySignal<string> _busyStatusTextSubject = new(1);
@@ -132,9 +211,12 @@ public class ModernWindow
 
         // associate window commands with this instance
         _ = CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
-        _ = CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
-        _ = CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
-        _ = CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
+        _ = CommandBindings.Add(
+            new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
+        _ = CommandBindings.Add(
+            new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
+        _ = CommandBindings.Add(
+            new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
 
         // listen for theme changes
         PreviewMouseDown += ModernWindow_PreviewMouseDown;
@@ -158,7 +240,6 @@ public class ModernWindow
     public bool AppBarEnabled
     {
         get => (bool)GetValue(AppBarEnabledProperty);
-
         set
         {
             SetValue(AppBarEnabledProperty, value);
@@ -178,7 +259,6 @@ public class ModernWindow
     public bool AppBarIsSticky
     {
         get => (bool)GetValue(AppBarIsStickyProperty);
-
         private set => SetValue(AppBarIsStickyProperty, value);
     }
 
@@ -307,7 +387,6 @@ public class ModernWindow
     public Visibility NavBarBackButtonVisible
     {
         get => (Visibility)GetValue(NavBarBackButtonVisibleProperty);
-
         set => SetValue(NavBarBackButtonVisibleProperty, value);
     }
 
@@ -402,9 +481,7 @@ public class ModernWindow
 
     /// <summary>Themes the changed.</summary>
     /// <param name="theme">The theme.</param>
-    public virtual void ThemeChanged(string theme)
-    {
-    }
+    public virtual void ThemeChanged(string theme) { }
 
     /// <summary>
     /// When overridden in a derived class, is invoked whenever application code or internal
@@ -422,7 +499,7 @@ public class ModernWindow
             _backgroundAnimation?.Begin();
         }
 
-        BrowseBack = ReactiveCommand.Create<object>(this.NavigateBack, this.CanNavigateBack());
+        BrowseBack = ReactiveCommand.Create<IRxObject?>(this.NavigateBack, this.CanNavigateBack());
         var backButton = (AppBarButton)Template.FindName("BackButton", this);
         if (backButton is not null)
         {
@@ -452,7 +529,7 @@ public class ModernWindow
         this.ListenForBusy(IsBusy);
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -461,7 +538,8 @@ public class ModernWindow
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
+    /// only unmanaged resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (_disposedValue)
@@ -595,12 +673,14 @@ public class ModernWindow
     /// <summary>Called when [can minimize window].</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.</param>
-    private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ResizeMode != ResizeMode.NoResize;
+    private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e) =>
+        e.CanExecute = ResizeMode != ResizeMode.NoResize;
 
     /// <summary>Called when [can resize window].</summary>
     /// <param name="sender">The sender.</param>
     /// <param name="e">The <see cref="CanExecuteRoutedEventArgs"/> instance containing the event data.</param>
-    private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = ResizeMode == ResizeMode.CanResize || ResizeMode == ResizeMode.CanResizeWithGrip;
+    private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e) =>
+        e.CanExecute = ResizeMode == ResizeMode.CanResize || ResizeMode == ResizeMode.CanResizeWithGrip;
 
     /// <summary>Called when [close window].</summary>
     /// <param name="target">The target.</param>

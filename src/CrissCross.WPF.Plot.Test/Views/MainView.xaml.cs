@@ -77,26 +77,16 @@ public partial class MainView : IDisposable
     /// <param name="disposables">The activation disposables.</param>
     private void BindChartProperties(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName)
-            .DisposeWith(disposables);
+        _ = this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(disposables);
         _ = this.OneWayBind(ViewModel, vm => vm.ActiveScenario, v => v.ActiveScenarioText.Text)
             .DisposeWith(disposables);
         _ = this.OneWayBind(ViewModel, vm => vm.ThemeButtonText, v => v.ToggleThemeButton.Content)
             .DisposeWith(disposables);
-        _ = this.Bind(
-                ViewModel,
-                vm => vm.UseFixedNumberOfPoints,
-                v => v.CheckBoxUseFixedNumberOfPoints.IsChecked)
+        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.CheckBoxUseFixedNumberOfPoints.IsChecked)
             .DisposeWith(disposables);
-        _ = this.Bind(
-                ViewModel,
-                vm => vm.UseFixedNumberOfPoints,
-                v => v.Chart.UseFixedNumberOfPoints)
+        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.Chart.UseFixedNumberOfPoints)
             .DisposeWith(disposables);
-        _ = this.Bind(
-                ViewModel,
-                vm => vm.NumberPointsPlotted,
-                v => v.NumberPointsPlotted.Value)
+        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted.Value)
             .DisposeWith(disposables);
     }
 
@@ -109,25 +99,13 @@ public partial class MainView : IDisposable
                 viewModel => viewModel.ShowAllChartTypesCommand,
                 view => view.ShowAllChartTypesButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(
-                ViewModel,
-                viewModel => viewModel.ShowLiveCommand,
-                view => view.ShowLiveButton)
+        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowLiveCommand, view => view.ShowLiveButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(
-                ViewModel,
-                viewModel => viewModel.ShowHistoricCommand,
-                view => view.ShowHistoricButton)
+        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowHistoricCommand, view => view.ShowHistoricButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(
-                ViewModel,
-                viewModel => viewModel.ShowIndicatorsCommand,
-                view => view.ShowIndicatorsButton)
+        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowIndicatorsCommand, view => view.ShowIndicatorsButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(
-                ViewModel,
-                viewModel => viewModel.ToggleThemeCommand,
-                view => view.ToggleThemeButton)
+        _ = this.BindCommand(ViewModel, viewModel => viewModel.ToggleThemeCommand, view => view.ToggleThemeButton)
             .DisposeWith(disposables);
     }
 
@@ -135,10 +113,10 @@ public partial class MainView : IDisposable
     /// <param name="disposables">The activation disposables.</param>
     private void BindPlotData(CompositeDisposable disposables)
     {
-        _ = ViewModel.WhenAnyValue(vm => vm.NumberPointsPlotted)
+        _ = ViewModel
+            .WhenAnyValue(vm => vm.NumberPointsPlotted)
             .Where(static numberOfPoints => numberOfPoints.HasValue)
-            .Select(static numberOfPoints =>
-                Math.Max(1, Convert.ToInt32(numberOfPoints.GetValueOrDefault())))
+            .Select(static numberOfPoints => Math.Max(1, Convert.ToInt32(numberOfPoints.GetValueOrDefault())))
             .BindTo(this, v => v.Chart.NumberPointsPlotted)
             .DisposeWith(disposables);
         _ = ViewModel

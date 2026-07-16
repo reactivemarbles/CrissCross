@@ -6,21 +6,23 @@ using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Represents a control that displays a block of text with support for customizable typography and appearance settings.</summary>
+/// <summary>Represents the TextBlock type.</summary>
 /// <remarks>The TextBlock control extends the base Avalonia TextBlock by providing additional properties for font
 /// typography and appearance. It is typically used to display read-only text in user interfaces, with options to adjust
 /// visual style according to application design requirements.</remarks>
 public class TextBlock : global::Avalonia.Controls.TextBlock
 {
     /// <summary>Property for <see cref="FontTypography"/>.</summary>
-    public static readonly StyledProperty<FontTypography> FontTypographyProperty = AvaloniaProperty.Register<TextBlock, FontTypography>(
-        nameof(FontTypography),
-        FontTypography.Body);
+    public static readonly StyledProperty<FontTypography> FontTypographyProperty = AvaloniaProperty.Register<
+        TextBlock,
+        FontTypography
+    >(nameof(FontTypography), FontTypography.Body);
 
     /// <summary>Property for <see cref="Appearance"/>.</summary>
-    public static readonly StyledProperty<TextColor> AppearanceProperty = AvaloniaProperty.Register<TextBlock, TextColor>(
-        nameof(Appearance),
-        TextColor.Primary);
+    public static readonly StyledProperty<TextColor> AppearanceProperty = AvaloniaProperty.Register<
+        TextBlock,
+        TextColor
+    >(nameof(Appearance), TextColor.Primary);
 
     /// <summary>Gets or sets the font typography.</summary>
     public FontTypography FontTypography

@@ -35,16 +35,106 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     private const int InlineImageHeight = 48;
 
     /// <summary>Provides the DemoImageDataUri member.</summary>
-    private const string DemoImageDataUri = "data:image/png;base64,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";
+    private const string DemoImageDataUri =
+        "data:image/png;base64,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";
 
     /// <summary>Provides the SampleMarkdown member.</summary>
-    private const string SampleMarkdown = "# RichTextBox Markdown\n\n- **Bold** command sample\n- *Italic* command sample\n- <u>Underline</u> command sample\n\nThis sample mirrors WPF-style rich content workflows.";
+    private const string SampleMarkdown =
+        "# RichTextBox Markdown\n\n- **Bold** command sample\n- *Italic* command sample\n"
+        + "- <u>Underline</u> command sample\n\nThis sample mirrors WPF-style rich content workflows.";
 
     /// <summary>Provides the ClipboardHtmlSample member.</summary>
-    private const string ClipboardHtmlSample = "<p><strong>Clipboard rich text</strong> with <em>italic</em>, <u>underline</u>, and <span style='color:#FF8C00'>foreground color</span>.</p>";
+    private const string ClipboardHtmlSample =
+        "<p><strong>Clipboard rich text</strong> with <em>italic</em>, <u>underline</u>, and "
+        + "<span style='color:#FF8C00'>foreground color</span>.</p>";
 
     /// <summary>Provides the RepresentativeHtml member.</summary>
-    private const string RepresentativeHtml = "<h2>RichTextBox capabilities</h2><p><strong>Bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s>, <span style='font-family:Consolas;font-size:18;color:#00BFFF;background-color:#202020'>font family, size, foreground, and highlight</span>.</p><p>Use the toolbar, keyboard shortcuts, context menu, clipboard, drag/drop, and serialization buttons below.</p><ul><li>Drop plain text, HTML, image files, or data:image URIs.</li><li>Copy/cut preserves selected rich HTML and plain-text fallback.</li><li>Save/load supports HTML, Markdown, and plain-text streams.</li></ul>";
+    private const string RepresentativeHtml =
+        "<h2>RichTextBox capabilities</h2><p><strong>Bold</strong>, <em>italic</em>, <u>underline</u>, "
+        + "<s>strikethrough</s>, <span style='font-family:Consolas;font-size:18;color:#00BFFF;"
+        + "background-color:#202020'>font family, size, foreground, and highlight</span>.</p>"
+        + "<p>Use the toolbar, keyboard shortcuts, context menu, clipboard, drag/drop, and serialization buttons "
+        + "below.</p><ul><li>Drop plain text, HTML, image files, or data:image URIs.</li>"
+        + "<li>Copy/cut preserves selected rich HTML and plain-text fallback.</li>"
+        + "<li>Save/load supports HTML, Markdown, and plain-text streams.</li></ul>";
 
     /// <summary>Provides the _demoClipboard member.</summary>
     private readonly RichTextMemoryClipboardAdapter _demoClipboard = new();
@@ -56,7 +146,8 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     public InputPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<InputPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<InputPageViewModel>());
         RegisterXamlEventHandlersForAnalyzer();
 
         if (DemoRichTextBox is not { } richTextBox)
@@ -87,7 +178,9 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <returns>The result.</returns>
     private static string TruncateForStatus(string value)
     {
-        var normalized = value.Replace("\r", " ", StringComparison.Ordinal).Replace("\n", " ", StringComparison.Ordinal);
+        var normalized = value
+            .Replace("\r", " ", StringComparison.Ordinal)
+            .Replace("\n", " ", StringComparison.Ordinal);
         return normalized.Length <= StatusPreviewMaxLength ? normalized : normalized[..StatusPreviewMaxLength] + "...";
     }
 
@@ -175,7 +268,10 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
             return;
         }
 
-        richTextBox.AppendHtml("<p><strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, <s>Strikethrough</s>, <span style='font-family:Consolas;font-size:20;color:#00BFFF;background-color:#222'>font/color/highlight</span>.</p>");
+        richTextBox.AppendHtml(
+            "<p><strong>Bold</strong>, <em>Italic</em>, <u>Underline</u>, <s>Strikethrough</s>, "
+            + "<span style='font-family:Consolas;font-size:20;color:#00BFFF;background-color:#222'>"
+            + "font/color/highlight</span>.</p>");
         UpdateDisplayPreview("HTML fragment appended.");
     }
 
@@ -205,7 +301,9 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
             return;
         }
 
-        richTextBox.AppendHtml($"<p>Inline image inserted from a data URI:</p><img src='{DemoImageDataUri}' width='{InlineImageWidth}' height='{InlineImageHeight}' align='left' /><p></p>");
+        richTextBox.AppendHtml(
+            $"<p>Inline image inserted from a data URI:</p><img src='{DemoImageDataUri}' "
+            + $"width='{InlineImageWidth}' height='{InlineImageHeight}' align='left' /><p></p>");
         UpdateDisplayPreview("Inline image inserted from data URI.");
     }
 
@@ -237,47 +335,70 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <summary>Provides the OnRichTextBoldClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextBoldClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.ToggleBold(), "Bold toggled for the current selection.");
+    private void OnRichTextBoldClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(richTextBox => richTextBox.ToggleBold(), "Bold toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextItalicClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextItalicClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.ToggleItalic(), "Italic toggled for the current selection.");
+    private void OnRichTextItalicClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(richTextBox => richTextBox.ToggleItalic(), "Italic toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextUnderlineClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextUnderlineClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.ToggleUnderline(), "Underline toggled for the current selection.");
+    private void OnRichTextUnderlineClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.ToggleUnderline(),
+            "Underline toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextStrikeClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextStrikeClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.ToggleStrikethrough(), "Strikethrough toggled for the current selection.");
+    private void OnRichTextStrikeClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.ToggleStrikethrough(),
+            "Strikethrough toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextClearFormattingClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextClearFormattingClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.ClearFormatting(), "Formatting cleared for the current selection.");
+    private void OnRichTextClearFormattingClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.ClearFormatting(),
+            "Formatting cleared for the current selection.");
 
     /// <summary>Provides the OnRichTextFontFamilyClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextFontFamilyClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.SetSelectionFontFamily("Consolas"), "Font Family changed to Consolas.");
+    private void OnRichTextFontFamilyClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.SetSelectionFontFamily("Consolas"),
+            "Font Family changed to Consolas.");
 
     /// <summary>Provides the OnRichTextFontSizeClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextFontSizeClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.SetSelectionFontSize(FormattingFontSize), $"Font Size changed to {FormattingFontSize}.");
+    private void OnRichTextFontSizeClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.SetSelectionFontSize(FormattingFontSize),
+            $"Font Size changed to {FormattingFontSize}.");
 
     /// <summary>Provides the OnRichTextForegroundClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextForegroundClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.SetSelectionForeground(Colors.DeepSkyBlue), "Foreground changed to DeepSkyBlue.");
+    private void OnRichTextForegroundClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.SetSelectionForeground(Colors.DeepSkyBlue),
+            "Foreground changed to DeepSkyBlue.");
 
     /// <summary>Provides the OnRichTextHighlightClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextHighlightClick(object? sender, RoutedEventArgs e) => ApplySelectionAction(richTextBox => richTextBox.SetSelectionHighlight(Colors.DarkSlateBlue), "Highlight changed to DarkSlateBlue.");
+    private void OnRichTextHighlightClick(object? sender, RoutedEventArgs e) =>
+        ApplySelectionAction(
+            richTextBox => richTextBox.SetSelectionHighlight(Colors.DarkSlateBlue),
+            "Highlight changed to DarkSlateBlue.");
 
     /// <summary>Provides the OnRichTextUndoClick member.</summary>
     /// <param name="sender">The sender value.</param>
@@ -310,7 +431,9 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
 
         EnsureDemoSelection(richTextBox);
         richTextBox.Copy();
-        UpdateStatus($"Copied selection. Plain={_demoClipboard.PlainText?.Length ?? 0} chars; HTML={_demoClipboard.HtmlText?.Length ?? 0} chars.");
+        UpdateStatus(
+            $"Copied selection. Plain={_demoClipboard.PlainText?.Length ?? 0} chars; "
+            + $"HTML={_demoClipboard.HtmlText?.Length ?? 0} chars.");
     }
 
     /// <summary>Provides the OnRichTextCutClick member.</summary>
@@ -355,8 +478,11 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextDropTextSampleClick(object? sender, RoutedEventArgs e)
     {
-        var inserted = DemoRichTextBox?.TryDropText("<strong>Dropped HTML text</strong> with plain-text fallback instructions.") == true;
-        UpdateDisplayPreview(inserted ? "Text/HTML drop sample accepted." : "Text/HTML drop sample rejected by current mode.");
+        var inserted =
+            DemoRichTextBox?.TryDropText("<strong>Dropped HTML text</strong> with plain-text fallback instructions.")
+            == true;
+        UpdateDisplayPreview(
+            inserted ? "Text/HTML drop sample accepted." : "Text/HTML drop sample rejected by current mode.");
     }
 
     /// <summary>Provides the OnRichTextDropImageSampleClick member.</summary>
@@ -417,7 +543,10 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
 
         _displayModeEnabled = !_displayModeEnabled;
         richTextBox.EditMode = _displayModeEnabled ? RichTextEditMode.Display : RichTextEditMode.EditOnFocus;
-        UpdateDisplayPreview(_displayModeEnabled ? "Main editor switched to Display mode." : "Main editor switched to EditOnFocus mode.");
+        var status = _displayModeEnabled
+            ? "Main editor switched to Display mode."
+            : "Main editor switched to EditOnFocus mode.";
+        UpdateDisplayPreview(status);
     }
 
     /// <summary>Provides the ApplySelectionAction member.</summary>

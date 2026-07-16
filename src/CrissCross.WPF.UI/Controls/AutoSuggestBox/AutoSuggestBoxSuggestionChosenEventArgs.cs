@@ -10,7 +10,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// </remarks>
 /// <param name="eventArgs">The event arguments.</param>
 /// <param name="sender">The sender.</param>
-public sealed class AutoSuggestBoxSuggestionChosenEventArgs(RoutedEvent eventArgs, object sender) : RoutedEventArgs(eventArgs, sender)
+public sealed class AutoSuggestBoxSuggestionChosenEventArgs(RoutedEvent eventArgs, object sender)
+    : RoutedEventArgs(eventArgs, sender)
 {
     /// <summary>Gets the selected item.</summary>
     /// <value>

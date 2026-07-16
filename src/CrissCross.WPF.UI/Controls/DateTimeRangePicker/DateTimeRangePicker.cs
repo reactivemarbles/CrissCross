@@ -17,14 +17,20 @@ public class DateTimeRangePicker : Control
         nameof(Start),
         typeof(DateTimeOffset?),
         typeof(DateTimeRangePicker),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnRangeInputChanged));
+        new FrameworkPropertyMetadata(
+            null,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnRangeInputChanged));
 
     /// <summary>Property for <see cref="End"/>.</summary>
     public static readonly DependencyProperty EndProperty = DependencyProperty.Register(
         nameof(End),
         typeof(DateTimeOffset?),
         typeof(DateTimeRangePicker),
-        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnRangeInputChanged));
+        new FrameworkPropertyMetadata(
+            null,
+            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+            OnRangeInputChanged));
 
     /// <summary>Property for <see cref="CurrentRange"/>.</summary>
     public static readonly DependencyProperty CurrentRangeProperty = DependencyProperty.Register(
@@ -170,7 +176,10 @@ public class DateTimeRangePicker : Control
             return preset;
         }
 
-        return Enum.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), ignoreCase: true, out DateTimeRangePreset parsed)
+        return Enum.TryParse(
+            Convert.ToString(value, CultureInfo.InvariantCulture),
+            ignoreCase: true,
+            out DateTimeRangePreset parsed)
             ? parsed
             : DateTimeRangePreset.Custom;
     }
@@ -178,14 +187,15 @@ public class DateTimeRangePicker : Control
     /// <summary>Provides the ResolvePresetDefinition member.</summary>
     /// <param name="preset">The preset value.</param>
     /// <returns>The result.</returns>
-    private static DateTimeRangePresetDefinition ResolvePresetDefinition(DateTimeRangePreset preset) => preset switch
-    {
-        DateTimeRangePreset.Today => DateTimeRangePresetDefinition.Today,
-        DateTimeRangePreset.Yesterday => DateTimeRangePresetDefinition.Yesterday,
-        DateTimeRangePreset.LastSevenDays => DateTimeRangePresetDefinition.LastSevenDays,
-        DateTimeRangePreset.ThisMonth => DateTimeRangePresetDefinition.ThisMonth,
-        _ => DateTimeRangePresetDefinition.Custom
-    };
+    private static DateTimeRangePresetDefinition ResolvePresetDefinition(DateTimeRangePreset preset) =>
+        preset switch
+        {
+            DateTimeRangePreset.Today => DateTimeRangePresetDefinition.Today,
+            DateTimeRangePreset.Yesterday => DateTimeRangePresetDefinition.Yesterday,
+            DateTimeRangePreset.LastSevenDays => DateTimeRangePresetDefinition.LastSevenDays,
+            DateTimeRangePreset.ThisMonth => DateTimeRangePresetDefinition.ThisMonth,
+            _ => DateTimeRangePresetDefinition.Custom,
+        };
 
     /// <summary>Provides the EmitRange member.</summary>
     /// <param name="range">The range value.</param>

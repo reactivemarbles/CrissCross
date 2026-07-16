@@ -8,8 +8,7 @@ namespace CrissCross.WPF.UI.Converters;
 
 /// <summary>Provides the PickerTypeToIntConverter member.</summary>
 [ValueConversion(typeof(PickerType), typeof(int))]
-internal sealed class PickerTypeToIntConverter
-    : IValueConverter
+internal sealed class PickerTypeToIntConverter : IValueConverter
 {
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>
@@ -25,5 +24,6 @@ internal sealed class PickerTypeToIntConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => (PickerType)value;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        (PickerType)value;
 }

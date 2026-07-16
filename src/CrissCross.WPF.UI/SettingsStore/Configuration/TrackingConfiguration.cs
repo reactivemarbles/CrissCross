@@ -28,16 +28,12 @@ public class TrackingConfiguration : ITrackingConfiguration
     private Action<object>? _persistedAction;
 
     /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
-    internal TrackingConfiguration()
-    {
-    }
+    internal TrackingConfiguration() { }
 
     /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
     /// <param name="tracker">The tracker value.</param>
     /// <param name="targetType">The targetType value.</param>
-    internal TrackingConfiguration(
-        Tracker tracker,
-        Type targetType)
+    internal TrackingConfiguration(Tracker tracker, Type targetType)
     {
         TargetType = targetType;
         Tracker = tracker;
@@ -49,9 +45,7 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// <summary>Initializes a new instance of the <see cref="TrackingConfiguration"/> class.</summary>
     /// <param name="baseConfig">The baseConfig value.</param>
     /// <param name="targetType">The targetType value.</param>
-    internal TrackingConfiguration(
-        TrackingConfiguration baseConfig,
-        Type targetType)
+    internal TrackingConfiguration(TrackingConfiguration baseConfig, Type targetType)
     {
         TargetType = targetType;
         Tracker = baseConfig.Tracker;
@@ -80,7 +74,7 @@ public class TrackingConfiguration : ITrackingConfiguration
     public Type? TargetType { get; }
 
     /// <summary>Gets the StateTracker that owns this tracking configuration.</summary>
-    public virtual Tracker? Tracker { get; }
+    public Tracker? Tracker { get; }
 
     /// <summary>Gets or sets the value.</summary>
     /// <value>
@@ -106,7 +100,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>Allows supplying a callback that will be called when all saved state is applied to a target object.</summary>
+    /// <summary>Provides the WhenAppliedState member.</summary>
     /// <param name="action">The action.</param>
     /// <returns>ITracking Configuration.</returns>
     public ITrackingConfiguration WhenAppliedState(Action<object> action)
@@ -135,9 +129,9 @@ public class TrackingConfiguration : ITrackingConfiguration
 
     /// <summary>Ases the generic.</summary>
     /// <typeparam name="T">THe type.</typeparam>
+    /// <param name="request">The typed tracking request.</param>
     /// <returns>Tracking Configuration.</returns>
-    public TrackingConfiguration<T> AsGeneric<T>()
-        => new(this);
+    public TrackingConfiguration<T> AsGeneric<T>(TrackingRequest<T> request) => new(this);
 
     /// <summary>Gets the store identifier.</summary>
     /// <param name="target">The target.</param>
@@ -145,11 +139,24 @@ public class TrackingConfiguration : ITrackingConfiguration
     public string GetStoreId(object target) => _idFunc!(target);
 
     /// <summary>Identifiers the specified identifier function.</summary>
-    /// <param name="idFunc">The provided function will be used to get an identifier for a target object in order to identify the data that belongs to it.</param>
-    /// <param name="namespace">Serves to distinguish objects with the same ids that are used in different contexts.</param>
-    /// <param name="includeType">If true, the name of the type will be included in the id. This prevents id clashes with different types.</param>
+    /// <param name="idFunc">The provided function will be used to get an identifier for a target object in order to
+    /// identify the data that belongs to it.</param>
     /// <returns>ITrackingConfiguration.</returns>
-    public ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace = null, bool includeType = true)
+    public ITrackingConfiguration Id(Func<object, string> idFunc) => Id(idFunc, null, true);
+
+    /// <summary>Identifiers the specified identifier function.</summary>
+    /// <param name="idFunc">The identifier function.</param>
+    /// <param name="namespace">The optional namespace.</param>
+    /// <returns>ITrackingConfiguration.</returns>
+    public ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace) => Id(idFunc, @namespace, true);
+
+    /// <summary>Identifiers the specified identifier function.</summary>
+    /// <param name="idFunc">The identifier function.</param>
+    /// <param name="namespace">Serves to distinguish objects with the same ids that are used in different
+    /// contexts.</param>
+    /// <param name="includeType">Whether the type name is included in the identifier.</param>
+    /// <returns>ITrackingConfiguration.</returns>
+    public ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace, bool includeType)
     {
         _idFunc = target =>
         {
@@ -180,14 +187,15 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>Registers the specified event of the target object as a trigger that will cause the target's data to be persisted.</summary>
+    /// <summary>Provides the PersistOn member.</summary>
     /// <remarks>
     /// Automatically persist a target object when it fires the specified name.
     /// </remarks>
     /// <example>
     /// For a Window object, "LocationChanged" and/or "SizeChanged" would be appropriate.
     /// </example>
-    /// <param name="eventNames">The names of the events that will cause the target object's data to be persisted.</param>
+    /// <param name="eventNames">The names of the events that will cause the target object's data to be
+    /// persisted.</param>
     /// <returns>
     /// ITrackingConfiguration.
     /// </returns>
@@ -206,7 +214,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
+    /// <summary>Provides the PersistOn member.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSourceObject">If not provided.</param>
     /// <returns>
@@ -218,7 +226,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         return this;
     }
 
-    /// <summary>Automatically persist a target object when the specified eventSourceObject fires the specified event.</summary>
+    /// <summary>Provides the PersistOn member.</summary>
     /// <param name="eventName">The name of the event that should trigger persisting stete.</param>
     /// <param name="eventSourceGetter">The event source getter.</param>
     /// <returns>
@@ -239,7 +247,8 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// <param name="eventName">Name of the event.</param>
     /// <param name="eventSource">The event source.</param>
     /// <returns>ITrackingConfiguration.</returns>
-    public ITrackingConfiguration StopTrackingOn(string eventName, object eventSource) => StopTrackingOn(eventName, _ => eventSource);
+    public ITrackingConfiguration StopTrackingOn(string eventName, object eventSource) =>
+        StopTrackingOn(eventName, _ => eventSource);
 
     /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
@@ -259,12 +268,21 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </summary>
     /// <typeparam name="T">Type of target object.</typeparam>
     /// <typeparam name="TProperty">The tracked property type.</typeparam>
-    /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing properties of nested objects.</param>
+    /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing
+    /// properties of nested objects.</param>
+    /// <returns>ITracking Configuration.</returns>
+    public ITrackingConfiguration Property<T, TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression) =>
+        Property(null, propertyAccessExpression, false, default);
+
+    /// <summary>Sets up tracking for the specified property.</summary>
+    /// <typeparam name="T">Type of target object.</typeparam>
+    /// <typeparam name="TProperty">The tracked property type.</typeparam>
+    /// <param name="propertyAccessExpression">The expression that points to the property to track.</param>
     /// <param name="name">Name to use when tracking the property's data.</param>
-    /// <returns>
-    /// ITracking Configuration.
-    /// </returns>
-    public ITrackingConfiguration Property<T, TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression, string? name = null)
+    /// <returns>ITracking Configuration.</returns>
+    public ITrackingConfiguration Property<T, TProperty>(
+        Expression<Func<T, TProperty?>> propertyAccessExpression,
+        string? name)
     {
         if (propertyAccessExpression is null)
         {
@@ -282,11 +300,26 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </summary>
     /// <typeparam name="T">Type of target object.</typeparam>
     /// <typeparam name="TProperty">The tracked property type.</typeparam>
-    /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing properties of nested objects.</param>
-    /// <param name="defaultValue">If there is no value in the store for the property, the defaultValue will be used.</param>
+    /// <param name="propertyAccessExpression">The expression that points to the property to track. Supports accessing
+    /// properties of nested objects.</param>
+    /// <param name="defaultValue">If there is no value in the store for the property, the defaultValue will be
+    /// used.</param>
+    /// <returns>ITrackingConfiguration.</returns>
+    public ITrackingConfiguration Property<T, TProperty>(
+        Expression<Func<T, TProperty?>> propertyAccessExpression,
+        TProperty defaultValue) => Property(propertyAccessExpression, defaultValue, null);
+
+    /// <summary>Sets up tracking for the specified property and default value.</summary>
+    /// <typeparam name="T">Type of target object.</typeparam>
+    /// <typeparam name="TProperty">The tracked property type.</typeparam>
+    /// <param name="propertyAccessExpression">The expression that points to the property to track.</param>
+    /// <param name="defaultValue">The default property value.</param>
     /// <param name="name">Name to use when tracking the property's data.</param>
     /// <returns>ITrackingConfiguration.</returns>
-    public ITrackingConfiguration Property<T, TProperty>(Expression<Func<T, TProperty?>> propertyAccessExpression, TProperty defaultValue, string? name = null)
+    public ITrackingConfiguration Property<T, TProperty>(
+        Expression<Func<T, TProperty?>> propertyAccessExpression,
+        TProperty defaultValue,
+        string? name)
     {
         if (propertyAccessExpression is null)
         {
@@ -305,7 +338,8 @@ public class TrackingConfiguration : ITrackingConfiguration
         return Property(name, propertyAccessExpression, true, defaultValue);
     }
 
-    /// <summary>Set up tracking for one or more properties. The expression should be an anonymous type projection (e.g. x => new { x.MyProp1, x.MyProp2 }).</summary>
+    /// <summary>Set up tracking for one or more properties. The expression should be an anonymous type projection (e.g.
+    /// x => new { x.MyProp1, x.MyProp2 }).</summary>
     /// <typeparam name="T">Type of target object.</typeparam>
     /// <param name="projection">A projection of properties to track. Allows providing nested object properties.</param>
     /// <returns>ITrackingConfiguration.</returns>
@@ -313,40 +347,66 @@ public class TrackingConfiguration : ITrackingConfiguration
     {
         if (projection?.Body.NodeType != ExpressionType.New)
         {
-            throw new ArgumentException("Expression must project properties as an anonymous class e.g. f => new { f.Height, f.Width } or access a single property e.g. f => f.Text.");
+            throw new ArgumentException(
+                "Expression must project properties as an anonymous class, for example "
+                    + "f => new { f.Height, f.Width }, or access one property, for example f => f.Text.");
         }
 
         var newExp = projection.Body as NewExpression;
 
         // VB.NET encapsulates the new expression in a convert-to-object expression
-        if (newExp is null && projection.Body is UnaryExpression ue && ue.NodeType == ExpressionType.Convert && ue.Type == typeof(object))
+        if (
+            newExp is null
+            && projection.Body is UnaryExpression ue
+            && ue.NodeType == ExpressionType.Convert
+            && ue.Type == typeof(object))
         {
             newExp = ue.Operand as NewExpression;
         }
 
         if (newExp is not null)
         {
-            var accessors = newExp.Members?.Select((m, i) =>
-            {
-                var right = Expression.Parameter(typeof(object));
-                var propType = (m as PropertyInfo)?.PropertyType;
-                return (name: m.Name, type: propType, getter: Expression.Lambda(Expression.Convert((newExp.Arguments[i] as MemberExpression)!, typeof(object)), projection.Parameters[0]).Compile() as Func<T, object>, setter: Expression.Lambda(Expression.Block(Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType!)), Expression.Empty()), projection.Parameters[0], right).Compile() as Action<T, object?>);
-            });
+            var accessors = newExp.Members?.Select(
+                (m, i) =>
+                {
+                    var right = Expression.Parameter(typeof(object));
+                    var propType = (m as PropertyInfo)?.PropertyType;
+                    return (
+                        name: m.Name,
+                        type: propType,
+                        getter: Expression
+                            .Lambda(
+                                Expression.Convert((newExp.Arguments[i] as MemberExpression)!, typeof(object)),
+                                projection.Parameters[0])
+                            .Compile() as Func<T, object>,
+                        setter: Expression
+                            .Lambda(
+                                Expression.Block(
+                                    Expression.Assign(newExp.Arguments[i], Expression.Convert(right, propType!)),
+                                    Expression.Empty()),
+                                projection.Parameters[0],
+                                right)
+                            .Compile() as Action<T, object?>);
+                });
 
             foreach (var a in accessors!)
             {
-                TrackedProperties[a.name] = new(x => a.getter!((T)x), (x, v) => a.setter!((T)x, Convert(v, a.name, a.type)));
+                TrackedProperties[a.name] = new(
+                    x => a.getter!((T)x),
+                    (x, v) => a.setter!((T)x, Convert(v, a.name, a.type)));
             }
         }
         else
         {
-            throw new ArgumentException("Expression must project properties as an anonymous class e.g. f => new { f.Height, f.Width } or access a single property e.g. f => f.Text.");
+            throw new ArgumentException(
+                "Expression must project properties as an anonymous class, for example "
+                    + "f => new { f.Height, f.Width }, or access one property, for example f => f.Text.");
         }
 
         return this;
     }
 
-    /// <summary>Reads the data from the tracked properties and saves it to the data store for the tracked object.</summary>
+    /// <summary>Provides the Persist member.</summary>
     /// <param name="target">The target object.</param>
     internal void Persist(object target)
     {
@@ -379,7 +439,8 @@ public class TrackingConfiguration : ITrackingConfiguration
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"Persisting failed, property key = '{name}', property = {propertyName}, message='{ex.Message}'.");
+                Trace.WriteLine(
+                    $"Persisting failed, property key = '{name}', property = {propertyName}, message='{ex.Message}'.");
             }
         }
 
@@ -421,7 +482,9 @@ public class TrackingConfiguration : ITrackingConfiguration
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine($"TRACKING: Applying tracking to property with key='{propertyName}' failed. ExceptionType:'{ex.GetType().Name}', message: '{ex.Message}'!");
+                    Trace.WriteLine(
+                        $"TRACKING: Applying tracking to property with key='{propertyName}' failed. "
+                            + $"ExceptionType:'{ex.GetType().Name}', message: '{ex.Message}'!");
                 }
             }
             else if (descriptor.IsDefaultSpecified)
@@ -443,7 +506,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         }
 
         var name = _idFunc!(target);
-        var data = Tracker?.Store.GetData(name);
+        _ = Tracker?.Store.GetData(name);
 
         foreach (var propertyName in TrackedProperties.Keys)
         {
@@ -496,7 +559,11 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// <param name="defaultSpecified">The defaultSpecified value.</param>
     /// <param name="defaultValue">The defaultvalue.</param>
     /// <returns>The result.</returns>
-    internal ITrackingConfiguration Property<T, TProperty>(string? name, Expression<Func<T, TProperty?>>? propertyAccessExpression, bool defaultSpecified, TProperty defaultValue)
+    internal ITrackingConfiguration Property<T, TProperty>(
+        string? name,
+        Expression<Func<T, TProperty?>>? propertyAccessExpression,
+        bool defaultSpecified,
+        TProperty defaultValue)
     {
         if (name is null && propertyAccessExpression?.Body is MemberExpression me)
         {
@@ -511,8 +578,18 @@ public class TrackingConfiguration : ITrackingConfiguration
         var getter = propertyAccessExpression?.Compile();
 
         var right = Expression.Parameter(typeof(object));
-        var propType = membershipExpression?.Type;
-        var setter = Expression.Lambda(Expression.Block(Expression.Assign(membershipExpression!, Expression.Convert(right, membershipExpression?.Type!)), Expression.Empty()), propertyAccessExpression?.Parameters[0]!, right).Compile() as Action<T, object?>;
+        _ = membershipExpression?.Type;
+        var setter =
+            Expression
+                .Lambda(
+                    Expression.Block(
+                        Expression.Assign(
+                            membershipExpression!,
+                            Expression.Convert(right, membershipExpression?.Type!)),
+                        Expression.Empty()),
+                    propertyAccessExpression?.Parameters[0]!,
+                    right)
+                .Compile() as Action<T, object?>;
         if (defaultSpecified)
         {
             TrackedProperties[name!] = new(x => getter!((T)x), (x, v) => setter!((T)x, v), defaultValue);
@@ -553,7 +630,8 @@ public class TrackingConfiguration : ITrackingConfiguration
         {
             var typeOfValue = value.GetType();
 
-            // This can happen if we're trying to write an Int64 to an Int32 property (in case of overflow it will throw).
+            // This can happen if we're trying to write an Int64 to an Int32 property (in case of overflow it will
+            // throw).
             // Also can happen for enums.
             if (typeOfValue != t && t?.IsAssignableFrom(typeOfValue) == false)
             {
@@ -573,7 +651,9 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// <summary>Provides the ReadAttributes member.</summary>
     private void ReadAttributes()
     {
-        var keyProperty = TargetType?.GetProperties().SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
+        var keyProperty = TargetType
+            ?.GetProperties()
+            .SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
         if (keyProperty is not null)
         {
             _idFunc = (t) => keyProperty.GetValue(t, null)?.ToString()!;

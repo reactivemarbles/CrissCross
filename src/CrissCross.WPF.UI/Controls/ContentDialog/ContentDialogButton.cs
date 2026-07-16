@@ -14,5 +14,5 @@ public enum ContentDialogButton
     Secondary,
 
     /// <summary>The close button is the default.</summary>
-    Close
+    Close,
 }

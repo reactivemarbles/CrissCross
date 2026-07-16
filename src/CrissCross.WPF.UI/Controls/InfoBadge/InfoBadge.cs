@@ -6,7 +6,8 @@ using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>InfoBadge, a control that displays a small amount of information, typically a number or a small piece of text, in a compact way.</summary>
+/// <summary>InfoBadge, a control that displays a small amount of information, typically a number or a small piece of
+/// text, in a compact way.</summary>
 /// <seealso cref="System.Windows.Controls.Control" />
 public class InfoBadge : System.Windows.Controls.Control
 {
@@ -37,8 +38,8 @@ public class InfoBadge : System.Windows.Controls.Control
         typeof(CornerRadius),
         typeof(InfoBadge),
         new FrameworkPropertyMetadata(
-                new CornerRadius(8),
-                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+            new CornerRadius(8),
+            FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
     /// <summary>Gets or sets the title of the <see cref="Severity" />.</summary>
     public InfoBadgeSeverity Severity
