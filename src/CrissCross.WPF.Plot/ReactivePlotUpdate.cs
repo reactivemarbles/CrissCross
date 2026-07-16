@@ -12,7 +12,8 @@ namespace CrissCross.WPF.Plot;
 /// <param name="Y">The Y-axis values.</param>
 /// <param name="XAxisKind">The interpretation of X-axis values.</param>
 /// <param name="Sequence">A monotonic sequence value supplied by the source adapter.</param>
-/// <param name="MaxPoints">The optional maximum number of points that should be retained for this update's target series.</param>
+/// <param name="MaxPoints">The optional retention limit for the target series.</param>
+/// <param name="Style">Optional immutable series styling.</param>
 public sealed record ReactivePlotUpdate(
     PlotSeriesKey Key,
     PlotType PlotType,
@@ -21,4 +22,5 @@ public sealed record ReactivePlotUpdate(
     IReadOnlyList<double> Y,
     PlotXAxisKind XAxisKind,
     long Sequence,
-    int? MaxPoints = null);
+    int? MaxPoints = null,
+    ReactivePlotSeriesStyle? Style = null);

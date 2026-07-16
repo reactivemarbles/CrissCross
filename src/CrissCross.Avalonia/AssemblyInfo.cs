@@ -5,3 +5,6 @@
 using Avalonia.Metadata;
 
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.Avalonia", "CrissCross.Avalonia")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.Avalonia")]
+[assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross", "rxNav")]

@@ -9,7 +9,7 @@ namespace CrissCross.WPF.Plot.Test;
 /// <summary>Interaction logic for App.xaml.</summary>
 public partial class App
 {
-    /// <summary>Initializes a new instance of the <see cref="App"/> class and configures the application to use ReactiveUI with WPF support.</summary>
+    /// <summary>Initializes a new instance of the <see cref="App"/> class and configures ReactiveUI.</summary>
     /// <remarks>This constructor sets up the application's dependency injection and platform integration
     /// using the ReactiveUI framework for WPF. It should be called once at application startup.</remarks>
     public App() => RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();

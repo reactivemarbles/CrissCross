@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:abb="https://github.com/ChrisPulman/AppBarButton.WPF"
     xmlns:bbcode="https://github.com/ChrisPulman/BBCode.WPF"
+    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
     xmlns:mb="clr-namespace:CrissCross.WPF.UI"
     xmlns:rxNav="clr-namespace:CrissCross.WPF.UI"
@@ -126,12 +126,12 @@
                                             Orientation="Horizontal"
                                             Visibility="{TemplateBinding NavBarVisible}">
                                             <!--  back button Start  -->
-                                            <abb:AppBarButton
+                                            <controls:AppBarButton
                                                 x:Name="BackButton"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Top"
                                                 Content="  "
-                                                Icon="ab_arrow_left"
+                                                Icon="Ab_arrow_left"
                                                 IconHeight="25"
                                                 IconWidth="25"
                                                 ToolTip="back"

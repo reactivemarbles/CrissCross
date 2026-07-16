@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.WinForms" />
     <PackageReference Include="ReactiveUI.WinForms" />
   </ItemGroup>
 

@@ -3,13 +3,13 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
-using CP.Reactive.Collections;
+using CP.Primitives.Collections;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.Plot;
 
-/// <summary>Represents the view model for managing and editing properties of chart objects in the right properties panel.</summary>
+/// <summary>Manages chart-object properties in the right properties panel.</summary>
 /// <remarks>This class provides properties and commands for interacting with chart object settings, such as line
 /// color, line width, item name, and visibility. It is intended for use in Windows 10.0.19041 or later environments.
 /// The view model exposes collections of available line colors and visibility options, and provides a command to save
@@ -38,27 +38,24 @@ public partial class RightPropertiesViewModel : RxObject
     [Reactive]
     private string? _itemVisibility;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RightPropertiesViewModel"/> class and sets up default values for line colors,.
-    /// visibilities, and the save configuration command.
-    /// </summary>
+    /// <summary>Initializes a new instance of the <see cref="RightPropertiesViewModel"/> class.</summary>
     /// <remarks>The constructor populates the LineColors and Visibilities collections with predefined values
     /// and configures the SaveConfiguration command to apply changes to the selected setting. This ensures that the
     /// view model is ready for use immediately after instantiation.</remarks>
     public RightPropertiesViewModel()
     {
         LineColors =
-            [
-                System.Drawing.Color.Blue.Name,
-                System.Drawing.Color.Red.Name,
-                System.Drawing.Color.Orange.Name,
-                System.Drawing.Color.Yellow.Name,
-                System.Drawing.Color.Green.Name,
-                System.Drawing.Color.Brown.Name,
-                System.Drawing.Color.Violet.Name,
-                System.Drawing.Color.Pink.Name,
-                System.Drawing.Color.Gray.Name
-            ];
+        [
+            System.Drawing.Color.Blue.Name,
+            System.Drawing.Color.Red.Name,
+            System.Drawing.Color.Orange.Name,
+            System.Drawing.Color.Yellow.Name,
+            System.Drawing.Color.Green.Name,
+            System.Drawing.Color.Brown.Name,
+            System.Drawing.Color.Violet.Name,
+            System.Drawing.Color.Pink.Name,
+            System.Drawing.Color.Gray.Name,
+        ];
 
         Visibilities = ["Visible", "Invisible"];
 
@@ -94,7 +91,7 @@ public partial class RightPropertiesViewModel : RxObject
     public ReactiveList<string> LineColors { get; set; }
 #endif
 
-    /// <summary>Gets or sets the collection of colors used to render individual lines in the chart or visualization.</summary>
+    /// <summary>Gets or sets the colors used to render chart lines.</summary>
     /// <remarks>The order of colors in the collection determines which color is applied to each line.
     /// Modifying this collection updates the appearance of the corresponding lines. The property is observable; changes
     /// to the collection will automatically propagate to any listeners.</remarks>

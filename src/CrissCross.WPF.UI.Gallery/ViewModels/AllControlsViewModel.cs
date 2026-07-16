@@ -23,6 +23,7 @@ public class AllControlsViewModel : RxObject
     {
         _controls = [];
 
+        AppBarButtonCommand = ReactiveCommand.Create(AppBarButton);
         ButtonsCommand = ReactiveCommand.Create(Buttons);
         CheckBoxCommand = ReactiveCommand.Create(CheckBox);
         ComboBoxCommand = ReactiveCommand.Create(ComboBox);
@@ -58,6 +59,9 @@ public class AllControlsViewModel : RxObject
 
     /// <summary>Gets the collection view over all controls applying the current filter.</summary>
     public ICollectionView FilteredControls { get; }
+
+    /// <summary>Gets the command that navigates to the app bar button demo.</summary>
+    public ReactiveCommand<Unit, Unit> AppBarButtonCommand { get; }
 
     /// <summary>Gets the command that navigates to the button demos.</summary>
     public ReactiveCommand<Unit, Unit> ButtonsCommand { get; }
@@ -106,6 +110,7 @@ public class AllControlsViewModel : RxObject
             return;
         }
 
+        _controls.Add(new ControlItem { Name = "AppBarButton", Icon = "/Assets/ControlImages/AppBarButton.png", Command = AppBarButtonCommand, Description = "Circular command buttons with embedded icons and glyphs." });
         _controls.Add(new ControlItem { Name = "Buttons", Icon = "/Assets/ControlImages/Button.png", Command = ButtonsCommand, Description = "Push buttons, repeat buttons and styles." });
         _controls.Add(new ControlItem { Name = "CheckBox", Icon = "/Assets/ControlImages/CheckBox.png", Command = CheckBoxCommand, Description = "Standard and tri-state check boxes." });
         _controls.Add(new ControlItem { Name = "ComboBox", Icon = "/Assets/ControlImages/ComboBox.png", Command = ComboBoxCommand, Description = "ComboBox / AutoSuggest scenarios." });
@@ -134,6 +139,9 @@ public class AllControlsViewModel : RxObject
         return string.IsNullOrWhiteSpace(FilterText) ? true : item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ||
                (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false);
     }
+
+    /// <summary>Navigates to the app bar button demo.</summary>
+    private void AppBarButton() => MainWindow.Navigation?.NavigateTo<AppBarButtonViewModel>(breadcrumbItemContent: "AppBarButton");
 
     /// <summary>Navigates to the buttons demo.</summary>
     private void Buttons() => MainWindow.Navigation?.NavigateTo<ButtonsViewModel>(breadcrumbItemContent: "Buttons");

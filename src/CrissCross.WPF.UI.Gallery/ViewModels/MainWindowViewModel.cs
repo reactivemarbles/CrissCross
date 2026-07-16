@@ -47,6 +47,7 @@ public partial class MainWindowViewModel : RxObject
         // Register ViewModels and Views (basic demos)
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AllControlsViewModel()).Register<IViewFor<AllControlsViewModel>>(static () => new AllControlsView());
+        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AppBarButtonViewModel()).Register<IViewFor<AppBarButtonViewModel>>(static () => new AppBarButtonView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ButtonsViewModel()).Register<IViewFor<ButtonsViewModel>>(static () => new ButtonsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new CheckBoxViewModel()).Register<IViewFor<CheckBoxViewModel>>(static () => new CheckBoxView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ComboBoxViewModel()).Register<IViewFor<ComboBoxViewModel>>(static () => new ComboBoxView());
@@ -87,7 +88,11 @@ public partial class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterConstant(_tracker);
         _tracker?.Configure<MainWindow>()
             .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
-            .Properties(w => ValueTuple.Create(w.Height, w.Width, w.Left, w.Top, w.WindowState))
+            .Property(w => w.Height)
+            .Property(w => w.Width)
+            .Property(w => w.Left)
+            .Property(w => w.Top)
+            .Property(w => w.WindowState)
             .PersistOn(w => nameof(w.Closing))
             .StopTrackingOn(w => nameof(w.Closing));
     }

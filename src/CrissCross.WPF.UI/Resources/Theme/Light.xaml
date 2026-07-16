@@ -3,10 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/AppBarButton.WPF;component/Themes/AppBarButton.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-
     <Color x:Key="ApplicationBackgroundColor">#FFFAFAFA</Color>
     <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
 

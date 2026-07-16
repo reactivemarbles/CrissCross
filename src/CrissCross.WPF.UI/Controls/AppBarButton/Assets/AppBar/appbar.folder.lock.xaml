@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Canvas
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="appbar_folder_lock"
+    Width="76"
+    Height="76"
+    Clip="F1 M 0,0L 76,0L 76,76L 0,76L 0,0">
+    <Path
+        Canvas.Left="21"
+        Canvas.Top="24"
+        Width="38"
+        Height="29"
+        Data="F1 M 59,53L 46,53L 46,42L 48,42L 48,40C 48,37.7909 49.7909,36 52,36L 53,36C 55.2091,36 57,37.7909 57,40L 57,42L 59,42L 59,53 Z M 54,40.5C 54,39.6716 53.3284,39 52.5,39C 51.6716,39 51,39.6716 51,40.5L 51,42L 54,42L 54,40.5 Z M 21,30.0001L 55.9999,30.0001L 55.9999,35.5351C 55.4116,35.1948 54.7285,35 54,35L 51,35C 48.7908,35 47,36.7909 47,39L 47,41L 45,41L 45,50L 21,50L 21,30.0001 Z M 52,28L 37,28C 38,25 39.4999,24.0001 39.4999,24.0001L 50.75,24C 51.3022,24 52,24.6978 52,25.25L 52,28 Z "
+        Fill="#FF000000"
+        Stretch="Fill" />
+</Canvas>

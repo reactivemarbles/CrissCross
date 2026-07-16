@@ -99,7 +99,7 @@ internal static class StreamExtensions
         /// <returns>The result.</returns>
         public Task<int> ReadBufferAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
-#if NET472 || NET481
+#if NET472 || NET48 || NET481
             return stream.ReadAsync(buffer, offset, count, cancellationToken);
 #else
             return stream.ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
@@ -114,7 +114,7 @@ internal static class StreamExtensions
         /// <returns>The result.</returns>
         public Task WriteBufferAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken = default)
         {
-#if NET472 || NET481
+#if NET472 || NET48 || NET481
             return stream.WriteAsync(buffer, offset, count, cancellationToken);
 #else
             return stream.WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();

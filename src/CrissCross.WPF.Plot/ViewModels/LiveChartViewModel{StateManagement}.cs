@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
-using CP.Reactive.Collections;
+using CP.Primitives.Collections;
 
 namespace CrissCross.WPF.Plot;
 
@@ -31,11 +31,11 @@ public partial class LiveChartViewModel
     /// <item><description>Do not hold long-term references to items - they may be disposed</description></item>
     /// <item><description>ItemName may initially be "---" until first observable emission</description></item>
     /// <item><description>Access must occur on the UI thread (not thread-safe)</description></item>
-    /// <item><description>Items are NOT disposed when collection is cleared - they remain owned by PlotLinesCollectionUI</description></item>
+    /// <item><description>Cleared items remain owned by PlotLinesCollectionUI.</description></item>
     /// </list>
     /// <para><b>Lifecycle:</b></para>
     /// <list type="bullet">
-    /// <item><description>Updated via UpdateChartObjectsCollection() after InitializeGenericPlotLines</description></item>
+    /// <item><description>Updated after generic plot lines are initialized.</description></item>
     /// <item><description>Items disposed only when ClearContent() is called on parent ViewModel</description></item>
     /// <item><description>Collection cleared but items remain alive during reinitialization</description></item>
     /// </list>
@@ -69,13 +69,13 @@ public partial class LiveChartViewModel
     /// }
     /// </code>
     /// </example>
-    #if NET8_0_OR_GREATER
+#if NET8_0_OR_GREATER
     public QuaternaryList<ChartObjects> ChartObjectsCollection { get; private set; } = [];
 #else
     public ReactiveList<ChartObjects> ChartObjectsCollection { get; private set; } = [];
 #endif
 
-    /// <summary>Updates the ChartObjectsCollection from current plot lines. Called automatically after plot initialization.</summary>
+    /// <summary>Updates ChartObjectsCollection from the current plot lines.</summary>
     /// <remarks>
     /// Uses a snapshot of PlotLinesCollectionUI to avoid concurrent modification exceptions.
     /// Items are not disposed when cleared as they remain owned by PlotLinesCollectionUI.
@@ -83,7 +83,9 @@ public partial class LiveChartViewModel
     public void UpdateChartObjectsCollection()
     {
         // Get existing collection (items remain alive, owned by PlotLinesCollectionUI)
-        var chartSettings = PlotLinesCollectionUI.Select(pl => pl.ChartSettings).Where(cs => cs is not null);
+        var chartSettings = PlotLinesCollectionUI
+            .Select(pl => pl.ChartSettings)
+            .Where(cs => cs is not null);
 
         // Populate from current plot lines (snapshot to avoid concurrent modification)
         ChartObjectsCollection.ReplaceAll(chartSettings);

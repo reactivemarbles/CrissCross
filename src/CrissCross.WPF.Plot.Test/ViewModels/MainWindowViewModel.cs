@@ -31,12 +31,23 @@ public partial class MainWindowViewModel : RxObject
         NavigationModels = [];
         NavigationModels.AddRange(
         [
-            new NavigationModel(null, NavigationModels) { IsExpander = true, Icon = new SymbolIcon(SymbolRegular.LineHorizontal320) },
-            new NavigationModel(typeof(MainViewModel), NavigationModels) { Name = "Main", Icon = new SymbolIcon(SymbolRegular.Home20), IsSelected = true },
+            new NavigationModel(null, NavigationModels)
+            {
+                IsExpander = true,
+                Icon = new SymbolIcon(SymbolRegular.LineHorizontal320),
+            },
+            new NavigationModel(typeof(MainViewModel), NavigationModels)
+            {
+                Name = "Main",
+                Icon = new SymbolIcon(SymbolRegular.Home20),
+                IsSelected = true,
+            },
         ]);
 
         // Register ViewModels and Views
-        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
+        AppLocator.CurrentMutable
+            .RegisterLazySingletonAnd(static () => new MainViewModel())
+            .Register<IViewFor<MainViewModel>>(static () => new MainView());
         AppLocator.CurrentMutable.SetupComplete();
     }
 
@@ -49,10 +60,16 @@ public partial class MainWindowViewModel : RxObject
     /// <summary>Configures persisted main window tracking.</summary>
     private void SetupTracker()
     {
+        var windowId =
+            $"[Width={SystemParameters.VirtualScreenWidth},Height={SystemParameters.VirtualScreenHeight}]";
         AppLocator.CurrentMutable.RegisterConstant(_tracker);
         _tracker?.Configure<MainWindow>()
-            .Id(w => w.Name, $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
-            .Properties(w => ValueTuple.Create(w.Height, w.Width, w.Left, w.Top, w.WindowState))
+            .Id(w => w.Name, windowId)
+            .Property(w => w.Height)
+            .Property(w => w.Width)
+            .Property(w => w.Left)
+            .Property(w => w.Top)
+            .Property(w => w.WindowState)
             .PersistOn(w => nameof(w.Closing))
             .StopTrackingOn(w => nameof(w.Closing));
     }

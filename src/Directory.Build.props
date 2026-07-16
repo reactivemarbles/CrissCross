@@ -29,10 +29,10 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <CrissCrossCoreTargetFrameworks>net8.0;net9.0;net10.0</CrissCrossCoreTargetFrameworks>
-    <CrissCrossAvaloniaTargetFrameworks>net8.0;net9.0;net10.0</CrissCrossAvaloniaTargetFrameworks>
-    <CrissCrossWinTargetFrameworks>net472;net481;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
-    <CrissCrossWebviewTargetFrameworks>net472;net481;net8.0-windows;net9.0-windows;net10.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossCoreTargetFrameworks>net8.0;net9.0;net10.0;net11.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossAvaloniaTargetFrameworks>net8.0;net9.0;net10.0;net11.0</CrissCrossAvaloniaTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>net472;net48;net481;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0;net11.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net472;net48;net481;net8.0-windows;net9.0-windows;net10.0-windows;net11.0-windows</CrissCrossWebviewTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows'))">
     <CrissCrossCoreTargetFrameworks>$(CrissCrossCoreTargetFrameworks);$(CrissCrossWinTargetFrameworks)</CrissCrossCoreTargetFrameworks>
@@ -118,5 +118,6 @@
     <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="CompositeDisposable" />
     <Using Include="ReactiveUI.Primitives.Disposables.SwapDisposable" Alias="SerialDisposable" />
     <Using Include="ReactiveUI.Primitives.Signals.Signal" Alias="Observable" />
+    <Using Include="ReactiveUI.Primitives.Disposables.Scope" Alias="Disposable" />
   </ItemGroup>
 </Project>

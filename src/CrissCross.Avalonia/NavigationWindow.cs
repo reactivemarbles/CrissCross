@@ -8,12 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
-using Avalonia.Metadata;
 using ReactiveUI;
-
-[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross")]
-[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.Avalonia")]
-[assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross", "rxNav")]
 
 namespace CrissCross.Avalonia;
 

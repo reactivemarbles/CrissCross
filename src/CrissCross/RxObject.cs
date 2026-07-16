@@ -8,8 +8,6 @@ using ReactiveUI;
 namespace CrissCross;
 
 /// <summary>Rx Object.</summary>
-/// <seealso cref="ReactiveUI.ReactiveObject" />
-/// <seealso cref="CrissCross.IRxObject" />
 /// <seealso cref="ReactiveObject" />
 /// <seealso cref="IRxObject" />
 public abstract class RxObject : ReactiveObject, IRxObject
