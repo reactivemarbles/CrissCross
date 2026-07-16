@@ -48,6 +48,7 @@ public partial class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel()).Register<IViewFor<MainViewModel>>(static () => new MainView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AllControlsViewModel()).Register<IViewFor<AllControlsViewModel>>(static () => new AllControlsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new AppBarButtonViewModel()).Register<IViewFor<AppBarButtonViewModel>>(static () => new AppBarButtonView());
+        AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new BBCodeBlockViewModel()).Register<IViewFor<BBCodeBlockViewModel>>(static () => new BBCodeBlockView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ButtonsViewModel()).Register<IViewFor<ButtonsViewModel>>(static () => new ButtonsView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new CheckBoxViewModel()).Register<IViewFor<CheckBoxViewModel>>(static () => new CheckBoxView());
         AppLocator.CurrentMutable.RegisterLazySingletonAnd(static () => new ComboBoxViewModel()).Register<IViewFor<ComboBoxViewModel>>(static () => new ComboBoxView());

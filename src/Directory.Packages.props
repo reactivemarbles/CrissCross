@@ -64,7 +64,6 @@
 
     <!-- Other UI/Framework Packages -->
     <PackageVersion Include="AngleSharp" Version="1.5.2" />
-    <PackageVersion Include="BBCode.WPF" Version="1.0.2" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
