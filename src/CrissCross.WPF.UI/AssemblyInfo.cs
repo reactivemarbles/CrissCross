@@ -9,6 +9,7 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Controls.Gauges.Converters")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Markup")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Converters")]
+[assembly: XmlnsDefinition("https://github.com/ChrisPulman/BBCode.WPF", "CrissCross.WPF.UI.Controls")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "System.Windows", AssemblyName = "WindowsBase")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "System.Windows", AssemblyName = "PresentationCore")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "System.Windows", AssemblyName = "PresentationFramework")]
@@ -24,4 +25,5 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "System.Windows.Shapes", AssemblyName = "PresentationFramework")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "System.Windows.Shell", AssemblyName = "PresentationFramework")]
 [assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross.ui", "ccui")]
+[assembly: XmlnsPrefix("https://github.com/ChrisPulman/BBCode.WPF", "bbcode")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]

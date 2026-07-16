@@ -24,6 +24,7 @@ public class AllControlsViewModel : RxObject
         _controls = [];
 
         AppBarButtonCommand = ReactiveCommand.Create(AppBarButton);
+        BBCodeBlockCommand = ReactiveCommand.Create(BBCodeBlock);
         ButtonsCommand = ReactiveCommand.Create(Buttons);
         CheckBoxCommand = ReactiveCommand.Create(CheckBox);
         ComboBoxCommand = ReactiveCommand.Create(ComboBox);
@@ -62,6 +63,9 @@ public class AllControlsViewModel : RxObject
 
     /// <summary>Gets the command that navigates to the app bar button demo.</summary>
     public ReactiveCommand<Unit, Unit> AppBarButtonCommand { get; }
+
+    /// <summary>Gets the command that navigates to the BBCode block demo.</summary>
+    public ReactiveCommand<Unit, Unit> BBCodeBlockCommand { get; }
 
     /// <summary>Gets the command that navigates to the button demos.</summary>
     public ReactiveCommand<Unit, Unit> ButtonsCommand { get; }
@@ -111,6 +115,7 @@ public class AllControlsViewModel : RxObject
         }
 
         _controls.Add(new ControlItem { Name = "AppBarButton", Icon = "/Assets/ControlImages/AppBarButton.png", Command = AppBarButtonCommand, Description = "Circular command buttons with embedded icons and glyphs." });
+        _controls.Add(new ControlItem { Name = "BBCodeBlock", Icon = "/Assets/ControlImages/RichTextBlock.png", Command = BBCodeBlockCommand, Description = "Theme-aware BBCode reference and extension rendering." });
         _controls.Add(new ControlItem { Name = "Buttons", Icon = "/Assets/ControlImages/Button.png", Command = ButtonsCommand, Description = "Push buttons, repeat buttons and styles." });
         _controls.Add(new ControlItem { Name = "CheckBox", Icon = "/Assets/ControlImages/CheckBox.png", Command = CheckBoxCommand, Description = "Standard and tri-state check boxes." });
         _controls.Add(new ControlItem { Name = "ComboBox", Icon = "/Assets/ControlImages/ComboBox.png", Command = ComboBoxCommand, Description = "ComboBox / AutoSuggest scenarios." });
@@ -142,6 +147,9 @@ public class AllControlsViewModel : RxObject
 
     /// <summary>Navigates to the app bar button demo.</summary>
     private void AppBarButton() => MainWindow.Navigation?.NavigateTo<AppBarButtonViewModel>(breadcrumbItemContent: "AppBarButton");
+
+    /// <summary>Navigates to the BBCode block demo.</summary>
+    private void BBCodeBlock() => MainWindow.Navigation?.NavigateTo<BBCodeBlockViewModel>(breadcrumbItemContent: "BBCodeBlock");
 
     /// <summary>Navigates to the buttons demo.</summary>
     private void Buttons() => MainWindow.Navigation?.NavigateTo<ButtonsViewModel>(breadcrumbItemContent: "Buttons");

@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:bbcode="https://github.com/ChrisPulman/BBCode.WPF"
     xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
     xmlns:converter="https://github.com/ChrisPulman/XamlConverters"
     xmlns:mb="clr-namespace:CrissCross.WPF.UI"
@@ -161,7 +160,7 @@
                                             </Grid>
                                             <!--  Title Logo End  -->
                                             <!--  Main Title Begin  -->
-                                            <bbcode:BBCodeBlock
+                                            <controls:BBCodeBlock
                                                 Margin="{TemplateBinding TitleMargin}"
                                                 VerticalAlignment="Top"
                                                 BBCode="{TemplateBinding MainTitle}"

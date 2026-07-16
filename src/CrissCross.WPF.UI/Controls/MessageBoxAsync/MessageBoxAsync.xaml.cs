@@ -4,7 +4,7 @@
 
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using CP.BBCode.WPF;
+using CrissCross.WPF.UI.Controls;
 using ReactiveUI;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
