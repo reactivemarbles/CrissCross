@@ -5,7 +5,11 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Interaction logic for AppBar.xaml.</summary>
 public partial class AppBar : IHaveAppBar

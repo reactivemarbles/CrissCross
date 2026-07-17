@@ -8,7 +8,11 @@ using FontFamily = System.Windows.Media.FontFamily;
 using FontStyle = System.Windows.FontStyle;
 using SystemFonts = System.Windows.SystemFonts;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents an icon that uses a glyph from the specified font.</summary>
 [ToolboxItem(true)]

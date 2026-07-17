@@ -5,7 +5,11 @@
 using System;
 using System.Runtime.Serialization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>View Model Navigation Base Event Args.</summary>
 /// <remarks>Initializes shared navigation event state.</remarks>

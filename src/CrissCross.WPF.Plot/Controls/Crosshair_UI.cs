@@ -8,7 +8,11 @@ using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Provides a user interface component for displaying and interacting with a crosshair overlay on a plot, supporting

@@ -5,10 +5,14 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Interaction logic for HueSlider.</summary>
-internal sealed partial class HueSlider : UserControl
+public sealed partial class HueSlider : UserControl
 {
     /// <summary>Provides the ValueProperty member.</summary>
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(

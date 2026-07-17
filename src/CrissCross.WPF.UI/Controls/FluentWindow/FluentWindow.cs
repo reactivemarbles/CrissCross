@@ -5,7 +5,11 @@
 using System.Drawing;
 using System.Windows.Shell;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>A custom WinUI Window with more convenience methods.</summary>
 [ToolboxItem(true)]

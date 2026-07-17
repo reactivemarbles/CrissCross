@@ -5,10 +5,17 @@
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrissCross;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Appearance;
+#else
 using CrissCross.WPF.UI.Appearance;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a theme preference picker over the platform theme service.</summary>
 public class ThemeSwitcher : Control

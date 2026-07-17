@@ -2,7 +2,17 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
+
+#if REACTIVE_SHIM
+using ExceptionReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<System.Exception>;
+#else
+using ExceptionReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<System.Exception>;
+#endif
 
 /// <summary>Tracks subscriptions, adapters, state, and errors for a reactive plot binding.</summary>
 internal sealed class ReactivePlotConnection : IReactivePlotConnection
@@ -11,7 +21,7 @@ internal sealed class ReactivePlotConnection : IReactivePlotConnection
     private readonly StateSignal<ReactivePlotConnectionState> _state = new(ReactivePlotConnectionState.Connecting);
 
     /// <summary>Stores the errors value.</summary>
-    private readonly ReplaySignal<Exception> _errors = new();
+    private readonly ExceptionReplaySignal _errors = new();
 
     /// <summary>Stores the active source subscriptions.</summary>
     private CompositeDisposable? _subscriptions;

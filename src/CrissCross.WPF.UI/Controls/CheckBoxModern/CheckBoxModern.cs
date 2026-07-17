@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Check Box Modern.</summary>
 /// <seealso cref="Control"/>

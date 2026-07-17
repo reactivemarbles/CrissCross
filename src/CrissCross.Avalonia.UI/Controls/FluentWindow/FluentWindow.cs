@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>A custom Fluent Window with more convenience methods.</summary>
 /// <remarks>

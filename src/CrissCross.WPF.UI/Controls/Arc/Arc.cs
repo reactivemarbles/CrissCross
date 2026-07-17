@@ -5,7 +5,11 @@
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Control that draws a symmetrical arc with rounded edges.</summary>
 /// <example>

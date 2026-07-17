@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a loading screen overlay control.</summary>
 public class LoadingScreen : TemplatedControl

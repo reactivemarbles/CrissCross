@@ -7,9 +7,11 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a date/time range picker surface for reports, logs, and dashboard filters.</summary>
 public class DateTimeRangePicker : TemplatedControl

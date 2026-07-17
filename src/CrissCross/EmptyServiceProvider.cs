@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides a null-object service provider for factory delegates that do not need services.</summary>
 internal sealed class EmptyServiceProvider : IServiceProvider

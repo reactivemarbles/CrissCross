@@ -9,9 +9,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 using CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Displays lightweight, theme-aware rich content expressed as BBCode.</summary>
 [ContentProperty(nameof(BBCode))]

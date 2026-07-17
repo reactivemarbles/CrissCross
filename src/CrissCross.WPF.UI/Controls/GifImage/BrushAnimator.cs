@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Decoding;
+#else
 using CrissCross.WPF.UI.Controls.Decoding;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents BrushAnimator.</summary>
 /// <seealso cref="Animator" />

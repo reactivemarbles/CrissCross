@@ -6,7 +6,11 @@ using System.Drawing;
 using System.Windows.Data;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a control that can be used to display and edit numbers.</summary>
 [ToolboxItem(true)]

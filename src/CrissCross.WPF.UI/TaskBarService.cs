@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Allows you to manage the animations of the window icon in the taskbar.</summary>
 public class TaskBarService : ITaskBarService

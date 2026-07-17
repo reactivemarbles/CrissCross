@@ -9,7 +9,11 @@ using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Provides a user interface component for plotting and interacting with XY signal data on a Windows platform. Supports

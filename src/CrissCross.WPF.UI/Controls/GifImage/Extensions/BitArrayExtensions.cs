@@ -4,7 +4,11 @@
 
 using System.Collections;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 namespace CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
 /// <summary>Provides the BitArrayExtensions member.</summary>
 internal static class BitArrayExtensions

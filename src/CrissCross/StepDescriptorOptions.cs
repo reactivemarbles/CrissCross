@@ -5,7 +5,11 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Configures workflow state, validation, and commands for a step descriptor.</summary>
 public sealed class StepDescriptorOptions

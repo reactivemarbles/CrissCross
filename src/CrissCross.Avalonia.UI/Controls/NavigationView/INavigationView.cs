@@ -7,9 +7,17 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Animations;
+#else
 using CrissCross.Avalonia.UI.Animations;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main
 /// content, and a menu pane for navigation commands.</summary>

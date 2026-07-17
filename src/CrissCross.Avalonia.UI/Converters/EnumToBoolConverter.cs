@@ -6,7 +6,11 @@ using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Converters;
+#else
 namespace CrissCross.Avalonia.UI.Converters;
+#endif
 
 /// <summary>Converts an enum value to a boolean based on parameter comparison.</summary>
 public class EnumToBoolConverter : IValueConverter

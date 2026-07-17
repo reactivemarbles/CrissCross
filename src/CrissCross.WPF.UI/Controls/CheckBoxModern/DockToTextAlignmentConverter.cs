@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Dock To Text Alignment Converter.</summary>
 public class DockToTextAlignmentConverter : IValueConverter

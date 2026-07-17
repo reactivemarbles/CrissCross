@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a toggle button control with a customizable chevron size for use in TreeView items.</summary>
 public class ToggleButton : global::Avalonia.Controls.Primitives.ToggleButton

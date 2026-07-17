@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the documented member.</summary>
 public sealed class TextPointer : IComparable<TextPointer>, IComparable

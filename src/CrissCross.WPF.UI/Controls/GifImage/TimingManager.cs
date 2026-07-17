@@ -4,7 +4,11 @@
 
 using System.Windows.Media.Animation;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the TimingManager member.</summary>
 /// <param name="repeatBehavior">The repeatBehavior value.</param>

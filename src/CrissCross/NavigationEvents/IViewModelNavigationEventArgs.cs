@@ -4,7 +4,11 @@
 
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>I View Model Navigation EventArgs.</summary>
 public interface IViewModelNavigationEventArgs : IViewModelNavigationBaseEventArgs

@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Appearance;
+#else
 namespace CrissCross.WPF.UI.Appearance;
+#endif
 
 /// <summary>Facilitates the management of the window background.</summary>
 /// <example>

@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Controls.Presenters;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 using CrissCross.Avalonia.UI.Controls;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI;
+#else
 namespace CrissCross.Avalonia.UI;
+#endif
 
 /// <summary>Represents a contract with the service that creates <see cref="ContentDialog"/>.</summary>
 /// <example>

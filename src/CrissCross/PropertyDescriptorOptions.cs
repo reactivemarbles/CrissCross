@@ -5,7 +5,11 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Configures editing, values, commands, and validation for a property descriptor.</summary>
 public sealed class PropertyDescriptorOptions

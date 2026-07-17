@@ -6,7 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Storage;
+#else
 namespace CrissCross.WPF.UI.Storage;
+#endif
 
 /// <summary>An implementation of IStore that saves data to a json file.</summary>
 /// <remarks>

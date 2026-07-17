@@ -8,7 +8,11 @@ using System.Windows.Controls.Primitives;
 using Point = System.Windows.Point;
 using Size = System.Windows.Size;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Extended base class for VirtualizingPanel.</summary>
 [ToolboxItem(true)]

@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Dialogue displayed inside the application covering its internals, displaying some content.</summary>
 /// <example>

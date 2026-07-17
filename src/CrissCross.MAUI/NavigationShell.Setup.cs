@@ -4,7 +4,15 @@
 
 using ReactiveUI;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.MAUI;
+#else
 namespace CrissCross.MAUI;
+#endif
 
 /// <summary>Hosts MAUI shell navigation for routed view models.</summary>
 public partial class NavigationShell

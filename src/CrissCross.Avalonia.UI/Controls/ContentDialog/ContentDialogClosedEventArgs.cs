@@ -4,7 +4,11 @@
 
 using Avalonia.Interactivity;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides data for the <see cref="ContentDialog.Closed"/> event.</summary>
 public class ContentDialogClosedEventArgs : RoutedEventArgs

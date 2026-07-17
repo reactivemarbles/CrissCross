@@ -5,7 +5,11 @@
 using System.Drawing;
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Custom <see cref="ScrollViewer"/> with events depending on actions taken by the user.</summary>
 [ToolboxItem(true)]
@@ -107,7 +111,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
 
         if (e?.HorizontalChange > _minimalChange || e?.HorizontalChange < -_minimalChange)
         {
-            UpdateHorizontalScrollingState();
+            _ = UpdateHorizontalScrollingStateAsync();
         }
 
         if ((e is null || e.VerticalChange <= _minimalChange) && (e is null || e.VerticalChange >= -_minimalChange))
@@ -115,7 +119,7 @@ public class DynamicScrollViewer : PassiveScrollViewer
             return;
         }
 
-        UpdateVerticalScrollingState();
+        _ = UpdateVerticalScrollingStateAsync();
     }
 
     /// <summary>Provides the IsScrollingVerticallyProperty_OnChanged member.</summary>
@@ -176,8 +180,9 @@ public class DynamicScrollViewer : PassiveScrollViewer
         scroll._timeout = scroll.Timeout;
     }
 
-    /// <summary>Provides the UpdateVerticalScrollingState member.</summary>
-    private async void UpdateVerticalScrollingState()
+    /// <summary>Updates vertical scrolling state after the configured inactivity delay.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task UpdateVerticalScrollingStateAsync()
     {
         // TODO: Optimize
         // My main assumption here is that each scroll causes a new "event / thread" to be assigned.
@@ -204,8 +209,9 @@ public class DynamicScrollViewer : PassiveScrollViewer
         IsScrollingVertically = false;
     }
 
-    /// <summary>Provides the UpdateHorizontalScrollingState member.</summary>
-    private async void UpdateHorizontalScrollingState()
+    /// <summary>Updates horizontal scrolling state after the configured inactivity delay.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task UpdateHorizontalScrollingStateAsync()
     {
         // TODO: Optimize
         // My main assumption here is that each scroll causes a new "event / thread" to be assigned.

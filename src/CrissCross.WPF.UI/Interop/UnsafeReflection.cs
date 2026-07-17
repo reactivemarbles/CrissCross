@@ -6,7 +6,11 @@
 
 #nullable enable
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>A set of dangerous methods to modify the appearance.</summary>
 internal static class UnsafeReflection
@@ -46,7 +50,7 @@ internal static class UnsafeReflection
             TaskBarProgressState.Error => ShObjIdl.TBPFLAG.TBPF_ERROR,
             TaskBarProgressState.Paused => ShObjIdl.TBPFLAG.TBPF_PAUSED,
             TaskBarProgressState.Normal => ShObjIdl.TBPFLAG.TBPF_NORMAL,
-            _ => CrissCross.WPF.UI.Interop.ShObjIdl.TBPFLAG.TBPF_NOPROGRESS
+            _ => ShObjIdl.TBPFLAG.TBPF_NOPROGRESS
         };
     }
 

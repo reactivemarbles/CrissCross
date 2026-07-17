@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents an immutable request for a page of data plus a stable query/filter/sort snapshot.</summary>
 public sealed class PageRequest

@@ -3,13 +3,19 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Provides UI functionality for displaying and managing axis lines on a WPF plot, supporting both horizontal and

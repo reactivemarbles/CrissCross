@@ -2,9 +2,15 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Binds reactive plot sources with validation, batching, lifecycle, and UI dispatch.</summary>
 public sealed class ReactivePlotBinder : IReactivePlotBinder

@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+#if REACTIVE_SHIM
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Represents the view model for a live chart, providing access to chart object settings and managing their lifecycle

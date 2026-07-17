@@ -4,7 +4,11 @@
 
 using System.Collections.ObjectModel;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Appearance;
+#else
 namespace CrissCross.WPF.UI.Appearance;
+#endif
 
 /// <summary>Allows managing application dictionaries.</summary>
 /// <remarks>

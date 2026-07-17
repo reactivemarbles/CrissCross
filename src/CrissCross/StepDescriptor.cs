@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes one platform-neutral workflow step for steppers and wizard progress controls.</summary>
 public sealed class StepDescriptor

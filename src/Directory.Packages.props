@@ -26,15 +26,23 @@
 
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.0-beta.1" />
+    <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.0-beta.1" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.Maui.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WinForms" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.WinForms.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.WPF.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Disposables" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Core" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Extensions" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Extensions.Core" Version="$(ReactiveUIPrimitivesVersion)" />
+    <PackageVersion Include="ReactiveUI.Primitives.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
+    <PackageVersion Include="ReactiveUI.Primitives.Async.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
+    <PackageVersion Include="ReactiveUI.Primitives.Extensions.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Wpf" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.WinForms" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Maui" Version="$(ReactiveUIPrimitivesVersion)" />
@@ -75,6 +83,7 @@
     <PackageVersion Include="CP.Xaml.Converters" Version="2.0.0" />
     <PackageVersion Include="Markdig" Version="1.3.2" />
     <PackageVersion Include="ReactiveList" Version="5.2.0" />
+    <PackageVersion Include="ReactiveList.Reactive" Version="5.2.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.59" />
 
     <!-- Polyfill for .NET Framework -->

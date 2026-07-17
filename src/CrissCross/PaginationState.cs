@@ -5,7 +5,11 @@
 using System;
 using System.Globalization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral state for paged data navigation.</summary>
 public sealed class PaginationState

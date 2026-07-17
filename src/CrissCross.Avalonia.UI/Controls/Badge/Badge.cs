@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Used to highlight an item, attract attention or flag status.</summary>
 public class Badge : global::Avalonia.Controls.ContentControl, IAppearanceControl

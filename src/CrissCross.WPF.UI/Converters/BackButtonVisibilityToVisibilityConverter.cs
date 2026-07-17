@@ -4,10 +4,14 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the BackButtonVisibilityToVisibilityConverter member.</summary>
-internal sealed class BackButtonVisibilityToVisibilityConverter : IValueConverter
+public sealed class BackButtonVisibilityToVisibilityConverter : IValueConverter
 {
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>

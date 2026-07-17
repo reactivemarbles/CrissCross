@@ -4,7 +4,11 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Gauges.Converters;
+#else
 namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
+#endif
 
 /// <summary>Calculates the range indicator light position.</summary>
 public class RangeIndicatorLightPositionConverter : IValueConverter

@@ -4,9 +4,11 @@
 
 using System.Windows.Input;
 using Avalonia;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a group of selectable or removable chips/tags.</summary>
 public class ChipGroup : ItemsControl

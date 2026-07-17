@@ -4,12 +4,22 @@
 
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls;
+#else
 using CrissCross.WPF.UI.Controls;
+#endif
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxResult = System.Windows.MessageBoxResult;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Interaction logic for MessageBox.xaml.</summary>
 public partial class MessageBoxAsync : IListenForMessages

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossAvaloniaTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.Avalonia\**\*.cs"
+             Exclude="..\CrissCross.Avalonia\bin\**;..\CrissCross.Avalonia\obj\**"
+             LinkBase="CrissCross.Avalonia" />
+    <AvaloniaResource Include="Themes\**\*.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="ReactiveUI.Avalonia.Reactive" />
+    <PackageReference Include="ReactiveUI.Reactive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.Reactive\CrissCross.Reactive.csproj" />
+  </ItemGroup>
+</Project>

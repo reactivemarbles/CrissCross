@@ -3,9 +3,18 @@
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
-using static ReactiveUI.TransitioningContentControl;
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Reactive.TransitioningContentControl;
+#else
+using static ReactiveUI.TransitioningContentControl;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Navigation Window.</summary>
 /// <seealso cref="FluentWindow" />

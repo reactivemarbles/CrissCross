@@ -6,7 +6,11 @@ using System.Collections;
 using System.Windows.Shapes;
 using Path = System.Windows.Shapes.Path;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains CircularGauge state and dependency-property wrappers.</summary>
 public sealed partial class CircularGauge

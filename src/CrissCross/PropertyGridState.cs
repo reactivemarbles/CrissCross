@@ -6,7 +6,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral state for a descriptor-driven property inspector.</summary>
 public sealed class PropertyGridState

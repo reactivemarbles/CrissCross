@@ -5,7 +5,11 @@
 using System.Windows.Input;
 using Avalonia.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Creates menu items for the rich text editor context menu.</summary>
 internal static class RichTextMenuItemFactory

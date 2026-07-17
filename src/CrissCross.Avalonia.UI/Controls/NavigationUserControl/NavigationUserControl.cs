@@ -4,7 +4,11 @@
 
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>User control wrapper for navigation functionality.</summary>
 public class NavigationUserControl : UserControl

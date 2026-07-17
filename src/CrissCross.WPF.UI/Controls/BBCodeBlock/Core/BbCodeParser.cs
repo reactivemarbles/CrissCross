@@ -4,7 +4,11 @@
 
 using System.Text;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
 /// <summary>Parses BBCode into a nested document tree.</summary>
 internal sealed class BbCodeParser

@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents a deterministic bidirectional navigation resolution failure.</summary>
 public sealed class NavigationResolutionException : InvalidOperationException

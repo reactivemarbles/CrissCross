@@ -6,9 +6,17 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Converters;
+#else
 using CrissCross.WPF.UI.Converters;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows a user to pick a date from a calendar display.</summary>
 /// <example>

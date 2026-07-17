@@ -2,10 +2,16 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents NavigationModel.</summary>
 public partial class NavigationModel : RxObject
@@ -18,6 +24,18 @@ public partial class NavigationModel : RxObject
 
     /// <summary>Stores the _navigationService value.</summary>
     private readonly IUseHostedNavigation _navigationService;
+
+    /// <summary>Stores the name visibility.</summary>
+    private Visibility _isNameVisible;
+
+    /// <summary>Stores the selected indicator visibility.</summary>
+    private Visibility _isSelectedVisible;
+
+    /// <summary>Stores the expander horizontal alignment.</summary>
+    private HorizontalAlignment _isExpanderHorizontalAlignment;
+
+    /// <summary>Stores the expander vertical alignment.</summary>
+    private VerticalAlignment _isExpanderVerticalAlignment;
 
     /// <summary>Gets or sets the name.</summary>
     /// <value>
@@ -79,42 +97,79 @@ public partial class NavigationModel : RxObject
         ICollection<NavigationModel> navigationModels,
         IUseHostedNavigation? navigationService)
     {
-        InitializeOAPH();
         _viewModel = viewModel;
         _navigationModels = navigationModels ?? throw new ArgumentNullException(nameof(navigationModels));
         _navigationService = navigationService ?? this;
         NavigateCommand = ReactiveCommand.Create(Navigate);
+        InitializeObservableProperties();
     }
 
     /// <summary>Gets the command that invokes navigation for this model.</summary>
     public ReactiveCommand<Unit, Unit> NavigateCommand { get; }
 
+    /// <summary>Gets the name visibility.</summary>
+    public Visibility IsNameVisible
+    {
+        get => _isNameVisible;
+        private set => this.RaiseAndSetIfChanged(ref _isNameVisible, value);
+    }
+
+    /// <summary>Gets the selected indicator visibility.</summary>
+    public Visibility IsSelectedVisible
+    {
+        get => _isSelectedVisible;
+        private set => this.RaiseAndSetIfChanged(ref _isSelectedVisible, value);
+    }
+
+    /// <summary>Gets the expander horizontal alignment.</summary>
+    public HorizontalAlignment IsExpanderHorizontalAlignment
+    {
+        get => _isExpanderHorizontalAlignment;
+        private set => this.RaiseAndSetIfChanged(ref _isExpanderHorizontalAlignment, value);
+    }
+
+    /// <summary>Gets the expander vertical alignment.</summary>
+    public VerticalAlignment IsExpanderVerticalAlignment
+    {
+        get => _isExpanderVerticalAlignment;
+        private set => this.RaiseAndSetIfChanged(ref _isExpanderVerticalAlignment, value);
+    }
+
     /// <summary>Determines whether [is name visible].</summary>
     /// <returns>
     ///   <c>true</c> if [is name visible]; otherwise, <c>false</c>.
     /// </returns>
-    [ObservableAsProperty]
-    private IObservable<Visibility> IsNameVisible() =>
+    private IObservable<Visibility> ObserveIsNameVisible() =>
         this.WhenAnyValue(x => x.IsExpanded, x => x.IsExpander)
             .Select(x => (x.Value1 && !x.Value2) ? Visibility.Visible : Visibility.Collapsed);
 
     /// <summary>Provides the IsSelectedVisible member.</summary>
     /// <returns>The result.</returns>
-    [ObservableAsProperty]
-    private IObservable<Visibility> IsSelectedVisible() =>
+    private IObservable<Visibility> ObserveIsSelectedVisible() =>
         this.WhenAnyValue(x => x.IsSelected).Select(x => x ? Visibility.Visible : Visibility.Hidden);
 
     /// <summary>Provides the IsExpanderHorizontalAlignment member.</summary>
     /// <returns>The result.</returns>
-    [ObservableAsProperty]
-    private IObservable<HorizontalAlignment> IsExpanderHorizontalAlignment() =>
+    private IObservable<HorizontalAlignment> ObserveIsExpanderHorizontalAlignment() =>
         this.WhenAnyValue(x => x.IsExpander).Select(x => x ? HorizontalAlignment.Left : HorizontalAlignment.Stretch);
 
     /// <summary>Provides the IsExpanderVerticalAlignment member.</summary>
     /// <returns>The result.</returns>
-    [ObservableAsProperty]
-    private IObservable<VerticalAlignment> IsExpanderVerticalAlignment() =>
+    private IObservable<VerticalAlignment> ObserveIsExpanderVerticalAlignment() =>
         this.WhenAnyValue(x => x.IsExpander).Select(x => x ? VerticalAlignment.Top : VerticalAlignment.Stretch);
+
+    /// <summary>Connects the derived observable properties for this model.</summary>
+    private void InitializeObservableProperties()
+    {
+        _ = ObserveIsNameVisible().Subscribe(value => IsNameVisible = value).DisposeWith(Disposables);
+        _ = ObserveIsSelectedVisible().Subscribe(value => IsSelectedVisible = value).DisposeWith(Disposables);
+        _ = ObserveIsExpanderHorizontalAlignment()
+            .Subscribe(value => IsExpanderHorizontalAlignment = value)
+            .DisposeWith(Disposables);
+        _ = ObserveIsExpanderVerticalAlignment()
+            .Subscribe(value => IsExpanderVerticalAlignment = value)
+            .DisposeWith(Disposables);
+    }
 
     /// <summary>Provides the Navigate member.</summary>
     private void Navigate()

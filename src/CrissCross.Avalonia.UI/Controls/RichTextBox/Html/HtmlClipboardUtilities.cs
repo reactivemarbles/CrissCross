@@ -7,7 +7,11 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the HtmlClipboardUtilities member.</summary>
 internal static class HtmlClipboardUtilities

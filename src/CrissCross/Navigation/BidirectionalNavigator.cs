@@ -8,7 +8,11 @@ using System.Linq;
 using System.Threading;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Default bidirectional navigation resolver over an immutable registration snapshot.</summary>
 internal sealed class BidirectionalNavigator : IBidirectionalNavigator

@@ -5,9 +5,18 @@
 using System;
 using System.Windows;
 using ReactiveUI;
-using static ReactiveUI.TransitioningContentControl;
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Reactive.TransitioningContentControl;
+#else
+using static ReactiveUI.TransitioningContentControl;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF;
+#else
 namespace CrissCross.WPF;
+#endif
 
 /// <summary>Navigation Window.</summary>
 /// <seealso cref="Window" />

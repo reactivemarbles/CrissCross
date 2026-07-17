@@ -5,11 +5,17 @@
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Windows.Input;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Provides functionality for managing and initializing live chart plot lines, axes, and control menus in a reactive

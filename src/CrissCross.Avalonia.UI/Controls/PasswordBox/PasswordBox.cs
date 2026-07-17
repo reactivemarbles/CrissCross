@@ -7,7 +7,11 @@ using Avalonia;
 using AvaloniaInteractivity = global::Avalonia.Interactivity;
 using RoutedEventArgs = global::Avalonia.Interactivity.RoutedEventArgs;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set
 /// to true, PasswordProperty always contains raw password.</summary>

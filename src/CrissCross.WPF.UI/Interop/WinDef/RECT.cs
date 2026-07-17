@@ -8,7 +8,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop.WinDef;
+#else
 namespace CrissCross.WPF.UI.Interop.WinDef;
+#endif
 
 /// <summary>The RECT structure defines a rectangle by the coordinates of its upper-left and lower-right
 /// corners.</summary>

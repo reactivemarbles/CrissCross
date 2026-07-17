@@ -5,7 +5,11 @@
 using System.Windows.Shell;
 using Size = System.Windows.Size;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// If you use <see cref="WindowChrome"/> to extend the UI elements to the non-client area, you can include this

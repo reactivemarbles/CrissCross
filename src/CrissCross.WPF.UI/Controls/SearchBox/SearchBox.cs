@@ -4,9 +4,11 @@
 
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a lightweight search input surface that projects shared SearchQueryState.</summary>
 public class SearchBox : Control

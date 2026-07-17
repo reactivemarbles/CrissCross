@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Appearance;
+#else
 namespace CrissCross.WPF.UI.Appearance;
+#endif
 
 /// <summary>
 /// Automatically updates the application background if the system theme or color is changed.

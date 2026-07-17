@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the ContentDialogButtonEnumToBoolConverter member.</summary>
-internal sealed class ContentDialogButtonEnumToBoolConverter : EnumToBoolConverter<ContentDialogButton>;
+public sealed class ContentDialogButtonEnumToBoolConverter : EnumToBoolConverter<ContentDialogButton>;

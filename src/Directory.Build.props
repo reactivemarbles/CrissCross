@@ -101,6 +101,8 @@
     <PackageReference Include="MinVer" PrivateAssets="all" />
     <PackageReference Include="StyleSharp.Analyzers" PrivateAssets="all" />
     <PackageReference Include="Roslynator.Analyzers" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Reactive'))">
     <PackageReference Include="ReactiveUI.Disposables" />
     <PackageReference Include="ReactiveUI.Primitives" />
     <PackageReference Include="ReactiveUI.Primitives.Core" />

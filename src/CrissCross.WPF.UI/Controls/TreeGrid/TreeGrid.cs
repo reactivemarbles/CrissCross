@@ -4,7 +4,11 @@
 
 using System.Collections.ObjectModel;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Work in progress.</summary>
 public class TreeGrid : System.Windows.Controls.Primitives.Selector

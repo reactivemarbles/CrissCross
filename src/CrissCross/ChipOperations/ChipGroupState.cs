@@ -6,7 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral state for a group of chip/tag items.</summary>
 public sealed class ChipGroupState

@@ -5,7 +5,11 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Converters;
+#else
 namespace CrissCross.Avalonia.UI.Converters;
+#endif
 
 /// <summary>Converts a boolean value to its inverted value.</summary>
 public class BoolToInvertedBoolConverter : IValueConverter

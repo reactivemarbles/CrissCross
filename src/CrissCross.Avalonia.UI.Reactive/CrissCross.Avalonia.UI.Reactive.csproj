@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossAvaloniaTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseAvalonia>true</UseAvalonia>
+    <Deterministic>true</Deterministic>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <ReactiveMarkupKind>Avalonia</ReactiveMarkupKind>
+    <ReactiveMarkupBeforeTargets>_InjectAvaloniaAdditionalFiles;AddAvaloniaResources</ReactiveMarkupBeforeTargets>
+    <ReactiveMarkupMappings>CrissCross.Avalonia.UI=CrissCross.Reactive.Avalonia.UI|CrissCross.Avalonia.UI.Reactive;CrissCross.Avalonia=CrissCross.Reactive.Avalonia|CrissCross.Avalonia.Reactive;CrissCross=CrissCross.Reactive|CrissCross.Reactive</ReactiveMarkupMappings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.Avalonia.UI\**\*.cs"
+             Exclude="..\CrissCross.Avalonia.UI\bin\**;..\CrissCross.Avalonia.UI\obj\**"
+             LinkBase="CrissCross.Avalonia.UI" />
+    <_ReactiveMarkupSource Include="..\CrissCross.Avalonia.UI\**\*.axaml"
+                           Exclude="..\CrissCross.Avalonia.UI\bin\**;..\CrissCross.Avalonia.UI\obj\**"
+                           Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaResource Include="@(_ReactiveMarkupSource->'$(IntermediateOutputPath)ReactiveMarkup\%(Link)')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="ReactiveUI.Reactive" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="ReactiveUI.Reactive" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="AngleSharp" />
+    <PackageReference Include="Markdig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.Avalonia.Reactive\CrissCross.Avalonia.Reactive.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\CrissCross.Avalonia.UI\Images\*.png" Link="Images\%(Filename)%(Extension)" />
+    <Resource Include="..\CrissCross.Avalonia.UI\Resources\Fonts\*.ttf" Link="Resources\Fonts\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrissCross.Avalonia.UI\Controls\**\*.bmp"
+                      Link="Controls\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Import Project="..\ReactiveMarkup.targets" />
+</Project>

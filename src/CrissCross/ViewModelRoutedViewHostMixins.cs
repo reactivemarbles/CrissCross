@@ -5,16 +5,35 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+
+#if REACTIVE_SHIM
+using BooleanReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<bool>;
+using UnitReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<System.Reactive.Unit>;
+#else
+using BooleanReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<bool>;
+using UnitReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<ReactiveUI.Primitives.RxVoid>;
+#endif
 using ReactiveUI;
 
+#if REACTIVE_SHIM
+[assembly: InternalsVisibleTo("CrissCross.Avalonia.Reactive")]
+[assembly: InternalsVisibleTo("CrissCross.MAUI.Reactive")]
+[assembly: InternalsVisibleTo("CrissCross.WinForms.Reactive")]
+[assembly: InternalsVisibleTo("CrissCross.WPF.Reactive")]
+#else
 [assembly: InternalsVisibleTo("CrissCross.Avalonia")]
 [assembly: InternalsVisibleTo("CrissCross.MAUI")]
 [assembly: InternalsVisibleTo("CrissCross.WinForms")]
 [assembly: InternalsVisibleTo("CrissCross.WPF")]
+#endif
 [assembly: InternalsVisibleTo("CrissCross.XamForms")]
 [assembly: InternalsVisibleTo("CrissCross.Tests")]
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides navigation helpers for routed view hosts.</summary>
 public static partial class ViewModelRoutedViewHostMixins
@@ -23,7 +42,7 @@ public static partial class ViewModelRoutedViewHostMixins
     private static readonly object _lockObject = new();
 
     /// <summary>Gets the signal that at least one navigation host setup has completed.</summary>
-    internal static ReplaySignal<Unit> ASetupCompleted { get; } = new(1);
+    internal static UnitReplaySignal ASetupCompleted { get; } = new(1);
 
     /// <summary>Gets the view-scoped disposables by navigation host name.</summary>
     internal static Dictionary<string, CompositeDisposable> CurrentViewDisposable { get; } = [];
@@ -41,7 +60,7 @@ public static partial class ViewModelRoutedViewHostMixins
     internal static Signal<IViewModelNavigatingEventArgs> SetWhenNavigating { get; } = new();
 
     /// <summary>Gets the setup-completion signals by host name.</summary>
-    internal static Dictionary<string, ReplaySignal<bool>> WhenSetupSubjects { get; } = [];
+    internal static Dictionary<string, BooleanReplaySignal> WhenSetupSubjects { get; } = [];
 
     /// <summary>Provides navigation event helpers.</summary>
     /// <param name="navigation">The navigation notification owner.</param>

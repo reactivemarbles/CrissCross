@@ -4,6 +4,16 @@
 
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.Reactive.WPF.UI")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.Reactive.WPF.UI.Controls")]
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.ui",
+    "CrissCross.Reactive.WPF.UI.Controls.Gauges.Converters")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.Reactive.WPF.UI.Markup")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.Reactive.WPF.UI.Converters")]
+[assembly: XmlnsDefinition("https://github.com/ChrisPulman/BBCode.WPF", "CrissCross.Reactive.WPF.UI.Controls")]
+#else
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Controls")]
 [assembly: XmlnsDefinition(
@@ -12,6 +22,7 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Markup")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.WPF.UI.Converters")]
 [assembly: XmlnsDefinition("https://github.com/ChrisPulman/BBCode.WPF", "CrissCross.WPF.UI.Controls")]
+#endif
 [assembly: XmlnsDefinition(
     "https://github.com/reactivemarbles/CrissCross.ui",
     "System.Windows",

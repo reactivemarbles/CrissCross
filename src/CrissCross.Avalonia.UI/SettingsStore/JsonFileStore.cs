@@ -6,7 +6,11 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Storage;
+#else
 namespace CrissCross.Avalonia.UI.Storage;
+#endif
 
 /// <summary>An implementation of IStore that saves data to a JSON file.</summary>
 [System.Diagnostics.CodeAnalysis.RequiresDynamicCode(

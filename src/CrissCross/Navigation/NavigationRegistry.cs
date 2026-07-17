@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Default in-memory, AOT-friendly bidirectional navigation registry.</summary>
 public sealed class NavigationRegistry : INavigationRegistry

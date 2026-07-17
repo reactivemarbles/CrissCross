@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Layout;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Simple control that displays a grid of items.</summary>
 public class VirtualizingGridView : global::Avalonia.Controls.ListBox

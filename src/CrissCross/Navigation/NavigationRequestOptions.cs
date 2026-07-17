@@ -4,7 +4,11 @@
 
 using System.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Configures contract, parameter, and cancellation behavior for a navigation request.</summary>
 public sealed class NavigationRequestOptions

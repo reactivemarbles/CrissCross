@@ -5,7 +5,11 @@
 using System;
 using System.Collections.Generic;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides platform-neutral back and forward navigation journal operations.</summary>
 public static class NavigationJournal

@@ -5,7 +5,11 @@
 using System;
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF;
+#else
 namespace CrissCross.WPF;
+#endif
 
 /// <summary>Provides user32 interop helpers for hosted WebView windows.</summary>
 #if NET7_0_OR_GREATER

@@ -19,6 +19,7 @@ public static class Make
     /// <summary>Ensures that only one application instance is running.</summary>
     /// <param name="appName">Name of the application.</param>
     /// <param name="uniquePerUser">if set to <c>true</c> [unique per user].</param>
+    /// <exception cref="InvalidOperationException">Another application instance is already running.</exception>
     public static void SingleInstance(string appName, bool uniquePerUser)
     {
         if (_mainInstanceRunning)
@@ -48,7 +49,7 @@ public static class Make
         if (isSecondaryInstance)
         {
             ActivateFirstInstanceWindow(eventWaitHandle);
-            Environment.Exit(0);
+            throw new InvalidOperationException("Another application instance is already running.");
         }
 
         RegisterFirstInstanceWindowActivation(Application.Current, eventName);

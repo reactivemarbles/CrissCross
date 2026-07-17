@@ -12,7 +12,11 @@ using System.Windows.Media.Effects;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF;
+#else
 namespace CrissCross.WPF;
+#endif
 
 /// <summary>Navigation Web View.</summary>
 /// <seealso cref="ContentControl" />

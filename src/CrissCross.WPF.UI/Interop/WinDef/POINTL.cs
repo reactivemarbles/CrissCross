@@ -8,7 +8,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop.WinDef;
+#else
 namespace CrissCross.WPF.UI.Interop.WinDef;
+#endif
 
 /// <summary>The <see cref="POINTL"/> structure defines the x- and y-coordinates of a point.</summary>
 [StructLayout(LayoutKind.Sequential)]

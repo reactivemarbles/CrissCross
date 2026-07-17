@@ -6,7 +6,11 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Converts string values to lower case.</summary>
 public class ToLowerConverter : IValueConverter

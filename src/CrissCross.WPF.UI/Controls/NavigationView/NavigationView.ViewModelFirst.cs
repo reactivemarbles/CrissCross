@@ -4,7 +4,11 @@
 
 using System.Windows.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// Partial ViewModel-first integration for <see cref="NavigationView"/>.

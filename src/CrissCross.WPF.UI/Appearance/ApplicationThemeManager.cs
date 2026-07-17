@@ -4,7 +4,11 @@
 
 using WpfWindow = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Appearance;
+#else
 namespace CrissCross.WPF.UI.Appearance;
+#endif
 
 /// <summary>Allows to manage the application theme by swapping resource dictionaries containing dynamic resources with
 /// color information.</summary>
@@ -32,16 +36,30 @@ namespace CrissCross.WPF.UI.Appearance;
 public static class ApplicationThemeManager
 {
     /// <summary>Provides the LibraryNamespace member.</summary>
+#if REACTIVE_SHIM
+    internal const string LibraryNamespace = "crisscross.wpf.ui.reactive;";
+#else
     internal const string LibraryNamespace = "crisscross.wpf.ui;";
+#endif
 
     /// <summary>Provides the ThemesDictionaryPath member.</summary>
-    internal const string ThemesDictionaryPath = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Theme/";
+#if REACTIVE_SHIM
+    internal const string ThemesDictionaryPath =
+        "pack://application:,,,/CrissCross.WPF.UI.Reactive;component/Resources/Theme/";
+#else
+    internal const string ThemesDictionaryPath =
+        "pack://application:,,,/CrissCross.WPF.UI;component/Resources/Theme/";
+#endif
 
     /// <summary>Provides the ThemeDictionaryLookup member.</summary>
     private const string ThemeDictionaryLookup = "/resources/theme/";
 
     /// <summary>The WPF appearance resource namespace.</summary>
+#if REACTIVE_SHIM
+    private const string AppearanceResourceNamespace = "CrissCross.Reactive.WPF.UI.Appearance";
+#else
     private const string AppearanceResourceNamespace = "CrissCross.WPF.UI.Appearance";
+#endif
 
     /// <summary>Stores the _cachedApplicationTheme value.</summary>
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;

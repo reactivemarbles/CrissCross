@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Styling;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the DataGrid member.</summary>
 /// <remarks>

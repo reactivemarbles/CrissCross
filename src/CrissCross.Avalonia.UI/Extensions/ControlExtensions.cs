@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Extensions;
+#else
 namespace CrissCross.Avalonia.UI.Extensions;
+#endif
 
 /// <summary>Extension methods for <see cref="Control"/>.</summary>
 public static class ControlExtensions

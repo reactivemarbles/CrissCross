@@ -5,7 +5,11 @@
 using System;
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows a user to pick a time value.</summary>
 public class TimePicker : global::Avalonia.Controls.TimePicker

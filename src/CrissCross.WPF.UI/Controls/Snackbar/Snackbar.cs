@@ -3,10 +3,18 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Converters;
+#else
 using CrissCross.WPF.UI.Converters;
+#endif
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Snackbar inform user of a process that an app has performed or will perform. It appears temporarily,
 /// towards the bottom of the window.</summary>

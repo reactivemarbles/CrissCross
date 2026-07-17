@@ -4,7 +4,11 @@
 
 using System.Globalization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents a concrete field/operator/value filter expression.</summary>
 /// <remarks>

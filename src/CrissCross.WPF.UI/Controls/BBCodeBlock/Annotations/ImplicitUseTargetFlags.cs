@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode.Annotations;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode.Annotations;
+#endif
 
 /// <summary>Describes the target of an implicit use annotation.</summary>
 [Flags]

@@ -5,7 +5,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Groups descriptor-driven property inspector fields by category.</summary>
 /// <remarks>

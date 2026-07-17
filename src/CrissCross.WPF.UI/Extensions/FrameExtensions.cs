@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Extensions;
+#else
 namespace CrissCross.WPF.UI.Extensions;
+#endif
 
 /// <summary>Set of extensions for <see cref="Frame"/>.</summary>
 public static class FrameExtensions

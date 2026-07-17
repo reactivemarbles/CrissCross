@@ -6,7 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral selection state for a segmented control.</summary>
 public sealed class SegmentedSelectionState

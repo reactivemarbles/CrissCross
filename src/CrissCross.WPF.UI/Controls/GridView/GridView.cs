@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Extends <see cref="System.Windows.Controls.GridView"/> to use Wpf.Ui custom styles.</summary>
 /// <example>
@@ -20,13 +24,22 @@ namespace CrissCross.WPF.UI.Controls;
 /// </example>
 public class GridView : System.Windows.Controls.GridView
 {
+#if REACTIVE_SHIM
+    /// <summary>The pack URI for the column-header style dictionary.</summary>
+    private const string GridViewColumnHeaderUri =
+        "pack://application:,,,/CrissCross.WPF.UI.Reactive;component/Controls/GridView/GridViewColumnHeader.xaml";
+#else
+    /// <summary>The pack URI for the column-header style dictionary.</summary>
+    private const string GridViewColumnHeaderUri =
+        "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml";
+#endif
+
     /// <summary>Provides the GridView member.</summary>
     static GridView()
     {
         ResourceDictionary resourceDict = new()
         {
-            Source = new(
-                "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewColumnHeader.xaml"),
+            Source = new(GridViewColumnHeaderUri),
         };
 
         var defaultStyle = (Style)resourceDict["UiGridViewColumnHeaderStyle"];

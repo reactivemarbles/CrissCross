@@ -4,7 +4,11 @@
 
 using Expression = System.Linq.Expressions.Expression;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Configuration;
+#else
 namespace CrissCross.WPF.UI.Configuration;
+#endif
 
 /// <summary>A TrackingConfiguration is an object that determines how a target object will be tracked.</summary>
 public class TrackingConfiguration : ITrackingConfiguration

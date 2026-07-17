@@ -5,7 +5,11 @@
 using System.Drawing;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Displays the rating scale with interactions.</summary>
 [ToolboxItem(true)]

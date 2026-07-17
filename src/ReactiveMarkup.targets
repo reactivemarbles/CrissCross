@@ -1,0 +1,98 @@
+<Project>
+  <UsingTask TaskName="GenerateReactiveMarkupTask"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <SourceFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <OutputDirectory ParameterType="System.String" Required="true" />
+      <Mappings ParameterType="System.String" Required="true" />
+      <GeneratedFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.Collections.Generic" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Linq" />
+      <Using Namespace="System.Text" />
+      <Using Namespace="Microsoft.Build.Framework" />
+      <Using Namespace="Microsoft.Build.Utilities" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        var generatedFiles = new List<ITaskItem>();
+        var mappings = Mappings
+            .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(entry => entry.Split(new[] { '=', '|' }, StringSplitOptions.None))
+            .Where(parts => parts.Length == 3)
+            .ToArray();
+
+        foreach (var source in SourceFiles)
+        {
+            var relativePath = source.GetMetadata("Link");
+            if (string.IsNullOrWhiteSpace(relativePath))
+            {
+                relativePath = source.GetMetadata("RecursiveDir")
+                    + source.GetMetadata("Filename")
+                    + source.GetMetadata("Extension");
+            }
+
+            var destination = Path.Combine(OutputDirectory, relativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            var content = File.ReadAllText(source.ItemSpec);
+
+            const string crissCrossSchema = "https://github.com/reactivemarbles/CrissCross";
+            const string crissCrossUiSchema = "https://github.com/reactivemarbles/CrissCross.ui";
+            const string crissCrossSchemaPlaceholder = "__CRISSCROSS_SCHEMA__";
+            const string crissCrossUiSchemaPlaceholder = "__CRISSCROSS_UI_SCHEMA__";
+            content = content
+                .Replace(crissCrossUiSchema, crissCrossUiSchemaPlaceholder)
+                .Replace(crissCrossSchema, crissCrossSchemaPlaceholder);
+
+            for (var index = 0; index < mappings.Length; index++)
+            {
+                var sourceNamespace = mappings[index][0];
+                var targetAssembly = mappings[index][2];
+                var assemblyPlaceholder = "__REACTIVE_ASSEMBLY_" + index + "__";
+
+                content = content
+                    .Replace("assembly=" + sourceNamespace, "assembly=" + assemblyPlaceholder)
+                    .Replace("avares://" + sourceNamespace + "/", "avares://" + assemblyPlaceholder + "/")
+                    .Replace("/" + sourceNamespace + ";component/", "/" + assemblyPlaceholder + ";component/");
+            }
+
+            for (var index = 0; index < mappings.Length; index++)
+            {
+                content = content.Replace(mappings[index][0], "__REACTIVE_NAMESPACE_" + index + "__");
+            }
+
+            for (var index = 0; index < mappings.Length; index++)
+            {
+                content = content
+                    .Replace("__REACTIVE_NAMESPACE_" + index + "__", mappings[index][1])
+                    .Replace("__REACTIVE_ASSEMBLY_" + index + "__", mappings[index][2]);
+            }
+
+            content = content
+                .Replace(crissCrossUiSchemaPlaceholder, crissCrossUiSchema)
+                .Replace(crissCrossSchemaPlaceholder, crissCrossSchema);
+
+            File.WriteAllText(destination, content, new UTF8Encoding(false));
+            var generated = new TaskItem(destination);
+            generated.SetMetadata("Link", relativePath);
+            generatedFiles.Add(generated);
+        }
+
+        GeneratedFiles = generatedFiles.ToArray();
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="GenerateReactiveMarkup"
+          BeforeTargets="$(ReactiveMarkupBeforeTargets)"
+          Condition="'@(_ReactiveMarkupSource)' != ''">
+    <GenerateReactiveMarkupTask SourceFiles="@(_ReactiveMarkupSource)"
+                                OutputDirectory="$(IntermediateOutputPath)ReactiveMarkup"
+                                Mappings="$(ReactiveMarkupMappings)">
+      <Output TaskParameter="GeneratedFiles" ItemName="_GeneratedReactiveMarkup" />
+    </GenerateReactiveMarkupTask>
+
+  </Target>
+</Project>

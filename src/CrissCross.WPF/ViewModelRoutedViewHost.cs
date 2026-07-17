@@ -9,7 +9,15 @@ using System.Windows;
 using ReactiveUI;
 using Splat;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF;
+#else
 namespace CrissCross.WPF;
+#endif
 
 /// <summary>View Model Routed View Host.</summary>
 /// <seealso cref="RoutedViewHost" />

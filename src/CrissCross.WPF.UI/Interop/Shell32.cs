@@ -9,7 +9,11 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>The Windows UI provides users with access to a wide variety of objects necessary to run applications and
 /// manage the operating system.</summary>

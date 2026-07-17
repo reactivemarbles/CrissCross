@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows numeric input with increment/decrement buttons.</summary>
 public class NumberBox : NumericUpDown

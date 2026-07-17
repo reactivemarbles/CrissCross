@@ -3,9 +3,20 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using ReactiveUI;
 
+#if !REACTIVE_SHIM
+using ReactiveUI;
+#endif
+
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Rx Object.</summary>
 /// <seealso cref="ReactiveObject" />
@@ -25,7 +36,11 @@ public class RxObject : ReactiveObject, IRxObject
     /// <value>
     /// The display name.
     /// </value>
-    public string? DisplayName { get; set; }
+    public string? DisplayName
+    {
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    }
 
     /// <summary>Gets a value indicating whether this instance is disposed.</summary>
     /// <value><c>true</c> if this instance is disposed; otherwise, <c>false</c>.</value>

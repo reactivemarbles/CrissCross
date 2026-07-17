@@ -6,7 +6,11 @@
 
 #nullable enable
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>Windows kernel module.</summary>
 internal static class Libraries

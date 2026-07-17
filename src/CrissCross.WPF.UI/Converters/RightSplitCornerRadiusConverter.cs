@@ -4,10 +4,14 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the RightSplitCornerRadiusConverter member.</summary>
-internal sealed class RightSplitCornerRadiusConverter : IValueConverter
+public sealed class RightSplitCornerRadiusConverter : IValueConverter
 {
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>

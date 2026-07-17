@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 
 namespace CrissCross.WPF.UI.SymbolGenerator;
@@ -54,13 +55,19 @@ public sealed class SymbolEnumGenerator : IIncrementalGenerator
             .AdditionalTextsProvider.Where(static file =>
                 file.Path.EndsWith(".symbols", StringComparison.OrdinalIgnoreCase))
             .Collect();
+        var reactiveShim = context.ParseOptionsProvider.Select(
+            static (options, _) =>
+                options is CSharpParseOptions csharp
+                && csharp.PreprocessorSymbolNames.Contains("REACTIVELIST_REACTIVE", StringComparer.Ordinal));
 
         context.RegisterSourceOutput(
-            catalogs,
-            static (productionContext, files) =>
+            catalogs.Combine(reactiveShim),
+            static (productionContext, input) =>
             {
-                GenerateEnum(productionContext, files, "SymbolRegular", "regular");
-                GenerateEnum(productionContext, files, "SymbolFilled", "filled");
+                var generatedNamespace =
+                    input.Right ? "CrissCross.Reactive.WPF.UI.Controls" : "CrissCross.WPF.UI.Controls";
+                GenerateEnum(productionContext, input.Left, "SymbolRegular", "regular", generatedNamespace);
+                GenerateEnum(productionContext, input.Left, "SymbolFilled", "filled", generatedNamespace);
             });
     }
 
@@ -69,11 +76,13 @@ public sealed class SymbolEnumGenerator : IIncrementalGenerator
     /// <param name="files">The available symbol catalog partitions.</param>
     /// <param name="enumName">The enum name.</param>
     /// <param name="style">The human-readable icon style.</param>
+    /// <param name="generatedNamespace">The namespace for the generated enum.</param>
     private static void GenerateEnum(
         SourceProductionContext context,
         ImmutableArray<AdditionalText> files,
         string enumName,
-        string style)
+        string style,
+        string generatedNamespace)
     {
         var members = ReadMembers(context, files, enumName);
         if (members is null)
@@ -93,7 +102,7 @@ public sealed class SymbolEnumGenerator : IIncrementalGenerator
         _ = source.AppendLine("// ReactiveUI and Contributors licenses this file to you under the MIT license.");
         _ = source.AppendLine("// See the LICENSE file in the project root for full license information.");
         _ = source.AppendLine();
-        _ = source.AppendLine("namespace CrissCross.WPF.UI.Controls;");
+        _ = source.Append("namespace ").Append(generatedNamespace).AppendLine(";");
         _ = source.AppendLine();
         _ = source.AppendLine("/// <summary>");
         _ = source

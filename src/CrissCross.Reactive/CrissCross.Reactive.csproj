@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossCoreTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross\**\*.cs"
+             Exclude="..\CrissCross\bin\**;..\CrissCross\obj\**"
+             LinkBase="CrissCross" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI.Reactive" />
+    <PackageReference Include="ReactiveList.Reactive" />
+  </ItemGroup>
+</Project>

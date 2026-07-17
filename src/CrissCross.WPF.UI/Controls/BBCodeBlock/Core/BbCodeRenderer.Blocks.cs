@@ -10,7 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
 /// <summary>Creates block-like WPF elements for BBCode nodes.</summary>
 internal sealed partial class BbCodeRenderer

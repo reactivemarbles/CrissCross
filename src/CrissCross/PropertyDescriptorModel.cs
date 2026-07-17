@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes a single AOT-friendly property inspector field without reflection-based discovery.</summary>
 public sealed class PropertyDescriptorModel

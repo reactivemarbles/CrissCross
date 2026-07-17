@@ -6,10 +6,18 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Converters;
+#else
 using CrissCross.WPF.UI.Converters;
+#endif
 using Splat; // for Locator
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// Represents the container for an item in a NavigationView control.

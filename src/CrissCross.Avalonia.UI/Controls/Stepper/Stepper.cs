@@ -5,9 +5,11 @@
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Data;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a workflow stepper or wizard-progress surface.</summary>
 public class Stepper : ItemsControl

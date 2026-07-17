@@ -6,11 +6,15 @@ using Avalonia;
 using Avalonia.Controls.Presenters;
 using Avalonia.Interactivity;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>SnackbarPresenter member.</summary>
 /// <seealso cref="ContentPresenter" />
-public class SnackbarPresenter : ContentPresenter
+public class SnackbarPresenter : ContentPresenter, IDisposable
 {
     /// <summary>Property for <see cref="SnackbarContent"/>.</summary>
     public static readonly StyledProperty<Snackbar?> SnackbarContentProperty =
@@ -19,19 +23,11 @@ public class SnackbarPresenter : ContentPresenter
     /// <summary>Delay that allows the hide animation to complete.</summary>
     private const int HideCompletionDelayMilliseconds = 300;
 
+    /// <summary>Tracks whether owned resources have been released.</summary>
+    private bool _disposed;
+
     /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
     public SnackbarPresenter() => Unloaded += OnUnloadedHandler;
-
-    /// <summary>Finalizes an instance of the <see cref="SnackbarPresenter"/> class.</summary>
-    ~SnackbarPresenter()
-    {
-        if (!CancellationTokenSource.IsCancellationRequested)
-        {
-            CancellationTokenSource.Cancel();
-        }
-
-        CancellationTokenSource.Dispose();
-    }
 
     /// <summary>Gets the SnackbarContent value.</summary>
     /// <value>
@@ -99,6 +95,13 @@ public class SnackbarPresenter : ContentPresenter
         ResetCancellationTokenSource();
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
     /// <summary>Called when [unloaded].</summary>
     protected virtual void OnUnloaded()
     {
@@ -109,6 +112,24 @@ public class SnackbarPresenter : ContentPresenter
 
         ImmediatelyHideCurrent();
         ResetCancellationTokenSource();
+    }
+
+    /// <summary>Releases resources owned by the presenter.</summary>
+    /// <param name="disposing">Whether the call originates from <see cref="Dispose()"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing || _disposed)
+        {
+            return;
+        }
+
+        if (!CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Cancel();
+        }
+
+        CancellationTokenSource.Dispose();
+        _disposed = true;
     }
 
     /// <summary>Resets the cancellation token source.</summary>

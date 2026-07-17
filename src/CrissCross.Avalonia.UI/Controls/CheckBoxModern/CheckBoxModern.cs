@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Check Box Modern.</summary>
 public class CheckBoxModern : global::Avalonia.Controls.CheckBox

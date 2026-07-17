@@ -5,7 +5,12 @@
 using System.Windows;
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.Reactive")]
+[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.Reactive.WPF")]
+#else
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.WPF")]
+#endif
 [assembly: XmlnsPrefix("https://github.com/reactivemarbles/CrissCross", "rxNav")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.SourceAssembly, ResourceDictionaryLocation.SourceAssembly)]

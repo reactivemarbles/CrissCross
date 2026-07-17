@@ -7,12 +7,22 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ScottPlot;
 using ScottPlot.Plottables;
+#if REACTIVELIST_REACTIVE
+using AppBarIcons = CrissCross.Reactive.WPF.UI.Controls.AppBarIcons;
+#else
 using AppBarIcons = CrissCross.WPF.UI.Controls.AppBarIcons;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
 [SupportedOSPlatform("windows")]

@@ -4,9 +4,11 @@
 
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a group of selectable or removable chips/tags.</summary>
 public class ChipGroup : ItemsControl

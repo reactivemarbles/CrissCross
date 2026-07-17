@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents an invalid bidirectional navigation registration.</summary>
 public sealed class NavigationRegistrationException : InvalidOperationException

@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides guard helpers for target frameworks with different BCL guard API surfaces.</summary>
 internal static class ThrowHelper

@@ -5,7 +5,11 @@
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides visual state group extension members.</summary>
 internal static class VisualStateGroupExtensions

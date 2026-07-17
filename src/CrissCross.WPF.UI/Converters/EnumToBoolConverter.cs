@@ -4,11 +4,15 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the EnumToBoolConverter member.</summary>
 /// <typeparam name="TEnum">The type.</typeparam>
-internal class EnumToBoolConverter<TEnum> : IValueConverter
+public class EnumToBoolConverter<TEnum> : IValueConverter
     where TEnum : Enum
 {
     /// <summary>Provides the Convert member.</summary>

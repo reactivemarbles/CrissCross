@@ -7,7 +7,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the Input members for <see cref="RichTextBox"/>.</summary>
 public partial class RichTextBox
@@ -35,24 +39,7 @@ public partial class RichTextBox
             return false;
         }
 
-        var command = e.Key switch
-        {
-            Key.C => CopyCommand,
-            Key.X => CutCommand,
-            Key.V => PasteCommand,
-            Key.Z when e.KeyModifiers.HasFlag(KeyModifiers.Shift) => RedoCommand,
-            Key.Z => UndoCommand,
-            Key.Y => RedoCommand,
-            Key.B when IsFormattingEnabled && !IsReadOnlyInternal => ToggleBoldCommand,
-            Key.I when IsFormattingEnabled && !IsReadOnlyInternal => ToggleItalicCommand,
-            Key.U when IsFormattingEnabled && !IsReadOnlyInternal => ToggleUnderlineCommand,
-            Key.A => SelectAllCommand,
-            Key.S
-                when e.KeyModifiers.HasFlag(KeyModifiers.Shift)
-                    && IsFormattingEnabled
-                    && !IsReadOnlyInternal => ToggleStrikethroughCommand,
-            _ => null,
-        };
+        var command = GetEditingShortcutCommand(e) ?? GetFormattingShortcutCommand(e);
 
         if (command is null)
         {
@@ -62,6 +49,41 @@ public partial class RichTextBox
         command.Execute(null);
         e.Handled = true;
         return true;
+    }
+
+    /// <summary>Gets a standard editing command for a key gesture.</summary>
+    /// <param name="e">The key event.</param>
+    /// <returns>The editing command, or <see langword="null"/>.</returns>
+    private ICommand? GetEditingShortcutCommand(KeyEventArgs e)
+    {
+        return e.Key == Key.Y || (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            ? RedoCommand
+            : e.Key switch
+            {
+                Key.C => CopyCommand,
+                Key.X => CutCommand,
+                Key.V => PasteCommand,
+                Key.Z => UndoCommand,
+                Key.A => SelectAllCommand,
+                _ => null,
+            };
+    }
+
+    /// <summary>Gets a rich-text formatting command for a key gesture.</summary>
+    /// <param name="e">The key event.</param>
+    /// <returns>The formatting command, or <see langword="null"/>.</returns>
+    private ICommand? GetFormattingShortcutCommand(KeyEventArgs e)
+    {
+        return !IsFormattingEnabled || IsReadOnlyInternal
+            ? null
+            : e.Key switch
+            {
+                Key.B => ToggleBoldCommand,
+                Key.I => ToggleItalicCommand,
+                Key.U => ToggleUnderlineCommand,
+                Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) => ToggleStrikethroughCommand,
+                _ => null,
+            };
     }
 
     /// <summary>Provides the OnTextBoxTextChanged member.</summary>

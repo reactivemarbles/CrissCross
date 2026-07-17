@@ -4,7 +4,11 @@
 
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Immutable validation feedback for a named form field or form-level rule.</summary>
 public sealed class ValidationMessage

@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Helper methods for bidirectional navigation resolution.</summary>
 internal static class BidirectionalNavigationResolverHelpers

@@ -6,10 +6,20 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ReactiveUI;
-using ReactiveUI.Maui;
 using Splat;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+using ReactiveUI.Reactive.Maui;
+#else
+using ReactiveUI.Maui;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.MAUI;
+#else
 namespace CrissCross.MAUI;
+#endif
 
 /// <summary>Hosts MAUI shell navigation for routed view models.</summary>
 /// <seealso cref="Shell" />
@@ -110,7 +120,7 @@ public partial class NavigationShell
 
                 if (_currentView is not null)
                 {
-                    GotoPage();
+                    _ = GotoPageAsync();
                 }
 
                 _navigateBack = false;
@@ -304,7 +314,7 @@ public partial class NavigationShell
         // Keep existing view
         if (CurrentPage is null && _currentView is not null)
         {
-            GotoPage();
+            _ = GotoPageAsync();
         }
 
         if (NavigateBackIsEnabled != false)
@@ -366,7 +376,8 @@ public partial class NavigationShell
     }
 
     /// <summary>Runs the goto Page operation.</summary>
-    private async void GotoPage()
+    /// <returns>A task that completes when navigation finishes.</returns>
+    private async Task GotoPageAsync()
     {
         var page = ToPage(_currentView!);
         var animated = true;

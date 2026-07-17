@@ -7,10 +7,14 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using WpfGrid = System.Windows.Controls.Grid;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Interaction logic for SquareSlider.</summary>
-internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
+public sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
 {
     /// <summary>Provides the HueProperty member.</summary>
     public static readonly DependencyProperty HueProperty = DependencyProperty.Register(

@@ -6,7 +6,11 @@ using System.Drawing;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Rotating loading ring.</summary>
 [ToolboxItem(true)]
@@ -25,35 +29,14 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(IsIndeterminate),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(
-            false,
-            static (d, e) =>
-            {
-                if (d is not ProgressRing pr || e.NewValue is not bool b)
-                {
-                    return;
-                }
-
-                // keep IsActive in sync
-                pr.SetCurrentValue(IsActiveProperty, b);
-            }));
+        new PropertyMetadata(false, Callbacks.OnIsIndeterminateChanged));
 
     /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive.</summary>
     public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
         nameof(IsActive),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(
-            false,
-            static (d, e) =>
-            {
-                if (d is not ProgressRing pr || e.NewValue is not bool b)
-                {
-                    return;
-                }
-
-                pr.SetCurrentValue(IsIndeterminateProperty, b);
-            }));
+        new PropertyMetadata(false, Callbacks.OnIsActiveChanged));
 
     /// <summary>Property for <see cref="EngAngle"/>.</summary>
     public static readonly DependencyProperty EngAngleProperty = DependencyProperty.Register(
@@ -188,5 +171,37 @@ public class ProgressRing : System.Windows.Controls.Control
         }
 
         EngAngle = endAngle;
+    }
+
+    /// <summary>Contains dependency-property callbacks that must run after static field initialization.</summary>
+    private static class Callbacks
+    {
+        /// <summary>Keeps <see cref="IsActive"/> synchronized with <see cref="IsIndeterminate"/>.</summary>
+        /// <param name="dependencyObject">The progress ring.</param>
+        /// <param name="e">The property-change data.</param>
+        public static void OnIsIndeterminateChanged(
+            DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs e)
+        {
+            if (dependencyObject is not ProgressRing progressRing || e.NewValue is not bool isIndeterminate)
+            {
+                return;
+            }
+
+            progressRing.SetCurrentValue(IsActiveProperty, isIndeterminate);
+        }
+
+        /// <summary>Keeps <see cref="IsIndeterminate"/> synchronized with <see cref="IsActive"/>.</summary>
+        /// <param name="dependencyObject">The progress ring.</param>
+        /// <param name="e">The property-change data.</param>
+        public static void OnIsActiveChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            if (dependencyObject is not ProgressRing progressRing || e.NewValue is not bool isActive)
+            {
+                return;
+            }
+
+            progressRing.SetCurrentValue(IsIndeterminateProperty, isActive);
+        }
     }
 }

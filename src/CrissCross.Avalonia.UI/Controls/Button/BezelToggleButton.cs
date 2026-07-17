@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>A toggle button with a beveled/bezel appearance.</summary>
 public class BezelToggleButton : global::Avalonia.Controls.Primitives.ToggleButton

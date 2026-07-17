@@ -5,9 +5,17 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Animations;
+#else
 using CrissCross.WPF.UI.Animations;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents NavigationViewContentPresenter.</summary>
 /// <seealso cref="Frame" />

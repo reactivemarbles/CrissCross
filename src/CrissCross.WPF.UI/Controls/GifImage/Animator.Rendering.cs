@@ -5,11 +5,27 @@
 using System.Runtime.InteropServices;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Decoding;
+#else
 using CrissCross.WPF.UI.Controls.Decoding;
+#endif
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Decompression;
+#else
 using CrissCross.WPF.UI.Controls.Decompression;
+#endif
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 using CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains GIF frame decoding and rendering operations.</summary>
 public abstract partial class Animator

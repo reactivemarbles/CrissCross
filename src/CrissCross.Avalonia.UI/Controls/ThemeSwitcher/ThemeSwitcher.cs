@@ -7,10 +7,17 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
-using CrissCross;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 using CrissCross.Avalonia.UI.Appearance;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a theme preference picker over the platform theme service.</summary>
 public class ThemeSwitcher : TemplatedControl

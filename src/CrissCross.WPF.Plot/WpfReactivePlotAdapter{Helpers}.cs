@@ -6,7 +6,11 @@ using ScottPlot;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Applies normalized reactive plot updates to WPF plot UI elements.</summary>
 internal sealed partial class WpfReactivePlotAdapter

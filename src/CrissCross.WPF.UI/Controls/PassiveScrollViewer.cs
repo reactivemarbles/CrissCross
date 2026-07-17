@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>A custom ScrollViewer that allows certain mouse events to bubble through when it's inactive.</summary>
 public class PassiveScrollViewer : ScrollViewer

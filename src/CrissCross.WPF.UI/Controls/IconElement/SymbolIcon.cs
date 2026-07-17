@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Extensions;
+#else
 using CrissCross.WPF.UI.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a text element containing an icon glyph.</summary>
 [ToolboxItem(true)]

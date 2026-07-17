@@ -5,7 +5,11 @@
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Interaction logic for ReactiveTreeView.xaml.</summary>
 [IViewFor<ReactiveTreeViewModel>]

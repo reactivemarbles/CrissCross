@@ -4,10 +4,14 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the ProportialConverter member.</summary>
-internal sealed class ProportialConverter : IMultiValueConverter
+public sealed class ProportialConverter : IMultiValueConverter
 {
     /// <summary>Provides the primary value index.</summary>
     private const int PrimaryValueIndex = 0;

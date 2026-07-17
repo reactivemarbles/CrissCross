@@ -6,7 +6,11 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>
 /// Represents a text input control that supports placeholder text, an optional icon, and a clear button, with

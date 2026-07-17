@@ -8,7 +8,11 @@ using Microsoft.Extensions.Hosting;
 using Page = System.Windows.Controls.Page;
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Represents HostBuilderMixins.</summary>
 public static class HostBuilderMixins

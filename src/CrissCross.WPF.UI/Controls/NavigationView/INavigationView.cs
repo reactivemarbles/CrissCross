@@ -4,9 +4,17 @@
 
 using System.Collections;
 using System.Windows.Controls;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Animations;
+#else
 using CrissCross.WPF.UI.Animations;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a container that enables navigation of app content. It has a header, a view for the main
 /// content, and a menu pane for navigation commands.</summary>

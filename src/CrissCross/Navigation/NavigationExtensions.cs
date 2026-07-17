@@ -5,7 +5,11 @@
 using System;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides strongly typed convenience methods over runtime navigation keys.</summary>
 public static class NavigationExtensions
