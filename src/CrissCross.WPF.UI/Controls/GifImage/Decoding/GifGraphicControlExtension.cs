@@ -43,9 +43,7 @@ internal sealed class GifGraphicControlExtension : GifExtension
     private const int TransparencyIndexOffset = 4;
 
     /// <summary>Initializes a new instance of the <see cref="GifGraphicControlExtension"/> class.</summary>
-    private GifGraphicControlExtension()
-    {
-    }
+    private GifGraphicControlExtension() { }
 
     /// <summary>Gets the BlockSize value.</summary>
     public int BlockSize { get; private set; }

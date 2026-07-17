@@ -12,7 +12,8 @@ namespace CrissCross.WPF.UI.Interop;
 
 internal static class UxTheme
 {
-    /// <summary>Returned by the GetThemeMargins function to define the margins of windows that have visual styles applied.</summary>
+    /// <summary>Returned by the GetThemeMargins function to define the margins of windows that have visual styles
+    /// applied.</summary>
     public struct MARGINS
     {
         /// <summary>Width of left border that retains its size.</summary>
@@ -90,22 +91,28 @@ internal static class UxTheme
         [In] IntPtr hWnd,
         [In] WINDOWTHEMEATTRIBUTETYPE eAttribute,
         [In] ref WTA_OPTIONS pvAttribute,
-        [In] uint cbAttribute
-    );
+        [In] uint cbAttribute);
 
     /// <summary>Tests if a visual style for the current application is active.</summary>
-    /// <returns><see langword="true"/> if a visual style is enabled, and windows with visual styles applied should call OpenThemeData to start using theme drawing services.</returns>
+    /// <returns><see langword="true"/> if a visual style is enabled, and windows with visual styles applied should call
+    /// OpenThemeData to start using theme drawing services.</returns>
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.UxTheme)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool IsThemeActive();
 
-    /// <summary>Retrieves the name of the current visual style, and optionally retrieves the color scheme name and size name.</summary>
-    /// <param name="cchMaxColorChars">Value of type int that contains the maximum number of characters allowed in the color scheme name.</param>
-    /// <param name="cchMaxSizeChars">Value of type int that contains the maximum number of characters allowed in the size name.</param>
-    /// <param name="dwMaxNameChars">Value of type int that contains the maximum number of characters allowed in the theme file name.</param>
-    /// <param name="pszColorBuff">Pointer to a string that receives the color scheme name. This parameter may be set to NULL.</param>
-    /// <param name="pszSizeBuff">Pointer to a string that receives the size name. This parameter may be set to NULL.</param>
+    /// <summary>Retrieves the name of the current visual style, and optionally retrieves the color scheme name and size
+    /// name.</summary>
+    /// <param name="cchMaxColorChars">Value of type int that contains the maximum number of characters allowed in the
+    /// color scheme name.</param>
+    /// <param name="cchMaxSizeChars">Value of type int that contains the maximum number of characters allowed in the
+    /// size name.</param>
+    /// <param name="dwMaxNameChars">Value of type int that contains the maximum number of characters allowed in the
+    /// theme file name.</param>
+    /// <param name="pszColorBuff">Pointer to a string that receives the color scheme name. This parameter may be set to
+    /// NULL.</param>
+    /// <param name="pszSizeBuff">Pointer to a string that receives the size name. This parameter may be set to
+    /// NULL.</param>
     /// <param name="pszThemeFileName">Pointer to a string that receives the theme path and file name.</param>
     /// <returns>HRESULT</returns>
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -116,6 +123,5 @@ internal static class UxTheme
         [Out] StringBuilder pszColorBuff,
         [In] int cchMaxColorChars,
         [Out] StringBuilder pszSizeBuff,
-        [In] int cchMaxSizeChars
-    );
+        [In] int cchMaxSizeChars);
 }

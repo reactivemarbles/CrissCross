@@ -12,11 +12,12 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
     private const int HideTransitionDurationMilliseconds = 300;
 
     /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
-    public SnackbarPresenter() => Unloaded += static (sender, _) =>
-                                       {
-                                           var self = (SnackbarPresenter)sender;
-                                           self.OnUnloaded();
-                                       };
+    public SnackbarPresenter() =>
+        Unloaded += static (sender, _) =>
+        {
+            var self = (SnackbarPresenter)sender;
+            self.OnUnloaded();
+        };
 
     /// <summary>Finalizes an instance of the <see cref="SnackbarPresenter"/> class.</summary>
     ~SnackbarPresenter()

@@ -11,10 +11,13 @@ namespace CrissCross.WPF.UI.AutomationPeers;
 /// <param name="owner">The owner value.</param>
 internal sealed class CardControlAutomationPeer(CardControl owner) : FrameworkElementAutomationPeer(owner)
 {
-    /// <summary>Gets the control pattern for the <see cref="T:System.Windows.UIElement" /> that is associated with this <see cref="T:System.Windows.Automation.Peers.UIElementAutomationPeer" />.</summary>
+    /// <summary>Gets the control pattern for the <see cref="T:System.Windows.UIElement" /> that is associated with this
+    /// <see cref="T:System.Windows.Automation.Peers.UIElementAutomationPeer" />.</summary>
     /// <param name="patternInterface">A value from the enumeration.</param>
     /// <returns>
-    /// An object that implements the <see cref="T:System.Windows.Automation.Provider.ISynchronizedInputProvider" /> interface if <paramref name="patternInterface" /> is <see cref="F:System.Windows.Automation.Peers.PatternInterface.SynchronizedInput" />; otherwise, null.
+    /// An object that implements the <see cref="T:System.Windows.Automation.Provider.ISynchronizedInputProvider" />
+    /// interface if <paramref name="patternInterface" /> is <see
+    /// cref="F:System.Windows.Automation.Peers.PatternInterface.SynchronizedInput" />; otherwise, null.
     /// </returns>
     public override object GetPattern(PatternInterface patternInterface)
     {

@@ -13,7 +13,8 @@ namespace CrissCross.WPF.UI.Interop;
 /// <summary>Used by multiple technologies.</summary>
 internal class Kernel32
 {
-    /// <summary>Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread basis. Multiple threads do not overwrite each other's last-error code.</summary>
+    /// <summary>Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread
+    /// basis. Multiple threads do not overwrite each other's last-error code.</summary>
     /// <returns>The return value is the calling thread's last-error code.</returns>
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.Kernel32)]

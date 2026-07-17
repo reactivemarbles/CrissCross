@@ -48,8 +48,7 @@ public static class UnsafeNativeMethods
             handle,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
             ref pvAttribute,
-            Marshal.SizeOf(typeof(int))
-        );
+            Marshal.SizeOf(typeof(int)));
 
         return true;
     }
@@ -199,13 +198,13 @@ public static class UnsafeNativeMethods
             handle,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
             ref backdropPvAttribute,
-            Marshal.SizeOf(typeof(int))
-        );
+            Marshal.SizeOf(typeof(int)));
 
         return true;
     }
 
-    /// <summary>Tries to determine whether the provided <see cref="Window"/> has applied legacy backdrop effect.</summary>
+    /// <summary>Tries to determine whether the provided <see cref="Window"/> has applied legacy backdrop
+    /// effect.</summary>
     /// <param name="handle">Window handle.</param>
     /// <param name="backdropType">Background backdrop type.</param>
     public static bool IsWindowHasBackdrop(IntPtr handle, WindowBackdropType backdropType)
@@ -221,8 +220,7 @@ public static class UnsafeNativeMethods
             handle,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_SYSTEMBACKDROP_TYPE,
             ref pvAttribute,
-            Marshal.SizeOf(typeof(int))
-        );
+            Marshal.SizeOf(typeof(int)));
 
         return pvAttribute == (int)UnsafeReflection.Cast(backdropType);
     }
@@ -247,8 +245,7 @@ public static class UnsafeNativeMethods
             handle,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_MICA_EFFECT,
             ref pvAttribute,
-            Marshal.SizeOf(typeof(int))
-        );
+            Marshal.SizeOf(typeof(int)));
 
         return pvAttribute == 0x1;
     }
@@ -271,8 +268,7 @@ public static class UnsafeNativeMethods
             handle,
             Dwmapi.DWMWINDOWATTRIBUTE.DWMWA_MICA_EFFECT,
             ref backdropPvAttribute,
-            Marshal.SizeOf(typeof(int))
-        );
+            Marshal.SizeOf(typeof(int)));
 
         return true;
     }
@@ -328,8 +324,7 @@ public static class UnsafeNativeMethods
             var colorizationColorValue = Registry.GetValue(
                 @"HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM",
                 "ColorizationColor",
-                null
-            );
+                null);
 
             if (colorizationColorValue is not null)
             {
@@ -406,8 +401,7 @@ public static class UnsafeNativeMethods
 
         if (
             taskbarFlag != ShObjIdl.TBPFLAG.TBPF_INDETERMINATE
-            && taskbarFlag != ShObjIdl.TBPFLAG.TBPF_NOPROGRESS
-        )
+            && taskbarFlag != ShObjIdl.TBPFLAG.TBPF_NOPROGRESS)
         {
             taskbarList.SetProgressValue(hWnd, Convert.ToUInt64(current), Convert.ToUInt64(total));
         }
@@ -449,8 +443,7 @@ public static class UnsafeNativeMethods
             hWnd,
             UxTheme.WINDOWTHEMEATTRIBUTETYPE.WTA_NONCLIENT,
             ref wtaOptions,
-            (uint)Marshal.SizeOf(typeof(UxTheme.WTA_OPTIONS))
-        );
+            (uint)Marshal.SizeOf(typeof(UxTheme.WTA_OPTIONS)));
 
         return true;
     }
@@ -495,8 +488,7 @@ public static class UnsafeNativeMethods
             hWnd,
             UxTheme.WINDOWTHEMEATTRIBUTETYPE.WTA_NONCLIENT,
             ref wtaOptions,
-            (uint)Marshal.SizeOf(typeof(UxTheme.WTA_OPTIONS))
-        );
+            (uint)Marshal.SizeOf(typeof(UxTheme.WTA_OPTIONS)));
 
         DisplayDpi windowDpi = DpiHelper.GetWindowDpi(hWnd);
 
@@ -504,8 +496,7 @@ public static class UnsafeNativeMethods
         Thickness deviceGlassThickness = DpiHelper.LogicalThicknessToDevice(
             new Thickness(-1, -1, -1, -1),
             windowDpi.DpiScaleX,
-            windowDpi.DpiScaleY
-        );
+            windowDpi.DpiScaleY);
 
         var dwmMargin = new UxTheme.MARGINS
         {
@@ -567,8 +558,7 @@ public static class UnsafeNativeMethods
 
     private static Color GetDefaultWindowsAccentColor()
     {
-        // Windows default accent color
-        // https://learn.microsoft.com/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-themes-windowcolor#values
+        // Windows default accent color from the Microsoft unattended-setup WindowColor documentation.
         return Color.FromArgb(0xff, 0x00, 0x78, 0xd7);
     }
 }

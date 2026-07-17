@@ -13,22 +13,38 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ReactiveFormField : ContentControl
 {
     /// <summary>Property for <see cref="Header"/>.</summary>
-    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<ReactiveFormField, object?>(nameof(Header));
+    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<
+        ReactiveFormField,
+        object?
+    >(nameof(Header));
 
     /// <summary>Property for <see cref="HelperText"/>.</summary>
-    public static readonly StyledProperty<string?> HelperTextProperty = AvaloniaProperty.Register<ReactiveFormField, string?>(nameof(HelperText));
+    public static readonly StyledProperty<string?> HelperTextProperty = AvaloniaProperty.Register<
+        ReactiveFormField,
+        string?
+    >(nameof(HelperText));
 
     /// <summary>Property for <see cref="FieldKey"/>.</summary>
-    public static readonly StyledProperty<string?> FieldKeyProperty = AvaloniaProperty.Register<ReactiveFormField, string?>(nameof(FieldKey));
+    public static readonly StyledProperty<string?> FieldKeyProperty = AvaloniaProperty.Register<
+        ReactiveFormField,
+        string?
+    >(nameof(FieldKey));
 
     /// <summary>Property for <see cref="State"/>.</summary>
-    public static readonly StyledProperty<FormFieldState> StateProperty = AvaloniaProperty.Register<ReactiveFormField, FormFieldState>(nameof(State), FormFieldState.Normal);
+    public static readonly StyledProperty<FormFieldState> StateProperty = AvaloniaProperty.Register<
+        ReactiveFormField,
+        FormFieldState
+    >(nameof(State), FormFieldState.Normal);
 
     /// <summary>Property for <see cref="Messages"/>.</summary>
-    public static readonly StyledProperty<IEnumerable<ValidationMessage>?> MessagesProperty = AvaloniaProperty.Register<ReactiveFormField, IEnumerable<ValidationMessage>?>(nameof(Messages));
+    public static readonly StyledProperty<IEnumerable<ValidationMessage>?> MessagesProperty = AvaloniaProperty.Register<
+        ReactiveFormField,
+        IEnumerable<ValidationMessage>?
+    >(nameof(Messages));
 
     /// <summary>Property for <see cref="IsRequired"/>.</summary>
-    public static readonly StyledProperty<bool> IsRequiredProperty = AvaloniaProperty.Register<ReactiveFormField, bool>(nameof(IsRequired));
+    public static readonly StyledProperty<bool> IsRequiredProperty = AvaloniaProperty.Register<ReactiveFormField, bool>(
+        nameof(IsRequired));
 
     /// <summary>Gets or sets the form field header content.</summary>
     public object? Header

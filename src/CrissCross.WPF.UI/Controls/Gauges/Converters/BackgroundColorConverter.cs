@@ -21,7 +21,12 @@ public class BackgroundColorConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         var radBrush = new RadialGradientBrush();
-        radBrush.GradientStops.Add(new GradientStop { Offset = ForegroundGradientStopOffset, Color = value is null ? Colors.Transparent : ((SolidColorBrush)value).Color });
+        radBrush.GradientStops.Add(
+            new GradientStop
+            {
+                Offset = ForegroundGradientStopOffset,
+                Color = value is null ? Colors.Transparent : ((SolidColorBrush)value).Color,
+            });
         radBrush.GradientStops.Add(new GradientStop { Color = Color.FromArgb(0xFF, 0xAF, 0xB2, 0xB0) });
         return radBrush;
     }

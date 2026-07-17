@@ -43,8 +43,7 @@ public partial class LiveChart
     {
         if (
             e.LeftButton == MouseButtonState.Pressed
-            && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control
-        )
+            && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
         {
             AddCoordinateMarker(e);
             return;
@@ -56,9 +55,7 @@ public partial class LiveChart
     /// <summary>Toggles the left panel visibility.</summary>
     private void ToggleLeftPanelVisibility() =>
         ViewModel!.LeftPanelVisibility =
-            ViewModel.LeftPanelVisibility == Visibility.Hidden
-                ? Visibility.Visible
-                : Visibility.Hidden;
+            ViewModel.LeftPanelVisibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
 
     /// <summary>Enables autoscale after locking if needed.</summary>
     private void EnsureAutoScaleAfterLock()
@@ -89,10 +86,7 @@ public partial class LiveChart
                 + DateTime.FromOADate(horizontalCoordinate).ToLongTimeString()
                 + "\nY : "
                 + verticalCoordinate.ToString("F2")
-            : "X : "
-                + horizontalCoordinate.ToString("F2")
-                + "\nY : "
-                + verticalCoordinate.ToString("F2");
+            : "X : " + horizontalCoordinate.ToString("F2") + "\nY : " + verticalCoordinate.ToString("F2");
 
         var marker = ViewModel.WpfPlot1vm.Plot.Add.Marker(mouseLocation);
         var markerText = ViewModel.WpfPlot1vm.Plot.Add.Text(text, mouseLocation);

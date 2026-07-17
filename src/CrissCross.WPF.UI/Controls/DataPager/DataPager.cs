@@ -60,9 +60,15 @@ public class DataPager : Control
     public DataPager()
     {
         FirstPageCommand = new PageNavigationCommand(() => MoveToPage(0), () => PaginationState?.CanGoFirst == true);
-        PreviousPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) - 1), () => PaginationState?.CanGoPrevious == true);
-        NextPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) + 1), () => PaginationState?.CanGoNext == true);
-        LastPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.TotalPages ?? 1) - 1), () => PaginationState?.CanGoLast == true);
+        PreviousPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) - 1),
+            () => PaginationState?.CanGoPrevious == true);
+        NextPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) + 1),
+            () => PaginationState?.CanGoNext == true);
+        LastPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.TotalPages ?? 1) - 1),
+            () => PaginationState?.CanGoLast == true);
     }
 
     /// <summary>Gets or sets the shared pagination state projected by the control.</summary>

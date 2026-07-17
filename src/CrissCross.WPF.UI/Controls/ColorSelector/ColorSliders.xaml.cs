@@ -10,20 +10,18 @@ namespace CrissCross.WPF.UI;
 public partial class ColorSliders : PickerControlBase
 {
     /// <summary>The small change property.</summary>
-    public static readonly DependencyProperty SmallChangeProperty =
-        DependencyProperty.Register(
-            nameof(SmallChange),
-            typeof(double),
-            typeof(ColorSliders),
-            new PropertyMetadata(1.0));
+    public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
+        nameof(SmallChange),
+        typeof(double),
+        typeof(ColorSliders),
+        new PropertyMetadata(1.0));
 
     /// <summary>The show alpha property.</summary>
-    public static readonly DependencyProperty ShowAlphaProperty =
-        DependencyProperty.Register(
-            nameof(ShowAlpha),
-            typeof(bool),
-            typeof(ColorSliders),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
+        nameof(ShowAlpha),
+        typeof(bool),
+        typeof(ColorSliders),
+        new PropertyMetadata(true));
 
     /// <summary>Initializes a new instance of the <see cref="ColorSliders"/> class.</summary>
     public ColorSliders() => InitializeComponent();

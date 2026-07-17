@@ -11,14 +11,23 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for a descriptor-driven property inspector.</summary>
 public sealed class PropertyGridState
 {
+    /// <inheritdoc />
+    public PropertyGridState()
+        : this(null, null, false) { }
+
+    /// <inheritdoc />
+    public PropertyGridState(IReadOnlyList<PropertyDescriptorModel>? descriptors)
+        : this(descriptors, null, false) { }
+
+    /// <inheritdoc />
+    public PropertyGridState(IReadOnlyList<PropertyDescriptorModel>? descriptors, string? searchText)
+        : this(descriptors, searchText, false) { }
+
     /// <summary>Initializes a new instance of the <see cref="PropertyGridState"/> class.</summary>
     /// <param name="descriptors">The property descriptors.</param>
     /// <param name="searchText">The optional search text.</param>
     /// <param name="isCommitting">A value indicating whether a commit operation is active.</param>
-    public PropertyGridState(
-        IReadOnlyList<PropertyDescriptorModel>? descriptors = null,
-        string? searchText = null,
-        bool isCommitting = false)
+    public PropertyGridState(IReadOnlyList<PropertyDescriptorModel>? descriptors, string? searchText, bool isCommitting)
     {
         Descriptors = descriptors ?? [];
         SearchText = searchText;
@@ -87,11 +96,19 @@ public sealed class PropertyGridState
 
             if (HasValidationErrors)
             {
-                return string.Format(CultureInfo.InvariantCulture, "{0} properties, {1} invalid", DescriptorCount, InvalidDescriptorCount);
+                return string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} properties, {1} invalid",
+                    DescriptorCount,
+                    InvalidDescriptorCount);
             }
 
             return HasModifications
-                ? string.Format(CultureInfo.InvariantCulture, "{0} properties, {1} modified", DescriptorCount, ModifiedDescriptorCount)
+                ? string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0} properties, {1} modified",
+                    DescriptorCount,
+                    ModifiedDescriptorCount)
                 : string.Format(CultureInfo.InvariantCulture, "{0} properties", DescriptorCount);
         }
     }
@@ -99,7 +116,8 @@ public sealed class PropertyGridState
     /// <summary>Finds a descriptor by stable key.</summary>
     /// <param name="key">The descriptor key.</param>
     /// <returns>The descriptor when present; otherwise, <c>null</c>.</returns>
-    public PropertyDescriptorModel? GetDescriptor(string key) => Descriptors.FirstOrDefault(descriptor => descriptor.Key == key);
+    public PropertyDescriptorModel? GetDescriptor(string key) =>
+        Descriptors.FirstOrDefault(descriptor => descriptor.Key == key);
 
     /// <summary>Determines whether one string contains another using ordinal-ignore-case comparison.</summary>
     /// <param name="source">The source text.</param>

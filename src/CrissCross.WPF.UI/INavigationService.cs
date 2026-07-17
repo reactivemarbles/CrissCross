@@ -10,34 +10,36 @@ namespace CrissCross.WPF.UI;
 /// </summary>
 public interface INavigationService
 {
-    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with IPageService.</summary>
     /// <param name="pageType">The pageType value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType);
 
-    /// <summary>Lets you navigate to the selected page based on it's type, Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type, Should be used with IPageService.</summary>
     /// <param name="pageType">The pageType value.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType, object? dataContext);
 
-    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with IPageService.</summary>
     /// <param name="pageIdOrTargetTag">The pageIdOrTargetTag value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag);
 
-    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's tag. Should be used with IPageService.</summary>
     /// <param name="pageIdOrTargetTag">The pageIdOrTargetTag value.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(string pageIdOrTargetTag, object? dataContext);
 
-    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the
+    /// page represented by the element.</summary>
     /// <param name="pageType">The pageType value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool NavigateWithHierarchy(Type pageType);
 
-    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+    /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the
+    /// page represented by the element.</summary>
     /// <param name="pageType">The pageType value.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>

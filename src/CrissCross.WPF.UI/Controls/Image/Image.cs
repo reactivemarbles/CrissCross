@@ -9,7 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents an image with additional properties for Borders and Rounded corners.</summary>
 public class Image : Control
 {
-    /// <summary>Gets/Sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
+    /// <summary>Gets/Sets the Source on this Image.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(ImageSource),
@@ -50,12 +50,11 @@ public class Image : Control
         null);
 
     /// <summary>DependencyPropertyKey for InnerCornerRadius property.</summary>
-    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(InnerCornerRadius),
-            typeof(CornerRadius),
-            typeof(Image),
-            new PropertyMetadata(new CornerRadius(0)));
+    public static readonly DependencyPropertyKey InnerCornerRadiusPropertyKey = DependencyProperty.RegisterReadOnly(
+        nameof(InnerCornerRadius),
+        typeof(CornerRadius),
+        typeof(Image),
+        new PropertyMetadata(new CornerRadius(0)));
 
     /// <summary>DependencyProperty for InnerCornerRadius property.</summary>
     public static readonly DependencyProperty InnerCornerRadiusProperty =
@@ -64,14 +63,14 @@ public class Image : Control
     /// <summary>Divisor used to offset corner radius by half of the border thickness.</summary>
     private const double CornerRadiusThicknessDivisor = 2.0;
 
-    /// <summary>Gets or sets the Source on this Image. The Source property is the ImageSource that holds the actual image drawn.</summary>
+    /// <summary>Gets or sets the Source on this Image.</summary>
     public ImageSource Source
     {
         get => (ImageSource)GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
     }
 
-    /// <summary>Gets or sets the Stretch on this Image. The Stretch property determines how large the Image will be drawn.</summary>
+    /// <summary>Gets or sets the Stretch on this Image.</summary>
     public Stretch Stretch
     {
         get => (Stretch)GetValue(StretchProperty);
@@ -115,9 +114,17 @@ public class Image : Control
         d.SetValue(
             InnerCornerRadiusPropertyKey,
             new CornerRadius(
-                topLeft: Math.Max(0, (int)Math.Round(outerRarius.TopLeft - (thickness.Left / CornerRadiusThicknessDivisor), 0)),
-                topRight: Math.Max(0, (int)Math.Round(outerRarius.TopRight - (thickness.Top / CornerRadiusThicknessDivisor), 0)),
-                bottomRight: Math.Max(0, (int)Math.Round(outerRarius.BottomRight - (thickness.Right / CornerRadiusThicknessDivisor), 0)),
-                bottomLeft: Math.Max(0, (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / CornerRadiusThicknessDivisor), 0))));
+                topLeft: Math.Max(
+                    0,
+                    (int)Math.Round(outerRarius.TopLeft - (thickness.Left / CornerRadiusThicknessDivisor), 0)),
+                topRight: Math.Max(
+                    0,
+                    (int)Math.Round(outerRarius.TopRight - (thickness.Top / CornerRadiusThicknessDivisor), 0)),
+                bottomRight: Math.Max(
+                    0,
+                    (int)Math.Round(outerRarius.BottomRight - (thickness.Right / CornerRadiusThicknessDivisor), 0)),
+                bottomLeft: Math.Max(
+                    0,
+                    (int)Math.Round(outerRarius.BottomLeft - (thickness.Bottom / CornerRadiusThicknessDivisor), 0))));
     }
 }

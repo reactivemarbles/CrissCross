@@ -11,28 +11,25 @@ namespace CrissCross.WPF.UI.Behaviors;
 internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
 {
     /// <summary>Provides the SelectOnMouseClickProperty member.</summary>
-    public static readonly DependencyProperty SelectOnMouseClickProperty =
-        DependencyProperty.Register(
-            nameof(SelectOnMouseClick),
-            typeof(bool),
-            typeof(TextBoxFocusBehavior),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty SelectOnMouseClickProperty = DependencyProperty.Register(
+        nameof(SelectOnMouseClick),
+        typeof(bool),
+        typeof(TextBoxFocusBehavior),
+        new PropertyMetadata(true));
 
     /// <summary>Provides the ConfirmOnEnterProperty member.</summary>
-    public static readonly DependencyProperty ConfirmOnEnterProperty =
-        DependencyProperty.Register(
-            nameof(ConfirmOnEnter),
-            typeof(bool),
-            typeof(TextBoxFocusBehavior),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty ConfirmOnEnterProperty = DependencyProperty.Register(
+        nameof(ConfirmOnEnter),
+        typeof(bool),
+        typeof(TextBoxFocusBehavior),
+        new PropertyMetadata(true));
 
     /// <summary>Provides the DeselectOnFocusLossProperty member.</summary>
-    public static readonly DependencyProperty DeselectOnFocusLossProperty =
-        DependencyProperty.Register(
-            nameof(DeselectOnFocusLoss),
-            typeof(bool),
-            typeof(TextBoxFocusBehavior),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty DeselectOnFocusLossProperty = DependencyProperty.Register(
+        nameof(DeselectOnFocusLoss),
+        typeof(bool),
+        typeof(TextBoxFocusBehavior),
+        new PropertyMetadata(true));
 
     /// <summary>Gets or sets SelectOnMouseClick.</summary>
     public bool SelectOnMouseClick
@@ -106,9 +103,7 @@ internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
     /// <summary>Provides the AssociatedObjectGotKeyboardFocus member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
-    private void AssociatedObjectGotKeyboardFocus(
-        object sender,
-        KeyboardFocusChangedEventArgs e)
+    private void AssociatedObjectGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
     {
         if (!SelectOnMouseClick && !e.KeyboardDevice.IsKeyDown(Key.Tab))
         {
@@ -121,9 +116,7 @@ internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
     /// <summary>Provides the AssociatedObjectGotMouseCapture member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
-    private void AssociatedObjectGotMouseCapture(
-        object sender,
-        MouseEventArgs e)
+    private void AssociatedObjectGotMouseCapture(object sender, MouseEventArgs e)
     {
         if (!SelectOnMouseClick)
         {

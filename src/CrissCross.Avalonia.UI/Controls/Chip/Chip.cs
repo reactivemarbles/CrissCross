@@ -13,25 +13,33 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class Chip : TemplatedControl
 {
     /// <summary>Property for <see cref="Model"/>.</summary>
-    public static readonly StyledProperty<ChipModel?> ModelProperty = AvaloniaProperty.Register<Chip, ChipModel?>(nameof(Model));
+    public static readonly StyledProperty<ChipModel?> ModelProperty = AvaloniaProperty.Register<Chip, ChipModel?>(
+        nameof(Model));
 
     /// <summary>Property for <see cref="Text"/>.</summary>
-    public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<Chip, string?>(nameof(Text), string.Empty);
+    public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<Chip, string?>(
+        nameof(Text),
+        string.Empty);
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
-    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<Chip, object?>(nameof(Icon));
+    public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<Chip, object?>(
+        nameof(Icon));
 
     /// <summary>Property for <see cref="IsSelected"/>.</summary>
-    public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<Chip, bool>(nameof(IsSelected));
+    public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<Chip, bool>(
+        nameof(IsSelected));
 
     /// <summary>Property for <see cref="IsRemovable"/>.</summary>
-    public static readonly StyledProperty<bool> IsRemovableProperty = AvaloniaProperty.Register<Chip, bool>(nameof(IsRemovable));
+    public static readonly StyledProperty<bool> IsRemovableProperty = AvaloniaProperty.Register<Chip, bool>(
+        nameof(IsRemovable));
 
     /// <summary>Property for <see cref="SelectCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> SelectCommandProperty = AvaloniaProperty.Register<Chip, ICommand?>(nameof(SelectCommand));
+    public static readonly StyledProperty<ICommand?> SelectCommandProperty = AvaloniaProperty.Register<Chip, ICommand?>(
+        nameof(SelectCommand));
 
     /// <summary>Property for <see cref="RemoveCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> RemoveCommandProperty = AvaloniaProperty.Register<Chip, ICommand?>(nameof(RemoveCommand));
+    public static readonly StyledProperty<ICommand?> RemoveCommandProperty = AvaloniaProperty.Register<Chip, ICommand?>(
+        nameof(RemoveCommand));
 
     /// <summary>Gets or sets the shared chip model.</summary>
     public ChipModel? Model

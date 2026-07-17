@@ -35,8 +35,11 @@ public class BrowserViewModel : RxObject
     /// <value>
     /// The web URL.
     /// </value>
-    public string WebUrl { get => field; set => this.RaiseAndSetIfChanged(ref field, value); }
-= string.Empty;
+    public string WebUrl
+    {
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    } = string.Empty;
 
     /// <summary>Gets the goto main.</summary>
     /// <value>

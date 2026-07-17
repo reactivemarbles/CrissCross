@@ -20,7 +20,10 @@ public partial class ButtonsView
         _ = this.WhenActivated(disposables =>
         {
             _ = EventSignal
-                .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => BezelButton1.Click += handler, handler => BezelButton1.Click -= handler)
+                .From<RoutedEventHandler, RoutedEventArgs>(
+                    handler => handler.Invoke,
+                    handler => BezelButton1.Click += handler,
+                    handler => BezelButton1.Click -= handler)
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .Subscribe(_ => BezelToggleButton1.IsChecked = !BezelToggleButton1.IsChecked)
                 .DisposeWith(disposables);

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -8,7 +7,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF.WebView2\CrissCross.WPF.WebView2.csproj" />
     <PackageReference Include="Microsoft.Web.WebView2" />
@@ -17,5 +16,4 @@
   <ItemGroup>
     <Resource Include="*.png" />
   </ItemGroup>
-
 </Project>

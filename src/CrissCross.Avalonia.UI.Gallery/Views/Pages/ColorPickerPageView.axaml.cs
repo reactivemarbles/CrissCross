@@ -16,6 +16,7 @@ public partial class ColorPickerPageView : ReactiveUserControl<ColorPickerPageVi
     public ColorPickerPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ColorPickerPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ColorPickerPageViewModel>());
     }
 }

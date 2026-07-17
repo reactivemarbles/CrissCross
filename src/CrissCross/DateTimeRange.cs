@@ -10,6 +10,27 @@ namespace CrissCross;
 /// <summary>Represents a platform-neutral date/time range for filtering, reporting, and dashboard controls.</summary>
 public sealed class DateTimeRange
 {
+    /// <inheritdoc />
+    public DateTimeRange(DateTimeOffset? start, DateTimeOffset? end)
+        : this(start, end, DateTimeRangePreset.Custom, null, true, null) { }
+
+    /// <inheritdoc />
+    public DateTimeRange(DateTimeOffset? start, DateTimeOffset? end, DateTimeRangePreset preset)
+        : this(start, end, preset, null, true, null) { }
+
+    /// <inheritdoc />
+    public DateTimeRange(DateTimeOffset? start, DateTimeOffset? end, DateTimeRangePreset preset, string? label)
+        : this(start, end, preset, label, true, null) { }
+
+    /// <inheritdoc />
+    public DateTimeRange(
+        DateTimeOffset? start,
+        DateTimeOffset? end,
+        DateTimeRangePreset preset,
+        string? label,
+        bool isEndInclusive)
+        : this(start, end, preset, label, isEndInclusive, null) { }
+
     /// <summary>Initializes a new instance of the <see cref="DateTimeRange"/> class.</summary>
     /// <param name="start">The inclusive range start.</param>
     /// <param name="end">The inclusive or exclusive range end.</param>
@@ -20,10 +41,10 @@ public sealed class DateTimeRange
     public DateTimeRange(
         DateTimeOffset? start,
         DateTimeOffset? end,
-        DateTimeRangePreset preset = DateTimeRangePreset.Custom,
-        string? label = null,
-        bool isEndInclusive = true,
-        TimeSpan? maximumDuration = null)
+        DateTimeRangePreset preset,
+        string? label,
+        bool isEndInclusive,
+        TimeSpan? maximumDuration)
     {
         Start = start;
         End = end;
@@ -62,7 +83,7 @@ public sealed class DateTimeRange
     /// <summary>Gets a value indicating whether the configured maximum duration is exceeded.</summary>
     public bool ExceedsMaximumDuration { get; }
 
-    /// <summary>Gets the valid range duration, or <see cref="TimeSpan.Zero"/> when the range is incomplete or invalid.</summary>
+    /// <summary>Gets the valid duration, or zero when the range is incomplete or invalid.</summary>
     public TimeSpan Duration => HasValue && !IsReversed ? End!.Value - Start!.Value : TimeSpan.Zero;
 
     /// <summary>Gets a value indicating whether the range is complete and satisfies validation constraints.</summary>
@@ -88,9 +109,15 @@ public sealed class DateTimeRange
     }
 
     /// <summary>Gets compact user-facing range text.</summary>
-    public string DisplayText => IsValid
-        ? string.Format(CultureInfo.InvariantCulture, "{0}: {1} - {2}", Label, FormatDateTime(Start!.Value), FormatDateTime(End!.Value))
-        : string.Format(CultureInfo.InvariantCulture, "{0}: invalid range", Label);
+    public string DisplayText =>
+        IsValid
+            ? string.Format(
+                CultureInfo.InvariantCulture,
+                "{0}: {1} - {2}",
+                Label,
+                FormatDateTime(Start!.Value),
+                FormatDateTime(End!.Value))
+            : string.Format(CultureInfo.InvariantCulture, "{0}: invalid range", Label);
 
     /// <summary>Determines whether the supplied value falls inside this range.</summary>
     /// <param name="value">The value to test.</param>
@@ -108,23 +135,26 @@ public sealed class DateTimeRange
     /// <summary>Formats a date/time value for display.</summary>
     /// <param name="value">The date/time value.</param>
     /// <returns>The formatted value.</returns>
-    private static string FormatDateTime(DateTimeOffset value) => value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+    private static string FormatDateTime(DateTimeOffset value) =>
+        value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
     /// <summary>Resolves the display label for a range.</summary>
     /// <param name="label">The optional explicit label.</param>
     /// <param name="preset">The range preset.</param>
     /// <returns>The resolved label.</returns>
-    private static string ResolveLabel(string? label, DateTimeRangePreset preset) => string.IsNullOrWhiteSpace(label) ? ResolvePresetLabel(preset) : label!;
+    private static string ResolveLabel(string? label, DateTimeRangePreset preset) =>
+        string.IsNullOrWhiteSpace(label) ? ResolvePresetLabel(preset) : label!;
 
     /// <summary>Resolves the default display label for a preset.</summary>
     /// <param name="preset">The range preset.</param>
     /// <returns>The preset label.</returns>
-    private static string ResolvePresetLabel(DateTimeRangePreset preset) => preset switch
-    {
-        DateTimeRangePreset.Today => "Today",
-        DateTimeRangePreset.Yesterday => "Yesterday",
-        DateTimeRangePreset.LastSevenDays => "Last 7 days",
-        DateTimeRangePreset.ThisMonth => "This month",
-        _ => "Custom"
-    };
+    private static string ResolvePresetLabel(DateTimeRangePreset preset) =>
+        preset switch
+        {
+            DateTimeRangePreset.Today => "Today",
+            DateTimeRangePreset.Yesterday => "Yesterday",
+            DateTimeRangePreset.LastSevenDays => "Last 7 days",
+            DateTimeRangePreset.ThisMonth => "This month",
+            _ => "Custom",
+        };
 }

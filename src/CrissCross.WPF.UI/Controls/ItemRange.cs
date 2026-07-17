@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Items range. <para>Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</para></summary>
+/// <summary>Items range. Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</summary>
 public readonly record struct ItemRange
 {
     /// <summary>Initializes a new instance of the <see cref="ItemRange"/> struct.</summary>
@@ -34,5 +34,5 @@ public readonly record struct ItemRange
     /// <returns>
     ///   <c>true</c> if [contains] [the specified item index]; otherwise, <c>false</c>.
     /// </returns>
-    public readonly bool Contains(int itemIndex) => itemIndex >= StartIndex && itemIndex <= EndIndex;
+    public bool Contains(int itemIndex) => itemIndex >= StartIndex && itemIndex <= EndIndex;
 }

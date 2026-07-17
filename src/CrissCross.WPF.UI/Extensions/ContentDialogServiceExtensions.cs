@@ -17,15 +17,21 @@ public static class ContentDialogServiceExtensions
         /// <param name="title">The title.</param>
         /// <param name="message">The message.</param>
         /// <param name="closeButtonText">The close button text.</param>
+        /// <returns>Result of the life cycle of the <see cref="ContentDialog"/>.</returns>
+        public Task<ContentDialogResult> ShowAlertAsync(string title, string message, string closeButtonText) =>
+            dialogService.ShowAlertAsync(title, message, closeButtonText, CancellationToken.None);
+
+        /// <summary>Shows an alert asynchronously.</summary>
+        /// <param name="title">The title.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="closeButtonText">The close button text.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>
-        /// Result of the life cycle of the <see cref="ContentDialog" />.
-        /// </returns>
+        /// <returns>Result of the life cycle of the <see cref="ContentDialog"/>.</returns>
         public Task<ContentDialogResult> ShowAlertAsync(
             string title,
             string message,
             string closeButtonText,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (dialogService is null)
             {
@@ -43,11 +49,17 @@ public static class ContentDialogServiceExtensions
 
         /// <summary>Shows simple dialog.</summary>
         /// <param name="options">Set of parameters of the basic dialog box.</param>
+        /// <returns>Result of the life cycle of the <see cref="ContentDialog"/>.</returns>
+        public Task<ContentDialogResult> ShowSimpleDialogAsync(SimpleContentDialogCreateOptions options) =>
+            dialogService.ShowSimpleDialogAsync(options, CancellationToken.None);
+
+        /// <summary>Shows a simple dialog asynchronously.</summary>
+        /// <param name="options">The dialog options.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Result of the life cycle of the <see cref="ContentDialog"/>.</returns>
         public Task<ContentDialogResult> ShowSimpleDialogAsync(
             SimpleContentDialogCreateOptions options,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (dialogService is null)
             {
@@ -65,7 +77,7 @@ public static class ContentDialogServiceExtensions
                 Content = options.Content,
                 CloseButtonText = options.CloseButtonText,
                 PrimaryButtonText = options.PrimaryButtonText,
-                SecondaryButtonText = options.SecondaryButtonText
+                SecondaryButtonText = options.SecondaryButtonText,
             };
 
             return dialogService.ShowAsync(dialog, cancellationToken);

@@ -119,7 +119,10 @@ public sealed class RichTextBoxParityShimTests
         const int fragmentStartOffset = 60;
         const int fragmentEndOffset = 63;
 
-        var payload = $"StartFragment:{fragmentStartOffset:0000000000}\r\nEndFragment:{fragmentEndOffset:0000000000}\r\n".PadRight(fragmentStartOffset) + "abc";
+        var header =
+            $"StartFragment:{fragmentStartOffset:0000000000}\r\n"
+            + $"EndFragment:{fragmentEndOffset:0000000000}\r\n";
+        var payload = header.PadRight(fragmentStartOffset) + "abc";
 
         await Assert.That(HtmlClipboardUtilities.ExtractFragment(payload)).IsEqualTo("abc");
     }

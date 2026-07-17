@@ -28,27 +28,34 @@ public class AlarmBanner : global::Avalonia.Controls.ContentControl
         string.Empty);
 
     /// <summary>Identifies the <see cref="Severity"/> dependency property.</summary>
-    public static readonly StyledProperty<InfoBarSeverity> SeverityProperty = AvaloniaProperty.Register<AlarmBanner, InfoBarSeverity>(
-        nameof(Severity),
-        InfoBarSeverity.Error);
+    public static readonly StyledProperty<InfoBarSeverity> SeverityProperty = AvaloniaProperty.Register<
+        AlarmBanner,
+        InfoBarSeverity
+    >(nameof(Severity), InfoBarSeverity.Error);
 
     /// <summary>Identifies the <see cref="AcknowledgeText"/> dependency property.</summary>
-    public static readonly StyledProperty<string> AcknowledgeTextProperty = AvaloniaProperty.Register<AlarmBanner, string>(
-        nameof(AcknowledgeText),
-        "Acknowledge");
+    public static readonly StyledProperty<string> AcknowledgeTextProperty = AvaloniaProperty.Register<
+        AlarmBanner,
+        string
+    >(nameof(AcknowledgeText), "Acknowledge");
 
     /// <summary>Identifies the <see cref="IsAcknowledgeVisible"/> dependency property.</summary>
-    public static readonly StyledProperty<bool> IsAcknowledgeVisibleProperty = AvaloniaProperty.Register<AlarmBanner, bool>(
-        nameof(IsAcknowledgeVisible),
-        true);
+    public static readonly StyledProperty<bool> IsAcknowledgeVisibleProperty = AvaloniaProperty.Register<
+        AlarmBanner,
+        bool
+    >(nameof(IsAcknowledgeVisible), true);
 
     /// <summary>Identifies the <see cref="AcknowledgeCommand"/> dependency property.</summary>
-    public static readonly StyledProperty<IReactiveCommand> AcknowledgeCommandProperty = AvaloniaProperty.Register<AlarmBanner, IReactiveCommand>(
-        nameof(AcknowledgeCommand));
+    public static readonly StyledProperty<IReactiveCommand> AcknowledgeCommandProperty = AvaloniaProperty.Register<
+        AlarmBanner,
+        IReactiveCommand
+    >(nameof(AcknowledgeCommand));
 
     /// <summary>Identifies the <see cref="CloseCommand"/> dependency property.</summary>
-    public static readonly StyledProperty<IReactiveCommand> CloseCommandProperty = AvaloniaProperty.Register<AlarmBanner, IReactiveCommand>(
-        nameof(CloseCommand));
+    public static readonly StyledProperty<IReactiveCommand> CloseCommandProperty = AvaloniaProperty.Register<
+        AlarmBanner,
+        IReactiveCommand
+    >(nameof(CloseCommand));
 
     /// <summary>Initializes a new instance of the <see cref="AlarmBanner"/> class.</summary>
     public AlarmBanner()

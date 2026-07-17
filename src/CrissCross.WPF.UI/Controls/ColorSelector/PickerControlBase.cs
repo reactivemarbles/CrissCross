@@ -9,31 +9,28 @@ namespace CrissCross.WPF.UI;
 /// <summary>Represents PickerControlBase.</summary>
 /// <seealso cref="UserControl" />
 /// <seealso cref="IColorStateStorage" />
-public class PickerControlBase : UserControl, IColorStateStorage
+public partial class PickerControlBase : UserControl, IColorStateStorage
 {
     /// <summary>The color state property.</summary>
-    public static readonly DependencyProperty ColorStateProperty =
-        DependencyProperty.Register(
-            nameof(ColorState),
-            typeof(ColorState),
-            typeof(PickerControlBase),
-            new PropertyMetadata(new ColorState(0, 0, 0, 1, 0, 0, 0, 0, 0, 0), OnColorStatePropertyChange));
+    public static readonly DependencyProperty ColorStateProperty = DependencyProperty.Register(
+        nameof(ColorState),
+        typeof(ColorState),
+        typeof(PickerControlBase),
+        new PropertyMetadata(new ColorState(new(0, 0, 0), 1, new(0, 0, 0), new(0, 0, 0)), OnColorStatePropertyChange));
 
     /// <summary>The selected color property.</summary>
-    public static readonly DependencyProperty SelectedColorProperty =
-        DependencyProperty.Register(
-            nameof(SelectedColor),
-            typeof(Color),
-            typeof(PickerControlBase),
-            new PropertyMetadata(Colors.Black, OnSelectedColorPropertyChange));
+    public static readonly DependencyProperty SelectedColorProperty = DependencyProperty.Register(
+        nameof(SelectedColor),
+        typeof(Color),
+        typeof(PickerControlBase),
+        new PropertyMetadata(Colors.Black, OnSelectedColorPropertyChange));
 
     /// <summary>The color changed event.</summary>
-    public static readonly RoutedEvent ColorChangedEvent =
-        EventManager.RegisterRoutedEvent(
-            nameof(ColorChanged),
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(PickerControlBase));
+    public static readonly RoutedEvent ColorChangedEvent = EventManager.RegisterRoutedEvent(
+        nameof(ColorChanged),
+        RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler),
+        typeof(PickerControlBase));
 
     /// <summary>The impossible alpha channel used to seed the previous color sentinel.</summary>
     private const byte PreviousColorSentinelChannel = 5;
@@ -45,39 +42,11 @@ public class PickerControlBase : UserControl, IColorStateStorage
     private bool _ignoreColorChange;
 
     /// <summary>Stores the _previousColor value.</summary>
-    private Color _previousColor = System.Windows.Media.Color.FromArgb(PreviousColorSentinelChannel, PreviousColorSentinelChannel, PreviousColorSentinelChannel, PreviousColorSentinelChannel);
-
-    /// <summary>Initializes a new instance of the <see cref="PickerControlBase"/> class.</summary>
-    public PickerControlBase()
-    {
-        Color = new(this);
-        Color.PropertyChanged += (sender, args) =>
-        {
-            var newColor = System.Windows.Media.Color.FromArgb(
-                (byte)Math.Round(Color.A),
-                (byte)Math.Round(Color.RGB_R),
-                (byte)Math.Round(Color.RGB_G),
-                (byte)Math.Round(Color.RGB_B));
-            if (newColor == _previousColor)
-            {
-                return;
-            }
-
-            RaiseEvent(new ColorRoutedEventArgs(ColorChangedEvent, newColor));
-            _previousColor = newColor;
-        };
-        ColorChanged += (sender, newColor) =>
-        {
-            if (_ignoreColorChange)
-            {
-                return;
-            }
-
-            _ignoreColorPropertyChange = true;
-            SelectedColor = ((ColorRoutedEventArgs)newColor).Color;
-            _ignoreColorPropertyChange = false;
-        };
-    }
+    private Color _previousColor = System.Windows.Media.Color.FromArgb(
+        PreviousColorSentinelChannel,
+        PreviousColorSentinelChannel,
+        PreviousColorSentinelChannel,
+        PreviousColorSentinelChannel);
 
     /// <summary>Occurs when [color changed].</summary>
     public event RoutedEventHandler ColorChanged
@@ -110,11 +79,7 @@ public class PickerControlBase : UserControl, IColorStateStorage
     /// <value>
     /// The color.
     /// </value>
-    public NotifyableColor Color
-    {
-        get;
-        set;
-    }
+    public NotifyableColor Color { get; set; } = null!;
 
     /// <summary>Provides the OnColorStatePropertyChange member.</summary>
     /// <param name="d">The d value.</param>

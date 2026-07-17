@@ -9,7 +9,16 @@ namespace CrissCross.WPF.Plot;
 internal sealed class WpfReactivePlotAdapterFactory(LiveChartViewModel chart) : IReactivePlotAdapterFactory
 {
     /// <summary>Provides the default color palette for created adapters.</summary>
-    private static readonly string[] Colors = ["#377eb8", "#ff7f00", "#4daf4a", "#f781bf", "#a65628", "#984ea3", "#999999", "#e41a1c"];
+    private static readonly string[] Colors =
+    [
+        "#377eb8",
+        "#ff7f00",
+        "#4daf4a",
+        "#f781bf",
+        "#a65628",
+        "#984ea3",
+        "#999999",
+        "#e41a1c",];
 
     /// <summary>Stores the next color index.</summary>
     private int _colorIndex;
@@ -18,6 +27,10 @@ internal sealed class WpfReactivePlotAdapterFactory(LiveChartViewModel chart) : 
     /// <param name="key">The key value.</param>
     /// <param name="plotType">The plotType value.</param>
     /// <returns>The result.</returns>
-    public IReactivePlotAdapter Create(PlotSeriesKey key, PlotType plotType) =>
-        new WpfReactivePlotAdapter(chart, key, plotType, Colors[_colorIndex++ % Colors.Length]);
+    public IReactivePlotAdapter Create(PlotSeriesKey key, PlotType plotType)
+    {
+        var color = Colors[_colorIndex];
+        _colorIndex = (_colorIndex + 1) % Colors.Length;
+        return new WpfReactivePlotAdapter(chart, key, plotType, color);
+    }
 }

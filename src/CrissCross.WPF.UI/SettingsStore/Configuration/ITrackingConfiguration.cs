@@ -49,10 +49,21 @@ public interface ITrackingConfiguration
 
     /// <summary>Identifiers the specified identifier function.</summary>
     /// <param name="idFunc">The idFunc value.</param>
+    /// <returns>ITracking Configuration.</returns>
+    ITrackingConfiguration Id(Func<object, string> idFunc);
+
+    /// <summary>Identifiers the specified identifier function.</summary>
+    /// <param name="idFunc">The idFunc value.</param>
+    /// <param name="namespace">The namespace value.</param>
+    /// <returns>ITracking Configuration.</returns>
+    ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace);
+
+    /// <summary>Identifiers the specified identifier function.</summary>
+    /// <param name="idFunc">The idFunc value.</param>
     /// <param name="namespace">The namespace value.</param>
     /// <param name="includeType">The includeType value.</param>
     /// <returns>ITracking Configuration.</returns>
-    ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace = null, bool includeType = true);
+    ITrackingConfiguration Id(Func<object, string> idFunc, object? @namespace, bool includeType);
 
     /// <summary>Persists the on.</summary>
     /// <param name="eventNames">The eventNames value.</param>

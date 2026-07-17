@@ -34,7 +34,8 @@ public class ThumbRate : System.Windows.Controls.Control
         new PropertyMetadata(null));
 
     /// <summary>Initializes a new instance of the <see cref="ThumbRate"/> class.</summary>
-    public ThumbRate() => SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<ThumbRateState>(OnTemplateButtonClick));
+    public ThumbRate() =>
+        SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<ThumbRateState>(OnTemplateButtonClick));
 
     /// <summary>Occurs when <see cref="State"/> is changed.</summary>
     public event EventHandler<RoutedEventArgs> StateChanged

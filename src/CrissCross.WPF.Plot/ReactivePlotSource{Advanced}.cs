@@ -10,8 +10,7 @@ public sealed partial record ReactivePlotSource
     /// <summary>Creates a finite line source from a static series snapshot.</summary>
     /// <param name="series">The static series.</param>
     /// <returns>The finite plot source.</returns>
-    public static IReactivePlotSource FromStatic(PlotSeriesData series) =>
-        FromStatic(series, PlotType.Line, null);
+    public static IReactivePlotSource FromStatic(PlotSeriesData series) => FromStatic(series, PlotType.Line, null);
 
     /// <summary>Creates a finite source from a static series snapshot.</summary>
     /// <param name="series">The static series.</param>
@@ -35,10 +34,7 @@ public sealed partial record ReactivePlotSource
             throw new ArgumentNullException(nameof(series));
         }
 
-        return new ReactivePlotSource(
-            series.Key,
-            plotType,
-            Observable.Return(series.ToUpdate(plotType, style: style)))
+        return new ReactivePlotSource(series.Key, plotType, Observable.Return(series.ToUpdate(plotType, style: style)))
         {
             XAxisKind = series.XAxisKind,
         };
@@ -48,9 +44,7 @@ public sealed partial record ReactivePlotSource
     /// <param name="series">The full historic series.</param>
     /// <param name="targetPointCount">The maximum rendered point count.</param>
     /// <returns>The reduced finite plot source.</returns>
-    public static IReactivePlotSource FromHistoric(
-        PlotSeriesData series,
-        int targetPointCount) =>
+    public static IReactivePlotSource FromHistoric(PlotSeriesData series, int targetPointCount) =>
         FromHistoric(series, targetPointCount, PlotType.Line, null);
 
     /// <summary>Creates a reduced historic source.</summary>
@@ -58,10 +52,7 @@ public sealed partial record ReactivePlotSource
     /// <param name="targetPointCount">The maximum rendered point count.</param>
     /// <param name="plotType">The rendered chart type.</param>
     /// <returns>The reduced finite plot source.</returns>
-    public static IReactivePlotSource FromHistoric(
-        PlotSeriesData series,
-        int targetPointCount,
-        PlotType plotType) =>
+    public static IReactivePlotSource FromHistoric(PlotSeriesData series, int targetPointCount, PlotType plotType) =>
         FromHistoric(series, targetPointCount, plotType, null);
 
     /// <summary>Creates a finite source from historic data reduced to a rendering budget with LTTB.</summary>
@@ -75,25 +66,14 @@ public sealed partial record ReactivePlotSource
         int targetPointCount,
         PlotType plotType,
         ReactivePlotSeriesStyle? style) =>
-        FromStatic(
-            PlotDataReducer.LargestTriangleThreeBuckets(series, targetPointCount),
-            plotType,
-            style);
+        FromStatic(PlotDataReducer.LargestTriangleThreeBuckets(series, targetPointCount), plotType, style);
 
     /// <summary>Creates a numeric signal source from live points.</summary>
     /// <param name="key">The stable output key.</param>
     /// <param name="points">The live point stream.</param>
     /// <returns>The live plot source.</returns>
-    public static IReactivePlotSource FromLive(
-        PlotSeriesKey key,
-        IObservable<PlotDataPoint> points) =>
-        FromLive(
-            key,
-            points,
-            PlotType.Signal,
-            PlotXAxisKind.Numeric,
-            null,
-            null);
+    public static IReactivePlotSource FromLive(PlotSeriesKey key, IObservable<PlotDataPoint> points) =>
+        FromLive(key, points, PlotType.Signal, PlotXAxisKind.Numeric, null, null);
 
     /// <summary>Creates a live source with explicit chart and axis types.</summary>
     /// <param name="key">The stable output key.</param>
@@ -105,8 +85,7 @@ public sealed partial record ReactivePlotSource
         PlotSeriesKey key,
         IObservable<PlotDataPoint> points,
         PlotType plotType,
-        PlotXAxisKind axisKind) =>
-        FromLive(key, points, plotType, axisKind, null, null);
+        PlotXAxisKind axisKind) => FromLive(key, points, plotType, axisKind, null, null);
 
     /// <summary>Creates an append source from a stream of normalized numeric points.</summary>
     /// <param name="key">The stable output key.</param>
@@ -171,8 +150,7 @@ public sealed partial record ReactivePlotSource
         PlotSeriesKey key,
         IObservable<(DateTime Timestamp, double Value)> points,
         int? maxPoints,
-        ReactivePlotSeriesStyle? style) =>
-        FromDateTimeLive(key, points, PlotType.Signal, maxPoints, style);
+        ReactivePlotSeriesStyle? style) => FromDateTimeLive(key, points, PlotType.Signal, maxPoints, style);
 
     /// <summary>Creates a timestamped source with an explicit chart type.</summary>
     /// <param name="key">The stable output key.</param>
@@ -182,8 +160,7 @@ public sealed partial record ReactivePlotSource
     public static IReactivePlotSource FromDateTimeLive(
         PlotSeriesKey key,
         IObservable<(DateTime Timestamp, double Value)> points,
-        PlotType plotType) =>
-        FromDateTimeLive(key, points, plotType, null, null);
+        PlotType plotType) => FromDateTimeLive(key, points, plotType, null, null);
 
     /// <summary>Creates an append source from timestamped live values.</summary>
     /// <param name="key">The stable output key.</param>

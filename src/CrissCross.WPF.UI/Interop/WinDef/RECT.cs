@@ -10,7 +10,8 @@ using System.Runtime.InteropServices;
 
 namespace CrissCross.WPF.UI.Interop.WinDef;
 
-/// <summary>The RECT structure defines a rectangle by the coordinates of its upper-left and lower-right corners.</summary>
+/// <summary>The RECT structure defines a rectangle by the coordinates of its upper-left and lower-right
+/// corners.</summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct RECT
 {

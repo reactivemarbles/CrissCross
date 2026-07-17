@@ -14,9 +14,7 @@ public class NavigatingCancelEventArgs : RoutedEventArgs
     /// <param name="routedEvent">The routed event.</param>
     /// <param name="source">The source.</param>
     public NavigatingCancelEventArgs(RoutedEvent routedEvent, object? source)
-        : base(routedEvent, source)
-    {
-    }
+        : base(routedEvent, source) { }
 
     /// <summary>Gets the page being navigated to.</summary>
     /// <value>
@@ -24,7 +22,7 @@ public class NavigatingCancelEventArgs : RoutedEventArgs
     /// </value>
     public required object Page { get; init; }
 
-    /// <summary>Gets or sets a value indicating whether this <see cref="NavigatingCancelEventArgs"/> should cancel navigation.</summary>
+    /// <summary>Gets or sets whether this NavigatingCancelEventArgs should cancel navigation.</summary>
     /// <value>
     ///   <c>true</c> if cancel; otherwise, <c>false</c>.
     /// </value>

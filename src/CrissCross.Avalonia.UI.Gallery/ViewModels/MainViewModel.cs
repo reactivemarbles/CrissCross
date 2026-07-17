@@ -8,58 +8,48 @@ using ReactiveUI;
 namespace CrissCross.Avalonia.UI.Gallery.ViewModels;
 
 /// <summary>Main view model for the gallery application.</summary>
-public class MainViewModel : RxObject, IUseHostedNavigation
+public class MainViewModel : RxObject
 {
     /// <summary>Initializes a new instance of the <see cref="MainViewModel"/> class.</summary>
-    public MainViewModel() =>
-        this.BuildComplete(() =>
-        {
-            DisplayName = "Gallery";
-
-            // Navigation commands for each control category.
-            GotoHome = ReactiveCommand.Create(() => this.NavigateToView<HomePageViewModel>());
-            GotoButtons = ReactiveCommand.Create(() => this.NavigateToView<ButtonsPageViewModel>());
-            GotoInput = ReactiveCommand.Create(() => this.NavigateToView<InputPageViewModel>());
-            GotoProgress = ReactiveCommand.Create(() => this.NavigateToView<ProgressPageViewModel>());
-            GotoCheckBox = ReactiveCommand.Create(() => this.NavigateToView<CheckBoxPageViewModel>());
-            GotoRadioButton = ReactiveCommand.Create(() => this.NavigateToView<RadioButtonPageViewModel>());
-            GotoComboBox = ReactiveCommand.Create(() => this.NavigateToView<ComboBoxPageViewModel>());
-            GotoSlider = ReactiveCommand.Create(() => this.NavigateToView<SliderPageViewModel>());
-            GotoDatePicker = ReactiveCommand.Create(() => this.NavigateToView<DatePickerPageViewModel>());
-            GotoColorPicker = ReactiveCommand.Create(() => this.NavigateToView<ColorPickerPageViewModel>());
-            GotoFeaturePlayground = ReactiveCommand.Create(() => this.NavigateToView<FeaturePlaygroundPageViewModel>());
-        });
+    public MainViewModel() => DisplayName = "Gallery";
 
     /// <summary>Gets the goto home command.</summary>
-    public ICommand? GotoHome { get; private set; }
+    public ICommand GotoHome => field ??= CreateNavigationCommand<HomePageViewModel>();
 
     /// <summary>Gets the goto buttons command.</summary>
-    public ICommand? GotoButtons { get; private set; }
+    public ICommand GotoButtons => field ??= CreateNavigationCommand<ButtonsPageViewModel>();
 
     /// <summary>Gets the goto input command.</summary>
-    public ICommand? GotoInput { get; private set; }
+    public ICommand GotoInput => field ??= CreateNavigationCommand<InputPageViewModel>();
 
     /// <summary>Gets the goto progress command.</summary>
-    public ICommand? GotoProgress { get; private set; }
+    public ICommand GotoProgress => field ??= CreateNavigationCommand<ProgressPageViewModel>();
 
     /// <summary>Gets the goto checkbox command.</summary>
-    public ICommand? GotoCheckBox { get; private set; }
+    public ICommand GotoCheckBox => field ??= CreateNavigationCommand<CheckBoxPageViewModel>();
 
     /// <summary>Gets the goto radiobutton command.</summary>
-    public ICommand? GotoRadioButton { get; private set; }
+    public ICommand GotoRadioButton => field ??= CreateNavigationCommand<RadioButtonPageViewModel>();
 
     /// <summary>Gets the goto combobox command.</summary>
-    public ICommand? GotoComboBox { get; private set; }
+    public ICommand GotoComboBox => field ??= CreateNavigationCommand<ComboBoxPageViewModel>();
 
     /// <summary>Gets the goto slider command.</summary>
-    public ICommand? GotoSlider { get; private set; }
+    public ICommand GotoSlider => field ??= CreateNavigationCommand<SliderPageViewModel>();
 
     /// <summary>Gets the goto datepicker command.</summary>
-    public ICommand? GotoDatePicker { get; private set; }
+    public ICommand GotoDatePicker => field ??= CreateNavigationCommand<DatePickerPageViewModel>();
 
     /// <summary>Gets the goto colorpicker command.</summary>
-    public ICommand? GotoColorPicker { get; private set; }
+    public ICommand GotoColorPicker => field ??= CreateNavigationCommand<ColorPickerPageViewModel>();
 
     /// <summary>Gets the goto feature playground command.</summary>
-    public ICommand? GotoFeaturePlayground { get; private set; }
+    public ICommand GotoFeaturePlayground => field ??= CreateNavigationCommand<FeaturePlaygroundPageViewModel>();
+
+    /// <summary>Creates a command that navigates to a registered view model.</summary>
+    /// <typeparam name="TViewModel">The destination view model type.</typeparam>
+    /// <returns>The navigation command.</returns>
+    private ReactiveCommand<Unit, Unit> CreateNavigationCommand<TViewModel>()
+        where TViewModel : class, IRxObject =>
+        ReactiveCommand.Create(() => this.NavigateToView(new NavigationKeyRequest<TViewModel>()));
 }

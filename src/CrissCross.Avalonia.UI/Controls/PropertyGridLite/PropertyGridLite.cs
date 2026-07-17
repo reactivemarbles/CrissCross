@@ -14,16 +14,28 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class PropertyGridLite : TemplatedControl
 {
     /// <summary>Property for <see cref="InspectorState"/>.</summary>
-    public static readonly StyledProperty<PropertyGridState?> InspectorStateProperty = AvaloniaProperty.Register<PropertyGridLite, PropertyGridState?>(nameof(InspectorState));
+    public static readonly StyledProperty<PropertyGridState?> InspectorStateProperty = AvaloniaProperty.Register<
+        PropertyGridLite,
+        PropertyGridState?
+    >(nameof(InspectorState));
 
     /// <summary>Property for <see cref="SearchText"/>.</summary>
-    public static readonly StyledProperty<string?> SearchTextProperty = AvaloniaProperty.Register<PropertyGridLite, string?>(nameof(SearchText));
+    public static readonly StyledProperty<string?> SearchTextProperty = AvaloniaProperty.Register<
+        PropertyGridLite,
+        string?
+    >(nameof(SearchText));
 
     /// <summary>Property for <see cref="CommitChangesCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> CommitChangesCommandProperty = AvaloniaProperty.Register<PropertyGridLite, ICommand?>(nameof(CommitChangesCommand));
+    public static readonly StyledProperty<ICommand?> CommitChangesCommandProperty = AvaloniaProperty.Register<
+        PropertyGridLite,
+        ICommand?
+    >(nameof(CommitChangesCommand));
 
     /// <summary>Property for <see cref="ResetChangesCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ResetChangesCommandProperty = AvaloniaProperty.Register<PropertyGridLite, ICommand?>(nameof(ResetChangesCommand));
+    public static readonly StyledProperty<ICommand?> ResetChangesCommandProperty = AvaloniaProperty.Register<
+        PropertyGridLite,
+        ICommand?
+    >(nameof(ResetChangesCommand));
 
     /// <summary>Initializes a new instance of the <see cref="PropertyGridLite"/> class.</summary>
     public PropertyGridLite()
@@ -68,7 +80,10 @@ public class PropertyGridLite : TemplatedControl
 
     /// <summary>Creates a filtered state snapshot using the current search text.</summary>
     /// <returns>The filtered state snapshot.</returns>
-    public PropertyGridState CreateVisibleState() => InspectorState is null ? new PropertyGridState(searchText: SearchText) : new PropertyGridState(InspectorState.Descriptors, SearchText, InspectorState.IsCommitting);
+    public PropertyGridState CreateVisibleState() =>
+        InspectorState is null
+            ? new PropertyGridState(null, SearchText)
+            : new PropertyGridState(InspectorState.Descriptors, SearchText, InspectorState.IsCommitting);
 
     /// <summary>Commits the current inspector state through the configured command hook.</summary>
     public void CommitChanges()

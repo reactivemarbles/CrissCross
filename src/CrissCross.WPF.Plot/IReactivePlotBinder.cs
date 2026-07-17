@@ -11,9 +11,7 @@ public interface IReactivePlotBinder
     /// <param name="chart">The live chart view model to bind.</param>
     /// <param name="sources">The reactive sources to bind.</param>
     /// <returns>An owned connection that controls source subscriptions.</returns>
-    IReactivePlotConnection Bind(
-        LiveChartViewModel chart,
-        IEnumerable<IReactivePlotSource> sources);
+    IReactivePlotConnection Bind(LiveChartViewModel chart, IEnumerable<IReactivePlotSource> sources);
 
     /// <summary>Binds the supplied sources to a live chart view model.</summary>
     /// <param name="chart">The live chart view model to bind.</param>

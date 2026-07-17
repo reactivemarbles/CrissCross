@@ -4,7 +4,7 @@
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Use <see cref="ToggleSwitch"/> to present users with two mutually exclusive options (like on/off).</summary>
+/// <summary>Use ToggleSwitch to present users with two mutually exclusive options (like on/off).</summary>
 public class ToggleSwitch : global::Avalonia.Controls.ToggleSwitch
 {
     // Inherits all functionality from Avalonia ToggleSwitch including:

@@ -92,8 +92,8 @@ internal sealed partial class BbCodeRenderer
         BbCodeRenderHelpers.ApplyImageSize(image, node);
         StackPanel panel = new() { Orientation = Orientation.Vertical };
         _ = panel.Children.Add(image);
-        var hasCaption = node.Attributes.TryGetValue("alt", out var alt) ||
-            node.Attributes.TryGetValue("title", out alt);
+        var hasCaption =
+            node.Attributes.TryGetValue("alt", out var alt) || node.Attributes.TryGetValue("title", out alt);
         if (!hasCaption && BbCodeRenderHelpers.LooksLikeAddress(legacyParts[0]))
         {
             alt = node.GetText().Trim();
@@ -219,10 +219,8 @@ internal sealed partial class BbCodeRenderer
     /// <summary>Renders a BBCode table.</summary>
     /// <param name="node">The table node.</param>
     /// <returns>The table container.</returns>
-    private InlineUIContainer CreateTable(BbCodeNode node) => new(CreateTableGrid(BbCodeRenderHelpers.GetRows(node)))
-    {
-        BaselineAlignment = BaselineAlignment.Center,
-    };
+    private InlineUIContainer CreateTable(BbCodeNode node) =>
+        new(CreateTableGrid(BbCodeRenderHelpers.GetRows(node))) { BaselineAlignment = BaselineAlignment.Center };
 
     /// <summary>Renders pipe-delimited tabular text.</summary>
     /// <param name="node">The pipe-table node.</param>
@@ -260,9 +258,10 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The heading container.</returns>
     private InlineUIContainer CreateHeading(BbCodeNode node)
     {
-        var levelText = node.Name.Length == DefaultHeadingLevel && node.Name[0] == 'h'
-            ? node.Name[1..]
-            : node.Value ?? DefaultHeadingLevel.ToString(CultureInfo.InvariantCulture);
+        var levelText =
+            node.Name.Length == DefaultHeadingLevel && node.Name[0] == 'h'
+                ? node.Name[1..]
+                : node.Value ?? DefaultHeadingLevel.ToString(CultureInfo.InvariantCulture);
         _ = int.TryParse(levelText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var level);
         level = Math.Max(1, Math.Min(level == 0 ? DefaultHeadingLevel : level, MaximumHeadingLevel));
         var heading = CreateTextBlock(node.Children);
@@ -289,21 +288,25 @@ internal sealed partial class BbCodeRenderer
     {
         var raw = node.Value ?? node.GetText();
         _ = double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var rating);
-        var maximum = node.Attributes.TryGetValue("max", out var maxValue) &&
-            int.TryParse(maxValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedMaximum)
-            ? parsedMaximum
-            : DefaultMaximumRating;
+        var maximum =
+            node.Attributes.TryGetValue("max", out var maxValue)
+            && int.TryParse(maxValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedMaximum)
+                ? parsedMaximum
+                : DefaultMaximumRating;
         maximum = Math.Max(1, Math.Min(maximum, MaximumRating));
         rating = Math.Max(0D, Math.Min(rating, maximum));
         var fullStars = (int)Math.Round(rating, MidpointRounding.AwayFromZero);
-        var text = new string('★', fullStars) + new string('☆', maximum - fullStars) +
-            " " + rating.ToString("0.#", CultureInfo.InvariantCulture) + "/" +
-            maximum.ToString(CultureInfo.InvariantCulture);
+        var text =
+            new string('★', fullStars)
+            + new string('☆', maximum - fullStars)
+            + " "
+            + rating.ToString("0.#", CultureInfo.InvariantCulture)
+            + "/"
+            + maximum.ToString(CultureInfo.InvariantCulture);
         var ratingBlock = CreateThemedTextBlock();
         ratingBlock.Text = text;
         ratingBlock.SetResourceReference(TextBlock.ForegroundProperty, "SystemAccentColorBrush");
-        ratingBlock.ToolTip = "Rating " + rating.ToString("0.#", CultureInfo.InvariantCulture) +
-            " out of " + maximum;
+        ratingBlock.ToolTip = "Rating " + rating.ToString("0.#", CultureInfo.InvariantCulture) + " out of " + maximum;
         return new(ratingBlock) { BaselineAlignment = BaselineAlignment.Center };
     }
 

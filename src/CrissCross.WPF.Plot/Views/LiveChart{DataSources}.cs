@@ -4,6 +4,7 @@
 
 using System.Windows;
 using ReactiveUI;
+
 namespace CrissCross.WPF.Plot;
 
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
@@ -99,8 +100,7 @@ public partial class LiveChart
         _crosshairDisposable?.Dispose();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
-            .Subscribe(d =>
-                ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
+            .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
     }
 
     /// <summary>Handles the ChangeSignalObserver operation.</summary>
@@ -117,8 +117,7 @@ public partial class LiveChart
         _crosshairDisposable?.Dispose();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
-            .Subscribe(d =>
-                ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
+            .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
     }
 
     /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
@@ -190,8 +189,7 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForSignalPoints(input.Data);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -206,8 +204,7 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForSignalPoints(SignalWithPoints);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -224,8 +221,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
 
         ViewModel?.InitializeLinesForSignalPoints(input.Data);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -241,8 +237,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
 
         ViewModel?.InitializeLinesForSignalPoints(SignalsWithPoints);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -293,8 +288,7 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForScatterPoints(input.Data);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -309,8 +303,7 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
-        ViewModel?.InitializeControlMenu(
-            ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }

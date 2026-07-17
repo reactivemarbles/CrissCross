@@ -13,40 +13,27 @@ public static class NavigationServiceExtensions
     {
         /// <summary>Lets you navigate to the selected page based on it's type.</summary>
         /// <typeparam name="T">Type of the page.</typeparam>
+        /// <param name="request">The typed navigation request.</param>
         /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
-        public bool Navigate<T>()
+        public bool Navigate<T>(PageNavigationRequest<T> request)
+            where T : class
         {
             ArgumentNullException.ThrowIfNull(navigationService);
-            return navigationService.Navigate(typeof(T));
+            ArgumentNullException.ThrowIfNull(request);
+            return navigationService.Navigate(request.PageType, request.DataContext);
         }
 
-        /// <summary>Lets you navigate to the selected page based on it's type.</summary>
-        /// <typeparam name="T">Type of the page.</typeparam>
-        /// <param name="dataContext">DataContext <see cref="object"/>.</param>
-        /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
-        public bool Navigate<T>(object? dataContext)
-        {
-            ArgumentNullException.ThrowIfNull(navigationService);
-            return navigationService.Navigate(typeof(T), dataContext);
-        }
-
-        /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
+        /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the
+        /// page represented by the element.</summary>
         /// <typeparam name="T">Type of control to be synchronously added to the navigation stack.</typeparam>
+        /// <param name="request">The typed navigation request.</param>
         /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
-        public bool NavigateWithHierarchy<T>()
+        public bool NavigateWithHierarchy<T>(PageNavigationRequest<T> request)
+            where T : class
         {
             ArgumentNullException.ThrowIfNull(navigationService);
-            return navigationService.NavigateWithHierarchy(typeof(T));
-        }
-
-        /// <summary>Synchronously adds an element to the navigation stack and navigates current navigation Frame to the page represented by the element.</summary>
-        /// <typeparam name="T">Type of control to be synchronously added to the navigation stack.</typeparam>
-        /// <param name="dataContext">DataContext <see cref="object"/>.</param>
-        /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
-        public bool NavigateWithHierarchy<T>(object? dataContext)
-        {
-            ArgumentNullException.ThrowIfNull(navigationService);
-            return navigationService.NavigateWithHierarchy(typeof(T), dataContext);
+            ArgumentNullException.ThrowIfNull(request);
+            return navigationService.NavigateWithHierarchy(request.PageType, request.DataContext);
         }
     }
 }

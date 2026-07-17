@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Threading;
 using ReactiveUI;
 
 namespace CrissCross;
@@ -11,87 +10,39 @@ namespace CrissCross;
 /// <summary>Resolves bidirectional ViewModel/View navigation requests without mutating a platform host.</summary>
 public interface IBidirectionalNavigator
 {
-    /// <summary>Resolves a ViewModel-first navigation request using a supplied view model instance.</summary>
+    /// <summary>Resolves a typed ViewModel-first navigation request.</summary>
     /// <typeparam name="TViewModel">The view model key and result type.</typeparam>
     /// <typeparam name="TView">The resolved view type.</typeparam>
-    /// <param name="viewModel">The view model instance.</param>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="request">The typed navigation request.</param>
     /// <returns>An observable typed navigation resolution.</returns>
     IObservable<NavigationResolution<TViewModel, TView>> NavigateViewModel<TViewModel, TView>(
-        TViewModel viewModel,
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewModel : class, IRxObject
-        where TView : class, IViewFor<TViewModel>;
-
-    /// <summary>Resolves a ViewModel-first navigation request by creating the registered view model.</summary>
-    /// <typeparam name="TViewModel">The view model key and result type.</typeparam>
-    /// <typeparam name="TView">The resolved view type.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>An observable typed navigation resolution.</returns>
-    IObservable<NavigationResolution<TViewModel, TView>> NavigateViewModel<TViewModel, TView>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
+        ViewModelNavigationRequest<TViewModel, TView> request)
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel>;
 
     /// <summary>Resolves a ViewModel-first navigation request using a runtime key.</summary>
     /// <param name="viewModelKey">The view model lookup key.</param>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="options">The navigation request options.</param>
     /// <returns>An observable navigation resolution.</returns>
     IObservable<NavigationResolution> NavigateViewModel(
         Type viewModelKey,
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default);
+        NavigationRequestOptions options);
 
-    /// <summary>Resolves a View-first navigation request using a supplied view instance.</summary>
+    /// <summary>Resolves a typed View-first navigation request.</summary>
     /// <typeparam name="TViewModel">The view model result type.</typeparam>
     /// <typeparam name="TView">The view key and result type.</typeparam>
-    /// <param name="view">The view instance.</param>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="request">The typed navigation request.</param>
     /// <returns>An observable typed navigation resolution.</returns>
     IObservable<NavigationResolution<TViewModel, TView>> NavigateView<TViewModel, TView>(
-        TView view,
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
-        where TViewModel : class, IRxObject
-        where TView : class, IViewFor<TViewModel>;
-
-    /// <summary>Resolves a View-first navigation request by creating the registered view.</summary>
-    /// <typeparam name="TViewModel">The view model result type.</typeparam>
-    /// <typeparam name="TView">The view key and result type.</typeparam>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>An observable typed navigation resolution.</returns>
-    IObservable<NavigationResolution<TViewModel, TView>> NavigateView<TViewModel, TView>(
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default)
+        ViewNavigationRequest<TViewModel, TView> request)
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel>;
 
     /// <summary>Resolves a View-first navigation request using a runtime key.</summary>
     /// <param name="viewKey">The view lookup key.</param>
-    /// <param name="contract">The navigation contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="options">The navigation request options.</param>
     /// <returns>An observable navigation resolution.</returns>
     IObservable<NavigationResolution> NavigateView(
         Type viewKey,
-        string? contract = null,
-        object? parameter = null,
-        CancellationToken cancellationToken = default);
+        NavigationRequestOptions options);
 }

@@ -16,11 +16,14 @@ public partial class MainForm : NavigationForm<MainWindowViewModel>
     public MainForm()
     {
         InitializeComponent();
-        _ = this.WhenSetup().Subscribe(setupComplete =>
-        {
-            _ = this.WhenActivated((CompositeDisposable activationDisposables) => ViewModel ??= AppLocator.Current.GetService<MainWindowViewModel>() ?? new());
-            NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack);
-            this.NavigateToView<MainViewModel>();
-        });
+        _ = this.WhenSetup()
+            .Subscribe(setupComplete =>
+            {
+                _ = this.WhenActivated(
+                    (CompositeDisposable activationDisposables) =>
+                        ViewModel ??= AppLocator.Current.GetService<MainWindowViewModel>() ?? new());
+                NavBack.Command = ReactiveCommand.Create(() => this.NavigateBack(), CanNavigateBack);
+                this.NavigateToView<MainViewModel>();
+            });
     }
 }

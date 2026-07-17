@@ -9,28 +9,25 @@ namespace CrissCross.WPF.UI;
 public partial class PortableColorPicker : DualPickerControlBase
 {
     /// <summary>The small change property.</summary>
-    public static readonly DependencyProperty SmallChangeProperty =
-        DependencyProperty.Register(
-            nameof(SmallChange),
-            typeof(double),
-            typeof(PortableColorPicker),
-            new PropertyMetadata(1.0));
+    public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
+        nameof(SmallChange),
+        typeof(double),
+        typeof(PortableColorPicker),
+        new PropertyMetadata(1.0));
 
     /// <summary>The show alpha property.</summary>
-    public static readonly DependencyProperty ShowAlphaProperty =
-        DependencyProperty.Register(
-            nameof(ShowAlpha),
-            typeof(bool),
-            typeof(PortableColorPicker),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
+        nameof(ShowAlpha),
+        typeof(bool),
+        typeof(PortableColorPicker),
+        new PropertyMetadata(true));
 
     /// <summary>The picker type property.</summary>
-    public static readonly DependencyProperty PickerTypeProperty
-        = DependencyProperty.Register(
-            nameof(PickerType),
-            typeof(PickerType),
-            typeof(PortableColorPicker),
-            new PropertyMetadata(PickerType.HSV));
+    public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
+        nameof(PickerType),
+        typeof(PickerType),
+        typeof(PortableColorPicker),
+        new PropertyMetadata(PickerType.HSV));
 
     /// <summary>Initializes a new instance of the <see cref="PortableColorPicker"/> class.</summary>
     public PortableColorPicker() => InitializeComponent();

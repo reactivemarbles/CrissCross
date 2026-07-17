@@ -9,7 +9,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DemoRichTextBox = CrissCross.Avalonia.UI.Controls.RichTextBox;
 
@@ -66,18 +65,20 @@ public partial class MainWindow : Window
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
         ResolveControls();
         ConfigureEditor();
         WireToolbar();
 
-        _stateTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(StateRefreshMilliseconds),
-        };
+        _stateTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(StateRefreshMilliseconds) };
         _stateTimer.Tick += StateTimerTick;
-        _stateTimer.Start();
+    }
 
+    /// <inheritdoc/>
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+        _stateTimer.Start();
         RefreshState();
         _ = RefreshClipboardStateAsync();
     }
@@ -114,7 +115,8 @@ public partial class MainWindow : Window
             return string.Empty;
         }
 
-        var normalized = text.Replace("\r", "\\r", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal);
+        var normalized = text.Replace("\r", "\\r", StringComparison.Ordinal)
+            .Replace("\n", "\\n", StringComparison.Ordinal);
         return normalized.Length <= PreviewMaxLength ? normalized : normalized[..PreviewTrimmedLength] + "...";
     }
 
@@ -134,11 +136,20 @@ public partial class MainWindow : Window
     /// <summary>Configures the RichTextBox with sample content and event reporting.</summary>
     private void ConfigureEditor()
     {
-        _editor.SetHtml("<p><strong>RichTextBox parity baseline</strong></p><p>Select text, apply formatting, cut/copy/paste, undo/redo, or drop text and files here.</p><p>The editor remains in rendered-text coordinates while preserving formatting outside the changed range.</p>");
+        _editor.SetHtml(
+            "<p><strong>RichTextBox parity baseline</strong></p>"
+            + "<p>Select text, apply formatting, cut/copy/paste, undo/redo, or drop text and files here.</p>"
+            + "<p>The editor remains in rendered-text coordinates while preserving formatting outside the changed "
+            + "range.</p>");
         _editor.SelectionChanged += (_, _) => UpdateAction("Selection changed.");
         _editor.TextChanged += (_, _) => UpdateAction("Text changed.");
-        _editor.FormattingApplied += (_, args) => UpdateAction($"{args.FormatType} formatting applied to '{TrimForDisplay(args.AffectedText)}'.");
-        _editor.AddHandler(DragDrop.DragOverEvent, OnDragOver, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
+        _editor.FormattingApplied += (_, args) =>
+            UpdateAction($"{args.FormatType} formatting applied to '{TrimForDisplay(args.AffectedText)}'.");
+        _editor.AddHandler(
+            DragDrop.DragOverEvent,
+            OnDragOver,
+            RoutingStrategies.Tunnel | RoutingStrategies.Bubble,
+            true);
         _editor.AddHandler(DragDrop.DropEvent, OnDrop, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
     }
 
@@ -204,7 +215,9 @@ public partial class MainWindow : Window
     /// <summary>Resets the editor to the shared comparison text.</summary>
     private void ResetEditor()
     {
-        _editor.SetHtml("<p><strong>RichTextBox parity baseline</strong></p><p>Type, select, format, copy, paste, undo, and drop content here.</p>");
+        _editor.SetHtml(
+            "<p><strong>RichTextBox parity baseline</strong></p>"
+            + "<p>Type, select, format, copy, paste, undo, and drop content here.</p>");
         UpdateAction("Editor reset.");
     }
 
@@ -325,8 +338,12 @@ public partial class MainWindow : Window
     {
         var text = _editor.PlainText;
         _textStateText.Text = $"length={text.Length}, caret={_editor.CaretIndex}, lines={CountLines(text)}";
-        _selectionStateText.Text = $"start={_editor.SelectionStart}, end={_editor.SelectionEnd}, length={_editor.SelectionLength}, text='{TrimForDisplay(_editor.SelectedText)}'";
-        _commandStateText.Text = $"copy={_editor.CanCopy}, cut={_editor.CanCut}, paste={_editor.CanPaste}, undo={_editor.CanUndo}, redo={_editor.CanRedo}";
+        _selectionStateText.Text =
+            $"start={_editor.SelectionStart}, end={_editor.SelectionEnd}, length={_editor.SelectionLength}, "
+            + $"text='{TrimForDisplay(_editor.SelectedText)}'";
+        _commandStateText.Text =
+            $"copy={_editor.CanCopy}, cut={_editor.CanCut}, paste={_editor.CanPaste}, "
+            + $"undo={_editor.CanUndo}, redo={_editor.CanRedo}";
         _clipboardStateText.Text = _clipboardState;
         _dropStateText.Text = _dropState;
         _lastActionText.Text = _lastAction;

@@ -10,22 +10,16 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 public class InvalidSignatureException : GifDecoderException
 {
     /// <summary>Initializes a new instance of the <see cref="InvalidSignatureException"/> class.</summary>
-    public InvalidSignatureException()
-    {
-    }
+    public InvalidSignatureException() { }
 
     /// <summary>Initializes a new instance of the <see cref="InvalidSignatureException"/> class.</summary>
     /// <param name="message">The message value.</param>
     public InvalidSignatureException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the <see cref="InvalidSignatureException"/> class.</summary>
     /// <param name="message">The message value.</param>
     /// <param name="inner">The inner value.</param>
     public InvalidSignatureException(string message, Exception inner)
-        : base(message, inner)
-    {
-    }
+        : base(message, inner) { }
 }

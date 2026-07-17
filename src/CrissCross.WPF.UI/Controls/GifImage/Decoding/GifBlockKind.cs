@@ -17,5 +17,5 @@ internal enum GifBlockKind
     SpecialPurpose,
 
     /// <summary>Represents the Other value.</summary>
-    Other
+    Other,
 }

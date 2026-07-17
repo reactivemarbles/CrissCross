@@ -8,22 +8,16 @@ namespace CrissCross.WPF.UI.Controls.BBCode;
 public class ParseException : Exception
 {
     /// <summary>Initializes a new instance of the <see cref="ParseException"/> class.</summary>
-    public ParseException()
-    {
-    }
+    public ParseException() { }
 
     /// <summary>Initializes a new instance of the <see cref="ParseException"/> class.</summary>
     /// <param name="message">The error message.</param>
     public ParseException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the <see cref="ParseException"/> class.</summary>
     /// <param name="message">The error message.</param>
     /// <param name="innerException">The underlying exception.</param>
     public ParseException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+        : base(message, innerException) { }
 }

@@ -6,16 +6,14 @@ using Avalonia.Interactivity;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Provides data for the event that is raised when a user submits a query in an AutoSuggestBox control.</summary>
+/// <summary>Provides the AutoSuggestBoxQuerySubmittedEventArgs member.</summary>
 public sealed class AutoSuggestBoxQuerySubmittedEventArgs : RoutedEventArgs
 {
     /// <summary>Initializes a new instance of the <see cref="AutoSuggestBoxQuerySubmittedEventArgs"/> class.</summary>
     /// <param name="routedEvent">The routed event.</param>
     /// <param name="sender">The sender.</param>
     public AutoSuggestBoxQuerySubmittedEventArgs(RoutedEvent routedEvent, object sender)
-        : base(routedEvent, sender)
-    {
-    }
+        : base(routedEvent, sender) { }
 
     /// <summary>Gets the query text.</summary>
     public string QueryText { get; init; } = string.Empty;

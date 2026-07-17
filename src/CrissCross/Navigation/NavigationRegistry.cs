@@ -22,25 +22,32 @@ public sealed class NavigationRegistry : INavigationRegistry
     public INavigationRegistry Register<TViewModel, TView>(
         Func<IServiceProvider, TViewModel> createViewModel,
         Func<IServiceProvider, TView> createView,
-        string? contract = null)
+        string? contract)
         where TViewModel : class, IRxObject
-        where TView : class, IViewFor<TViewModel> => Register<TViewModel, TViewModel, TView, TView>(createViewModel, createView, contract);
+        where TView : class, IViewFor<TViewModel> =>
+        Register(
+            new NavigationRegistration<TViewModel, TViewModel, TView, TView>(createViewModel, createView)
+            {
+                Contract = contract,
+            });
 
     /// <inheritdoc/>
     public INavigationRegistry Register<TViewModelKey, TViewModel, TViewKey, TView>(
-        Func<IServiceProvider, TViewModel> createViewModel,
-        Func<IServiceProvider, TView> createView,
-        string? contract = null)
+        NavigationRegistration<TViewModelKey, TViewModel, TViewKey, TView> registration)
         where TViewModelKey : class
         where TViewModel : class, TViewModelKey, IRxObject
         where TViewKey : class
         where TView : class, TViewKey, IViewFor<TViewModel>
     {
-        ThrowHelper.ThrowIfNull(createViewModel, nameof(createViewModel));
-        ThrowHelper.ThrowIfNull(createView, nameof(createView));
+        ThrowHelper.ThrowIfNull(registration, nameof(registration));
+        ThrowHelper.ThrowIfNull(registration.CreateViewModel, nameof(registration.CreateViewModel));
+        ThrowHelper.ThrowIfNull(registration.CreateView, nameof(registration.CreateView));
 
-        var normalizedContract = NavigationContract.Normalize(contract);
-        var viewModelKey = new NavigationLookupKey(NavigationSourceKind.ViewModel, typeof(TViewModelKey), normalizedContract);
+        var normalizedContract = NavigationContract.Normalize(registration.Contract);
+        var viewModelKey = new NavigationLookupKey(
+            NavigationSourceKind.ViewModel,
+            typeof(TViewModelKey),
+            normalizedContract);
         var viewKey = new NavigationLookupKey(NavigationSourceKind.View, typeof(TViewKey), normalizedContract);
 
         EnsureAvailable(_viewModelRegistrations, viewModelKey);
@@ -52,8 +59,8 @@ public sealed class NavigationRegistry : INavigationRegistry
             typeof(TViewKey),
             typeof(TView),
             normalizedContract,
-            serviceProvider => createViewModel(serviceProvider),
-            serviceProvider => createView(serviceProvider));
+            serviceProvider => registration.CreateViewModel(serviceProvider),
+            serviceProvider => registration.CreateView(serviceProvider));
 
         _viewModelRegistrations.Add(viewModelKey, descriptor);
         _viewRegistrations.Add(viewKey, descriptor);
@@ -61,14 +68,17 @@ public sealed class NavigationRegistry : INavigationRegistry
     }
 
     /// <inheritdoc/>
-    public IBidirectionalNavigator CreateNavigator(IServiceProvider? serviceProvider = null) => new BidirectionalNavigator(
-        _viewModelRegistrations.Values.ToArray(),
-        serviceProvider ?? EmptyServiceProvider.Instance);
+    public IBidirectionalNavigator CreateNavigator(IServiceProvider? serviceProvider) =>
+        new BidirectionalNavigator(
+            _viewModelRegistrations.Values.ToArray(),
+            serviceProvider ?? EmptyServiceProvider.Instance);
 
     /// <summary>Throws when a lookup key is already registered.</summary>
     /// <param name="registrations">The existing registration map.</param>
     /// <param name="key">The lookup key to validate.</param>
-    private static void EnsureAvailable(Dictionary<NavigationLookupKey, NavigationRegistrationDescriptor> registrations, NavigationLookupKey key)
+    private static void EnsureAvailable(
+        Dictionary<NavigationLookupKey, NavigationRegistrationDescriptor> registrations,
+        NavigationLookupKey key)
     {
         if (!registrations.ContainsKey(key))
         {

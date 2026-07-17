@@ -9,28 +9,25 @@ namespace CrissCross.WPF.UI.Controls;
 public class VisualStateGroupListener : FrameworkElement
 {
     /// <summary>The group property.</summary>
-    public static readonly DependencyProperty GroupProperty =
-        DependencyProperty.Register(
-            nameof(Group),
-            typeof(VisualStateGroup),
-            typeof(VisualStateGroupListener),
-            new PropertyMetadata(OnGroupChanged));
+    public static readonly DependencyProperty GroupProperty = DependencyProperty.Register(
+        nameof(Group),
+        typeof(VisualStateGroup),
+        typeof(VisualStateGroupListener),
+        new PropertyMetadata(OnGroupChanged));
 
     /// <summary>The listener property.</summary>
-    public static readonly DependencyProperty ListenerProperty =
-        DependencyProperty.RegisterAttached(
-            "Listener",
-            typeof(VisualStateGroupListener),
-            typeof(VisualStateGroupListener),
-            new PropertyMetadata(OnListenerChanged));
+    public static readonly DependencyProperty ListenerProperty = DependencyProperty.RegisterAttached(
+        "Listener",
+        typeof(VisualStateGroupListener),
+        typeof(VisualStateGroupListener),
+        new PropertyMetadata(OnListenerChanged));
 
     /// <summary>Provides the CurrentStateNamePropertyKey member.</summary>
-    public static readonly DependencyPropertyKey CurrentStateNamePropertyKey =
-        DependencyProperty.RegisterReadOnly(
-            nameof(CurrentStateName),
-            typeof(string),
-            typeof(VisualStateGroupListener),
-            null);
+    public static readonly DependencyPropertyKey CurrentStateNamePropertyKey = DependencyProperty.RegisterReadOnly(
+        nameof(CurrentStateName),
+        typeof(string),
+        typeof(VisualStateGroupListener),
+        null);
 
     /// <summary>The current state name property.</summary>
     public static readonly DependencyProperty CurrentStateNameProperty = CurrentStateNamePropertyKey.DependencyProperty;
@@ -38,7 +35,9 @@ public class VisualStateGroupListener : FrameworkElement
     /// <summary>Provides the VisualStateGroupListener member.</summary>
     static VisualStateGroupListener()
     {
-        VisibilityProperty.OverrideMetadata(typeof(VisualStateGroupListener), new FrameworkPropertyMetadata(Visibility.Collapsed));
+        VisibilityProperty.OverrideMetadata(
+            typeof(VisualStateGroupListener),
+            new FrameworkPropertyMetadata(Visibility.Collapsed));
     }
 
     /// <summary>Gets or sets the group.</summary>
@@ -132,7 +131,8 @@ public class VisualStateGroupListener : FrameworkElement
     /// <summary>Provides the OnCurrentStateChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
-    private void OnCurrentStateChanged(object? sender, VisualStateChangedEventArgs e) => UpdateCurrentStateName(e.NewState);
+    private void OnCurrentStateChanged(object? sender, VisualStateChangedEventArgs e) =>
+        UpdateCurrentStateName(e.NewState);
 
     /// <summary>Provides the UpdateCurrentStateName member.</summary>
     /// <param name="currentState">The currentState value.</param>

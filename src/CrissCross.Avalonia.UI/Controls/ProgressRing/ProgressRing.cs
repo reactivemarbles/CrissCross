@@ -14,14 +14,14 @@ public class ProgressRing : TemplatedControl
     /// <summary>Property for <see cref="Progress"/>.</summary>
     public static readonly StyledProperty<double> ProgressProperty = AvaloniaProperty.Register<ProgressRing, double>(
         nameof(Progress),
-        50d);
+        50D);
 
     /// <summary>Property for <see cref="IsIndeterminate"/>.</summary>
     public static readonly StyledProperty<bool> IsIndeterminateProperty = AvaloniaProperty.Register<ProgressRing, bool>(
         nameof(IsIndeterminate),
         false);
 
-    /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive. Maps to <see cref="IsIndeterminate"/>.</summary>
+    /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive.</summary>
     public static readonly StyledProperty<bool> IsActiveProperty = AvaloniaProperty.Register<ProgressRing, bool>(
         nameof(IsActive),
         false);
@@ -29,44 +29,49 @@ public class ProgressRing : TemplatedControl
     /// <summary>Property for <see cref="EngAngle"/>.</summary>
     public static readonly StyledProperty<double> EngAngleProperty = AvaloniaProperty.Register<ProgressRing, double>(
         nameof(EngAngle),
-        180.0d);
+        180.0D);
 
     /// <summary>Property for <see cref="IndeterminateAngle"/>.</summary>
-    public static readonly StyledProperty<double> IndeterminateAngleProperty = AvaloniaProperty.Register<ProgressRing, double>(
-        nameof(IndeterminateAngle),
-        180.0d);
+    public static readonly StyledProperty<double> IndeterminateAngleProperty = AvaloniaProperty.Register<
+        ProgressRing,
+        double
+    >(nameof(IndeterminateAngle), 180.0D);
 
     /// <summary>Property for <see cref="CoverRingStroke"/>.</summary>
-    public static readonly StyledProperty<IBrush> CoverRingStrokeProperty = AvaloniaProperty.Register<ProgressRing, IBrush>(
-        nameof(CoverRingStroke),
-        Brushes.Black);
+    public static readonly StyledProperty<IBrush> CoverRingStrokeProperty = AvaloniaProperty.Register<
+        ProgressRing,
+        IBrush
+    >(nameof(CoverRingStroke), Brushes.Black);
 
     /// <summary>Property for <see cref="CoverRingVisibility"/>.</summary>
-    public static readonly StyledProperty<bool> CoverRingVisibilityProperty = AvaloniaProperty.Register<ProgressRing, bool>(
-        nameof(CoverRingVisibility),
-        true);
+    public static readonly StyledProperty<bool> CoverRingVisibilityProperty = AvaloniaProperty.Register<
+        ProgressRing,
+        bool
+    >(nameof(CoverRingVisibility), true);
 
     /// <summary>Minimum accepted progress percentage.</summary>
-    private const double MinimumProgress = 0d;
+    private const double MinimumProgress = 0D;
 
     /// <summary>Maximum accepted progress percentage.</summary>
-    private const double MaximumProgress = 100d;
+    private const double MaximumProgress = 100D;
 
     /// <summary>Degrees represented by one percentage point.</summary>
-    private const double DegreesPerPercent = 3.6d;
+    private const double DegreesPerPercent = 3.6D;
 
     /// <summary>Degrees in a full circle.</summary>
-    private const double FullCircleDegrees = 360d;
+    private const double FullCircleDegrees = 360D;
 
     /// <summary>Maximum rendered arc angle.</summary>
-    private const double MaximumArcDegrees = 359d;
+    private const double MaximumArcDegrees = 359D;
 
     /// <summary>Provides the ProgressRing member.</summary>
     static ProgressRing()
     {
         _ = ProgressProperty.Changed.AddClassHandler<ProgressRing>((x, e) => x.UpdateProgressAngle());
-        _ = IsIndeterminateProperty.Changed.AddClassHandler<ProgressRing>((x, e) => x.SetCurrentValue(IsActiveProperty, (bool)e.NewValue!));
-        _ = IsActiveProperty.Changed.AddClassHandler<ProgressRing>((x, e) => x.SetCurrentValue(IsIndeterminateProperty, (bool)e.NewValue!));
+        _ = IsIndeterminateProperty.Changed.AddClassHandler<ProgressRing>(
+            (x, e) => x.SetCurrentValue(IsActiveProperty, (bool)e.NewValue!));
+        _ = IsActiveProperty.Changed.AddClassHandler<ProgressRing>(
+            (x, e) => x.SetCurrentValue(IsIndeterminateProperty, (bool)e.NewValue!));
     }
 
     /// <summary>Gets or sets the progress.</summary>
@@ -83,7 +88,7 @@ public class ProgressRing : TemplatedControl
         set => SetValue(IsIndeterminateProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the ring is active (alias of <see cref="IsIndeterminate"/>).</summary>
+    /// <summary>Gets or sets whether the ring is active (alias of IsIndeterminate).</summary>
     public bool IsActive
     {
         get => GetValue(IsActiveProperty);

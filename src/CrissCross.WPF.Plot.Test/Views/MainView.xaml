@@ -1,54 +1,36 @@
 ﻿<UserControl
-    x:Class="CrissCross.WPF.Plot.Test.Views.MainView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrissCross.WPF.Plot.Test.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
-    xmlns:viewmodels="clr-namespace:CrissCross.WPF.Plot.Test.ViewModels"
-    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <WrapPanel Margin="8" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <TextBlock
-                x:Name="ActiveScenarioText"
-                Margin="0,0,12,0"
-                VerticalAlignment="Center"
-                FontWeight="SemiBold" />
-            <ui:Button
-                x:Name="ShowAllChartTypesButton"
-                Margin="0,0,6,0"
-                Content="All chart types" />
-            <ui:Button
-                x:Name="ShowLiveButton"
-                Margin="0,0,6,0"
-                Content="Live streams" />
-            <ui:Button
-                x:Name="ShowHistoricButton"
-                Margin="0,0,6,0"
-                Content="Historic DateTime" />
-            <ui:Button
-                x:Name="ShowIndicatorsButton"
-                Margin="0,0,6,0"
-                Content="Indicators" />
-            <ui:Button
-                x:Name="ToggleThemeButton"
-                Margin="0,0,12,0" />
-            <ui:CheckBox
-                x:Name="CheckBoxUseFixedNumberOfPoints"
-                VerticalAlignment="Center"
-                Content="Use Fixed Number Of Points" />
-            <ui:NumberBox
-                x:Name="NumberPointsPlotted"
-                Width="200" />
-        </WrapPanel>
-        <ui:LiveChart x:Name="Chart" Grid.Row="1" />
-    </Grid>
+  x:Class="CrissCross.WPF.Plot.Test.Views.MainView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:CrissCross.WPF.Plot.Test.Views"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+  xmlns:viewmodels="clr-namespace:CrissCross.WPF.Plot.Test.ViewModels"
+  d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+  d:DesignHeight="450"
+  d:DesignWidth="800"
+  mc:Ignorable="d"
+>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <WrapPanel Margin="8" HorizontalAlignment="Left" VerticalAlignment="Center">
+      <TextBlock x:Name="ActiveScenarioText" Margin="0,0,12,0" VerticalAlignment="Center" FontWeight="SemiBold" />
+      <ui:Button x:Name="ShowAllChartTypesButton" Margin="0,0,6,0" Content="All chart types" />
+      <ui:Button x:Name="ShowLiveButton" Margin="0,0,6,0" Content="Live streams" />
+      <ui:Button x:Name="ShowHistoricButton" Margin="0,0,6,0" Content="Historic DateTime" />
+      <ui:Button x:Name="ShowIndicatorsButton" Margin="0,0,6,0" Content="Indicators" />
+      <ui:Button x:Name="ToggleThemeButton" Margin="0,0,12,0" />
+      <ui:CheckBox
+        x:Name="CheckBoxUseFixedNumberOfPoints"
+        VerticalAlignment="Center"
+        Content="Use Fixed Number Of Points"
+      />
+      <ui:NumberBox x:Name="NumberPointsPlotted" Width="200" />
+    </WrapPanel>
+    <ui:LiveChart x:Name="Chart" Grid.Row="1" />
+  </Grid>
 </UserControl>

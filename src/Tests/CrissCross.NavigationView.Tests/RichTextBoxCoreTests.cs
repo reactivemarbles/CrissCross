@@ -10,6 +10,21 @@ namespace CrissCross.NavigationView.Tests;
 /// <summary>Regression tests for RichTextBox document offsets and core editing behavior.</summary>
 public sealed class RichTextBoxCoreTests
 {
+    /// <summary>The formatted Hello world fixture.</summary>
+    private const string FormattedHelloWorld = "<strong>Hello</strong> world";
+
+    /// <summary>The Hello text fixture.</summary>
+    private const string HelloText = "Hello";
+
+    /// <summary>The Avalonia text fixture.</summary>
+    private const string AvaloniaText = "Avalonia";
+
+    /// <summary>The Hello Avalonia text fixture.</summary>
+    private const string HelloAvaloniaText = "Hello Avalonia";
+
+    /// <summary>The Hello world text fixture.</summary>
+    private const string HelloWorldText = "Hello world";
+
     /// <summary>The rendered start offset for the word Hello.</summary>
     private const int HelloStartOffset = 0;
 
@@ -38,11 +53,13 @@ public sealed class RichTextBoxCoreTests
     {
         var document = new FlowDocument();
 
-        document.SetText("<strong>Hello</strong> world");
-        var selected = document.GetTextRange(document.GetTextPointer(HelloStartOffset), document.GetTextPointer(HelloLength));
+        document.SetText(FormattedHelloWorld);
+        var selected = document.GetTextRange(
+            document.GetTextPointer(HelloStartOffset),
+            document.GetTextPointer(HelloLength));
 
         await Assert.That(document.Length).IsEqualTo(HelloWorldLength);
-        await Assert.That(selected).IsEqualTo("Hello");
+        await Assert.That(selected).IsEqualTo(HelloText);
     }
 
     /// <summary>Provides the FlowDocument_Replace_UsesRenderedOffsetsWithoutCorruptingMarkup member.</summary>
@@ -52,10 +69,10 @@ public sealed class RichTextBoxCoreTests
     {
         var document = new FlowDocument();
 
-        document.SetText("<strong>Hello</strong> world");
-        document.Replace(WorldStartOffset, WorldLength, "Avalonia");
+        document.SetText(FormattedHelloWorld);
+        document.Replace(WorldStartOffset, WorldLength, AvaloniaText);
 
-        await Assert.That(document.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(document.PlainText).IsEqualTo(HelloAvaloniaText);
         await Assert.That(document.Text).IsEqualTo("<strong>Hello</strong> Avalonia");
     }
 
@@ -66,11 +83,11 @@ public sealed class RichTextBoxCoreTests
     {
         var richTextBox = new RichTextBox();
 
-        richTextBox.SetHtml("<strong>Hello</strong> world");
+        richTextBox.SetHtml(FormattedHelloWorld);
         richTextBox.Select(HelloStartOffset, HelloLength);
 
         await Assert.That(richTextBox.SelectionLength).IsEqualTo(HelloLength);
-        await Assert.That(richTextBox.SelectedText).IsEqualTo("Hello");
+        await Assert.That(richTextBox.SelectedText).IsEqualTo(HelloText);
     }
 
     /// <summary>Provides the RichTextBox_ReplaceSelection_UsesRenderedOffsetsAndPlainTextCaret member.</summary>
@@ -80,11 +97,11 @@ public sealed class RichTextBoxCoreTests
     {
         var richTextBox = new RichTextBox();
 
-        richTextBox.SetHtml("<strong>Hello</strong> world");
+        richTextBox.SetHtml(FormattedHelloWorld);
         richTextBox.Select(WorldStartOffset, WorldLength);
-        richTextBox.ReplaceSelection("Avalonia");
+        richTextBox.ReplaceSelection(AvaloniaText);
 
-        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo(HelloAvaloniaText);
         await Assert.That(richTextBox.Html).IsEqualTo("<strong>Hello</strong> Avalonia");
         await Assert.That(richTextBox.CaretIndex).IsEqualTo(HelloAvaloniaLength);
     }
@@ -96,12 +113,12 @@ public sealed class RichTextBoxCoreTests
     {
         var richTextBox = new RichTextBox();
 
-        richTextBox.SetHtml("<strong>Hello</strong> world");
+        richTextBox.SetHtml(FormattedHelloWorld);
         richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.ToggleBold();
 
         await Assert.That(richTextBox.Html).IsEqualTo("<strong>Hello</strong> <strong>world</strong>");
-        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello world");
+        await Assert.That(richTextBox.PlainText).IsEqualTo(HelloWorldText);
     }
 
     /// <summary>Provides the RichTextBox_ToggleBoldCommand_UsesSamePipelineAsPublicMethod member.</summary>
@@ -112,8 +129,8 @@ public sealed class RichTextBoxCoreTests
         var commandDriven = new RichTextBox();
         var methodDriven = new RichTextBox();
 
-        commandDriven.SetHtml("Hello world");
-        methodDriven.SetHtml("Hello world");
+        commandDriven.SetHtml(HelloWorldText);
+        methodDriven.SetHtml(HelloWorldText);
         commandDriven.Select(WorldStartOffset, WorldLength);
         methodDriven.Select(WorldStartOffset, WorldLength);
 
@@ -134,26 +151,26 @@ public sealed class RichTextBoxCoreTests
     {
         var richTextBox = new RichTextBox();
 
-        richTextBox.SetHtml("Hello world");
+        richTextBox.SetHtml(HelloWorldText);
         richTextBox.Select(WorldStartOffset, WorldLength);
-        richTextBox.ReplaceSelection("Avalonia");
+        richTextBox.ReplaceSelection(AvaloniaText);
 
         await Assert.That(richTextBox.CanUndo).IsTrue();
         await Assert.That(richTextBox.CanRedo).IsFalse();
 
         richTextBox.Undo();
-        await Assert.That(richTextBox.Html).IsEqualTo("Hello world");
+        await Assert.That(richTextBox.Html).IsEqualTo(HelloWorldText);
         await Assert.That(richTextBox.CanRedo).IsTrue();
 
         richTextBox.Redo();
-        await Assert.That(richTextBox.Html).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo(HelloAvaloniaText);
 
         richTextBox.Select(WorldStartOffset, AvaloniaLength);
         richTextBox.ToggleItalic();
         await Assert.That(richTextBox.Html).IsEqualTo("Hello <em>Avalonia</em>");
 
         richTextBox.Undo();
-        await Assert.That(richTextBox.Html).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.Html).IsEqualTo(HelloAvaloniaText);
     }
 
     /// <summary>Provides the RichTextBox_ReadOnly_BlocksMutationCommandsButAllowsSelectionAndCopy member.</summary>
@@ -164,7 +181,7 @@ public sealed class RichTextBoxCoreTests
         var clipboard = new FakeRichTextClipboardAdapter();
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
-        richTextBox.SetHtml("Hello world");
+        richTextBox.SetHtml(HelloWorldText);
         richTextBox.Select(HelloStartOffset, HelloLength);
         richTextBox.IsReadOnly = true;
 
@@ -179,9 +196,9 @@ public sealed class RichTextBoxCoreTests
         richTextBox.Cut();
         richTextBox.Paste();
 
-        await Assert.That(clipboard.PlainText).IsEqualTo("Hello");
-        await Assert.That(richTextBox.Html).IsEqualTo("Hello world");
-        await Assert.That(richTextBox.SelectedText).IsEqualTo("Hello");
+        await Assert.That(clipboard.PlainText).IsEqualTo(HelloText);
+        await Assert.That(richTextBox.Html).IsEqualTo(HelloWorldText);
+        await Assert.That(richTextBox.SelectedText).IsEqualTo(HelloText);
     }
 
     /// <summary>Provides the RichTextBox_ClipboardAdapter_CutAndPasteUsePlainAndHtmlFallbacks member.</summary>
@@ -192,12 +209,12 @@ public sealed class RichTextBoxCoreTests
         var clipboard = new FakeRichTextClipboardAdapter();
         var richTextBox = new RichTextBox { ClipboardAdapter = clipboard };
 
-        richTextBox.SetHtml("<strong>Hello</strong> world");
+        richTextBox.SetHtml(FormattedHelloWorld);
         richTextBox.Select(HelloStartOffset, HelloLength);
         richTextBox.Cut();
 
-        await Assert.That(clipboard.PlainText).IsEqualTo("Hello");
-        await Assert.That(clipboard.HtmlText).Contains("Hello");
+        await Assert.That(clipboard.PlainText).IsEqualTo(HelloText);
+        await Assert.That(clipboard.HtmlText).Contains(HelloText);
         await Assert.That(richTextBox.Html).IsEqualTo(" world");
 
         clipboard.HtmlText = "<em>Avalonia</em>";
@@ -217,7 +234,7 @@ public sealed class RichTextBoxCoreTests
         var clipboard = new FakeRichTextClipboardAdapter { PlainText = "paste" };
         var richTextBox = new TestableRichTextBox { ClipboardAdapter = clipboard };
 
-        richTextBox.SetPlainText("Hello world");
+        richTextBox.SetPlainText(HelloWorldText);
         richTextBox.Select(WorldStartOffset, WorldLength);
         richTextBox.SendKey(Key.C);
 
@@ -227,17 +244,17 @@ public sealed class RichTextBoxCoreTests
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello ");
         await Assert.That(clipboard.PlainText).IsEqualTo("world");
 
-        clipboard.PlainText = "Avalonia";
+        clipboard.PlainText = AvaloniaText;
         clipboard.HtmlText = null;
         richTextBox.Select(richTextBox.Document.Length, 0);
         richTextBox.SendKey(Key.V);
-        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo(HelloAvaloniaText);
 
         richTextBox.SendKey(Key.Z);
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello ");
 
         richTextBox.SendKey(Key.Y);
-        await Assert.That(richTextBox.PlainText).IsEqualTo("Hello Avalonia");
+        await Assert.That(richTextBox.PlainText).IsEqualTo(HelloAvaloniaText);
     }
 
     /// <summary>Provides the TestableRichTextBox member.</summary>
@@ -247,11 +264,7 @@ public sealed class RichTextBoxCoreTests
         /// <param name="key">The key value.</param>
         public void SendKey(Key key)
         {
-            var args = new KeyEventArgs
-            {
-                Key = key,
-                KeyModifiers = KeyModifiers.Control
-            };
+            var args = new KeyEventArgs { Key = key, KeyModifiers = KeyModifiers.Control };
 
             OnKeyDown(args);
         }

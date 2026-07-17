@@ -10,12 +10,10 @@ namespace CrissCross;
 /// <summary>Rx Object.</summary>
 /// <seealso cref="ReactiveObject" />
 /// <seealso cref="IRxObject" />
-public abstract class RxObject : ReactiveObject, IRxObject
+public class RxObject : ReactiveObject, IRxObject
 {
     /// <summary>Initializes a new instance of the <see cref="RxObject"/> class.</summary>
-    protected RxObject()
-    {
-    }
+    protected RxObject() { }
 
     /// <summary>Gets the URL path segment.</summary>
     /// <value>
@@ -39,7 +37,7 @@ public abstract class RxObject : ReactiveObject, IRxObject
     /// </value>
     protected CompositeDisposable Disposables { get; } = [];
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    /// <summary>Releases resources owned by this instance.</summary>
     public void Dispose()
     {
         Dispose(true);
@@ -47,22 +45,18 @@ public abstract class RxObject : ReactiveObject, IRxObject
     }
 
     /// <inheritdoc/>
-    public virtual void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
-    {
-    }
+    public virtual void WhenNavigatedFrom(IViewModelNavigationEventArgs e) { }
 
     /// <inheritdoc/>
-    public virtual void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
-    {
-    }
+    public virtual void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables) { }
 
     /// <inheritdoc/>
-    public virtual void WhenNavigating(IViewModelNavigatingEventArgs e)
-    {
-    }
+    public virtual void WhenNavigating(IViewModelNavigatingEventArgs e) { }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param name="disposing">
+    /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+    /// </param>
     protected virtual void Dispose(bool disposing)
     {
         if (Disposables?.IsDisposed != false || !disposing)

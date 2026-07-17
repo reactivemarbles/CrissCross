@@ -8,21 +8,19 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 internal sealed class GifDataStream
 {
     /// <summary>Initializes a new instance of the <see cref="GifDataStream"/> class.</summary>
-    private GifDataStream()
-    {
-    }
+    private GifDataStream() { }
 
     /// <summary>Gets the Header value.</summary>
     public GifHeader? Header { get; private set; }
 
-    /// <summary>Gets or sets GlobalColorTable.</summary>
-    public GifColor[]? GlobalColorTable { get; set; }
+    /// <summary>Gets GlobalColorTable.</summary>
+    public GifColor[]? GlobalColorTable { get; private set; }
 
-    /// <summary>Gets or sets Frames.</summary>
-    public IList<GifFrame>? Frames { get; set; }
+    /// <summary>Gets Frames.</summary>
+    public IList<GifFrame>? Frames { get; private set; }
 
-    /// <summary>Gets or sets Extensions.</summary>
-    public IList<GifExtension>? Extensions { get; set; }
+    /// <summary>Gets Extensions.</summary>
+    public IList<GifExtension>? Extensions { get; private set; }
 
     /// <summary>Gets or sets RepeatCount.</summary>
     public ushort RepeatCount { get; set; }
@@ -46,19 +44,18 @@ internal sealed class GifDataStream
 
         if (Header.LogicalScreenDescriptor?.HasGlobalColorTable == true)
         {
-            GlobalColorTable = await GifHelpers.ReadColorTableAsync(stream, Header.LogicalScreenDescriptor.GlobalColorTableSize).ConfigureAwait(false);
+            GlobalColorTable = await GifHelpers
+                .ReadColorTableAsync(stream, Header.LogicalScreenDescriptor.GlobalColorTableSize)
+                .ConfigureAwait(false);
         }
 
         await ReadFramesAsync(stream).ConfigureAwait(false);
 
-        var netscapeExtension =
-                        Extensions?
-                            .OfType<GifApplicationExtension>()
-                            .FirstOrDefault(GifHelpers.IsNetscapeExtension);
+        var netscapeExtension = Extensions
+            ?.OfType<GifApplicationExtension>()
+            .FirstOrDefault(GifHelpers.IsNetscapeExtension);
 
-        RepeatCount = netscapeExtension is not null
-            ? GifHelpers.GetRepeatCount(netscapeExtension)
-            : (ushort)1;
+        RepeatCount = netscapeExtension is not null ? GifHelpers.GetRepeatCount(netscapeExtension) : (ushort)1;
     }
 
     /// <summary>Provides the ReadFramesAsync member.</summary>
@@ -91,7 +88,7 @@ internal sealed class GifDataStream
                         GifBlockKind.Control => () => controlExtensions.Add(extension),
                         GifBlockKind.SpecialPurpose => () => specialExtensions.Add(extension),
                         GifBlockKind.GraphicRendering or GifBlockKind.Other => static () => { },
-                        _ => static () => { }
+                        _ => static () => { },
                     };
 
                     processExtension();

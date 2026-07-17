@@ -28,12 +28,11 @@ public class NavigationViewContentPresenter : Frame
         new FrameworkPropertyMetadata(Transition.FadeInWithSlide));
 
     /// <summary>Property for <see cref="IsDynamicScrollViewerEnabled"/>.</summary>
-    public static readonly DependencyProperty IsDynamicScrollViewerEnabledProperty =
-        DependencyProperty.Register(
-            nameof(IsDynamicScrollViewerEnabled),
-            typeof(bool),
-            typeof(NavigationViewContentPresenter),
-            new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure));
+    public static readonly DependencyProperty IsDynamicScrollViewerEnabledProperty = DependencyProperty.Register(
+        nameof(IsDynamicScrollViewerEnabled),
+        typeof(bool),
+        typeof(NavigationViewContentPresenter),
+        new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
     /// <summary>Provides the NavigationViewContentPresenter member.</summary>
     static NavigationViewContentPresenter()
@@ -54,9 +53,7 @@ public class NavigationViewContentPresenter : Frame
             typeof(NavigationViewContentPresenter),
             new FrameworkPropertyMetadata(JournalOwnership.UsesParentJournal));
 
-        ScrollViewer.CanContentScrollProperty.OverrideMetadata(
-            typeof(Page),
-            new FrameworkPropertyMetadata(true));
+        ScrollViewer.CanContentScrollProperty.OverrideMetadata(typeof(Page), new FrameworkPropertyMetadata(true));
     }
 
     /// <summary>Initializes a new instance of the <see cref="NavigationViewContentPresenter"/> class.</summary>
@@ -98,7 +95,7 @@ public class NavigationViewContentPresenter : Frame
         set => SetValue(TransitionDurationProperty, value);
     }
 
-    /// <summary>Gets or sets type of <see cref="NavigationViewContentPresenter"/> transitions during navigation.</summary>
+    /// <summary>Gets or sets type of NavigationViewContentPresenter transitions during navigation.</summary>
     public Transition Transition
     {
         get => (Transition)GetValue(TransitionProperty);
@@ -143,7 +140,8 @@ public class NavigationViewContentPresenter : Frame
     }
 
     /// <summary>Raises the <see cref="E:Navigating" /> event.</summary>
-    /// <param name="eventArgs">The <see cref="System.Windows.Navigation.NavigatingCancelEventArgs"/> instance containing the event data.</param>
+    /// <param name="eventArgs">The <see cref="System.Windows.Navigation.NavigatingCancelEventArgs"/> instance
+    /// containing the event data.</param>
     protected virtual void OnNavigating(System.Windows.Navigation.NavigatingCancelEventArgs eventArgs)
     {
         NotifyContentAboutNavigatingTo(eventArgs?.Content);
@@ -179,11 +177,7 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigationContent.OnNavigatedTo();
         }
 
-        if (
-            content is INavigableView<object>
-            {
-                ViewModel: INavigationAware navigationAwareNavigableViewViewModel
-            })
+        if (content is INavigableView<object> { ViewModel: INavigationAware navigationAwareNavigableViewViewModel })
         {
             navigationAwareNavigableViewViewModel.OnNavigatedTo();
         }
@@ -205,11 +199,7 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigationContent.OnNavigatedFrom();
         }
 
-        if (
-            content is INavigableView<object>
-            {
-                ViewModel: INavigationAware navigationAwareNavigableViewViewModel
-            })
+        if (content is INavigableView<object> { ViewModel: INavigationAware navigationAwareNavigableViewViewModel })
         {
             navigationAwareNavigableViewViewModel.OnNavigatedFrom();
         }

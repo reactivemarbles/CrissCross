@@ -24,8 +24,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromUpdates(
         PlotSeriesKey key,
         PlotType plotType,
-        IObservable<ReactivePlotUpdate> updates) =>
-        FromUpdates(key, plotType, updates, null);
+        IObservable<ReactivePlotUpdate> updates) => FromUpdates(key, plotType, updates, null);
 
     /// <summary>Creates a source from an already-normalized update stream.</summary>
     /// <param name="key">The stable series key.</param>
@@ -72,10 +71,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.Signal,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
         {
             XAxisKind = PlotXAxisKind.Ticks,
         };
@@ -106,10 +102,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.Signal,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
         {
             XAxisKind = PlotXAxisKind.Numeric,
         };
@@ -140,10 +133,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.Scatter,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Scatter, projected)
         {
             XAxisKind = PlotXAxisKind.Numeric,
         };
@@ -168,11 +158,7 @@ public sealed partial record ReactivePlotSource(
             var currentSequence = sequence;
             sequence++;
             return CreateUpdate(
-                new(
-                    update.Name,
-                    update.Axis,
-                    PlotType.DataLogger,
-                    ReactivePlotUpdateKind.Append),
+                new(update.Name, update.Axis, PlotType.DataLogger, ReactivePlotUpdateKind.Append),
                 x,
                 update.Value,
                 PlotXAxisKind.Numeric,
@@ -180,10 +166,7 @@ public sealed partial record ReactivePlotSource(
                 maxPoints);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.DataLogger,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.DataLogger, projected)
         {
             XAxisKind = PlotXAxisKind.Numeric,
         };
@@ -214,10 +197,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.Streamer,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Streamer, projected)
         {
             XAxisKind = PlotXAxisKind.Numeric,
         };
@@ -248,10 +228,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(
-            new PlotSeriesKey(string.Empty, 0),
-            PlotType.SignalXY,
-            projected)
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.SignalXY, projected)
         {
             XAxisKind = PlotXAxisKind.Numeric,
         };
@@ -281,9 +258,7 @@ public sealed partial record ReactivePlotSource(
         int? maxPoints)
     {
         var key = new PlotSeriesKey(
-            string.IsNullOrWhiteSpace(identity.Name)
-                ? identity.PlotType.ToString()
-                : identity.Name!,
+            string.IsNullOrWhiteSpace(identity.Name) ? identity.PlotType.ToString() : identity.Name!,
             identity.Axis);
         return new ReactivePlotUpdate(
             key,
@@ -320,9 +295,5 @@ public sealed partial record ReactivePlotSource(
     /// <param name="Axis">The Y-axis index.</param>
     /// <param name="PlotType">The target plot type.</param>
     /// <param name="Kind">The update kind.</param>
-    private sealed record UpdateIdentity(
-        string? Name,
-        int Axis,
-        PlotType PlotType,
-        ReactivePlotUpdateKind Kind);
+    private sealed record UpdateIdentity(string? Name, int Axis, PlotType PlotType, ReactivePlotUpdateKind Kind);
 }

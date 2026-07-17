@@ -53,9 +53,7 @@ public class TitleBar : Control, IThemeControl
         nameof(ButtonsForeground),
         typeof(Brush),
         typeof(TitleBar),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="ButtonsBackground"/>.</summary>
     public static readonly DependencyProperty ButtonsBackgroundProperty = DependencyProperty.Register(
@@ -127,12 +125,11 @@ public class TitleBar : Control, IThemeControl
         typeof(TitleBar));
 
     /// <summary>Property for <see cref="CloseWindowByDoubleClickOnIcon"/>.</summary>
-    public static readonly DependencyProperty CloseWindowByDoubleClickOnIconProperty =
-        DependencyProperty.Register(
-            nameof(CloseWindowByDoubleClickOnIcon),
-            typeof(bool),
-            typeof(TitleBar),
-            new PropertyMetadata(false));
+    public static readonly DependencyProperty CloseWindowByDoubleClickOnIconProperty = DependencyProperty.Register(
+        nameof(CloseWindowByDoubleClickOnIcon),
+        typeof(bool),
+        typeof(TitleBar),
+        new PropertyMetadata(false));
 
     /// <summary>Routed event for <see cref="CloseClicked"/>.</summary>
     public static readonly RoutedEvent CloseClickedEvent = EventManager.RegisterRoutedEvent(
@@ -218,11 +215,6 @@ public class TitleBar : Control, IThemeControl
     public TitleBar()
     {
         Content = [];
-        SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<TitleBarButtonType>(OnTemplateButtonClick));
-        _dpiScale ??= VisualTreeHelper.GetDpi(this);
-
-        Loaded += (_, e) => OnLoaded(e);
-        Unloaded += (_, _) => OnUnloaded();
     }
 
     /// <summary>Event triggered after clicking close button.</summary>
@@ -302,28 +294,28 @@ public class TitleBar : Control, IThemeControl
         set => SetValue(ButtonsBackgroundProperty, value);
     }
 
-    /// <summary>Gets a value indicating whether gets or sets information whether the current window is maximized.</summary>
+    /// <summary>Gets whether gets or sets information whether the current window is maximized.</summary>
     public bool IsMaximized
     {
         get => (bool)GetValue(IsMaximizedProperty);
         internal set => SetValue(IsMaximizedProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether the controls affect main application window.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public bool ForceShutdown
     {
         get => (bool)GetValue(ForceShutdownProperty);
         set => SetValue(ForceShutdownProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show maximize button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show maximize button.</summary>
     public bool ShowMaximize
     {
         get => (bool)GetValue(ShowMaximizeProperty);
         set => SetValue(ShowMaximizeProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show minimize button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show minimize button.</summary>
     public bool ShowMinimize
     {
         get => (bool)GetValue(ShowMinimizeProperty);
@@ -337,14 +329,15 @@ public class TitleBar : Control, IThemeControl
         set => SetValue(ShowHelpProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to show close button.</summary>
+    /// <summary>Gets or sets whether gets or sets information whether to show close button.</summary>
     public bool ShowClose
     {
         get => (bool)GetValue(ShowCloseProperty);
         set => SetValue(ShowCloseProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether enables or disables the maximize functionality if disables the MaximizeActionOverride action won't be called.</summary>
+    /// <summary>Gets or sets a value indicating whether enables or disables the maximize functionality if disables the
+    /// MaximizeActionOverride action won't be called.</summary>
     public bool CanMaximize
     {
         get => (bool)GetValue(CanMaximizeProperty);
@@ -368,7 +361,7 @@ public class TitleBar : Control, IThemeControl
         set => SetValue(ContentProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether enables or disable closing the window by double clicking on the icon.</summary>
+    /// <summary>Gets or sets whether enables or disable closing the window by double clicking on the icon.</summary>
     public bool CloseWindowByDoubleClickOnIcon
     {
         get => (bool)GetValue(CloseWindowByDoubleClickOnIconProperty);
@@ -378,10 +371,10 @@ public class TitleBar : Control, IThemeControl
     /// <summary>Gets command triggered after clicking the titlebar button.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
-    /// <summary>Gets or sets lets you override the behavior of the Maximize/Restore button with an <see cref="Action"/>.</summary>
+    /// <summary>Gets or sets lets you override the behavior of the Maximize/Restore button with an Action.</summary>
     public Action<TitleBar, System.Windows.Window>? MaximizeActionOverride { get; set; }
 
-    /// <summary>Gets or sets lets you override the behavior of the Minimize button with an <see cref="Action"/>.</summary>
+    /// <summary>Gets or sets lets you override the behavior of the Minimize button with an Action.</summary>
     public Action<TitleBar, System.Windows.Window>? MinimizeActionOverride { get; set; }
 
     /// <summary>
@@ -413,6 +406,10 @@ public class TitleBar : Control, IThemeControl
 
         ApplicationTheme = ApplicationThemeManager.GetAppTheme();
         ApplicationThemeManager.Changed += OnThemeChanged;
+        SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<TitleBarButtonType>(OnTemplateButtonClick));
+        _dpiScale ??= VisualTreeHelper.GetDpi(this);
+        Loaded += (_, args) => OnLoaded(args);
+        Unloaded += (_, _) => OnUnloaded();
     }
 
     /// <summary>Called when [loaded].</summary>
@@ -432,9 +429,7 @@ public class TitleBar : Control, IThemeControl
     /// <summary>This virtual method is triggered when the app's theme changes.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    protected virtual void OnThemeChanged(
-        object? sender,
-        ThemeChangedEventArgs args)
+    protected virtual void OnThemeChanged(object? sender, ThemeChangedEventArgs args)
     {
         Debug.WriteLine(
             $"INFO | {typeof(TitleBar)} received theme -  {args.CurrentApplicationTheme}",
@@ -449,7 +444,9 @@ public class TitleBar : Control, IThemeControl
     private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
         var point = PointToScreen(e.GetPosition(this));
-        SystemCommands.ShowSystemMenu(_currentWindow, new Point(point.X / _dpiScale!.Value.DpiScaleX, point.Y / _dpiScale.Value.DpiScaleY));
+        SystemCommands.ShowSystemMenu(
+            _currentWindow,
+            new Point(point.X / _dpiScale!.Value.DpiScaleX, point.Y / _dpiScale.Value.DpiScaleY));
     }
 
     /// <summary>Provides the OnUnloaded member.</summary>
@@ -533,33 +530,32 @@ public class TitleBar : Control, IThemeControl
     {
         switch (buttonType)
         {
-            case TitleBarButtonType.Maximize
-            or TitleBarButtonType.Restore:
-                {
-                    RaiseEvent(new RoutedEventArgs(MaximizeClickedEvent, this));
-                    MaximizeWindow();
-                    break;
-                }
+            case TitleBarButtonType.Maximize or TitleBarButtonType.Restore:
+            {
+                RaiseEvent(new RoutedEventArgs(MaximizeClickedEvent, this));
+                MaximizeWindow();
+                break;
+            }
 
             case TitleBarButtonType.Close:
-                {
-                    RaiseEvent(new RoutedEventArgs(CloseClickedEvent, this));
-                    CloseWindow();
-                    break;
-                }
+            {
+                RaiseEvent(new RoutedEventArgs(CloseClickedEvent, this));
+                CloseWindow();
+                break;
+            }
 
             case TitleBarButtonType.Minimize:
-                {
-                    RaiseEvent(new RoutedEventArgs(MinimizeClickedEvent, this));
-                    MinimizeWindow();
-                    break;
-                }
+            {
+                RaiseEvent(new RoutedEventArgs(MinimizeClickedEvent, this));
+                MinimizeWindow();
+                break;
+            }
 
             case TitleBarButtonType.Help:
-                {
-                    RaiseEvent(new RoutedEventArgs(HelpClickedEvent, this));
-                    break;
-                }
+            {
+                RaiseEvent(new RoutedEventArgs(HelpClickedEvent, this));
+                break;
+            }
 
             case TitleBarButtonType.Unknown:
                 break;
@@ -592,11 +588,7 @@ public class TitleBar : Control, IThemeControl
 
         if (
             message
-            is not (
-                User32.WM.NCHITTEST
-                or User32.WM.NCMOUSELEAVE
-                or User32.WM.NCLBUTTONDOWN
-                or User32.WM.NCLBUTTONUP))
+            is not (User32.WM.NCHITTEST or User32.WM.NCMOUSELEAVE or User32.WM.NCLBUTTONDOWN or User32.WM.NCLBUTTONUP))
         {
             return IntPtr.Zero;
         }
@@ -611,20 +603,20 @@ public class TitleBar : Control, IThemeControl
 
         switch (message)
         {
-            case User32.WM.NCHITTEST
-                when CloseWindowByDoubleClickOnIcon && _icon.IsMouseOverElement(longParameter):
-                {
-                    handled = true;
+            case User32.WM.NCHITTEST when CloseWindowByDoubleClickOnIcon && _icon.IsMouseOverElement(longParameter):
+            {
+                handled = true;
 
-                    // Ideally, clicking on the icon should open the system menu, but when the system menu is opened manually, double-clicking on the icon does not close the window
-                    return (IntPtr)User32.WM_NCHITTEST.HTSYSMENU;
-                }
+                // Ideally, clicking on the icon should open the system menu, but when the system menu is opened
+                // manually, double-clicking on the icon does not close the window
+                return (IntPtr)User32.WM_NCHITTEST.HTSYSMENU;
+            }
 
             case User32.WM.NCHITTEST when this.IsMouseOverElement(longParameter) && !isMouseOverHeaderContent:
-                {
-                    handled = true;
-                    return (IntPtr)User32.WM_NCHITTEST.HTCAPTION;
-                }
+            {
+                handled = true;
+                return (IntPtr)User32.WM_NCHITTEST.HTCAPTION;
+            }
 
             default:
                 return IntPtr.Zero;
@@ -639,7 +631,8 @@ public class TitleBar : Control, IThemeControl
     {
         var isHitTestMessage = message == User32.WM.NCHITTEST;
         var isOverHeader = Header is UIElement headerUiElement && headerUiElement.IsMouseOverElement(longParameter);
-        var isOverTitleContent = TitleContent is UIElement titleUiElement && titleUiElement.IsMouseOverElement(longParameter);
+        var isOverTitleContent =
+            TitleContent is UIElement titleUiElement && titleUiElement.IsMouseOverElement(longParameter);
         return isHitTestMessage && (isOverHeader || isOverTitleContent);
     }
 
@@ -649,7 +642,7 @@ public class TitleBar : Control, IThemeControl
     {
         foreach (var button in _buttons)
         {
-            if (button != activeButton && button.IsHovered && activeButton.IsHovered)
+            if (!ReferenceEquals(button, activeButton) && button.IsHovered && activeButton.IsHovered)
             {
                 button.RemoveHover();
             }

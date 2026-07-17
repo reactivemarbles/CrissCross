@@ -10,9 +10,7 @@ internal sealed class MeansImplicitUseAttribute : Attribute
 {
     /// <summary>Initializes a new instance of the <see cref="MeansImplicitUseAttribute"/> class.</summary>
     public MeansImplicitUseAttribute()
-        : this(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself)
-    {
-    }
+        : this(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself) { }
 
     /// <summary>Initializes a new instance of the <see cref="MeansImplicitUseAttribute"/> class.</summary>
     /// <param name="useKindFlags">The implicit use kind.</param>

@@ -11,9 +11,7 @@ internal sealed class GifTrailer : GifBlock
     internal const int TrailerByte = 0x3B;
 
     /// <summary>Initializes a new instance of the <see cref="GifTrailer"/> class.</summary>
-    private GifTrailer()
-    {
-    }
+    private GifTrailer() { }
 
     internal override GifBlockKind Kind => GifBlockKind.Other;
 

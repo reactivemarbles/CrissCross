@@ -27,29 +27,28 @@ public class JsonFileStore(string storeFolderPath) : IStore
     /// CompanyName and ProductName are read from the entry assembly's attributes.
     /// </remarks>
     public JsonFileStore()
-        : this(true)
-    {
-    }
+        : this(true) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonFileStore"/> class.
-    /// Creates a JsonFileStore that will store files in a per-user or per-machine folder. (%appdata% or %allusersprofile%  + \[companyname]\[productname]).
+    /// Creates a JsonFileStore that will store files in a per-user or per-machine folder. (%appdata% or
+    /// %allusersprofile% + \[companyname]\[productname]).
     /// </summary>
     /// <remarks>
     /// CompanyName and ProductName are read from the entry assembly's attributes.
     /// </remarks>
     /// <param name="perUser">Specified if a per-user or per-machine folder will be used for storing the data.</param>
     public JsonFileStore(bool perUser)
-        : this(ConstructPath(perUser ? Environment.SpecialFolder.ApplicationData : Environment.SpecialFolder.CommonApplicationData))
-    {
-    }
+        : this(
+            ConstructPath(
+                perUser
+                    ? Environment.SpecialFolder.ApplicationData
+                    : Environment.SpecialFolder.CommonApplicationData)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class. Creates a JsonFileStore that will store files in the specified folder.</summary>
+    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class.</summary>
     /// <param name="folder">The folder inside which the json files for tracked objects will be stored.</param>
     public JsonFileStore(Environment.SpecialFolder folder)
-        : this(ConstructPath(folder))
-    {
-    }
+        : this(ConstructPath(folder)) { }
 
     /// <summary>Gets or sets the folder in which the store files will be located.</summary>
     public string FolderPath { get; set; } = storeFolderPath;
@@ -151,7 +150,8 @@ public class JsonFileStore(string storeFolderPath) : IStore
 
     /// <summary>Lists the ids.</summary>
     /// <returns>A string array.</returns>
-    public IEnumerable<string> ListIds() => Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension)!;
+    public IEnumerable<string> ListIds() =>
+        Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension)!;
 
     /// <summary>Clears the data.</summary>
     /// <param name="id">The identifier.</param>
@@ -169,17 +169,20 @@ public class JsonFileStore(string storeFolderPath) : IStore
     /// <summary>Provides the DeserializeUnknown member.</summary>
     /// <param name="element">The element value.</param>
     /// <returns>The result.</returns>
-    private static object? DeserializeUnknown(JsonElement element) => element.ValueKind switch
-    {
-        JsonValueKind.String => element.GetString(),
-        JsonValueKind.Number => DeserializeNumber(element),
-        JsonValueKind.True => true,
-        JsonValueKind.False => false,
-        JsonValueKind.Null => null,
-        JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
-        JsonValueKind.Object => element.EnumerateObject().ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
-        _ => null
-    };
+    private static object? DeserializeUnknown(JsonElement element) =>
+        element.ValueKind switch
+        {
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => DeserializeNumber(element),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
+            JsonValueKind.Object => element
+                .EnumerateObject()
+                .ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
+            _ => null,
+        };
 
     /// <summary>Deserializes a JSON number.</summary>
     /// <param name="element">The element value.</param>
@@ -266,9 +269,10 @@ public class JsonFileStore(string storeFolderPath) : IStore
     private static bool TryGetEntryName(JsonElement element, [NotNullWhen(true)] out string? name)
     {
         name = null;
-        if (element.ValueKind != JsonValueKind.Object ||
-            !element.TryGetProperty("Name", out var nameProp) ||
-            nameProp.ValueKind != JsonValueKind.String)
+        if (
+            element.ValueKind != JsonValueKind.Object
+            || !element.TryGetProperty("Name", out var nameProp)
+            || nameProp.ValueKind != JsonValueKind.String)
         {
             return false;
         }
@@ -302,13 +306,15 @@ public class JsonFileStore(string storeFolderPath) : IStore
         var entryAssembly = Assembly.GetEntryAssembly();
         if (entryAssembly is not null)
         {
-            var companyAttribute = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
+            var companyAttribute = (AssemblyCompanyAttribute?)
+                Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
             if (!string.IsNullOrEmpty(companyAttribute?.Company))
             {
                 companyPart = $"{companyAttribute?.Company}\\";
             }
 
-            var titleAttribute = (AssemblyTitleAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
+            var titleAttribute = (AssemblyTitleAttribute?)
+                Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
             if (!string.IsNullOrEmpty(titleAttribute?.Title))
             {
                 appNamePart = $"{titleAttribute?.Title}\\";

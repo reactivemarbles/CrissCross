@@ -11,8 +11,11 @@ public class TreeView : System.Windows.Controls.TreeView
     /// <summary>Identifies the SelectedItem dependency property for the TreeView control.</summary>
     /// <remarks>This field is used when referencing the SelectedItem property in property system operations,
     /// such as data binding or property metadata registration.</remarks>
-    public static new readonly DependencyProperty SelectedItemProperty =
-        DependencyProperty.Register(nameof(SelectedItem), typeof(ReactiveTreeItem), typeof(TreeView), new PropertyMetadata(null));
+    public static new readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
+        nameof(SelectedItem),
+        typeof(ReactiveTreeItem),
+        typeof(TreeView),
+        new PropertyMetadata(null));
 
     /// <summary>Gets or sets the currently selected item in the tree.</summary>
     /// <remarks>If no item is selected, the property value is <see langword="null"/>. Changing this property

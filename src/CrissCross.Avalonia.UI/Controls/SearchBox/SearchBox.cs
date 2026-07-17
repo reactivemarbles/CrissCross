@@ -10,23 +10,38 @@ using CrissCross;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Represents a lightweight search input surface that projects shared <see cref="SearchQueryState"/>.</summary>
+/// <summary>Represents a lightweight search input surface that projects shared SearchQueryState.</summary>
 public class SearchBox : TemplatedControl
 {
     /// <summary>Property for <see cref="Text"/>.</summary>
-    public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<SearchBox, string?>(nameof(Text), string.Empty, defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<SearchBox, string?>(
+        nameof(Text),
+        string.Empty,
+        defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="PlaceholderText"/>.</summary>
-    public static readonly StyledProperty<string?> PlaceholderTextProperty = AvaloniaProperty.Register<SearchBox, string?>(nameof(PlaceholderText), "Search");
+    public static readonly StyledProperty<string?> PlaceholderTextProperty = AvaloniaProperty.Register<
+        SearchBox,
+        string?
+    >(nameof(PlaceholderText), "Search");
 
     /// <summary>Property for <see cref="QueryState"/>.</summary>
-    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<SearchBox, SearchQueryState?>(nameof(QueryState));
+    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<
+        SearchBox,
+        SearchQueryState?
+    >(nameof(QueryState));
 
     /// <summary>Property for <see cref="SearchCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> SearchCommandProperty = AvaloniaProperty.Register<SearchBox, ICommand?>(nameof(SearchCommand));
+    public static readonly StyledProperty<ICommand?> SearchCommandProperty = AvaloniaProperty.Register<
+        SearchBox,
+        ICommand?
+    >(nameof(SearchCommand));
 
     /// <summary>Property for <see cref="ClearCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ClearCommandProperty = AvaloniaProperty.Register<SearchBox, ICommand?>(nameof(ClearCommand));
+    public static readonly StyledProperty<ICommand?> ClearCommandProperty = AvaloniaProperty.Register<
+        SearchBox,
+        ICommand?
+    >(nameof(ClearCommand));
 
     /// <summary>Gets or sets the current raw search text.</summary>
     public string? Text

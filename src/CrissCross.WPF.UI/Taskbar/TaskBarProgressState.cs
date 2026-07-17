@@ -4,11 +4,11 @@
 
 namespace CrissCross.WPF.UI.TaskBar;
 
-/// <summary>
-/// Specifies the state of the progress indicator in the Windows task bar.
-/// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.shell.taskbaritemprogressstate?view=windowsdesktop-5.0"/>.
-/// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1027:Mark enums with FlagsAttribute", Justification = "Not Required.")]
+/// <summary>Specifies the state of the progress indicator in the Windows task bar.</summary>
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Design",
+    "CA1027:Mark enums with FlagsAttribute",
+    Justification = "Not Required.")]
 public enum TaskBarProgressState
 {
     /// <summary>No progress indicator is displayed in the task bar area.</summary>
@@ -24,5 +24,5 @@ public enum TaskBarProgressState
     Error = 0x4,
 
     /// <summary>A yellow progress indicator is displayed in the task bar area.</summary>
-    Paused = 0x8
+    Paused = 0x8,
 }

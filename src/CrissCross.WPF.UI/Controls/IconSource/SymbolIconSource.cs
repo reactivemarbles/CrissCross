@@ -70,7 +70,7 @@ public class SymbolIconSource : IconSource
         set => SetValue(SymbolProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether defines whether or not we should use the <see cref="SymbolFilled"/>.</summary>
+    /// <summary>Gets or sets whether defines whether we should use the SymbolFilled.</summary>
     public bool Filled
     {
         get => (bool)GetValue(FilledProperty);
@@ -100,7 +100,7 @@ public class SymbolIconSource : IconSource
             symbolIcon.FontStyle = FontStyle;
         }
 
-        if (Foreground != SystemColors.ControlTextBrush)
+        if (!Equals(Foreground, SystemColors.ControlTextBrush))
         {
             symbolIcon.Foreground = Foreground;
         }

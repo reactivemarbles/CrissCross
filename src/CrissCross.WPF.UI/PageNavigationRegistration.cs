@@ -1,0 +1,17 @@
+// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
+// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+namespace CrissCross.WPF.UI;
+
+/// <summary>Identifies the window and initial page used by hosted page navigation.</summary>
+/// <typeparam name="TWindow">The window type.</typeparam>
+/// <typeparam name="TPage">The initial page type.</typeparam>
+public sealed class PageNavigationRegistration<TWindow, TPage>
+{
+    /// <summary>Gets the window type.</summary>
+    public Type WindowType => typeof(TWindow);
+
+    /// <summary>Gets the initial page type.</summary>
+    public Type PageType => typeof(TPage);
+}

@@ -9,23 +9,24 @@ using Avalonia.Media.Imaging;
 namespace CrissCross.Avalonia.UI.Controls;
 
 /// <summary>Bridges rich text clipboard content to Avalonia's platform clipboard.</summary>
-/// <param name="getClipboard">Resolves the clipboard for the current top-level control.</param>
-internal sealed class RichTextSystemClipboard(Func<IClipboard?> getClipboard)
+internal static class RichTextSystemClipboard
 {
     /// <summary>The platform HTML clipboard format.</summary>
     private static readonly DataFormat<string> HtmlFormat = DataFormat.CreateStringPlatformFormat(
         OperatingSystem.IsWindows() ? "HTML Format" : "text/html");
 
     /// <summary>Gets a value indicating whether a platform clipboard is available.</summary>
-    public bool IsAvailable => getClipboard() is not null;
+    /// <param name="clipboard">The platform clipboard.</param>
+    /// <returns><see langword="true"/> when the clipboard is available.</returns>
+    public static bool IsAvailable(IClipboard? clipboard) => clipboard is not null;
 
     /// <summary>Writes plain and rich text representations to the platform clipboard.</summary>
+    /// <param name="clipboard">The platform clipboard.</param>
     /// <param name="plainText">The plain-text representation.</param>
     /// <param name="htmlText">The optional HTML representation.</param>
     /// <returns>A task that completes when the clipboard has been updated.</returns>
-    public async Task WriteAsync(string plainText, string? htmlText)
+    public static async Task WriteAsync(IClipboard? clipboard, string plainText, string? htmlText)
     {
-        var clipboard = getClipboard();
         if (clipboard is null)
         {
             return;
@@ -45,10 +46,10 @@ internal sealed class RichTextSystemClipboard(Func<IClipboard?> getClipboard)
     }
 
     /// <summary>Reads supported rich text representations from the platform clipboard.</summary>
+    /// <param name="clipboard">The platform clipboard.</param>
     /// <returns>The clipboard content.</returns>
-    public async Task<RichTextClipboardContent> ReadAsync()
+    public static async Task<RichTextClipboardContent> ReadAsync(IClipboard? clipboard)
     {
-        var clipboard = getClipboard();
         if (clipboard is null)
         {
             return default;

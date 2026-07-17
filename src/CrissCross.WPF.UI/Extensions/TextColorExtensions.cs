@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Extensions;
 
-/// <summary>Extension that converts the text color type enumeration to the name of the resource that represents it.</summary>
+/// <summary>Provides the TextColorExtensions member.</summary>
 public static class TextColorExtensions
 {
     /// <summary>Provides extension members for text colors.</summary>
@@ -13,15 +13,17 @@ public static class TextColorExtensions
     {
         /// <summary>Converts the text color type enumeration to the name of the resource that represents it.</summary>
         /// <returns>
-        /// Name of the resource matching the <see cref="TextColor" />. <see cref="ArgumentOutOfRangeException" /> otherwise.
+        /// Name of the resource matching the <see cref="TextColor" />. <see cref="ArgumentOutOfRangeException" />
+        /// otherwise.
         /// </returns>
-        public string ToResourceValue() => textColor switch
-        {
-            TextColor.Primary => "TextFillColorPrimaryBrush",
-            TextColor.Secondary => "TextFillColorSecondaryBrush",
-            TextColor.Tertiary => "TextFillColorTertiaryBrush",
-            TextColor.Disabled => "TextFillColorDisabledBrush",
-            _ => throw new ArgumentOutOfRangeException(nameof(textColor), textColor, null)
-        };
+        public string ToResourceValue() =>
+            textColor switch
+            {
+                TextColor.Primary => "TextFillColorPrimaryBrush",
+                TextColor.Secondary => "TextFillColorSecondaryBrush",
+                TextColor.Tertiary => "TextFillColorTertiaryBrush",
+                TextColor.Disabled => "TextFillColorDisabledBrush",
+                _ => throw new ArgumentOutOfRangeException(nameof(textColor), textColor, null),
+            };
     }
 }

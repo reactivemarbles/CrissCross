@@ -16,16 +16,22 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class FormattedTextPresenter : TextBlock
 {
     /// <summary>Property for <see cref="Document"/>.</summary>
-    public static readonly StyledProperty<FlowDocument?> DocumentProperty =
-        AvaloniaProperty.Register<FormattedTextPresenter, FlowDocument?>(nameof(Document));
+    public static readonly StyledProperty<FlowDocument?> DocumentProperty = AvaloniaProperty.Register<
+        FormattedTextPresenter,
+        FlowDocument?
+    >(nameof(Document));
 
     /// <summary>Property for <see cref="DefaultForeground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> DefaultForegroundProperty =
-        AvaloniaProperty.Register<FormattedTextPresenter, IBrush?>(nameof(DefaultForeground));
+    public static readonly StyledProperty<IBrush?> DefaultForegroundProperty = AvaloniaProperty.Register<
+        FormattedTextPresenter,
+        IBrush?
+    >(nameof(DefaultForeground));
 
     /// <summary>Property for <see cref="DefaultFontSize"/>.</summary>
-    public static readonly StyledProperty<double> DefaultFontSizeProperty =
-        AvaloniaProperty.Register<FormattedTextPresenter, double>(nameof(DefaultFontSize), 14);
+    public static readonly StyledProperty<double> DefaultFontSizeProperty = AvaloniaProperty.Register<
+        FormattedTextPresenter,
+        double
+    >(nameof(DefaultFontSize), 14);
 
     /// <summary>Provides the InlineObjectBoundarySentinel member.</summary>
     private const string InlineObjectBoundarySentinel = "\u200B";
@@ -36,7 +42,7 @@ public class FormattedTextPresenter : TextBlock
     /// <summary>Provides the DefaultImageMaxHeight member.</summary>
     private const double DefaultImageMaxHeight = 480;
 
-    /// <summary>Gets or sets a value indicating whether HTTP/HTTPS image sources may be resolved by <see cref="RemoteImageLoader"/>.</summary>
+    /// <summary>Gets or sets whether HTTP/HTTPS image sources may be resolved by RemoteImageLoader.</summary>
     public bool IsRemoteImageLoadingEnabled { get; set; }
 
     /// <summary>Gets or sets the opt-in remote image loader used for HTTP/HTTPS image sources.</summary>
@@ -84,9 +90,10 @@ public class FormattedTextPresenter : TextBlock
     /// <returns>The image element, or <see langword="null"/> when the source cannot be loaded.</returns>
     internal Image? CreateImageElement(TextSegment segment)
     {
-        if (string.IsNullOrWhiteSpace(segment.ImageSource) ||
-            !TryLoadImage(segment.ImageSource, out var bitmap) ||
-            bitmap is null)
+        if (
+            string.IsNullOrWhiteSpace(segment.ImageSource)
+            || !TryLoadImage(segment.ImageSource, out var bitmap)
+            || bitmap is null)
         {
             return null;
         }
@@ -111,9 +118,14 @@ public class FormattedTextPresenter : TextBlock
             image.Height = segment.ImageHeight.Value;
         }
 
-        if (!segment.ImageWidth.HasValue && !segment.ImageHeight.HasValue && bitmap.Size is { Width: > 0, Height: > 0 } naturalSize)
+        if (
+            !segment.ImageWidth.HasValue
+            && !segment.ImageHeight.HasValue
+            && bitmap.Size is { Width: > 0, Height: > 0 } naturalSize)
         {
-            var scale = Math.Min(1, Math.Min(DefaultImageMaxWidth / naturalSize.Width, DefaultImageMaxHeight / naturalSize.Height));
+            var scale = Math.Min(
+                1,
+                Math.Min(DefaultImageMaxWidth / naturalSize.Width, DefaultImageMaxHeight / naturalSize.Height));
             image.Width = naturalSize.Width * scale;
             image.Height = naturalSize.Height * scale;
         }
@@ -131,12 +143,13 @@ public class FormattedTextPresenter : TextBlock
             return;
         }
 
-        if (change.Property != DocumentProperty &&
-            change.Property != DefaultForegroundProperty &&
-            change.Property != DefaultFontSizeProperty &&
-            change.Property != ForegroundProperty &&
-            change.Property != FontSizeProperty &&
-            change.Property != FontFamilyProperty)
+        if (
+            change.Property != DocumentProperty
+            && change.Property != DefaultForegroundProperty
+            && change.Property != DefaultFontSizeProperty
+            && change.Property != ForegroundProperty
+            && change.Property != FontSizeProperty
+            && change.Property != FontFamilyProperty)
         {
             return;
         }
@@ -402,10 +415,6 @@ public class FormattedTextPresenter : TextBlock
             return;
         }
 
-        Inlines.Add(new Run(InlineObjectBoundarySentinel)
-        {
-            Foreground = Brushes.Transparent,
-            FontSize = 1,
-        });
+        Inlines.Add(new Run(InlineObjectBoundarySentinel) { Foreground = Brushes.Transparent, FontSize = 1 });
     }
 }

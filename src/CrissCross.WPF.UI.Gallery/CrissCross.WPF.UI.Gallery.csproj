@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
@@ -32,5 +31,4 @@
   </ItemGroup>
 
   <!-- Grouped views rely on implicit Page includes (EnableDefaultPageItems). No explicit inclusion needed. -->
-
 </Project>

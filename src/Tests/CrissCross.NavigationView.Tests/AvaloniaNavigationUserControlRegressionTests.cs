@@ -9,25 +9,25 @@ namespace CrissCross.NavigationView.Tests;
 /// <summary>Regression tests for Avalonia navigation host setup.</summary>
 public class AvaloniaNavigationUserControlRegressionTests
 {
+    /// <summary>The configured navigation host name.</summary>
+    private const string MainWindowHostName = "mainWindow";
+
     /// <summary>Provides the OnInitialized_WhenControlHasName_UsesExistingNameForNavigationHost member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task OnInitialized_WhenControlHasName_UsesExistingNameForNavigationHost()
     {
-        var control = new TestNavigationUserControl
-        {
-            Name = "mainWindow"
-        };
+        var control = new TestNavigationUserControl { Name = MainWindowHostName };
 
         control.InitializeForTest();
 
-        await Assert.That(control.Name).IsEqualTo("mainWindow");
-        await Assert.That(((IUseNavigation)control).Name).IsEqualTo("mainWindow");
-        await Assert.That(control.NavigationFrame?.HostName).IsEqualTo("mainWindow");
-        await Assert.That(control.NavigationFrame?.Name).IsEqualTo("mainWindow");
+        await Assert.That(control.Name).IsEqualTo(MainWindowHostName);
+        await Assert.That(((IUseNavigation)control).Name).IsEqualTo(MainWindowHostName);
+        await Assert.That(control.NavigationFrame?.HostName).IsEqualTo(MainWindowHostName);
+        await Assert.That(control.NavigationFrame?.Name).IsEqualTo(MainWindowHostName);
     }
 
-    /// <summary>Provides the OnInitialized_WhenControlHasNoName_UsesGeneratedHostNameWithoutSettingElementName member.</summary>
+    /// <summary>Verifies the generated host name behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task OnInitialized_WhenControlHasNoName_UsesGeneratedHostNameWithoutSettingElementName()
@@ -40,7 +40,9 @@ public class AvaloniaNavigationUserControlRegressionTests
 
         await Assert.That(control.Name).IsNull();
         await Assert.That(string.IsNullOrWhiteSpace(hostName)).IsFalse();
-        await Assert.That(hostName!.StartsWith("__crisscross_navhost_NavigationUserControl_", StringComparison.Ordinal)).IsTrue();
+        await Assert
+            .That(hostName!.StartsWith("__crisscross_navhost_NavigationUserControl_", StringComparison.Ordinal))
+            .IsTrue();
         await Assert.That(control.NavigationFrame?.HostName).IsEqualTo(hostName);
         await Assert.That(control.NavigationFrame?.Name).IsEqualTo(hostName);
     }

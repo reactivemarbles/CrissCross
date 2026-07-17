@@ -46,7 +46,64 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class to display an XY signal on the specified WpfPlot using the. provided data and appearance settings.</summary>
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class to display an XY signal on the
+    /// specified WpfPlot using the. provided data and appearance settings.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    public SignalXY_UI(
+        WpfPlot plot,
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
+        string color)
+        : this(plot, data, color, true)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    public SignalXY_UI(
+        WpfPlot plot,
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
+        string color,
+        bool autoscale)
+        : this(plot, data, color, autoscale, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="coordinatesObs">The coordinatesObs value.</param>
+    public SignalXY_UI(
+        WpfPlot plot,
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
+        string color,
+        IObservable<Coordinates>? coordinatesObs)
+        : this(plot, data, color, true, false, coordinatesObs)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    public SignalXY_UI(
+        WpfPlot plot,
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
+        string color,
+        bool autoscale,
+        bool manualscale)
+        : this(plot, data, color, autoscale, manualscale, null)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="SignalXY_UI"/> class.</summary>
     /// <param name="plot">The plot value.</param>
     /// <param name="data">The data value.</param>
     /// <param name="color">The color value.</param>
@@ -57,9 +114,9 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
         WpfPlot plot,
         (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data,
         string color,
-        bool autoscale = true,
-        bool manualscale = false,
-        IObservable<Coordinates>? coordinatesObs = null)
+        bool autoscale,
+        bool manualscale,
+        IObservable<Coordinates>? coordinatesObs)
     {
         if (data.Value is null || data.DateTime is null)
         {
@@ -82,22 +139,24 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
             return;
         }
 
-        MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
-        {
-            if (PlotLine!.Data.Count <= 0)
+        MouseCoordinatesObs = coordinatesObs
+            .Subscribe(x =>
             {
-                return;
-            }
+                if (PlotLine!.Data.Count <= 0)
+                {
+                    return;
+                }
 
-            var closestCoordinate = PlotLine.GetNearestX(x, Plot.Plot.LastRender);
+                var closestCoordinate = PlotLine.GetNearestX(x, Plot.Plot.LastRender);
 
-            ChartSettings.Crosshair!.Position = closestCoordinate.Coordinates;
-            ChartSettings.Marker!.Position = closestCoordinate.Coordinates;
-            ChartSettings.MarkerText!.Location = closestCoordinate.Coordinates;
-            ChartSettings.MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
+                ChartSettings.Crosshair!.Position = closestCoordinate.Coordinates;
+                ChartSettings.Marker!.Position = closestCoordinate.Coordinates;
+                ChartSettings.MarkerText!.Location = closestCoordinate.Coordinates;
+                ChartSettings.MarkerText!.LabelText = $"{closestCoordinate.Y:0.##}\n{closestCoordinate.X:0.##}";
 
-            Plot?.Refresh();
-        }).DisposeWith(Disposables);
+                Plot?.Refresh();
+            })
+            .DisposeWith(Disposables);
     }
 
     /// <summary>Gets or sets the WpfPlot control used for rendering interactive plots within the application.</summary>
@@ -118,13 +177,14 @@ public partial class SignalXY_UI : RxObject, IPlottableUI
     /// <remarks>The signal is initialized with a single data point at the origin. The line width is set to 1
     /// pixel. If the color string is not a valid hex code, an exception may be thrown by the underlying color
     /// conversion method.</remarks>
-    /// <param name="color">A hexadecimal color string that determines the color of the signal line. Must be a valid hex color code.</param>
+    /// <param name="color">A hexadecimal color string that determines the color of the signal line. Must be a valid hex
+    /// color code.</param>
     public void CreateSignal(string color)
     {
         double[] y = [0];
         double[] x = [0];
         PlotLine = Plot.Plot.Add.SignalXY(x, y);
-        PlotLine.LineStyle.Width = 1f;
+        PlotLine.LineStyle.Width = 1F;
         PlotLine.Color = Color.FromHex(color);
     }
 

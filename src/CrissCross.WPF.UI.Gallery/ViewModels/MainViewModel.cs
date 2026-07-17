@@ -32,8 +32,7 @@ public partial class MainViewModel : RxObject
                 </ResourceDictionary>
             </Application.Resources>
         </Application>
-        """
-;
+        """;
 
     /// <summary>Gets the main window xaml setup.</summary>
     /// <value>
@@ -58,7 +57,15 @@ public partial class MainViewModel : RxObject
             mc:Ignorable="d">
             <ui:FluentNavigationWindow.LeftContent>
                 <StackPanel>
-                    <ui:TextBox Margin="3,0,0,0" Text="{Binding Filter, ElementName=NavigationLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ui:TextBox
+                        Margin="3,0,0,0">
+                        <ui:TextBox.Text>
+                            <Binding
+                                Path="Filter"
+                                ElementName="NavigationLeft"
+                                Mode="TwoWay"
+                                UpdateSourceTrigger="PropertyChanged" />
+                        </ui:TextBox.Text>
                         <ui:TextBox.Icon>
                             <ui:SymbolIcon Symbol="Search20" />
                         </ui:TextBox.Icon>
@@ -114,7 +121,8 @@ public partial class MainViewModel : RxObject
 
                     // Bind the view model
                     this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
-                    this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
+                    this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource)
+                        .DisposeWith(d);
 
                     // Navigate to the main view
                     this.NavigateToView<MainViewModel>();

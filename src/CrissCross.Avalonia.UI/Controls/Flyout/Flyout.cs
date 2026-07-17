@@ -4,5 +4,5 @@
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Represents a control that creates a pop-up window that displays information for an element in the interface.</summary>
+/// <summary>Represents the Flyout type.</summary>
 public class Flyout : global::Avalonia.Controls.Flyout;

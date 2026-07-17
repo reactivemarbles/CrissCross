@@ -14,7 +14,8 @@ public enum NavigationViewPaneDisplayMode
     LeftMinimal,
 
     /// <summary>
-    /// The pane is shown on the left side of the control. Large icons with titles underneath are the only display option. Does not support <see cref="INavigationViewItem.MenuItems"/>.
+    /// The pane is shown on the left side of the control. Large icons with titles underneath are the only display
+    /// option. Does not support <see cref="INavigationViewItem.MenuItems"/>.
     /// <para>Similar to the Windows Store (2022) app.</para>
     /// </summary>
     LeftFluent,
@@ -23,5 +24,5 @@ public enum NavigationViewPaneDisplayMode
     Top,
 
     /// <summary>The pane is shown at the bottom of the control.</summary>
-    Bottom
+    Bottom,
 }

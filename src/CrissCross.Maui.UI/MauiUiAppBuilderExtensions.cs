@@ -13,7 +13,7 @@ public static class MauiUiAppBuilderExtensions
     /// <param name="builder">The builder value.</param>
     extension(MauiAppBuilder builder)
     {
-        /// <summary>Adds the CrissCross MAUI UI resource dictionary to the current application when one is available.</summary>
+        /// <summary>Provides the UseCrissCrossMauiUi member.</summary>
         /// <returns>The supplied builder for fluent composition.</returns>
         public MauiAppBuilder UseCrissCrossMauiUi()
         {
@@ -26,7 +26,7 @@ public static class MauiUiAppBuilderExtensions
     /// <param name="resources">The resources value.</param>
     extension(ResourceDictionary resources)
     {
-        /// <summary>Adds CrissCross MAUI UI resources to the supplied resource dictionary if they are not already present.</summary>
+        /// <summary>Provides the UseCrissCrossMauiUiResources member.</summary>
         /// <returns>The supplied resource dictionary.</returns>
         public ResourceDictionary UseCrissCrossMauiUiResources()
         {

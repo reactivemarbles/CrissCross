@@ -29,8 +29,7 @@ public partial class MainWindowViewModel : RxObject
         _tracker = new();
         SetupTracker();
         NavigationModels = [];
-        NavigationModels.AddRange(
-        [
+        NavigationModels.AddRange([
             new NavigationModel(null, NavigationModels)
             {
                 IsExpander = true,
@@ -41,12 +40,11 @@ public partial class MainWindowViewModel : RxObject
                 Name = "Main",
                 Icon = new SymbolIcon(SymbolRegular.Home20),
                 IsSelected = true,
-            },
-        ]);
+            },]);
 
         // Register ViewModels and Views
-        AppLocator.CurrentMutable
-            .RegisterLazySingletonAnd(static () => new MainViewModel())
+        AppLocator
+            .CurrentMutable.RegisterLazySingletonAnd(static () => new MainViewModel())
             .Register<IViewFor<MainViewModel>>(static () => new MainView());
         AppLocator.CurrentMutable.SetupComplete();
     }
@@ -60,10 +58,10 @@ public partial class MainWindowViewModel : RxObject
     /// <summary>Configures persisted main window tracking.</summary>
     private void SetupTracker()
     {
-        var windowId =
-            $"[Width={SystemParameters.VirtualScreenWidth},Height={SystemParameters.VirtualScreenHeight}]";
+        var windowId = $"[Width={SystemParameters.VirtualScreenWidth},Height={SystemParameters.VirtualScreenHeight}]";
         AppLocator.CurrentMutable.RegisterConstant(_tracker);
-        _tracker?.Configure<MainWindow>()
+        _tracker
+            ?.Configure(new TrackingRequest<MainWindow>())
             .Id(w => w.Name, windowId)
             .Property(w => w.Height)
             .Property(w => w.Width)

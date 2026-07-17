@@ -25,14 +25,16 @@ public class TextBox : global::Avalonia.Controls.TextBox
         nameof(Icon));
 
     /// <summary>Property for <see cref="IconPlacement"/>.</summary>
-    public static readonly StyledProperty<ElementPlacement> IconPlacementProperty = AvaloniaProperty.Register<TextBox, ElementPlacement>(
-        nameof(IconPlacement),
-        ElementPlacement.Left);
+    public static readonly StyledProperty<ElementPlacement> IconPlacementProperty = AvaloniaProperty.Register<
+        TextBox,
+        ElementPlacement
+    >(nameof(IconPlacement), ElementPlacement.Left);
 
     /// <summary>Property for <see cref="PlaceholderText"/>.</summary>
-    public static new readonly StyledProperty<string> PlaceholderTextProperty = AvaloniaProperty.Register<TextBox, string>(
-        nameof(PlaceholderText),
-        string.Empty);
+    public static new readonly StyledProperty<string> PlaceholderTextProperty = AvaloniaProperty.Register<
+        TextBox,
+        string
+    >(nameof(PlaceholderText), string.Empty);
 
     /// <summary>Property for <see cref="PlaceholderEnabled"/>.</summary>
     public static readonly StyledProperty<bool> PlaceholderEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
@@ -40,9 +42,10 @@ public class TextBox : global::Avalonia.Controls.TextBox
         true);
 
     /// <summary>Property for <see cref="CurrentPlaceholderEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> CurrentPlaceholderEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
-        nameof(CurrentPlaceholderEnabled),
-        true);
+    public static readonly StyledProperty<bool> CurrentPlaceholderEnabledProperty = AvaloniaProperty.Register<
+        TextBox,
+        bool
+    >(nameof(CurrentPlaceholderEnabled), true);
 
     /// <summary>Property for <see cref="ClearButtonEnabled"/>.</summary>
     public static readonly StyledProperty<bool> ClearButtonEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
@@ -55,13 +58,16 @@ public class TextBox : global::Avalonia.Controls.TextBox
         false);
 
     /// <summary>Property for <see cref="IsTextSelectionEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsTextSelectionEnabledProperty = AvaloniaProperty.Register<TextBox, bool>(
-        nameof(IsTextSelectionEnabled),
-        false);
+    public static readonly StyledProperty<bool> IsTextSelectionEnabledProperty = AvaloniaProperty.Register<
+        TextBox,
+        bool
+    >(nameof(IsTextSelectionEnabled), false);
 
     /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> TemplateButtonCommandProperty = AvaloniaProperty.Register<TextBox, ICommand?>(
-        nameof(TemplateButtonCommand));
+    public static readonly StyledProperty<ICommand?> TemplateButtonCommandProperty = AvaloniaProperty.Register<
+        TextBox,
+        ICommand?
+    >(nameof(TemplateButtonCommand));
 
     /// <summary>Initializes a new instance of the <see cref="TextBox"/> class.</summary>
     public TextBox()

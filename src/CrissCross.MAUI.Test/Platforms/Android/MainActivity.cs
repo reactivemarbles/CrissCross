@@ -9,5 +9,13 @@ namespace CrissCross.MAUI.Test;
 
 /// <summary>MainActivity member.</summary>
 /// <seealso cref="MauiAppCompatActivity" />
-[Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+[Activity(
+    Theme = "@style/Maui.SplashTheme",
+    MainLauncher = true,
+    ConfigurationChanges = ConfigChanges.ScreenSize
+        | ConfigChanges.Orientation
+        | ConfigChanges.UiMode
+        | ConfigChanges.ScreenLayout
+        | ConfigChanges.SmallestScreenSize
+        | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity;

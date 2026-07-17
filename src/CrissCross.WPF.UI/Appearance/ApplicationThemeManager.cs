@@ -6,7 +6,8 @@ using WpfWindow = System.Windows.Window;
 
 namespace CrissCross.WPF.UI.Appearance;
 
-/// <summary>Allows to manage the application theme by swapping resource dictionaries containing dynamic resources with color information.</summary>
+/// <summary>Allows to manage the application theme by swapping resource dictionaries containing dynamic resources with
+/// color information.</summary>
 /// <example>
 /// <code lang="csharp">
 /// ApplicationThemeManager.Apply(
@@ -39,13 +40,16 @@ public static class ApplicationThemeManager
     /// <summary>Provides the ThemeDictionaryLookup member.</summary>
     private const string ThemeDictionaryLookup = "/resources/theme/";
 
+    /// <summary>The WPF appearance resource namespace.</summary>
+    private const string AppearanceResourceNamespace = "CrissCross.WPF.UI.Appearance";
+
     /// <summary>Stores the _cachedApplicationTheme value.</summary>
     private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
 
     /// <summary>Event triggered when the application's theme is changed.</summary>
     public static event EventHandler<ThemeChangedEventArgs>? Changed;
 
-    /// <summary>Gets a value that indicates whether the application is currently using the high contrast theme.</summary>
+    /// <summary>Gets the IsHighContrast value.</summary>
     /// <returns><see langword="true"/> if application uses high contrast theme.</returns>
     public static bool IsHighContrast() => _cachedApplicationTheme == ApplicationTheme.HighContrast;
 
@@ -55,19 +59,24 @@ public static class ApplicationThemeManager
 
     /// <summary>Changes the current application theme.</summary>
     /// <param name="applicationTheme">Theme to set.</param>
+    public static void Apply(ApplicationTheme applicationTheme) =>
+        Apply(applicationTheme, WindowBackdropType.Mica, true);
+
+    /// <summary>Applies the requested theme and background effect.</summary>
+    /// <param name="applicationTheme">Theme to set.</param>
+    /// <param name="backgroundEffect">Whether the custom background effect should be applied.</param>
+    public static void Apply(ApplicationTheme applicationTheme, WindowBackdropType backgroundEffect) =>
+        Apply(applicationTheme, backgroundEffect, true);
+
+    /// <summary>Applies the requested theme and background effect.</summary>
+    /// <param name="applicationTheme">Theme to set.</param>
     /// <param name="backgroundEffect">Whether the custom background effect should be applied.</param>
     /// <param name="updateAccent">Whether the color accents should be changed.</param>
-    public static void Apply(
-        ApplicationTheme applicationTheme,
-        WindowBackdropType backgroundEffect = WindowBackdropType.Mica,
-        bool updateAccent = true)
+    public static void Apply(ApplicationTheme applicationTheme, WindowBackdropType backgroundEffect, bool updateAccent)
     {
         if (updateAccent)
         {
-            ApplicationAccentColorManager.Apply(
-                ApplicationAccentColorManager.GetColorizationColor(),
-                applicationTheme,
-                false);
+            ApplicationAccentColorManager.Apply(ApplicationAccentColorManager.GetColorizationColor(), applicationTheme);
         }
 
         if (applicationTheme == ApplicationTheme.Unknown)
@@ -97,7 +106,8 @@ public static class ApplicationThemeManager
 
 #if DEBUG
         System.Diagnostics.Debug.WriteLine(
-            $"INFO | {typeof(ApplicationThemeManager)} tries to update theme to {themeDictionaryName} ({applicationTheme}): {isUpdated}",
+            $"INFO | {typeof(ApplicationThemeManager)} tries to update theme to "
+                + $"{themeDictionaryName} ({applicationTheme}): {isUpdated}",
             nameof(ApplicationThemeManager));
 #endif
         if (!isUpdated)
@@ -116,10 +126,7 @@ public static class ApplicationThemeManager
             return;
         }
 
-        WindowBackgroundManager.UpdateBackground(
-            mainWindow,
-            applicationTheme,
-            backgroundEffect);
+        WindowBackgroundManager.UpdateBackground(mainWindow, applicationTheme, backgroundEffect);
     }
 
     /// <summary>Applies Resources in the <paramref name="frameworkElement" />.</summary>
@@ -132,14 +139,15 @@ public static class ApplicationThemeManager
         }
 
         var resourcesRemove = frameworkElement
-            .Resources.MergedDictionaries.Where(e => e.Source?.ToString().Contains(LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true)
+            .Resources.MergedDictionaries.Where(e =>
+                e.Source?.ToString().Contains(LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true)
             .ToArray();
 
         foreach (var resource in UiApplication.Current.Resources.MergedDictionaries)
         {
             System.Diagnostics.Debug.WriteLine(
                 $"INFO | {typeof(ApplicationThemeManager)} Add {resource.Source}",
-                "CrissCross.WPF.UI.Appearance");
+                AppearanceResourceNamespace);
             frameworkElement.Resources.MergedDictionaries.Add(resource);
         }
 
@@ -147,7 +155,7 @@ public static class ApplicationThemeManager
         {
             System.Diagnostics.Debug.WriteLine(
                 $"INFO | {typeof(ApplicationThemeManager)} Remove {resource.Source}",
-                "CrissCross.WPF.UI.Appearance");
+                AppearanceResourceNamespace);
             _ = frameworkElement.Resources.MergedDictionaries.Remove(resource);
         }
 
@@ -155,7 +163,7 @@ public static class ApplicationThemeManager
         {
             System.Diagnostics.Debug.WriteLine(
                 $"INFO | {typeof(ApplicationThemeManager)} Copy Resource {resource.Key} - {resource.Value}",
-                "CrissCross.WPF.UI.Appearance");
+                AppearanceResourceNamespace);
             frameworkElement.Resources[resource.Key] = resource.Value;
         }
     }
@@ -177,13 +185,12 @@ public static class ApplicationThemeManager
         {
             themeToSet = ApplicationTheme.Dark;
         }
-        else if (
-            systemTheme is SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite)
+        else if (systemTheme is SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite)
         {
             themeToSet = ApplicationTheme.HighContrast;
         }
 
-        Apply(themeToSet, updateAccent: updateAccent);
+        Apply(themeToSet, WindowBackdropType.Mica, updateAccent);
     }
 
     /// <summary>Gets currently set application theme.</summary>
@@ -211,11 +218,9 @@ public static class ApplicationThemeManager
 
         return appApplicationTheme switch
         {
-            ApplicationTheme.Dark
-                => sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow,
-            ApplicationTheme.Light
-                => sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise,
-            _ => appApplicationTheme == ApplicationTheme.HighContrast && SystemThemeManager.HighContrast
+            ApplicationTheme.Dark => sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow,
+            ApplicationTheme.Light => sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise,
+            _ => appApplicationTheme == ApplicationTheme.HighContrast && SystemThemeManager.HighContrast,
         };
     }
 
@@ -228,7 +233,9 @@ public static class ApplicationThemeManager
         var appApplicationTheme = GetAppTheme();
         var sysTheme = GetSystemTheme();
 
-        return appApplicationTheme != ApplicationTheme.Dark ? false : sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow;
+        return appApplicationTheme != ApplicationTheme.Dark
+            ? false
+            : sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow;
     }
 
     /// <summary>Checks if the application and the operating system are currently working in a light theme.</summary>
@@ -240,7 +247,9 @@ public static class ApplicationThemeManager
         var appApplicationTheme = GetAppTheme();
         var sysTheme = GetSystemTheme();
 
-        return appApplicationTheme != ApplicationTheme.Light ? false : sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise;
+        return appApplicationTheme != ApplicationTheme.Light
+            ? false
+            : sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise;
     }
 
     /// <summary>Tries to guess the currently set application theme.</summary>

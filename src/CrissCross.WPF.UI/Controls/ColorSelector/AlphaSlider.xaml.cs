@@ -10,12 +10,11 @@ namespace CrissCross.WPF.UI;
 public partial class AlphaSlider : PickerControlBase
 {
     /// <summary>The small change property.</summary>
-    public static readonly DependencyProperty SmallChangeProperty =
-        DependencyProperty.Register(
-            nameof(SmallChange),
-            typeof(double),
-            typeof(AlphaSlider),
-            new PropertyMetadata(1.0));
+    public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
+        nameof(SmallChange),
+        typeof(double),
+        typeof(AlphaSlider),
+        new PropertyMetadata(1.0));
 
     /// <summary>Initializes a new instance of the <see cref="AlphaSlider"/> class.</summary>
     public AlphaSlider() => InitializeComponent();

@@ -17,7 +17,9 @@ internal sealed class RightSplitCornerRadiusConverter : IValueConverter
     /// <returns>The result.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is not CornerRadius cornerRadius ? value : new CornerRadius(0, cornerRadius.TopRight, cornerRadius.BottomRight, 0);
+        return value is not CornerRadius cornerRadius
+            ? value
+            : new CornerRadius(0, cornerRadius.TopRight, cornerRadius.BottomRight, 0);
     }
 
     /// <summary>Provides the ConvertBack member.</summary>
@@ -26,5 +28,6 @@ internal sealed class RightSplitCornerRadiusConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 }

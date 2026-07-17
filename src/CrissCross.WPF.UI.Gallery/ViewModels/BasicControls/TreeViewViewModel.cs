@@ -8,31 +8,20 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
-/// <summary>
-/// Represents the view model for a tree view control, providing data binding and state management for hierarchical data
-/// structures in a user interface.
-/// </summary>
+/// <summary>Provides data binding and state management for hierarchical tree view data.</summary>
 /// <remarks>This view model is typically used in MVVM architectures to facilitate interaction between a tree view
 /// UI component and the underlying data. It inherits from RxObject to support reactive property change
 /// notifications.</remarks>
 public class TreeViewViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="TreeViewViewModel"/> class with a default family tree and sets up commands for. managing tree items.</summary>
+    /// <summary>Initializes a new instance of the <see cref="TreeViewViewModel"/> class.</summary>
     /// <remarks>This constructor creates an initial family tree structure and configures reactive commands
     /// for adding persons or pets, expanding or collapsing tree nodes, and removing items. It also establishes
     /// subscriptions to update selection-related properties based on user interactions. The default tree includes two
     /// root persons, each with a child, to provide an example structure for immediate use.</remarks>
     public TreeViewViewModel()
     {
-        var cliffordPulman = new Person("Clifford Pulman", [new Pet("Kitty")]);
-        _ = cliffordPulman.DisposeWith(Disposables);
-        var clifford = new Person("Clifford", [cliffordPulman]);
-        _ = clifford.DisposeWith(Disposables);
-        var clarencePulman = new Person("Clarence Pulman");
-        _ = clarencePulman.DisposeWith(Disposables);
-        var clarence = new Person("Clarence", [clarencePulman]);
-        _ = clarence.DisposeWith(Disposables);
-        Family = new([clifford, clarence]);
+        Family = CreateFamily();
 
         AddPerson = ReactiveCommand.Create(() => { });
         _ = AddPerson.Subscribe(_ =>
@@ -66,14 +55,17 @@ public class TreeViewViewModel : RxObject
         _ = Expand.Subscribe(_ => SelectedItem?.ExpandPath());
         Remove = ReactiveCommand.Create(() => { });
         _ = Remove.Subscribe(_ => SelectedItem?.RemoveChild());
-        var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(
-            rti => rti.WhenAnyValue(vs => vs.IsSelected).Select(
-                x => (x, rti switch
-                {
-                    Person person => person.DisplayName,
-                    Pet pet => pet.DisplayName,
-                    _ => "NoName"
-                })));
+        var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(rti =>
+            rti.WhenAnyValue(vs => vs.IsSelected)
+                .Select(x =>
+                    (
+                        x,
+                        rti switch
+                        {
+                            Person person => person.DisplayName,
+                            Pet pet => pet.DisplayName,
+                            _ => "NoName",
+                        })));
         _ = isAnimalOrPerson.Subscribe(x =>
         {
             if (x.x)
@@ -173,11 +165,12 @@ public class TreeViewViewModel : RxObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    /// <summary>Releases the unmanaged resources used by the control and optionally releases the managed resources.</summary>
+    /// <summary>Provides the Dispose member.</summary>
     /// <remarks>This method overrides Dispose to ensure that all managed resources associated with the
     /// control are properly disposed when disposing is true. Call this method when you are finished using the control
     /// to free resources promptly.</remarks>
-    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+    /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged
+    /// resources.</param>
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -191,5 +184,20 @@ public class TreeViewViewModel : RxObject
         }
 
         base.Dispose(disposing);
+    }
+
+    /// <summary>Creates the sample family tree and attaches its items to this view model's lifetime.</summary>
+    /// <returns>The sample family tree.</returns>
+    private ReactiveList<ReactiveTreeItem> CreateFamily()
+    {
+        var cliffordPulman = new Person("Clifford Pulman", [new Pet("Kitty")]);
+        _ = cliffordPulman.DisposeWith(Disposables);
+        var clifford = new Person("Clifford", [cliffordPulman]);
+        _ = clifford.DisposeWith(Disposables);
+        var clarencePulman = new Person("Clarence Pulman");
+        _ = clarencePulman.DisposeWith(Disposables);
+        var clarence = new Person("Clarence", [clarencePulman]);
+        _ = clarence.DisposeWith(Disposables);
+        return new([clifford, clarence]);
     }
 }

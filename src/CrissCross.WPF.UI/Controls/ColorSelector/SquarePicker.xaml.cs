@@ -10,20 +10,18 @@ namespace CrissCross.WPF.UI;
 public partial class SquarePicker : PickerControlBase
 {
     /// <summary>The small change property.</summary>
-    public static readonly DependencyProperty SmallChangeProperty =
-        DependencyProperty.Register(
-            nameof(SmallChange),
-            typeof(double),
-            typeof(SquarePicker),
-            new PropertyMetadata(1.0));
+    public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
+        nameof(SmallChange),
+        typeof(double),
+        typeof(SquarePicker),
+        new PropertyMetadata(1.0));
 
     /// <summary>The picker type property.</summary>
-    public static readonly DependencyProperty PickerTypeProperty =
-        DependencyProperty.Register(
-            nameof(PickerType),
-            typeof(PickerType),
-            typeof(SquarePicker),
-            new PropertyMetadata(PickerType.HSV));
+    public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
+        nameof(PickerType),
+        typeof(PickerType),
+        typeof(SquarePicker),
+        new PropertyMetadata(PickerType.HSV));
 
     /// <summary>Initializes a new instance of the <see cref="SquarePicker"/> class.</summary>
     public SquarePicker() => InitializeComponent();

@@ -24,7 +24,8 @@ public partial class LiveChartViewModel : RxObject
     /// returned.</remarks>
     /// <param name="x">The x-coordinate of the mouse position, in plot units.</param>
     /// <param name="y">The y-coordinate of the mouse position, in plot units.</param>
-    /// <returns>An <see cref="AxisLine"/> representing the axis line under the mouse position, or <see langword="null"/> if no
+    /// <returns>An <see cref="AxisLine"/> representing the axis line under the mouse position, or <see
+    /// langword="null"/> if no
     /// axis line is found.</returns>
     public AxisLine? GetLineUnderMouse(float x, float y)
     {

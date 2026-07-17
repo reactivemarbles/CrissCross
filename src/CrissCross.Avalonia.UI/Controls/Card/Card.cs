@@ -11,8 +11,7 @@ public class Card : global::Avalonia.Controls.ContentControl
 {
     /// <summary>Property for <see cref="Footer"/>.</summary>
     public static readonly StyledProperty<object?> FooterProperty = AvaloniaProperty.Register<Card, object?>(
-        nameof(Footer),
-        null);
+        nameof(Footer));
 
     /// <summary>Property for <see cref="HasFooter"/>.</summary>
     public static readonly StyledProperty<bool> HasFooterProperty = AvaloniaProperty.Register<Card, bool>(
@@ -21,8 +20,7 @@ public class Card : global::Avalonia.Controls.ContentControl
 
     /// <summary>Property for <see cref="Header"/>.</summary>
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<Card, object?>(
-        nameof(Header),
-        null);
+        nameof(Header));
 
     /// <summary>Property for <see cref="HasHeader"/>.</summary>
     public static readonly StyledProperty<bool> HasHeaderProperty = AvaloniaProperty.Register<Card, bool>(
@@ -43,7 +41,7 @@ public class Card : global::Avalonia.Controls.ContentControl
         set => SetValue(FooterProperty, value);
     }
 
-    /// <summary>Gets a value indicating whether gets information whether the <see cref="Card"/> has a <see cref="Footer"/>.</summary>
+    /// <summary>Gets whether the Card has a Footer.</summary>
     public bool HasFooter
     {
         get => GetValue(HasFooterProperty);

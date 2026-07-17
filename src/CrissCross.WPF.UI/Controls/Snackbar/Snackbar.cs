@@ -8,7 +8,8 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Snackbar inform user of a process that an app has performed or will perform. It appears temporarily, towards the bottom of the window.</summary>
+/// <summary>Snackbar inform user of a process that an app has performed or will perform. It appears temporarily,
+/// towards the bottom of the window.</summary>
 public class Snackbar : ContentControl, IAppearanceControl, IIconControl
 {
     /// <summary>Property for <see cref="IsCloseButtonEnabled"/>.</summary>
@@ -79,9 +80,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
         nameof(ContentForeground),
         typeof(Brush),
         typeof(Snackbar),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="Opened"/>.</summary>
     public static readonly RoutedEvent OpenedEvent = EventManager.RegisterRoutedEvent(
@@ -120,7 +119,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
         remove => RemoveHandler(OpenedEvent, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the <see cref="Snackbar"/> close button should be visible.</summary>
+    /// <summary>Gets or sets whether the Snackbar close button should be visible.</summary>
     public bool IsCloseButtonEnabled
     {
         get => (bool)GetValue(IsCloseButtonEnabledProperty);
@@ -134,7 +133,7 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
         set => SetValue(SlideTransformProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets the information whether the <see cref="Snackbar"/> is visible.</summary>
+    /// <summary>Gets or sets whether gets the information whether the Snackbar is visible.</summary>
     public bool IsShown
     {
         get => (bool)GetValue(IsShownProperty);
@@ -248,9 +247,9 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     /// <summary>Hides the <see cref="Snackbar"/>.</summary>
     protected virtual void Hide() => _ = Presenter.HideCurrent();
 
-    /// <summary>This virtual method is called when <see cref="Snackbar"/> is opening and it raises the <see cref="Opened"/> <see langword="event"/>.</summary>
+    /// <summary>This virtual method is called when Snackbar is opening and it raises the Opened event.</summary>
     protected virtual void OnOpened() => RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
 
-    /// <summary>This virtual method is called when <see cref="Snackbar"/> is closing and it raises the <see cref="Closed"/> <see langword="event"/>.</summary>
+    /// <summary>This virtual method is called when Snackbar is closing and it raises the Closed event.</summary>
     protected virtual void OnClosed() => RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
 }

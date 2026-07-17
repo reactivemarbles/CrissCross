@@ -16,19 +16,19 @@ public class MainViewModel : RxObject
     /// <summary>Initializes a new instance of the <see cref="MainViewModel"/> class.</summary>
     public MainViewModel() =>
         this.BuildComplete(() =>
+        {
+            GotoFirst = ReactiveCommand.Create(() =>
             {
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("secondWindow");
-                    this.NavigateToView<FirstViewModel>("browserView");
-                });
-
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("browserView");
-                    this.NavigateToView<FirstViewModel>("secondWindow");
-                });
+                this.NavigateToView<MainViewModel>("secondWindow");
+                this.NavigateToView<FirstViewModel>("browserView");
             });
+
+            GotoMain = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView<MainViewModel>("browserView");
+                this.NavigateToView<FirstViewModel>("secondWindow");
+            });
+        });
 
     /// <summary>Gets the goto first.</summary>
     /// <value>

@@ -13,8 +13,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class BusyOverlay : ContentControl
 {
     /// <summary>Property for <see cref="Operation"/>.</summary>
-    public static readonly StyledProperty<BusyOperation?> OperationProperty = AvaloniaProperty.Register<BusyOverlay, BusyOperation?>(
-        nameof(Operation));
+    public static readonly StyledProperty<BusyOperation?> OperationProperty = AvaloniaProperty.Register<
+        BusyOverlay,
+        BusyOperation?
+    >(nameof(Operation));
 
     /// <summary>Property for <see cref="IsBusy"/>.</summary>
     public static readonly StyledProperty<bool> IsBusyProperty = AvaloniaProperty.Register<BusyOverlay, bool>(

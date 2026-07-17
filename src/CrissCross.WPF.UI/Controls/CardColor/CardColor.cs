@@ -26,7 +26,7 @@ public class CardColor : System.Windows.Controls.Control
         nameof(SubtitleFontSize),
         typeof(double),
         typeof(CardColor),
-        new PropertyMetadata(11.0d));
+        new PropertyMetadata(11.0D));
 
     /// <summary>Property for <see cref="Color"/>.</summary>
     public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
@@ -40,9 +40,7 @@ public class CardColor : System.Windows.Controls.Control
         nameof(Brush),
         typeof(Brush),
         typeof(CardColor),
-        new PropertyMetadata(
-            new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) },
-            OnBrushPropertyChanged));
+        new PropertyMetadata(new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) }, OnBrushPropertyChanged));
 
     /// <summary>Property for <see cref="CardBrush"/>.</summary>
     public static readonly DependencyProperty CardBrushProperty = DependencyProperty.Register(
@@ -94,9 +92,7 @@ public class CardColor : System.Windows.Controls.Control
     }
 
     /// <summary>Virtual method triggered when <see cref="Subtitle"/> is changed.</summary>
-    protected virtual void OnSubtitlePropertyChanged()
-    {
-    }
+    protected virtual void OnSubtitlePropertyChanged() { }
 
     /// <summary>Virtual method triggered when <see cref="Color"/> is changed.</summary>
     protected virtual void OnColorPropertyChanged() => CardBrush = new SolidColorBrush(Color);

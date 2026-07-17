@@ -10,9 +10,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class Badge : global::Avalonia.Controls.ContentControl, IAppearanceControl
 {
     /// <summary>Property for <see cref="Appearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<Badge, ControlAppearance>(
-        nameof(Appearance),
-        ControlAppearance.Primary);
+    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<
+        Badge,
+        ControlAppearance
+    >(nameof(Appearance), ControlAppearance.Primary);
 
     /// <inheritdoc />
     public ControlAppearance Appearance

@@ -8,9 +8,7 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 internal sealed class GifImageData
 {
     /// <summary>Initializes a new instance of the <see cref="GifImageData"/> class.</summary>
-    private GifImageData()
-    {
-    }
+    private GifImageData() { }
 
     /// <summary>Gets or sets LzwMinimumCodeSize.</summary>
     public byte LzwMinimumCodeSize { get; set; }

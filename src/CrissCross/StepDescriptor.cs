@@ -5,48 +5,35 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace CrissCross;
 
 /// <summary>Describes one platform-neutral workflow step for steppers and wizard progress controls.</summary>
 public sealed class StepDescriptor
 {
+    /// <inheritdoc />
+    public StepDescriptor(string key, string title)
+        : this(key, title, new StepDescriptorOptions()) { }
+
     /// <summary>Initializes a new instance of the <see cref="StepDescriptor"/> class.</summary>
     /// <param name="key">The stable step key.</param>
     /// <param name="title">The display title.</param>
-    /// <param name="status">The workflow status for the step.</param>
-    /// <param name="isOptional">A value indicating whether the step is optional.</param>
-    /// <param name="isEnabled">A value indicating whether the step can be shown as enabled.</param>
-    /// <param name="canEnter">A value indicating whether navigation may enter the step.</param>
-    /// <param name="canLeave">A value indicating whether navigation may leave the step.</param>
-    /// <param name="validationMessages">The validation messages associated with the step.</param>
-    /// <param name="enterCommand">The command invoked by a platform control when entering the step.</param>
-    /// <param name="leaveCommand">The command invoked by a platform control when leaving the step.</param>
-    public StepDescriptor(
-        string key,
-        string title,
-        StepStatus status = StepStatus.Pending,
-        bool isOptional = false,
-        bool isEnabled = true,
-        bool canEnter = true,
-        bool canLeave = true,
-        IEnumerable<ValidationMessage>? validationMessages = null,
-        ICommand? enterCommand = null,
-        ICommand? leaveCommand = null)
+    /// <param name="options">The workflow state, validation, and command options.</param>
+    public StepDescriptor(string key, string title, StepDescriptorOptions options)
     {
         ThrowHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
+        ThrowHelper.ThrowIfNull(options, nameof(options));
 
         Key = key.Trim();
         Title = title ?? string.Empty;
-        Status = status;
-        IsOptional = isOptional;
-        IsEnabled = isEnabled;
-        CanEnter = canEnter;
-        CanLeave = canLeave;
-        ValidationMessages = new ReadOnlyCollection<ValidationMessage>((validationMessages ?? []).ToList());
-        EnterCommand = enterCommand;
-        LeaveCommand = leaveCommand;
+        Status = options.Status;
+        IsOptional = options.IsOptional;
+        IsEnabled = options.IsEnabled;
+        CanEnter = options.CanEnter;
+        CanLeave = options.CanLeave;
+        ValidationMessages = new ReadOnlyCollection<ValidationMessage>((options.ValidationMessages ?? []).ToList());
+        EnterCommand = options.EnterCommand;
+        LeaveCommand = options.LeaveCommand;
     }
 
     /// <summary>Gets the stable step key.</summary>
@@ -74,16 +61,17 @@ public sealed class StepDescriptor
     public IReadOnlyList<ValidationMessage> ValidationMessages { get; }
 
     /// <summary>Gets the command invoked by a platform control when entering the step.</summary>
-    public ICommand? EnterCommand { get; }
+    public System.Windows.Input.ICommand? EnterCommand { get; }
 
     /// <summary>Gets the command invoked by a platform control when leaving the step.</summary>
-    public ICommand? LeaveCommand { get; }
+    public System.Windows.Input.ICommand? LeaveCommand { get; }
 
     /// <summary>Gets a value indicating whether validation messages are associated with the step.</summary>
     public bool HasValidationMessages => ValidationMessages.Count > 0;
 
     /// <summary>Gets a value indicating whether the step blocks forward progress.</summary>
-    public bool IsBlocking => Status == StepStatus.Error || ValidationMessages.Any(static message => message.IsBlocking);
+    public bool IsBlocking =>
+        Status == StepStatus.Error || ValidationMessages.Any(static message => message.IsBlocking);
 
     /// <summary>Gets a value indicating whether the step is active/current.</summary>
     public bool IsCurrent => Status == StepStatus.Active;

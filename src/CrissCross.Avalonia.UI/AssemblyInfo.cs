@@ -7,5 +7,9 @@ using Avalonia.Metadata;
 
 [assembly: InternalsVisibleTo("CrissCross.NavigationView.Tests")]
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.Avalonia.UI", "CrissCross.Avalonia.UI")]
-[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.Avalonia.UI", "CrissCross.Avalonia.UI.Controls")]
-[assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.Avalonia.UI", "CrissCross.Avalonia.UI.Appearance")]
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
+    "CrissCross.Avalonia.UI.Controls")]
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
+    "CrissCross.Avalonia.UI.Appearance")]

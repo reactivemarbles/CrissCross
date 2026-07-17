@@ -26,7 +26,7 @@ public partial class LiveChartViewModel : RxObject
     private const int MaximumGenericPlotLineCount = 16;
 
     /// <summary>The line width used for scatter points.</summary>
-    private const float ScatterPointLineWidth = 0.3f;
+    private const float ScatterPointLineWidth = 0.3F;
 
     /// <summary>Stores the is xaxis date time value.</summary>
     [Reactive]
@@ -40,21 +40,26 @@ public partial class LiveChartViewModel : RxObject
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>Initializes and configures up to 16 plot lines in the chart using the provided data and UI creation logic, assigning each plot line to the appropriate Y-axis and setting up the X-axis as either date/time or numeric points.</summary>
+    /// <summary>Initializes and configures up to 16 plot lines in the chart using the provided data and UI creation
+    /// logic, assigning each plot line to the appropriate Y-axis and setting up the X-axis as either date/time or
+    /// numeric points.</summary>
     /// <typeparam name="T">The T type.</typeparam>
     /// <param name="data">The data value.</param>
     /// <param name="getYAxis">The getYAxis value.</param>
     /// <param name="createPlotUI">The createPlotUI value.</param>
-    /// <param name="isXAxisDateTime">Whether the X-axis values are date/time values; <see langword="false"/> uses numeric points.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/>, <paramref name="getYAxis"/>, or <paramref name="createPlotUI"/> is null, or
+    /// <param name="isXAxisDateTime">Whether the X-axis values are date/time values; <see langword="false"/> uses
+    /// numeric points.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/>, <paramref name="getYAxis"/>, or
+    /// <paramref name="createPlotUI"/> is null, or
     /// if a plot UI element cannot be created for a data item.</exception>
-    /// <exception cref="IndexOutOfRangeException">Thrown if the Y-axis index provided by <paramref name="getYAxis"/> is less than zero or greater than or equal to
+    /// <exception cref="IndexOutOfRangeException">Thrown if the Y-axis index provided by <paramref name="getYAxis"/> is
+    /// less than zero or greater than or equal to
     /// the number of available Y-axes.</exception>
     public void InitializeGenericPlotLines<T>(
-    IEnumerable<T> data,
-    Func<T, object>? getYAxis,
-    Func<T, object> createPlotUI,
-    bool isXAxisDateTime)
+        IEnumerable<T> data,
+        Func<T, object>? getYAxis,
+        Func<T, object> createPlotUI,
+        bool isXAxisDateTime)
     {
         ValidateGenericPlotLineArguments(data, getYAxis, createPlotUI);
         ClearContent();
@@ -71,85 +76,128 @@ public partial class LiveChartViewModel : RxObject
 
     /// <summary>Initializes scatter plot lines using the provided collection of observable data series.</summary>
     /// <param name="observables">The observables value.</param>
-    public void InitializeScatterPlotLines(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
+    public void InitializeScatterPlotLines(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
         InitializeGenericPlotLines(
-        data: observables,
-        getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
-        isXAxisDateTime: true);
+            data: observables,
+            getYAxis: input => input.Select(x => x.Axis),
+            createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: true);
 
     /// <summary>Initializes plot lines for scatter plots using a collection of observable point sequences.</summary>
     /// <param name="observables">The observables value.</param>
-    public void InitializeLinesForScatterObservablesPoints(IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> observables) =>
+    public void InitializeLinesForScatterObservablesPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> observables) =>
         InitializeGenericPlotLines(
-        data: observables,
-        getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
-        isXAxisDateTime: false);
+            data: observables,
+            getYAxis: input => input.Select(x => x.Axis),
+            createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
 
     /// <summary>Initializes plot lines for signal data using the provided collection of observables.</summary>
     /// <param name="observables">The observables value.</param>
-    public void InitializeSignalPlotLines(IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
+    public void InitializeSignalPlotLines(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
         InitializeGenericPlotLines(
-        data: observables,
-        getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new SignalUI(WpfPlot1vm!, observable: obs, coordinatesObs: MouseCoordinatesObservable, SetColorLegend(PlotLinesCollectionUI!), fixedPoints: this.WhenAnyValue(x => x.UseFixedNumberOfPoints), numberPointsPlotted: this.WhenAnyValue(x => x.NumberPointsPlotted)),
-        isXAxisDateTime: true);
+            data: observables,
+            getYAxis: input => input.Select(x => x.Axis),
+            createPlotUI: obs => new SignalUI(
+                WpfPlot1vm!,
+                observable: obs,
+                coordinatesObs: MouseCoordinatesObservable,
+                SetColorLegend(PlotLinesCollectionUI!),
+                new SignalUIOptions
+                {
+                    FixedPoints = this.WhenAnyValue(x => x.UseFixedNumberOfPoints),
+                    NumberPointsPlotted = this.WhenAnyValue(x => x.NumberPointsPlotted),
+                }),
+            isXAxisDateTime: true);
+
+    /// <summary>Provides the InitializeSignalPlotLines member.</summary>
+    /// <param name="data">The data value.</param>
+    public void InitializeSignalPlotLines(
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
+        InitializeGenericPlotLines(
+            data: [data],
+            getYAxis: input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                WpfPlot1vm!,
+                (data.Name, data.Value, data.DateTime, data.Axis),
+                SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: true);
 
     /// <summary>Initializes plot lines with data points for the data logger using the provided observables.</summary>
     /// <param name="observables">The observables value.</param>
-    public void InitializeDataLoggerPlotLinesWithPoints(IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> observables) =>
+    public void InitializeDataLoggerPlotLinesWithPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> observables) =>
         InitializeGenericPlotLines(
-        data: observables,
-        getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new DataLoggerUI(plot: WpfPlot1vm!, observable: obs, color: SetColorLegend(PlotLinesCollectionUI!)),
-        isXAxisDateTime: false);
-
-    /// <summary>Initializes plot lines for a signal using the specified data, configuring the plot to use a date-time X axis.</summary>
-    /// <param name="data">The data value.</param>
-    public void InitializeSignalPlotLines((string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
-        InitializeGenericPlotLines(
-        data: [data],
-        getYAxis: input => input.Axis,
-        createPlotUI: d => new SignalXY_UI(WpfPlot1vm!, (data.Name, data.Value, data.DateTime, data.Axis), SetColorLegend(PlotLinesCollectionUI!)),
-        isXAxisDateTime: true);
+            data: observables,
+            getYAxis: input => input.Select(x => x.Axis),
+            createPlotUI: obs => new DataLoggerUI(
+                plot: WpfPlot1vm!,
+                observable: obs,
+                color: SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
 
     /// <summary>Initializes plot lines for a single set of signal points using the specified data tuple.</summary>
     /// <param name="data">The data value.</param>
-    public void InitializeLinesForSignalPoints((string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
+    public void InitializeLinesForSignalPoints(
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
         InitializeGenericPlotLines(
-        data: [data],
-        getYAxis: input => input.Axis,
-        createPlotUI: d => new SignalXY_UI(plot: WpfPlot1vm!, data: d, color: SetColorLegend(PlotLinesCollectionUI!), coordinatesObs: MouseCoordinatesObservable),
-        isXAxisDateTime: false);
+            data: [data],
+            getYAxis: input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                plot: WpfPlot1vm!,
+                data: d,
+                color: SetColorLegend(PlotLinesCollectionUI!),
+                coordinatesObs: MouseCoordinatesObservable),
+            isXAxisDateTime: false);
 
-    /// <summary>Initializes plot lines for a collection of signal points, configuring each line based on the provided data series.</summary>
+    /// <summary>Provides the InitializeLinesForSignalPoints member.</summary>
     /// <param name="data">The data value.</param>
-    public void InitializeLinesForSignalPoints(IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data) =>
+    public void InitializeLinesForSignalPoints(
+        IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data) =>
         InitializeGenericPlotLines(
-        data: data,
-        getYAxis: input => input.Axis,
-        createPlotUI: d => new SignalXY_UI(plot: WpfPlot1vm!, data: d, color: SetColorLegend(PlotLinesCollectionUI!), coordinatesObs: MouseCoordinatesObservable),
-        isXAxisDateTime: false);
+            data: data,
+            getYAxis: input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                plot: WpfPlot1vm!,
+                data: d,
+                color: SetColorLegend(PlotLinesCollectionUI!),
+                coordinatesObs: MouseCoordinatesObservable),
+            isXAxisDateTime: false);
 
-    /// <summary>Initializes plot lines for a collection of signal observables, configuring each line to display its corresponding data points on the plot.</summary>
+    /// <summary>Initializes plot lines for a collection of signal observables, configuring each line to display its
+    /// corresponding data points on the plot.</summary>
     /// <param name="observables">The observables value.</param>
     /// <param name="fs">The fs value.</param>
     /// <param name="sampleCount">The sample count value.</param>
-    public void InitializeLinesForSignalObservablesPoints(IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> observables, int fs, uint sampleCount) =>
+    public void InitializeLinesForSignalObservablesPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> observables,
+        int fs,
+        uint sampleCount) =>
         InitializeGenericPlotLines(
-        data: observables,
-        getYAxis: input => input.Select(x => x.Axis),
-        createPlotUI: obs => new StreamerUI(plot: WpfPlot1vm!, observable: obs, fs: fs, sampleCount: sampleCount, plottedPointCount: NumberPointsPlotted, color: SetColorLegend(PlotLinesCollectionUI!)),
-        isXAxisDateTime: false);
+            data: observables,
+            getYAxis: input => input.Select(x => x.Axis),
+            createPlotUI: obs => new StreamerUI(
+                plot: WpfPlot1vm!,
+                observable: obs,
+                fs: fs,
+                sampleCount: sampleCount,
+                plottedPointCount: NumberPointsPlotted,
+                color: SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
 
-    /// <summary>Initializes and adds a new scatter plot line to the chart using the specified data points and axis.</summary>
+    /// <summary>Provides the InitializeLinesForScatterPoints member.</summary>
     /// <param name="data">The data value.</param>
     public void InitializeLinesForScatterPoints((string? Name, IList<double> X, IList<double> Y, int Axis) data)
     {
-        var newMyItem = new ScatterUI(WpfPlot1vm!, (data.Name, data.X, data.Y, data.Axis), SetColorLegend(PlotLinesCollectionUI!));
+        var newMyItem = new ScatterUI(
+            WpfPlot1vm!,
+            (data.Name, data.X, data.Y, data.Axis),
+            SetColorLegend(PlotLinesCollectionUI!));
         newMyItem.PlotLine!.Axes.YAxis = YAxisList[data.Axis];
-        newMyItem.PlotLine!.MarkerSize = 1f;
+        newMyItem.PlotLine!.MarkerSize = 1F;
         newMyItem.PlotLine!.LineWidth = ScatterPointLineWidth;
 
         for (var j = 0; j < YAxisList.Count; j++)
@@ -163,7 +211,7 @@ public partial class LiveChartViewModel : RxObject
         UpdateChartObjectsCollection();
     }
 
-    /// <summary>Initializes the control menu with the specified chart object settings, replacing any existing items.</summary>
+    /// <summary>Provides the InitializeControlMenu member.</summary>
     /// <param name="settings">The settings value.</param>
     public void InitializeControlMenu(IList<ChartObjects>? settings)
     {
@@ -180,7 +228,7 @@ public partial class LiveChartViewModel : RxObject
         ControlMenu.ReplaceAll(settings);
     }
 
-    /// <summary>Initializes and configures axis line elements for the plot, adding them to the plottable collection if available.</summary>
+    /// <summary>Provides the InitializeAxisLines member.</summary>
     /// <remarks>This method assigns the appropriate X and Y axes to each axis line and ensures that only
     /// non-null axis lines are processed. If no axis lines are present, the method performs no action.</remarks>
     public void InitializeAxisLines()
@@ -222,15 +270,17 @@ public partial class LiveChartViewModel : RxObject
     /// <param name="value">The argument value.</param>
     /// <param name="name">The argument name.</param>
     private static void ThrowIfNull<T>(T? value, string name)
-        where T : class =>
-        _ = value ?? throw new ArgumentNullException(name);
+        where T : class => _ = value ?? throw new ArgumentNullException(name);
 
     /// <summary>Validates generic plot line initialization arguments.</summary>
     /// <typeparam name="T">The data item type.</typeparam>
     /// <param name="data">The plot data.</param>
     /// <param name="getYAxis">The axis selector.</param>
     /// <param name="createPlotUI">The plot UI factory.</param>
-    private static void ValidateGenericPlotLineArguments<T>(IEnumerable<T> data, Func<T, object>? getYAxis, Func<T, object> createPlotUI)
+    private static void ValidateGenericPlotLineArguments<T>(
+        IEnumerable<T> data,
+        Func<T, object>? getYAxis,
+        Func<T, object> createPlotUI)
     {
         ThrowIfNull(data, nameof(data));
         ThrowIfNull(getYAxis, nameof(getYAxis));
@@ -274,22 +324,25 @@ public partial class LiveChartViewModel : RxObject
         switch (axisSource)
         {
             case IObservable<int> observable:
-                {
-                    _ = observable.DistinctUntilChanged().Subscribe(axis => AssignYAxis(axis, line, lineUI)).DisposeWith(Disposables);
-                    break;
-                }
+            {
+                _ = observable
+                    .DistinctUntilChanged()
+                    .Subscribe(axis => AssignYAxis(axis, line, lineUI))
+                    .DisposeWith(Disposables);
+                break;
+            }
 
             case int axis:
-                {
-                    AssignYAxis(axis, line, lineUI);
-                    break;
-                }
+            {
+                AssignYAxis(axis, line, lineUI);
+                break;
+            }
 
             default:
-                {
-                    AssignDefaultYAxis(line, lineUI);
-                    break;
-                }
+            {
+                AssignDefaultYAxis(line, lineUI);
+                break;
+            }
         }
     }
 
@@ -346,23 +399,27 @@ public partial class LiveChartViewModel : RxObject
     /// be called during view model initialization to ensure mouse coordinate updates are available.</remarks>
     private void InitializeMouseObservable() =>
         EventSignal
-            .From<MouseEventHandler, MouseEventArgs>(handler => handler.Invoke, handler => WpfPlot1vm!.MouseMove += handler, handler => WpfPlot1vm!.MouseMove -= handler)
+            .From<MouseEventHandler, MouseEventArgs>(
+                handler => handler.Invoke,
+                handler => WpfPlot1vm!.MouseMove += handler,
+                handler => WpfPlot1vm!.MouseMove -= handler)
             .Retry(int.MaxValue)
             .Subscribe(e =>
-        {
-            // MOUSE EVENT
-            var position = e.GetPosition(e.Device.Target);
+            {
+                // MOUSE EVENT
+                var position = e.GetPosition(e.Device.Target);
 
-            //// determine where the mouse is and send the coordinates
-            Pixel mousePixel = new(position.X, position.Y);
-            var mouseLocation = WpfPlot1vm!.Plot.GetCoordinates(mousePixel);
-            try
-            {
-                MouseCoordinatesObservable.OnNext(mouseLocation);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine("mouse location error: " + ex);
-            }
-        }).DisposeWith(Disposables);
+                //// determine where the mouse is and send the coordinates
+                Pixel mousePixel = new(position.X, position.Y);
+                var mouseLocation = WpfPlot1vm!.Plot.GetCoordinates(mousePixel);
+                try
+                {
+                    MouseCoordinatesObservable.OnNext(mouseLocation);
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("mouse location error: " + ex);
+                }
+            })
+            .DisposeWith(Disposables);
 }

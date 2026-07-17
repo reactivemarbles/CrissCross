@@ -10,22 +10,16 @@ namespace CrissCross.WPF.UI.Controls.Decoding;
 public class UnknownBlockTypeException : GifDecoderException
 {
     /// <summary>Initializes a new instance of the <see cref="UnknownBlockTypeException"/> class.</summary>
-    public UnknownBlockTypeException()
-    {
-    }
+    public UnknownBlockTypeException() { }
 
     /// <summary>Initializes a new instance of the <see cref="UnknownBlockTypeException"/> class.</summary>
     /// <param name="message">The message value.</param>
     public UnknownBlockTypeException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the <see cref="UnknownBlockTypeException"/> class.</summary>
     /// <param name="message">The message value.</param>
     /// <param name="inner">The inner value.</param>
     public UnknownBlockTypeException(string message, Exception inner)
-        : base(message, inner)
-    {
-    }
+        : base(message, inner) { }
 }

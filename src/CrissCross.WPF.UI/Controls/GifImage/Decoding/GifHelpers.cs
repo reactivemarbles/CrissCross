@@ -42,7 +42,10 @@ internal static class GifHelpers
     /// <param name="sourceStream">The sourceStream value.</param>
     /// <param name="cancellationToken">The cancellationToken value.</param>
     /// <returns>The result.</returns>
-    public static async Task ConsumeDataBlocksAsync(Stream sourceStream, CancellationToken cancellationToken = default) => await CopyDataBlocksToStreamAsync(sourceStream, Stream.Null, cancellationToken);
+    public static async Task ConsumeDataBlocksAsync(
+        Stream sourceStream,
+        CancellationToken cancellationToken = default) =>
+        await CopyDataBlocksToStreamAsync(sourceStream, Stream.Null, cancellationToken);
 
     /// <summary>Provides the ReadDataBlocksAsync member.</summary>
     /// <param name="stream">The stream value.</param>
@@ -64,7 +67,10 @@ internal static class GifHelpers
     /// <param name="targetStream">The targetStream value.</param>
     /// <param name="cancellationToken">The cancellationToken value.</param>
     /// <returns>The result.</returns>
-    public static async Task CopyDataBlocksToStreamAsync(Stream sourceStream, Stream targetStream, CancellationToken cancellationToken = default)
+    public static async Task CopyDataBlocksToStreamAsync(
+        Stream sourceStream,
+        Stream targetStream,
+        CancellationToken cancellationToken = default)
     {
         int len;
 
@@ -109,7 +115,9 @@ internal static class GifHelpers
     /// <returns>The result.</returns>
     public static ushort GetRepeatCount(GifApplicationExtension ext)
     {
-        return ext.Data is { Length: >= NetscapeRepeatCountDataLength } data ? BitConverter.ToUInt16(data, NetscapeRepeatCountOffset) : (ushort)1;
+        return ext.Data is { Length: >= NetscapeRepeatCountDataLength } data
+            ? BitConverter.ToUInt16(data, NetscapeRepeatCountOffset)
+            : (ushort)1;
     }
 
     /// <summary>Provides the UnknownBlockTypeException member.</summary>
@@ -130,7 +138,8 @@ internal static class GifHelpers
     /// <param name="actualBlockSize">The actualBlockSize value.</param>
     /// <returns>The result.</returns>
     public static Exception InvalidBlockSizeException(string blockName, int expectedBlockSize, int actualBlockSize) =>
-        new InvalidBlockSizeException($"Invalid block size for {blockName}. Expected {expectedBlockSize}, but was {actualBlockSize}");
+        new InvalidBlockSizeException(
+            $"Invalid block size for {blockName}. Expected {expectedBlockSize}, but was {actualBlockSize}");
 
     /// <summary>Provides the InvalidSignatureException member.</summary>
     /// <param name="signature">The signature value.</param>
@@ -147,14 +156,12 @@ internal static class GifHelpers
     /// <summary>Provides the GetString member.</summary>
     /// <param name="bytes">The bytes value.</param>
     /// <returns>The result.</returns>
-    public static string GetString(byte[]? bytes) =>
-       bytes is null ? string.Empty : GetString(bytes, 0, bytes.Length);
+    public static string GetString(byte[]? bytes) => bytes is null ? string.Empty : GetString(bytes, 0, bytes.Length);
 
     /// <summary>Provides the GetString member.</summary>
     /// <param name="bytes">The bytes value.</param>
     /// <param name="index">The index value.</param>
     /// <param name="count">The count value.</param>
     /// <returns>The result.</returns>
-    public static string GetString(byte[] bytes, int index, int count) =>
-        Encoding.UTF8.GetString(bytes, index, count);
+    public static string GetString(byte[] bytes, int index, int count) => Encoding.UTF8.GetString(bytes, index, count);
 }

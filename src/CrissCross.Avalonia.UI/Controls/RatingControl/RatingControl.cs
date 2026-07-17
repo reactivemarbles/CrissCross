@@ -24,9 +24,10 @@ public class RatingControl : TemplatedControl
         5);
 
     /// <summary>Property for <see cref="HalfStarEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> HalfStarEnabledProperty = AvaloniaProperty.Register<RatingControl, bool>(
-        nameof(HalfStarEnabled),
-        true);
+    public static readonly StyledProperty<bool> HalfStarEnabledProperty = AvaloniaProperty.Register<
+        RatingControl,
+        bool
+    >(nameof(HalfStarEnabled), true);
 
     /// <summary>Property for <see cref="StarSize"/>.</summary>
     public static readonly StyledProperty<double> StarSizeProperty = AvaloniaProperty.Register<RatingControl, double>(
@@ -34,19 +35,22 @@ public class RatingControl : TemplatedControl
         24.0);
 
     /// <summary>Property for <see cref="StarSpacing"/>.</summary>
-    public static readonly StyledProperty<double> StarSpacingProperty = AvaloniaProperty.Register<RatingControl, double>(
-        nameof(StarSpacing),
-        4.0);
+    public static readonly StyledProperty<double> StarSpacingProperty = AvaloniaProperty.Register<
+        RatingControl,
+        double
+    >(nameof(StarSpacing), 4.0);
 
     /// <summary>Property for <see cref="FilledBrush"/>.</summary>
-    public static readonly StyledProperty<IBrush> FilledBrushProperty = AvaloniaProperty.Register<RatingControl, IBrush>(
-        nameof(FilledBrush),
-        Brushes.Gold);
+    public static readonly StyledProperty<IBrush> FilledBrushProperty = AvaloniaProperty.Register<
+        RatingControl,
+        IBrush
+    >(nameof(FilledBrush), Brushes.Gold);
 
     /// <summary>Property for <see cref="UnfilledBrush"/>.</summary>
-    public static readonly StyledProperty<IBrush> UnfilledBrushProperty = AvaloniaProperty.Register<RatingControl, IBrush>(
-        nameof(UnfilledBrush),
-        Brushes.Gray);
+    public static readonly StyledProperty<IBrush> UnfilledBrushProperty = AvaloniaProperty.Register<
+        RatingControl,
+        IBrush
+    >(nameof(UnfilledBrush), Brushes.Gray);
 
     /// <summary>Property for <see cref="IsReadOnly"/>.</summary>
     public static readonly StyledProperty<bool> IsReadOnlyProperty = AvaloniaProperty.Register<RatingControl, bool>(
@@ -54,7 +58,7 @@ public class RatingControl : TemplatedControl
         false);
 
     /// <summary>Increment used for half-star ratings.</summary>
-    private const double HalfStarIncrement = 0.5d;
+    private const double HalfStarIncrement = 0.5D;
 
     /// <summary>Provides the _starsPanel member.</summary>
     private global::Avalonia.Controls.StackPanel? _starsPanel;
@@ -133,9 +137,13 @@ public class RatingControl : TemplatedControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != ValueProperty && change.Property != MaxRatingProperty &&
-            change.Property != FilledBrushProperty && change.Property != UnfilledBrushProperty &&
-            change.Property != StarSizeProperty && change.Property != StarSpacingProperty)
+        if (
+            change.Property != ValueProperty
+            && change.Property != MaxRatingProperty
+            && change.Property != FilledBrushProperty
+            && change.Property != UnfilledBrushProperty
+            && change.Property != StarSizeProperty
+            && change.Property != StarSpacingProperty)
         {
             return;
         }
@@ -190,9 +198,10 @@ public class RatingControl : TemplatedControl
         if (HalfStarEnabled)
         {
             var fractionalPart = starIndex - Math.Floor(starIndex);
-            Value = fractionalPart < HalfStarIncrement
-                ? Math.Floor(starIndex) + HalfStarIncrement
-                : Math.Ceiling(starIndex);
+            Value =
+                fractionalPart < HalfStarIncrement
+                    ? Math.Floor(starIndex) + HalfStarIncrement
+                    : Math.Ceiling(starIndex);
         }
         else
         {
@@ -220,7 +229,7 @@ public class RatingControl : TemplatedControl
             {
                 Width = StarSize,
                 Height = StarSize,
-                Margin = new(0, 0, StarSpacing, 0)
+                Margin = new(0, 0, StarSpacing, 0),
             };
 
             // Background (unfilled) star
@@ -251,7 +260,7 @@ public class RatingControl : TemplatedControl
             Fill = fill,
             Stretch = Stretch.Uniform,
             Width = StarSize,
-            Height = StarSize
+            Height = StarSize,
         };
     }
 }

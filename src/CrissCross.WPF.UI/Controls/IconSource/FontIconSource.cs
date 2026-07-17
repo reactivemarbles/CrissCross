@@ -105,7 +105,7 @@ public class FontIconSource : IconSource
             fontIcon.FontStyle = FontStyle;
         }
 
-        if (Foreground != SystemColors.ControlTextBrush)
+        if (!Equals(Foreground, SystemColors.ControlTextBrush))
         {
             fontIcon.Foreground = Foreground;
         }

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Threading;
 using Splat;
 
 namespace CrissCross;
@@ -17,34 +16,27 @@ public static class NavigationExtensions
     {
         /// <summary>Resolves a ViewModel-first request using an interface or base-class key.</summary>
         /// <typeparam name="TViewModelKey">The caller-facing view model lookup key.</typeparam>
-        /// <param name="contract">The navigation contract.</param>
-        /// <param name="parameter">The navigation parameter.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="request">The typed navigation key request.</param>
         /// <returns>An observable navigation resolution.</returns>
         public IObservable<NavigationResolution> NavigateViewModel<TViewModelKey>(
-            string? contract = null,
-            object? parameter = null,
-            CancellationToken cancellationToken = default)
+            NavigationKeyRequest<TViewModelKey> request)
             where TViewModelKey : class
         {
             ThrowHelper.ThrowIfNull(navigator, nameof(navigator));
-            return navigator.NavigateViewModel(typeof(TViewModelKey), contract, parameter, cancellationToken);
+            ThrowHelper.ThrowIfNull(request, nameof(request));
+            return navigator.NavigateViewModel(typeof(TViewModelKey), request.Options);
         }
 
         /// <summary>Resolves a View-first request using an interface or base-class key.</summary>
         /// <typeparam name="TViewKey">The caller-facing view lookup key.</typeparam>
-        /// <param name="contract">The navigation contract.</param>
-        /// <param name="parameter">The navigation parameter.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="request">The typed navigation key request.</param>
         /// <returns>An observable navigation resolution.</returns>
-        public IObservable<NavigationResolution> NavigateView<TViewKey>(
-            string? contract = null,
-            object? parameter = null,
-            CancellationToken cancellationToken = default)
+        public IObservable<NavigationResolution> NavigateView<TViewKey>(NavigationKeyRequest<TViewKey> request)
             where TViewKey : class
         {
             ThrowHelper.ThrowIfNull(navigator, nameof(navigator));
-            return navigator.NavigateView(typeof(TViewKey), contract, parameter, cancellationToken);
+            ThrowHelper.ThrowIfNull(request, nameof(request));
+            return navigator.NavigateView(typeof(TViewKey), request.Options);
         }
     }
 
@@ -52,30 +44,66 @@ public static class NavigationExtensions
     /// <param name="viewHost">The navigation host.</param>
     extension(IViewModelRoutedViewHost viewHost)
     {
+        /// <summary>Navigates a host to the supplied view model.</summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        public void Navigate<TViewModel>(TViewModel viewModel)
+            where TViewModel : class, IRxObject => viewHost.Navigate(viewModel, null, null);
+
+        /// <summary>Navigates a host to the supplied view model and contract.</summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The navigation contract.</param>
+        public void Navigate<TViewModel>(TViewModel viewModel, string? contract)
+            where TViewModel : class, IRxObject => viewHost.Navigate(viewModel, contract, null);
+
+        /// <summary>Navigates a host to the supplied view model and clears history.</summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        public void NavigateAndReset<TViewModel>(TViewModel viewModel)
+            where TViewModel : class, IRxObject => viewHost.NavigateAndReset(viewModel, null, null);
+
+        /// <summary>Navigates a host to the supplied view model and contract, then clears history.</summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="contract">The navigation contract.</param>
+        public void NavigateAndReset<TViewModel>(TViewModel viewModel, string? contract)
+            where TViewModel : class, IRxObject => viewHost.NavigateAndReset(viewModel, contract, null);
+
+        /// <summary>Navigates back without a parameter.</summary>
+        /// <returns>The target view model.</returns>
+        public IRxObject? NavigateBack() => viewHost.NavigateBack(null);
+
         /// <summary>Navigates a host to a resolved view model type.</summary>
         /// <typeparam name="TViewModel">The view model type.</typeparam>
-        /// <param name="contract">The navigation contract.</param>
-        /// <param name="parameter">The navigation parameter.</param>
-        public void Navigate<TViewModel>(string? contract = null, object? parameter = null)
+        /// <param name="request">The typed navigation key request.</param>
+        public void Navigate<TViewModel>(NavigationKeyRequest<TViewModel> request)
             where TViewModel : class, IRxObject
         {
             ThrowHelper.ThrowIfNull(viewHost, nameof(viewHost));
-            var viewModel = AppLocator.Current.GetService<TViewModel>(contract) ??
-                throw new InvalidOperationException($"No view model is registered for '{typeof(TViewModel).FullName}'.");
-            viewHost.Navigate(viewModel, contract, parameter);
+            ThrowHelper.ThrowIfNull(request, nameof(request));
+            var options = request.Options;
+            var viewModel =
+                AppLocator.Current.GetService<TViewModel>(options.Contract)
+                ?? throw new InvalidOperationException(
+                    $"No view model is registered for '{typeof(TViewModel).FullName}'.");
+            viewHost.Navigate(viewModel, options.Contract, options.Parameter);
         }
 
         /// <summary>Navigates a host to a resolved view model type and clears its history.</summary>
         /// <typeparam name="TViewModel">The view model type.</typeparam>
-        /// <param name="contract">The navigation contract.</param>
-        /// <param name="parameter">The navigation parameter.</param>
-        public void NavigateAndReset<TViewModel>(string? contract = null, object? parameter = null)
+        /// <param name="request">The typed navigation key request.</param>
+        public void NavigateAndReset<TViewModel>(NavigationKeyRequest<TViewModel> request)
             where TViewModel : class, IRxObject
         {
             ThrowHelper.ThrowIfNull(viewHost, nameof(viewHost));
-            var viewModel = AppLocator.Current.GetService<TViewModel>(contract) ??
-                throw new InvalidOperationException($"No view model is registered for '{typeof(TViewModel).FullName}'.");
-            viewHost.NavigateAndReset(viewModel, contract, parameter);
+            ThrowHelper.ThrowIfNull(request, nameof(request));
+            var options = request.Options;
+            var viewModel =
+                AppLocator.Current.GetService<TViewModel>(options.Contract)
+                ?? throw new InvalidOperationException(
+                    $"No view model is registered for '{typeof(TViewModel).FullName}'.");
+            viewHost.NavigateAndReset(viewModel, options.Contract, options.Parameter);
         }
     }
 }

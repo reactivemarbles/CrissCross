@@ -20,7 +20,12 @@ public sealed class BrushAnimator : Animator
     /// <param name="metadata">The metadata value.</param>
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    private BrushAnimator(Stream sourceStream, Uri? sourceUri, GifDataStream metadata, RepeatBehavior repeatBehavior, bool cacheFrameDataInMemory)
+    private BrushAnimator(
+        Stream sourceStream,
+        Uri? sourceUri,
+        GifDataStream metadata,
+        RepeatBehavior repeatBehavior,
+        bool cacheFrameDataInMemory)
         : base(sourceStream, sourceUri, metadata, repeatBehavior, cacheFrameDataInMemory)
     {
         Brush = new ImageBrush { ImageSource = Bitmap };
@@ -40,7 +45,6 @@ public sealed class BrushAnimator : Animator
     public RepeatBehavior RepeatBehavior
     {
         get => _repeatBehavior;
-
         set
         {
             _repeatBehavior = value;
@@ -57,34 +61,63 @@ public sealed class BrushAnimator : Animator
     /// <summary>Creates the asynchronous.</summary>
     /// <param name="sourceUri">The source URI.</param>
     /// <param name="repeatBehavior">The repeat behavior.</param>
+    /// <returns>A BrushAnimator.</returns>
+    public static Task<BrushAnimator> CreateAsync(Uri sourceUri, RepeatBehavior repeatBehavior) =>
+        CreateAsync(sourceUri, repeatBehavior, false, null);
+
+    /// <summary>Creates the asynchronous animator and reports loading progress.</summary>
+    /// <param name="sourceUri">The source URI.</param>
+    /// <param name="repeatBehavior">The repeat behavior.</param>
     /// <param name="progress">The progress.</param>
     /// <returns>A BrushAnimator.</returns>
-    public static Task<BrushAnimator> CreateAsync(Uri sourceUri, RepeatBehavior repeatBehavior, IProgress<int>? progress = null) =>
-        CreateAsync(sourceUri, repeatBehavior, false, progress);
+    public static Task<BrushAnimator> CreateAsync(
+        Uri sourceUri,
+        RepeatBehavior repeatBehavior,
+        IProgress<int>? progress) => CreateAsync(sourceUri, repeatBehavior, false, progress);
 
     /// <summary>Creates the asynchronous.</summary>
     /// <param name="sourceUri">The source URI.</param>
     /// <param name="repeatBehavior">The repeat behavior.</param>
     /// <param name="cacheFrameDataInMemory">if set to <c>true</c> [cache frame data in memory].</param>
+    /// <returns>A BrushAnimator.</returns>
+    public static Task<BrushAnimator> CreateAsync(
+        Uri sourceUri,
+        RepeatBehavior repeatBehavior,
+        bool cacheFrameDataInMemory) => CreateAsync(sourceUri, repeatBehavior, cacheFrameDataInMemory, null);
+
+    /// <summary>Creates the asynchronous animator and reports loading progress.</summary>
+    /// <param name="sourceUri">The source URI.</param>
+    /// <param name="repeatBehavior">The repeat behavior.</param>
+    /// <param name="cacheFrameDataInMemory">Whether to cache frame data in memory.</param>
     /// <param name="progress">The progress.</param>
     /// <returns>A BrushAnimator.</returns>
-    public static Task<BrushAnimator> CreateAsync(Uri sourceUri, RepeatBehavior repeatBehavior, bool cacheFrameDataInMemory, IProgress<int>? progress = null) => CreateAsyncCore(
+    public static Task<BrushAnimator> CreateAsync(
+        Uri sourceUri,
+        RepeatBehavior repeatBehavior,
+        bool cacheFrameDataInMemory,
+        IProgress<int>? progress) =>
+        CreateAsyncCore(
             sourceUri,
             progress,
-            (stream, metadata) => new BrushAnimator(stream, sourceUri, metadata, repeatBehavior, cacheFrameDataInMemory));
+            (stream, metadata) =>
+                new BrushAnimator(stream, sourceUri, metadata, repeatBehavior, cacheFrameDataInMemory));
 
     /// <summary>Creates the asynchronous.</summary>
     /// <param name="sourceStream">The source stream.</param>
     /// <param name="repeatBehavior">The repeat behavior.</param>
     /// <returns>A BrushAnimator.</returns>
-    public static Task<BrushAnimator> CreateAsync(Stream sourceStream, RepeatBehavior repeatBehavior) => CreateAsync(sourceStream, repeatBehavior, false);
+    public static Task<BrushAnimator> CreateAsync(Stream sourceStream, RepeatBehavior repeatBehavior) =>
+        CreateAsync(sourceStream, repeatBehavior, false);
 
     /// <summary>Creates the asynchronous.</summary>
     /// <param name="sourceStream">The source stream.</param>
     /// <param name="repeatBehavior">The repeat behavior.</param>
     /// <param name="cacheFrameDataInMemory">if set to <c>true</c> [cache frame data in memory].</param>
     /// <returns>A BrushAnimator.</returns>
-    public static Task<BrushAnimator> CreateAsync(Stream sourceStream, RepeatBehavior repeatBehavior, bool cacheFrameDataInMemory)
+    public static Task<BrushAnimator> CreateAsync(
+        Stream sourceStream,
+        RepeatBehavior repeatBehavior,
+        bool cacheFrameDataInMemory)
     {
         if (sourceStream is null)
         {

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
@@ -24,5 +23,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.WPF.Plot\CrissCross.WPF.Plot.csproj" />
   </ItemGroup>
-
 </Project>

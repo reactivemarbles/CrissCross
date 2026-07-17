@@ -12,8 +12,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class EmptyState : ContentControl
 {
     /// <summary>Property for <see cref="Model"/>.</summary>
-    public static readonly StyledProperty<EmptyStateModel?> ModelProperty = AvaloniaProperty.Register<EmptyState, EmptyStateModel?>(
-        nameof(Model));
+    public static readonly StyledProperty<EmptyStateModel?> ModelProperty = AvaloniaProperty.Register<
+        EmptyState,
+        EmptyStateModel?
+    >(nameof(Model));
 
     /// <summary>Gets or sets the empty-state model.</summary>
     public EmptyStateModel? Model

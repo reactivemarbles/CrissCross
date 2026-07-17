@@ -79,12 +79,11 @@ public partial class MainWindow : IAmBuilt, IDisposable
         tracker?.Track(this);
         SetCurrentValue(TrackerProperty, tracker);
         _viewBindings = new();
-        _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title)
-            .DisposeWith(_viewBindings);
+        _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(_viewBindings);
         _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource)
             .DisposeWith(_viewBindings);
         NavBreadcrumb.SetupNavigation(nameof(mainWindow));
-        NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
+        NavBreadcrumb.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "Main");
     }
 
     /// <summary>Releases view bindings when the window leaves the visual tree.</summary>

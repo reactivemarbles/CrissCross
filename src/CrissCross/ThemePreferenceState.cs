@@ -11,27 +11,33 @@ namespace CrissCross;
 public sealed class ThemePreferenceState
 {
     /// <summary>Gets the theme choices available when high contrast is supported.</summary>
-    private static readonly IReadOnlyList<ThemeChoice> ChoicesWithHighContrast = Array.AsReadOnly(
-        [
-            ThemeChoice.System,
-            ThemeChoice.Light,
-            ThemeChoice.Dark,
-            ThemeChoice.HighContrast
-        ]);
+    private static readonly IReadOnlyList<ThemeChoice> ChoicesWithHighContrast = Array.AsReadOnly([
+        ThemeChoice.System,
+        ThemeChoice.Light,
+        ThemeChoice.Dark,
+        ThemeChoice.HighContrast,]);
 
     /// <summary>Gets the theme choices available when high contrast is not supported.</summary>
-    private static readonly IReadOnlyList<ThemeChoice> ChoicesWithoutHighContrast = Array.AsReadOnly(
-        [
-            ThemeChoice.System,
-            ThemeChoice.Light,
-            ThemeChoice.Dark
-        ]);
+    private static readonly IReadOnlyList<ThemeChoice> ChoicesWithoutHighContrast = Array.AsReadOnly([
+        ThemeChoice.System,
+        ThemeChoice.Light,
+        ThemeChoice.Dark,]);
+
+    /// <inheritdoc />
+    public ThemePreferenceState(ThemeChoice selectedChoice)
+        : this(selectedChoice, ThemeChoice.Light, true) { }
+
+    /// <inheritdoc />
+    public ThemePreferenceState(ThemeChoice selectedChoice, ThemeChoice systemChoice)
+        : this(selectedChoice, systemChoice, true) { }
 
     /// <summary>Initializes a new instance of the <see cref="ThemePreferenceState"/> class.</summary>
     /// <param name="selectedChoice">The user-selected theme preference.</param>
     /// <param name="systemChoice">The current concrete system theme.</param>
-    /// <param name="supportsHighContrast">A value indicating whether high contrast is supported by the current platform.</param>
-    public ThemePreferenceState(ThemeChoice selectedChoice, ThemeChoice systemChoice = ThemeChoice.Light, bool supportsHighContrast = true)
+    /// <param name="supportsHighContrast">
+    /// A value indicating whether high contrast is supported by the current platform.
+    /// </param>
+    public ThemePreferenceState(ThemeChoice selectedChoice, ThemeChoice systemChoice, bool supportsHighContrast)
     {
         SelectedChoice = selectedChoice;
         SystemChoice = NormalizeConcreteChoice(systemChoice, supportsHighContrast);
@@ -62,12 +68,19 @@ public sealed class ThemePreferenceState
     public bool IsHighContrastEffective => EffectiveChoice == ThemeChoice.HighContrast;
 
     /// <summary>Gets compact user-facing text for the theme preference.</summary>
-    public string DisplayText => (IsSystemSelected, SelectedChoice == ThemeChoice.HighContrast && !SupportsHighContrast) switch
-    {
-        (true, _) => string.Format(System.Globalization.CultureInfo.InvariantCulture, "System ({0})", FormatChoice(EffectiveChoice)),
-        (_, true) => string.Format(System.Globalization.CultureInfo.InvariantCulture, "High contrast (using {0})", FormatChoice(EffectiveChoice)),
-        _ => FormatChoice(SelectedChoice)
-    };
+    public string DisplayText =>
+        (IsSystemSelected, SelectedChoice == ThemeChoice.HighContrast && !SupportsHighContrast) switch
+        {
+            (true, _) => string.Format(
+                System.Globalization.CultureInfo.InvariantCulture,
+                "System ({0})",
+                FormatChoice(EffectiveChoice)),
+            (_, true) => string.Format(
+                System.Globalization.CultureInfo.InvariantCulture,
+                "High contrast (using {0})",
+                FormatChoice(EffectiveChoice)),
+            _ => FormatChoice(SelectedChoice),
+        };
 
     /// <summary>Determines whether the specified choice is available on the current platform.</summary>
     /// <param name="choice">The choice to test.</param>
@@ -79,9 +92,14 @@ public sealed class ThemePreferenceState
     /// <param name="systemChoice">The current system theme choice.</param>
     /// <param name="supportsHighContrast">A value indicating whether high contrast is supported.</param>
     /// <returns>The concrete effective theme choice.</returns>
-    private static ThemeChoice ResolveEffectiveChoice(ThemeChoice selectedChoice, ThemeChoice systemChoice, bool supportsHighContrast)
+    private static ThemeChoice ResolveEffectiveChoice(
+        ThemeChoice selectedChoice,
+        ThemeChoice systemChoice,
+        bool supportsHighContrast)
     {
-        return selectedChoice == ThemeChoice.System || (selectedChoice == ThemeChoice.HighContrast && !supportsHighContrast)
+        var systemSelected = selectedChoice == ThemeChoice.System;
+        var unsupportedHighContrast = selectedChoice == ThemeChoice.HighContrast && !supportsHighContrast;
+        return systemSelected || unsupportedHighContrast
             ? systemChoice
             : NormalizeConcreteChoice(selectedChoice, supportsHighContrast);
     }
@@ -97,17 +115,20 @@ public sealed class ThemePreferenceState
             return choice;
         }
 
-        return choice == ThemeChoice.HighContrast && supportsHighContrast ? ThemeChoice.HighContrast : ThemeChoice.Light;
+        return choice == ThemeChoice.HighContrast && supportsHighContrast
+            ? ThemeChoice.HighContrast
+            : ThemeChoice.Light;
     }
 
     /// <summary>Formats a theme choice for display.</summary>
     /// <param name="choice">The theme choice.</param>
     /// <returns>The display text.</returns>
-    private static string FormatChoice(ThemeChoice choice) => choice switch
-    {
-        ThemeChoice.Dark => "Dark",
-        ThemeChoice.Light => "Light",
-        ThemeChoice.HighContrast => "High contrast",
-        _ => "System"
-    };
+    private static string FormatChoice(ThemeChoice choice) =>
+        choice switch
+        {
+            ThemeChoice.Dark => "Dark",
+            ThemeChoice.Light => "Light",
+            ThemeChoice.HighContrast => "High contrast",
+            _ => "System",
+        };
 }

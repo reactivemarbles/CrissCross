@@ -6,7 +6,8 @@ using System.Windows.Markup;
 
 namespace CrissCross.WPF.UI.Markup;
 
-/// <summary>Provides a dictionary implementation that contains controls resources used by components and other elements of a WPF application.</summary>
+/// <summary>Provides a dictionary implementation that contains controls resources used by components and other elements
+/// of a WPF application.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;Application
@@ -27,8 +28,9 @@ namespace CrissCross.WPF.UI.Markup;
 public class ControlsDictionary : ResourceDictionary
 {
     /// <summary>Provides the DictionaryUri member.</summary>
-    private const string DictionaryUri = "pack://application:,,,/CrissCross.WPF.UI;component/Resources/CrissCross.Ui.xaml";
+    private const string DictionaryUri =
+        "pack://application:,,,/CrissCross.WPF.UI;component/Resources/CrissCross.Ui.xaml";
 
-    /// <summary>Initializes a new instance of the <see cref="ControlsDictionary"/> class. Default constructor defining <see cref="ResourceDictionary.Source"/> of the <c>CrissCross UI</c> controls dictionary.</summary>
+    /// <summary>Initializes a new instance of the <see cref="ControlsDictionary"/> class.</summary>
     public ControlsDictionary() => Source = new(DictionaryUri, UriKind.Absolute);
 }

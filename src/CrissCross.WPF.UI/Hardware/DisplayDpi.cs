@@ -15,17 +15,17 @@ public readonly record struct DisplayDpi(int DpiX, int DpiY, double DpiScaleX, d
     /// <param name="dpiScaleX">The DPI scale on the X axis.</param>
     /// <param name="dpiScaleY">The DPI scale on the Y axis.</param>
     public DisplayDpi(double dpiScaleX, double dpiScaleY)
-        : this((int)Math.Round(DpiHelper.DefaultDpi * dpiScaleX, MidpointRounding.AwayFromZero), (int)Math.Round(DpiHelper.DefaultDpi * dpiScaleY, MidpointRounding.AwayFromZero), dpiScaleX, dpiScaleY)
-    {
-    }
+        : this(
+            (int)Math.Round(DpiHelper.DefaultDpi * dpiScaleX, MidpointRounding.AwayFromZero),
+            (int)Math.Round(DpiHelper.DefaultDpi * dpiScaleY, MidpointRounding.AwayFromZero),
+            dpiScaleX,
+            dpiScaleY) { }
 
     /// <summary>Initializes a new instance of the <see cref="DisplayDpi"/> structure.</summary>
     /// <param name="dpiX">The DPI on the X axis.</param>
     /// <param name="dpiY">The DPI on the Y axis.</param>
     public DisplayDpi(int dpiX, int dpiY)
-        : this(dpiX, dpiY, dpiX / (double)DpiHelper.DefaultDpi, dpiY / (double)DpiHelper.DefaultDpi)
-    {
-    }
+        : this(dpiX, dpiY, dpiX / (double)DpiHelper.DefaultDpi, dpiY / (double)DpiHelper.DefaultDpi) { }
 
     /// <summary>Gets the DPI on the X axis.</summary>
     public int DpiX { get; } = DpiX;

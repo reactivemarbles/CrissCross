@@ -1,98 +1,104 @@
 <ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls">
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:controls="clr-namespace:CrissCross.WPF.UI.Controls"
+>
+  <Style TargetType="{x:Type controls:DataFilterPanel}">
+    <Setter Property="MinHeight" Value="96" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type controls:DataFilterPanel}">
+          <Border
+            Padding="12"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="6"
+          >
+            <StackPanel>
+              <DockPanel Margin="0,0,0,8" LastChildFill="True">
+                <TextBlock
+                  DockPanel.Dock="Left"
+                  Margin="0,0,12,0"
+                  VerticalAlignment="Center"
+                  FontWeight="SemiBold"
+                  Text="Filters"
+                />
+                <TextBlock
+                  DockPanel.Dock="Right"
+                  VerticalAlignment="Center"
+                  Opacity="0.72"
+                  Text="{Binding FilterState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}"
+                />
+                <TextBox
+                  MinWidth="180"
+                  Text="{Binding SearchText, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                />
+              </DockPanel>
 
-    <Style TargetType="{x:Type controls:DataFilterPanel}">
-        <Setter Property="MinHeight" Value="96" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:DataFilterPanel}">
-                    <Border
-                        Padding="12"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="6">
-                        <StackPanel>
-                            <DockPanel Margin="0,0,0,8" LastChildFill="True">
-                                <TextBlock
-                                    DockPanel.Dock="Left"
-                                    Margin="0,0,12,0"
-                                    VerticalAlignment="Center"
-                                    FontWeight="SemiBold"
-                                    Text="Filters" />
-                                <TextBlock
-                                    DockPanel.Dock="Right"
-                                    VerticalAlignment="Center"
-                                    Opacity="0.72"
-                                    Text="{Binding FilterState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <TextBox
-                                    MinWidth="180"
-                                    Text="{Binding SearchText, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </DockPanel>
+              <ItemsControl
+                Margin="0,0,0,8"
+                ItemsSource="{Binding FilterState.Descriptors, RelativeSource={RelativeSource TemplatedParent}}"
+              >
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button
+                      Margin="0,0,6,6"
+                      Command="{Binding AddFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:DataFilterPanel}}}"
+                      CommandParameter="{Binding}"
+                      Content="{Binding DisplayName}"
+                    />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
 
-                            <ItemsControl
-                                Margin="0,0,0,8"
-                                ItemsSource="{Binding FilterState.Descriptors, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button
-                                            Margin="0,0,6,6"
-                                            Command="{Binding AddFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:DataFilterPanel}}}"
-                                            CommandParameter="{Binding}"
-                                            Content="{Binding DisplayName}" />
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+              <ItemsControl
+                Margin="0,0,0,10"
+                ItemsSource="{Binding FilterState.ActiveTokens, RelativeSource={RelativeSource TemplatedParent}}"
+              >
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <DockPanel Margin="0,0,6,6" LastChildFill="False">
+                      <TextBlock VerticalAlignment="Center" Opacity="0.86" Text="{Binding DisplayText}" />
+                      <Button
+                        Margin="6,0,0,0"
+                        Command="{Binding RemoveFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:DataFilterPanel}}}"
+                        CommandParameter="{Binding}"
+                        Content="Remove"
+                      />
+                    </DockPanel>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+              </ItemsControl>
 
-                            <ItemsControl
-                                Margin="0,0,0,10"
-                                ItemsSource="{Binding FilterState.ActiveTokens, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel Margin="0,0,6,6" LastChildFill="False">
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Opacity="0.86"
-                                                Text="{Binding DisplayText}" />
-                                            <Button
-                                                Margin="6,0,0,0"
-                                                Command="{Binding RemoveFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type controls:DataFilterPanel}}}"
-                                                CommandParameter="{Binding}"
-                                                Content="Remove" />
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-
-                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                <Button
-                                    MinWidth="72"
-                                    Margin="0,0,8,0"
-                                    Command="{Binding ClearCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Content="Clear"
-                                    IsEnabled="{Binding FilterState.CanClear, RelativeSource={RelativeSource TemplatedParent}}" />
-                                <Button
-                                    MinWidth="72"
-                                    Command="{Binding ApplyCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Content="Apply"
-                                    IsEnabled="{Binding FilterState.CanApply, RelativeSource={RelativeSource TemplatedParent}}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
+              <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button
+                  MinWidth="72"
+                  Margin="0,0,8,0"
+                  Command="{Binding ClearCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                  Content="Clear"
+                  IsEnabled="{Binding FilterState.CanClear, RelativeSource={RelativeSource TemplatedParent}}"
+                />
+                <Button
+                  MinWidth="72"
+                  Command="{Binding ApplyCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                  Content="Apply"
+                  IsEnabled="{Binding FilterState.CanApply, RelativeSource={RelativeSource TemplatedParent}}"
+                />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

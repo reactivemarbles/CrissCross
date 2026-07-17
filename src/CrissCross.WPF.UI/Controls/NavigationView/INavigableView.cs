@@ -4,10 +4,10 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>A component whose ViewModel is separate from the DataContext and can be navigated by <see cref="INavigationView" />.</summary>
+/// <summary>Provides the INavigableView member.</summary>
 /// <typeparam name="T">The T type.</typeparam>
 public interface INavigableView<out T>
 {
-    /// <summary>Gets viewModel used by the view. Optionally, it may implement <see cref="INavigationAware"/> and be navigated by <see cref="INavigationView"/>.</summary>
+    /// <summary>Gets viewModel used by the view.</summary>
     T ViewModel { get; }
 }

@@ -46,7 +46,7 @@ public class SquareSlider : TemplatedControl
         AvaloniaProperty.Register<SquareSlider, IBrush>(nameof(ThumbBrush), Brushes.White);
 
     /// <summary>Divisor used to calculate half the thumb size.</summary>
-    private const double HalfSizeDivisor = 2d;
+    private const double HalfSizeDivisor = 2D;
 
     /// <summary>Provides the _canvas member.</summary>
     private Canvas? _canvas;

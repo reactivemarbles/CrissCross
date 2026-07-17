@@ -17,11 +17,13 @@ internal sealed class BackButtonVisibilityToVisibilityConverter : IValueConverte
     /// <returns>The result.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value is not NavigationViewBackButtonVisible backButtonVisibility ? Visibility.Collapsed : backButtonVisibility switch
-        {
-            NavigationViewBackButtonVisible.Collapsed => Visibility.Collapsed,
-            _ => (object)Visibility.Visible,
-        };
+        return value is not NavigationViewBackButtonVisible backButtonVisibility
+            ? Visibility.Collapsed
+            : backButtonVisibility switch
+            {
+                NavigationViewBackButtonVisible.Collapsed => Visibility.Collapsed,
+                _ => (object)Visibility.Visible,
+            };
     }
 
     /// <summary>Provides the ConvertBack member.</summary>
@@ -30,5 +32,6 @@ internal sealed class BackButtonVisibilityToVisibilityConverter : IValueConverte
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 }

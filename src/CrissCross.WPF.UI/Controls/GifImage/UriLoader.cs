@@ -24,7 +24,9 @@ internal static class UriLoader
     /// <returns>The result.</returns>
     public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int>? progress)
     {
-        return uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https") ? GetNetworkStreamAsync(uri, progress)! : GetStreamFromUriCoreAsync(uri);
+        return uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https")
+            ? GetNetworkStreamAsync(uri, progress)!
+            : GetStreamFromUriCoreAsync(uri);
     }
 
     /// <summary>Provides the GetNetworkStreamAsync member.</summary>
@@ -69,18 +71,17 @@ internal static class UriLoader
             IProgress<long> absoluteProgress = default!;
             if (progress is not null)
             {
-                absoluteProgress =
-                    new Progress<long>(bytesCopied =>
+                absoluteProgress = new Progress<long>(bytesCopied =>
+                {
+                    if (length > 0)
                     {
-                        if (length > 0)
-                        {
-                            progress.Report((int)(CompletedDownloadPercentage * bytesCopied / length));
-                        }
-                        else
-                        {
-                            progress.Report(-1);
-                        }
-                    });
+                        progress.Report((int)(CompletedDownloadPercentage * bytesCopied / length));
+                    }
+                    else
+                    {
+                        progress.Report(-1);
+                    }
+                });
             }
 
             await responseStream.CopyToAsync(fileStream, absoluteProgress);
@@ -99,9 +100,10 @@ internal static class UriLoader
     {
         if (uri.Scheme == PackUriHelper.UriSchemePack)
         {
-            var sri = uri.Authority == "siteoforigin:,,,"
-                ? Application.GetRemoteStream(uri)
-                : Application.GetResourceStream(uri);
+            var sri =
+                uri.Authority == "siteoforigin:,,,"
+                    ? Application.GetRemoteStream(uri)
+                    : Application.GetResourceStream(uri);
 
             if (sri is not null)
             {
@@ -135,9 +137,7 @@ internal static class UriLoader
         {
             stream = File.OpenRead(path);
         }
-        catch (FileNotFoundException)
-        {
-        }
+        catch (FileNotFoundException) { }
 
         return Task.FromResult(stream);
     }
@@ -185,8 +185,6 @@ internal static class UriLoader
     /// <summary>Provides the ToHex member.</summary>
     /// <param name="bytes">The bytes value.</param>
     /// <returns>The result.</returns>
-    private static string ToHex(byte[] bytes) => bytes.Aggregate(
-            new StringBuilder(),
-            (sb, b) => sb.Append(b.ToString("X2")),
-            sb => sb.ToString());
+    private static string ToHex(byte[] bytes) =>
+        bytes.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2")), sb => sb.ToString());
 }

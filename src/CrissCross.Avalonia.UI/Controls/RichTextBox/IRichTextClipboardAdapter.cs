@@ -4,7 +4,7 @@
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Provides deterministic clipboard access for <see cref="RichTextBox"/> plain-text and HTML operations.</summary>
+/// <summary>Provides deterministic clipboard access for RichTextBox plain-text and HTML operations.</summary>
 public interface IRichTextClipboardAdapter
 {
     /// <summary>Gets a value indicating whether plain text is available.</summary>

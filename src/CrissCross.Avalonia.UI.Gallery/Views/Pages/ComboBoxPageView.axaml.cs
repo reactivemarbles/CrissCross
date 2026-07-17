@@ -16,6 +16,7 @@ public partial class ComboBoxPageView : ReactiveUserControl<ComboBoxPageViewMode
     public ComboBoxPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ComboBoxPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<ComboBoxPageViewModel>());
     }
 }

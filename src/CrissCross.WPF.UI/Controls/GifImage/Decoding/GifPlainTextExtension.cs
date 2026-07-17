@@ -43,9 +43,7 @@ internal sealed class GifPlainTextExtension : GifExtension
     private const int BackgroundColorIndexOffset = 12;
 
     /// <summary>Initializes a new instance of the <see cref="GifPlainTextExtension"/> class.</summary>
-    private GifPlainTextExtension()
-    {
-    }
+    private GifPlainTextExtension() { }
 
     /// <summary>Gets the BlockSize value.</summary>
     public int BlockSize { get; private set; }
@@ -86,7 +84,9 @@ internal sealed class GifPlainTextExtension : GifExtension
     /// <param name="stream">The stream value.</param>
     /// <param name="controlExtensions">The controlExtensions value.</param>
     /// <returns>The result.</returns>
-    internal static new async Task<GifPlainTextExtension> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
+    internal static new async Task<GifPlainTextExtension> ReadAsync(
+        Stream stream,
+        IEnumerable<GifExtension> controlExtensions)
     {
         var plainText = new GifPlainTextExtension();
         await plainText.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);

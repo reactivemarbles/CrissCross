@@ -35,11 +35,12 @@ public class ContentDialogService : IContentDialogService
     public void SetContentPresenter(ContentPresenter contentPresenter) => _contentPresenter = contentPresenter;
 
     /// <inheritdoc/>
-    public ContentPresenter GetContentPresenter() => _contentPresenter switch
-    {
-        null => throw new ArgumentNullException("The ContentPresenter didn't set previously."),
-        _ => _contentPresenter
-    };
+    public ContentPresenter GetContentPresenter() =>
+        _contentPresenter switch
+        {
+            null => throw new ArgumentNullException("The ContentPresenter didn't set previously."),
+            _ => _contentPresenter,
+        };
 
     /// <inheritdoc/>
     public Task<ContentDialogResult> ShowAsync(ContentDialog dialog, CancellationToken cancellationToken)
@@ -56,7 +57,7 @@ public class ContentDialogService : IContentDialogService
 
         dialog.ContentPresenter ??= _contentPresenter;
 
-        if (dialog.ContentPresenter != _contentPresenter)
+        if (!ReferenceEquals(dialog.ContentPresenter, _contentPresenter))
         {
             throw new InvalidOperationException("The ContentPresenter is not the same as the previously set.");
         }

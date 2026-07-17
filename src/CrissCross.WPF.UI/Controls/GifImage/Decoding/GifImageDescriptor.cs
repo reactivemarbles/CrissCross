@@ -40,9 +40,7 @@ internal sealed class GifImageDescriptor : IGifRect
     private const int ColorTableSizeExponentOffset = 1;
 
     /// <summary>Initializes a new instance of the <see cref="GifImageDescriptor"/> class.</summary>
-    private GifImageDescriptor()
-    {
-    }
+    private GifImageDescriptor() { }
 
     /// <summary>Gets the Left value.</summary>
     public int Left { get; private set; }

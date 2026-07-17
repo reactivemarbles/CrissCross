@@ -122,7 +122,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
         HalfFilled,
 
         /// <summary>Represents the Filled value.</summary>
-        Filled
+        Filled,
     }
 
     /// <summary>Gets or sets the rating value.</summary>
@@ -139,7 +139,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
         set => SetValue(MaxRatingProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets the value deciding whether half of the star can be selected.</summary>
+    /// <summary>Gets or sets the GetValue value.</summary>
     public bool HalfStarEnabled
     {
         get => (bool)GetValue(HalfStarEnabledProperty);
@@ -236,7 +236,8 @@ public class RatingControl : System.Windows.Controls.ContentControl
     }
 
     /// <summary>Is called when mouse is cliked down.</summary>
-    /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data. This event data reports details about the mouse button that was pressed and the handled state.</param>
+    /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data.
+    /// This event data reports details about the mouse button that was pressed and the handled state.</param>
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         base.OnMouseDown(e);
@@ -294,7 +295,8 @@ public class RatingControl : System.Windows.Controls.ContentControl
 
     /// <summary>Provides the UpdateStarsOnMousePreview member.</summary>
     /// <param name="offsetPercentage">The offsetPercentage value.</param>
-    private void UpdateStarsOnMousePreview(double offsetPercentage) => SetStarsPresence(ExtractValueFromOffset(offsetPercentage));
+    private void UpdateStarsOnMousePreview(double offsetPercentage) =>
+        SetStarsPresence(ExtractValueFromOffset(offsetPercentage));
 
     /// <summary>Provides the UpdateStarsOnMouseClick member.</summary>
     /// <param name="offsetPercentage">The offsetPercentage value.</param>
@@ -302,7 +304,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
     {
         var currentValue = ExtractValueFromOffset(offsetPercentage);
 
-        Value = currentValue / RatingUnitsPerStar;
+        Value = currentValue / (double)RatingUnitsPerStar;
     }
 
     /// <summary>Provides the UpdateStarsFromValue member.</summary>
@@ -351,25 +353,25 @@ public class RatingControl : System.Windows.Controls.ContentControl
         switch (starValue)
         {
             case StarValue.HalfFilled:
-                {
-                    selectedIcon.Filled = false;
-                    selectedIcon.Symbol = StarHalfSymbol;
-                    break;
-                }
+            {
+                selectedIcon.Filled = false;
+                selectedIcon.Symbol = StarHalfSymbol;
+                break;
+            }
 
             case StarValue.Filled:
-                {
-                    selectedIcon.Filled = true;
-                    selectedIcon.Symbol = StarSymbol;
-                    break;
-                }
+            {
+                selectedIcon.Filled = true;
+                selectedIcon.Symbol = StarSymbol;
+                break;
+            }
 
             default:
-                {
-                    selectedIcon.Filled = false;
-                    selectedIcon.Symbol = StarSymbol;
-                    break;
-                }
+            {
+                selectedIcon.Filled = false;
+                selectedIcon.Symbol = StarSymbol;
+                break;
+            }
         }
     }
 

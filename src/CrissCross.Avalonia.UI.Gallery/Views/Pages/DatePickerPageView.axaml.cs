@@ -16,6 +16,7 @@ public partial class DatePickerPageView : ReactiveUserControl<DatePickerPageView
     public DatePickerPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<DatePickerPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<DatePickerPageViewModel>());
     }
 }

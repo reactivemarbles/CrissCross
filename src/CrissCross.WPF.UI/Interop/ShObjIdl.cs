@@ -10,7 +10,8 @@ using System.Runtime.InteropServices;
 
 namespace CrissCross.WPF.UI.Interop;
 
-/// <summary>Exposes methods that enumerate the contents of a view and receive notification from callback upon enumeration completion.</summary>
+/// <summary>Exposes methods that enumerate the contents of a view and receive notification from callback upon
+/// enumeration completion.</summary>
 internal static class ShObjIdl
 {
     /// <summary>THUMBBUTTON flags.  THBF_*</summary>
@@ -196,8 +197,7 @@ internal static class ShObjIdl
         int ThumbBarAddButtons(
             IntPtr hwnd,
             uint cButtons,
-            [MarshalAs(UnmanagedType.LPArray)] THUMBBUTTON[] pButtons
-        );
+            [MarshalAs(UnmanagedType.LPArray)] THUMBBUTTON[] pButtons);
 
         /// <summary>Thumbs the bar update buttons.</summary>
         /// <param name="hwnd">The HWND.</param>
@@ -210,8 +210,7 @@ internal static class ShObjIdl
         int ThumbBarUpdateButtons(
             IntPtr hwnd,
             uint cButtons,
-            [MarshalAs(UnmanagedType.LPArray)] THUMBBUTTON[] pButtons
-        );
+            [MarshalAs(UnmanagedType.LPArray)] THUMBBUTTON[] pButtons);
 
         /// <summary>Thumbs the bar set image list.</summary>
         /// <param name="hWnd">The h WND.</param>
@@ -227,8 +226,7 @@ internal static class ShObjIdl
         void SetOverlayIcon(
             IntPtr hwnd,
             IntPtr hIcon,
-            [MarshalAs(UnmanagedType.LPWStr)] string pszDescription
-        );
+            [MarshalAs(UnmanagedType.LPWStr)] string pszDescription);
 
         /// <summary>Sets the thumbnail tooltip.</summary>
         /// <param name="hwnd">The HWND.</param>

@@ -5,50 +5,59 @@
 namespace CrissCross.WPF.UI;
 
 /// <summary>Represents color channel state.</summary>
-/// <param name="red">The RGB red channel.</param>
-/// <param name="green">The RGB green channel.</param>
-/// <param name="blue">The RGB blue channel.</param>
-/// <param name="a">The alpha channel.</param>
-/// <param name="hsvHue">The HSV hue channel.</param>
-/// <param name="hsvSaturation">The HSV saturation channel.</param>
-/// <param name="hsvValue">The HSV value channel.</param>
-/// <param name="hslHue">The HSL hue channel.</param>
-/// <param name="hslSaturation">The HSL saturation channel.</param>
-/// <param name="hslLightness">The HSL lightness channel.</param>
-public struct ColorState(double red, double green, double blue, double a, double hsvHue, double hsvSaturation, double hsvValue, double hslHue, double hslSaturation, double hslLightness) : IEquatable<ColorState>
+public struct ColorState : IEquatable<ColorState>
 {
     /// <summary>Stores the red RGB channel.</summary>
-    private double _rgbR = red;
+    private double _rgbR;
 
     /// <summary>Stores the green RGB channel.</summary>
-    private double _rgbG = green;
+    private double _rgbG;
 
     /// <summary>Stores the blue RGB channel.</summary>
-    private double _rgbB = blue;
+    private double _rgbB;
 
     /// <summary>Stores the HSV hue channel.</summary>
-    private double _hsvH = hsvHue;
+    private double _hsvH;
 
     /// <summary>Stores the HSV saturation channel.</summary>
-    private double _hsvS = hsvSaturation;
+    private double _hsvS;
 
     /// <summary>Stores the HSV value channel.</summary>
-    private double _hsvV = hsvValue;
+    private double _hsvV;
 
     /// <summary>Stores the HSL hue channel.</summary>
-    private double _hslH = hslHue;
+    private double _hslH;
 
     /// <summary>Stores the HSL saturation channel.</summary>
-    private double _hslS = hslSaturation;
+    private double _hslS;
 
     /// <summary>Stores the HSL lightness channel.</summary>
-    private double _hslL = hslLightness;
+    private double _hslL;
+
+    /// <summary>Initializes a new instance of the <see cref="ColorState"/> struct.</summary>
+    /// <param name="rgb">The RGB components.</param>
+    /// <param name="alpha">The alpha channel.</param>
+    /// <param name="hsv">The HSV components.</param>
+    /// <param name="hsl">The HSL components.</param>
+    public ColorState(RgbColorComponents rgb, double alpha, HsvColorComponents hsv, HslColorComponents hsl)
+    {
+        _rgbR = rgb.Red;
+        _rgbG = rgb.Green;
+        _rgbB = rgb.Blue;
+        A = alpha;
+        _hsvH = hsv.Hue;
+        _hsvS = hsv.Saturation;
+        _hsvV = hsv.Value;
+        _hslH = hsl.Hue;
+        _hslS = hsl.Saturation;
+        _hslL = hsl.Lightness;
+    }
 
     /// <summary>Gets or sets a.</summary>
     /// <value>
     /// a.
     /// </value>
-    public double A { get; set; } = a;
+    public double A { get; set; }
 
     /// <summary>Gets or sets the RGB r.</summary>
     /// <value>
@@ -214,22 +223,7 @@ public struct ColorState(double red, double green, double blue, double a, double
     public override readonly bool Equals(object? obj) => obj is ColorState other && Equals(other);
 
     /// <inheritdoc/>
-    public override readonly int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = _rgbR.GetHashCode();
-            hashCode = (hashCode * 397) ^ _rgbG.GetHashCode();
-            hashCode = (hashCode * 397) ^ _rgbB.GetHashCode();
-            hashCode = (hashCode * 397) ^ A.GetHashCode();
-            hashCode = (hashCode * 397) ^ _hsvH.GetHashCode();
-            hashCode = (hashCode * 397) ^ _hsvS.GetHashCode();
-            hashCode = (hashCode * 397) ^ _hsvV.GetHashCode();
-            hashCode = (hashCode * 397) ^ _hslH.GetHashCode();
-            hashCode = (hashCode * 397) ^ _hslS.GetHashCode();
-            return (hashCode * 397) ^ _hslL.GetHashCode();
-        }
-    }
+    public override readonly int GetHashCode() => typeof(ColorState).GetHashCode();
 
     /// <summary>Sets the ARGB.</summary>
     /// <param name="a">a.</param>
@@ -253,12 +247,12 @@ public struct ColorState(double red, double green, double blue, double a, double
         double h = hsltuple.Item1;
         double s = hsltuple.Item2;
         double l = hsltuple.Item3;
-        if (h != -1)
+        if (!DoubleComparison.AreClose(h, -1D))
         {
             _hslH = h;
         }
 
-        if (s != -1)
+        if (!DoubleComparison.AreClose(s, -1D))
         {
             _hslS = s;
         }
@@ -274,7 +268,7 @@ public struct ColorState(double red, double green, double blue, double a, double
         double s = hsltuple.Item2;
         double l = hsltuple.Item3;
         _hslH = h;
-        if (s != -1)
+        if (!DoubleComparison.AreClose(s, -1D))
         {
             _hslS = s;
         }
@@ -289,12 +283,12 @@ public struct ColorState(double red, double green, double blue, double a, double
         double h = hsvtuple.Item1;
         double s = hsvtuple.Item2;
         double v = hsvtuple.Item3;
-        if (h != -1)
+        if (!DoubleComparison.AreClose(h, -1D))
         {
             _hsvH = h;
         }
 
-        if (s != -1)
+        if (!DoubleComparison.AreClose(s, -1D))
         {
             _hsvS = s;
         }
@@ -310,7 +304,7 @@ public struct ColorState(double red, double green, double blue, double a, double
         double s = hsvtuple.Item2;
         double v = hsvtuple.Item3;
         _hsvH = h;
-        if (s != -1)
+        if (!DoubleComparison.AreClose(s, -1D))
         {
             _hsvS = s;
         }

@@ -7,7 +7,7 @@ using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extended <see cref="System.Windows.Controls.TextBox"/> with additional parameters like <see cref="PlaceholderText"/>.</summary>
+/// <summary>Extended TextBox with additional parameters like PlaceholderText.</summary>
 public class TextBox : System.Windows.Controls.TextBox
 {
     /// <summary>Identifies the <see cref="Icon"/> dependency property.</summary>
@@ -122,7 +122,7 @@ public class TextBox : System.Windows.Controls.TextBox
         set => SetValue(ClearButtonEnabledProperty, value);
     }
 
-    /// <summary>Gets the Gets or sets a value indicating whether to show the clear button when <see cref="TextBox"/> is focused. value.</summary>
+    /// <summary>Gets the Gets or sets whether to show the clear button when TextBox is focused. value.</summary>
     public bool ShowClearButton
     {
         get => (bool)GetValue(ShowClearButtonProperty);

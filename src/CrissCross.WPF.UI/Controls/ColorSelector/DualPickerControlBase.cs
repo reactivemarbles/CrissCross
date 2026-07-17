@@ -8,49 +8,52 @@ namespace CrissCross.WPF.UI;
 /// <seealso cref="PickerControlBase" />
 /// <seealso cref="ISecondColorStorage" />
 /// <seealso cref="IHintColorStateStorage" />
-public class DualPickerControlBase : PickerControlBase, ISecondColorStorage, IHintColorStateStorage
+public partial class DualPickerControlBase : PickerControlBase, ISecondColorStorage, IHintColorStateStorage
 {
     /// <summary>The second color state property.</summary>
-    public static readonly DependencyProperty SecondColorStateProperty =
-            DependencyProperty.Register(
-                nameof(SecondColorState),
-                typeof(ColorState),
-                typeof(DualPickerControlBase),
-                new PropertyMetadata(new ColorState(1, 1, 1, 1, 0, 0, 1, 0, 0, 1), OnSecondColorStatePropertyChange));
+    public static readonly DependencyProperty SecondColorStateProperty = DependencyProperty.Register(
+        nameof(SecondColorState),
+        typeof(ColorState),
+        typeof(DualPickerControlBase),
+        new PropertyMetadata(
+            new ColorState(new(1, 1, 1), 1, new(0, 0, 1), new(0, 0, 1)),
+            OnSecondColorStatePropertyChange));
 
     /// <summary>The secondary color property.</summary>
-    public static readonly DependencyProperty SecondaryColorProperty =
-        DependencyProperty.Register(
-            nameof(SecondaryColor),
-            typeof(Color),
-            typeof(DualPickerControlBase),
-            new PropertyMetadata(Colors.White, OnSecondaryColorPropertyChange));
+    public static readonly DependencyProperty SecondaryColorProperty = DependencyProperty.Register(
+        nameof(SecondaryColor),
+        typeof(Color),
+        typeof(DualPickerControlBase),
+        new PropertyMetadata(Colors.White, OnSecondaryColorPropertyChange));
 
     /// <summary>The hint color state property.</summary>
-    public static readonly DependencyProperty HintColorStateProperty =
-        DependencyProperty.Register(
-            nameof(HintColorState),
-            typeof(ColorState),
-            typeof(DualPickerControlBase),
-            new PropertyMetadata(new ColorState(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), OnHintColorStatePropertyChange));
+    public static readonly DependencyProperty HintColorStateProperty = DependencyProperty.Register(
+        nameof(HintColorState),
+        typeof(ColorState),
+        typeof(DualPickerControlBase),
+        new PropertyMetadata(
+            new ColorState(new(0, 0, 0), 0, new(0, 0, 0), new(0, 0, 0)),
+            OnHintColorStatePropertyChange));
 
     /// <summary>The hint color property.</summary>
-    public static readonly DependencyProperty HintColorProperty =
-        DependencyProperty.Register(
-            nameof(HintColor),
-            typeof(Color),
-            typeof(DualPickerControlBase),
-            new PropertyMetadata(Colors.Transparent, OnHintColorPropertyChanged));
+    public static readonly DependencyProperty HintColorProperty = DependencyProperty.Register(
+        nameof(HintColor),
+        typeof(Color),
+        typeof(DualPickerControlBase),
+        new PropertyMetadata(Colors.Transparent, OnHintColorPropertyChanged));
 
     /// <summary>The use hint color property.</summary>
-    public static readonly DependencyProperty UseHintColorProperty =
-        DependencyProperty.Register(nameof(UseHintColor), typeof(bool), typeof(DualPickerControlBase), new PropertyMetadata(false));
+    public static readonly DependencyProperty UseHintColorProperty = DependencyProperty.Register(
+        nameof(UseHintColor),
+        typeof(bool),
+        typeof(DualPickerControlBase),
+        new PropertyMetadata(false));
 
     /// <summary>Stores the _secondColorDecorator value.</summary>
-    private readonly SecondColorDecorator _secondColorDecorator;
+    private SecondColorDecorator _secondColorDecorator = null!;
 
     /// <summary>Stores the _hintColorDecorator value.</summary>
-    private readonly HintColorDecorator _hintColorDecorator;
+    private HintColorDecorator _hintColorDecorator = null!;
 
     /// <summary>Stores the _ignoreSecondaryColorChange value.</summary>
     private bool _ignoreSecondaryColorChange;
@@ -63,47 +66,6 @@ public class DualPickerControlBase : PickerControlBase, ISecondColorStorage, IHi
 
     /// <summary>Stores the _ignoreHintColorPropertyChange value.</summary>
     private bool _ignoreHintColorPropertyChange;
-
-    /// <summary>Initializes a new instance of the <see cref="DualPickerControlBase"/> class.</summary>
-    public DualPickerControlBase()
-    {
-        _secondColorDecorator = new(this);
-        _hintColorDecorator = new(this);
-
-        SecondColor = new(_secondColorDecorator);
-        SecondColor.PropertyChanged += (sender, args) =>
-        {
-            if (_ignoreSecondaryColorChange)
-            {
-                return;
-            }
-
-            _ignoreSecondaryColorPropertyChange = true;
-            SecondaryColor = System.Windows.Media.Color.FromArgb(
-                (byte)Math.Round(SecondColor.A),
-                (byte)Math.Round(SecondColor.RGB_R),
-                (byte)Math.Round(SecondColor.RGB_G),
-                (byte)Math.Round(SecondColor.RGB_B));
-            _ignoreSecondaryColorPropertyChange = false;
-        };
-
-        HintNotifyableColor = new(_hintColorDecorator);
-        HintNotifyableColor.PropertyChanged += (sender, args) =>
-        {
-            if (_ignoreHintNotifyableColorChange)
-            {
-                return;
-            }
-
-            _ignoreHintColorPropertyChange = true;
-            HintColor = System.Windows.Media.Color.FromArgb(
-                (byte)Math.Round(HintNotifyableColor.A),
-                (byte)Math.Round(HintNotifyableColor.RGB_R),
-                (byte)Math.Round(HintNotifyableColor.RGB_G),
-                (byte)Math.Round(HintNotifyableColor.RGB_B));
-            _ignoreHintColorPropertyChange = false;
-        };
-    }
 
     /// <summary>Gets or sets the state of the second color.</summary>
     /// <value>
@@ -119,11 +81,7 @@ public class DualPickerControlBase : PickerControlBase, ISecondColorStorage, IHi
     /// <value>
     /// The color of the second.
     /// </value>
-    public NotifyableColor SecondColor
-    {
-        get;
-        set;
-    }
+    public NotifyableColor SecondColor { get; set; } = null!;
 
     /// <summary>Gets or sets the color of the secondary.</summary>
     /// <value>
@@ -149,11 +107,7 @@ public class DualPickerControlBase : PickerControlBase, ISecondColorStorage, IHi
     /// <value>
     /// The color of the hint notifyable.
     /// </value>
-    public NotifyableColor HintNotifyableColor
-    {
-        get;
-        set;
-    }
+    public NotifyableColor HintNotifyableColor { get; set; } = null!;
 
     /// <summary>Gets or sets the color of the hint.</summary>
     /// <value>

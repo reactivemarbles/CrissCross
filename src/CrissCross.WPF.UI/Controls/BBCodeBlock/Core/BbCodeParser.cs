@@ -15,13 +15,20 @@ internal sealed class BbCodeParser
     /// <summary>Tags whose contents are treated as literal text.</summary>
     private static readonly HashSet<string> RawTags = new(StringComparer.OrdinalIgnoreCase)
     {
-        "c", "code", "nfo", "noparse", "pre",
+        "c",
+        "code",
+        "nfo",
+        "noparse",
+        "pre",
     };
 
     /// <summary>Tags that do not create a nested scope.</summary>
     private static readonly HashSet<string> SelfClosingTags = new(StringComparer.OrdinalIgnoreCase)
     {
-        "*", "br", "hr", "line",
+        "*",
+        "br",
+        "hr",
+        "line",
     };
 
     /// <summary>The BBCode source.</summary>
@@ -82,8 +89,8 @@ internal sealed class BbCodeParser
             return;
         }
 
-        var matchingNode = stack.FirstOrDefault(
-            node => string.Equals(node.Name, tag.Name, StringComparison.OrdinalIgnoreCase));
+        var matchingNode = stack.FirstOrDefault(node =>
+            string.Equals(node.Name, tag.Name, StringComparison.OrdinalIgnoreCase));
         if (matchingNode is null)
         {
             stack.Peek().Children.Add(new BbCodeNode(tag.Raw));
@@ -304,10 +311,10 @@ internal sealed class BbCodeParser
     /// <summary>Removes matching quote characters around a shorthand value.</summary>
     /// <param name="value">The value.</param>
     /// <returns>The unquoted value.</returns>
-    private static string Unquote(string value) => value.Length >= 2 &&
-        ((value[0] == '"' && value[^1] == '"') || (value[0] == '\'' && value[^1] == '\''))
-        ? value[1..^1]
-        : value;
+    private static string Unquote(string value) =>
+        value.Length >= 2 && ((value[0] == '"' && value[^1] == '"') || (value[0] == '\'' && value[^1] == '\''))
+            ? value[1..^1]
+            : value;
 
     /// <summary>Represents a tag header read from the source.</summary>
     private readonly struct ParsedTag

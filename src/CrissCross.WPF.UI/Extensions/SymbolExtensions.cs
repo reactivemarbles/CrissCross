@@ -13,13 +13,11 @@ public static class SymbolExtensions
     {
         /// <summary>Replaces <see cref="SymbolFilled" /> with <see cref="SymbolRegular" />.</summary>
         /// <returns>SymbolRegular.</returns>
-        public SymbolRegular Swap() =>
-            SymbolGlyph.Parse(icon.ToString());
+        public SymbolRegular Swap() => SymbolGlyph.Parse(icon.ToString());
 
         /// <summary>Converts <see cref="SymbolFilled" /> to <see langword="string" /> based on the ID.</summary>
         /// <returns>A string.</returns>
-        public string GetString() =>
-            Encoding.Unicode.GetString(BitConverter.GetBytes((int)icon)).TrimEnd('\0');
+        public string GetString() => Encoding.Unicode.GetString(BitConverter.GetBytes((int)icon)).TrimEnd('\0');
     }
 
     /// <summary>Provides extension members.</summary>
@@ -28,12 +26,10 @@ public static class SymbolExtensions
     {
         /// <summary>Replaces <see cref="SymbolRegular" /> with <see cref="SymbolFilled" />.</summary>
         /// <returns>SymbolFilled.</returns>
-        public SymbolFilled Swap() =>
-            SymbolGlyph.ParseFilled(icon.ToString());
+        public SymbolFilled Swap() => SymbolGlyph.ParseFilled(icon.ToString());
 
         /// <summary>Converts <see cref="SymbolRegular" /> to <see langword="string" /> based on the ID.</summary>
         /// <returns>A string.</returns>
-        public string GetString() =>
-            Encoding.Unicode.GetString(BitConverter.GetBytes((int)icon)).TrimEnd('\0');
+        public string GetString() => Encoding.Unicode.GetString(BitConverter.GetBytes((int)icon)).TrimEnd('\0');
     }
 }

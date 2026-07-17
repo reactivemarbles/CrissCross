@@ -17,5 +17,5 @@ public enum LegendPosition
     Right,
 
     /// <summary>The left.</summary>
-    Left
+    Left,
 }

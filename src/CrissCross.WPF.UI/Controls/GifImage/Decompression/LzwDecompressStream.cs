@@ -11,12 +11,6 @@ namespace CrissCross.WPF.UI.Controls.Decompression;
 /// <param name="minimumCodeLength">The minimumCodeLength value.</param>
 internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLength) : Stream
 {
-    /// <summary>Provides the MaxCodeLength member.</summary>
-    private const int MaxCodeLength = 12;
-
-    /// <summary>The number of reserved clear and stop codes in the GIF LZW table.</summary>
-    private const int ReservedCodeCount = 2;
-
     /// <summary>Stores the _reader value.</summary>
     private readonly BitReader _reader = new(compressedBuffer);
 
@@ -46,9 +40,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         set => throw new NotSupportedException();
     }
 
-    public override void Flush()
-    {
-    }
+    public override void Flush() { }
 
     public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
@@ -238,7 +230,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         /// <summary>Provides the Append member.</summary>
         /// <param name="b">The b value.</param>
         /// <returns>The result.</returns>
-        public readonly Sequence Append(byte b)
+        public Sequence Append(byte b)
         {
             var bytes = new byte[Bytes!.Length + 1];
             Bytes.CopyTo(bytes, 0);
@@ -250,6 +242,12 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
     /// <summary>Provides the CodeTable member.</summary>
     private sealed class CodeTable
     {
+        /// <summary>Provides the MaxCodeLength member.</summary>
+        private const int MaxCodeLength = 12;
+
+        /// <summary>The number of reserved clear and stop codes in the GIF LZW table.</summary>
+        private const int ReservedCodeCount = 2;
+
         /// <summary>Stores the _minimumCodeLength value.</summary>
         private readonly int _minimumCodeLength;
 
@@ -272,7 +270,8 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
             _table = new Sequence[1 << MaxCodeLength];
             for (var i = 0; i < initialEntries; i++)
             {
-                _table[_count++] = new([(byte)i]);
+                _table[_count] = new([(byte)i]);
+                _count++;
             }
 
             Add(Sequence.ClearCode);
@@ -318,7 +317,8 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
                 return;
             }
 
-            _table[_count++] = sequence;
+            _table[_count] = sequence;
+            _count++;
             if ((_count & (_count - 1)) != 0 || _codeLength >= MaxCodeLength)
             {
                 return;

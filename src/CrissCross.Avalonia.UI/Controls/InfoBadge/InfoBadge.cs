@@ -6,13 +6,15 @@ using Avalonia;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>InfoBadge, a control that displays a small amount of information, typically a number or a small piece of text, in a compact way.</summary>
+/// <summary>InfoBadge, a control that displays a small amount of information, typically a number or a small piece of
+/// text, in a compact way.</summary>
 public class InfoBadge : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>Property for <see cref="Severity"/>.</summary>
-    public static readonly StyledProperty<InfoBadgeSeverity> SeverityProperty = AvaloniaProperty.Register<InfoBadge, InfoBadgeSeverity>(
-        nameof(Severity),
-        InfoBadgeSeverity.Informational);
+    public static readonly StyledProperty<InfoBadgeSeverity> SeverityProperty = AvaloniaProperty.Register<
+        InfoBadge,
+        InfoBadgeSeverity
+    >(nameof(Severity), InfoBadgeSeverity.Informational);
 
     /// <summary>Property for <see cref="Value"/>.</summary>
     public static readonly StyledProperty<string> ValueProperty = AvaloniaProperty.Register<InfoBadge, string>(
@@ -20,14 +22,14 @@ public class InfoBadge : global::Avalonia.Controls.Primitives.TemplatedControl
         string.Empty);
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
-    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<InfoBadge, CornerRadius>(
-        nameof(CornerRadius),
-        new CornerRadius(8));
+    public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty = AvaloniaProperty.Register<
+        InfoBadge,
+        CornerRadius
+    >(nameof(CornerRadius), new CornerRadius(8));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly StyledProperty<object?> IconProperty = AvaloniaProperty.Register<InfoBadge, object?>(
-        nameof(Icon),
-        null);
+        nameof(Icon));
 
     /// <summary>Gets or sets the severity.</summary>
     public InfoBadgeSeverity Severity

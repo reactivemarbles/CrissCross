@@ -8,7 +8,7 @@ namespace CrissCross.WPF.UI;
 public class SnackbarService : ISnackbarService
 {
     /// <summary>Provides the default snackbar timeout in seconds.</summary>
-    private const double DefaultTimeoutSeconds = 5d;
+    private const double DefaultTimeoutSeconds = 5D;
 
     /// <summary>Stores the _presenter value.</summary>
     private SnackbarPresenter? _presenter;
@@ -27,14 +27,10 @@ public class SnackbarService : ISnackbarService
         _presenter ?? throw new InvalidOperationException("The SnackbarPresenter was not set previously.");
 
     /// <inheritdoc />
-    public void Show(
-        string title,
-        string message,
-        ControlAppearance appearance,
-        IconElement? icon,
-        TimeSpan timeout)
+    public void Show(string title, string message, ControlAppearance appearance, IconElement? icon, TimeSpan timeout)
     {
-        var presenter = _presenter ?? throw new InvalidOperationException("The SnackbarPresenter was not set previously.");
+        var presenter =
+            _presenter ?? throw new InvalidOperationException("The SnackbarPresenter was not set previously.");
 
         _snackbar ??= new Snackbar(presenter);
 
@@ -42,9 +38,7 @@ public class SnackbarService : ISnackbarService
         _snackbar.SetCurrentValue(System.Windows.Controls.ContentControl.ContentProperty, message);
         _snackbar.SetCurrentValue(Snackbar.AppearanceProperty, appearance);
         _snackbar.SetCurrentValue(Snackbar.IconProperty, icon);
-        _snackbar.SetCurrentValue(
-            Snackbar.TimeoutProperty,
-            timeout.TotalSeconds == 0 ? DefaultTimeOut : timeout);
+        _snackbar.SetCurrentValue(Snackbar.TimeoutProperty, timeout.TotalSeconds == 0 ? DefaultTimeOut : timeout);
 
         _snackbar.Show(true);
     }

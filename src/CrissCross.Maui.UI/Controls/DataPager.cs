@@ -8,22 +8,40 @@ namespace CrissCross.Maui.UI.Controls;
 public class DataPager : ContentView
 {
     /// <summary>Bindable property for <see cref="PaginationState"/>.</summary>
-    public static readonly BindableProperty PaginationStateProperty = BindableProperty.Create(nameof(PaginationState), typeof(PaginationState), typeof(DataPager));
+    public static readonly BindableProperty PaginationStateProperty = BindableProperty.Create(
+        nameof(PaginationState),
+        typeof(PaginationState),
+        typeof(DataPager));
 
     /// <summary>Bindable property for <see cref="CurrentRequest"/>.</summary>
-    public static readonly BindableProperty CurrentRequestProperty = BindableProperty.Create(nameof(CurrentRequest), typeof(PageRequest), typeof(DataPager));
+    public static readonly BindableProperty CurrentRequestProperty = BindableProperty.Create(
+        nameof(CurrentRequest),
+        typeof(PageRequest),
+        typeof(DataPager));
 
     /// <summary>Bindable property for <see cref="PageRequestCommand"/>.</summary>
-    public static readonly BindableProperty PageRequestCommandProperty = BindableProperty.Create(nameof(PageRequestCommand), typeof(ICommand), typeof(DataPager));
+    public static readonly BindableProperty PageRequestCommandProperty = BindableProperty.Create(
+        nameof(PageRequestCommand),
+        typeof(ICommand),
+        typeof(DataPager));
 
     /// <summary>Bindable property for <see cref="SortKey"/>.</summary>
-    public static readonly BindableProperty SortKeyProperty = BindableProperty.Create(nameof(SortKey), typeof(string), typeof(DataPager));
+    public static readonly BindableProperty SortKeyProperty = BindableProperty.Create(
+        nameof(SortKey),
+        typeof(string),
+        typeof(DataPager));
 
     /// <summary>Bindable property for <see cref="SortDescending"/>.</summary>
-    public static readonly BindableProperty SortDescendingProperty = BindableProperty.Create(nameof(SortDescending), typeof(bool), typeof(DataPager));
+    public static readonly BindableProperty SortDescendingProperty = BindableProperty.Create(
+        nameof(SortDescending),
+        typeof(bool),
+        typeof(DataPager));
 
     /// <summary>Bindable property for <see cref="QueryState"/>.</summary>
-    public static readonly BindableProperty QueryStateProperty = BindableProperty.Create(nameof(QueryState), typeof(SearchQueryState), typeof(DataPager));
+    public static readonly BindableProperty QueryStateProperty = BindableProperty.Create(
+        nameof(QueryState),
+        typeof(SearchQueryState),
+        typeof(DataPager));
 
     /// <summary>Default page size used when no pagination state has been supplied.</summary>
     private const int DefaultPageSize = 20;
@@ -32,9 +50,15 @@ public class DataPager : ContentView
     public DataPager()
     {
         FirstPageCommand = new PageNavigationCommand(() => MoveToPage(0), () => PaginationState?.CanGoFirst == true);
-        PreviousPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) - 1), () => PaginationState?.CanGoPrevious == true);
-        NextPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.PageIndex ?? 0) + 1), () => PaginationState?.CanGoNext == true);
-        LastPageCommand = new PageNavigationCommand(() => MoveToPage((PaginationState?.TotalPages ?? 1) - 1), () => PaginationState?.CanGoLast == true);
+        PreviousPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) - 1),
+            () => PaginationState?.CanGoPrevious == true);
+        NextPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.PageIndex ?? 0) + 1),
+            () => PaginationState?.CanGoNext == true);
+        LastPageCommand = new PageNavigationCommand(
+            () => MoveToPage((PaginationState?.TotalPages ?? 1) - 1),
+            () => PaginationState?.CanGoLast == true);
     }
 
     /// <summary>Gets or sets the shared pagination state projected by the control.</summary>

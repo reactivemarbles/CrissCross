@@ -15,10 +15,7 @@ namespace CrissCross.WPF.UI;
 public partial class MessageBoxAsync : IListenForMessages
 {
     /// <summary>Identifies the Buttons dependency property.</summary>
-    public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
-        nameof(Buttons),
-        typeof(ObservableCollection<Button>),
-        typeof(MessageBoxAsync));
+    public static readonly DependencyProperty ButtonsProperty;
 
     /// <summary>Minimum dialog button height.</summary>
     private const int DialogButtonMinHeight = 21;
@@ -34,6 +31,9 @@ public partial class MessageBoxAsync : IListenForMessages
 
     /// <summary>Bottom margin applied to message content.</summary>
     private const int MessageContentBottomMargin = 8;
+
+    /// <summary>Identifies the read-only Buttons dependency property.</summary>
+    private static readonly DependencyPropertyKey ButtonsPropertyKey;
 
     /// <summary>Stores the _closeOkCommand value.</summary>
     private readonly ReactiveCommand<Unit, MessageBoxResult>? _closeOkCommand;
@@ -89,6 +89,17 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <summary>Stores the _yesButton value.</summary>
     private Button? _yesButton;
 
+    /// <summary>Initializes static members of the <see cref="MessageBoxAsync" /> class.</summary>
+    static MessageBoxAsync()
+    {
+        ButtonsPropertyKey = DependencyProperty.RegisterReadOnly(
+            nameof(Buttons),
+            typeof(ObservableCollection<Button>),
+            typeof(MessageBoxAsync),
+            new PropertyMetadata(null));
+        ButtonsProperty = ButtonsPropertyKey.DependencyProperty;
+    }
+
     /// <summary>Initializes a new instance of the <see cref="MessageBoxAsync"/> class.</summary>
     public MessageBoxAsync()
     {
@@ -109,35 +120,18 @@ public partial class MessageBoxAsync : IListenForMessages
         _custom8Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom8);
         _custom9Command = ReactiveCommand.Create(() => _customMessageBoxResult = CustomMessageBoxResult.Custom9);
 
-        Buttons = new([CloseButton]);
+        SetValue(ButtonsPropertyKey, new ObservableCollection<Button>([CloseButton]));
         ButtonsSource.ItemsSource = Buttons;
         Loaded += (_, _) =>
         {
             // Set up magic functions
             this.ListenForMessages(message => MessageBoxShow(message.Item1, message.Item2, message.Item3));
-            this.ListenForCustomMessages(
-                message =>
-                MessageBoxShow(
-                                     message.Item1,
-                                     message.Item2,
-                                     message.Item3,
-                                     message.Item4,
-                                     message.Item5,
-                                     message.Item6,
-                                     message.Item7,
-                                     message.Rest.Item1,
-                                     message.Rest.Item2,
-                                     message.Rest.Item3,
-                                     message.Rest.Item4));
+            this.ListenForCustomMessages(MessageBoxShow);
         };
     }
 
-    /// <summary>Gets or sets the dialog buttons.</summary>
-    public ObservableCollection<Button> Buttons
-    {
-        get => (ObservableCollection<Button>)GetValue(ButtonsProperty);
-        set => SetValue(ButtonsProperty, value);
-    }
+    /// <summary>Gets the dialog buttons.</summary>
+    public ObservableCollection<Button> Buttons => (ObservableCollection<Button>)GetValue(ButtonsProperty);
 
     /// <summary>Gets the close window command that sets the dialog result to a null value.</summary>
     public ICommand CloseCommand { get; }
@@ -209,36 +203,26 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <param name="isCancel">if set to <c>true</c> [is cancel].</param>
     /// <param name="command">The command.</param>
     /// <returns>A Button.</returns>
-    private static Button CreateDialogButton(string content, bool isDefault, bool isCancel, ICommand? command) => new()
-    {
-        Content = content,
-        Command = command,
-        IsDefault = isDefault,
-        IsCancel = isCancel,
-        MinHeight = DialogButtonMinHeight,
-        MinWidth = DialogButtonMinWidth,
-        Margin = new(DialogButtonLeftMargin, 0, 0, 0)
-    };
+    private static Button CreateDialogButton(string content, bool isDefault, bool isCancel, ICommand? command) =>
+        new()
+        {
+            Content = content,
+            Command = command,
+            IsDefault = isDefault,
+            IsCancel = isCancel,
+            MinHeight = DialogButtonMinHeight,
+            MinWidth = DialogButtonMinWidth,
+            Margin = new(DialogButtonLeftMargin, 0, 0, 0),
+        };
 
     /// <summary>Messages the box show.</summary>
-    /// <param name="bbcode">The bbcode.</param>
-    /// <param name="title">The title.</param>
-    /// <param name="custom0">The custom0.</param>
-    /// <param name="custom1">The custom1.</param>
-    /// <param name="custom2">The custom2.</param>
-    /// <param name="custom3">The custom3.</param>
-    /// <param name="custom4">The custom4.</param>
-    /// <param name="custom5">The custom5.</param>
-    /// <param name="custom6">The custom6.</param>
-    /// <param name="custom7">The custom7.</param>
-    /// <param name="custom8">The custom8.</param>
-    /// <param name="custom9">The custom9.</param>
+    /// <param name="request">The custom message request.</param>
     /// <returns>A Value.</returns>
-    private async Task<CustomMessageBoxResult> MessageBoxShow(string bbcode, string title, string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
+    private async Task<CustomMessageBoxResult> MessageBoxShow(CustomMessageBoxRequest request)
     {
-        if (custom0 is null)
+        if (request.Buttons.Count == 0)
         {
-            throw new ArgumentNullException(nameof(custom0));
+            throw new ArgumentException("At least one custom button is required.", nameof(request));
         }
 
         // If message box is already shown wait for it to be actioned
@@ -249,10 +233,14 @@ public partial class MessageBoxAsync : IListenForMessages
 
         await Dispatcher.InvokeAsync(() =>
         {
-            MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, MessageContentBottomMargin) };
+            MessageTitle.Text = request.Title;
+            MessageContent.Content = new BBCodeBlock
+            {
+                BBCode = request.BBCode,
+                Margin = new(0, 0, 0, MessageContentBottomMargin),
+            };
             Buttons.Clear();
-            foreach (var button in GetButtons(custom0, custom1, custom2, custom3, custom4, custom5, custom6, custom7, custom8, custom9))
+            foreach (var button in GetButtons(request.Buttons))
             {
                 Buttons.Add(button);
             }
@@ -271,10 +259,8 @@ public partial class MessageBoxAsync : IListenForMessages
             customMessageBoxResult = GetCustomMessageBoxResult();
         }
 
-        await Dispatcher.InvokeAsync(() =>
-
-        // hide the message box and return result
-        Visibility = Visibility.Collapsed);
+        // Hide the message box and return the result.
+        await Dispatcher.InvokeAsync(() => Visibility = Visibility.Collapsed);
         return customMessageBoxResult;
     }
 
@@ -283,7 +269,10 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <param name="title">The title.</param>
     /// <param name="button">The buttons to show.</param>
     /// <returns>Task of MessageBoxResult.</returns>
-    private async Task<MessageBoxResult> MessageBoxShow(string bbcode, string title = "", MessageBoxButton button = MessageBoxButton.OK)
+    private async Task<MessageBoxResult> MessageBoxShow(
+        string bbcode,
+        string title = "",
+        MessageBoxButton button = MessageBoxButton.OK)
     {
         // If message box is already shown wait for it to be actioned
         while (Visibility == Visibility.Visible)
@@ -294,7 +283,11 @@ public partial class MessageBoxAsync : IListenForMessages
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, MessageContentBottomMargin) };
+            MessageContent.Content = new BBCodeBlock
+            {
+                BBCode = bbcode,
+                Margin = new(0, 0, 0, MessageContentBottomMargin),
+            };
             Buttons.Clear();
             foreach (var button in GetButtons(button))
             {
@@ -321,42 +314,29 @@ public partial class MessageBoxAsync : IListenForMessages
     }
 
     /// <summary>Provides the GetButtons member.</summary>
-    /// <param name="custom0">The custom0 value.</param>
-    /// <param name="custom1">The custom1 value.</param>
-    /// <param name="custom2">The custom2 value.</param>
-    /// <param name="custom3">The custom3 value.</param>
-    /// <param name="custom4">The custom4 value.</param>
-    /// <param name="custom5">The custom5 value.</param>
-    /// <param name="custom6">The custom6 value.</param>
-    /// <param name="custom7">The custom7 value.</param>
-    /// <param name="custom8">The custom8 value.</param>
-    /// <param name="custom9">The custom9 value.</param>
+    /// <param name="buttonLabels">The custom button labels.</param>
     /// <returns>The result.</returns>
-    private List<Button> GetButtons(string custom0, string? custom1 = null, string? custom2 = null, string? custom3 = null, string? custom4 = null, string? custom5 = null, string? custom6 = null, string? custom7 = null, string? custom8 = null, string? custom9 = null)
+    private List<Button> GetButtons(IReadOnlyList<string> buttonLabels)
     {
         var result = new List<Button>();
-        var buttonDefinitions = new (string? Text, ICommand? Command, Action<Button> Assign)[]
+        var buttonDefinitions = new (ICommand? Command, Action<Button> Assign)[]
         {
-            (custom0, _custom0Command, button => CustomButton0 = button),
-            (custom1, _custom1Command, button => CustomButton1 = button),
-            (custom2, _custom2Command, button => CustomButton2 = button),
-            (custom3, _custom3Command, button => CustomButton3 = button),
-            (custom4, _custom4Command, button => CustomButton4 = button),
-            (custom5, _custom5Command, button => CustomButton5 = button),
-            (custom6, _custom6Command, button => CustomButton6 = button),
-            (custom7, _custom7Command, button => CustomButton7 = button),
-            (custom8, _custom8Command, button => CustomButton8 = button),
-            (custom9, _custom9Command, button => CustomButton9 = button)
+            (_custom0Command, button => CustomButton0 = button),
+            (_custom1Command, button => CustomButton1 = button),
+            (_custom2Command, button => CustomButton2 = button),
+            (_custom3Command, button => CustomButton3 = button),
+            (_custom4Command, button => CustomButton4 = button),
+            (_custom5Command, button => CustomButton5 = button),
+            (_custom6Command, button => CustomButton6 = button),
+            (_custom7Command, button => CustomButton7 = button),
+            (_custom8Command, button => CustomButton8 = button),
+            (_custom9Command, button => CustomButton9 = button),
         };
 
-        foreach (var (text, command, assign) in buttonDefinitions)
+        for (var index = 0; index < Math.Min(buttonLabels.Count, buttonDefinitions.Length); index++)
         {
-            if (text is null)
-            {
-                break;
-            }
-
-            var button = CreateDialogButton(text, result.Count == 0, false, command);
+            var (command, assign) = buttonDefinitions[index];
+            var button = CreateDialogButton(buttonLabels[index], result.Count == 0, false, command);
             assign(button);
             result.Add(button);
         }
@@ -374,37 +354,37 @@ public partial class MessageBoxAsync : IListenForMessages
         switch (button)
         {
             case MessageBoxButton.OK:
-                {
-                    result.Add(owner.OkButton);
-                    break;
-                }
+            {
+                result.Add(owner.OkButton);
+                break;
+            }
 
             case MessageBoxButton.OKCancel:
-                {
-                    result.Add(owner.OkButton);
-                    result.Add(owner.CancelButton);
-                    break;
-                }
+            {
+                result.Add(owner.OkButton);
+                result.Add(owner.CancelButton);
+                break;
+            }
 
             case MessageBoxButton.YesNo:
-                {
-                    result.Add(owner.YesButton);
-                    result.Add(owner.NoButton);
-                    break;
-                }
+            {
+                result.Add(owner.YesButton);
+                result.Add(owner.NoButton);
+                break;
+            }
 
             case MessageBoxButton.YesNoCancel:
-                {
-                    result.Add(owner.YesButton);
-                    result.Add(owner.NoButton);
-                    result.Add(owner.CancelButton);
-                    break;
-                }
+            {
+                result.Add(owner.YesButton);
+                result.Add(owner.NoButton);
+                result.Add(owner.CancelButton);
+                break;
+            }
 
             default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
-                }
+            {
+                throw new ArgumentOutOfRangeException(nameof(button), button, null);
+            }
         }
 
         return result;

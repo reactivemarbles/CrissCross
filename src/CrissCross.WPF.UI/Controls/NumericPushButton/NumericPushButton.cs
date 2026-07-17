@@ -8,123 +8,104 @@ using ReactiveUI;
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Numeric Push Button.</summary>
-public class NumericPushButton : System.Windows.Controls.Button, INumberPadButton, IDisposable
+public partial class NumericPushButton : System.Windows.Controls.Button, INumberPadButton, IDisposable
 {
     /// <summary>Defaults decimal points.</summary>
-    public static readonly DependencyProperty DecimalPlacesProperty =
-        DependencyProperty.Register(
-            nameof(DecimalPlaces),
-            typeof(int),
-            typeof(NumericPushButton),
-            new UIPropertyMetadata(0, UpdateDecimalPlaces));
+    public static readonly DependencyProperty DecimalPlacesProperty = DependencyProperty.Register(
+        nameof(DecimalPlaces),
+        typeof(int),
+        typeof(NumericPushButton),
+        new UIPropertyMetadata(0, UpdateDecimalPlaces));
 
     /// <summary>The error text property.</summary>
-    public static readonly DependencyProperty ErrorTextProperty =
-        DependencyProperty.Register(
-            nameof(ErrorText),
-            typeof(string),
-            typeof(NumericPushButton),
-            new PropertyMetadata("Action disallowed - Please press and hold safety button first"));
+    public static readonly DependencyProperty ErrorTextProperty = DependencyProperty.Register(
+        nameof(ErrorText),
+        typeof(string),
+        typeof(NumericPushButton),
+        new PropertyMetadata("Action disallowed - Please press and hold safety button first"));
 
     /// <summary>The error visible property.</summary>
-    public static readonly DependencyProperty ErrorVisibleProperty =
-        DependencyProperty.Register(
-            nameof(ErrorVisible),
-            typeof(Visibility),
-            typeof(NumericPushButton),
-            new PropertyMetadata(Visibility.Hidden));
+    public static readonly DependencyProperty ErrorVisibleProperty = DependencyProperty.Register(
+        nameof(ErrorVisible),
+        typeof(Visibility),
+        typeof(NumericPushButton),
+        new PropertyMetadata(Visibility.Hidden));
 
     /// <summary>The mask color property.</summary>
-    public static readonly DependencyProperty MaskColorProperty =
-        DependencyProperty.Register(
-            nameof(MaskColor),
-            typeof(Brush),
-            typeof(NumericPushButton),
-            new PropertyMetadata(Brushes.Black, UpdateMask));
+    public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register(
+        nameof(MaskColor),
+        typeof(Brush),
+        typeof(NumericPushButton),
+        new PropertyMetadata(Brushes.Black, UpdateMask));
 
     /// <summary>Maximum of the size of value.</summary>
-    public static readonly DependencyProperty MaximumProperty =
-        DependencyProperty.Register(
-            nameof(Maximum),
-            typeof(double?),
-            typeof(NumericPushButton),
-            new UIPropertyMetadata(double.MaxValue, MaximumChanged));
+    public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
+        nameof(Maximum),
+        typeof(double?),
+        typeof(NumericPushButton),
+        new UIPropertyMetadata(double.MaxValue, MaximumChanged));
 
     /// <summary>Minimum size of value.</summary>
-    public static readonly DependencyProperty MinimumProperty =
-        DependencyProperty.Register(
-            nameof(Minimum),
-            typeof(double?),
-            typeof(NumericPushButton),
-            new UIPropertyMetadata(double.MinValue, MinimumChanged));
+    public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
+        nameof(Minimum),
+        typeof(double?),
+        typeof(NumericPushButton),
+        new UIPropertyMetadata(double.MinValue, MinimumChanged));
 
     /// <summary>The show keypad property.</summary>
-    public static readonly DependencyProperty ShowKeypadProperty =
-        DependencyProperty.Register(
-            nameof(ShowKeypad),
-            typeof(ReactiveCommand<Unit, Unit>),
-            typeof(NumericPushButton),
-            new PropertyMetadata(null));
+    public static readonly DependencyProperty ShowKeypadProperty = DependencyProperty.Register(
+        nameof(ShowKeypad),
+        typeof(ReactiveCommand<Unit, Unit>),
+        typeof(NumericPushButton),
+        new PropertyMetadata(null));
 
     /// <summary>The units on new line property.</summary>
-    public static readonly DependencyProperty UnitsOnNewLineProperty =
-        DependencyProperty.Register(
-            nameof(UnitsOnNewLine),
-            typeof(bool),
-            typeof(NumericPushButton),
-            new PropertyMetadata(false, UpdateNewLine));
+    public static readonly DependencyProperty UnitsOnNewLineProperty = DependencyProperty.Register(
+        nameof(UnitsOnNewLine),
+        typeof(bool),
+        typeof(NumericPushButton),
+        new PropertyMetadata(false, UpdateNewLine));
 
     /// <summary>The units on new line property.</summary>
-    public static readonly DependencyProperty UseSeperateEditValueProperty =
-        DependencyProperty.Register(
-            nameof(UseSeperateEditValue),
-            typeof(bool),
-            typeof(NumericPushButton),
-            new PropertyMetadata(false, UpdateValue));
+    public static readonly DependencyProperty UseSeperateEditValueProperty = DependencyProperty.Register(
+        nameof(UseSeperateEditValue),
+        typeof(bool),
+        typeof(NumericPushButton),
+        new PropertyMetadata(false, UpdateValue));
 
     /// <summary>Units Dependency Property.</summary>
-    public static readonly DependencyProperty UnitsProperty =
-        DependencyProperty.Register(
-            nameof(Units),
-            typeof(string),
-            typeof(NumericPushButton),
-            new PropertyMetadata("Units", UnitsChanged));
+    public static readonly DependencyProperty UnitsProperty = DependencyProperty.Register(
+        nameof(Units),
+        typeof(string),
+        typeof(NumericPushButton),
+        new PropertyMetadata("Units", UnitsChanged));
 
     /// <summary>Value Change.</summary>
-    public static readonly DependencyProperty ValueProperty =
-        DependencyProperty.Register(
-            nameof(Value),
-            typeof(double),
-            typeof(NumericPushButton),
-            new PropertyMetadata(0d, UpdateValue));
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+        nameof(Value),
+        typeof(double),
+        typeof(NumericPushButton),
+        new PropertyMetadata(0D, UpdateValue));
 
     /// <summary>Edited Value Change.</summary>
-    public static readonly DependencyProperty EditedValueProperty =
-        DependencyProperty.Register(
-            nameof(EditedValue),
-            typeof(double),
-            typeof(NumericPushButton),
-            new PropertyMetadata(0d, UpdateValue));
+    public static readonly DependencyProperty EditedValueProperty = DependencyProperty.Register(
+        nameof(EditedValue),
+        typeof(double),
+        typeof(NumericPushButton),
+        new PropertyMetadata(0D, UpdateValue));
 
     /// <summary>The use criss cross theme manager property.</summary>
-    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty =
-        DependencyProperty.Register(
-            nameof(UseCrissCrossThemeManager),
-            typeof(bool),
-            typeof(NumericPushButton),
-            new PropertyMetadata(true, UpdateUseCrissCross));
+    public static readonly DependencyProperty UseCrissCrossThemeManagerProperty = DependencyProperty.Register(
+        nameof(UseCrissCrossThemeManager),
+        typeof(bool),
+        typeof(NumericPushButton),
+        new PropertyMetadata(true, UpdateUseCrissCross));
 
     /// <summary>Delay before collapsing the keypad after the owner is disabled.</summary>
     private const int IsEnabledFalseDelayMilliseconds = 100;
 
     /// <summary>Delay before hiding the error state.</summary>
     private const int ErrorVisibilityDelaySeconds = 2;
-
-    /// <summary>Stores the _errrorTimer value.</summary>
-    private readonly DispatcherTimer _errrorTimer;
-
-    /// <summary>Stores the _isEnabledFalseTimer value.</summary>
-    private readonly DispatcherTimer _isEnabledFalseTimer;
 
     /// <summary>Stores the _valueD value.</summary>
     private readonly ReplaySignal<(bool UserChanged, double Value)> _valueD = new(1);
@@ -134,6 +115,12 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
 
     /// <summary>Stores the _keypadDisposable value.</summary>
     private readonly CompositeDisposable _keypadDisposable = [];
+
+    /// <summary>Stores the _errrorTimer value.</summary>
+    private DispatcherTimer _errrorTimer = null!;
+
+    /// <summary>Stores the _isEnabledFalseTimer value.</summary>
+    private DispatcherTimer _isEnabledFalseTimer = null!;
 
     /// <summary>Stores the _keypad value.</summary>
     private NumberPad? _keypad;
@@ -145,74 +132,6 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     public NumericPushButton()
     {
         DefaultStyleKey = typeof(NumericPushButton);
-        ShowKeypad = ReactiveCommand.Create(() => { });
-        _keypadDisposable.Add(ShowKeypad.Subscribe(_ =>
-        {
-            var maskColor = MaskColor;
-            var useThemeManager = UseCrissCrossThemeManager;
-            _keypad = new(this) { MaskColor = maskColor, UseCrissCrossThemeManager = useThemeManager };
-        }));
-        _isEnabledFalseTimer = new(
-            TimeSpan.FromMilliseconds(IsEnabledFalseDelayMilliseconds),
-            DispatcherPriority.Normal,
-            (s, e) =>
-            {
-                _isEnabledFalseTimer?.Stop();
-                if (_keypad is null)
-                {
-                    return;
-                }
-
-                _keypad.Visibility = Visibility.Collapsed;
-                DisposeKeypad();
-            },
-            Dispatcher);
-
-        _errrorTimer = new(
-            TimeSpan.FromSeconds(ErrorVisibilityDelaySeconds),
-            DispatcherPriority.Normal,
-            (s, e) =>
-            {
-                _errrorTimer?.Stop();
-                ErrorVisible = Visibility.Collapsed;
-            },
-            Dispatcher);
-
-        _keypadDisposable.Add(EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(handler => handler.Invoke, handler => Loaded += handler, handler => Loaded -= handler)
-            .Subscribe(loadedArgs =>
-        {
-            _ = this.UpdateSpinButtonContent();
-            if (_valueD.HasObservers)
-            {
-                _valueD.OnNext((UserChanged, Value));
-            }
-
-            if (_valueF.HasObservers)
-            {
-                _valueF.OnNext((UserChanged, (float)Value));
-            }
-
-            var command = Command;
-            if (command is null)
-            {
-                return;
-            }
-
-            DependencyPropertyChangedEventHandler enabledChanged = (_, e) =>
-            {
-                if (!(bool)e.NewValue)
-                {
-                    _isEnabledFalseTimer.Start();
-                }
-                else
-                {
-                    _isEnabledFalseTimer.Stop();
-                }
-            };
-            IsEnabledChanged += enabledChanged;
-            _keypadDisposable.Add(new ActionDisposable(() => IsEnabledChanged -= enabledChanged));
-        }));
     }
 
     /// <summary>Value changed and if user changed it</summary>
@@ -519,7 +438,11 @@ public class NumericPushButton : System.Windows.Controls.Button, INumberPadButto
     /// <param name="e">Dependency Property Changed Event Arguments.</param>
     private static void UpdateValue(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (e.NewValue is not double newdbl || e.OldValue is not double olddbl || newdbl == olddbl || d is not NumericPushButton sb)
+        if (
+            e.NewValue is not double newdbl
+            || e.OldValue is not double olddbl
+            || DoubleComparison.AreClose(newdbl, olddbl)
+            || d is not NumericPushButton sb)
         {
             return;
         }

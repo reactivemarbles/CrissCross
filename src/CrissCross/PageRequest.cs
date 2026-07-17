@@ -11,18 +11,25 @@ namespace CrissCross;
 /// <summary>Represents an immutable request for a page of data plus a stable query/filter/sort snapshot.</summary>
 public sealed class PageRequest
 {
+    /// <inheritdoc />
+    public PageRequest(int pageIndex, int pageSize)
+        : this(pageIndex, pageSize, null, false, null) { }
+
+    /// <inheritdoc />
+    public PageRequest(int pageIndex, int pageSize, string? sortKey)
+        : this(pageIndex, pageSize, sortKey, false, null) { }
+
+    /// <inheritdoc />
+    public PageRequest(int pageIndex, int pageSize, string? sortKey, bool sortDescending)
+        : this(pageIndex, pageSize, sortKey, sortDescending, null) { }
+
     /// <summary>Initializes a new instance of the <see cref="PageRequest"/> class.</summary>
     /// <param name="pageIndex">The zero-based requested page index.</param>
     /// <param name="pageSize">The requested page size.</param>
     /// <param name="sortKey">The explicit sort key, when present.</param>
     /// <param name="sortDescending">A value indicating whether the sort direction is descending.</param>
     /// <param name="queryState">The search/filter snapshot associated with the request.</param>
-    public PageRequest(
-        int pageIndex,
-        int pageSize,
-        string? sortKey = null,
-        bool sortDescending = false,
-        SearchQueryState? queryState = null)
+    public PageRequest(int pageIndex, int pageSize, string? sortKey, bool sortDescending, SearchQueryState? queryState)
     {
         PageIndex = pageIndex < 0 ? 0 : pageIndex;
         PageSize = pageSize < 1 ? 1 : pageSize;
@@ -64,5 +71,6 @@ public sealed class PageRequest
     public bool HasQuery => QueryState?.HasQuery == true || ActiveFilters.Count > 0;
 
     /// <summary>Gets compact user-facing request text for diagnostics.</summary>
-    public string DisplayText => string.Format(CultureInfo.InvariantCulture, "Page {0}, {1} per page", PageIndex + 1, PageSize);
+    public string DisplayText =>
+        string.Format(CultureInfo.InvariantCulture, "Page {0}, {1} per page", PageIndex + 1, PageSize);
 }

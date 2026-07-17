@@ -36,7 +36,8 @@ public class DropDownButton : Button
 
     /// <summary>Gets or sets a value indicating whether the drop-down for a button is currently open.</summary>
     /// <returns>
-    /// <see langword="true" /> if the drop-down is open; otherwise, <see langword="false" />. The default is <see langword="false" />.</returns>
+    /// <see langword="true" /> if the drop-down is open; otherwise, <see langword="false" />. The default is <see
+    /// langword="false" />.</returns>
     [Bindable(true)]
     [Browsable(false)]
     [Category("Appearance")]
@@ -74,9 +75,7 @@ public class DropDownButton : Button
 
     /// <summary>Called when [is drop down open changed].</summary>
     /// <param name="currentValue">if set to <c>true</c> [current value].</param>
-    protected virtual void OnIsDropDownOpenChanged(bool currentValue)
-    {
-    }
+    protected virtual void OnIsDropDownOpenChanged(bool currentValue) { }
 
     /// <summary>Called when a <see cref="T:System.Windows.Controls.Button" /> is clicked.</summary>
     protected override void OnClick()

@@ -11,11 +11,20 @@ namespace CrissCross.MAUI.Test;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class MainView
 {
+    /// <summary>Provides the activation registration.</summary>
+    private IDisposable? _activation;
+
     /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
     public MainView()
     {
         InitializeComponent();
-        _ = this.WhenActivated(d =>
+    }
+
+    /// <inheritdoc />
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _activation ??= this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
             _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);

@@ -8,12 +8,11 @@ namespace CrissCross.WPF.UI.UIExtensions;
 internal sealed class HsvColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderHsvTypeProperty member.</summary>
-    public static readonly DependencyProperty SliderHsvTypeProperty =
-        DependencyProperty.Register(
-            nameof(SliderHsvType),
-            typeof(string),
-            typeof(HsvColorSlider),
-            new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty SliderHsvTypeProperty = DependencyProperty.Register(
+        nameof(SliderHsvType),
+        typeof(string),
+        typeof(HsvColorSlider),
+        new PropertyMetadata(string.Empty));
 
     /// <summary>Gets or sets SliderHsvType.</summary>
     public string SliderHsvType
@@ -30,16 +29,14 @@ internal sealed class HsvColorSlider : PreviewColorSlider
             var colorEnd = GetColorForSelectedArgb(FullHueDegrees);
             LeftCapColor.Color = colorStart;
             RightCapColor.Color = colorEnd;
-            BackgroundGradient =
-            [
+            SetBackgroundGradient([
                 new GradientStop(colorStart, 0),
                 new GradientStop(GetColorForSelectedArgb(YellowHueDegrees), YellowGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(GreenHueDegrees), GreenGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(CyanHueDegrees), CyanGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(BlueHueDegrees), BlueGradientOffset),
                 new GradientStop(GetColorForSelectedArgb(MagentaHueDegrees), MagentaGradientOffset),
-                new GradientStop(colorEnd, 1)
-            ];
+                new GradientStop(colorEnd, 1),]);
             return;
         }
 
@@ -47,11 +44,7 @@ internal sealed class HsvColorSlider : PreviewColorSlider
         var fallbackColorEnd = GetColorForSelectedArgb(MaximumColorChannelValue);
         LeftCapColor.Color = fallbackColorStart;
         RightCapColor.Color = fallbackColorEnd;
-        BackgroundGradient =
-        [
-            new GradientStop(fallbackColorStart, 0.0),
-            new GradientStop(fallbackColorEnd, 1)
-        ];
+        SetBackgroundGradient([new GradientStop(fallbackColorStart, 0.0), new GradientStop(fallbackColorEnd, 1)]);
     }
 
     /// <summary>Provides the GetColorForSelectedArgb member.</summary>
@@ -62,34 +55,56 @@ internal sealed class HsvColorSlider : PreviewColorSlider
         switch (SliderHsvType)
         {
             case "H":
-                {
-                    var rgbtuple = ColorSpaceHelper.HsvToRgb(value, CurrentColorState.HSV_S, CurrentColorState.HSV_V);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HsvToRgb(value, CurrentColorState.HSV_S, CurrentColorState.HSV_V);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             case "S":
-                {
-                    var rgbtuple = ColorSpaceHelper.HsvToRgb(CurrentColorState.HSV_H, value / ColorChannelScale, CurrentColorState.HSV_V);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HsvToRgb(
+                    CurrentColorState.HSV_H,
+                    value / ColorChannelScale,
+                    CurrentColorState.HSV_V);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             case "V":
-                {
-                    var rgbtuple = ColorSpaceHelper.HsvToRgb(CurrentColorState.HSV_H, CurrentColorState.HSV_S, value / ColorChannelScale);
-                    double r = rgbtuple.Item1;
-                    double g = rgbtuple.Item2;
-                    double b = rgbtuple.Item3;
-                    return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(r * ColorChannelScale), (byte)(g * ColorChannelScale), (byte)(b * ColorChannelScale));
-                }
+            {
+                var rgbtuple = ColorSpaceHelper.HsvToRgb(
+                    CurrentColorState.HSV_H,
+                    CurrentColorState.HSV_S,
+                    value / ColorChannelScale);
+                double r = rgbtuple.Item1;
+                double g = rgbtuple.Item2;
+                double b = rgbtuple.Item3;
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(r * ColorChannelScale),
+                    (byte)(g * ColorChannelScale),
+                    (byte)(b * ColorChannelScale));
+            }
 
             default:
-                return Color.FromArgb((byte)(CurrentColorState.A * ColorChannelScale), (byte)(CurrentColorState.RGB_R * ColorChannelScale), (byte)(CurrentColorState.RGB_G * ColorChannelScale), (byte)(CurrentColorState.RGB_B * ColorChannelScale));
+                return Color.FromArgb(
+                    (byte)(CurrentColorState.A * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_R * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_G * ColorChannelScale),
+                    (byte)(CurrentColorState.RGB_B * ColorChannelScale));
         }
     }
 }

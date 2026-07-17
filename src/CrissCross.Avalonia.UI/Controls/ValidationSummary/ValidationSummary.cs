@@ -13,10 +13,16 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ValidationSummary : ItemsControl
 {
     /// <summary>Property for <see cref="SummaryState"/>.</summary>
-    public static readonly StyledProperty<ValidationSummaryState?> SummaryStateProperty = AvaloniaProperty.Register<ValidationSummary, ValidationSummaryState?>(nameof(SummaryState));
+    public static readonly StyledProperty<ValidationSummaryState?> SummaryStateProperty = AvaloniaProperty.Register<
+        ValidationSummary,
+        ValidationSummaryState?
+    >(nameof(SummaryState));
 
     /// <summary>Property for <see cref="NavigateToFieldCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> NavigateToFieldCommandProperty = AvaloniaProperty.Register<ValidationSummary, ICommand?>(nameof(NavigateToFieldCommand));
+    public static readonly StyledProperty<ICommand?> NavigateToFieldCommandProperty = AvaloniaProperty.Register<
+        ValidationSummary,
+        ICommand?
+    >(nameof(NavigateToFieldCommand));
 
     /// <summary>Gets or sets the aggregate validation state shown by this summary.</summary>
     public ValidationSummaryState? SummaryState

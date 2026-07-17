@@ -29,9 +29,7 @@ namespace CrissCross.WPF.UI.Markup;
 public class SymbolIconExtension : MarkupExtension
 {
     /// <summary>Initializes a new instance of the <see cref="SymbolIconExtension"/> class.</summary>
-    public SymbolIconExtension()
-    {
-    }
+    public SymbolIconExtension() { }
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIconExtension"/> class.</summary>
     /// <param name="symbol">The symbol.</param>
@@ -39,8 +37,7 @@ public class SymbolIconExtension : MarkupExtension
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIconExtension"/> class.</summary>
     /// <param name="symbol">The symbol.</param>
-    public SymbolIconExtension(string symbol) =>
-        Symbol = Enum.Parse<SymbolRegular>(symbol);
+    public SymbolIconExtension(string symbol) => Symbol = Enum.Parse<SymbolRegular>(symbol);
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIconExtension"/> class.</summary>
     /// <param name="symbol">The symbol.</param>
@@ -68,8 +65,10 @@ public class SymbolIconExtension : MarkupExtension
     /// </value>
     public double FontSize { get; set; }
 
-    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.</summary>
-    /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target
+    /// property for this markup extension.</summary>
+    /// <param name="serviceProvider">A service provider helper that can provide services for the markup
+    /// extension.</param>
     /// <returns>
     /// The object value to set on the property where the extension is applied.
     /// </returns>

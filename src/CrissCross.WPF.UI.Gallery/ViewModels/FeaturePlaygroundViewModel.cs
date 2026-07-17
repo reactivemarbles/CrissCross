@@ -42,8 +42,11 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     /// <summary>The simulated search delay in milliseconds.</summary>
     private const int SearchDelayMilliseconds = 150;
 
+    /// <summary>Workflow key used by the review step.</summary>
+    private const string ReviewStepKey = "review";
+
     /// <summary>Tracks whether the import command is running.</summary>
-    private readonly ObservableAsPropertyHelper<bool> _isOperationRunning;
+    private ObservableAsPropertyHelper<bool>? _isOperationRunning;
 
     /// <summary>Stores the current search text.</summary>
     private string? _searchText = "pump alarm";
@@ -77,7 +80,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         _paginationState = new(SamplePageIndex, SamplePageSize, SampleResultCount);
         _currentRange = CreateRange(DateTimeOffset.Now);
         _segmentState = new(CreateSegments(), "table");
-        _stepperState = new(CreateSteps("review"), "review", StepperOrientation.Horizontal);
+        _stepperState = new(CreateSteps(ReviewStepKey), ReviewStepKey, StepperOrientation.Horizontal);
         _themeState = CreateThemeState(_selectedTheme);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
@@ -88,9 +91,6 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         SegmentChangedCommand = ReactiveCommand.Create<string>(ApplySegment);
         StepRequestedCommand = ReactiveCommand.Create<string>(ApplyStep);
         ThemeChangedCommand = ReactiveCommand.Create<ThemeChoice>(ApplyTheme);
-
-        _isOperationRunning = RunImportCommand.IsExecuting
-            .ToProperty(this, nameof(IsOperationRunning), scheduler: RxSchedulers.MainThreadScheduler);
     }
 
     /// <summary>Gets the async command used by the command button and busy overlay demos.</summary>
@@ -148,7 +148,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     }
 
     /// <summary>Gets a value indicating whether the async import command is executing.</summary>
-    public bool IsOperationRunning => _isOperationRunning.Value;
+    public bool IsOperationRunning => GetIsOperationRunningValue();
 
     /// <summary>Gets the command button visual state.</summary>
     public CommandButtonState CommandState
@@ -216,15 +216,16 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     }
 
     /// <summary>Gets deterministic platform notes for manual QA.</summary>
-    public string PlatformNotes { get; } = "WPF demonstrates Windows desktop theme/high-contrast support, view-model navigation, and breadcrumb view navigation.";
+    public string PlatformNotes { get; } =
+        "WPF demonstrates Windows desktop theme/high-contrast support, view-model navigation, "
+        + "and breadcrumb view navigation.";
 
     /// <summary>Gets activation/disposal trace text.</summary>
     public string ActivationLog
     {
         get => field;
         private set => this.RaiseAndSetIfChanged(ref field, value);
-    }
-= "Not activated yet.";
+    } = "Not activated yet.";
 
     /// <inheritdoc/>
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
@@ -233,9 +234,11 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         ArgumentNullException.ThrowIfNull(disposables);
 
         ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
-        _ = Observable.Interval(TimeSpan.FromSeconds(ActivationRefreshSeconds), RxSchedulers.TaskpoolScheduler)
+        _ = Observable
+            .Interval(TimeSpan.FromSeconds(ActivationRefreshSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(_ => ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
+            .Subscribe(_ =>
+                ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
             .DisposeWith(disposables);
     }
 
@@ -244,7 +247,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     {
         if (disposing)
         {
-            _isOperationRunning.Dispose();
+            _isOperationRunning?.Dispose();
         }
 
         base.Dispose(disposing);
@@ -254,42 +257,59 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     /// <param name="text">The current search text.</param>
     /// <param name="isSearching">A value indicating whether search is active.</param>
     /// <returns>The search state.</returns>
-    private static SearchQueryState CreateSearchState(string? text, bool isSearching) => new(
-        text,
-        debouncedText: text?.Trim(),
-        submittedText: text?.Trim(),
-        isSearching: isSearching,
-        resultCount: string.IsNullOrWhiteSpace(text) ? SampleResultCount : SearchResultCount,
-        filters:
-        [
-            new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
-            new FilterToken("status", FilterOperator.NotEquals, "closed", "Status: Active")
-        ]);
+    private static SearchQueryState CreateSearchState(string? text, bool isSearching) =>
+        new(
+            text,
+            debouncedText: text?.Trim(),
+            submittedText: text?.Trim(),
+            isSearching: isSearching,
+            resultCount: string.IsNullOrWhiteSpace(text) ? SampleResultCount : SearchResultCount,
+            filters:
+            [
+                new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
+                new FilterToken("status", FilterOperator.NotEquals, "closed", "Status: Active"),]);
 
     /// <summary>Creates the default date/time range.</summary>
     /// <param name="now">The current time.</param>
     /// <returns>The default date/time range.</returns>
-    private static DateTimeRange CreateRange(DateTimeOffset now) => new(now.AddHours(DefaultRangeHours), now, DateTimeRangePreset.Custom, "Last four hours");
+    private static DateTimeRange CreateRange(DateTimeOffset now) =>
+        new(now.AddHours(DefaultRangeHours), now, DateTimeRangePreset.Custom, "Last four hours");
 
     /// <summary>Creates the segmented control items.</summary>
     /// <returns>The segment items.</returns>
     private static IReadOnlyList<SegmentItem> CreateSegments() =>
-    [
-        new SegmentItem("table", "Table"),
-        new SegmentItem("cards", "Cards"),
-        new SegmentItem("timeline", "Timeline")
-    ];
+        [new SegmentItem("table", "Table"), new SegmentItem("cards", "Cards"), new SegmentItem("timeline", "Timeline")];
 
     /// <summary>Creates the workflow steps.</summary>
     /// <param name="currentKey">The active step key.</param>
     /// <returns>The workflow steps.</returns>
     private static IReadOnlyList<StepDescriptor> CreateSteps(string currentKey) =>
-    [
-        new StepDescriptor("connect", "Connect", currentKey == "connect" ? StepStatus.Active : StepStatus.Completed),
-        new StepDescriptor("query", "Query", currentKey == "query" ? StepStatus.Active : StepStatus.Completed),
-        new StepDescriptor("review", "Review", currentKey == "review" ? StepStatus.Active : StepStatus.Pending),
-        new StepDescriptor("publish", "Publish", StepStatus.Pending, canEnter: currentKey == "review")
-    ];
+        [
+            new StepDescriptor(
+                "connect",
+                "Connect",
+                new StepDescriptorOptions
+                {
+                    Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed,
+                }),
+            new StepDescriptor(
+                "query",
+                "Query",
+                new StepDescriptorOptions
+                {
+                    Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed,
+                }),
+            new StepDescriptor(
+                ReviewStepKey,
+                "Review",
+                new StepDescriptorOptions
+                {
+                    Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending,
+                }),
+            new StepDescriptor(
+                "publish",
+                "Publish",
+                new StepDescriptorOptions { Status = StepStatus.Pending, CanEnter = currentKey == ReviewStepKey }),];
 
     /// <summary>Creates the theme preference state.</summary>
     /// <param name="selectedChoice">The selected theme choice.</param>
@@ -299,12 +319,24 @@ public sealed class FeaturePlaygroundViewModel : RxObject
 
     /// <summary>Gets the current system theme choice.</summary>
     /// <returns>The current system theme choice.</returns>
-    private static ThemeChoice GetSystemThemeChoice() => new ThemeService().GetSystemTheme() switch
+    private static ThemeChoice GetSystemThemeChoice() =>
+        new ThemeService().GetSystemTheme() switch
+        {
+            ApplicationTheme.Dark => ThemeChoice.Dark,
+            ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
+            _ => ThemeChoice.Light,
+        };
+
+    /// <summary>Gets the lazily initialized command execution state.</summary>
+    /// <returns>Whether the import command is executing.</returns>
+    private bool GetIsOperationRunningValue()
     {
-        ApplicationTheme.Dark => ThemeChoice.Dark,
-        ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
-        _ => ThemeChoice.Light
-    };
+        _isOperationRunning ??= RunImportCommand.IsExecuting.ToProperty(
+            this,
+            nameof(IsOperationRunning),
+            scheduler: RxSchedulers.MainThreadScheduler);
+        return _isOperationRunning.Value;
+    }
 
     /// <summary>Runs the sample import operation.</summary>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -313,7 +345,11 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     {
         CommandState = CommandButtonState.Executing;
         CommandProgress = InitialCommandProgress;
-        CurrentOperation = new("Loading deterministic sample data", "Simulates a cancellable import without network access.", CommandProgress, ClearSearchCommand);
+        CurrentOperation = new(
+            "Loading deterministic sample data",
+            "Simulates a cancellable import without network access.",
+            CommandProgress,
+            ClearSearchCommand);
 
         await Task.Delay(ImportDelayMilliseconds, cancellationToken).ConfigureAwait(true);
 
@@ -345,7 +381,8 @@ public sealed class FeaturePlaygroundViewModel : RxObject
 
     /// <summary>Applies a page request.</summary>
     /// <param name="request">The page request.</param>
-    private void ApplyPageRequest(PageRequest request) => PaginationState = new(request.PageIndex, request.PageSize, SampleResultCount);
+    private void ApplyPageRequest(PageRequest request) =>
+        PaginationState = new(request.PageIndex, request.PageSize, SampleResultCount);
 
     /// <summary>Applies a date/time range.</summary>
     /// <param name="range">The date/time range.</param>

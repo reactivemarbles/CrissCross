@@ -7,7 +7,7 @@ using Avalonia.Styling;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>A DataGrid control that displays data in rows and columns and allows for the entering and editing of data.</summary>
+/// <summary>Provides the DataGrid member.</summary>
 /// <remarks>
 /// This control requires the Avalonia.Controls.DataGrid NuGet package to be installed.
 /// Install it separately: dotnet add package Avalonia.Controls.DataGrid.
@@ -15,16 +15,16 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class DataGrid : ItemsControl
 {
     /// <summary>Property for <see cref="CheckBoxColumnElementStyle"/>.</summary>
-    public static readonly StyledProperty<Style?> CheckBoxColumnElementStyleProperty =
-        AvaloniaProperty.Register<DataGrid, Style?>(
-            nameof(CheckBoxColumnElementStyle),
-            null);
+    public static readonly StyledProperty<Style?> CheckBoxColumnElementStyleProperty = AvaloniaProperty.Register<
+        DataGrid,
+        Style?
+    >(nameof(CheckBoxColumnElementStyle));
 
     /// <summary>Property for <see cref="CheckBoxColumnEditingElementStyle"/>.</summary>
-    public static readonly StyledProperty<Style?> CheckBoxColumnEditingElementStyleProperty =
-        AvaloniaProperty.Register<DataGrid, Style?>(
-            nameof(CheckBoxColumnEditingElementStyle),
-            null);
+    public static readonly StyledProperty<Style?> CheckBoxColumnEditingElementStyleProperty = AvaloniaProperty.Register<
+        DataGrid,
+        Style?
+    >(nameof(CheckBoxColumnEditingElementStyle));
 
     /// <summary>Gets or sets a style to apply to all checkbox columns in the DataGrid.</summary>
     public Style? CheckBoxColumnElementStyle

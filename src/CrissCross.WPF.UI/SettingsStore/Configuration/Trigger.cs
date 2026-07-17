@@ -30,7 +30,8 @@ public class Trigger(string eventName, Func<object, object> sourceGetter)
     public Func<object, object> SourceGetter { get; } = sourceGetter;
 
     /// <summary>Subscribes the specified target.</summary>
-    /// <exception cref="ArgumentException">Event '{EventName}' not found on target of type '{source.GetType().Name}'. Check the tracking configuration for this type.</exception>
+    /// <exception cref="ArgumentException">Event '{EventName}' not found on target of type '{source.GetType().Name}'.
+    /// Check the tracking configuration for this type.</exception>
     /// <param name="target">The target.</param>
     /// <param name="action">The action.</param>
     public void Subscribe(object target, Action action) => _ = SubscribeDisposable(target, action);
@@ -46,18 +47,23 @@ public class Trigger(string eventName, Func<object, object> sourceGetter)
 
         var source = SourceGetter(target);
 
-        var eventInfo = source.GetType().GetEvent(EventName) ?? throw new ArgumentException($"Event '{EventName}' not found on target of type '{source.GetType().Name}'. Check the tracking configuration for this type.");
-        var parameters = eventInfo.EventHandlerType?
-            .GetMethod("Invoke")?
-            .GetParameters()
+        var eventInfo =
+            source.GetType().GetEvent(EventName)
+            ?? throw new ArgumentException(
+                $"Event '{EventName}' not found on target of type '{source.GetType().Name}'. "
+                    + "Check the tracking configuration for this type.");
+        var parameters = eventInfo
+            .EventHandlerType?.GetMethod("Invoke")
+            ?.GetParameters()
             .Select(parameter => Expression.Parameter(parameter.ParameterType))
             .ToArray();
 
-        var handler = Expression.Lambda(
+        var handler = Expression
+            .Lambda(
                 eventInfo.EventHandlerType!,
                 Expression.Call(Expression.Constant(action), nameof(Action.Invoke), Type.EmptyTypes),
                 parameters)
-          .Compile();
+            .Compile();
 
         eventInfo.AddEventHandler(source, handler);
 

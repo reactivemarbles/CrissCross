@@ -13,11 +13,19 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for steppers and wizard progress controls.</summary>
 public sealed class StepperState
 {
+    /// <inheritdoc />
+    public StepperState(IEnumerable<StepDescriptor> steps)
+        : this(steps, null, StepperOrientation.Horizontal) { }
+
+    /// <inheritdoc />
+    public StepperState(IEnumerable<StepDescriptor> steps, string? currentKey)
+        : this(steps, currentKey, StepperOrientation.Horizontal) { }
+
     /// <summary>Initializes a new instance of the <see cref="StepperState"/> class.</summary>
     /// <param name="steps">The steps projected by the workflow.</param>
     /// <param name="currentKey">The stable key for the current step.</param>
     /// <param name="orientation">The preferred presentation orientation.</param>
-    public StepperState(IEnumerable<StepDescriptor> steps, string? currentKey = null, StepperOrientation orientation = StepperOrientation.Horizontal)
+    public StepperState(IEnumerable<StepDescriptor> steps, string? currentKey, StepperOrientation orientation)
     {
         if (steps is null)
         {
@@ -58,23 +66,31 @@ public sealed class StepperState
     public bool HasSteps => Steps.Count > 0;
 
     /// <summary>Gets a value indicating whether previous-step navigation is currently available.</summary>
-    public bool CanGoPrevious => CurrentIndex > 0 && CurrentStep?.CanLeave == true && Steps[CurrentIndex - 1].IsAvailable;
+    public bool CanGoPrevious =>
+        CurrentIndex > 0 && CurrentStep?.CanLeave == true && Steps[CurrentIndex - 1].IsAvailable;
 
     /// <summary>Gets a value indicating whether next-step navigation is currently available.</summary>
-    public bool CanGoNext => CurrentIndex >= 0 && CurrentIndex < Steps.Count - 1 && CurrentStep?.CanLeave == true && Steps[CurrentIndex + 1].IsAvailable;
+    public bool CanGoNext =>
+        CurrentIndex >= 0
+        && CurrentIndex < Steps.Count - 1
+        && CurrentStep?.CanLeave == true
+        && Steps[CurrentIndex + 1].IsAvailable;
 
     /// <summary>Gets a value indicating whether the current workflow state can finish.</summary>
-    public bool CanFinish => HasSteps && CurrentIndex == Steps.Count - 1 && BlockingStepCount == 0 && CurrentStep?.CanLeave == true;
+    public bool CanFinish =>
+        HasSteps && CurrentIndex == Steps.Count - 1 && BlockingStepCount == 0 && CurrentStep?.CanLeave == true;
 
     /// <summary>Gets compact progress text for diagnostics and screen-reader labels.</summary>
-    public string ProgressText => HasSteps
-        ? string.Format(CultureInfo.InvariantCulture, "Step {0} of {1}", CurrentIndex + 1, Steps.Count)
-        : "No steps";
+    public string ProgressText =>
+        HasSteps
+            ? string.Format(CultureInfo.InvariantCulture, "Step {0} of {1}", CurrentIndex + 1, Steps.Count)
+            : "No steps";
 
     /// <summary>Gets the step with the specified stable key.</summary>
     /// <param name="key">The stable step key.</param>
     /// <returns>The matching step, or <c>null</c> when no step has the key.</returns>
-    public StepDescriptor? GetStep(string key) => Steps.FirstOrDefault(step => string.Equals(step.Key, key, StringComparison.Ordinal));
+    public StepDescriptor? GetStep(string key) =>
+        Steps.FirstOrDefault(step => string.Equals(step.Key, key, StringComparison.Ordinal));
 
     /// <summary>Resolves the current step key from a requested key or active step.</summary>
     /// <param name="requestedKey">The requested current key.</param>

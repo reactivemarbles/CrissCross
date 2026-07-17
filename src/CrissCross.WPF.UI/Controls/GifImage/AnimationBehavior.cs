@@ -14,112 +14,95 @@ namespace CrissCross.WPF.UI.Controls;
 public static class AnimationBehavior
 {
     /// <summary>The animate in design mode property.</summary>
-    public static readonly DependencyProperty AnimateInDesignModeProperty =
-        DependencyProperty.RegisterAttached(
-            "AnimateInDesignMode",
-            typeof(bool),
-            typeof(AnimationBehavior),
-            new PropertyMetadata(
-                false,
-                AnimateInDesignModeChanged));
+    public static readonly DependencyProperty AnimateInDesignModeProperty = DependencyProperty.RegisterAttached(
+        "AnimateInDesignMode",
+        typeof(bool),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(false, AnimateInDesignModeChanged));
 
     /// <summary>The animation completed event.</summary>
-    public static readonly RoutedEvent AnimationCompletedEvent =
-        EventManager.RegisterRoutedEvent(
-            "AnimationCompleted",
-            RoutingStrategy.Bubble,
-            typeof(AnimationCompletedEventHandler),
-            typeof(AnimationBehavior));
+    public static readonly RoutedEvent AnimationCompletedEvent = EventManager.RegisterRoutedEvent(
+        "AnimationCompleted",
+        RoutingStrategy.Bubble,
+        typeof(AnimationCompletedEventHandler),
+        typeof(AnimationBehavior));
 
     /// <summary>The animation started event.</summary>
-    public static readonly RoutedEvent AnimationStartedEvent =
-        EventManager.RegisterRoutedEvent(
-            "AnimationStarted",
-            RoutingStrategy.Bubble,
-            typeof(AnimationStartedEventHandler),
-            typeof(AnimationBehavior));
+    public static readonly RoutedEvent AnimationStartedEvent = EventManager.RegisterRoutedEvent(
+        "AnimationStarted",
+        RoutingStrategy.Bubble,
+        typeof(AnimationStartedEventHandler),
+        typeof(AnimationBehavior));
 
     /// <summary>The animator property.</summary>
-    public static readonly DependencyProperty AnimatorProperty =
-        DependencyProperty.RegisterAttached(
-            nameof(Animator),
-            typeof(Animator),
-            typeof(AnimationBehavior),
-            new PropertyMetadata(null));
+    public static readonly DependencyProperty AnimatorProperty = DependencyProperty.RegisterAttached(
+        nameof(Animator),
+        typeof(Animator),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(null));
 
     /// <summary>The automatic start property.</summary>
-    public static readonly DependencyProperty AutoStartProperty =
-        DependencyProperty.RegisterAttached(
-            "AutoStart",
-            typeof(bool),
-            typeof(AnimationBehavior),
-            new PropertyMetadata(true));
+    public static readonly DependencyProperty AutoStartProperty = DependencyProperty.RegisterAttached(
+        "AutoStart",
+        typeof(bool),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(true));
 
     /// <summary>The cache frames in memory property.</summary>
-    public static readonly DependencyProperty CacheFramesInMemoryProperty =
-        DependencyProperty.RegisterAttached(
+    public static readonly DependencyProperty CacheFramesInMemoryProperty = DependencyProperty.RegisterAttached(
         "CacheFramesInMemory",
         typeof(bool),
         typeof(AnimationBehavior),
         new PropertyMetadata(false, SourceChanged));
 
     /// <summary>The download progress event.</summary>
-    public static readonly RoutedEvent DownloadProgressEvent =
-        EventManager.RegisterRoutedEvent(
-            "DownloadProgress",
-            RoutingStrategy.Bubble,
-            typeof(DownloadProgressEventHandler),
-            typeof(AnimationBehavior));
+    public static readonly RoutedEvent DownloadProgressEvent = EventManager.RegisterRoutedEvent(
+        "DownloadProgress",
+        RoutingStrategy.Bubble,
+        typeof(DownloadProgressEventHandler),
+        typeof(AnimationBehavior));
 
     /// <summary>The error event.</summary>
-    public static readonly RoutedEvent ErrorEvent =
-        EventManager.RegisterRoutedEvent(
-            "Error",
-            RoutingStrategy.Bubble,
-            typeof(AnimationErrorEventHandler),
-            typeof(AnimationBehavior));
+    public static readonly RoutedEvent ErrorEvent = EventManager.RegisterRoutedEvent(
+        "Error",
+        RoutingStrategy.Bubble,
+        typeof(AnimationErrorEventHandler),
+        typeof(AnimationBehavior));
 
     /// <summary>The loaded event.</summary>
-    public static readonly RoutedEvent LoadedEvent =
-        EventManager.RegisterRoutedEvent(
-            "Loaded",
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(AnimationBehavior));
+    public static readonly RoutedEvent LoadedEvent = EventManager.RegisterRoutedEvent(
+        "Loaded",
+        RoutingStrategy.Bubble,
+        typeof(RoutedEventHandler),
+        typeof(AnimationBehavior));
 
     /// <summary>The repeat behavior property.</summary>
-    public static readonly DependencyProperty RepeatBehaviorProperty =
-        DependencyProperty.RegisterAttached(
-          nameof(RepeatBehavior),
-          typeof(RepeatBehavior),
-          typeof(AnimationBehavior),
-          new PropertyMetadata(
-            default(RepeatBehavior),
-            RepeatBehaviorChanged));
+    public static readonly DependencyProperty RepeatBehaviorProperty = DependencyProperty.RegisterAttached(
+        nameof(RepeatBehavior),
+        typeof(RepeatBehavior),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(default(RepeatBehavior), RepeatBehaviorChanged));
 
     /// <summary>The source stream property.</summary>
-    public static readonly DependencyProperty SourceStreamProperty =
-        DependencyProperty.RegisterAttached(
-            "SourceStream",
-            typeof(Stream),
-            typeof(AnimationBehavior),
-            new PropertyMetadata(
-                null,
-                SourceChanged));
+    public static readonly DependencyProperty SourceStreamProperty = DependencyProperty.RegisterAttached(
+        "SourceStream",
+        typeof(Stream),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(null, SourceChanged));
 
     /// <summary>The source URI property.</summary>
-    public static readonly DependencyProperty SourceUriProperty =
-        DependencyProperty.RegisterAttached(
-          "SourceUri",
-          typeof(Uri),
-          typeof(AnimationBehavior),
-          new PropertyMetadata(
-            null,
-            SourceChanged));
+    public static readonly DependencyProperty SourceUriProperty = DependencyProperty.RegisterAttached(
+        "SourceUri",
+        typeof(Uri),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(null, SourceChanged));
 
     /// <summary>Provides the SeqNumProperty member.</summary>
-    private static readonly DependencyProperty SeqNumProperty =
-        DependencyProperty.RegisterAttached("SeqNum", typeof(int), typeof(AnimationBehavior), new PropertyMetadata(0));
+    private static readonly DependencyProperty SeqNumProperty = DependencyProperty.RegisterAttached(
+        "SeqNum",
+        typeof(int),
+        typeof(AnimationBehavior),
+        new PropertyMetadata(0));
 
     /// <summary>Gets the download cache location.</summary>
     public static string DownloadCacheLocation => UriLoader.DownloadCacheLocation;
@@ -437,10 +420,7 @@ public static class AnimationBehavior
             }
             else if (sourceUri is not null)
             {
-                image.Source = new BitmapImage
-                {
-                    UriSource = sourceUri
-                };
+                image.Source = new BitmapImage { UriSource = sourceUri };
             }
         }
         catch
@@ -551,7 +531,12 @@ public static class AnimationBehavior
             var stream = GetSourceStream(image);
             if (stream is not null)
             {
-                InitAnimationAsync(image, stream.AsBuffered(), GetRepeatBehavior(image), seqNum, GetCacheFramesInMemory(image));
+                InitAnimationAsync(
+                    image,
+                    stream.AsBuffered(),
+                    GetRepeatBehavior(image),
+                    seqNum,
+                    GetCacheFramesInMemory(image));
                 return;
             }
 
@@ -573,7 +558,12 @@ public static class AnimationBehavior
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="seqNum">The seqNum value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    private static async void InitAnimationAsync(System.Windows.Controls.Image image, Uri sourceUri, RepeatBehavior repeatBehavior, int seqNum, bool cacheFrameDataInMemory)
+    private static async void InitAnimationAsync(
+        System.Windows.Controls.Image image,
+        Uri sourceUri,
+        RepeatBehavior repeatBehavior,
+        int seqNum,
+        bool cacheFrameDataInMemory)
     {
         if (!CheckDesignMode(image, sourceUri, null))
         {
@@ -583,7 +573,12 @@ public static class AnimationBehavior
         try
         {
             var progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
-            var animator = await ImageAnimator.CreateAsync(sourceUri, repeatBehavior, progress, image, cacheFrameDataInMemory);
+            var animator = await ImageAnimator.CreateAsync(
+                sourceUri,
+                repeatBehavior,
+                progress,
+                image,
+                cacheFrameDataInMemory);
 
             // Check that the source hasn't changed while we were loading the animation
             if (GetSeqNum(image) != seqNum)
@@ -613,7 +608,12 @@ public static class AnimationBehavior
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="seqNum">The seqNum value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    private static async void InitAnimationAsync(System.Windows.Controls.Image image, Stream stream, RepeatBehavior repeatBehavior, int seqNum, bool cacheFrameDataInMemory)
+    private static async void InitAnimationAsync(
+        System.Windows.Controls.Image image,
+        Stream stream,
+        RepeatBehavior repeatBehavior,
+        int seqNum,
+        bool cacheFrameDataInMemory)
     {
         if (!CheckDesignMode(image, null, stream))
         {

@@ -25,45 +25,49 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(IsIndeterminate),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(false, static (d, e) =>
-        {
-            if (d is not ProgressRing pr || e.NewValue is not bool b)
+        new PropertyMetadata(
+            false,
+            static (d, e) =>
             {
-                return;
-            }
+                if (d is not ProgressRing pr || e.NewValue is not bool b)
+                {
+                    return;
+                }
 
-            // keep IsActive in sync
-            pr.SetCurrentValue(IsActiveProperty, b);
-        }));
+                // keep IsActive in sync
+                pr.SetCurrentValue(IsActiveProperty, b);
+            }));
 
-    /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive. Maps to <see cref="IsIndeterminate"/>.</summary>
+    /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive.</summary>
     public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
         nameof(IsActive),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(false, static (d, e) =>
-        {
-            if (d is not ProgressRing pr || e.NewValue is not bool b)
+        new PropertyMetadata(
+            false,
+            static (d, e) =>
             {
-                return;
-            }
+                if (d is not ProgressRing pr || e.NewValue is not bool b)
+                {
+                    return;
+                }
 
-            pr.SetCurrentValue(IsIndeterminateProperty, b);
-        }));
+                pr.SetCurrentValue(IsIndeterminateProperty, b);
+            }));
 
     /// <summary>Property for <see cref="EngAngle"/>.</summary>
     public static readonly DependencyProperty EngAngleProperty = DependencyProperty.Register(
         nameof(EngAngle),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(180.0d));
+        new PropertyMetadata(180.0D));
 
     /// <summary>Property for <see cref="IndeterminateAngle"/>.</summary>
     public static readonly DependencyProperty IndeterminateAngleProperty = DependencyProperty.Register(
         nameof(IndeterminateAngle),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(180.0d));
+        new PropertyMetadata(180.0D));
 
     /// <summary>Property for <see cref="CoverRingStroke"/>.</summary>
     public static readonly DependencyProperty CoverRingStrokeProperty = DependencyProperty.Register(
@@ -72,7 +76,9 @@ public class ProgressRing : System.Windows.Controls.Control
         typeof(ProgressRing),
         new FrameworkPropertyMetadata(
             Brushes.Black,
-            FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender | FrameworkPropertyMetadataOptions.Inherits));
+            FrameworkPropertyMetadataOptions.AffectsRender
+                | FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender
+                | FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="CoverRingVisibility"/>.</summary>
     public static readonly DependencyProperty CoverRingVisibilityProperty = DependencyProperty.Register(
@@ -82,22 +88,22 @@ public class ProgressRing : System.Windows.Controls.Control
         new PropertyMetadata(System.Windows.Visibility.Visible));
 
     /// <summary>Default progress value.</summary>
-    private const double DefaultProgress = 50.0d;
+    private const double DefaultProgress = 50.0D;
 
     /// <summary>Maximum supported progress value.</summary>
-    private const double MaximumProgress = 100.0d;
+    private const double MaximumProgress = 100.0D;
 
     /// <summary>Minimum supported progress value.</summary>
-    private const double MinimumProgress = 0.0d;
+    private const double MinimumProgress = 0.0D;
 
     /// <summary>Degree multiplier for a single progress percentage point.</summary>
-    private const double DegreesPerProgressPercent = 3.6d;
+    private const double DegreesPerProgressPercent = 3.6D;
 
     /// <summary>Degrees in a full circle.</summary>
-    private const double FullCircleDegrees = 360.0d;
+    private const double FullCircleDegrees = 360.0D;
 
     /// <summary>Maximum arc angle before the path closes visually.</summary>
-    private const double MaximumArcDegrees = 359.0d;
+    private const double MaximumArcDegrees = 359.0D;
 
     /// <summary>Gets or sets the progress.</summary>
     public double Progress
@@ -113,7 +119,7 @@ public class ProgressRing : System.Windows.Controls.Control
         set => SetValue(IsIndeterminateProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the ring is active (alias of <see cref="IsIndeterminate"/>).</summary>
+    /// <summary>Gets or sets whether the ring is active (alias of IsIndeterminate).</summary>
     public bool IsActive
     {
         get => (bool)GetValue(IsActiveProperty);

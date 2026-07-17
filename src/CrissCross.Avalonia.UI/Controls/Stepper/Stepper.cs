@@ -13,19 +13,33 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class Stepper : ItemsControl
 {
     /// <summary>Property for <see cref="State"/>.</summary>
-    public static readonly StyledProperty<StepperState?> StateProperty = AvaloniaProperty.Register<Stepper, StepperState?>(nameof(State));
+    public static readonly StyledProperty<StepperState?> StateProperty = AvaloniaProperty.Register<
+        Stepper,
+        StepperState?
+    >(nameof(State));
 
     /// <summary>Property for <see cref="CurrentKey"/>.</summary>
-    public static readonly StyledProperty<string?> CurrentKeyProperty = AvaloniaProperty.Register<Stepper, string?>(nameof(CurrentKey), defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<string?> CurrentKeyProperty = AvaloniaProperty.Register<Stepper, string?>(
+        nameof(CurrentKey),
+        defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="StepRequestedCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> StepRequestedCommandProperty = AvaloniaProperty.Register<Stepper, ICommand?>(nameof(StepRequestedCommand));
+    public static readonly StyledProperty<ICommand?> StepRequestedCommandProperty = AvaloniaProperty.Register<
+        Stepper,
+        ICommand?
+    >(nameof(StepRequestedCommand));
 
     /// <summary>Property for <see cref="FinishCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> FinishCommandProperty = AvaloniaProperty.Register<Stepper, ICommand?>(nameof(FinishCommand));
+    public static readonly StyledProperty<ICommand?> FinishCommandProperty = AvaloniaProperty.Register<
+        Stepper,
+        ICommand?
+    >(nameof(FinishCommand));
 
     /// <summary>Property for <see cref="CancelCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> CancelCommandProperty = AvaloniaProperty.Register<Stepper, ICommand?>(nameof(CancelCommand));
+    public static readonly StyledProperty<ICommand?> CancelCommandProperty = AvaloniaProperty.Register<
+        Stepper,
+        ICommand?
+    >(nameof(CancelCommand));
 
     /// <summary>Initializes a new instance of the <see cref="Stepper"/> class.</summary>
     public Stepper()
@@ -208,7 +222,7 @@ public class Stepper : ItemsControl
             {
                 StepDescriptor step => step.Key,
                 string value => value,
-                _ => null
+                _ => null,
             };
 
             _execute(key);

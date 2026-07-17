@@ -8,7 +8,4 @@ namespace CrissCross.WPF.Plot;
 /// <param name="Macd">The fast-minus-slow EMA series.</param>
 /// <param name="Signal">The EMA of the MACD series.</param>
 /// <param name="Histogram">The MACD-minus-signal histogram.</param>
-public sealed record MacdResult(
-    PlotSeriesData Macd,
-    PlotSeriesData Signal,
-    PlotSeriesData Histogram);
+public sealed record MacdResult(PlotSeriesData Macd, PlotSeriesData Signal, PlotSeriesData Histogram);

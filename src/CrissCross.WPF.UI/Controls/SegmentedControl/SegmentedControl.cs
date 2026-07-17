@@ -56,9 +56,13 @@ public class SegmentedControl : ItemsControl
     /// <summary>Provides the OnSelectionStateChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnSelectionStateChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void OnSelectionStateChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
-        if (dependencyObject is not SegmentedControl segmentedControl || args.NewValue is not SegmentedSelectionState state)
+        if (
+            dependencyObject is not SegmentedControl segmentedControl
+            || args.NewValue is not SegmentedSelectionState state)
         {
             return;
         }

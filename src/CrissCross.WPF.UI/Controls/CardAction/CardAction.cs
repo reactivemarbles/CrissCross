@@ -7,7 +7,7 @@ using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Inherited from the <see cref="System.Windows.Controls.Primitives.ButtonBase"/> interactive card styled according to Fluent Design.</summary>
+/// <summary>Inherited from the ButtonBase interactive card styled according to Fluent Design.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(CardAction), "CardAction.bmp")]
 public class CardAction : System.Windows.Controls.Primitives.ButtonBase
@@ -26,7 +26,8 @@ public class CardAction : System.Windows.Controls.Primitives.ButtonBase
         typeof(CardAction),
         new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
 
-    /// <summary>Gets or sets a value indicating whether gets or sets information whether to display the chevron icon on the right side of the card.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets information whether to display the chevron icon on
+    /// the right side of the card.</summary>
     [Bindable(true)]
     [Category("Appearance")]
     public bool IsChevronVisible

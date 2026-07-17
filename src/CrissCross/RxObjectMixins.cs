@@ -45,7 +45,7 @@ public static class RxObjectMixins
     /// <param name="resolver">The dependency resolver.</param>
     extension(IMutableDependencyResolver resolver)
     {
-        /// <summary>Sets the IOC container build complete, Execute this once after completion of IOC registrations.</summary>
+        /// <summary>Marks IOC registration as complete.</summary>
         public void SetupComplete()
         {
             ThrowHelper.ThrowIfNull(resolver, nameof(resolver));
@@ -85,30 +85,34 @@ public static class RxObjectMixins
                     observer.OnNext(result);
                 }
 
-                _ = sourceList.Subscribe(items =>
-                {
-                    if (items is null)
+                _ = sourceList
+                    .Subscribe(items =>
                     {
-                        return;
-                    }
-
-                    var currentInnerSubscriptions = new CompositeDisposable();
-                    innerSubscriptions.Disposable = currentInnerSubscriptions;
-                    valuesByObservable.Clear();
-
-                    var hasItems = false;
-                    foreach (var itemObservable in items)
-                    {
-                        hasItems = true;
-                        _ = itemObservable.Subscribe(value =>
+                        if (items is null)
                         {
-                            valuesByObservable[itemObservable] = value;
-                            Publish(valuesByObservable.Values.Any(predicate));
-                        }).DisposeWith(currentInnerSubscriptions);
-                    }
+                            return;
+                        }
 
-                    Publish(hasItems && valuesByObservable.Values.Any(predicate));
-                }).DisposeWith(disposable);
+                        var currentInnerSubscriptions = new CompositeDisposable();
+                        innerSubscriptions.Disposable = currentInnerSubscriptions;
+                        valuesByObservable.Clear();
+
+                        var hasItems = false;
+                        foreach (var itemObservable in items)
+                        {
+                            hasItems = true;
+                            _ = itemObservable
+                                .Subscribe(value =>
+                                {
+                                    valuesByObservable[itemObservable] = value;
+                                    Publish(valuesByObservable.Values.Any(predicate));
+                                })
+                                .DisposeWith(currentInnerSubscriptions);
+                        }
+
+                        Publish(hasItems && valuesByObservable.Values.Any(predicate));
+                    })
+                    .DisposeWith(disposable);
 
                 disposable.Add(innerSubscriptions);
                 return disposable;
@@ -126,9 +130,11 @@ public static class RxObjectMixins
         /// <param name="predicate">The property selector.</param>
         /// <returns>An observable of item property observables.</returns>
 #if NET8_0_OR_GREATER
-        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Evaluates expression-based member chains via reflection; members may be trimmed.")]
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+            "Evaluates expression-based member chains via reflection; members may be trimmed.")]
 #endif
-        public IObservable<IEnumerable<IObservable<TResult>>> ToListOfObservables<TResult>(Expression<Func<T, TResult>> predicate) =>
+        public IObservable<IEnumerable<IObservable<TResult>>> ToListOfObservables<TResult>(
+            Expression<Func<T, TResult>> predicate) =>
             Observable.Create<IEnumerable<IObservable<TResult>>>(observer =>
             {
                 ThrowHelper.ThrowIfNull(source, nameof(source));
@@ -136,21 +142,23 @@ public static class RxObjectMixins
 
                 var disposable = new CompositeDisposable();
                 var result = new List<IObservable<TResult>>();
-                _ = source.Subscribe(items =>
-                {
-                    if (items is null)
+                _ = source
+                    .Subscribe(items =>
                     {
-                        return;
-                    }
+                        if (items is null)
+                        {
+                            return;
+                        }
 
-                    result.Clear();
-                    foreach (var item in items)
-                    {
-                        result.Add(item.WhenAnyValue(predicate));
-                    }
+                        result.Clear();
+                        foreach (var item in items)
+                        {
+                            result.Add(item.WhenAnyValue(predicate));
+                        }
 
-                    observer.OnNext(result);
-                }).DisposeWith(disposable);
+                        observer.OnNext(result);
+                    })
+                    .DisposeWith(disposable);
                 return disposable;
             });
     }

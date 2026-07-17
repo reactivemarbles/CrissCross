@@ -16,29 +16,40 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class ThemeSwitcher : TemplatedControl
 {
     /// <summary>Property for <see cref="SelectedChoice"/>.</summary>
-    public static readonly StyledProperty<ThemeChoice> SelectedChoiceProperty = AvaloniaProperty.Register<ThemeSwitcher, ThemeChoice>(
-        nameof(SelectedChoice),
-        ThemeChoice.System,
-        defaultBindingMode: BindingMode.TwoWay);
+    public static readonly StyledProperty<ThemeChoice> SelectedChoiceProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        ThemeChoice
+    >(nameof(SelectedChoice), ThemeChoice.System, defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Property for <see cref="SystemChoice"/>.</summary>
-    public static readonly StyledProperty<ThemeChoice> SystemChoiceProperty = AvaloniaProperty.Register<ThemeSwitcher, ThemeChoice>(
-        nameof(SystemChoice),
-        ThemeChoice.Light);
+    public static readonly StyledProperty<ThemeChoice> SystemChoiceProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        ThemeChoice
+    >(nameof(SystemChoice), ThemeChoice.Light);
 
     /// <summary>Property for <see cref="SupportsHighContrast"/>.</summary>
-    public static readonly StyledProperty<bool> SupportsHighContrastProperty = AvaloniaProperty.Register<ThemeSwitcher, bool>(
-        nameof(SupportsHighContrast),
-        true);
+    public static readonly StyledProperty<bool> SupportsHighContrastProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        bool
+    >(nameof(SupportsHighContrast), true);
 
     /// <summary>Property for <see cref="CurrentState"/>.</summary>
-    public static readonly StyledProperty<ThemePreferenceState?> CurrentStateProperty = AvaloniaProperty.Register<ThemeSwitcher, ThemePreferenceState?>(nameof(CurrentState));
+    public static readonly StyledProperty<ThemePreferenceState?> CurrentStateProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        ThemePreferenceState?
+    >(nameof(CurrentState));
 
     /// <summary>Property for <see cref="ThemeService"/>.</summary>
-    public static readonly StyledProperty<IThemeService?> ThemeServiceProperty = AvaloniaProperty.Register<ThemeSwitcher, IThemeService?>(nameof(ThemeService));
+    public static readonly StyledProperty<IThemeService?> ThemeServiceProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        IThemeService?
+    >(nameof(ThemeService));
 
     /// <summary>Property for <see cref="ThemeChangedCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ThemeChangedCommandProperty = AvaloniaProperty.Register<ThemeSwitcher, ICommand?>(nameof(ThemeChangedCommand));
+    public static readonly StyledProperty<ICommand?> ThemeChangedCommandProperty = AvaloniaProperty.Register<
+        ThemeSwitcher,
+        ICommand?
+    >(nameof(ThemeChangedCommand));
 
     /// <summary>Initializes a new instance of the <see cref="ThemeSwitcher"/> class.</summary>
     public ThemeSwitcher()
@@ -125,7 +136,10 @@ public class ThemeSwitcher : TemplatedControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != SelectedChoiceProperty && change.Property != SystemChoiceProperty && change.Property != SupportsHighContrastProperty)
+        if (
+            change.Property != SelectedChoiceProperty
+            && change.Property != SystemChoiceProperty
+            && change.Property != SupportsHighContrastProperty)
         {
             return;
         }
@@ -143,7 +157,10 @@ public class ThemeSwitcher : TemplatedControl
             return choice;
         }
 
-        return Enum.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), ignoreCase: true, out ThemeChoice parsed)
+        return Enum.TryParse(
+            Convert.ToString(value, CultureInfo.InvariantCulture),
+            ignoreCase: true,
+            out ThemeChoice parsed)
             ? parsed
             : ThemeChoice.System;
     }
@@ -164,22 +181,24 @@ public class ThemeSwitcher : TemplatedControl
     /// <summary>Provides the ToApplicationTheme member.</summary>
     /// <param name="choice">The choice value.</param>
     /// <returns>The result.</returns>
-    private static ApplicationTheme ToApplicationTheme(ThemeChoice choice) => choice switch
-    {
-        ThemeChoice.Dark => ApplicationTheme.Dark,
-        ThemeChoice.HighContrast => ApplicationTheme.HighContrast,
-        _ => ApplicationTheme.Light
-    };
+    private static ApplicationTheme ToApplicationTheme(ThemeChoice choice) =>
+        choice switch
+        {
+            ThemeChoice.Dark => ApplicationTheme.Dark,
+            ThemeChoice.HighContrast => ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Light,
+        };
 
     /// <summary>Provides the ToThemeChoice member.</summary>
     /// <param name="theme">The theme value.</param>
     /// <returns>The result.</returns>
-    private static ThemeChoice ToThemeChoice(ApplicationTheme theme) => theme switch
-    {
-        ApplicationTheme.Dark => ThemeChoice.Dark,
-        ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
-        _ => ThemeChoice.Light
-    };
+    private static ThemeChoice ToThemeChoice(ApplicationTheme theme) =>
+        theme switch
+        {
+            ApplicationTheme.Dark => ThemeChoice.Dark,
+            ApplicationTheme.HighContrast => ThemeChoice.HighContrast,
+            _ => ThemeChoice.Light,
+        };
 
     /// <summary>Provides the ThemeSwitcherCommand member.</summary>
     private sealed class ThemeSwitcherCommand : ICommand

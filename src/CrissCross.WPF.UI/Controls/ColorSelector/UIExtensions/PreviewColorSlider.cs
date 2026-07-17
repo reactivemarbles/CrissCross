@@ -11,20 +11,18 @@ namespace CrissCross.WPF.UI.UIExtensions;
 internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
 {
     /// <summary>Provides the CurrentColorStateProperty member.</summary>
-    public static readonly DependencyProperty CurrentColorStateProperty =
-        DependencyProperty.Register(
-            nameof(CurrentColorState),
-            typeof(ColorState),
-            typeof(PreviewColorSlider),
-            new PropertyMetadata(ColorStateChangedCallback));
+    public static readonly DependencyProperty CurrentColorStateProperty = DependencyProperty.Register(
+        nameof(CurrentColorState),
+        typeof(ColorState),
+        typeof(PreviewColorSlider),
+        new PropertyMetadata(ColorStateChangedCallback));
 
     /// <summary>Provides the SmallChangeBindableProperty member.</summary>
-    public static readonly DependencyProperty SmallChangeBindableProperty =
-        DependencyProperty.Register(
-            nameof(SmallChangeBindable),
-            typeof(double),
-            typeof(PreviewColorSlider),
-            new PropertyMetadata(1.0, SmallChangeBindableChangedCallback));
+    public static readonly DependencyProperty SmallChangeBindableProperty = DependencyProperty.Register(
+        nameof(SmallChangeBindable),
+        typeof(double),
+        typeof(PreviewColorSlider),
+        new PropertyMetadata(1.0, SmallChangeBindableChangedCallback));
 
     /// <summary>The scale used to convert normalized color channels to byte channel values.</summary>
     protected const double ColorChannelScale = byte.MaxValue;
@@ -60,25 +58,25 @@ internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
     protected const int MagentaHueDegrees = 300;
 
     /// <summary>The gradient offset for the yellow hue stop.</summary>
-    protected const double YellowGradientOffset = 1d / 6d;
+    protected const double YellowGradientOffset = 1D / 6D;
 
     /// <summary>The gradient offset for the green hue stop.</summary>
-    protected const double GreenGradientOffset = 2d / 6d;
+    protected const double GreenGradientOffset = 2D / 6D;
 
     /// <summary>The gradient offset for the cyan hue stop.</summary>
-    protected const double CyanGradientOffset = 0.5d;
+    protected const double CyanGradientOffset = 0.5D;
 
     /// <summary>The gradient offset for the blue hue stop.</summary>
-    protected const double BlueGradientOffset = 4d / 6d;
+    protected const double BlueGradientOffset = 4D / 6D;
 
     /// <summary>The gradient offset for the magenta hue stop.</summary>
-    protected const double MagentaGradientOffset = 5d / 6d;
+    protected const double MagentaGradientOffset = 5D / 6D;
 
     /// <summary>The default large-change step for preview sliders.</summary>
-    private const double DefaultLargeChange = 10d;
+    private const double DefaultLargeChange = 10D;
 
     /// <summary>The default minimum height for preview sliders.</summary>
-    private const double DefaultMinimumHeight = 12d;
+    private const double DefaultMinimumHeight = 12D;
 
     /// <summary>The WPF mouse wheel delta value for one wheel notch.</summary>
     private const int MouseWheelDelta = 120;
@@ -114,12 +112,8 @@ internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
         set => SetValue(CurrentColorStateProperty, value);
     }
 
-    /// <summary>Gets or sets BackgroundGradient.</summary>
-    public GradientStopCollection BackgroundGradient
-    {
-        get => _backgroundBrush.GradientStops;
-        set => _backgroundBrush.GradientStops = value;
-    }
+    /// <summary>Gets BackgroundGradient.</summary>
+    public GradientStopCollection BackgroundGradient => _backgroundBrush.GradientStops;
 
     /// <summary>Gets or sets LeftCapColor.</summary>
     public SolidColorBrush LeftCapColor
@@ -130,8 +124,7 @@ internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LeftCapColor)));
         }
-    }
-= new();
+    } = new();
 
     /// <summary>Gets or sets RightCapColor.</summary>
     public SolidColorBrush RightCapColor
@@ -142,8 +135,7 @@ internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RightCapColor)));
         }
-    }
-    = new();
+    } = new();
 
     public override void EndInit()
     {
@@ -163,6 +155,17 @@ internal abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
 
     /// <summary>Provides the GenerateBackground member.</summary>
     protected abstract void GenerateBackground();
+
+    /// <summary>Replaces the gradient stops while retaining the exposed collection instance.</summary>
+    /// <param name="gradientStops">The new gradient stops.</param>
+    protected void SetBackgroundGradient(IEnumerable<GradientStop> gradientStops)
+    {
+        BackgroundGradient.Clear();
+        foreach (var gradientStop in gradientStops)
+        {
+            BackgroundGradient.Add(gradientStop);
+        }
+    }
 
     /// <summary>Provides the SmallChangeBindableChangedCallback member.</summary>
     /// <param name="d">The d value.</param>

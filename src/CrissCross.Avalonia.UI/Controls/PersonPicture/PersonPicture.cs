@@ -10,9 +10,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class PersonPicture : global::Avalonia.Controls.Primitives.TemplatedControl
 {
     /// <summary>Property for <see cref="DisplayName"/>.</summary>
-    public static readonly StyledProperty<string> DisplayNameProperty = AvaloniaProperty.Register<PersonPicture, string>(
-        nameof(DisplayName),
-        string.Empty);
+    public static readonly StyledProperty<string> DisplayNameProperty = AvaloniaProperty.Register<
+        PersonPicture,
+        string
+    >(nameof(DisplayName), string.Empty);
 
     /// <summary>Property for <see cref="Initials"/>.</summary>
     public static readonly StyledProperty<string> InitialsProperty = AvaloniaProperty.Register<PersonPicture, string>(

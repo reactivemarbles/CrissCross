@@ -4,17 +4,23 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Base nubmer formatter that uses default format specifier and <see cref="CultureInfo"/> that represents the culture used by the current thread.</summary>
+/// <summary>Provides the ValidateNumberFormatter member.</summary>
 public class ValidateNumberFormatter : INumberFormatter, INumberParser
 {
-    /// <inheritdoc />
-    public string FormatDouble(double? value) => value?.ToString(GetFormatSpecifier(), GetCurrentCultureConverter()) ?? string.Empty;
+    /// <summary>The general numeric format specifier.</summary>
+    private const string FormatSpecifier = "G";
 
     /// <inheritdoc />
-    public string FormatInt(int? value) => value?.ToString(GetFormatSpecifier(), GetCurrentCultureConverter()) ?? string.Empty;
+    public string FormatDouble(double? value) =>
+        value?.ToString(FormatSpecifier, GetCurrentCultureConverter()) ?? string.Empty;
 
     /// <inheritdoc />
-    public string FormatUInt(uint? value) => value?.ToString(GetFormatSpecifier(), GetCurrentCultureConverter()) ?? string.Empty;
+    public string FormatInt(int? value) =>
+        value?.ToString(FormatSpecifier, GetCurrentCultureConverter()) ?? string.Empty;
+
+    /// <inheritdoc />
+    public string FormatUInt(uint? value) =>
+        value?.ToString(FormatSpecifier, GetCurrentCultureConverter()) ?? string.Empty;
 
     /// <inheritdoc />
     public double? ParseDouble(string? value)
@@ -39,10 +45,6 @@ public class ValidateNumberFormatter : INumberFormatter, INumberParser
 
         return ui;
     }
-
-    /// <summary>Provides the GetFormatSpecifier member.</summary>
-    /// <returns>The result.</returns>
-    private static string GetFormatSpecifier() => "G";
 
     /// <summary>Provides the GetCurrentCultureConverter member.</summary>
     /// <returns>The result.</returns>

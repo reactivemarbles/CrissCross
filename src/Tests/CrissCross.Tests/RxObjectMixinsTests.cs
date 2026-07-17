@@ -12,6 +12,9 @@ namespace CrissCross.Tests;
 /// <summary>Tests for RxObjectMixins class.</summary>
 public class RxObjectMixinsTests
 {
+    /// <summary>Provides the matching test property value.</summary>
+    private const string MatchValue = "Match";
+
     /// <summary>Provides the propagation delay used by observable tests.</summary>
     private const int ObservablePropagationDelayMilliseconds = 100;
 
@@ -20,8 +23,8 @@ public class RxObjectMixinsTests
 
     /// <summary>Provides the InitializeReactiveUI member.</summary>
     [Before(HookType.Class)]
-
-    public static void InitializeReactiveUI() => Locator.CurrentMutable.CreateReactiveUIBuilder().WithCoreServices().BuildApp();
+    public static void InitializeReactiveUI() =>
+        Locator.CurrentMutable.CreateReactiveUIBuilder().WithCoreServices().BuildApp();
 
     /// <summary>Provides the SetupComplete_RaisesBuildCompleteSignal member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -182,13 +185,13 @@ public class RxObjectMixinsTests
     public async Task AnyMatch_ReturnsTrueWhenPredicateMatches()
     {
         // Arrange
-        var obj1 = new TestReactiveObject { TestProperty = "Match" };
+        var obj1 = new TestReactiveObject { TestProperty = MatchValue };
         var obj2 = new TestReactiveObject { TestProperty = "NoMatch" };
         var list = new List<TestReactiveObject> { obj1, obj2 };
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == "Match");
+        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
 
         var result = false;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -215,7 +218,7 @@ public class RxObjectMixinsTests
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == "Match");
+        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
 
         var result = true;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -241,7 +244,7 @@ public class RxObjectMixinsTests
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == "Match");
+        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
 
         var result = false;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -250,7 +253,7 @@ public class RxObjectMixinsTests
         await Task.Delay(ObservablePropagationDelayMilliseconds);
 
         // Act - Change property to match
-        obj1.TestProperty = "Match";
+        obj1.TestProperty = MatchValue;
 
         // Give time for the observable to propagate
         await Task.Delay(ObservablePropagationDelayMilliseconds);

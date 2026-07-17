@@ -24,12 +24,73 @@ internal sealed partial class BbCodeRenderer
     /// <summary>Tags supported by the renderer.</summary>
     private static readonly HashSet<string> KnownTags = new(StringComparer.OrdinalIgnoreCase)
     {
-        "*", "align", "b", "bbvideo", "blur", "br", "c", "center", "code", "color", "del", "email", "em",
-        "font", "gvideo", "h1", "h2", "h3", "h4", "h5", "h6", "header", "heading", "hide", "hr", "i", "image",
-        "img", "ins", "justify", "left", "li", "line", "link", "list", "mail", "nfo", "noparse", "ol", "p",
-        "paragraph", "pipes", "pre", "q", "quote", "rate", "rating", "right", "row", "s", "size", "spoil",
-        "spoiler", "strike", "strong", "style", "sub", "sup", "table", "td", "th", "tr", "u", "ul", "url",
-        "video", "youtube",
+        "*",
+        "align",
+        "b",
+        "bbvideo",
+        "blur",
+        "br",
+        "c",
+        "center",
+        "code",
+        "color",
+        "del",
+        "email",
+        "em",
+        "font",
+        "gvideo",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "heading",
+        "hide",
+        "hr",
+        "i",
+        "image",
+        "img",
+        "ins",
+        "justify",
+        "left",
+        "li",
+        "line",
+        "link",
+        "list",
+        "mail",
+        "nfo",
+        "noparse",
+        "ol",
+        "p",
+        "paragraph",
+        "pipes",
+        "pre",
+        "q",
+        "quote",
+        "rate",
+        "rating",
+        "right",
+        "row",
+        "s",
+        "size",
+        "spoil",
+        "spoiler",
+        "strike",
+        "strong",
+        "style",
+        "sub",
+        "sup",
+        "table",
+        "td",
+        "th",
+        "tr",
+        "u",
+        "ul",
+        "url",
+        "video",
+        "youtube",
     };
 
     /// <summary>The control that owns rendered inline content.</summary>
@@ -123,19 +184,23 @@ internal sealed partial class BbCodeRenderer
                 return true;
             }
 
-            case "i" or "em":
+            case "i"
+            or "em":
             {
                 AddStyledSpan(target, node, span => span.FontStyle = FontStyles.Italic);
                 return true;
             }
 
-            case "u" or "ins":
+            case "u"
+            or "ins":
             {
                 AddStyledSpan(target, node, span => span.TextDecorations = TextDecorations.Underline);
                 return true;
             }
 
-            case "s" or "strike" or "del":
+            case "s"
+            or "strike"
+            or "del":
             {
                 AddStyledSpan(target, node, span => span.TextDecorations = TextDecorations.Strikethrough);
                 return true;
@@ -153,6 +218,21 @@ internal sealed partial class BbCodeRenderer
                 return true;
             }
 
+            default:
+            {
+                return TryAddParameterizedFormatting(target, node);
+            }
+        }
+    }
+
+    /// <summary>Attempts to render formatting that accepts a parameter.</summary>
+    /// <param name="target">The target inline collection.</param>
+    /// <param name="node">The formatting node.</param>
+    /// <returns><see langword="true"/> when the node was handled.</returns>
+    private bool TryAddParameterizedFormatting(InlineCollection target, BbCodeNode node)
+    {
+        switch (node.Name)
+        {
             case "color":
             {
                 AddStyledSpan(target, node, span => BbCodeRenderHelpers.ApplyColor(span, node.Value));
@@ -198,31 +278,39 @@ internal sealed partial class BbCodeRenderer
                 return true;
             }
 
-            case "hr" or "line":
+            case "hr"
+            or "line":
             {
                 target.Add(CreateSeparator());
                 return true;
             }
 
-            case "url" or "link" or "email" or "mail":
+            case "url"
+            or "link"
+            or "email"
+            or "mail":
             {
                 AddHyperlink(target, node);
                 return true;
             }
 
-            case "img" or "image":
+            case "img"
+            or "image":
             {
                 target.Add(CreateImage(node));
                 return true;
             }
 
-            case "quote" or "q":
+            case "quote"
+            or "q":
             {
                 target.Add(CreateQuote(node));
                 return true;
             }
 
-            case "spoiler" or "spoil" or "hide":
+            case "spoiler"
+            or "spoil"
+            or "hide":
             {
                 target.Add(CreateSpoiler(node));
                 return true;
@@ -261,7 +349,9 @@ internal sealed partial class BbCodeRenderer
                 return true;
             }
 
-            case "ul" or "ol" or "list":
+            case "ul"
+            or "ol"
+            or "list":
             {
                 target.Add(CreateList(node));
                 return true;
@@ -456,9 +546,8 @@ internal sealed partial class BbCodeRenderer
             for (var columnIndex = 0; columnIndex < rows[rowIndex].Count; columnIndex++)
             {
                 var cellNode = rows[rowIndex][columnIndex];
-                var backgroundKey = cellNode.Name == "th"
-                    ? "ControlFillColorDefaultBrush"
-                    : "CardBackgroundFillColorDefaultBrush";
+                var backgroundKey =
+                    cellNode.Name == "th" ? "ControlFillColorDefaultBrush" : "CardBackgroundFillColorDefaultBrush";
                 var border = CreateThemedBorder(backgroundKey);
                 border.CornerRadius = default;
                 border.Padding = new(

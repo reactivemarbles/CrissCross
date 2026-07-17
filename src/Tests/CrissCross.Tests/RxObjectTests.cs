@@ -13,7 +13,7 @@ public class RxObjectTests
     public async Task Name_ReturnsFullTypeName()
     {
         // Arrange
-        var rxObject = new TestRxObject();
+        using var rxObject = new TestRxObject();
 
         // Act
         var name = rxObject.Name;
@@ -28,7 +28,7 @@ public class RxObjectTests
     public async Task DisplayName_CanBeSetAndRetrieved()
     {
         // Arrange
-        var rxObject = new TestRxObject();
+        using var rxObject = new TestRxObject();
         const string expectedDisplayName = "Test Display Name";
 
         // Act
@@ -44,7 +44,7 @@ public class RxObjectTests
     public async Task DisplayName_IsNullByDefault()
     {
         // Arrange & Act
-        var rxObject = new TestRxObject();
+        using var rxObject = new TestRxObject();
 
         // Assert
         await Assert.That(rxObject.DisplayName).IsNull();
@@ -56,7 +56,7 @@ public class RxObjectTests
     public async Task IsDisposed_IsFalseByDefault()
     {
         // Arrange & Act
-        var rxObject = new TestRxObject();
+        using var rxObject = new TestRxObject();
 
         // Assert
         await Assert.That(rxObject.IsDisposed).IsFalse();
@@ -123,8 +123,7 @@ public class RxObjectTests
             null,
             NavigationType.New,
             null,
-            "test",
-            null);
+            "test");
 
         // Act & Assert - should not throw
         rxObject.WhenNavigatedFrom(eventArgs);
@@ -144,8 +143,7 @@ public class RxObjectTests
             rxObject,
             NavigationType.New,
             null,
-            "test",
-            null);
+            "test");
 
         // Act & Assert - should not throw
         rxObject.WhenNavigatedTo(eventArgs, disposables);
@@ -164,8 +162,7 @@ public class RxObjectTests
             null,
             NavigationType.New,
             null,
-            "test",
-            null);
+            "test");
 
         // Act & Assert - should not throw
         rxObject.WhenNavigating(eventArgs);
@@ -179,7 +176,7 @@ public class RxObjectTests
     public async Task PropertyChanged_IsRaisedWhenDisplayNameChanges()
     {
         // Arrange
-        var rxObject = new TestRxObject();
+        using var rxObject = new TestRxObject();
         var propertyChangedRaised = false;
         rxObject.PropertyChanged += (sender, e) =>
         {

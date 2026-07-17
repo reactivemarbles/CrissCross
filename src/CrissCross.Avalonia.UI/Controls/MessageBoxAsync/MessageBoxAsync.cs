@@ -7,6 +7,27 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>MessageBoxAsync provides static methods to show message boxes asynchronously.</summary>
 public static class MessageBoxAsync
 {
+    /// <summary>Displays a message box.</summary>
+    /// <param name="text">The text to display.</param>
+    /// <returns>MessageBoxResult.</returns>
+    public static Task<MessageBoxResult> ShowAsync(string text) =>
+        ShowAsync(text, string.Empty, MessageBoxButton.Close, null);
+
+    /// <summary>Displays a message box.</summary>
+    /// <param name="text">The text to display.</param>
+    /// <param name="title">The title.</param>
+    /// <returns>MessageBoxResult.</returns>
+    public static Task<MessageBoxResult> ShowAsync(string text, string title) =>
+        ShowAsync(text, title, MessageBoxButton.Close, null);
+
+    /// <summary>Displays a message box.</summary>
+    /// <param name="text">The text to display.</param>
+    /// <param name="title">The title.</param>
+    /// <param name="buttons">The buttons to show.</param>
+    /// <returns>MessageBoxResult.</returns>
+    public static Task<MessageBoxResult> ShowAsync(string text, string title, MessageBoxButton buttons) =>
+        ShowAsync(text, title, buttons, null);
+
     /// <summary>Shows a message box with the specified text.</summary>
     /// <param name="text">The text to display.</param>
     /// <param name="title">The title.</param>
@@ -15,9 +36,9 @@ public static class MessageBoxAsync
     /// <returns>MessageBoxResult.</returns>
     public static Task<MessageBoxResult> ShowAsync(
         string text,
-        string title = "",
-        MessageBoxButton buttons = MessageBoxButton.Close,
-        Window? owner = null)
+        string title,
+        MessageBoxButton buttons,
+        Window? owner)
     {
         var messageBox = new MessageBox
         {

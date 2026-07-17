@@ -14,7 +14,7 @@ namespace CrissCross;
 /// <param name="navigationParameter">The navigation parameter.</param>
 /// <seealso cref="EventArgs" />
 [DataContract]
-public abstract class ViewModelNavigationBaseEventArgs(
+public class ViewModelNavigationBaseEventArgs(
     IRxObject? from = null,
     IRxObject? to = null,
     object? navigationParameter = null)

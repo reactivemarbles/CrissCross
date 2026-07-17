@@ -16,7 +16,7 @@ public class NavigatingCancelEventArgs(RoutedEvent routedEvent, object source) :
     /// </value>
     public required object Page { get; init; }
 
-    /// <summary>Gets or sets a value indicating whether this <see cref="NavigatingCancelEventArgs"/> is cancel.</summary>
+    /// <summary>Gets or sets whether this NavigatingCancelEventArgs is cancel.</summary>
     /// <value>
     ///   <c>true</c> if cancel; otherwise, <c>false</c>.
     /// </value>

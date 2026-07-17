@@ -16,8 +16,7 @@ using WpfButton = System.Windows.Controls.Button;
 namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Adds icon content to a standard button.</summary>
-public class AppBarButton
-    : WpfButton
+public class AppBarButton : WpfButton
 {
     /// <summary>The background glyph font size property.</summary>
     public static readonly DependencyProperty BackgroundGlyphFontSizeProperty = DependencyProperty.Register(
@@ -92,9 +91,10 @@ public class AppBarButton
     private static readonly AppBarIconProvider IconProvider = new(typeof(AppBarButton).Assembly);
 
     /// <summary>Initializes static members of the <see cref="AppBarButton"/> class.</summary>
-    static AppBarButton() => DefaultStyleKeyProperty.OverrideMetadata(
-        typeof(AppBarButton),
-        new FrameworkPropertyMetadata(typeof(AppBarButton)));
+    static AppBarButton() =>
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(AppBarButton),
+            new FrameworkPropertyMetadata(typeof(AppBarButton)));
 
     /// <summary>Gets or sets the background glyph.</summary>
     /// <value>The background glyph.</value>
@@ -103,7 +103,6 @@ public class AppBarButton
     public string BackgroundGlyph
     {
         get => (string)GetValue(BackgroundGlyphProperty);
-
         set => SetValue(BackgroundGlyphProperty, value);
     }
 
@@ -114,7 +113,6 @@ public class AppBarButton
     public double BackgroundGlyphFontSize
     {
         get => (double)GetValue(BackgroundGlyphFontSizeProperty);
-
         set => SetValue(BackgroundGlyphFontSizeProperty, value);
     }
 
@@ -125,7 +123,6 @@ public class AppBarButton
     public double ElipseDiameter
     {
         get => (double)GetValue(ElipseDiameterProperty);
-
         set => SetValue(ElipseDiameterProperty, value);
     }
 
@@ -136,7 +133,6 @@ public class AppBarButton
     public string ForegroundGlyph
     {
         get => (string)GetValue(ForegroundGlyphProperty);
-
         set => SetValue(ForegroundGlyphProperty, value);
     }
 
@@ -147,7 +143,6 @@ public class AppBarButton
     public Brush ForegroundGlyphColor
     {
         get => (Brush)GetValue(ForegroundGlyphColorProperty);
-
         set => SetValue(ForegroundGlyphColorProperty, value);
     }
 
@@ -158,7 +153,6 @@ public class AppBarButton
     public double ForegroundGlyphFontSize
     {
         get => (double)GetValue(ForegroundGlyphFontSizeProperty);
-
         set => SetValue(ForegroundGlyphFontSizeProperty, value);
     }
 
@@ -173,7 +167,6 @@ public class AppBarButton
             var icon = GetValue(IconProperty);
             return icon is null ? default : (AppBarIcons)icon;
         }
-
         set => SetValue(IconProperty, value);
     }
 
@@ -188,7 +181,6 @@ public class AppBarButton
             var iconData = GetValue(IconDataProperty);
             return iconData is null ? default : (Geometry)iconData;
         }
-
         set => SetValue(IconDataProperty, value);
     }
 
@@ -199,7 +191,6 @@ public class AppBarButton
     public double IconHeight
     {
         get => (double)GetValue(IconHeightProperty);
-
         set => SetValue(IconHeightProperty, value);
     }
 
@@ -210,7 +201,6 @@ public class AppBarButton
     public double IconWidth
     {
         get => (double)GetValue(IconWidthProperty);
-
         set => SetValue(IconWidthProperty, value);
     }
 
@@ -240,8 +230,8 @@ public class AppBarButton
             new(
                 GetAttributeValue(element, "Canvas.Left"),
                 GetAttributeValue(element, "Canvas.Top"),
-                GetAttributeValue(element, "Width"),
-                GetAttributeValue(element, "Height"));
+                GetAttributeValue(element, nameof(Width)),
+                GetAttributeValue(element, nameof(Height)));
 
         /// <summary>Adds parsed path data to a geometry group.</summary>
         /// <param name="geometry">The destination geometry group.</param>
@@ -397,8 +387,9 @@ public class AppBarButton
         /// <returns>The loaded XML document.</returns>
         private XDocument LoadDocument(string resourceName)
         {
-            using var stream = _assembly.GetManifestResourceStream(resourceName) ??
-                throw new InvalidOperationException(
+            using var stream =
+                _assembly.GetManifestResourceStream(resourceName)
+                ?? throw new InvalidOperationException(
                     $"The embedded icon resource '{resourceName}' could not be found.");
 
             return XDocument.Load(stream);

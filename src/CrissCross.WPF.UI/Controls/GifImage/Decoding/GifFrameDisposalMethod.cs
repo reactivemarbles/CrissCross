@@ -17,5 +17,5 @@ public enum GifFrameDisposalMethod
     RestoreBackground = 2,
 
     /// <summary>The restore previous.</summary>
-    RestorePrevious = 3
+    RestorePrevious = 3,
 }

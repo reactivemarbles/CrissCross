@@ -108,59 +108,15 @@ public class ColorSelector : TemplatedControl
         var q = v * (1 - (f * s));
         var t = v * (1 - ((1 - f) * s));
 
-        double r;
-        double g;
-        double b;
-        switch (hi)
+        var (r, g, b) = hi switch
         {
-            case redHueSector:
-                {
-                    r = v;
-                    g = t;
-                    b = p;
-                    break;
-                }
-
-            case yellowHueSector:
-                {
-                    r = q;
-                    g = v;
-                    b = p;
-                    break;
-                }
-
-            case greenHueSector:
-                {
-                    r = p;
-                    g = v;
-                    b = t;
-                    break;
-                }
-
-            case cyanHueSector:
-                {
-                    r = p;
-                    g = q;
-                    b = v;
-                    break;
-                }
-
-            case blueHueSector:
-                {
-                    r = t;
-                    g = p;
-                    b = v;
-                    break;
-                }
-
-            default:
-                {
-                    r = v;
-                    g = p;
-                    b = q;
-                    break;
-                }
-        }
+            redHueSector => (v, t, p),
+            yellowHueSector => (q, v, p),
+            greenHueSector => (p, v, t),
+            cyanHueSector => (p, q, v),
+            blueHueSector => (t, p, v),
+            _ => (v, p, q),
+        };
 
         return Color.FromRgb((byte)(r * byteChannelScale), (byte)(g * byteChannelScale), (byte)(b * byteChannelScale));
     }

@@ -12,13 +12,22 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class FilterBar : ItemsControl
 {
     /// <summary>Property for <see cref="QueryState"/>.</summary>
-    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<FilterBar, SearchQueryState?>(nameof(QueryState));
+    public static readonly StyledProperty<SearchQueryState?> QueryStateProperty = AvaloniaProperty.Register<
+        FilterBar,
+        SearchQueryState?
+    >(nameof(QueryState));
 
     /// <summary>Property for <see cref="RemoveFilterCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> RemoveFilterCommandProperty = AvaloniaProperty.Register<FilterBar, ICommand?>(nameof(RemoveFilterCommand));
+    public static readonly StyledProperty<ICommand?> RemoveFilterCommandProperty = AvaloniaProperty.Register<
+        FilterBar,
+        ICommand?
+    >(nameof(RemoveFilterCommand));
 
     /// <summary>Property for <see cref="ClearAllCommand"/>.</summary>
-    public static readonly StyledProperty<ICommand?> ClearAllCommandProperty = AvaloniaProperty.Register<FilterBar, ICommand?>(nameof(ClearAllCommand));
+    public static readonly StyledProperty<ICommand?> ClearAllCommandProperty = AvaloniaProperty.Register<
+        FilterBar,
+        ICommand?
+    >(nameof(ClearAllCommand));
 
     /// <summary>Gets or sets the aggregate search state that supplies active filter tokens.</summary>
     public SearchQueryState? QueryState

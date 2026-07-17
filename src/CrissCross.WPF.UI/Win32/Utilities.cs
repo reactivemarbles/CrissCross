@@ -49,19 +49,19 @@ internal static class Utilities
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 6.2.</summary>
     public static bool IsOSWindows8OrNewer => new Version(6, 2) <= _version;
 
-    /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 10_240).</summary>
+    /// <summary>Gets whether the operating system build is Windows 10 or newer.</summary>
     public static bool IsOSWindows10OrNewer => _version.Build >= Windows10InitialBuild;
 
-    /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_000).</summary>
+    /// <summary>Gets whether the operating system build is Windows 11 or newer.</summary>
     public static bool IsOSWindows11OrNewer => _version.Build >= Windows11InitialBuild;
 
-    /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_523).</summary>
+    /// <summary>Gets whether the OS includes Windows 11 Insider build 22523.</summary>
     public static bool IsOSWindows11Insider1OrNewer => _version.Build >= Windows11InsiderBuild22523;
 
-    /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 10.0* (build 22_557).</summary>
+    /// <summary>Gets whether the OS includes Windows 11 Insider build 22557.</summary>
     public static bool IsOSWindows11Insider2OrNewer => _version.Build >= Windows11InsiderBuild22557;
 
-    /// <summary>Gets a value indicating whether indicates whether Desktop Window Manager (DWM) composition is enabled.</summary>
+    /// <summary>Gets whether Desktop Window Manager composition is enabled.</summary>
     public static bool IsCompositionEnabled
     {
         get
@@ -139,7 +139,9 @@ internal static class Utilities
     /// <returns>The parsed version segment, or 0.</returns>
     private static int GetCurrentVersionPart(int index)
     {
-        if (!TryGetRegistryKey(CurrentVersionRegistryPath, "CurrentVersion", out var value) || value is not string version)
+        if (
+            !TryGetRegistryKey(CurrentVersionRegistryPath, "CurrentVersion", out var value)
+            || value is not string version)
         {
             return 0;
         }

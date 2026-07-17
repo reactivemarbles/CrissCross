@@ -27,21 +27,21 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
         new PropertyMetadata(WindowBackdropType.None, OnBackdropTypeChanged));
 
     /// <summary>Property for <see cref="ExtendsContentIntoTitleBar"/>.</summary>
-    public static readonly DependencyProperty ExtendsContentIntoTitleBarProperty =
-        DependencyProperty.Register(
-            nameof(ExtendsContentIntoTitleBar),
-            typeof(bool),
-            typeof(FluentWindow),
-            new PropertyMetadata(false, OnExtendsContentIntoTitleBarChanged));
+    public static readonly DependencyProperty ExtendsContentIntoTitleBarProperty = DependencyProperty.Register(
+        nameof(ExtendsContentIntoTitleBar),
+        typeof(bool),
+        typeof(FluentWindow),
+        new PropertyMetadata(false, OnExtendsContentIntoTitleBarChanged));
 
     /// <summary>The resize border thickness used when resize is enabled.</summary>
-    private const double ResizeBorderThickness = 4d;
+    private const double ResizeBorderThickness = 4D;
 
     /// <summary>Stores the _interopHelper value.</summary>
     private WindowInteropHelper? _interopHelper;
 
     /// <summary>Initializes static members of the <see cref="FluentWindow"/> class.</summary>
-    static FluentWindow() => DefaultStyleKeyProperty.OverrideMetadata(
+    static FluentWindow() =>
+        DefaultStyleKeyProperty.OverrideMetadata(
             typeof(FluentWindow),
             new FrameworkPropertyMetadata(typeof(FluentWindow)));
 
@@ -62,7 +62,8 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
         set => SetValue(WindowBackdropTypeProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether gets or sets a value that specifies whether the default title bar of the window should be hidden to create space for app content.</summary>
+    /// <summary>Gets or sets a value indicating whether gets or sets a value that specifies whether the default title
+    /// bar of the window should be hidden to create space for app content.</summary>
     public bool ExtendsContentIntoTitleBar
     {
         get => (bool)GetValue(ExtendsContentIntoTitleBarProperty);
@@ -91,9 +92,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
     /// <summary>This virtual method is called when <see cref="WindowCornerPreference" /> is changed.</summary>
     /// <param name="oldValue">The old value.</param>
     /// <param name="newValue">The new value.</param>
-    protected virtual void OnCornerPreferenceChanged(
-        WindowCornerPreference oldValue,
-        WindowCornerPreference newValue)
+    protected virtual void OnCornerPreferenceChanged(WindowCornerPreference oldValue, WindowCornerPreference newValue)
     {
         if (InteropHelper.Handle == IntPtr.Zero)
         {
@@ -104,7 +103,8 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
     }
 
     /// <summary>This virtual method is called when <see cref="WindowBackdropType" /> is changed.</summary>
-    /// <exception cref="InvalidOperationException">Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)} is false.</exception>
+    /// <exception cref="InvalidOperationException">Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)}
+    /// is false.</exception>
     /// <param name="oldValue">The old value.</param>
     /// <param name="newValue">The new value.</param>
     protected virtual void OnBackdropTypeChanged(WindowBackdropType oldValue, WindowBackdropType newValue)
@@ -127,7 +127,8 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
 
         if (!ExtendsContentIntoTitleBar)
         {
-            throw new InvalidOperationException($"Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)} is false.");
+            throw new InvalidOperationException(
+                $"Cannot apply backdrop effect if {nameof(ExtendsContentIntoTitleBar)} is false.");
         }
 
         if (!WindowBackdrop.IsSupported(newValue) || !WindowBackdrop.RemoveBackground(this))
@@ -153,8 +154,9 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
                 CaptionHeight = 0,
                 CornerRadius = default,
                 GlassFrameThickness = new(-1),
-                ResizeBorderThickness = ResizeMode == ResizeMode.NoResize ? default : new Thickness(ResizeBorderThickness),
-                UseAeroCaptionButtons = false
+                ResizeBorderThickness =
+                    ResizeMode == ResizeMode.NoResize ? default : new Thickness(ResizeBorderThickness),
+                UseAeroCaptionButtons = false,
             });
 
         _ = UnsafeNativeMethods.RemoveWindowTitlebarContents(this);
@@ -175,9 +177,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
             return;
         }
 
-        window.OnCornerPreferenceChanged(
-            (WindowCornerPreference)e.OldValue,
-            (WindowCornerPreference)e.NewValue);
+        window.OnCornerPreferenceChanged((WindowCornerPreference)e.OldValue, (WindowCornerPreference)e.NewValue);
     }
 
     /// <summary>Private <see cref="WindowBackdropType"/> property callback.</summary>
@@ -201,9 +201,7 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
     /// <summary>Private <see cref="ExtendsContentIntoTitleBar"/> property callback.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void OnExtendsContentIntoTitleBarChanged(
-        DependencyObject d,
-        DependencyPropertyChangedEventArgs e)
+    private static void OnExtendsContentIntoTitleBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not FluentWindow window)
         {

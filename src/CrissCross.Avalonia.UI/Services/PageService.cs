@@ -15,8 +15,12 @@ namespace CrissCross.Avalonia.UI;
 internal sealed class PageService(IServiceProvider serviceProvider) : IPageService
 {
     /// <inheritdoc />
-    public T? GetPage<T>()
-        where T : class => (T?)serviceProvider.GetService(CheckIsControl(typeof(T)));
+    public T? GetPage<T>(PageNavigationRequest<T> request)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return (T?)serviceProvider.GetService(CheckIsControl(request.PageType));
+    }
 
     /// <inheritdoc />
     public Control? GetPage(Type pageType) =>

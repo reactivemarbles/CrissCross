@@ -10,32 +10,36 @@ using Avalonia.Input;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>A bottom application bar that can show and hide with animation, containing left and right content areas.</summary>
+/// <summary>Provides the AppBar member.</summary>
 public class AppBar : TemplatedControl
 {
     /// <summary>Property for <see cref="AppBarEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> AppBarEnabledProperty =
-        AvaloniaProperty.Register<AppBar, bool>(nameof(AppBarEnabled), true);
+    public static readonly StyledProperty<bool> AppBarEnabledProperty = AvaloniaProperty.Register<AppBar, bool>(
+        nameof(AppBarEnabled),
+        true);
 
     /// <summary>Property for <see cref="AppBarIsSticky"/>.</summary>
-    public static readonly StyledProperty<bool> AppBarIsStickyProperty =
-        AvaloniaProperty.Register<AppBar, bool>(nameof(AppBarIsSticky));
+    public static readonly StyledProperty<bool> AppBarIsStickyProperty = AvaloniaProperty.Register<AppBar, bool>(
+        nameof(AppBarIsSticky));
 
     /// <summary>Property for <see cref="AppBarLeft"/>.</summary>
-    public static readonly StyledProperty<ObservableCollection<Control>> AppBarLeftProperty =
-        AvaloniaProperty.Register<AppBar, ObservableCollection<Control>>(nameof(AppBarLeft));
+    public static readonly StyledProperty<ObservableCollection<Control>> AppBarLeftProperty = AvaloniaProperty.Register<
+        AppBar,
+        ObservableCollection<Control>
+    >(nameof(AppBarLeft));
 
     /// <summary>Property for <see cref="AppBarRight"/>.</summary>
     public static readonly StyledProperty<ObservableCollection<Control>> AppBarRightProperty =
         AvaloniaProperty.Register<AppBar, ObservableCollection<Control>>(nameof(AppBarRight));
 
     /// <summary>Property for <see cref="AppBarHeight"/>.</summary>
-    public static readonly StyledProperty<double> AppBarHeightProperty =
-        AvaloniaProperty.Register<AppBar, double>(nameof(AppBarHeight), 88.0);
+    public static readonly StyledProperty<double> AppBarHeightProperty = AvaloniaProperty.Register<AppBar, double>(
+        nameof(AppBarHeight),
+        88.0);
 
     /// <summary>Property for <see cref="IsOpen"/>.</summary>
-    public static readonly StyledProperty<bool> IsOpenProperty =
-        AvaloniaProperty.Register<AppBar, bool>(nameof(IsOpen));
+    public static readonly StyledProperty<bool> IsOpenProperty = AvaloniaProperty.Register<AppBar, bool>(
+        nameof(IsOpen));
 
     /// <summary>Provides the _isPointerOver member.</summary>
     private bool _isPointerOver;
@@ -43,8 +47,8 @@ public class AppBar : TemplatedControl
     /// <summary>Initializes a new instance of the <see cref="AppBar"/> class.</summary>
     public AppBar()
     {
-        AppBarLeft = [];
-        AppBarRight = [];
+        _ = SetValue(AppBarLeftProperty, new ObservableCollection<Control>());
+        _ = SetValue(AppBarRightProperty, new ObservableCollection<Control>());
     }
 
     /// <summary>Gets or sets a value indicating whether the application bar is enabled.</summary>
@@ -54,25 +58,23 @@ public class AppBar : TemplatedControl
         set => SetValue(AppBarEnabledProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the application bar stays open until explicitly closed.</summary>
+    /// <summary>Gets or sets whether the application bar stays open until explicitly closed.</summary>
     public bool AppBarIsSticky
     {
         get => GetValue(AppBarIsStickyProperty);
         set => SetValue(AppBarIsStickyProperty, value);
     }
 
-    /// <summary>Gets or sets the left-aligned content items.</summary>
+    /// <summary>Gets the left-aligned content items.</summary>
     public ObservableCollection<Control> AppBarLeft
     {
         get => GetValue(AppBarLeftProperty);
-        set => SetValue(AppBarLeftProperty, value);
     }
 
-    /// <summary>Gets or sets the right-aligned content items.</summary>
+    /// <summary>Gets the right-aligned content items.</summary>
     public ObservableCollection<Control> AppBarRight
     {
         get => GetValue(AppBarRightProperty);
-        set => SetValue(AppBarRightProperty, value);
     }
 
     /// <summary>Gets or sets the height of the application bar when expanded.</summary>
@@ -90,8 +92,11 @@ public class AppBar : TemplatedControl
     }
 
     /// <summary>Shows the application bar.</summary>
+    public void ShowAppBar() => ShowAppBar(false);
+
+    /// <summary>Shows the application bar.</summary>
     /// <param name="isSticky">If set to <c>true</c>, the bar stays open until explicitly closed.</param>
-    public void ShowAppBar(bool isSticky = false)
+    public void ShowAppBar(bool isSticky)
     {
         if (!AppBarEnabled)
         {

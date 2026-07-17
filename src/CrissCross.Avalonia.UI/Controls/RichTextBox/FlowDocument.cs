@@ -11,7 +11,7 @@ using Avalonia.Media;
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Lightweight representation of a flow document that mirrors the segments produced by <see cref="RichTextDocument"/>.</summary>
+/// <summary>Provides the FlowDocument member.</summary>
 public sealed class FlowDocument
 {
     /// <summary>Provides the NewLineSeparators member.</summary>
@@ -26,13 +26,11 @@ public sealed class FlowDocument
     /// <summary>Provides the _coreDocument member.</summary>
     private readonly RichTextDocument _coreDocument;
 
-    /// <summary>Initializes a new instance of the <see cref="FlowDocument"/> class with a fresh <see cref="RichTextDocument"/>.</summary>
+    /// <summary>Initializes a new instance of the <see cref="FlowDocument"/> class.</summary>
     public FlowDocument()
-        : this(new RichTextDocument())
-    {
-    }
+        : this(new RichTextDocument()) { }
 
-    /// <summary>Initializes a new instance of the <see cref="FlowDocument"/> class wrapping an existing <see cref="RichTextDocument"/>.</summary>
+    /// <summary>Initializes a new instance of the <see cref="FlowDocument"/> class.</summary>
     /// <param name="document">The document to wrap.</param>
     public FlowDocument(RichTextDocument document)
     {
@@ -216,7 +214,10 @@ public sealed class FlowDocument
 
         if (segment.TextDecorations is not null)
         {
-            run.TextDecorations = segment.TextDecorations;
+            foreach (var decoration in segment.TextDecorations)
+            {
+                run.TextDecorations.Add(decoration);
+            }
         }
 
         return run;
@@ -227,12 +228,14 @@ public sealed class FlowDocument
     /// <returns>The result.</returns>
     private static ImageInline? CreateImageInline(TextSegment segment)
     {
-        return string.IsNullOrWhiteSpace(segment.ImageSource) ? null : new ImageInline(segment.ImageSource)
-        {
-            Alignment = segment.ImageAlignment,
-            Width = segment.ImageWidth,
-            Height = segment.ImageHeight,
-        };
+        return string.IsNullOrWhiteSpace(segment.ImageSource)
+            ? null
+            : new ImageInline(segment.ImageSource)
+            {
+                Alignment = segment.ImageAlignment,
+                Width = segment.ImageWidth,
+                Height = segment.ImageHeight,
+            };
     }
 
     /// <summary>Provides the AppendRuns member.</summary>
@@ -284,7 +287,10 @@ public sealed class FlowDocument
     /// <param name="segment">The paragraph break segment.</param>
     /// <param name="paragraph">The current paragraph.</param>
     /// <param name="pendingAlignment">The pending paragraph alignment.</param>
-    private static void ApplyParagraphBreak(TextSegment segment, ref Paragraph? paragraph, ref TextAlignment? pendingAlignment)
+    private static void ApplyParagraphBreak(
+        TextSegment segment,
+        ref Paragraph? paragraph,
+        ref TextAlignment? pendingAlignment)
     {
         if (paragraph is not null && segment.ParagraphAlignment.HasValue)
         {
@@ -445,7 +451,7 @@ public sealed class FlowDocument
     private void OnTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 
     /// <summary>Base block element.</summary>
-    public abstract class Block
+    public class Block
     {
         /// <summary>Gets or sets the block margin.</summary>
         public Thickness Margin { get; set; } = new(0);
@@ -465,7 +471,7 @@ public sealed class FlowDocument
     }
 
     /// <summary>Base inline element.</summary>
-    public abstract class Inline
+    public class Inline
     {
         /// <summary>Gets or sets the font weight.</summary>
         public FontWeight FontWeight { get; set; } = FontWeight.Normal;
@@ -473,8 +479,8 @@ public sealed class FlowDocument
         /// <summary>Gets or sets the font style.</summary>
         public FontStyle FontStyle { get; set; } = FontStyle.Normal;
 
-        /// <summary>Gets or sets the text decorations.</summary>
-        public TextDecorationCollection? TextDecorations { get; set; }
+        /// <summary>Gets the text decorations.</summary>
+        public TextDecorationCollection TextDecorations { get; } = [];
 
         /// <summary>Gets or sets the foreground brush.</summary>
         public IBrush? Foreground { get; set; }

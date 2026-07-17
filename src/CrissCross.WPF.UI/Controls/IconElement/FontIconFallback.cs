@@ -12,17 +12,18 @@ namespace CrissCross.WPF.UI.Controls;
 public class FontIconFallback : Control
 {
     /// <summary>The data property.</summary>
-    public static readonly DependencyProperty DataProperty =
-        DependencyProperty.Register(
-            nameof(Data),
-            typeof(Geometry),
-            typeof(FontIconFallback),
-            null);
+    public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
+        nameof(Data),
+        typeof(Geometry),
+        typeof(FontIconFallback),
+        null);
 
     /// <summary>Provides the FontIconFallback member.</summary>
     static FontIconFallback()
     {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(FontIconFallback), new FrameworkPropertyMetadata(typeof(FontIconFallback)));
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(FontIconFallback),
+            new FrameworkPropertyMetadata(typeof(FontIconFallback)));
         FocusableProperty.OverrideMetadata(typeof(FontIconFallback), new FrameworkPropertyMetadata(false));
     }
 

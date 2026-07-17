@@ -109,9 +109,7 @@ public partial class LiveChart
     > SignalObservablesWithTimeStamp
     {
         get =>
-            (IEnumerable<
-                IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>
-            >)
+            (IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>>)
                 GetValue(SignalObservablesWithTimeStampProperty);
         set
         {
@@ -132,9 +130,7 @@ public partial class LiveChart
     > DataLoggerObservablesWithPoints
     {
         get =>
-            (IEnumerable<
-                IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
-            >)
+            (IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>>)
                 GetValue(DataLoggerObservablesWithPointsProperty);
         set
         {
@@ -151,8 +147,7 @@ public partial class LiveChart
     public (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) DataWithTimeStamp
     {
         get =>
-            ((string? Name, IList<double>? Value, IList<double> DateTime, int Axis))GetValue(
-                DataWithTimeStampProperty);
+            ((string? Name, IList<double>? Value, IList<double> DateTime, int Axis))GetValue(DataWithTimeStampProperty);
         set
         {
             SetValue(DataWithTimeStampProperty, value);
@@ -166,9 +161,7 @@ public partial class LiveChart
     /// this property updates the associated signal data with the provided points.</remarks>
     public (string? Name, IList<double>? Y, IList<double> X, int Axis) SignalWithPoints
     {
-        get =>
-            ((string? Name, IList<double>? Y, IList<double> X, int Axis))GetValue(
-                SignalWithPointsProperty);
+        get => ((string? Name, IList<double>? Y, IList<double> X, int Axis))GetValue(SignalWithPointsProperty);
         set
         {
             SetValue(SignalWithPointsProperty, value);
@@ -184,12 +177,7 @@ public partial class LiveChart
     /// unnamed. The Y and X lists must be of equal length for each signal. The axis index specifies which axis the
     /// signal is associated with. Setting this property updates the underlying signal data and may trigger related
     /// changes in the consuming component.</remarks>
-    public IEnumerable<(
-        string? Name,
-        IList<double>? Y,
-        IList<double> X,
-        int Axis
-    )> SignalsWithPoints
+    public IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> SignalsWithPoints
     {
         get =>
             (IEnumerable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>)
@@ -228,9 +216,7 @@ public partial class LiveChart
     /// correspond to a valid axis in the plot configuration.</remarks>
     public (string? Name, IList<double> X, IList<double> Y, int Axis) ScatterWithPoints
     {
-        get =>
-            ((string? Name, IList<double> X, IList<double> Y, int Axis))GetValue(
-                ScatterWithPointsProperty);
+        get => ((string? Name, IList<double> X, IList<double> Y, int Axis))GetValue(ScatterWithPointsProperty);
         set
         {
             SetValue(ScatterWithPointsProperty, value);
@@ -346,19 +332,15 @@ public partial class LiveChart
     /// <summary>Provides named observable data streams with axes and retention limits.</summary>
     /// <param name="Data">The Data value.</param>
     public sealed record DataLoggerEnumObsPoints(
-        IEnumerable<
-            IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>
-        > Data);
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> Data);
 
     /// <summary>Represents a signal with X and Y values, associated timestamps, and axis information.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalXYTimestamp(
-        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) Data);
+    public sealed record SignalXYTimestamp((string? Name, IList<double>? Value, IList<double> DateTime, int Axis) Data);
 
     /// <summary>Provides XY signal points with optional names and axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record SignalXYPoints(
-        (string? Name, IList<double>? Y, IList<double> X, int Axis) Data);
+    public sealed record SignalXYPoints((string? Name, IList<double>? Y, IList<double> X, int Axis) Data);
 
     /// <summary>Provides named XY data-point series with axis assignments.</summary>
     /// <param name="Data">The Data value.</param>
@@ -377,6 +359,5 @@ public partial class LiveChart
 
     /// <summary>Provides named scatter points with coordinates and axes.</summary>
     /// <param name="Data">The Data value.</param>
-    public sealed record ScatterPoints(
-        (string? Name, IList<double> X, IList<double> Y, int Axis) Data);
+    public sealed record ScatterPoints((string? Name, IList<double> X, IList<double> Y, int Axis) Data);
 }

@@ -24,27 +24,21 @@ public class TitleBarButton : Button
         nameof(ButtonsForeground),
         typeof(Brush),
         typeof(TitleBarButton),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="MouseOverButtonsForeground"/>.</summary>
     public static readonly DependencyProperty MouseOverButtonsForegroundProperty = DependencyProperty.Register(
         nameof(MouseOverButtonsForeground),
         typeof(Brush),
         typeof(TitleBarButton),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="RenderButtonsForeground"/>.</summary>
     public static readonly DependencyProperty RenderButtonsForegroundProperty = DependencyProperty.Register(
         nameof(RenderButtonsForeground),
         typeof(Brush),
         typeof(TitleBarButton),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Stores the _defaultBackgroundBrush value.</summary>
     private readonly Brush _defaultBackgroundBrush = Brushes.Transparent; // TODO: Should it be transparent?
@@ -140,9 +134,7 @@ public class TitleBarButton : Button
     /// <summary>Invokes click on the button.</summary>
     public void InvokeClick()
     {
-        if (
-            new ButtonAutomationPeer(this).GetPattern(PatternInterface.Invoke)
-            is IInvokeProvider invokeProvider)
+        if (new ButtonAutomationPeer(this).GetPattern(PatternInterface.Invoke) is IInvokeProvider invokeProvider)
         {
             invokeProvider.Invoke();
         }
@@ -162,35 +154,36 @@ public class TitleBarButton : Button
         switch (msg)
         {
             case User32.WM.NCHITTEST:
+            {
+                if (this.IsMouseOverElement(messageParameter))
                 {
-                    if (this.IsMouseOverElement(messageParameter))
-                    {
-                        Hover();
-                        returnIntPtr = (IntPtr)_returnValue;
-                        return true;
-                    }
-
-                    RemoveHover();
-                    return false;
+                    Hover();
+                    returnIntPtr = (IntPtr)_returnValue;
+                    return true;
                 }
+
+                RemoveHover();
+                return false;
+            }
 
             case User32.WM.NCMOUSELEAVE: // Mouse leaves the window
-                {
-                    RemoveHover();
-                    return false;
-                }
+            {
+                RemoveHover();
+                return false;
+            }
 
             case User32.WM.NCLBUTTONDOWN when this.IsMouseOverElement(messageParameter): // Left button clicked down
-                {
-                    _isClickedDown = true;
-                    return true;
-                }
+            {
+                _isClickedDown = true;
+                return true;
+            }
 
-            case User32.WM.NCLBUTTONUP when _isClickedDown && this.IsMouseOverElement(messageParameter): // Left button clicked up
-                {
-                    InvokeClick();
-                    return true;
-                }
+            // Left button clicked up.
+            case User32.WM.NCLBUTTONUP when _isClickedDown && this.IsMouseOverElement(messageParameter):
+            {
+                InvokeClick();
+                return true;
+            }
 
             default:
                 return false;
@@ -208,14 +201,16 @@ public class TitleBarButton : Button
 
     /// <summary>Provides the TitleBarButton_Unloaded member.</summary>
     private void TitleBarButton_Unloaded() =>
-        DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
+        DependencyPropertyDescriptor
+            .FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .RemoveValueChanged(this, OnButtonsForegroundChanged);
 
     /// <summary>Provides the TitleBarButton_Loaded member.</summary>
     private void TitleBarButton_Loaded()
     {
         RenderButtonsForeground = ButtonsForeground;
-        DependencyPropertyDescriptor.FromProperty(ButtonsForegroundProperty, typeof(Brush))
+        DependencyPropertyDescriptor
+            .FromProperty(ButtonsForegroundProperty, typeof(Brush))
             .AddValueChanged(this, OnButtonsForegroundChanged);
     }
 
@@ -236,6 +231,6 @@ public class TitleBarButton : Button
             TitleBarButtonType.Close => User32.WM_NCHITTEST.HTCLOSE,
             TitleBarButtonType.Restore => User32.WM_NCHITTEST.HTMAXBUTTON,
             TitleBarButtonType.Maximize => User32.WM_NCHITTEST.HTMAXBUTTON,
-            _ => throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null),
         };
 }

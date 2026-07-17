@@ -11,9 +11,7 @@ internal sealed class GifCommentExtension : GifExtension
     internal const int ExtensionLabel = 0xFE;
 
     /// <summary>Initializes a new instance of the <see cref="GifCommentExtension"/> class.</summary>
-    private GifCommentExtension()
-    {
-    }
+    private GifCommentExtension() { }
 
     /// <summary>Gets the Text value.</summary>
     public string? Text { get; private set; }

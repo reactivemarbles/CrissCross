@@ -11,9 +11,7 @@ internal sealed class UsedImplicitlyAttribute : Attribute
 {
     /// <summary>Initializes a new instance of the <see cref="UsedImplicitlyAttribute"/> class.</summary>
     public UsedImplicitlyAttribute()
-        : this(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself)
-    {
-    }
+        : this(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself) { }
 
     /// <summary>Initializes a new instance of the <see cref="UsedImplicitlyAttribute"/> class.</summary>
     /// <param name="useKindFlags">The implicit use kind.</param>

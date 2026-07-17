@@ -42,13 +42,17 @@ public class ValidationSummary : ItemsControl
     /// <summary>Provides the OnSummaryStateChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnSummaryStateChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+    private static void OnSummaryStateChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs args)
     {
         if (dependencyObject is not ValidationSummary summary)
         {
             return;
         }
 
-        summary.SetCurrentValue(ItemsSourceProperty, args.NewValue is ValidationSummaryState state ? state.Messages : null);
+        summary.SetCurrentValue(
+            ItemsSourceProperty,
+            args.NewValue is ValidationSummaryState state ? state.Messages : null);
     }
 }

@@ -4,12 +4,12 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Defines values that specify the input validation behavior of a <see cref="NumberBox"/> when invalid input is entered.</summary>
+/// <summary>Provides the NumberBoxValidationMode member.</summary>
 public enum NumberBoxValidationMode
 {
     /// <summary>Input validation is disabled.</summary>
     InvalidInputOverwritten,
 
     /// <summary>Invalid input is replaced by <see cref="NumberBox"/> PlaceholderText text.</summary>
-    Disabled
+    Disabled,
 }

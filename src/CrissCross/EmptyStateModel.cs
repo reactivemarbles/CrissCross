@@ -51,5 +51,6 @@ public sealed class EmptyStateModel(
     public bool HasPrimaryAction => PrimaryActionCommand is not null && !string.IsNullOrWhiteSpace(PrimaryActionText);
 
     /// <summary>Gets a value indicating whether the model exposes a secondary action.</summary>
-    public bool HasSecondaryAction => SecondaryActionCommand is not null && !string.IsNullOrWhiteSpace(SecondaryActionText);
+    public bool HasSecondaryAction =>
+        SecondaryActionCommand is not null && !string.IsNullOrWhiteSpace(SecondaryActionText);
 }

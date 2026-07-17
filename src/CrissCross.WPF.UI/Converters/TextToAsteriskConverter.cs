@@ -15,7 +15,8 @@ internal sealed class TextToAsteriskConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new string('*', value?.ToString()?.Length ?? 0);
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        new string('*', value?.ToString()?.Length ?? 0);
 
     /// <summary>Provides the ConvertBack member.</summary>
     /// <param name="value">The value.</param>
@@ -23,5 +24,6 @@ internal sealed class TextToAsteriskConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Binding.DoNothing;
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 }

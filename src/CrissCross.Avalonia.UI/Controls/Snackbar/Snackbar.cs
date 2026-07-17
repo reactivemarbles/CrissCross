@@ -11,9 +11,10 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class Snackbar : global::Avalonia.Controls.ContentControl
 {
     /// <summary>Property for <see cref="IsCloseButtonEnabled"/>.</summary>
-    public static readonly StyledProperty<bool> IsCloseButtonEnabledProperty = AvaloniaProperty.Register<Snackbar, bool>(
-        nameof(IsCloseButtonEnabled),
-        true);
+    public static readonly StyledProperty<bool> IsCloseButtonEnabledProperty = AvaloniaProperty.Register<
+        Snackbar,
+        bool
+    >(nameof(IsCloseButtonEnabled), true);
 
     /// <summary>Property for <see cref="IsShown"/>.</summary>
     public static readonly StyledProperty<bool> IsShownProperty = AvaloniaProperty.Register<Snackbar, bool>(
@@ -27,31 +28,31 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
 
     /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly StyledProperty<object?> TitleProperty = AvaloniaProperty.Register<Snackbar, object?>(
-        nameof(Title),
-        null);
+        nameof(Title));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
-    public static readonly StyledProperty<IconElement?> IconProperty = AvaloniaProperty.Register<Snackbar, IconElement?>(
-        nameof(Icon),
-        null);
+    public static readonly StyledProperty<IconElement?> IconProperty = AvaloniaProperty.Register<
+        Snackbar,
+        IconElement?
+    >(nameof(Icon));
 
     /// <summary>Property for <see cref="Appearance"/>.</summary>
-    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<Snackbar, ControlAppearance>(
-        nameof(Appearance),
-        ControlAppearance.Secondary);
+    public static readonly StyledProperty<ControlAppearance> AppearanceProperty = AvaloniaProperty.Register<
+        Snackbar,
+        ControlAppearance
+    >(nameof(Appearance), ControlAppearance.Secondary);
 
     /// <summary>Property for <see cref="ContentForeground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> ContentForegroundProperty = AvaloniaProperty.Register<Snackbar, IBrush?>(
-        nameof(ContentForeground),
-        Brushes.Black);
+    public static readonly StyledProperty<IBrush?> ContentForegroundProperty = AvaloniaProperty.Register<
+        Snackbar,
+        IBrush?
+    >(nameof(ContentForeground), Brushes.Black);
 
     /// <summary>Provides the _presenter member.</summary>
     private readonly SnackbarPresenter? _presenter;
 
     /// <summary>Initializes a new instance of the <see cref="Snackbar"/> class.</summary>
-    public Snackbar()
-    {
-    }
+    public Snackbar() { }
 
     /// <summary>Initializes a new instance of the <see cref="Snackbar"/> class.</summary>
     /// <param name="presenter">The presenter.</param>
@@ -110,8 +111,11 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     protected new SnackbarPresenter? Presenter { get; set; }
 
     /// <summary>Shows the snackbar.</summary>
+    public void Show() => Show(false);
+
+    /// <summary>Shows the snackbar.</summary>
     /// <param name="immediately">if set to <c>true</c> shows immediately.</param>
-    public virtual void Show(bool immediately = false)
+    public virtual void Show(bool immediately)
     {
         if (_presenter is null)
         {

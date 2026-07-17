@@ -139,7 +139,9 @@ public class DataFilterPanel : Control
 
     /// <summary>Creates a search query snapshot from the current filter state.</summary>
     /// <returns>The query state snapshot.</returns>
-    public SearchQueryState CreateQueryState() => FilterState?.ToSearchQueryState(SearchText, ResultCount) ?? new SearchQueryState(SearchText, submittedText: SearchText, resultCount: ResultCount);
+    public SearchQueryState CreateQueryState() =>
+        FilterState?.ToSearchQueryState(SearchText, ResultCount)
+        ?? new SearchQueryState(SearchText, submittedText: SearchText, resultCount: ResultCount);
 
     /// <summary>Applies the current filters and emits a query-state snapshot.</summary>
     public void ApplyFilters()

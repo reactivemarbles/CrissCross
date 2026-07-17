@@ -11,15 +11,14 @@ namespace CrissCross.WPF.UI.Controls;
 internal static class VisualStateGroupExtensions
 {
     /// <summary>Provides the CurrentStoryboardsProperty member.</summary>
-    private static readonly DependencyProperty CurrentStoryboardsProperty =
-        DependencyProperty.RegisterAttached(
-            "CurrentStoryboards",
-            typeof(Collection<Storyboard>),
-            typeof(VisualStateGroupExtensions));
+    private static readonly DependencyProperty CurrentStoryboardsProperty = DependencyProperty.RegisterAttached(
+        "CurrentStoryboards",
+        typeof(Collection<Storyboard>),
+        typeof(VisualStateGroupExtensions));
 
     /// <summary>Stores the _setCurrentState value.</summary>
-    private static readonly Lazy<Action<VisualStateGroup, VisualState>> _setCurrentState =
-        new(CreateSetCurrentStateDelegate);
+    private static readonly Lazy<Action<VisualStateGroup, VisualState>> _setCurrentState = new(
+        CreateSetCurrentStateDelegate);
 
     /// <summary>Gets the IsSupported value.</summary>
     internal static bool IsSupported => _setCurrentState.Value is not null;
@@ -38,7 +37,7 @@ internal static class VisualStateGroupExtensions
             }
 
             _setCurrentState.Value(group, value);
-            Debug.Assert(group.CurrentState == value, "Current State.");
+            Debug.Assert(ReferenceEquals(group.CurrentState, value), "Current State.");
         }
 
         /// <summary>Provides the GetState member.</summary>

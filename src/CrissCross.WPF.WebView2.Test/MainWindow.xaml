@@ -1,55 +1,33 @@
 ﻿<Window
-    x:Class="CrissCross.WPF.WebView2.Test.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CrissCross.WPF.WebView2.Test"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:rxnav="https://github.com/reactivemarbles/CrissCross"
-    Title="MainWindow"
-    Width="800"
-    Height="450"
-    mc:Ignorable="d">
-    <Grid>
-        <rxnav:WebView2Wpf
-            x:Name="WebView2Wpf"
-            AutoDispose="True"
-            Source="https://www.aicsolutions.com">
-            <StackPanel HorizontalAlignment="Left">
-                <TextBlock
-                    x:Name="Greeting"
-                    FontSize="20"
-                    Foreground="Red"
-                    Text="Hello World" />
-                <Button
-                    Width="100"
-                    Height="100"
-                    Background="Transparent"
-                    Click="ReactiveUI_Click">
-                    <Image Source="/logo.png" />
-                </Button>
-                <Button
-                    Width="100"
-                    Height="100"
-                    Background="Transparent"
-                    Click="Windows7_Click">
-                    <Image Source="/logo1.png" />
-                </Button>
-                <Button
-                    Width="100"
-                    Height="100"
-                    Background="Transparent"
-                    Click="WindowsXp_Click">
-                    <Image Source="/logo2.png" />
-                </Button>
-                <Button
-                    Width="100"
-                    Height="100"
-                    Background="Transparent"
-                    Click="Windows10_Click">
-                    <Image Source="/logo3.png" />
-                </Button>
-            </StackPanel>
-        </rxnav:WebView2Wpf>
-    </Grid>
+  x:Class="CrissCross.WPF.WebView2.Test.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:CrissCross.WPF.WebView2.Test"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:rxnav="https://github.com/reactivemarbles/CrissCross"
+  Title="MainWindow"
+  Width="800"
+  Height="450"
+  mc:Ignorable="d"
+>
+  <Grid>
+    <rxnav:WebView2Wpf x:Name="WebView2Wpf" AutoDispose="True" Source="https://www.aicsolutions.com">
+      <StackPanel HorizontalAlignment="Left">
+        <TextBlock x:Name="Greeting" FontSize="20" Foreground="Red" Text="Hello World" />
+        <Button Width="100" Height="100" Background="Transparent" Click="ReactiveUI_Click">
+          <Image Source="/logo.png" />
+        </Button>
+        <Button Width="100" Height="100" Background="Transparent" Click="Windows7_Click">
+          <Image Source="/logo1.png" />
+        </Button>
+        <Button Width="100" Height="100" Background="Transparent" Click="WindowsXp_Click">
+          <Image Source="/logo2.png" />
+        </Button>
+        <Button Width="100" Height="100" Background="Transparent" Click="Windows10_Click">
+          <Image Source="/logo3.png" />
+        </Button>
+      </StackPanel>
+    </rxnav:WebView2Wpf>
+  </Grid>
 </Window>

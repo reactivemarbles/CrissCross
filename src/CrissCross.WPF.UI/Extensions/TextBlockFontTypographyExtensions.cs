@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Extensions;
 
-/// <summary>Extension that converts the typography type enumeration to the name of the resource that represents it.</summary>
+/// <summary>Provides the TextBlockFontTypographyExtensions member.</summary>
 public static class TextBlockFontTypographyExtensions
 {
     /// <summary>Provides extension members for font typography values.</summary>
@@ -13,18 +13,20 @@ public static class TextBlockFontTypographyExtensions
     {
         /// <summary>Converts the typography type enumeration to the name of the resource that represents it.</summary>
         /// <returns>
-        /// Name of the resource matching the <see cref="FontTypography" />. <see cref="ArgumentOutOfRangeException" /> otherwise.
+        /// Name of the resource matching the <see cref="FontTypography" />. <see cref="ArgumentOutOfRangeException" />
+        /// otherwise.
         /// </returns>
-        public string ToResourceValue() => typography switch
-        {
-            FontTypography.Caption => "CaptionTextBlockStyle",
-            FontTypography.Body => "BodyTextBlockStyle",
-            FontTypography.BodyStrong => "BodyStrongTextBlockStyle",
-            FontTypography.Subtitle => "SubtitleTextBlockStyle",
-            FontTypography.Title => "TitleTextBlockStyle",
-            FontTypography.TitleLarge => "TitleLargeTextBlockStyle",
-            FontTypography.Display => "DisplayTextBlockStyle",
-            _ => throw new ArgumentOutOfRangeException(nameof(typography), typography, null)
-        };
+        public string ToResourceValue() =>
+            typography switch
+            {
+                FontTypography.Caption => "CaptionTextBlockStyle",
+                FontTypography.Body => "BodyTextBlockStyle",
+                FontTypography.BodyStrong => "BodyStrongTextBlockStyle",
+                FontTypography.Subtitle => "SubtitleTextBlockStyle",
+                FontTypography.Title => "TitleTextBlockStyle",
+                FontTypography.TitleLarge => "TitleLargeTextBlockStyle",
+                FontTypography.Display => "DisplayTextBlockStyle",
+                _ => throw new ArgumentOutOfRangeException(nameof(typography), typography, null),
+            };
     }
 }

@@ -12,25 +12,25 @@ namespace CrissCross.MAUI.Test;
 /// <seealso cref="RxObject" />
 public class FirstViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
-    public FirstViewModel()
-    {
-        GotoMain = ReactiveCommand.Create(() => this.NavigateToView<MainViewModel>());
+    /// <summary>Provides the cached main-navigation command.</summary>
+    private ICommand? _gotoMain;
 
-        GotoFirst = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
-    }
+    /// <summary>Provides the cached back-navigation command.</summary>
+    private ICommand? _gotoFirst;
 
     /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
-    public ICommand? GotoMain { get; }
+    public ICommand GotoMain =>
+        _gotoMain ??= ReactiveCommand.Create(() => this.NavigateToView(new NavigationKeyRequest<MainViewModel>()));
 
     /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
-    public ICommand? GotoFirst { get; }
+    public ICommand GotoFirst =>
+        _gotoFirst ??= ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
 
     /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />

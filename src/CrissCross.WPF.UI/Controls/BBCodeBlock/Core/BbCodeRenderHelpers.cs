@@ -145,17 +145,18 @@ internal static class BbCodeRenderHelpers
     /// <param name="style">The list style.</param>
     /// <param name="number">The one-based item number.</param>
     /// <returns>The marker text.</returns>
-    public static string CreateListMarker(string style, int number) => style switch
-    {
-        "1" => number.ToString(CultureInfo.InvariantCulture) + ".",
-        "a" => ((char)('a' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
-        "A" => ((char)('A' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
-        "i" => ToRoman(number).ToLowerInvariant() + ".",
-        "I" => ToRoman(number) + ".",
-        "circle" => "○",
-        "square" => "▪",
-        _ => "•",
-    };
+    public static string CreateListMarker(string style, int number) =>
+        style switch
+        {
+            "1" => number.ToString(CultureInfo.InvariantCulture) + ".",
+            "a" => ((char)('a' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
+            "A" => ((char)('A' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
+            "i" => ToRoman(number).ToLowerInvariant() + ".",
+            "I" => ToRoman(number) + ".",
+            "circle" => "○",
+            "square" => "▪",
+            _ => "•",
+        };
 
     /// <summary>Creates a bitmap without file-scheme access or propagated decode failures.</summary>
     /// <param name="value">The image URI text.</param>
@@ -164,8 +165,9 @@ internal static class BbCodeRenderHelpers
     public static bool TryCreateBitmap(string value, [NotNullWhen(true)] out BitmapImage? bitmap)
     {
         bitmap = null;
-        if (!Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri) ||
-            (uri.IsAbsoluteUri && uri.Scheme is not ("http" or "https" or "pack")))
+        if (
+            !Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out var uri)
+            || (uri.IsAbsoluteUri && uri.Scheme is not ("http" or "https" or "pack")))
         {
             return false;
         }
@@ -175,8 +177,8 @@ internal static class BbCodeRenderHelpers
             bitmap = new(uri);
             return true;
         }
-        catch (Exception exception) when (
-            exception is IOException or InvalidOperationException or NotSupportedException or UriFormatException)
+        catch (Exception exception)
+            when (exception is IOException or InvalidOperationException or NotSupportedException or UriFormatException)
         {
             bitmap = null;
             return false;
@@ -227,10 +229,10 @@ internal static class BbCodeRenderHelpers
     /// <param name="value">The candidate value.</param>
     /// <returns><see langword="true"/> when the value is address-like.</returns>
     public static bool LooksLikeAddress(string value) =>
-        value.StartsWith("http:", StringComparison.OrdinalIgnoreCase) ||
-        value.StartsWith("https:", StringComparison.OrdinalIgnoreCase) ||
-        value.StartsWith("pack:", StringComparison.OrdinalIgnoreCase) ||
-        value.StartsWith("/", StringComparison.Ordinal);
+        value.StartsWith("http:", StringComparison.OrdinalIgnoreCase)
+        || value.StartsWith("https:", StringComparison.OrdinalIgnoreCase)
+        || value.StartsWith("pack:", StringComparison.OrdinalIgnoreCase)
+        || value.StartsWith("/", StringComparison.Ordinal);
 
     /// <summary>Creates a URI only for supported navigation schemes.</summary>
     /// <param name="value">The URI text.</param>
@@ -239,8 +241,9 @@ internal static class BbCodeRenderHelpers
     public static bool TryCreateAllowedUri(string value, out Uri? uri)
     {
         uri = null;
-        if (!Uri.TryCreate(value, UriKind.Absolute, out var candidate) ||
-            candidate.Scheme is not ("http" or "https" or "mailto" or "cmd"))
+        if (
+            !Uri.TryCreate(value, UriKind.Absolute, out var candidate)
+            || candidate.Scheme is not ("http" or "https" or "mailto" or "cmd"))
         {
             return false;
         }
@@ -276,8 +279,10 @@ internal static class BbCodeRenderHelpers
     /// <param name="apply">The dimension setter.</param>
     private static void ApplyImageDimension(BbCodeNode node, string name, Action<double> apply)
     {
-        if (!node.Attributes.TryGetValue(name, out var text) ||
-            !double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || value <= 0D)
+        if (
+            !node.Attributes.TryGetValue(name, out var text)
+            || !double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+            || value <= 0D)
         {
             return;
         }

@@ -12,7 +12,7 @@ public class ToggleButton : global::Avalonia.Controls.Primitives.ToggleButton
     /// <summary>The TreeView item chevron size property.</summary>
     public static readonly StyledProperty<double> ChevronSizeProperty = AvaloniaProperty.Register<ToggleButton, double>(
         nameof(ChevronSize),
-        10d);
+        10D);
 
     /// <summary>Gets or sets the size of the TreeView item chevron.</summary>
     public double ChevronSize

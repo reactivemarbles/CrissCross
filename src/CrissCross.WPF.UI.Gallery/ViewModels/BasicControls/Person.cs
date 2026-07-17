@@ -9,20 +9,32 @@ namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
 /// <summary>Person member.</summary>
 /// <seealso cref="ReactiveTreeItem" />
-public class Person
-    : ReactiveTreeItem
+public class Person : ReactiveTreeItem
 {
     /// <summary>The height and width of the person icon.</summary>
     private const int IconSize = 20;
 
     /// <summary>Initializes a new instance of the <see cref="Person"/> class.</summary>
     /// <param name="name">The name.</param>
+    public Person(string? name)
+        : this(name, []) { }
+
+    /// <summary>Initializes a new instance of the <see cref="Person"/> class.</summary>
+    /// <param name="name">The name.</param>
     /// <param name="children">The children.</param>
-    public Person(string? name, IEnumerable<ReactiveTreeItem>? children = null)
+    public Person(string? name, IEnumerable<ReactiveTreeItem> children)
         : base(children)
     {
         DisplayName = name;
-        Icon = new ImageIcon() { Height = IconSize, Width = IconSize, Source = new BitmapImage(new Uri("pack://application:,,,/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/AnimatedIcon.png")) };
+        Icon = new ImageIcon()
+        {
+            Height = IconSize,
+            Width = IconSize,
+            Source = new BitmapImage(
+                new Uri(
+                    "pack://application:,,,/CrissCross.WPF.UI.Gallery;component/"
+                        + "Assets/ControlImages/AnimatedIcon.png")),
+        };
     }
 
     /// <summary>Gets the view model.</summary>

@@ -17,5 +17,5 @@ public enum TextColor
     Tertiary,
 
     /// <summary>Disabled only (not accessible).</summary>
-    Disabled
+    Disabled,
 }

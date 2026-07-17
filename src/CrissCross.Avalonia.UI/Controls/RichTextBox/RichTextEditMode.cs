@@ -4,7 +4,7 @@
 
 namespace CrissCross.Avalonia.UI.Controls;
 
-/// <summary>Defines whether <see cref="RichTextBox"/> behaves as an editor, a display surface, or switches on focus.</summary>
+/// <summary>Defines whether RichTextBox behaves as an editor, a display surface, or switches on focus.</summary>
 public enum RichTextEditMode
 {
     /// <summary>Editing surface is enabled whenever the control is enabled.</summary>
@@ -14,5 +14,5 @@ public enum RichTextEditMode
     Display,
 
     /// <summary>Display surface is shown until the control receives focus.</summary>
-    EditOnFocus
+    EditOnFocus,
 }

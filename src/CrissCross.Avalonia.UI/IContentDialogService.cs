@@ -34,12 +34,14 @@ public interface IContentDialogService
     void SetContentPresenter(ContentPresenter contentPresenter);
 
     /// <summary>Provides direct access to the <see cref="ContentPresenter"/>.</summary>
-    /// <returns>Reference to the currently selected <see cref="ContentPresenter"/> which displays the <see cref="ContentDialog"/>'s.</returns>
+    /// <returns>Reference to the currently selected <see cref="ContentPresenter"/> which displays the <see
+    /// cref="ContentDialog"/>'s.</returns>
     ContentPresenter GetContentPresenter();
 
     /// <summary>Asynchronously shows the specified dialog.</summary>
     /// <param name="dialog">The dialog to show.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the dialog result.</returns>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the dialog
+    /// result.</returns>
     Task<ContentDialogResult> ShowAsync(ContentDialog dialog, CancellationToken cancellationToken);
 }

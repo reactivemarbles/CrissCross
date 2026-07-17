@@ -11,7 +11,7 @@ internal static class TreeExtensions
     /// <param name="source">The root element that marks the source of the search.</param>
     extension(DependencyObject source)
     {
-        /// <summary>Analyzes both visual and logical tree in order to find all elements of a given type that are descendants of the <paramref name="source"/> item.</summary>
+        /// <summary>Provides the FindChildren member.</summary>
         /// <typeparam name="T">The type of the queried items.</typeparam>
         /// <returns>All descendants of <paramref name="source"/> that match the requested type.</returns>
         public IEnumerable<T> FindChildren<T>()
@@ -54,7 +54,11 @@ internal static class TreeExtensions
             if (source is ContentElement || source is FrameworkElement)
             {
                 // use the logical tree for content / framework elements
-                foreach (var obj in from object obj in LogicalTreeHelper.GetChildren(source) let depObj = obj as DependencyObject where depObj is not null select obj)
+                foreach (
+                    var obj in from object obj in LogicalTreeHelper.GetChildren(source)
+                    let depObj = obj as DependencyObject
+                    where depObj is not null
+                    select obj)
                 {
                     yield return (DependencyObject)obj;
                 }
@@ -136,7 +140,7 @@ internal static class TreeExtensions
         }
     }
 
-    /// <summary>Tries to locate a given item within the visual tree, starting with the dependency object at a given position.</summary>
+    /// <summary>Provides the TryFindFromPoint member.</summary>
     /// <typeparam name="T">
     /// The type of the element to be found on the visual tree of the element at the given location.
     /// </typeparam>

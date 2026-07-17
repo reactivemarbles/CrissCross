@@ -11,24 +11,15 @@ public sealed record PlotSeriesData
     /// <param name="key">The stable series identity and axis assignment.</param>
     /// <param name="x">The X values.</param>
     /// <param name="y">The Y values.</param>
-    public PlotSeriesData(
-        PlotSeriesKey key,
-        IReadOnlyList<double> x,
-        IReadOnlyList<double> y)
-        : this(key, x, y, PlotXAxisKind.Numeric)
-    {
-    }
+    public PlotSeriesData(PlotSeriesKey key, IReadOnlyList<double> x, IReadOnlyList<double> y)
+        : this(key, x, y, PlotXAxisKind.Numeric) { }
 
     /// <summary>Initializes a new instance of the <see cref="PlotSeriesData"/> class.</summary>
     /// <param name="key">The stable series identity and axis assignment.</param>
     /// <param name="x">The X values.</param>
     /// <param name="y">The Y values.</param>
     /// <param name="axisKind">The interpretation of X values.</param>
-    public PlotSeriesData(
-        PlotSeriesKey key,
-        IReadOnlyList<double> x,
-        IReadOnlyList<double> y,
-        PlotXAxisKind axisKind)
+    public PlotSeriesData(PlotSeriesKey key, IReadOnlyList<double> x, IReadOnlyList<double> y, PlotXAxisKind axisKind)
     {
         if (x is null)
         {
@@ -71,11 +62,8 @@ public sealed record PlotSeriesData
     /// <param name="x">The numeric X values.</param>
     /// <param name="y">The Y values.</param>
     /// <returns>The normalized series.</returns>
-    public static PlotSeriesData Numeric(
-        string name,
-        int axis,
-        IReadOnlyList<double> x,
-        IReadOnlyList<double> y) => new(new PlotSeriesKey(name, axis), x, y);
+    public static PlotSeriesData Numeric(string name, int axis, IReadOnlyList<double> x, IReadOnlyList<double> y) =>
+        new(new PlotSeriesKey(name, axis), x, y);
 
     /// <summary>Creates a DateTime XY series using OLE Automation date values for ScottPlot compatibility.</summary>
     /// <param name="name">The series name.</param>
@@ -106,40 +94,32 @@ public sealed record PlotSeriesData
     /// <summary>Creates an update that replaces a rendered series with this snapshot.</summary>
     /// <param name="plotType">The target chart type.</param>
     /// <returns>A normalized replace update.</returns>
-    public ReactivePlotUpdate ToUpdate(PlotType plotType) =>
-        ToUpdate(plotType, 0, null);
+    public ReactivePlotUpdate ToUpdate(PlotType plotType) => ToUpdate(plotType, 0, null);
 
     /// <summary>Creates a styled update that replaces a rendered series with this snapshot.</summary>
     /// <param name="plotType">The target chart type.</param>
     /// <param name="style">The series styling.</param>
     /// <returns>A normalized replace update.</returns>
-    public ReactivePlotUpdate ToUpdate(
-        PlotType plotType,
-        ReactivePlotSeriesStyle? style) =>
+    public ReactivePlotUpdate ToUpdate(PlotType plotType, ReactivePlotSeriesStyle? style) =>
         ToUpdate(plotType, 0, style);
 
     /// <summary>Creates an update with a sequence that replaces a rendered series.</summary>
     /// <param name="plotType">The target chart type.</param>
     /// <param name="sequence">The source sequence.</param>
     /// <returns>A normalized replace update.</returns>
-    public ReactivePlotUpdate ToUpdate(PlotType plotType, long sequence) =>
-        ToUpdate(plotType, sequence, null);
+    public ReactivePlotUpdate ToUpdate(PlotType plotType, long sequence) => ToUpdate(plotType, sequence, null);
 
     /// <summary>Creates an update that replaces a rendered series with this snapshot.</summary>
     /// <param name="plotType">The target chart type.</param>
     /// <param name="sequence">The source sequence.</param>
     /// <param name="style">Optional series styling.</param>
     /// <returns>A normalized replace update.</returns>
-    public ReactivePlotUpdate ToUpdate(
-        PlotType plotType,
-        long sequence,
-        ReactivePlotSeriesStyle? style) =>
+    public ReactivePlotUpdate ToUpdate(PlotType plotType, long sequence, ReactivePlotSeriesStyle? style) =>
         new(Key, plotType, ReactivePlotUpdateKind.Replace, X, Y, XAxisKind, sequence, Style: style);
 
     /// <summary>Creates a copy of this series with a different key and Y values.</summary>
     /// <param name="key">The replacement key.</param>
     /// <param name="y">The replacement Y values.</param>
     /// <returns>The derived series.</returns>
-    public PlotSeriesData Derive(PlotSeriesKey key, IReadOnlyList<double> y) =>
-        new(key, X, y, XAxisKind);
+    public PlotSeriesData Derive(PlotSeriesKey key, IReadOnlyList<double> y) => new(key, X, y, XAxisKind);
 }

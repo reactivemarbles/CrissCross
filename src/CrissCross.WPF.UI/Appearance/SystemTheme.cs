@@ -41,5 +41,5 @@ public enum SystemTheme
     Sunrise,
 
     /// <summary>Light theme: Flow.</summary>
-    Flow
+    Flow,
 }

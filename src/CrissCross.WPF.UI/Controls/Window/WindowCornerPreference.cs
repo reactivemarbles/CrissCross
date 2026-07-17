@@ -17,5 +17,5 @@ public enum WindowCornerPreference
     Round,
 
     /// <summary>Round the corners slightly.</summary>
-    RoundSmall
+    RoundSmall,
 }

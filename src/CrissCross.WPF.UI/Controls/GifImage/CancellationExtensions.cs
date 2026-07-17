@@ -19,15 +19,15 @@ internal static class CancellationExtensions
             var registration = default(CancellationTokenRegistration);
             registration = cancellationToken.Register(
                 o =>
-            {
-                if (o is TaskCompletionSource<int> tcs)
                 {
-                    _ = tcs.TrySetCanceled();
-                }
+                    if (o is TaskCompletionSource<int> tcs)
+                    {
+                        _ = tcs.TrySetCanceled();
+                    }
 
-                // ReSharper disable once AccessToModifiedClosure
-                registration.Dispose();
-            },
+                    // ReSharper disable once AccessToModifiedClosure
+                    registration.Dispose();
+                },
                 tcs);
             return tcs.Task;
         }
@@ -40,7 +40,8 @@ internal static class CancellationExtensions
         /// <summary>Provides the WithCancellationToken member.</summary>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public async Task WithCancellationToken(CancellationToken cancellationToken) => await Task.WhenAny(task, cancellationToken.WhenCanceled());
+        public async Task WithCancellationToken(CancellationToken cancellationToken) =>
+            await Task.WhenAny(task, cancellationToken.WhenCanceled());
     }
 
     /// <summary>Provides extension members.</summary>

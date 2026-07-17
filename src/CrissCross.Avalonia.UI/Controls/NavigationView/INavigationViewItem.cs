@@ -32,22 +32,23 @@ public interface INavigationViewItem
     /// <summary>Gets a value indicating whether gets information whether the current element is active.</summary>
     bool IsActive { get; }
 
-    /// <summary>Gets or sets a value indicating whether gets information whether the sub-<see cref="MenuItems"/> are expanded.</summary>
+    /// <summary>Gets or sets whether the sub-MenuItems are expanded.</summary>
     bool IsExpanded { get; set; }
 
     /// <summary>Gets a value indicating whether this instance has menu items.</summary>
     bool HasMenuItems { get; }
 
-    /// <summary>Gets or sets a unique tag used by the parent navigation system for the purpose of searching and navigating.</summary>
+    /// <summary>Gets or sets a unique tag used by the parent navigation system to searching and navigating.</summary>
     string TargetPageTag { get; set; }
 
-    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from <see cref="T:Avalonia.Controls.Control"/>).</summary>
+    /// <summary>Gets or sets the type of the page to be navigated. (Should be derived from Control).</summary>
     Type? TargetPageType { get; set; }
 
     /// <summary>Gets or sets the AOT-safe factory used when no page service is configured.</summary>
     Func<object?>? TargetPageFactory => null;
 
-    /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence over TargetPageType.</summary>
+    /// <summary>Gets or sets the target ViewModel type for ViewModel-first navigation. When set this takes precedence
+    /// over TargetPageType.</summary>
     Type? TargetViewModelType { get; set; }
 
     /// <summary>

@@ -4,7 +4,8 @@
 
 namespace CrissCross.WPF.UI.Configuration;
 
-/// <summary>Event args for a tracking operation. Enables the handler to cancel the operation and modify the data that will be persisted/applied.</summary>
+/// <summary>Event args for a tracking operation. Enables the handler to cancel the operation and modify the data that
+/// will be persisted/applied.</summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="PropertyOperationData"/> class.
 /// Creates a new instance of PropertyData.

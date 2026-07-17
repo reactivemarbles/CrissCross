@@ -10,7 +10,7 @@ namespace CrissCross.WinForms;
 /// <seealso cref="Form" />
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
-public partial class NavigationForm : Form, ISetNavigation, IUseNavigation, IAmBuilt
+public partial class NavigationForm : Form, ISetNavigation, IUseNavigation
 {
     /// <summary>Stores the navigation Frame Dock value.</summary>
     private DockStyle _navigationFrameDock = DockStyle.Fill;

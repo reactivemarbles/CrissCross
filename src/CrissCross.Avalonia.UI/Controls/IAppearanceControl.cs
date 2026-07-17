@@ -8,5 +8,5 @@ namespace CrissCross.Avalonia.UI.Controls;
 public interface IAppearanceControl
 {
     /// <summary>Gets or sets the <see cref="Appearance"/> of the control, if available.</summary>
-    public ControlAppearance Appearance { get; set; }
+    ControlAppearance Appearance { get; set; }
 }

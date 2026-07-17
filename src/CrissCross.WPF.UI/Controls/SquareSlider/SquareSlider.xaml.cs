@@ -13,36 +13,32 @@ namespace CrissCross.WPF.UI;
 internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
 {
     /// <summary>Provides the HueProperty member.</summary>
-    public static readonly DependencyProperty HueProperty
-        = DependencyProperty.Register(
-            nameof(Hue),
-            typeof(double),
-            typeof(SquareSlider),
-            new PropertyMetadata(0.0, OnHueChanged));
+    public static readonly DependencyProperty HueProperty = DependencyProperty.Register(
+        nameof(Hue),
+        typeof(double),
+        typeof(SquareSlider),
+        new PropertyMetadata(0.0, OnHueChanged));
 
     /// <summary>Provides the HeadXProperty member.</summary>
-    public static readonly DependencyProperty HeadXProperty
-        = DependencyProperty.Register(
-            nameof(HeadX),
-            typeof(double),
-            typeof(SquareSlider),
-            new PropertyMetadata(0.0));
+    public static readonly DependencyProperty HeadXProperty = DependencyProperty.Register(
+        nameof(HeadX),
+        typeof(double),
+        typeof(SquareSlider),
+        new PropertyMetadata(0.0));
 
     /// <summary>Provides the HeadYProperty member.</summary>
-    public static readonly DependencyProperty HeadYProperty
-        = DependencyProperty.Register(
-            nameof(HeadY),
-            typeof(double),
-            typeof(SquareSlider),
-            new PropertyMetadata(0.0));
+    public static readonly DependencyProperty HeadYProperty = DependencyProperty.Register(
+        nameof(HeadY),
+        typeof(double),
+        typeof(SquareSlider),
+        new PropertyMetadata(0.0));
 
     /// <summary>Provides the PickerTypeProperty member.</summary>
-    public static readonly DependencyProperty PickerTypeProperty
-        = DependencyProperty.Register(
-            nameof(PickerType),
-            typeof(PickerType),
-            typeof(SquareSlider),
-            new PropertyMetadata(PickerType.HSV, OnColorSpaceChanged));
+    public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
+        nameof(PickerType),
+        typeof(PickerType),
+        typeof(SquareSlider),
+        new PropertyMetadata(PickerType.HSV, OnColorSpaceChanged));
 
     /// <summary>Provides the width and height of the generated gradient bitmap.</summary>
     private const int GradientBitmapDimension = 32;
@@ -69,7 +65,8 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
     private WriteableBitmap? _gradientBitmap;
 
     /// <summary>Stores the _colorSpaceConversionMethod value.</summary>
-    private Func<double, double, double, Tuple<double, double, double>> _colorSpaceConversionMethod = ColorSpaceHelper.HsvToRgb;
+    private Func<double, double, double, Tuple<double, double, double>> _colorSpaceConversionMethod =
+        ColorSpaceHelper.HsvToRgb;
 
     /// <summary>Initializes a new instance of the <see cref="SquareSlider"/> class.</summary>
     public SquareSlider()
@@ -170,7 +167,8 @@ internal sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
     /// <summary>Provides the OnHueChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="_">Unused event arguments required by the dependency property callback.</param>
-    private static void OnHueChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) => ((SquareSlider)d).RecalculateGradient();
+    private static void OnHueChanged(DependencyObject d, DependencyPropertyChangedEventArgs _) =>
+        ((SquareSlider)d).RecalculateGradient();
 
     /// <summary>Provides the RecalculateGradient member.</summary>
     private void RecalculateGradient()

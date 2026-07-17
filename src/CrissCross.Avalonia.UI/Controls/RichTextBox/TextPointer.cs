@@ -102,12 +102,6 @@ public sealed class TextPointer : IComparable<TextPointer>, IComparable
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? obj) => obj is TextPointer other && ReferenceEquals(Document, other.Document) && Offset == other.Offset;
-
-    /// <inheritdoc />
-    public override int GetHashCode() => HashCode.Combine(Document, Offset);
-
-    /// <inheritdoc />
     public int CompareTo(object? obj)
     {
         if (obj is null)
@@ -122,4 +116,11 @@ public sealed class TextPointer : IComparable<TextPointer>, IComparable
 
         throw new ArgumentException(string.Empty, nameof(obj));
     }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj) =>
+        obj is TextPointer other && ReferenceEquals(Document, other.Document) && Offset == other.Offset;
+
+    /// <inheritdoc />
+    public override int GetHashCode() => HashCode.Combine(Document, Offset);
 }

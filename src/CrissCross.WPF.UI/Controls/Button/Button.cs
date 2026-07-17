@@ -6,7 +6,7 @@ using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Inherited from the <see cref="System.Windows.Controls.Button"/>, adding <see cref="SymbolRegular"/>.</summary>
+/// <summary>Inherited from the Button, adding SymbolRegular.</summary>
 /// <example>
 /// <code lang="xml">
 /// &lt;ui:Button
@@ -59,9 +59,7 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         nameof(PressedForeground),
         typeof(Brush),
         typeof(Button),
-        new FrameworkPropertyMetadata(
-            SystemColors.ControlTextBrush,
-            FrameworkPropertyMetadataOptions.Inherits));
+        new FrameworkPropertyMetadata(SystemColors.ControlTextBrush, FrameworkPropertyMetadataOptions.Inherits));
 
     /// <summary>Property for <see cref="PressedBackground"/>.</summary>
     public static readonly DependencyProperty PressedBackgroundProperty = DependencyProperty.Register(
@@ -82,7 +80,10 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(Button),
-        (PropertyMetadata)new FrameworkPropertyMetadata((object)default(CornerRadius), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+        (PropertyMetadata)
+            new FrameworkPropertyMetadata(
+                (object)default(CornerRadius),
+                FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
     /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     [Bindable(true)]
@@ -102,7 +103,7 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         set => SetValue(AppearanceProperty, value);
     }
 
-    /// <summary>Gets or sets background <see cref="Brush"/> when the user interacts with an element with a pointing device.</summary>
+    /// <summary>Gets or sets background Brush when the user interacts with an element with a pointing device.</summary>
     [Bindable(true)]
     [Category("Appearance")]
     public Brush MouseOverBackground
@@ -111,7 +112,7 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         set => SetValue(MouseOverBackgroundProperty, value);
     }
 
-    /// <summary>Gets or sets border <see cref="Brush"/> when the user interacts with an element with a pointing device.</summary>
+    /// <summary>Gets or sets border Brush when the user interacts with an element with a pointing device.</summary>
     [Bindable(true)]
     [Category("Appearance")]
     public Brush MouseOverBorderBrush
@@ -147,7 +148,7 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         set => SetValue(PressedBorderBrushProperty, value);
     }
 
-    /// <summary>Gets or sets a value that represents the degree to which the corners of a <see cref="T:System.Windows.Controls.Border" /> are rounded.</summary>
+    /// <summary>Gets or sets a value that represents the degree to which the corners of a Border are rounded.</summary>
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);

@@ -11,5 +11,5 @@ public enum PickerType
     HSV = 0,
 
     /// <summary>The HSL.</summary>
-    HSL = 1
+    HSL = 1,
 }

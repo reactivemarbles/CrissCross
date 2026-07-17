@@ -7,7 +7,7 @@ using CrissCross.WPF.UI.Converters;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Inherited from the <see cref="System.Windows.Controls.Expander"/> control which can hide the collapsible content.</summary>
+/// <summary>Inherited from the Expander control which can hide the collapsible content.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(CardExpander), "CardExpander.bmp")]
 public class CardExpander : System.Windows.Controls.Expander
@@ -31,9 +31,7 @@ public class CardExpander : System.Windows.Controls.Expander
         nameof(ContentPadding),
         typeof(Thickness),
         typeof(CardExpander),
-        new FrameworkPropertyMetadata(
-            default(Thickness),
-            FrameworkPropertyMetadataOptions.AffectsParentMeasure));
+        new FrameworkPropertyMetadata(default(Thickness), FrameworkPropertyMetadataOptions.AffectsParentMeasure));
 
     /// <summary>Gets or sets displayed <see cref="IconElement"/>.</summary>
     [Bindable(true)]

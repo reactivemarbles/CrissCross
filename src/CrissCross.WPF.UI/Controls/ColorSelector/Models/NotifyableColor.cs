@@ -18,7 +18,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     private const double ColorChannelScale = byte.MaxValue;
 
     /// <summary>The scale used to convert normalized saturation, value, and lightness to percentages.</summary>
-    private const double PercentageScale = 100d;
+    private const double PercentageScale = 100D;
 
     /// <summary>Gets or sets a.</summary>
     /// <value>
@@ -193,7 +193,7 @@ public class NotifyableColor(IColorStateStorage colorStateStorage) : RxObject
     /// <param name="propertyName">The property name.</param>
     private void RaiseIfChanged(double currentValue, double oldValue, string propertyName)
     {
-        if (currentValue == oldValue)
+        if (DoubleComparison.AreClose(currentValue, oldValue))
         {
             return;
         }

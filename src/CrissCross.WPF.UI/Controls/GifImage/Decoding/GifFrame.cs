@@ -11,9 +11,7 @@ internal sealed class GifFrame : GifBlock
     internal const int ImageSeparator = 0x2C;
 
     /// <summary>Initializes a new instance of the <see cref="GifFrame"/> class.</summary>
-    private GifFrame()
-    {
-    }
+    private GifFrame() { }
 
     /// <summary>Gets the Descriptor value.</summary>
     public GifImageDescriptor? Descriptor { get; private set; }
@@ -55,7 +53,9 @@ internal sealed class GifFrame : GifBlock
         Descriptor = await GifImageDescriptor.ReadAsync(stream).ConfigureAwait(false);
         if (Descriptor.HasLocalColorTable)
         {
-            LocalColorTable = await GifHelpers.ReadColorTableAsync(stream, Descriptor.LocalColorTableSize).ConfigureAwait(false);
+            LocalColorTable = await GifHelpers
+                .ReadColorTableAsync(stream, Descriptor.LocalColorTableSize)
+                .ConfigureAwait(false);
         }
 
         ImageData = await GifImageData.ReadAsync(stream).ConfigureAwait(false);

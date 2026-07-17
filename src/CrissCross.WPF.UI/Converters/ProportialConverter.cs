@@ -24,11 +24,14 @@ internal sealed class ProportialConverter : IMultiValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values[PrimaryValueIndex] switch
-    {
-        double firstValue when values[AvailableSizeIndex] is double secondValue && values[ScaleFactorIndex] is double scaleFactor => firstValue * (secondValue / scaleFactor),
-        _ => 0
-    };
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
+        values[PrimaryValueIndex] switch
+        {
+            double firstValue
+                when values[AvailableSizeIndex] is double secondValue
+                    && values[ScaleFactorIndex] is double scaleFactor => firstValue * (secondValue / scaleFactor),
+            _ => 0,
+        };
 
     /// <summary>Provides the ConvertBack member.</summary>
     /// <param name="value">The value.</param>
@@ -36,5 +39,6 @@ internal sealed class ProportialConverter : IMultiValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [Binding.DoNothing];
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+        [Binding.DoNothing];
 }

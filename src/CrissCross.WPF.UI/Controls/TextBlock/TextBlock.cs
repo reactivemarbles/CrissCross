@@ -6,7 +6,7 @@ using CrissCross.WPF.UI.Extensions;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Extended <see cref="System.Windows.Controls.TextBlock"/> with additional parameters like <see cref="FontTypography"/>.</summary>
+/// <summary>Extended TextBlock with additional parameters like FontTypography.</summary>
 public class TextBlock : System.Windows.Controls.TextBlock
 {
     /// <summary>Property for <see cref="FontTypography"/>.</summary>

@@ -19,34 +19,40 @@ namespace CrissCross.Avalonia;
 public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation, IActivatableView
 {
     /// <summary>The navigate back is enabled property.</summary>
-    public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty =
-        AvaloniaProperty.Register<NavigationUserControl, bool?>(nameof(NavigateBackIsEnabled), defaultValue: true);
+    public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty = AvaloniaProperty.Register<
+        NavigationUserControl,
+        bool?
+    >(nameof(NavigateBackIsEnabled), defaultValue: true);
 
     /// <summary>The navigation frame property.</summary>
-    public static readonly StyledProperty<ViewModelRoutedViewHost?> NavigationFrameProperty =
-        AvaloniaProperty.Register<NavigationUserControl, ViewModelRoutedViewHost?>(nameof(NavigationFrame));
+    public static readonly StyledProperty<ViewModelRoutedViewHost?> NavigationFrameProperty = AvaloniaProperty.Register<
+        NavigationUserControl,
+        ViewModelRoutedViewHost?
+    >(nameof(NavigationFrame));
 
     /// <summary>Stores the navigation Host Name value.</summary>
     private string? _navigationHostName;
 
     /// <summary>Initializes static members of the <see cref="NavigationUserControl"/> class.</summary>
     static NavigationUserControl() =>
-        _ = NavigationFrameProperty.Changed.Subscribe(static (e) =>
-        {
-            if (e.Sender is not NavigationUserControl navigationWindow || e.NewValue.Value is not ViewModelRoutedViewHost host)
+        _ = NavigationFrameProperty.Changed.Subscribe(
+            static (e) =>
             {
-                return;
-            }
+                if (
+                    e.Sender is not NavigationUserControl navigationWindow
+                    || e.NewValue.Value is not ViewModelRoutedViewHost host)
+                {
+                    return;
+                }
 
-            navigationWindow.ConfigureNavigationHost(host, nameof(NavigationUserControl));
-        });
+                navigationWindow.ConfigureNavigationHost(host, nameof(NavigationUserControl));
+            });
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
-    public IObservable<bool?>? CanNavigateBack =>
-        NavigationFrame?.CanNavigateBackObservable;
+    public IObservable<bool?>? CanNavigateBack => NavigationFrame?.CanNavigateBackObservable;
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -86,7 +92,7 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
             HorizontalAlignment = HorizontalAlignment.Stretch,
             VerticalAlignment = VerticalAlignment.Stretch,
             HostName = hostName,
-            NavigateBackIsEnabled = navigateBackIsEnabled
+            NavigateBackIsEnabled = navigateBackIsEnabled,
         };
     }
 

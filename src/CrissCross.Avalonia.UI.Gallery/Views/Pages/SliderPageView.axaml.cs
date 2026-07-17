@@ -16,6 +16,7 @@ public partial class SliderPageView : ReactiveUserControl<SliderPageViewModel>
     public SliderPageView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<SliderPageViewModel>());
+        _ = this.WhenActivated(
+            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<SliderPageViewModel>());
     }
 }

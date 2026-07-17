@@ -14,5 +14,5 @@ public enum MessageBoxResult
     Primary,
 
     /// <summary>The secondary button was tapped by the user.</summary>
-    Secondary
+    Secondary,
 }

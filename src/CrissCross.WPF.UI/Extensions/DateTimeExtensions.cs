@@ -4,30 +4,32 @@
 
 namespace CrissCross.WPF.UI.Extensions;
 
-/// <summary>A collection of several extensions to the <see cref="DateTime"/> class.</summary>
+/// <summary>A collection of several extensions to the <see cref="DateTimeOffset"/> class.</summary>
 public static class DateTimeExtensions
 {
     /// <summary>Provides the number of microseconds in a millisecond.</summary>
     private const long MicrosecondsPerMillisecond = 1000;
 
     /// <summary>Provides the Unix epoch in coordinated universal time.</summary>
-    private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTimeOffset UnixEpoch = new(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
     /// <summary>Provides extension members.</summary>
     /// <param name="dateTime">The dateTime value.</param>
-    extension(DateTime dateTime)
+    extension(DateTimeOffset dateTime)
     {
-        /// <summary>Gets the number of seconds that have elapsed since the Unix epoch, excluding leap seconds. The Unix epoch is 00:00:00 UTC on 1 January 1970.</summary>
+        /// <summary>Gets the number of seconds that have elapsed since the Unix epoch, excluding leap seconds. The Unix
+        /// epoch is 00:00:00 UTC on 1 January 1970.</summary>
         /// <returns>A long.</returns>
-        public long GetTimestamp() =>
-            (long)dateTime.Subtract(UnixEpoch).TotalSeconds;
+        public long GetTimestamp() => (long)dateTime.Subtract(UnixEpoch).TotalSeconds;
 
-        /// <summary>Gets the number of milliseconds that have elapsed since the Unix epoch, excluding leap seconds. The Unix epoch is 00:00:00 UTC on 1 January 1970.</summary>
+        /// <summary>Gets the number of milliseconds that have elapsed since the Unix epoch, excluding leap seconds. The
+        /// Unix epoch is 00:00:00 UTC on 1 January 1970.</summary>
         /// <returns>A long.</returns>
         public long GetMillisTimestamp() => // Should be 10^-3
             (long)dateTime.Subtract(UnixEpoch).TotalMilliseconds;
 
-        /// <summary>Gets the number of microseconds that have elapsed since the Unix epoch, excluding leap seconds. The Unix epoch is 00:00:00 UTC on 1 January 1970.</summary>
+        /// <summary>Gets the number of microseconds that have elapsed since the Unix epoch, excluding leap seconds. The
+        /// Unix epoch is 00:00:00 UTC on 1 January 1970.</summary>
         /// <returns>
         /// A long.
         /// </returns>

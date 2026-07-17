@@ -4,7 +4,7 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a rich editing control which operates on System.Windows.Documents.FlowDocument objects.</summary>
+/// <summary>Represents the RichTextBox type.</summary>
 public class RichTextBox : System.Windows.Controls.RichTextBox
 {
     /// <summary>Property for <see cref="IsTextSelectionEnabledProperty"/>.</summary>

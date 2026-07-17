@@ -7,18 +7,18 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>InfoBadgeSeverity member.</summary>
 public enum InfoBadgeSeverity
 {
-    /// <summary>Communicates that the InfoBadge is displaying general information that requires the user's attention.</summary>
+    /// <summary>Indicates the InfoBadge is displaying general information that requires the user's attention.</summary>
     Attention = 0,
 
-    /// <summary>Communicates that the InfoBadge is displaying general information that requires the user's attention.</summary>
+    /// <summary>Indicates the InfoBadge is displaying general information that requires the user's attention.</summary>
     Informational = 1,
 
-    /// <summary>Communicates that the InfoBadge is displaying general information that requires the user's attention.</summary>
+    /// <summary>Indicates the InfoBadge is displaying general information that requires the user's attention.</summary>
     Success = 2,
 
-    /// <summary>Communicates that the InfoBadge is displaying general information that requires the user's attention.</summary>
+    /// <summary>Indicates the InfoBadge is displaying general information that requires the user's attention.</summary>
     Caution = 3,
 
-    /// <summary>Communicates that the InfoBadge is displaying general information that requires the user's attention.</summary>
-    Critical = 4
+    /// <summary>Indicates the InfoBadge is displaying general information that requires the user's attention.</summary>
+    Critical = 4,
 }

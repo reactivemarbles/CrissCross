@@ -13,8 +13,8 @@ namespace CrissCross.WPF.UI;
 public sealed class PageService(IServiceProvider serviceProvider) : IPageService
 {
     /// <inheritdoc />
-    public T? GetPage<T>()
-        where T : class => (T?)serviceProvider.GetService(CheckIsFrameworkElement(typeof(T)));
+    public T? GetPage<T>(PageNavigationRequest<T> request)
+        where T : class => (T?)serviceProvider.GetService(CheckIsFrameworkElement(request.PageType));
 
     /// <inheritdoc />
     public FrameworkElement? GetPage(Type pageType) =>

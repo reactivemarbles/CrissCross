@@ -4,7 +4,8 @@
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>An interface that returns a string representation of a provided value, using distinct format methods to format several data types.</summary>
+/// <summary>An interface that returns a string representation of a provided value, using distinct format methods to
+/// format several data types.</summary>
 public interface INumberFormatter
 {
     /// <summary>Returns a string representation of a <see cref="double" /> value.</summary>

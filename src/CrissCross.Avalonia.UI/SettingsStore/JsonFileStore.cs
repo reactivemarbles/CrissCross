@@ -9,8 +9,10 @@ using System.Text.Json.Serialization;
 namespace CrissCross.Avalonia.UI.Storage;
 
 /// <summary>An implementation of IStore that saves data to a JSON file.</summary>
-[System.Diagnostics.CodeAnalysis.RequiresDynamicCode("Arbitrary runtime value types require dynamic JSON serialization metadata.")]
-[System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode("Arbitrary runtime value types and assembly metadata may be removed by trimming.")]
+[System.Diagnostics.CodeAnalysis.RequiresDynamicCode(
+    "Arbitrary runtime value types require dynamic JSON serialization metadata.")]
+[System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
+    "Arbitrary runtime value types and assembly metadata may be removed by trimming.")]
 public class JsonFileStore : IStore
 {
     /// <summary>Name of the serialized type metadata property.</summary>
@@ -19,11 +21,9 @@ public class JsonFileStore : IStore
     /// <summary>Provides the SerializerOptions member.</summary>
     private static readonly JsonSerializerOptions SerializerOptions = CreateOptions();
 
-    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class. Creates a JsonFileStore that will store files in a per-user folder.</summary>
+    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class.</summary>
     public JsonFileStore()
-        : this(true)
-    {
-    }
+        : this(true) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonFileStore"/> class.
@@ -31,11 +31,13 @@ public class JsonFileStore : IStore
     /// </summary>
     /// <param name="perUser">Specified if a per-user or per-machine folder will be used for storing the data.</param>
     public JsonFileStore(bool perUser)
-        : this(ConstructPath(perUser ? Environment.SpecialFolder.ApplicationData : Environment.SpecialFolder.CommonApplicationData))
-    {
-    }
+        : this(
+            ConstructPath(
+                perUser
+                    ? Environment.SpecialFolder.ApplicationData
+                    : Environment.SpecialFolder.CommonApplicationData)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class. Creates a JsonFileStore that will store files in the specified folder.</summary>
+    /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class.</summary>
     /// <param name="storeFolderPath">The folder inside which the json files for tracked objects will be stored.</param>
     public JsonFileStore(string storeFolderPath)
     {
@@ -141,7 +143,9 @@ public class JsonFileStore : IStore
     /// <inheritdoc/>
     public IEnumerable<string> ListIds()
     {
-        return !Directory.Exists(FolderPath) ? [] : Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension).OfType<string>();
+        return !Directory.Exists(FolderPath)
+            ? []
+            : Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension).OfType<string>();
     }
 
     /// <inheritdoc/>
@@ -168,17 +172,20 @@ public class JsonFileStore : IStore
     /// <summary>Provides the DeserializeUnknown member.</summary>
     /// <param name="element">The element value.</param>
     /// <returns>The result.</returns>
-    private static object? DeserializeUnknown(JsonElement element) => element.ValueKind switch
-    {
-        JsonValueKind.String => element.GetString(),
-        JsonValueKind.Number => DeserializeNumber(element),
-        JsonValueKind.True => true,
-        JsonValueKind.False => false,
-        JsonValueKind.Null => null,
-        JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
-        JsonValueKind.Object => element.EnumerateObject().ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
-        _ => null
-    };
+    private static object? DeserializeUnknown(JsonElement element) =>
+        element.ValueKind switch
+        {
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => DeserializeNumber(element),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
+            JsonValueKind.Object => element
+                .EnumerateObject()
+                .ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
+            _ => null,
+        };
 
     /// <summary>Tries to read one stored entry from a JSON element.</summary>
     /// <param name="element">The source JSON element.</param>
@@ -301,13 +308,15 @@ public class JsonFileStore : IStore
         var entryAssembly = Assembly.GetEntryAssembly();
         if (entryAssembly is not null)
         {
-            var companyAttribute = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
+            var companyAttribute = (AssemblyCompanyAttribute?)
+                Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyCompanyAttribute));
             if (!string.IsNullOrEmpty(companyAttribute?.Company))
             {
                 companyPart = $"{companyAttribute.Company}{Path.DirectorySeparatorChar}";
             }
 
-            var titleAttribute = (AssemblyTitleAttribute?)Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
+            var titleAttribute = (AssemblyTitleAttribute?)
+                Attribute.GetCustomAttribute(entryAssembly, typeof(AssemblyTitleAttribute));
             if (!string.IsNullOrEmpty(titleAttribute?.Title))
             {
                 appNamePart = $"{titleAttribute.Title}{Path.DirectorySeparatorChar}";

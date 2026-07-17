@@ -6,7 +6,7 @@ using System.Windows.Controls.Primitives;
 
 namespace CrissCross.WPF.UI.Controls;
 
-/// <summary>Represents a control that creates a pop-up window that displays information for an element in the interface.</summary>
+/// <summary>Represents the Flyout type.</summary>
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
 public class Flyout : System.Windows.Controls.ContentControl
 {
@@ -127,8 +127,7 @@ public class Flyout : System.Windows.Controls.ContentControl
 
     /// <summary>Called when [popup opened].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    protected virtual void OnPopupOpened(EventArgs e) =>
-        RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
+    protected virtual void OnPopupOpened(EventArgs e) => RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
 
     /// <summary>Called when [popup closed].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

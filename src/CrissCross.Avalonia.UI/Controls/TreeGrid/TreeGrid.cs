@@ -12,23 +12,26 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class TreeGrid : TemplatedControl
 {
     /// <summary>Property for <see cref="Headers"/>.</summary>
-    public static readonly StyledProperty<ObservableCollection<object>> HeadersProperty = AvaloniaProperty.Register<TreeGrid, ObservableCollection<object>>(
-        nameof(Headers));
+    public static readonly StyledProperty<ObservableCollection<object>> HeadersProperty = AvaloniaProperty.Register<
+        TreeGrid,
+        ObservableCollection<object>
+    >(nameof(Headers));
 
-    /// <summary>Gets or sets content is the data used to generate the child elements of this control.</summary>
+    /// <summary>Initializes a new instance of the <see cref="TreeGrid"/> class.</summary>
+    public TreeGrid()
+    {
+        _ = SetValue(HeadersProperty, new ObservableCollection<object>());
+    }
+
+    /// <summary>Gets content used to generate the child elements of this control.</summary>
     public ObservableCollection<object> Headers
     {
         get => GetValue(HeadersProperty);
-        set => SetValue(HeadersProperty, value);
     }
 
     /// <summary>Called when [headers changed].</summary>
-    protected virtual void OnHeadersChanged()
-    {
-    }
+    protected virtual void OnHeadersChanged() { }
 
     /// <summary>Called when [content changed].</summary>
-    protected virtual void OnContentChanged()
-    {
-    }
+    protected virtual void OnContentChanged() { }
 }

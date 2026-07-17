@@ -4,7 +4,7 @@
 
 namespace CrissCross.Maui.UI.Controls;
 
-/// <summary>Represents a command-aware MAUI button that projects execution state, progress, and error content.</summary>
+/// <summary>Represents the CommandButton type.</summary>
 public class CommandButton : Button
 {
     /// <summary>Bindable property for <see cref="State"/>.</summary>

@@ -12,7 +12,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <param name="source">The source.</param>
 /// <param name="exception">The exception.</param>
 /// <param name="kind">The kind.</param>
-public class AnimationErrorEventArgs(object source, Exception exception, AnimationErrorKind kind) : RoutedEventArgs(AnimationBehavior.ErrorEvent, source)
+public class AnimationErrorEventArgs(object source, Exception exception, AnimationErrorKind kind)
+    : RoutedEventArgs(AnimationBehavior.ErrorEvent, source)
 {
     /// <summary>Gets the exception.</summary>
     /// <value>

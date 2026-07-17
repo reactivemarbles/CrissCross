@@ -18,7 +18,8 @@ internal static class NavigationViewActivator
         if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
         {
             throw new InvalidCastException(
-                $"PageType of the ${typeof(INavigationViewItem)} must be derived from {typeof(FrameworkElement)}. {pageType} is not.");
+                $"PageType of {typeof(INavigationViewItem)} must be derived from "
+                    + $"{typeof(FrameworkElement)}. {pageType} is not.");
         }
 
         if (DesignerHelper.IsInDesignMode)
@@ -27,8 +28,8 @@ internal static class NavigationViewActivator
             {
                 Content = new TextBlock
                 {
-                    Text = "Pages are not rendered while using the Designer. Edit the page template directly."
-                }
+                    Text = "Pages are not rendered while using the Designer. Edit the page template directly.",
+                },
             };
         }
 
@@ -53,8 +54,11 @@ internal static class NavigationViewActivator
             }
         }
 
-        var emptyConstructor = FindParameterlessConstructor(pageType) ?? throw new InvalidOperationException(
-                $"The {pageType} page does not have a parameterless constructor. If you are using {typeof(IPageService)} do not navigate initially and don't use Cache or Precache.");
+        var emptyConstructor =
+            FindParameterlessConstructor(pageType)
+            ?? throw new InvalidOperationException(
+                $"The {pageType} page does not have a parameterless constructor. If you are using "
+                    + $"{typeof(IPageService)}, do not navigate initially or use Cache or Precache.");
 
         instance = emptyConstructor.Invoke(null) as FrameworkElement;
         SetDataContext(instance, dataContext);
@@ -92,8 +96,13 @@ internal static class NavigationViewActivator
             return false;
         }
 
-        var selectedCtor = FitBestConstructor(pageConstructors, dataContext) ?? throw new InvalidOperationException(
-                $"The {pageType} page does not have a parameterless constructor or the required services have not been configured for dependency injection. Use the static {nameof(ControlsServices)} class to initialize the GUI library with your service provider. If you are using {typeof(IPageService)} do not navigate initially and don't use Cache or Precache.");
+        var selectedCtor =
+            FitBestConstructor(pageConstructors, dataContext)
+            ?? throw new InvalidOperationException(
+                $"The {pageType} page does not have a parameterless constructor, or the required services "
+                    + "have not been configured for dependency injection. Use the static "
+                    + $"{nameof(ControlsServices)} class to initialize the GUI library with your service provider. "
+                    + $"If you are using {typeof(IPageService)}, do not navigate initially or use Cache or Precache.");
 
         instance = InvokeElementConstructor(selectedCtor, dataContext);
         SetDataContext(instance, dataContext);
@@ -106,16 +115,16 @@ internal static class NavigationViewActivator
     /// <returns>The result.</returns>
     private static object? ResolveConstructorParameter(Type parameterType, object? dataContext)
     {
-        return dataContext is not null && dataContext.GetType() == parameterType ? dataContext : ControlsServices.ControlsServiceProvider?.GetService(parameterType);
+        return dataContext is not null && dataContext.GetType() == parameterType
+            ? dataContext
+            : ControlsServices.ControlsServiceProvider?.GetService(parameterType);
     }
 
     /// <summary>Picks a constructor which has the most satisfiable arguments count.</summary>
     /// <param name="parameterfullCtors">The parameterfullCtors value.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns>The result.</returns>
-    private static ConstructorInfo? FitBestConstructor(
-        ConstructorInfo[] parameterfullCtors,
-        object? dataContext)
+    private static ConstructorInfo? FitBestConstructor(ConstructorInfo[] parameterfullCtors, object? dataContext)
     {
         return parameterfullCtors
             .Select(ctor =>
@@ -143,8 +152,7 @@ internal static class NavigationViewActivator
     /// <returns>The result.</returns>
     private static FrameworkElement? InvokeElementConstructor(ConstructorInfo ctor, object? dataContext)
     {
-        var args = ctor.GetParameters()
-            .Select(prm => ResolveConstructorParameter(prm.ParameterType, dataContext));
+        var args = ctor.GetParameters().Select(prm => ResolveConstructorParameter(prm.ParameterType, dataContext));
 
         return ctor.Invoke(args.ToArray()) as FrameworkElement;
     }
@@ -166,7 +174,8 @@ internal static class NavigationViewActivator
     /// <summary>Provides the FindParameterlessConstructor member.</summary>
     /// <param name="pageType">The page type.</param>
     /// <returns>The result.</returns>
-    private static ConstructorInfo? FindParameterlessConstructor(Type? pageType) => pageType?.GetConstructor(Type.EmptyTypes);
+    private static ConstructorInfo? FindParameterlessConstructor(Type? pageType) =>
+        pageType?.GetConstructor(Type.EmptyTypes);
 
     /// <summary>Provides the SetDataContext member.</summary>
     /// <param name="element">The element value.</param>

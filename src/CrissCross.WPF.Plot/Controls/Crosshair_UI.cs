@@ -54,7 +54,77 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     [Reactive]
     private bool _useFixedNumberOfPoints;
 
-    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class, configuring crosshair display and marker behavior for the. specified plot with customizable appearance and scaling options.</summary>
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class, configuring crosshair display and
+    /// marker behavior for the. specified plot with customizable appearance and scaling options.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    public Crosshair_UI(WpfPlot plot, (string? Name, int Axis) data, string color)
+        : this(plot, data, color, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
+    public Crosshair_UI(WpfPlot plot, (string? Name, int Axis) data, string color, bool isXAxisDateTime)
+        : this(plot, data, color, isXAxisDateTime, true)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
+    /// <param name="coordinatesObs">The coordinatesObs value.</param>
+    public Crosshair_UI(
+        WpfPlot plot,
+        (string? Name, int Axis) data,
+        string color,
+        bool isXAxisDateTime,
+        IObservable<Coordinates>? coordinatesObs)
+        : this(plot, data, color, isXAxisDateTime, true, false, coordinatesObs)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    public Crosshair_UI(
+        WpfPlot plot,
+        (string? Name, int Axis) data,
+        string color,
+        bool isXAxisDateTime,
+        bool autoscale)
+        : this(plot, data, color, isXAxisDateTime, autoscale, false)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="isXAxisDateTime">The isXAxisDateTime value.</param>
+    /// <param name="autoscale">The autoscale value.</param>
+    /// <param name="manualscale">The manualscale value.</param>
+    public Crosshair_UI(
+        WpfPlot plot,
+        (string? Name, int Axis) data,
+        string color,
+        bool isXAxisDateTime,
+        bool autoscale,
+        bool manualscale)
+        : this(plot, data, color, isXAxisDateTime, autoscale, manualscale, null)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
     /// <param name="plot">The plot value.</param>
     /// <param name="data">The data value.</param>
     /// <param name="color">The color value.</param>
@@ -66,10 +136,10 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         WpfPlot plot,
         (string? Name, int Axis) data,
         string color,
-        bool isXAxisDateTime = false,
-        bool autoscale = true,
-        bool manualscale = false,
-        IObservable<Coordinates>? coordinatesObs = null)
+        bool isXAxisDateTime,
+        bool autoscale,
+        bool manualscale,
+        IObservable<Coordinates>? coordinatesObs)
     {
         ChartSettings = new(itemName: data.Name!, color: color);
         ManualScale = manualscale;
@@ -82,21 +152,25 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
 
         if (coordinatesObs is not null && !isXAxisDateTime)
         {
-            MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
-            {
-                ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{x.X:0.##}";
-                Plot?.Refresh();
-            }).DisposeWith(Disposables);
+            MouseCoordinatesObs = coordinatesObs
+                .Subscribe(x =>
+                {
+                    ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{x.X:0.##}";
+                    Plot?.Refresh();
+                })
+                .DisposeWith(Disposables);
             CreateCrosshair(color: color);
         }
         else if (coordinatesObs is not null && isXAxisDateTime)
         {
-            MouseCoordinatesObs = coordinatesObs.Subscribe(x =>
-            {
-                var xtext = DateTime.FromOADate(x.X).ToLongTimeString();
-                ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{xtext}";
-                Plot?.Refresh();
-            }).DisposeWith(Disposables);
+            MouseCoordinatesObs = coordinatesObs
+                .Subscribe(x =>
+                {
+                    var xtext = DateTime.FromOADate(x.X).ToLongTimeString();
+                    ChartSettings.MarkerText.LabelText = $"{x.Y:0.##}\n{xtext}";
+                    Plot?.Refresh();
+                })
+                .DisposeWith(Disposables);
             CreateCrosshair(color: color, DateTime.Now.ToOADate());
         }
         else
@@ -120,9 +194,14 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
     /// <remarks>The crosshair consists of horizontal and vertical lines that can be dragged by the user. Both
     /// lines display a label with a customizable background color. If an invalid color name is provided, the crosshair
     /// may not display as intended.</remarks>
-    /// <param name="color">The name of the color to use for the crosshair lines and labels. Must be a valid system color name.</param>
-    /// <param name="position">The horizontal position, in plot coordinates, where the crosshair is initially placed. Defaults to 0.0.</param>
-    public void CreateCrosshair(string color, double position = 0.0)
+    /// <param name="color">The name of the color to use for the crosshair lines and labels. Must be a valid system
+    /// color name.</param>
+    public void CreateCrosshair(string color) => CreateCrosshair(color, 0.0);
+
+    /// <summary>Adds a draggable crosshair to the plot at the specified position and color.</summary>
+    /// <param name="color">The name of the color to use for the crosshair lines and labels.</param>
+    /// <param name="position">The horizontal position, in plot coordinates.</param>
+    public void CreateCrosshair(string color, double position)
     {
         PlotLine = Plot.Plot.Add.Crosshair(position, 0);
         PlotLine.IsVisible = true;

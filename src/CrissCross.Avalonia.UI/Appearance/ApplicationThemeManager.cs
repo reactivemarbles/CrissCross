@@ -20,7 +20,7 @@ public static class ApplicationThemeManager
     /// <summary>Event triggered when the application's theme is changed.</summary>
     public static event EventHandler<ThemeChangedEventArgs>? Changed;
 
-    /// <summary>Gets a value that indicates whether the application is currently using the high contrast theme.</summary>
+    /// <summary>Gets the IsHighContrast value.</summary>
     /// <returns><see langword="true"/> if application uses high contrast theme.</returns>
     public static bool IsHighContrast => _cachedApplicationTheme == ApplicationTheme.HighContrast;
 
@@ -41,8 +41,12 @@ public static class ApplicationThemeManager
 
     /// <summary>Changes the current application theme.</summary>
     /// <param name="applicationTheme">Theme to set.</param>
-    /// <param name="accentColor">Optional accent color.</param>
-    public static void Apply(ApplicationTheme applicationTheme, Color? accentColor = null)
+    public static void Apply(ApplicationTheme applicationTheme) => Apply(applicationTheme, null);
+
+    /// <summary>Changes the current application theme.</summary>
+    /// <param name="applicationTheme">Theme to set.</param>
+    /// <param name="accentColor">Accent color, or <see langword="null"/> to retain the default.</param>
+    public static void Apply(ApplicationTheme applicationTheme, Color? accentColor)
     {
         if (applicationTheme == ApplicationTheme.Unknown)
         {
@@ -63,7 +67,7 @@ public static class ApplicationThemeManager
             {
                 ApplicationTheme.Dark => ThemeVariant.Dark,
                 ApplicationTheme.Light => ThemeVariant.Light,
-                _ => ThemeVariant.Default
+                _ => ThemeVariant.Default,
             };
         }
 
@@ -78,8 +82,9 @@ public static class ApplicationThemeManager
         var themeToSet = systemTheme switch
         {
             SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow => ApplicationTheme.Dark,
-            SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite => ApplicationTheme.HighContrast,
-            _ => ApplicationTheme.Light
+            SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite =>
+                ApplicationTheme.HighContrast,
+            _ => ApplicationTheme.Light,
         };
 
         Apply(themeToSet);
@@ -96,8 +101,12 @@ public static class ApplicationThemeManager
         {
             ApplicationTheme.Dark => sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow,
             ApplicationTheme.Light => sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise,
-            ApplicationTheme.HighContrast => sysTheme is SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite,
-            _ => false
+            ApplicationTheme.HighContrast => sysTheme
+                is SystemTheme.HC1
+                    or SystemTheme.HC2
+                    or SystemTheme.HCBlack
+                    or SystemTheme.HCWhite,
+            _ => false,
         };
     }
 
@@ -127,8 +136,6 @@ public static class ApplicationThemeManager
         }
 
         var actualTheme = Application.Current.ActualThemeVariant;
-        _cachedApplicationTheme = actualTheme == ThemeVariant.Dark
-            ? ApplicationTheme.Dark
-            : ApplicationTheme.Light;
+        _cachedApplicationTheme = actualTheme == ThemeVariant.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
     }
 }

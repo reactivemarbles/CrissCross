@@ -205,7 +205,7 @@ public partial class NavigationView
     /// <summary>Stores the _footerMenuItems value.</summary>
     private ObservableCollection<object>? _footerMenuItems;
 
-    /// <summary>Gets or sets a value indicating whether enables or disables debugging messages for this control.</summary>
+    /// <summary>Gets or sets whether enables or disables debugging messages for this control.</summary>
     public bool EnableDebugMessages
     {
         get => (bool)GetValue(EnableDebugMessagesProperty);
@@ -539,8 +539,8 @@ public partial class NavigationView
         navigationView.CloseNavigationViewItemMenus();
 
         navigationView.TitleBar?.SetCurrentValue(
-                MarginProperty,
-                navigationView.IsPaneOpen ? titleBarPaneOpenMargin : titleBarPaneCompactMargin);
+            MarginProperty,
+            navigationView.IsPaneOpen ? titleBarPaneOpenMargin : titleBarPaneCompactMargin);
 
         UpdateVisualState(navigationView);
     }
@@ -587,7 +587,9 @@ public partial class NavigationView
     /// <summary>Provides the OnAutoSuggestBoxPropertyChangedCallback member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static void OnAutoSuggestBoxPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnAutoSuggestBoxPropertyChangedCallback(
+        DependencyObject d,
+        DependencyPropertyChangedEventArgs e)
     {
         if (d is not NavigationView navigationView)
         {
@@ -610,7 +612,9 @@ public partial class NavigationView
         autoSuggestBox.SuggestionChosen += navigationView.AutoSuggestBoxOnSuggestionChosen;
         autoSuggestBox.QuerySubmitted += navigationView.AutoSuggestBoxOnQuerySubmitted;
 
-        if (navigationView.TitleBar?.Margin != titleBarPaneOpenMargin || autoSuggestBox.Margin is not { Bottom: 0, Left: 0, Right: 0, Top: 0 })
+        if (
+            navigationView.TitleBar?.Margin != titleBarPaneOpenMargin
+            || autoSuggestBox.Margin is not { Bottom: 0, Left: 0, Right: 0, Top: 0 })
         {
             return;
         }

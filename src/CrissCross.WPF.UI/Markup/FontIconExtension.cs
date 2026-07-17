@@ -32,9 +32,7 @@ namespace CrissCross.WPF.UI.Markup;
 public class FontIconExtension : MarkupExtension
 {
     /// <summary>Initializes a new instance of the <see cref="FontIconExtension"/> class.</summary>
-    public FontIconExtension()
-    {
-    }
+    public FontIconExtension() { }
 
     /// <summary>Initializes a new instance of the <see cref="FontIconExtension"/> class.</summary>
     /// <param name="glyph">The glyph.</param>
@@ -60,8 +58,10 @@ public class FontIconExtension : MarkupExtension
     /// </value>
     public double FontSize { get; set; }
 
-    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target property for this markup extension.</summary>
-    /// <param name="serviceProvider">A service provider helper that can provide services for the markup extension.</param>
+    /// <summary>When implemented in a derived class, returns an object that is provided as the value of the target
+    /// property for this markup extension.</summary>
+    /// <param name="serviceProvider">A service provider helper that can provide services for the markup
+    /// extension.</param>
     /// <returns>
     /// The object value to set on the property where the extension is applied.
     /// </returns>

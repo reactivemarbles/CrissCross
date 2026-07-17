@@ -24,7 +24,7 @@ public class DockToTextAlignmentConverter : IValueConverter
                 Dock.Left => TextAlignment.Left,
                 Dock.Right => TextAlignment.Right,
                 Dock.Top or Dock.Bottom => TextAlignment.Center,
-                _ => TextAlignment.Left
+                _ => TextAlignment.Left,
             }
             : TextAlignment.Left;
     }
@@ -42,7 +42,7 @@ public class DockToTextAlignmentConverter : IValueConverter
             {
                 TextAlignment.Left => Dock.Left,
                 TextAlignment.Right => Dock.Right,
-                _ => Dock.Left
+                _ => Dock.Left,
             }
             : Dock.Left;
     }

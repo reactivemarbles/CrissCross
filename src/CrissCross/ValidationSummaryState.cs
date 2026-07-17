@@ -53,7 +53,8 @@ public sealed class ValidationSummaryState
     public bool IsValid => !HasErrors && !IsPending;
 
     /// <summary>Gets the first blocking error, if one exists.</summary>
-    public ValidationMessage? FirstError => Messages.FirstOrDefault(message => message.Severity == ValidationSeverity.Error);
+    public ValidationMessage? FirstError =>
+        Messages.FirstOrDefault(message => message.Severity == ValidationSeverity.Error);
 
     /// <summary>Gets a compact summary string suitable for validation summary headers.</summary>
     public string SummaryText

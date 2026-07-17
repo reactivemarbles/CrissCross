@@ -11,7 +11,8 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace CrissCross.WPF.UI.Interop;
 
-/// <summary>The Windows UI provides users with access to a wide variety of objects necessary to run applications and manage the operating system.</summary>
+/// <summary>The Windows UI provides users with access to a wide variety of objects necessary to run applications and
+/// manage the operating system.</summary>
 // ReSharper disable IdentifierTypo
 // ReSharper disable InconsistentNaming
 internal static class Shell32
@@ -63,16 +64,20 @@ internal static class Shell32
         /// <summary>The size of this structure, in bytes.</summary>
         public int cbSize = Marshal.SizeOf(typeof(NOTIFYICONDATA));
 
-        /// <summary>A handle to the window that receives notifications associated with an icon in the notification area.</summary>
+        /// <summary>A handle to the window that receives notifications associated with an icon in the notification
+        /// area.</summary>
         public IntPtr hWnd;
 
         /// <summary>
-        /// The application-defined identifier of the taskbar icon. The Shell uses either (hWnd plus uID) or guidItem to identify which icon to operate on when Shell_NotifyIcon is invoked.
-        /// You can have multiple icons associated with a single hWnd by assigning each a different uID. If guidItem is specified, uID is ignored.
+        /// The application-defined identifier of the taskbar icon. The Shell uses either (hWnd plus uID) or guidItem to
+        /// identify which icon to operate on when Shell_NotifyIcon is invoked.
+        /// You can have multiple icons associated with a single hWnd by assigning each a different uID. If guidItem is
+        /// specified, uID is ignored.
         /// </summary>
         public int uID;
 
-        /// <summary>Flags that either indicate which of the other members of the structure contain valid data or provide additional information to the tooltip as to how it should display.</summary>
+        /// <summary>Flags that either indicate which of the other members of the structure contain valid data or
+        /// provide additional information to the tooltip as to how it should display.</summary>
         public NIF uFlags;
 
         /// <summary>0x00000001. The uCallbackMessage member is valid.</summary>
@@ -97,7 +102,8 @@ internal static class Shell32
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x100)] // 256
         public string szInfo = string.Empty;
 
-        /// <summary>Prior to Vista this was a union of uTimeout and uVersion.  As of Vista, uTimeout has been deprecated.</summary>
+        /// <summary>Prior to Vista this was a union of uTimeout and uVersion. As of Vista, uTimeout has been
+        /// deprecated.</summary>
         public uint uVersion; // Used with Shell_NotifyIcon flag NIM_SETVERSION.
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x40)] // 64
@@ -117,8 +123,7 @@ internal static class Shell32
         System.Runtime.InteropServices.ComTypes.IDataObject pdtobj,
         DOGIF dwFlags,
         [In] ref Guid riid,
-        [Out, MarshalAs(UnmanagedType.Interface)] out object ppv
-    );
+        [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
 
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.Shell32)]
@@ -126,8 +131,7 @@ internal static class Shell32
         [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
         IBindCtx pbc,
         [In] ref Guid riid,
-        [Out, MarshalAs(UnmanagedType.Interface)] out object ppv
-    );
+        [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
 
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.Shell32)]
@@ -139,14 +143,13 @@ internal static class Shell32
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.Shell32, PreserveSig = false)]
     public static extern void SetCurrentProcessExplicitAppUserModelID(
-        [MarshalAs(UnmanagedType.LPWStr)] string AppID
-    );
+        [MarshalAs(UnmanagedType.LPWStr)] string AppID);
 
-    /// <summary>Retrieves the User Model AppID that has been explicitly set for the current process via SetCurrentProcessExplicitAppUserModelID</summary>
+    /// <summary>Retrieves the User Model AppID that has been explicitly set for the current process via
+    /// SetCurrentProcessExplicitAppUserModelID</summary>
     /// <param name="AppID"></param>
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [DllImport(Libraries.Shell32)]
     public static extern int GetCurrentProcessExplicitAppUserModelID(
-        [Out, MarshalAs(UnmanagedType.LPWStr)] out string AppID
-    );
+        [Out, MarshalAs(UnmanagedType.LPWStr)] out string AppID);
 }

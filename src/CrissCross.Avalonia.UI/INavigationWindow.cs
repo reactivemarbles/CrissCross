@@ -19,12 +19,12 @@ public interface INavigationWindow
     /// <returns>Instance of the <see cref="INavigationView"/> control.</returns>
     INavigationView GetNavigation();
 
-    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with <see cref="IPageService"/>.</summary>
+    /// <summary>Lets you navigate to the selected page based on it's type. Should be used with IPageService.</summary>
     /// <param name="pageType">The page type.</param>
     /// <returns><see langword="true"/> if the operation succeeds. <see langword="false"/> otherwise.</returns>
     bool Navigate(Type pageType);
 
-    /// <summary>Lets you attach the service provider that delivers page instances to <see cref="INavigationView"/>.</summary>
+    /// <summary>Lets you attach the service provider that delivers page instances to INavigationView.</summary>
     /// <param name="serviceProvider">The service provider.</param>
     void SetServiceProvider(IServiceProvider serviceProvider);
 

@@ -16,7 +16,7 @@ public class BoolToVisibilityConverter : IValueConverter
     /// <param name="culture">The culture.</param>
     /// <returns>An object.</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-                (bool)value ? Visibility.Visible : Visibility.Collapsed;
+        (bool)value ? Visibility.Visible : Visibility.Collapsed;
 
     /// <summary>Converts the back.</summary>
     /// <param name="value">The value.</param>

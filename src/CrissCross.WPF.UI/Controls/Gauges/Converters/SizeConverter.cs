@@ -15,12 +15,13 @@ public class SizeConverter : IValueConverter
     /// <param name="parameter">The converter parameter to use.</param>
     /// <param name="culture">The culture to use in the converter.</param>
     /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => parameter?.ToString() switch
-    {
-        "Height" => ((Size)value).Height,
-        "Width" => ((Size)value).Width,
-        _ => (object)0,
-    };
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+        parameter?.ToString() switch
+        {
+            "Height" => ((Size)value).Height,
+            "Width" => ((Size)value).Width,
+            _ => (object)0,
+        };
 
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value that is produced by the binding target.</param>

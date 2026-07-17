@@ -131,7 +131,7 @@ public class MessageBox : System.Windows.Window
         };
     }
 
-    /// <summary>Gets or sets a value indicating whether to show the <see cref="System.Windows.Window.Title"/> in <see cref="TitleBar"/>.</summary>
+    /// <summary>Gets or sets whether to show the Title in TitleBar.</summary>
     public bool ShowTitle
     {
         get => (bool)GetValue(ShowTitleProperty);
@@ -201,14 +201,14 @@ public class MessageBox : System.Windows.Window
         set => SetValue(CloseButtonAppearanceProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the <see cref="MessageBox"/> primary button is enabled.</summary>
+    /// <summary>Gets or sets whether the MessageBox primary button is enabled.</summary>
     public bool IsSecondaryButtonEnabled
     {
         get => (bool)GetValue(IsSecondaryButtonEnabledProperty);
         set => SetValue(IsSecondaryButtonEnabledProperty, value);
     }
 
-    /// <summary>Gets or sets a value indicating whether the <see cref="MessageBox"/> secondary button is enabled.</summary>
+    /// <summary>Gets or sets whether the MessageBox secondary button is enabled.</summary>
     public bool IsPrimaryButtonEnabled
     {
         get => (bool)GetValue(IsPrimaryButtonEnabledProperty);
@@ -224,32 +224,40 @@ public class MessageBox : System.Windows.Window
     /// </value>
     protected TaskCompletionSource<MessageBoxResult>? Tcs { get; set; }
 
-    /// <summary>Shows this instance.</summary>
-    /// <exception cref="InvalidOperationException">$"Use {nameof(ShowDialogAsync)} instead.</exception>
-    [Obsolete($"Use {nameof(ShowDialogAsync)} instead")]
+    /// <summary>Prevents bypassing the asynchronous message-box workflow.</summary>
+    /// <exception cref="InvalidOperationException">Use <see cref="ShowDialogAsync(bool, CancellationToken)" />
+    /// instead.</exception>
     public new void Show() => throw new InvalidOperationException($"Use {nameof(ShowDialogAsync)} instead");
 
-    /// <summary>Shows the dialog.</summary>
-    /// <returns>A bool.</returns>
-    /// <exception cref="InvalidOperationException">$"Use {nameof(ShowDialogAsync)} instead.</exception>
-    [Obsolete($"Use {nameof(ShowDialogAsync)} instead")]
+    /// <summary>Prevents bypassing the asynchronous message-box workflow.</summary>
+    /// <returns>This method does not return.</returns>
+    /// <exception cref="InvalidOperationException">Use <see cref="ShowDialogAsync(bool, CancellationToken)" />
+    /// instead.</exception>
     public new bool? ShowDialog() => throw new InvalidOperationException($"Use {nameof(ShowDialogAsync)} instead");
 
-    /// <summary>Closes this instance.</summary>
-    /// <exception cref="InvalidOperationException">$"Use {nameof(Close)} with MessageBoxResult instead.</exception>
-    [Obsolete($"Use {nameof(Close)} with MessageBoxResult instead")]
-    public new void Close() => throw new InvalidOperationException($"Use {nameof(Close)} with MessageBoxResult instead");
+    /// <summary>Prevents closing the message box without a result.</summary>
+    /// <exception cref="InvalidOperationException">Close through the message-box result workflow instead.</exception>
+    public new void Close() =>
+        throw new InvalidOperationException($"Use {nameof(Close)} with MessageBoxResult instead");
 
     /// <summary>Displays a message box.</summary>
     /// <exception cref="TaskCanceledException">Thrown if the operation is canceled.</exception>
-    /// <param name="showAsDialog">if set to <c>true</c> [show as dialog].</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///   <see cref="MessageBoxResult" />.
     /// </returns>
-    public async Task<MessageBoxResult> ShowDialogAsync(
-        bool showAsDialog = true,
-        CancellationToken cancellationToken = default)
+    public Task<MessageBoxResult> ShowDialogAsync() => ShowDialogAsync(true, CancellationToken.None);
+
+    /// <summary>Shows the message box asynchronously.</summary>
+    /// <param name="showAsDialog">Whether to show a modal dialog.</param>
+    /// <returns>The selected result.</returns>
+    public Task<MessageBoxResult> ShowDialogAsync(bool showAsDialog) =>
+        ShowDialogAsync(showAsDialog, CancellationToken.None);
+
+    /// <summary>Shows the message box asynchronously.</summary>
+    /// <param name="showAsDialog">Whether to show a modal dialog.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The selected result.</returns>
+    public async Task<MessageBoxResult> ShowDialogAsync(bool showAsDialog, CancellationToken cancellationToken)
     {
         Tcs = new();
         var tokenRegistration = cancellationToken.Register(
@@ -291,26 +299,24 @@ public class MessageBox : System.Windows.Window
         switch (WindowStartupLocation)
         {
             case WindowStartupLocation.Manual or WindowStartupLocation.CenterScreen:
-                {
-                    CenterWindowOnScreen();
-                    break;
-                }
+            {
+                CenterWindowOnScreen();
+                break;
+            }
 
             case WindowStartupLocation.CenterOwner:
+            {
+                if (!CanCenterOverWPFOwner() || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
                 {
-                    if (
-                                    !CanCenterOverWPFOwner()
-                                    || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
-                    {
-                        CenterWindowOnScreen();
-                    }
-                    else
-                    {
-                        CenterWindowOnOwner();
-                    }
-
-                    break;
+                    CenterWindowOnScreen();
                 }
+                else
+                {
+                    CenterWindowOnOwner();
+                }
+
+                break;
+            }
 
             default:
                 throw new InvalidOperationException();
@@ -339,7 +345,8 @@ public class MessageBox : System.Windows.Window
     }
 
     /// <summary>Raises the <see cref="E:Closing" /> event.</summary>
-    /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
+    /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event
+    /// data.</param>
     protected override void OnClosing(CancelEventArgs e)
     {
         base.OnClosing(e);
@@ -370,7 +377,7 @@ public class MessageBox : System.Windows.Window
         {
             MessageBoxButton.Primary => MessageBoxResult.Primary,
             MessageBoxButton.Secondary => MessageBoxResult.Secondary,
-            _ => MessageBoxResult.None
+            _ => MessageBoxResult.None,
         };
 
         _ = Tcs?.TrySetResult(result);
@@ -382,12 +389,15 @@ public class MessageBox : System.Windows.Window
     /// <summary>Provides the CanCenterOverWPFOwnerAccessor member.</summary>
     /// <param name="w">The w value.</param>
     /// <returns>The result.</returns>
-    [System.Runtime.CompilerServices.UnsafeAccessor(System.Runtime.CompilerServices.UnsafeAccessorKind.Method, Name = "get_CanCenterOverWPFOwner")]
+    [System.Runtime.CompilerServices.UnsafeAccessor(
+        System.Runtime.CompilerServices.UnsafeAccessorKind.Method,
+        Name = "get_CanCenterOverWPFOwner")]
     private static extern bool CanCenterOverWPFOwnerAccessor(System.Windows.Window w);
 #endif
 
     /// <summary>
-    /// CanCenterOverWPFOwner property see https://source.dot.net/#PresentationFramework/System/Windows/Window.cs,e679e433777b21b8.
+    /// CanCenterOverWPFOwner property see
+    /// https://source.dot.net/#PresentationFramework/System/Windows/Window.cs,e679e433777b21b8.
     /// </summary>
     /// <returns><c>true</c> when the window can center over the WPF owner; otherwise, <c>false</c>.</returns>
     private bool CanCenterOverWPFOwner() =>

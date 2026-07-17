@@ -18,7 +18,8 @@ public class BrowserViewModel : RxObject
         {
             GotoMain = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateToView<MainViewModel>("mainWindow"));
 
-            GotoFirst = ReactiveCommand.Create(() => MainWindow.Navigation?.NavigateToView<FirstViewModel>("mainWindow"));
+            GotoFirst = ReactiveCommand.Create(() =>
+                MainWindow.Navigation?.NavigateToView<FirstViewModel>("mainWindow"));
             WebUrl = "https://www.aicsolutions.com";
         });
 
@@ -26,8 +27,11 @@ public class BrowserViewModel : RxObject
     /// <value>
     /// The web URL.
     /// </value>
-    public string WebUrl { get => field; set => this.RaiseAndSetIfChanged(ref field, value); }
-= string.Empty;
+    public string WebUrl
+    {
+        get => field;
+        set => this.RaiseAndSetIfChanged(ref field, value);
+    } = string.Empty;
 
     /// <summary>Gets the goto main.</summary>
     /// <value>

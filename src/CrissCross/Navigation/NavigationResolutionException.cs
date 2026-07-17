@@ -46,13 +46,20 @@ public sealed class NavigationResolutionException : InvalidOperationException
     /// <param name="sourceKey">The caller-facing source key.</param>
     /// <param name="contract">The requested navigation contract.</param>
     /// <param name="knownContracts">The contracts known for the source key.</param>
-    public NavigationResolutionException(NavigationSourceKind sourceKind, Type sourceKey, string? contract, IEnumerable<string?> knownContracts)
-        : base($"No {sourceKind} navigation registration exists for '{sourceKey?.FullName}' with contract '{NavigationContract.ToDisplay(contract)}'.")
+    public NavigationResolutionException(
+        NavigationSourceKind sourceKind,
+        Type sourceKey,
+        string? contract,
+        IEnumerable<string?> knownContracts)
+        : base(
+            $"No {sourceKind} navigation registration exists for '{sourceKey?.FullName}' "
+                + $"with contract '{NavigationContract.ToDisplay(contract)}'.")
     {
         SourceKind = sourceKind;
         SourceKey = sourceKey ?? throw new ArgumentNullException(nameof(sourceKey));
         Contract = NavigationContract.Normalize(contract);
-        KnownContracts = new ReadOnlyCollection<string?>(knownContracts.Select(NavigationContract.Normalize).Distinct(StringComparer.Ordinal).ToArray());
+        KnownContracts = new ReadOnlyCollection<string?>(
+            knownContracts.Select(NavigationContract.Normalize).Distinct(StringComparer.Ordinal).ToArray());
     }
 
     /// <summary>Gets the source side used for lookup.</summary>

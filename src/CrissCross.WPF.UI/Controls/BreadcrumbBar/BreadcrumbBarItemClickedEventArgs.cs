@@ -13,8 +13,8 @@ namespace CrissCross.WPF.UI.Controls;
 /// <param name="source">The source.</param>
 /// <param name="item">The item.</param>
 /// <param name="index">The index.</param>
-public sealed class BreadcrumbBarItemClickedEventArgs(RoutedEvent routedEvent, object source, object item, int index) :
-    RoutedEventArgs(routedEvent, source)
+public sealed class BreadcrumbBarItemClickedEventArgs(RoutedEvent routedEvent, object source, object item, int index)
+    : RoutedEventArgs(routedEvent, source)
 {
     /// <summary>Gets the Content property value of the BreadcrumbBarItem that is clicked.</summary>
     public object Item { get; } = item;

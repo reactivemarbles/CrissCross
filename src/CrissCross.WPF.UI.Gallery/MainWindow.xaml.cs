@@ -21,17 +21,35 @@ public partial class MainWindow : IAmBuilt
         typeof(MainWindow),
         new PropertyMetadata(null));
 
+    /// <summary>Tracks whether activation setup has been completed.</summary>
+    private bool _activationConfigured;
+
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
-        // Watch for system theme changes
-        SystemThemeWatcher.Watch(this);
         InitializeComponent();
         Navigation = NavBreadcrumb;
 
         // Set the data context
         ViewModel = new();
         DataContext = ViewModel;
+    }
+
+    /// <summary>Gets the nav breadcrumb.</summary>
+    /// <value>The nav breadcrumb.</value>
+    public static BreadcrumbBar? Navigation { get; private set; }
+
+    /// <inheritdoc/>
+    protected override void OnContentRendered(EventArgs e)
+    {
+        base.OnContentRendered(e);
+        if (_activationConfigured)
+        {
+            return;
+        }
+
+        _activationConfigured = true;
+        SystemThemeWatcher.Watch(this);
         _ = this.WhenActivated(d =>
         {
             // Set the tracker
@@ -46,16 +64,14 @@ public partial class MainWindow : IAmBuilt
             NavBreadcrumb.SetupNavigation(nameof(mainWindow));
 
             // Navigate to the main view
-            NavBreadcrumb.NavigateTo<MainViewModel>(breadcrumbItemContent: "Main");
+            NavBreadcrumb.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "Main");
         });
-
-        // Dispose the view model on close
-        Closing += (s, e) => ViewModel.Dispose();
     }
 
-    /// <summary>Gets the nav breadcrumb.</summary>
-    /// <value>
-    /// The nav breadcrumb.
-    /// </value>
-    public static BreadcrumbBar? Navigation { get; private set; }
+    /// <inheritdoc/>
+    protected override void OnClosed(EventArgs e)
+    {
+        ViewModel?.Dispose();
+        base.OnClosed(e);
+    }
 }

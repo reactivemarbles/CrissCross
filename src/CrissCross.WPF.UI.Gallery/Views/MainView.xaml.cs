@@ -13,11 +13,28 @@ namespace CrissCross.WPF.UI.Gallery.Views;
 [IViewFor<MainViewModel>]
 public partial class MainView
 {
+    /// <summary>Tracks whether reactive bindings have been configured.</summary>
+    private bool _bindingsConfigured;
+
     /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
     public MainView()
     {
         InitializeComponent();
         ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
+        Loaded += OnLoaded;
+    }
+
+    /// <summary>Configures reactive bindings after construction has completed.</summary>
+    /// <param name="sender">The loaded view.</param>
+    /// <param name="e">The routed event data.</param>
+    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (_bindingsConfigured)
+        {
+            return;
+        }
+
+        _bindingsConfigured = true;
         _ = this.WhenActivated(d =>
         {
             // Bind the view model

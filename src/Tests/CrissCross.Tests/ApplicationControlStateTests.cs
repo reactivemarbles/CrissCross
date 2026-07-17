@@ -9,6 +9,30 @@ namespace CrissCross.Tests;
 /// <summary>Tests for platform-neutral application control state models shared by UI stacks.</summary>
 public class ApplicationControlStateTests
 {
+    /// <summary>Provides the shared status field key.</summary>
+    private const string StatusFieldKey = "status";
+
+    /// <summary>Provides the closed display label.</summary>
+    private const string ClosedLabel = "Closed";
+
+    /// <summary>Provides the email field key.</summary>
+    private const string EmailFieldKey = "email";
+
+    /// <summary>Provides the created sort key.</summary>
+    private const string CreatedSortKey = "created";
+
+    /// <summary>Provides the setup step key.</summary>
+    private const string SetupStepKey = "setup";
+
+    /// <summary>Provides the mapping step key.</summary>
+    private const string MappingStepKey = "mapping";
+
+    /// <summary>Provides the manual choice label.</summary>
+    private const string ManualLabel = "Manual";
+
+    /// <summary>Provides the connection category name.</summary>
+    private const string ConnectionCategory = "Connection";
+
     /// <summary>Provides the determinate progress value.</summary>
     private const double DeterminateProgress = 0.42;
 
@@ -97,7 +121,7 @@ public class ApplicationControlStateTests
         await Assert.That(status.HasError).IsFalse();
     }
 
-    /// <summary>Provides the CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task CommandButtonStatus_Failed_ExposesErrorAndStaysInteractiveWhenCommandCanExecute()
@@ -143,18 +167,24 @@ public class ApplicationControlStateTests
         await Assert.That(model.Variant).IsEqualTo(EmptyStateVariant.NoResults);
     }
 
-    /// <summary>Provides the SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SearchQueryState_WithTextAndFilters_ExposesNormalizedQueryAndActiveFilterCount()
     {
         var filters = new[]
         {
-            new FilterToken("status", FilterOperator.Equals, "open", "Status: Open"),
-            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, PriorityFilterThreshold, "Priority >= 2")
+            new FilterToken(StatusFieldKey, FilterOperator.Equals, "open", "Status: Open"),
+            new FilterToken("priority", FilterOperator.GreaterThanOrEqual, PriorityFilterThreshold, "Priority >= 2"),
         };
 
-        var state = new SearchQueryState("  pump fault  ", "pump", "pump fault", isSearching: true, resultCount: 12, filters: filters);
+        var state = new SearchQueryState(
+            "  pump fault  ",
+            "pump",
+            "pump fault",
+            isSearching: true,
+            resultCount: 12,
+            filters: filters);
 
         await Assert.That(state.NormalizedText).IsEqualTo("pump fault");
         await Assert.That(state.HasQuery).IsTrue();
@@ -168,7 +198,7 @@ public class ApplicationControlStateTests
     [Test]
     public async Task FilterToken_RemovableToken_UsesDisplayTextAndStableKey()
     {
-        var token = new FilterToken("area", FilterOperator.Contains, "north", "Area contains north", isRemovable: true);
+        var token = new FilterToken("area", FilterOperator.Contains, "north", "Area contains north");
 
         await Assert.That(token.Key).IsEqualTo("area:Contains:north");
         await Assert.That(token.DisplayText).IsEqualTo("Area contains north");
@@ -184,11 +214,13 @@ public class ApplicationControlStateTests
         var chip = new ChipModel(
             "status-open",
             "Open",
-            isSelected: true,
-            isRemovable: true,
-            isEnabled: true,
-            icon: "StatusGlyph",
-            removeCommand: removeCommand);
+            new ChipModelOptions
+            {
+                IsSelected = true,
+                IsRemovable = true,
+                Icon = "StatusGlyph",
+                RemoveCommand = removeCommand,
+            });
 
         await Assert.That(chip.Key).IsEqualTo("status-open");
         await Assert.That(chip.HasIcon).IsTrue();
@@ -203,9 +235,9 @@ public class ApplicationControlStateTests
     {
         var chips = new[]
         {
-            new ChipModel("open", "Open", isSelected: true, isRemovable: true),
-            new ChipModel("closed", "Closed", isSelected: false, isRemovable: true),
-            new ChipModel("locked", "Locked", isSelected: true, isRemovable: false, isEnabled: false)
+            new ChipModel("open", "Open", new ChipModelOptions { IsSelected = true, IsRemovable = true }),
+            new ChipModel("closed", ClosedLabel, new ChipModelOptions { IsRemovable = true }),
+            new ChipModel("locked", "Locked", new ChipModelOptions { IsSelected = true, IsEnabled = false }),
         };
 
         var group = new ChipGroupState(chips, ChipGroupSelectionMode.Multiple);
@@ -217,7 +249,7 @@ public class ApplicationControlStateTests
         await Assert.That(group.GetChip("open")?.Text).IsEqualTo("Open");
     }
 
-    /// <summary>Provides the SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task SegmentedSelectionState_SingleSelection_ExposesSelectedItemAndEnabledItems()
@@ -225,8 +257,8 @@ public class ApplicationControlStateTests
         var items = new[]
         {
             new SegmentItem("list", "List", isEnabled: true, icon: "ListGlyph"),
-            new SegmentItem("grid", "Grid", isEnabled: true),
-            new SegmentItem("map", "Map", isEnabled: false)
+            new SegmentItem("grid", "Grid"),
+            new SegmentItem("map", "Map", isEnabled: false),
         };
 
         var state = new SegmentedSelectionState(items, "grid");
@@ -244,7 +276,7 @@ public class ApplicationControlStateTests
     {
         var action = new TestCommand();
         var message = new ValidationMessage(
-            "email",
+            EmailFieldKey,
             "Email address",
             "Enter a valid email address.",
             ValidationSeverity.Error,
@@ -255,20 +287,20 @@ public class ApplicationControlStateTests
         await Assert.That(message.DisplayText).IsEqualTo("Email address: Enter a valid email address.");
     }
 
-    /// <summary>Provides the ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task ValidationSummaryState_MixedMessages_ReportsValidityCountsAndFieldMessages()
     {
         var messages = new[]
         {
-            new ValidationMessage("email", nameof(Email), "Required", ValidationSeverity.Error),
+            new ValidationMessage(EmailFieldKey, nameof(Email), "Required"),
             new ValidationMessage("password", "Password", "Weak", ValidationSeverity.Warning),
-            new ValidationMessage("profile", "Profile", "Checking availability", ValidationSeverity.Pending)
+            new ValidationMessage("profile", "Profile", "Checking availability", ValidationSeverity.Pending),
         };
 
         var summary = new ValidationSummaryState(messages);
-        var emailMessages = summary.GetMessagesForField("email");
+        var emailMessages = summary.GetMessagesForField(EmailFieldKey);
 
         await Assert.That(summary.IsValid).IsFalse();
         await Assert.That(summary.HasWarnings).IsTrue();
@@ -285,7 +317,10 @@ public class ApplicationControlStateTests
     [Test]
     public async Task PaginationState_MiddlePage_ReportsRangesAndNavigationAvailability()
     {
-        var state = new PaginationState(pageIndex: MiddlePageIndex, pageSize: MiddlePageSize, totalItemCount: MiddlePageTotalItemCount);
+        var state = new PaginationState(
+            pageIndex: MiddlePageIndex,
+            pageSize: MiddlePageSize,
+            totalItemCount: MiddlePageTotalItemCount);
 
         await Assert.That(state.PageNumber).IsEqualTo(ExpectedMiddlePageNumber);
         await Assert.That(state.TotalPages).IsEqualTo(ExpectedMiddlePageTotalPages);
@@ -318,12 +353,14 @@ public class ApplicationControlStateTests
     [Test]
     public async Task PageRequest_WithSearchAndFilters_CapturesStableDataQuerySnapshot()
     {
-        var filters = new[]
-        {
-            new FilterToken("status", FilterOperator.Equals, "open", "Status: Open")
-        };
+        var filters = new[] { new FilterToken(StatusFieldKey, FilterOperator.Equals, "open", "Status: Open") };
         var query = new SearchQueryState(" alarm ", submittedText: "alarm", filters: filters);
-        var request = new PageRequest(pageIndex: 1, pageSize: PageRequestPageSize, sortKey: "created", sortDescending: true, queryState: query);
+        var request = new PageRequest(
+            pageIndex: 1,
+            pageSize: PageRequestPageSize,
+            sortKey: CreatedSortKey,
+            sortDescending: true,
+            queryState: query);
 
         await Assert.That(request.PageIndex).IsEqualTo(1);
         await Assert.That(request.Offset).IsEqualTo(PageRequestPageSize);
@@ -333,26 +370,27 @@ public class ApplicationControlStateTests
         await Assert.That(request.FilterSnapshotKey).IsEqualTo("status:Equals:open");
     }
 
-    /// <summary>Provides the StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task StepDescriptor_OptionalStepWithWarning_ReportsAvailabilityAndValidationState()
     {
         var messages = new[]
         {
-            new ValidationMessage("setup", "Setup", "Recommended before import", ValidationSeverity.Warning)
+            new ValidationMessage(SetupStepKey, "Setup", "Recommended before import", ValidationSeverity.Warning),
         };
         var step = new StepDescriptor(
-            "setup",
+            SetupStepKey,
             "Setup connection",
-            StepStatus.Warning,
-            isOptional: true,
-            isEnabled: true,
-            canEnter: true,
-            canLeave: false,
-            validationMessages: messages);
+            new StepDescriptorOptions
+            {
+                Status = StepStatus.Warning,
+                IsOptional = true,
+                CanLeave = false,
+                ValidationMessages = messages,
+            });
 
-        await Assert.That(step.Key).IsEqualTo("setup");
+        await Assert.That(step.Key).IsEqualTo(SetupStepKey);
         await Assert.That(step.DisplayTitle).IsEqualTo("Setup connection (optional)");
         await Assert.That(step.IsBlocking).IsFalse();
         await Assert.That(step.HasValidationMessages).IsTrue();
@@ -367,19 +405,22 @@ public class ApplicationControlStateTests
     {
         var steps = new[]
         {
-            new StepDescriptor("source", "Source", StepStatus.Completed),
-            new StepDescriptor("mapping", "Mapping", StepStatus.Active),
+            new StepDescriptor("source", "Source", new StepDescriptorOptions { Status = StepStatus.Completed }),
+            new StepDescriptor(MappingStepKey, "Mapping", new StepDescriptorOptions { Status = StepStatus.Active }),
             new StepDescriptor(
                 "review",
                 "Review",
-                StepStatus.Error,
-                validationMessages: [new ValidationMessage("review", "Review", "Resolve duplicate columns", ValidationSeverity.Error)]),
-            new StepDescriptor("finish", "Finish", StepStatus.Pending, isEnabled: false)
+                new StepDescriptorOptions
+                {
+                    Status = StepStatus.Error,
+                    ValidationMessages = [new ValidationMessage("review", "Review", "Resolve duplicate columns")],
+                }),
+            new StepDescriptor("finish", "Finish", new StepDescriptorOptions { IsEnabled = false }),
         };
-        var state = new StepperState(steps, "mapping", StepperOrientation.Vertical);
+        var state = new StepperState(steps, MappingStepKey, StepperOrientation.Vertical);
 
         await Assert.That(state.CurrentIndex).IsEqualTo(1);
-        await Assert.That(state.CurrentStep?.Key).IsEqualTo("mapping");
+        await Assert.That(state.CurrentStep?.Key).IsEqualTo(MappingStepKey);
         await Assert.That(state.CompletedCount).IsEqualTo(1);
         await Assert.That(state.BlockingStepCount).IsEqualTo(1);
         await Assert.That(state.CanGoPrevious).IsTrue();
@@ -395,7 +436,7 @@ public class ApplicationControlStateTests
     {
         var start = new DateTimeOffset(2026, 5, 13, 12, 0, 0, TimeSpan.Zero);
         var end = start.AddHours(ReversedRangeHourOffset);
-        var range = new DateTimeRange(start, end, DateTimeRangePreset.Custom, "Manual");
+        var range = new DateTimeRange(start, end, DateTimeRangePreset.Custom, ManualLabel);
 
         await Assert.That(range.IsValid).IsFalse();
         await Assert.That(range.HasValue).IsTrue();
@@ -404,7 +445,7 @@ public class ApplicationControlStateTests
         await Assert.That(range.DisplayText).IsEqualTo("Manual: invalid range");
     }
 
-    /// <summary>Provides the DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task DateTimeRangePresetDefinition_LastSevenDays_CreatesInclusiveRangeEndingAtReferenceTime()
@@ -455,11 +496,11 @@ public class ApplicationControlStateTests
     public async Task FilterDescriptor_EnumDescriptor_CreatesStableDisplayToken()
     {
         var descriptor = new FilterDescriptor(
-            "status",
+            StatusFieldKey,
             "Status",
             FilterEditorKind.Enum,
             [FilterOperator.Equals, FilterOperator.NotEquals],
-            ["Open", "Closed"]);
+            ["Open", ClosedLabel]);
 
         var token = descriptor.CreateToken("Open");
 
@@ -477,15 +518,20 @@ public class ApplicationControlStateTests
     {
         var descriptors = new[]
         {
-            new FilterDescriptor("status", "Status", FilterEditorKind.Enum, [FilterOperator.Equals], ["Open", "Closed"]),
-            new FilterDescriptor("created", "Created", FilterEditorKind.DateRange, [FilterOperator.Between]),
-            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, [FilterOperator.Contains])
+            new FilterDescriptor(
+                StatusFieldKey,
+                "Status",
+                FilterEditorKind.Enum,
+                [FilterOperator.Equals],
+                ["Open", ClosedLabel]),
+            new FilterDescriptor(CreatedSortKey, "Created", FilterEditorKind.DateRange, [FilterOperator.Between]),
+            new FilterDescriptor("notes", "Notes", FilterEditorKind.Text, [FilterOperator.Contains]),
         };
         var expressions = new[]
         {
-            new FilterExpression("status", FilterOperator.Equals, "Open"),
-            new FilterExpression("created", FilterOperator.Between, "Today"),
-            new FilterExpression("notes", FilterOperator.Contains, string.Empty)
+            new FilterExpression(StatusFieldKey, FilterOperator.Equals, "Open"),
+            new FilterExpression(CreatedSortKey, FilterOperator.Between, "Today"),
+            new FilterExpression("notes", FilterOperator.Contains, string.Empty),
         };
 
         var state = new DataFilterPanelState(descriptors, expressions, isDirty: true);
@@ -497,7 +543,7 @@ public class ApplicationControlStateTests
         await Assert.That(state.CanClear).IsTrue();
         await Assert.That(state.ActiveTokens).Count().IsEqualTo(ExpectedActiveTokenCount);
         await Assert.That(state.ActiveTokens[0].DisplayText).IsEqualTo("Status equals Open");
-        await Assert.That(state.GetDescriptor("created")?.EditorKind).IsEqualTo(FilterEditorKind.DateRange);
+        await Assert.That(state.GetDescriptor(CreatedSortKey)?.EditorKind).IsEqualTo(FilterEditorKind.DateRange);
         await Assert.That(queryState.NormalizedText).IsEqualTo("alarm");
         await Assert.That(queryState.ResultSummary).IsEqualTo("4 results");
         await Assert.That(queryState.ActiveFilters).Count().IsEqualTo(ExpectedActiveFilterCount);
@@ -508,21 +554,20 @@ public class ApplicationControlStateTests
     [Test]
     public async Task PropertyDescriptorModel_ModifiedInvalidDescriptor_ReportsEditableState()
     {
-        var messages = new[]
-        {
-            new ValidationMessage("retryCount", "Retry count", "Must be between 1 and 3", ValidationSeverity.Error)
-        };
+        var messages = new[] { new ValidationMessage("retryCount", "Retry count", "Must be between 1 and 3") };
         var resetCommand = new TestCommand();
         var descriptor = new PropertyDescriptorModel(
             "retryCount",
             "Retry count",
-            "Connection",
-            PropertyEditorKind.Number,
-            value: ModifiedPropertyValue,
-            originalValue: OriginalPropertyValue,
-            isReadOnly: false,
-            resetCommand: resetCommand,
-            validationMessages: messages);
+            new PropertyDescriptorOptions
+            {
+                Category = ConnectionCategory,
+                EditorKind = PropertyEditorKind.Number,
+                Value = ModifiedPropertyValue,
+                OriginalValue = OriginalPropertyValue,
+                ResetCommand = resetCommand,
+                ValidationMessages = messages,
+            });
 
         await Assert.That(descriptor.HasValue).IsTrue();
         await Assert.That(descriptor.ValueDisplayText).IsEqualTo("5");
@@ -532,24 +577,44 @@ public class ApplicationControlStateTests
         await Assert.That(descriptor.CanReset).IsTrue();
     }
 
-    /// <summary>Provides the PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors member.</summary>
+    /// <summary>Verifies the documented behavior.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task PropertyGridState_SearchAndCategories_ReportsVisibleEditableInvalidDescriptors()
     {
         var descriptors = new[]
         {
-            new PropertyDescriptorModel("endpoint", "Endpoint", "Connection", PropertyEditorKind.Text, "opc.tcp://localhost", "opc.tcp://localhost"),
-            new PropertyDescriptorModel("timeout", nameof(Timeout), "Connection", PropertyEditorKind.Number, ModifiedPropertyValue, OriginalPropertyValue),
+            new PropertyDescriptorModel(
+                "endpoint",
+                "Endpoint",
+                new PropertyDescriptorOptions
+                {
+                    Category = ConnectionCategory,
+                    Value = "opc.tcp://localhost",
+                    OriginalValue = "opc.tcp://localhost",
+                }),
+            new PropertyDescriptorModel(
+                "timeout",
+                nameof(Timeout),
+                new PropertyDescriptorOptions
+                {
+                    Category = ConnectionCategory,
+                    EditorKind = PropertyEditorKind.Number,
+                    Value = ModifiedPropertyValue,
+                    OriginalValue = OriginalPropertyValue,
+                }),
             new PropertyDescriptorModel(
                 "mode",
                 "Mode",
-                "Advanced",
-                PropertyEditorKind.Enum,
-                "Manual",
-                "Automatic",
-                choices: ["Automatic", "Manual"],
-                validationMessages: [new ValidationMessage("mode", "Mode", "Manual mode is unavailable", ValidationSeverity.Error)])
+                new PropertyDescriptorOptions
+                {
+                    Category = "Advanced",
+                    EditorKind = PropertyEditorKind.Enum,
+                    Value = ManualLabel,
+                    OriginalValue = "Automatic",
+                    Choices = ["Automatic", ManualLabel],
+                    ValidationMessages = [new ValidationMessage("mode", "Mode", "Manual mode is unavailable")],
+                }),
         };
 
         var state = new PropertyGridState(descriptors, "connection");
@@ -561,7 +626,7 @@ public class ApplicationControlStateTests
         await Assert.That(state.InvalidDescriptorCount).IsEqualTo(1);
         await Assert.That(state.CanCommit).IsFalse();
         await Assert.That(state.Categories).Count().IsEqualTo(1);
-        await Assert.That(state.Categories[0].Name).IsEqualTo("Connection");
+        await Assert.That(state.Categories[0].Name).IsEqualTo(ConnectionCategory);
         await Assert.That(state.GetDescriptor("timeout")?.IsModified).IsTrue();
     }
 

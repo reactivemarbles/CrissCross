@@ -68,7 +68,10 @@ internal static class DelegateHelper
     /// <param name="name">The name value.</param>
     /// <returns>The result.</returns>
     /// <param name="bindingAttr">The bindingAttr value.</param>
-    public static Func<TType, TProperty> CreatePropertyGetter<TType, TProperty>(string name, BindingFlags bindingAttr = DefaultLookup, bool nonPublic = false)
+    public static Func<TType, TProperty> CreatePropertyGetter<TType, TProperty>(
+        string name,
+        BindingFlags bindingAttr = DefaultLookup,
+        bool nonPublic = false)
     {
         var property = typeof(TType).GetProperty(name, bindingAttr);
         if (property is not null)
@@ -90,7 +93,10 @@ internal static class DelegateHelper
     /// <param name="nonPublic">The nonPublic value.</param>
     /// <returns>The result.</returns>
     /// <typeparam name="TType">The type that owns the property.</typeparam>
-    public static Action<TType, TProperty> CreatePropertySetter<TType, TProperty>(string name, BindingFlags bindingAttr = DefaultLookup, bool nonPublic = false)
+    public static Action<TType, TProperty> CreatePropertySetter<TType, TProperty>(
+        string name,
+        BindingFlags bindingAttr = DefaultLookup,
+        bool nonPublic = false)
     {
         var property = typeof(TType).GetProperty(name, bindingAttr);
         if (property is not null)

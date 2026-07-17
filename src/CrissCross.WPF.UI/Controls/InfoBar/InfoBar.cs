@@ -58,11 +58,12 @@ public class InfoBar : System.Windows.Controls.ContentControl
         new PropertyMetadata(null));
 
     /// <inheritdoc />
-    public InfoBar() => SetValue(
+    public InfoBar() =>
+        SetValue(
             TemplateButtonCommandProperty,
             ReactiveCommand.Create<object>(_ => SetCurrentValue(IsOpenProperty, false)));
 
-    /// <summary>Gets or sets a value indicating whether the user can close the <see cref="InfoBar" />. Defaults to <c>true</c>.</summary>
+    /// <summary>Gets or sets whether the user can close the InfoBar. Defaults to <c>true</c>.</summary>
     public bool IsClosable
     {
         get => (bool)GetValue(IsClosableProperty);
