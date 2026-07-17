@@ -81,7 +81,7 @@
     <PackageVersion Include="Polyfill" Version="11.0.1" Condition="$(TargetFramework.StartsWith('net4'))" />
 
     <!-- Testing Packages -->
-    <PackageVersion Include="TUnit" Version="1.58.0" Condition="$(IsTestProject)" />
+    <PackageVersion Include="TUnit" Version="1.61.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Verify.TUnit" Version="31.24.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.9.0" Condition="$(IsTestProject)" />
