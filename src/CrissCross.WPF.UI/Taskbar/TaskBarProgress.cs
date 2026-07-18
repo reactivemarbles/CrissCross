@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.TaskBar;
+#else
 namespace CrissCross.WPF.UI.TaskBar;
+#endif
 
 /// <summary>Allows to change the status of the displayed notification in the application icon on the TaskBar.</summary>
 public static class TaskBarProgress

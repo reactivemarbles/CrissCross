@@ -5,7 +5,11 @@
 using System.Drawing;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Custom ScrollBar with events depending on actions taken by the user.</summary>
 [ToolboxItem(true)]

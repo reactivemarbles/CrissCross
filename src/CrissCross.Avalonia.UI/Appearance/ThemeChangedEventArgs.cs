@@ -4,7 +4,11 @@
 
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 namespace CrissCross.Avalonia.UI.Appearance;
+#endif
 
 /// <summary>Provides data for application theme changes.</summary>
 /// <param name="currentTheme">The current application theme.</param>

@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents an icon that uses an image.</summary>
 public class ImageIcon : IconElement

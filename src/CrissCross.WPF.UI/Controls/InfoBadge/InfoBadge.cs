@@ -2,9 +2,17 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Converters;
+#else
 using CrissCross.WPF.UI.Converters;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>InfoBadge, a control that displays a small amount of information, typically a number or a small piece of
 /// text, in a compact way.</summary>

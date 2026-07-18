@@ -8,7 +8,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>Used by multiple technologies.</summary>
 internal class Kernel32

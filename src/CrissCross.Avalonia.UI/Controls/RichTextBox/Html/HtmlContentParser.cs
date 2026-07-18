@@ -13,7 +13,11 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using AvaloniaHorizontalAlignment = Avalonia.Layout.HorizontalAlignment;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the HtmlContentParser member.</summary>
 internal static class HtmlContentParser
@@ -339,9 +343,8 @@ internal static class HtmlContentParser
             {
                 "B" or "STRONG" => context with { Bold = true },
                 "I" or "EM" => context with { Italic = true },
-                "U" => context with { Underline = true },
+                "U" or "A" => context with { Underline = true },
                 "S" or "DEL" or "STRIKE" => context with { Strikethrough = true },
-                "A" => context with { Underline = true },
                 "P" or "DIV" => context with { ParagraphAlignment = ParseParagraphAlignment(element) },
                 _ => context,
             };

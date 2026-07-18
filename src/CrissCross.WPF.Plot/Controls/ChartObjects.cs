@@ -3,14 +3,20 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 using PlotColor = ScottPlot.Color;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Represents a collection of chart-related objects and appearance settings for managing visual elements such as

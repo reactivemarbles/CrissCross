@@ -4,7 +4,11 @@
 
 using Microsoft.Extensions.Hosting;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Managed host of the application.</summary>
 /// <typeparam name="TWindow">The application Window.</typeparam>

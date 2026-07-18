@@ -4,7 +4,11 @@
 
 using Avalonia.Layout;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a horizontal bar at the bottom of a window that displays status information.</summary>
 public class StatusBar : StackPanel

@@ -6,7 +6,11 @@ using System.ComponentModel;
 using ReactiveUI;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WinForms;
+#else
 namespace CrissCross.WinForms;
+#endif
 
 /// <summary>Hosts WinForms navigation content.</summary>
 /// <typeparam name="TViewModel">The type of the view model.</typeparam>

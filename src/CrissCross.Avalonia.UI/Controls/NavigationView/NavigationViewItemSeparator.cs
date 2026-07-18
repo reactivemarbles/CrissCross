@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a separator item in a NavigationView control.</summary>
 public class NavigationViewItemSeparator : TemplatedControl

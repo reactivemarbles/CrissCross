@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides navigation helpers for routed view hosts.</summary>
 public static partial class ViewModelRoutedViewHostMixins

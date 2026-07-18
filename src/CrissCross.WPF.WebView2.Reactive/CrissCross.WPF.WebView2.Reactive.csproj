@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossWebviewTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <UseWPF>true</UseWPF>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.WPF.WebView2\**\*.cs"
+             Exclude="..\CrissCross.WPF.WebView2\bin\**;..\CrissCross.WPF.WebView2\obj\**"
+             LinkBase="CrissCross.WPF.WebView2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+  </ItemGroup>
+</Project>

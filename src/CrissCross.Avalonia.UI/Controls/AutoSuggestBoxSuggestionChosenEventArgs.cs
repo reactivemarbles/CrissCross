@@ -3,9 +3,18 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Interactivity;
+#if REACTIVELIST_REACTIVE
+using SuggestionChosenEventArgs =
+    global::CrissCross.Reactive.Avalonia.UI.Controls.AutoSuggestBoxSuggestionChosenEventArgs;
+#else
 using SuggestionChosenEventArgs = global::CrissCross.Avalonia.UI.Controls.AutoSuggestBoxSuggestionChosenEventArgs;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the AutoSuggestBoxSuggestionChosenEventArgs member.</summary>
 /// <remarks>Use this class to access the item that was chosen by the user from the suggestion list. This event

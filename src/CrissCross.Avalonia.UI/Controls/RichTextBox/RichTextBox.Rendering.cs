@@ -11,7 +11,11 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.VisualTree;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the Rendering members for <see cref="RichTextBox"/>.</summary>
 public partial class RichTextBox
@@ -318,12 +322,9 @@ public partial class RichTextBox
             return false;
         }
 
-        var textLayout = visual switch
-        {
-            TextPresenter presenter => presenter.TextLayout,
-            FormattedTextPresenter presenter => presenter.TextLayout,
-            _ => null,
-        };
+        var textLayout = visual is TextPresenter presenter
+            ? presenter.TextLayout
+            : (visual as FormattedTextPresenter)?.TextLayout;
 
         if (textLayout is null)
         {

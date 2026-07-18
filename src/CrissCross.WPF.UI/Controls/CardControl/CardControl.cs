@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation.Peers;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.AutomationPeers;
+#else
 using CrissCross.WPF.UI.AutomationPeers;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the CardControl member.</summary>
 public class CardControl : System.Windows.Controls.Primitives.ButtonBase, IIconControl

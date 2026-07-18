@@ -2,10 +2,14 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.UIExtensions;
+#else
 namespace CrissCross.WPF.UI.UIExtensions;
+#endif
 
 /// <summary>Provides the HsvColorSlider member.</summary>
-internal sealed class HsvColorSlider : PreviewColorSlider
+public sealed class HsvColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderHsvTypeProperty member.</summary>
     public static readonly DependencyProperty SliderHsvTypeProperty = DependencyProperty.Register(

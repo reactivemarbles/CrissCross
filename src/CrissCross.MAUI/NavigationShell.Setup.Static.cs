@@ -4,7 +4,11 @@
 
 using System.Diagnostics;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.MAUI;
+#else
 namespace CrissCross.MAUI;
+#endif
 
 /// <summary>Hosts MAUI shell navigation for routed view models.</summary>
 public partial class NavigationShell

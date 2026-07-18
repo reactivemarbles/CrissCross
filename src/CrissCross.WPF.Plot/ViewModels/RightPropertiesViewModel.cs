@@ -3,11 +3,21 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+#if REACTIVE_SHIM
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Manages chart-object properties in the right properties panel.</summary>
 /// <remarks>This class provides properties and commands for interacting with chart object settings, such as line

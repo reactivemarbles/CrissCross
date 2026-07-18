@@ -6,6 +6,17 @@ using System.Runtime.CompilerServices;
 using Avalonia.Metadata;
 
 [assembly: InternalsVisibleTo("CrissCross.NavigationView.Tests")]
+#if REACTIVELIST_REACTIVE
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
+    "CrissCross.Reactive.Avalonia.UI")]
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
+    "CrissCross.Reactive.Avalonia.UI.Controls")]
+[assembly: XmlnsDefinition(
+    "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
+    "CrissCross.Reactive.Avalonia.UI.Appearance")]
+#else
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.Avalonia.UI", "CrissCross.Avalonia.UI")]
 [assembly: XmlnsDefinition(
     "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
@@ -13,3 +24,4 @@ using Avalonia.Metadata;
 [assembly: XmlnsDefinition(
     "https://github.com/reactivemarbles/CrissCross.Avalonia.UI",
     "CrissCross.Avalonia.UI.Appearance")]
+#endif

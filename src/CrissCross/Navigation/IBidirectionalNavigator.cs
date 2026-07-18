@@ -5,7 +5,11 @@
 using System;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Resolves bidirectional ViewModel/View navigation requests without mutating a platform host.</summary>
 public interface IBidirectionalNavigator

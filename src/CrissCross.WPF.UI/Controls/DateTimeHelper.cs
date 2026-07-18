@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// NOTICE: This date time helper assumes it is working in a Gregorian calendar

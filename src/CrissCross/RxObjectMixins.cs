@@ -6,16 +6,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
+
 using Splat;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVE_SHIM
+using UnitReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<System.Reactive.Unit>;
+#else
+using UnitReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<ReactiveUI.Primitives.RxVoid>;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Provides build and observable collection helpers.</summary>
 public static class RxObjectMixins
 {
     /// <summary>Signals when dependency registration has completed.</summary>
-    private static readonly ReplaySignal<Unit> _buildCompleteSubject = new(1);
+    private static readonly UnitReplaySignal _buildCompleteSubject = new(1);
 
     /// <summary>Provides build-completion helpers for build-aware objects.</summary>
     /// <param name="target">The build-aware object.</param>

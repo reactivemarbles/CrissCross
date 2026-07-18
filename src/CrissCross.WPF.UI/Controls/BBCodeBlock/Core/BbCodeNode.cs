@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
 /// <summary>One text or tag node in a parsed BBCode document.</summary>
 internal sealed class BbCodeNode

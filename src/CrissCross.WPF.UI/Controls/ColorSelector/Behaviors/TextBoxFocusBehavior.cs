@@ -5,10 +5,14 @@
 using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Behaviors;
+#else
 namespace CrissCross.WPF.UI.Behaviors;
+#endif
 
 /// <summary>Provides the TextBoxFocusBehavior member.</summary>
-internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
+public sealed class TextBoxFocusBehavior : Behavior<TextBox>
 {
     /// <summary>Provides the SelectOnMouseClickProperty member.</summary>
     public static readonly DependencyProperty SelectOnMouseClickProperty = DependencyProperty.Register(
@@ -91,7 +95,7 @@ internal sealed class TextBoxFocusBehavior : Behavior<TextBox>
         var scope = FocusManager.GetFocusScope(AssociatedObject);
         var parent = (FrameworkElement)AssociatedObject.Parent;
 
-        while (parent is not null && parent is IInputElement element && !element.Focusable)
+        while (parent is IInputElement element && !element.Focusable)
         {
             parent = (FrameworkElement)parent.Parent;
         }

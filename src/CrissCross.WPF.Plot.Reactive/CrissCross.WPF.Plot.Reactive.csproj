@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ReactiveMarkupKind>WPF</ReactiveMarkupKind>
+    <ReactiveMarkupBeforeTargets>PrepareResourceNames;MarkupCompilePass1</ReactiveMarkupBeforeTargets>
+    <ReactiveMarkupMappings>CrissCross.WPF.Plot=CrissCross.Reactive.WPF.Plot|CrissCross.WPF.Plot.Reactive;CrissCross.WPF.UI=CrissCross.Reactive.WPF.UI|CrissCross.WPF.UI.Reactive;CrissCross.WPF=CrissCross.Reactive.WPF|CrissCross.WPF.Reactive;CrissCross=CrissCross.Reactive|CrissCross.Reactive</ReactiveMarkupMappings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.WPF.Plot\**\*.cs"
+             Exclude="..\CrissCross.WPF.Plot\bin\**;..\CrissCross.WPF.Plot\obj\**"
+             LinkBase="CrissCross.WPF.Plot" />
+    <_ReactiveMarkupSource Include="..\CrissCross.WPF.Plot\**\*.xaml"
+                           Exclude="..\CrissCross.WPF.Plot\bin\**;..\CrissCross.WPF.Plot\obj\**"
+                           Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="@(_ReactiveMarkupSource->'$(IntermediateOutputPath)ReactiveMarkup\%(Link)')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="ReactiveUI.Reactive" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+    <PackageReference Include="ReactiveList.Reactive" />
+    <PackageReference Include="ScottPlot.WPF" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="Polyfill" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.WPF.UI.Reactive\CrissCross.WPF.UI.Reactive.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\CrissCross.WPF.Plot\Images\*.png" Link="Images\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Import Project="..\ReactiveMarkup.targets" />
+</Project>

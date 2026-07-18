@@ -4,9 +4,11 @@
 
 using System;
 using Avalonia;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a command-aware button that can project execution state, progress, and error content.</summary>
 public class CommandButton : Button

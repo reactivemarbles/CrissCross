@@ -6,7 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Interaction logic for DateTimePicker.xaml.</summary>
 public partial class DateTimePicker : UserControl

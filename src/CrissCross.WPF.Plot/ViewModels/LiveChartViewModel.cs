@@ -5,15 +5,25 @@
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
+#if REACTIVE_SHIM
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 using ScottPlot.Palettes;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Represents the view model for a live chart, providing properties and commands to manage chart data, axes, labels,

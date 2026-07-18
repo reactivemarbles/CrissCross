@@ -4,7 +4,11 @@
 
 using System.Windows.Documents;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
 /// <summary>Creates WPF inline content from a parsed BBCode document.</summary>
 internal sealed partial class BbCodeRenderer

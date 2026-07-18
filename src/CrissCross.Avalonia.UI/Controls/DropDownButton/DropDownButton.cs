@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a button with a drop-down list.</summary>
 public class DropDownButton : global::Avalonia.Controls.DropDownButton

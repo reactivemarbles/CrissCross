@@ -6,7 +6,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents CommonRepeatButtonBase.</summary>
 public class CommonRepeatButtonBase : RepeatButton

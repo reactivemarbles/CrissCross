@@ -4,7 +4,11 @@
 
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Represents NotifyableColor.</summary>
 /// <seealso cref="RxObject" />

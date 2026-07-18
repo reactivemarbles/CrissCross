@@ -5,7 +5,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral state for a descriptor-driven data filter panel.</summary>
 public sealed class DataFilterPanelState

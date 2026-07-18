@@ -2,9 +2,17 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 using CrissCross.Avalonia.UI.Controls;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Extensions;
+#else
 namespace CrissCross.Avalonia.UI.Extensions;
+#endif
 
 /// <summary>Extensions for the <see cref="ISnackbarService"/>.</summary>
 public static class SnackbarServiceExtensions

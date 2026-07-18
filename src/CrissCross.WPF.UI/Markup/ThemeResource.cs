@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Markup;
+#else
 namespace CrissCross.WPF.UI.Markup;
+#endif
 
 /// <summary>Collection of theme resources.</summary>
 /// <example>

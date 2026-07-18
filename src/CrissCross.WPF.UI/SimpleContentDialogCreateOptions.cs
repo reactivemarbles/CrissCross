@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Set of properties used when creating a new simple content dialog.</summary>
 /// <param name="Title"> Gets or sets a name at the top of the content dialog. </param>

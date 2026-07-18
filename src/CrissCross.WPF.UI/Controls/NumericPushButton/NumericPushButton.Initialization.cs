@@ -3,9 +3,15 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains numeric push-button initialization behavior.</summary>
 public partial class NumericPushButton

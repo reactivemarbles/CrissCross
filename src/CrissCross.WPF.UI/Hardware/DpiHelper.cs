@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Hardware;
+#else
 namespace CrissCross.WPF.UI.Hardware;
+#endif
 
 /// <summary>Provides access to various DPI-related methods.</summary>
 internal static class DpiHelper

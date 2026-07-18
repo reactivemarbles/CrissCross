@@ -2,10 +2,14 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.UIExtensions;
+#else
 namespace CrissCross.WPF.UI.UIExtensions;
+#endif
 
 /// <summary>Provides the RgbColorSlider member.</summary>
-internal sealed class RgbColorSlider : PreviewColorSlider
+public sealed class RgbColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderArgbTypeProperty member.</summary>
     public static readonly DependencyProperty SliderArgbTypeProperty = DependencyProperty.Register(

@@ -5,11 +5,23 @@
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Designer;
+#else
 using CrissCross.WPF.UI.Designer;
+#endif
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Extensions;
+#else
 using CrissCross.WPF.UI.Extensions;
+#endif
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Custom navigation buttons for the window.</summary>
 [TemplatePart(Name = ElementIcon, Type = typeof(System.Windows.Controls.Image))]

@@ -6,9 +6,11 @@ using System;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.Primitives;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a descriptor-driven filter editor surface for grids and lists.</summary>
 public class DataFilterPanel : TemplatedControl

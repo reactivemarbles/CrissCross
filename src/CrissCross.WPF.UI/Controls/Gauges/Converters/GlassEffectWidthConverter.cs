@@ -6,7 +6,11 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Gauges.Converters;
+#else
 namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
+#endif
 
 /// <summary>Scaling factor for drawing the glass effect.</summary>
 public class GlassEffectWidthConverter : IValueConverter

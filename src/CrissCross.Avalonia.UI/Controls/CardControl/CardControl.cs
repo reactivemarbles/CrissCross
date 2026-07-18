@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents the CardControl type.</summary>
 public class CardControl : global::Avalonia.Controls.Button, IIconControl

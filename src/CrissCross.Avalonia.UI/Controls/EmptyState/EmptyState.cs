@@ -4,9 +4,11 @@
 
 using Avalonia;
 using Avalonia.Controls;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Presents a consistent no-data, no-results, error, offline, or permission-required state.</summary>
 public class EmptyState : ContentControl

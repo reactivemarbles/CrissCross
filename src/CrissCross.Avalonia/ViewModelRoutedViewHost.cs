@@ -9,7 +9,15 @@ using Avalonia.Layout;
 using ReactiveUI;
 using Splat;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia;
+#else
 namespace CrissCross.Avalonia;
+#endif
 
 /// <summary>Hosts routed view model navigation content.</summary>
 public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IResolvedViewModelRoutedViewHost

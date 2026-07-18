@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a header item in a NavigationView control.</summary>
 public class NavigationViewItemHeader : TemplatedControl

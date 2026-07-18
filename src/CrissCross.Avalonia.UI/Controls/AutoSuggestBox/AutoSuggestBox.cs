@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a text control that makes suggestions to users as they enter text.</summary>
 public class AutoSuggestBox : global::Avalonia.Controls.AutoCompleteBox

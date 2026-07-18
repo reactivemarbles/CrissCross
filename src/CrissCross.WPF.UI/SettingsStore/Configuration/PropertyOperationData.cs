@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Configuration;
+#else
 namespace CrissCross.WPF.UI.Configuration;
+#endif
 
 /// <summary>Event args for a tracking operation. Enables the handler to cancel the operation and modify the data that
 /// will be persisted/applied.</summary>

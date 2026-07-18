@@ -4,7 +4,11 @@
 
 using System.Windows.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Styles.Controls;
+#else
 namespace CrissCross.WPF.UI.Styles.Controls;
+#endif
 
 /// <summary>
 /// Overwrites ContextMenu-Style for some UIElements (like RichTextBox) that don't take the default ContextMenu-Style by

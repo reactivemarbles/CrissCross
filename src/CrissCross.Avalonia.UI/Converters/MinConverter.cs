@@ -6,7 +6,11 @@ using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Converters;
+#else
 namespace CrissCross.Avalonia.UI.Converters;
+#endif
 
 /// <summary>Returns the minimum of two values.</summary>
 public class MinConverter : IValueConverter

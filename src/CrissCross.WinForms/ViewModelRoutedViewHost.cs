@@ -7,7 +7,15 @@ using System.ComponentModel;
 using ReactiveUI;
 using Splat;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WinForms;
+#else
 namespace CrissCross.WinForms;
+#endif
 
 /// <summary>Hosts routed view model navigation content.</summary>
 /// <seealso cref="UserControl" />

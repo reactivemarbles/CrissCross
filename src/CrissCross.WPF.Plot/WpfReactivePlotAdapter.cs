@@ -2,12 +2,18 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ScottPlot;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Applies normalized reactive plot updates to WPF plot UI elements.</summary>
 internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter

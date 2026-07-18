@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Represents a contract with the service that provides global <see cref="Snackbar"/>.</summary>
 public interface ISnackbarService

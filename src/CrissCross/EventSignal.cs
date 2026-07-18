@@ -5,7 +5,17 @@
 using System;
 using System.Threading;
 
+#if REACTIVE_SHIM
+using SignalFactory = ReactiveUI.Primitives.Reactive.Signals.Signal;
+#else
+using SignalFactory = ReactiveUI.Primitives.Signals.Signal;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Creates observable event streams backed by ReactiveUI.Primitives.</summary>
 public static class EventSignal
@@ -23,7 +33,7 @@ public static class EventSignal
         Action<TEventHandler> removeHandler)
         where TEventHandler : Delegate
         where TEventArgs : EventArgs =>
-        ReactiveUI.Primitives.Signals.Signal.CreateSafe<TEventArgs>(observer =>
+        SignalFactory.CreateSafe<TEventArgs>(observer =>
         {
             var handler = handlerFactory((_, eventArgs) => observer.OnNext(eventArgs));
 

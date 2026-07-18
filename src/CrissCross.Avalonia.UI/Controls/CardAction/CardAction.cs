@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents the CardAction type.</summary>
 /// <remarks>CardAction extends the standard button functionality to provide a consistent action element for

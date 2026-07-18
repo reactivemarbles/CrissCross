@@ -4,9 +4,17 @@
 
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Decoding;
+#else
 using CrissCross.WPF.UI.Controls.Decoding;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents Animator.</summary>
 /// <seealso cref="System.Windows.DependencyObject" />
@@ -226,67 +234,10 @@ public abstract partial class Animator : DependencyObject, IDisposable
     public void Pause() => _timingManager.Pause();
 
     /// <summary>Plays this instance.</summary>
-    public async void Play()
-    {
-        try
-        {
-            if (_timingManager.IsComplete)
-            {
-                _timingManager.Reset();
-                _isStarted = false;
-            }
-
-            if (!_isStarted)
-            {
-                _cancellationTokenSource?.Dispose();
-                _cancellationTokenSource = new();
-                _isStarted = true;
-                OnAnimationStarted();
-                if (_timingManager.IsPaused)
-                {
-                    _timingManager.Resume();
-                }
-
-                await RunAsync(_cancellationTokenSource.Token);
-            }
-            else if (_timingManager.IsPaused)
-            {
-                _timingManager.Resume();
-            }
-        }
-        catch (OperationCanceledException) { }
-        catch (Exception ex)
-        {
-            // ignore errors that might occur during Dispose
-            if (!_disposing)
-            {
-                OnError(ex, AnimationErrorKind.Rendering);
-            }
-        }
-    }
+    public void Play() => _ = PlayAsync();
 
     /// <summary>Rewinds this instance.</summary>
-    public async void Rewind()
-    {
-        CurrentFrameIndex = 0;
-        var isStopped = _timingManager.IsPaused || _timingManager.IsComplete;
-        _timingManager.Reset();
-        if (!isStopped)
-        {
-            return;
-        }
-
-        _timingManager.Pause();
-        _isStarted = false;
-        try
-        {
-            await RenderFrameAsync(0, CancellationToken.None);
-        }
-        catch (Exception ex)
-        {
-            OnError(ex, AnimationErrorKind.Rendering);
-        }
-    }
+    public void Rewind() => _ = RewindAsync();
 
     /// <summary>Converts to string.</summary>
     /// <returns>
@@ -440,4 +391,69 @@ public abstract partial class Animator : DependencyObject, IDisposable
     /// <param name="kind">The kind.</param>
     protected virtual void OnError(Exception ex, AnimationErrorKind kind) =>
         Error?.Invoke(this, new AnimationErrorEventArgs(AnimationSource, ex, kind));
+
+    /// <summary>Plays this instance asynchronously.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task PlayAsync()
+    {
+        try
+        {
+            if (_timingManager.IsComplete)
+            {
+                _timingManager.Reset();
+                _isStarted = false;
+            }
+
+            if (!_isStarted)
+            {
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = new();
+                _isStarted = true;
+                OnAnimationStarted();
+                if (_timingManager.IsPaused)
+                {
+                    _timingManager.Resume();
+                }
+
+                await RunAsync(_cancellationTokenSource.Token);
+            }
+            else if (_timingManager.IsPaused)
+            {
+                _timingManager.Resume();
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            // ignore errors that might occur during Dispose
+            if (!_disposing)
+            {
+                OnError(ex, AnimationErrorKind.Rendering);
+            }
+        }
+    }
+
+    /// <summary>Rewinds this instance asynchronously.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task RewindAsync()
+    {
+        CurrentFrameIndex = 0;
+        var isStopped = _timingManager.IsPaused || _timingManager.IsComplete;
+        _timingManager.Reset();
+        if (!isStopped)
+        {
+            return;
+        }
+
+        _timingManager.Pause();
+        _isStarted = false;
+        try
+        {
+            await RenderFrameAsync(0, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            OnError(ex, AnimationErrorKind.Rendering);
+        }
+    }
 }

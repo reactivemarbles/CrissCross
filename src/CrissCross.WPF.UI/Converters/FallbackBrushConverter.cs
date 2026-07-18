@@ -5,10 +5,14 @@
 #nullable enable
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the FallbackBrushConverter member.</summary>
-internal sealed class FallbackBrushConverter : IValueConverter
+public sealed class FallbackBrushConverter : IValueConverter
 {
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>

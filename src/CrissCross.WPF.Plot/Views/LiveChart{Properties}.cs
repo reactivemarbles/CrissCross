@@ -5,9 +5,17 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+#if REACTIVE_SHIM
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>AICSLiveChart member.</summary>
 /// <seealso cref="UserControl" />

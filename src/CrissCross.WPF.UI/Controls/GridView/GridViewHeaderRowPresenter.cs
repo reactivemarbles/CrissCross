@@ -4,11 +4,25 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the GridViewHeaderRowPresenter member.</summary>
 public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeaderRowPresenter
 {
+#if REACTIVE_SHIM
+    /// <summary>The pack URI for the header-row indicator dictionary.</summary>
+    private const string GridViewHeaderRowIndicatorUri =
+        "pack://application:,,,/CrissCross.WPF.UI.Reactive;component/Controls/GridView/GridViewHeaderRowIndicator.xaml";
+#else
+    /// <summary>The pack URI for the header-row indicator dictionary.</summary>
+    private const string GridViewHeaderRowIndicatorUri =
+        "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewHeaderRowIndicator.xaml";
+#endif
+
     /// <summary>The width of the column resize indicator.</summary>
     private const double IndicatorWidth = 3D;
 
@@ -80,9 +94,7 @@ public class GridViewHeaderRowPresenter : System.Windows.Controls.GridViewHeader
 
         ResourceDictionary resourceDictionary = new()
         {
-            Source = new(
-                "pack://application:,,,/CrissCross.WPF.UI;component/Controls/GridView/GridViewHeaderRowIndicator.xaml",
-                UriKind.Absolute),
+            Source = new(GridViewHeaderRowIndicatorUri, UriKind.Absolute),
         };
 
         if (resourceDictionary["GridViewHeaderRowIndicatorTemplate"] is ControlTemplate template)

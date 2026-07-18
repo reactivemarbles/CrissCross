@@ -5,7 +5,11 @@
 using System.Windows.Input;
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents CommonButtonBase.</summary>
 public class CommonButtonBase : System.Windows.Controls.Button

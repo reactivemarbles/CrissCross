@@ -3,9 +3,11 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents NavigationView.</summary>
 /// <seealso cref="System.Windows.Controls.Control" />

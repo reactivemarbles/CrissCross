@@ -6,10 +6,17 @@ using System.Collections;
 using Avalonia;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
-using CrissCross;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Animations;
+#else
 using CrissCross.Avalonia.UI.Animations;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Defines the events and styled properties exposed by <see cref="NavigationView"/>.</summary>
 public partial class NavigationView

@@ -4,7 +4,11 @@
 
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Extended <see cref="UserControl"/>.</summary>
 /// <seealso cref="UserControl" />

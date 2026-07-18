@@ -5,10 +5,22 @@
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Decoding;
+#else
 using CrissCross.WPF.UI.Controls.Decoding;
+#endif
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 using CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents AnimationBehavior.</summary>
 public static class AnimationBehavior
@@ -531,7 +543,7 @@ public static class AnimationBehavior
             var stream = GetSourceStream(image);
             if (stream is not null)
             {
-                InitAnimationAsync(
+                _ = InitAnimationAsync(
                     image,
                     stream.AsBuffered(),
                     GetRepeatBehavior(image),
@@ -543,7 +555,7 @@ public static class AnimationBehavior
             var uri = GetAbsoluteUri(image);
             if (uri is not null)
             {
-                InitAnimationAsync(image, uri, GetRepeatBehavior(image), seqNum, GetCacheFramesInMemory(image));
+                _ = InitAnimationAsync(image, uri, GetRepeatBehavior(image), seqNum, GetCacheFramesInMemory(image));
             }
         }
         catch (Exception ex)
@@ -558,7 +570,8 @@ public static class AnimationBehavior
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="seqNum">The seqNum value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    private static async void InitAnimationAsync(
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private static async Task InitAnimationAsync(
         System.Windows.Controls.Image image,
         Uri sourceUri,
         RepeatBehavior repeatBehavior,
@@ -608,7 +621,8 @@ public static class AnimationBehavior
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="seqNum">The seqNum value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    private static async void InitAnimationAsync(
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private static async Task InitAnimationAsync(
         System.Windows.Controls.Image image,
         Stream stream,
         RepeatBehavior repeatBehavior,

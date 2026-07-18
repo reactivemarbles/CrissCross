@@ -4,10 +4,14 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the ProgressThicknessConverter member.</summary>
-internal sealed class ProgressThicknessConverter : IValueConverter
+public sealed class ProgressThicknessConverter : IValueConverter
 {
     /// <summary>Provides the fallback progress indicator thickness.</summary>
     private const double DefaultThickness = 12D;

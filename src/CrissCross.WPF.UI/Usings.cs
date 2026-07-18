@@ -19,6 +19,16 @@ global using System.Threading.Tasks;
 global using System.Windows;
 global using System.Windows.Interop;
 global using System.Windows.Media;
+#if REACTIVELIST_REACTIVE
+global using CrissCross.Reactive.WPF.UI.Appearance;
+global using CrissCross.Reactive.WPF.UI.Configuration;
+global using CrissCross.Reactive.WPF.UI.Configuration.Attributes;
+global using CrissCross.Reactive.WPF.UI.Controls;
+global using CrissCross.Reactive.WPF.UI.Hardware;
+global using CrissCross.Reactive.WPF.UI.Interop;
+global using CrissCross.Reactive.WPF.UI.Storage;
+global using CrissCross.Reactive.WPF.UI.TaskBar;
+#else
 global using CrissCross.WPF.UI.Appearance;
 global using CrissCross.WPF.UI.Configuration;
 global using CrissCross.WPF.UI.Configuration.Attributes;
@@ -27,3 +37,4 @@ global using CrissCross.WPF.UI.Hardware;
 global using CrissCross.WPF.UI.Interop;
 global using CrissCross.WPF.UI.Storage;
 global using CrissCross.WPF.UI.TaskBar;
+#endif

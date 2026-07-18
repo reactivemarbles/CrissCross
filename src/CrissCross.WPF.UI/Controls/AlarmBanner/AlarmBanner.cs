@@ -4,7 +4,11 @@
 
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// AlarmBanner is an inline notification optimized for industrial/commercial alarm messages.

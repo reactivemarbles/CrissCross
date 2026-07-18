@@ -4,7 +4,11 @@
 
 using System.Drawing;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Simple Card with content and <see cref="Footer"/>.</summary>
 [ToolboxItem(true)]

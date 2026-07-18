@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Navigation controls (back/forward buttons, etc.).</summary>
 public class NavigationControls : TemplatedControl

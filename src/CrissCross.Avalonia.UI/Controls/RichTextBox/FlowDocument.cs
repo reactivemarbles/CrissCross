@@ -9,7 +9,11 @@ using Avalonia;
 using Avalonia.Layout;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the FlowDocument member.</summary>
 public sealed class FlowDocument

@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents an image control with GIF animation support and additional properties.</summary>
 public class GifImage : global::Avalonia.Controls.Image

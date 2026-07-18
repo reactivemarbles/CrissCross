@@ -4,7 +4,11 @@
 
 using System.Windows.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents the Flyout type.</summary>
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]

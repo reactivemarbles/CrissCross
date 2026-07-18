@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>
 /// Simple control that displays a gird of items. Depending on the orientation, the items are either stacked

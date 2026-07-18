@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows users to select a color using HSV model.</summary>
 public class ColorSelector : TemplatedControl

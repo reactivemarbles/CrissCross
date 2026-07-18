@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 namespace CrissCross.Avalonia.UI.Appearance;
+#endif
 
 /// <summary>Theme in which an application using CrissCross UI is displayed.</summary>
 public enum ApplicationTheme

@@ -8,7 +8,11 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.BBCode;
+#else
 namespace CrissCross.WPF.UI.Controls.BBCode;
+#endif
 
 /// <summary>Provides pure conversion helpers used by the BBCode renderer.</summary>
 internal static class BbCodeRenderHelpers

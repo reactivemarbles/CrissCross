@@ -3,13 +3,19 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ReactiveUI.SourceGenerators;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 using Color = ScottPlot.Color;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Provides a user interface component for visualizing and interacting with data streams using a plot, supporting

@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Styling;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 namespace CrissCross.Avalonia.UI.Appearance;
+#endif
 
 /// <summary>Allows to manage the application theme.</summary>
 public static class ApplicationThemeManager

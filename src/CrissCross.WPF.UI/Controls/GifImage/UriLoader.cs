@@ -5,9 +5,17 @@
 using System.IO.Packaging;
 using System.Net.Http;
 using System.Security.Cryptography;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 using CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the UriLoader member.</summary>
 internal static class UriLoader

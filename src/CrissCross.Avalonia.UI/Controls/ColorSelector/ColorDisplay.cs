@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>A control that displays a color preview.</summary>
 public class ColorDisplay : TemplatedControl

@@ -6,7 +6,11 @@ using System.Globalization;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Converters;
+#else
 namespace CrissCross.Avalonia.UI.Converters;
+#endif
 
 /// <summary>Converts a Color to a SolidColorBrush.</summary>
 public class ColorToBrushConverter : IValueConverter

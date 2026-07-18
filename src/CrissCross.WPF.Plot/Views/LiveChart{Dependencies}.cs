@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
+#if REACTIVE_SHIM
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Represents a live-updating chart control that displays real-time data streams with customizable axes, legends, and

@@ -4,7 +4,11 @@
 
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Identifies a typed ViewModel-first navigation pair and request options.</summary>
 /// <typeparam name="TViewModel">The view model key and result type.</typeparam>

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using ReactiveUI;
@@ -255,12 +256,16 @@ public sealed class ControlsGalleryViewModel : RxObject
         ArgumentNullException.ThrowIfNull(e);
         ArgumentNullException.ThrowIfNull(disposables);
 
-        ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
+        var initialTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+        ActivationLog = $"Activated {initialTimestamp} from {e.From?.Name ?? "<cold start>"}.";
         _ = Observable
             .Interval(TimeSpan.FromSeconds(ActivationHeartbeatSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
-                ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
+            {
+                var heartbeatTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                ActivationLog = $"Still active {heartbeatTimestamp}; dispose this page by navigating away.";
+            })
             .DisposeWith(disposables);
     }
 

@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Lets you set the app theme.</summary>
 public class ThemeService : IThemeService
@@ -20,16 +24,10 @@ public class ThemeService : IThemeService
 
         return systemTheme switch
         {
-            SystemTheme.Light => ApplicationTheme.Light,
-            SystemTheme.Dark => ApplicationTheme.Dark,
-            SystemTheme.Glow => ApplicationTheme.Dark,
-            SystemTheme.CapturedMotion => ApplicationTheme.Dark,
-            SystemTheme.Sunrise => ApplicationTheme.Light,
-            SystemTheme.Flow => ApplicationTheme.Light,
-            SystemTheme.HCBlack => ApplicationTheme.HighContrast,
-            SystemTheme.HC1 => ApplicationTheme.HighContrast,
-            SystemTheme.HC2 => ApplicationTheme.HighContrast,
-            SystemTheme.HCWhite => ApplicationTheme.HighContrast,
+            SystemTheme.Light or SystemTheme.Sunrise or SystemTheme.Flow => ApplicationTheme.Light,
+            SystemTheme.Dark or SystemTheme.Glow or SystemTheme.CapturedMotion => ApplicationTheme.Dark,
+            SystemTheme.HCBlack or SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCWhite =>
+                ApplicationTheme.HighContrast,
             _ => ApplicationTheme.Unknown,
         };
     }

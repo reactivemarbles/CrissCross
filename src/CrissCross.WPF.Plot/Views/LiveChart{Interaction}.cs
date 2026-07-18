@@ -10,7 +10,11 @@ using ScottPlot;
 using ScottPlot.Plottables;
 using PlotColor = ScottPlot.Color;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
 public partial class LiveChart

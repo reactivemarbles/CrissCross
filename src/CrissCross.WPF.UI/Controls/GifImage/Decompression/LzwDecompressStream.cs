@@ -4,7 +4,11 @@
 
 using Buffer = System.Buffer;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Decompression;
+#else
 namespace CrissCross.WPF.UI.Controls.Decompression;
+#endif
 
 /// <summary>Provides the LzwDecompressStream member.</summary>
 /// <param name="compressedBuffer">The compressedBuffer value.</param>

@@ -5,7 +5,11 @@
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.AutomationPeers;
+#else
 namespace CrissCross.WPF.UI.AutomationPeers;
+#endif
 
 /// <summary>Provides the CardControlAutomationPeer member.</summary>
 /// <param name="owner">The owner value.</param>

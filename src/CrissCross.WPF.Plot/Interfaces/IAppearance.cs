@@ -2,11 +2,17 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 using ScottPlot;
 using ScottPlot.WPF;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Defines the contract for configuring and managing the appearance-related properties and commands of a UI element,

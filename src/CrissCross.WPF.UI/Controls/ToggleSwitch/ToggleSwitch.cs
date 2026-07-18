@@ -4,7 +4,11 @@
 
 using System.Drawing;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Use <see cref="ToggleSwitch"/> to present users with two mutally exclusive options (like on/off).</summary>
 [ToolboxItem(true)]

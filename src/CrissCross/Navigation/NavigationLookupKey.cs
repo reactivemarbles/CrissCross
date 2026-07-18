@@ -4,7 +4,11 @@
 
 using System;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Identifies one side of a navigation registration by source kind, service type, and contract.</summary>
 /// <param name="sourceKind">The navigation source kind.</param>

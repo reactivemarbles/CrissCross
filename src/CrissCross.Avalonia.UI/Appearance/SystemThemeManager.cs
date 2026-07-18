@@ -4,7 +4,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 namespace CrissCross.Avalonia.UI.Appearance;
+#endif
 
 /// <summary>Provides methods for detecting the system theme.</summary>
 public static class SystemThemeManager

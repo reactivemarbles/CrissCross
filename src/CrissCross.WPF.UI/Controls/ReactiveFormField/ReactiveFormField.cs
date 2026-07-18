@@ -4,9 +4,11 @@
 
 using System.Collections.Generic;
 using System.Windows.Controls;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Presents a form input with shared validation state, helper text, and required-field metadata.</summary>
 public class ReactiveFormField : ContentControl

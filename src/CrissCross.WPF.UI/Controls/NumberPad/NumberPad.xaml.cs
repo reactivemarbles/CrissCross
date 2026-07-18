@@ -6,7 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Interaction logic for NumberPad.</summary>
 public partial class NumberPad : IDisposable
@@ -258,8 +262,12 @@ public partial class NumberPad : IDisposable
         _currentValue = string.Empty;
     }
 
-    /// <summary>Provides the CloseKeypad member.</summary>
-    private async void CloseKeypad()
+    /// <summary>Starts closing the keypad.</summary>
+    private void CloseKeypad() => _ = CloseKeypadAsync();
+
+    /// <summary>Closes the keypad after its transition completes.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task CloseKeypadAsync()
     {
         ClearValues();
         await Task.Delay(CloseAnimationDelayMilliseconds).ConfigureAwait(true);
@@ -286,8 +294,12 @@ public partial class NumberPad : IDisposable
         return value;
     }
 
-    /// <summary>Enter Button Clicked.</summary>
-    private async void AcceptResult()
+    /// <summary>Starts accepting the current result.</summary>
+    private void AcceptResult() => _ = AcceptResultAsync();
+
+    /// <summary>Accepts the current result and completes the keypad transition.</summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task AcceptResultAsync()
     {
         if (Value.Value.HasValue)
         {

@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>A control that drop downs a flyout of choices from which one can be chosen.</summary>
 public class DropDownButton : Button

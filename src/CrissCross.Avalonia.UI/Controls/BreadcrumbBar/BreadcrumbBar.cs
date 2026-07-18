@@ -8,7 +8,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the BreadcrumbBar member.</summary>
 public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
@@ -41,7 +45,9 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
     /// <summary>Initializes a new instance of the <see cref="BreadcrumbBar"/> class.</summary>
     public BreadcrumbBar()
     {
-        _ = SetValue(TemplateButtonCommandProperty, ReactiveCommand.Create<object?>(OnTemplateButtonClick));
+        _ = SetValue(
+            TemplateButtonCommandProperty,
+            ReactiveCommand.Create<object?>(content => ArgumentNullException.ThrowIfNull(content)));
     }
 
     /// <summary>Occurs when an item is clicked in the <see cref="BreadcrumbBar"/>.</summary>
@@ -214,18 +220,6 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
         {
             _ = Items.Add(new BreadcrumbBarItem { NavigationType = typeName, Content = content ?? typeName.Name });
         }
-    }
-
-    /// <summary>Provides the OnTemplateButtonClick member.</summary>
-    /// <param name="obj">The obj value.</param>
-    private void OnTemplateButtonClick(object? obj)
-    {
-        if (obj is not null)
-        {
-            return;
-        }
-
-        throw new ArgumentNullException("Item content is null");
     }
 
     //// private void InteractWithItemContainer(int offsetFromEnd, Action<BreadcrumbBarItem> action)

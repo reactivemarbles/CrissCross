@@ -5,7 +5,11 @@
 using System;
 using System.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes a platform-neutral navigation request before host mutation.</summary>
 /// <remarks>

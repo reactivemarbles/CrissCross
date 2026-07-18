@@ -5,7 +5,11 @@
 using System;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Defines a typed ViewModel/View registration and caller-facing lookup keys.</summary>
 /// <typeparam name="TMK">The caller-facing view model lookup key.</typeparam>

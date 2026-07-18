@@ -4,10 +4,14 @@
 
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>INotifiy Routable ViewModel.</summary>
-/// <seealso cref="IRoutableViewModel" />
+/// <seealso cref="IReactiveObject" />
 /// <seealso cref="IUseHostedNavigation" />
 public interface INotifiyRoutableViewModel : IReactiveObject, IUseHostedNavigation
 {

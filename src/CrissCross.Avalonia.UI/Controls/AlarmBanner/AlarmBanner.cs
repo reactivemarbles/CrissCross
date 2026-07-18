@@ -5,7 +5,11 @@
 using Avalonia;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>
 /// AlarmBanner is an inline notification optimized for industrial/commercial alarm messages.

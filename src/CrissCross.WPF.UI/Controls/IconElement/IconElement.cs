@@ -5,7 +5,11 @@
 using System.Windows.Documents;
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents the base class for an icon UI element.</summary>
 [TypeConverter(typeof(IconElementConverter))]

@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Control that draws a symmetrical arc with rounded edges.</summary>
 public class Arc : Shape

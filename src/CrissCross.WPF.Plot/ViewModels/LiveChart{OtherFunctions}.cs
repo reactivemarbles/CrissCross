@@ -5,7 +5,11 @@
 using System.Runtime.Versioning;
 using ScottPlot.Plottables;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>
 /// Represents the view model for a live chart, providing data binding and interaction logic for chart visualization

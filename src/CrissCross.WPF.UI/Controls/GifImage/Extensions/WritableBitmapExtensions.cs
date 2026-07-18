@@ -4,7 +4,11 @@
 
 using System.Windows.Media.Imaging;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 namespace CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
 /// <summary>Provides the WritableBitmapExtensions member.</summary>
 internal static class WritableBitmapExtensions

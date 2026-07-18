@@ -8,7 +8,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows a user to pick a date from a calendar display.</summary>
 public class CalendarDatePicker : global::Avalonia.Controls.Button

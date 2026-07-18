@@ -10,7 +10,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia;
+#else
 namespace CrissCross.Avalonia;
+#endif
 
 /// <summary>Hosts Avalonia navigation content in a window.</summary>
 /// <seealso cref="TemplatedControl" />

@@ -5,7 +5,11 @@
 using System.Windows.Input;
 using System.Windows.Threading;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains number-pad initialization behavior.</summary>
 public partial class NumberPad

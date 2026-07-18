@@ -5,7 +5,11 @@
 using System.Drawing;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Allows to rate positively or negatively by clicking on one of the thumbs.</summary>
 [ToolboxItem(true)]

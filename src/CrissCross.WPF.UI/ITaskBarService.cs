@@ -4,7 +4,11 @@
 
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Represents a contract with a service that provides methods for manipulating the taskbar.</summary>
 public interface ITaskBarService

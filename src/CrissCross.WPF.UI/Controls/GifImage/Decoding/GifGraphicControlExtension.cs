@@ -2,9 +2,17 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls.Extensions;
+#else
 using CrissCross.WPF.UI.Controls.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Decoding;
+#else
 namespace CrissCross.WPF.UI.Controls.Decoding;
+#endif
 
 /// <summary>Label 0xF9.</summary>
 internal sealed class GifGraphicControlExtension : GifExtension

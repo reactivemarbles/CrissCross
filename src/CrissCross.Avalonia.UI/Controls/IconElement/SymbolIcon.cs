@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Extensions;
+#else
 using CrissCross.Avalonia.UI.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a text element containing an icon glyph.</summary>
 public class SymbolIcon : FontIcon

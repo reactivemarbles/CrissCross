@@ -6,7 +6,11 @@ using System.Collections.Specialized;
 using System.Windows.Controls;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the DataGrid member.</summary>
 public class DataGrid : System.Windows.Controls.DataGrid

@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents the ListView type.</summary>
 /// <remarks>ListView extends ListBox to provide additional functionality for switching between visual

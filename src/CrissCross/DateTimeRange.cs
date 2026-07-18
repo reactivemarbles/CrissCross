@@ -5,7 +5,11 @@
 using System;
 using System.Globalization;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents a platform-neutral date/time range for filtering, reporting, and dashboard controls.</summary>
 public sealed class DateTimeRange

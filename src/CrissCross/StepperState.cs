@@ -8,7 +8,11 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral state for steppers and wizard progress controls.</summary>
 public sealed class StepperState

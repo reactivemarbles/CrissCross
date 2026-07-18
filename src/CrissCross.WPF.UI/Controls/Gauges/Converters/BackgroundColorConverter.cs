@@ -4,7 +4,11 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls.Gauges.Converters;
+#else
 namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
+#endif
 
 /// <summary>Converts background color to Gradient effect.</summary>
 public class BackgroundColorConverter : IValueConverter

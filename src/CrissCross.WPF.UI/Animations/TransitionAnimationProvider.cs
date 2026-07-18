@@ -4,7 +4,11 @@
 
 using System.Windows.Media.Animation;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Animations;
+#else
 namespace CrissCross.WPF.UI.Animations;
+#endif
 
 /// <summary>Provides tools for <see cref="FrameworkElement"/> animation.</summary>
 /// <example>

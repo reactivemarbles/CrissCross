@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Configuration;
+#else
 namespace CrissCross.WPF.UI.Configuration;
+#endif
 
 /// <summary>An object that decribes the tracking information for a target object's property.</summary>
 /// <param name="Getter"> Gets function that gets the value of the property. </param>

@@ -4,7 +4,11 @@
 
 using System.Collections.Generic;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents the platform-neutral state projected by a search box and filter bar.</summary>
 /// <remarks>

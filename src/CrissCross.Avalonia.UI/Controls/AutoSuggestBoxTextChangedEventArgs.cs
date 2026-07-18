@@ -4,7 +4,11 @@
 
 using Avalonia.Interactivity;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides data for the TextChanged event of an AutoSuggestBox control.</summary>
 /// <remarks>Use this class to obtain information about the text change event, including the current text and the

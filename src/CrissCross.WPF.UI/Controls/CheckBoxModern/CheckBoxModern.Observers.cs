@@ -4,7 +4,11 @@
 
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains modern check-box input observers.</summary>
 public partial class CheckBoxModern
@@ -37,35 +41,53 @@ public partial class CheckBoxModern
                 handler => handler.Invoke,
                 handler => Loaded += handler,
                 handler => Loaded -= handler)
-            .Subscribe(async loadedArgs =>
+            .Subscribe(loadedArgs => _ = HandleLoadedAsync(loadedArgs))
+            .DisposeWith(_disposables);
+    }
+
+    /// <summary>Initializes enabled-state observation after the control loads.</summary>
+    /// <param name="loadedArgs">The loaded event arguments.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task HandleLoadedAsync(RoutedEventArgs loadedArgs)
+    {
+        _ = loadedArgs;
+        if (_isChecked.HasObservers)
+        {
+            _isChecked.OnNext(new CheckBoxResultEventArgs(false, Checked));
+        }
+
+        await EnableChange(IsEnabled);
+        IsEnabledChanged += OnIsEnabledChanged;
+        if (Command is null)
+        {
+            return;
+        }
+
+        if (!Command.CanExecute(null))
+        {
+            await EnableChange(false);
+        }
+
+        _ = EventSignal
+            .From<EventHandler, EventArgs>(
+                handler => handler.Invoke,
+                handler => Command.CanExecuteChanged += handler,
+                handler => Command.CanExecuteChanged -= handler)
+            .Subscribe(ignored =>
             {
-                _ = loadedArgs;
-                if (_isChecked.HasObservers)
-                {
-                    _isChecked.OnNext(new CheckBoxResultEventArgs(false, Checked));
-                }
-
-                await EnableChange(IsEnabled);
-                IsEnabledChanged += async (_, e) => await EnableChange((bool)e.NewValue);
-                if (Command is null)
-                {
-                    return;
-                }
-
-                if (!Command.CanExecute(null))
-                {
-                    await EnableChange(false);
-                }
-
-                _ = EventSignal
-                    .From<EventHandler, EventArgs>(
-                        handler => handler.Invoke,
-                        handler => Command.CanExecuteChanged += handler,
-                        handler => Command.CanExecuteChanged -= handler)
-                    .Subscribe(async _ => await EnableChange(IsEnabled && Command.CanExecute(null)))
-                    .DisposeWith(_disposables);
+                _ = ignored;
+                _ = EnableChange(IsEnabled && Command.CanExecute(null));
             })
             .DisposeWith(_disposables);
+    }
+
+    /// <summary>Updates the enabled animation after the WPF enabled state changes.</summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The property-change arguments.</param>
+    private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        _ = sender;
+        _ = EnableChange((bool)e.NewValue);
     }
 
     /// <summary>Observes pointer state for hover styling.</summary>

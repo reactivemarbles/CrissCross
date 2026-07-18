@@ -6,9 +6,17 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Controls;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Animations;
+#else
 using CrissCross.WPF.UI.Animations;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents NavigationView.</summary>
 /// <seealso cref="Control" />
@@ -635,9 +643,7 @@ public partial class NavigationView
         if (e.NewValue is null && e.OldValue is BreadcrumbBar oldValue)
         {
             oldValue.ItemClicked -= navigationView.BreadcrumbBarOnItemClicked;
-            {
-                return;
-            }
+            return;
         }
 
         if (e.NewValue is not BreadcrumbBar breadcrumbBar)

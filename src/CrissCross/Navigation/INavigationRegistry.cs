@@ -5,7 +5,11 @@
 using System;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Registers bidirectional ViewModel/View navigation pairs.</summary>
 public interface INavigationRegistry

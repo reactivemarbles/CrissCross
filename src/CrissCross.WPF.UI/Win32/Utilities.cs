@@ -4,7 +4,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Win32;
+#else
 namespace CrissCross.WPF.UI.Win32;
+#endif
 
 /// <summary>Common Window utilities.</summary>
 internal static class Utilities

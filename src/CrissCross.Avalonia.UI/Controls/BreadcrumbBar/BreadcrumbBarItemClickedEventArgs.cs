@@ -4,7 +4,11 @@
 
 using Avalonia.Interactivity;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>BreadcrumbBarItemClickedEventArgs member.</summary>
 public sealed class BreadcrumbBarItemClickedEventArgs : RoutedEventArgs

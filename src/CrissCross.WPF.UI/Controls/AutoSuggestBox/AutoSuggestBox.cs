@@ -7,9 +7,15 @@ using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a text control that makes suggestions to users as they enter text using a keyboard. The app is
 /// notified when text has been changed by the user and is responsible for providing relevant suggestions for this

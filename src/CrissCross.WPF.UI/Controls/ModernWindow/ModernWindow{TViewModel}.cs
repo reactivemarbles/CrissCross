@@ -5,7 +5,11 @@
 using ReactiveUI;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Navigation Window.</summary>
 /// <typeparam name="TViewModel">The type of the view model.</typeparam>

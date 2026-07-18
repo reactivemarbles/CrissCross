@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents an item in a <see cref="BreadcrumbBar"/> control.</summary>
 public class BreadcrumbBarItem : global::Avalonia.Controls.ContentControl

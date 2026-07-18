@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Media;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 using CrissCross.Avalonia.UI.Appearance;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI;
+#else
 namespace CrissCross.Avalonia.UI;
+#endif
 
 /// <summary>Represents a contract with a service that provides tools for manipulating the theme.</summary>
 public interface IThemeService

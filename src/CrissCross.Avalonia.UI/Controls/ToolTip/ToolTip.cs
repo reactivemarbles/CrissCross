@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that creates a pop-up window that displays information for an element.</summary>
 public class ToolTip : TemplatedControl

@@ -7,7 +7,11 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Path = System.Windows.Shapes.Path;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Contains CircularGauge template behavior and value handling.</summary>
 public sealed partial class CircularGauge
@@ -178,7 +182,7 @@ public sealed partial class CircularGauge
     /// <summary>Provides the OnDetectValueOrErrorPropertyChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
-    private static async void OnDetectValueOrErrorPropertyChanged(
+    private static void OnDetectValueOrErrorPropertyChanged(
         DependencyObject d,
         DependencyPropertyChangedEventArgs e)
     {
@@ -186,7 +190,7 @@ public sealed partial class CircularGauge
         if ((bool)e.NewValue)
         {
             // Start checking
-            await gauge!.DetectectingThread();
+            _ = gauge!.DetectectingThread();
         }
         else
         {

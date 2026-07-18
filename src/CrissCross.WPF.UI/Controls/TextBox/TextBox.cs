@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Extended TextBox with additional parameters like PlaceholderText.</summary>
 public class TextBox : System.Windows.Controls.TextBox

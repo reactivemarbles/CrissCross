@@ -3,9 +3,25 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVE_SHIM
+using DoubleReplaySignal =
+    ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<(bool UserChanged, double Value)>;
+using FloatReplaySignal =
+    ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<(bool UserChanged, float Value)>;
+#else
+using DoubleReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<(bool UserChanged, double Value)>;
+using FloatReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<(bool UserChanged, float Value)>;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Numeric Push Button.</summary>
 public partial class NumericPushButton : System.Windows.Controls.Button, INumberPadButton, IDisposable
@@ -108,10 +124,10 @@ public partial class NumericPushButton : System.Windows.Controls.Button, INumber
     private const int ErrorVisibilityDelaySeconds = 2;
 
     /// <summary>Stores the _valueD value.</summary>
-    private readonly ReplaySignal<(bool UserChanged, double Value)> _valueD = new(1);
+    private readonly DoubleReplaySignal _valueD = new(1);
 
     /// <summary>Stores the _valueF value.</summary>
-    private readonly ReplaySignal<(bool UserChanged, float Value)> _valueF = new(1);
+    private readonly FloatReplaySignal _valueF = new(1);
 
     /// <summary>Stores the _keypadDisposable value.</summary>
     private readonly CompositeDisposable _keypadDisposable = [];

@@ -2,10 +2,18 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CP.Reactive.Collections;
+#else
 using CP.Primitives.Collections;
+#endif
 using ReactiveUI.SourceGenerators;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Reactive Tree Item.</summary>
 /// <seealso cref="RxObject" />

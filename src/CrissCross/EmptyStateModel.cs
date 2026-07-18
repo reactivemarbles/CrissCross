@@ -4,7 +4,11 @@
 
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes a reusable empty, error, offline, or no-results presentation surface.</summary>
 /// <remarks>

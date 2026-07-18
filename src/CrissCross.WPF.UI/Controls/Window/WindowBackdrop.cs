@@ -4,7 +4,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Applies the chosen backdrop effect to the selected window.</summary>
 public static class WindowBackdrop
@@ -17,8 +21,7 @@ public static class WindowBackdrop
     public static bool IsSupported(WindowBackdropType backdropType) =>
         backdropType switch
         {
-            WindowBackdropType.Auto => Win32.Utilities.IsOSWindows11Insider1OrNewer,
-            WindowBackdropType.Tabbed => Win32.Utilities.IsOSWindows11Insider1OrNewer,
+            WindowBackdropType.Auto or WindowBackdropType.Tabbed => Win32.Utilities.IsOSWindows11Insider1OrNewer,
             WindowBackdropType.Mica => Win32.Utilities.IsOSWindows11OrNewer,
             WindowBackdropType.Acrylic => Win32.Utilities.IsOSWindows7OrNewer,
             WindowBackdropType.None => true,

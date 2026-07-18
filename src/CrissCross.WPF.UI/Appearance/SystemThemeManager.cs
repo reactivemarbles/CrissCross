@@ -4,7 +4,11 @@
 
 using Microsoft.Win32;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Appearance;
+#else
 namespace CrissCross.WPF.UI.Appearance;
+#endif
 
 /// <summary>Provides information about Windows system themes.</summary>
 /// <example>

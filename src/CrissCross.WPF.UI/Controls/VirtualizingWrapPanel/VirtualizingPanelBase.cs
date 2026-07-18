@@ -7,7 +7,11 @@ using System.Collections.Specialized;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Base abstract class for creating virtualized panels.</summary>
 public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo

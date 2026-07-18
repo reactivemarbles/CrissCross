@@ -4,7 +4,11 @@
 
 using System.Resources;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the ResourceAccessor member.</summary>
 /// <param name="controlType">The controlType value.</param>

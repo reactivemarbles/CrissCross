@@ -4,7 +4,11 @@
 
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Markup;
+#else
 namespace CrissCross.WPF.UI.Markup;
+#endif
 
 /// <summary>Custom <see cref="MarkupExtension"/> which can provide <see cref="SymbolIcon"/>.</summary>
 /// <example>

@@ -4,7 +4,11 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Converts an <see cref="IconSourceElement"/> to an <see cref="IconElement"/>.</summary>
 public class IconSourceElementConverter : IValueConverter

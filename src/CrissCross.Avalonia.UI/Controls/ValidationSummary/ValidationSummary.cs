@@ -5,9 +5,11 @@
 using System;
 using System.Windows.Input;
 using Avalonia;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Presents aggregate validation messages and exposes a field navigation command hook.</summary>
 public class ValidationSummary : ItemsControl

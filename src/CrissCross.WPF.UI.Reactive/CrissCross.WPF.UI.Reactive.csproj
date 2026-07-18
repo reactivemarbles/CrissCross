@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Deterministic>true</Deterministic>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <ReactiveMarkupKind>WPF</ReactiveMarkupKind>
+    <ReactiveMarkupBeforeTargets>PrepareResourceNames;MarkupCompilePass1</ReactiveMarkupBeforeTargets>
+    <ReactiveMarkupMappings>CrissCross.WPF.UI=CrissCross.Reactive.WPF.UI|CrissCross.WPF.UI.Reactive;CrissCross.WPF=CrissCross.Reactive.WPF|CrissCross.WPF.Reactive;CrissCross=CrissCross.Reactive|CrissCross.Reactive</ReactiveMarkupMappings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.WPF.UI\**\*.cs"
+             Exclude="..\CrissCross.WPF.UI\bin\**;..\CrissCross.WPF.UI\obj\**"
+             LinkBase="CrissCross.WPF.UI" />
+    <_ReactiveMarkupSource Include="..\CrissCross.WPF.UI\**\*.xaml"
+                           Exclude="..\CrissCross.WPF.UI\bin\**;..\CrissCross.WPF.UI\obj\**;..\CrissCross.WPF.UI\Controls\AppBarButton\Assets\AppBar\**"
+                           Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="@(_ReactiveMarkupSource->'$(IntermediateOutputPath)ReactiveMarkup\%(Link)')" />
+    <AdditionalFiles Include="..\CrissCross.WPF.UI\Controls\Symbols\*.symbols"
+                     Link="Controls\Symbols\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="ReactiveUI.Reactive" />
+    <PackageReference Include="CP.Extensions.Hosting.Wpf" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+    <PackageReference Include="CP.Xaml.Converters" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+    <PackageReference Include="ReactiveList.Reactive" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="Polyfill" PrivateAssets="all" />
+    <PackageReference Include="System.Buffers" />
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.WPF.Reactive\CrissCross.WPF.Reactive.csproj" />
+    <ProjectReference Include="..\CrissCross.WPF.UI.SymbolGenerator\CrissCross.WPF.UI.SymbolGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="..\CrissCross.WPF.UI\Images\*.png" Link="Images\%(Filename)%(Extension)" />
+    <Resource Include="..\CrissCross.WPF.UI\Resources\Fonts\*.ttf" Link="Resources\Fonts\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\AppBarButton\Assets\AppBar\*.xaml"
+                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.AppBar.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\AppBarButton\Assets\svg\*.svg"
+                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.svg.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\**\*.png"
+                      Link="Controls\%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\**\*.bmp"
+                      Link="Controls\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Import Project="..\ReactiveMarkup.targets" />
+</Project>

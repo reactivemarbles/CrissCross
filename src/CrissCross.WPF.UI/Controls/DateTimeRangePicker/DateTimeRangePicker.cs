@@ -5,9 +5,11 @@
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents a date/time range picker surface for reports, logs, and dashboard filters.</summary>
 public class DateTimeRangePicker : Control

@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Specifies the available plot types for visualizing data in the plotting library.</summary>
 /// <remarks>Use this enumeration to select the style of plot to render, such as signal, scatter, data logger,

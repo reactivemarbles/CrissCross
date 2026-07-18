@@ -4,13 +4,17 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Represents RangeConstrainedDoubleToDoubleConverter.</summary>
 /// <seealso cref="DependencyObject" />
 /// <seealso cref="IValueConverter" />
 [ValueConversion(typeof(double), typeof(string))]
-internal sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, IValueConverter
+public sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, IValueConverter
 {
     /// <summary>The minimum property.</summary>
     private static readonly DependencyProperty _minProperty = DependencyProperty.Register(

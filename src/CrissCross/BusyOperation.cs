@@ -4,7 +4,11 @@
 
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes the operation projected by a regional busy overlay.</summary>
 /// <remarks>

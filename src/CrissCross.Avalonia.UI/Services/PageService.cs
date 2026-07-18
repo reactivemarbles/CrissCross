@@ -4,7 +4,11 @@
 
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI;
+#else
 namespace CrissCross.Avalonia.UI;
+#endif
 
 /// <summary>Service that provides pages for navigation.</summary>
 /// <remarks>

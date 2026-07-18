@@ -5,7 +5,11 @@
 using System.Windows.Input;
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Contains application-bar input observers.</summary>
 public partial class AppBar

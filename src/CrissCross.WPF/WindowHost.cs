@@ -8,7 +8,11 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF;
+#else
 namespace CrissCross.WPF;
+#endif
 
 /// <summary>Window Host.</summary>
 /// <typeparam name="TWindow">The type of the window to host.</typeparam>

@@ -5,7 +5,11 @@
 using System.Runtime.Serialization;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>View Model Navigating Event Args.</summary>
 [DataContract]

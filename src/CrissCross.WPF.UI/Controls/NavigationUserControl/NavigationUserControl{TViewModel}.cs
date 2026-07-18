@@ -5,7 +5,11 @@
 using ReactiveUI;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>A NavigationUserControl with a strongly-typed ViewModel, wired for ReactiveUI activation.</summary>
 /// <typeparam name="TViewModel">The view model type.</typeparam>

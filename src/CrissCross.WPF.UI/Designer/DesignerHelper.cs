@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Designer;
+#else
 namespace CrissCross.WPF.UI.Designer;
+#endif
 
 /// <summary>Helper class for Visual Studio designer.</summary>
 public static class DesignerHelper

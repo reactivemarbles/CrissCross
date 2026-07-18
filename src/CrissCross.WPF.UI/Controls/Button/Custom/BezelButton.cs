@@ -2,7 +2,11 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents GenericButton.</summary>
 public class BezelButton : CommonButtonBase
@@ -23,7 +27,11 @@ public class BezelButton : CommonButtonBase
 
     /// <summary>Initializes a new instance of the <see cref="BezelButton"/> class.</summary>
     public BezelButton()
+#if REACTIVE_SHIM
+        : base("CrissCross.Reactive.WPF.UI.Controls.BezelButton") { }
+#else
         : base("CrissCross.WPF.UI.Controls.BezelButton") { }
+#endif
 
     // Properties
     /// <summary>Gets or sets the glare opacity mask.</summary>

@@ -5,7 +5,11 @@
 using System.Collections;
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents the container for an item in a NavigationView control.</summary>
 public interface INavigationViewItem

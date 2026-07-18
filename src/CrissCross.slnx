@@ -78,8 +78,20 @@
     <File Path="global.json" />
     <File Path="testconfig.json" />
   </Folder>
+  <Folder Name="/Reactive/">
+    <Project Path="CrissCross.Reactive/CrissCross.Reactive.csproj" />
+    <Project Path="CrissCross.Avalonia.Reactive/CrissCross.Avalonia.Reactive.csproj" />
+    <Project Path="CrissCross.Avalonia.UI.Reactive/CrissCross.Avalonia.UI.Reactive.csproj" />
+    <Project Path="CrissCross.MAUI.Reactive/CrissCross.MAUI.Reactive.csproj" />
+    <Project Path="CrissCross.WinForms.Reactive/CrissCross.WinForms.Reactive.csproj" />
+    <Project Path="CrissCross.WPF.Reactive/CrissCross.WPF.Reactive.csproj" />
+    <Project Path="CrissCross.WPF.UI.Reactive/CrissCross.WPF.UI.Reactive.csproj" />
+    <Project Path="CrissCross.WPF.Plot.Reactive/CrissCross.WPF.Plot.Reactive.csproj" />
+    <Project Path="CrissCross.WPF.WebView2.Reactive/CrissCross.WPF.WebView2.Reactive.csproj" />
+  </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
+    <Project Path="Tests/CrissCross.Reactive.Tests/CrissCross.Reactive.Tests.csproj" />
     <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
     <Project Path="Tests/CrissCross.WPF.Plot.Tests/CrissCross.WPF.Plot.Tests.csproj" />
   </Folder>

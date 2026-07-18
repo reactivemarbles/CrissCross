@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);REACTIVE_SHIM;REACTIVELIST_REACTIVE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI.Primitives.Reactive" />
+    <PackageReference Include="ReactiveUI.Primitives.Extensions.Reactive" />
+
+    <Using Include="ReactiveUI.Primitives.Core" />
+    <Using Include="ReactiveUI.Primitives.Disposables" />
+    <Using Include="ReactiveUI.Primitives.Signals" />
+    <Using Include="ReactiveUI.Primitives.Reactive" />
+    <Using Include="ReactiveUI.Primitives.Reactive.Concurrency" />
+    <Using Include="ReactiveUI.Primitives.Reactive.Signals" />
+    <Using Include="ReactiveUI.Primitives.Extensions.Reactive" />
+    <Using Include="System.Reactive.Unit" Alias="Unit" />
+    <Using Include="System.Reactive.Concurrency.IScheduler" Alias="IScheduler" />
+    <Using Include="System.Reactive.Concurrency.ImmediateScheduler" Alias="ImmediateScheduler" />
+    <Using Include="System.Reactive.Concurrency" />
+    <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="CompositeDisposable" />
+    <Using Include="ReactiveUI.Primitives.Disposables.SwapDisposable" Alias="SerialDisposable" />
+    <Using Include="ReactiveUI.Primitives.Disposables.Scope" Alias="Disposable" />
+    <Using Include="ReactiveUI.Primitives.Reactive.Signals.Signal" Alias="Observable" />
+  </ItemGroup>
+</Project>

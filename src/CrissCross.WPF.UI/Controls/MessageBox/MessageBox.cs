@@ -5,7 +5,11 @@
 using System.Drawing;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Customized window for notifications.</summary>
 [ToolboxItem(true)]

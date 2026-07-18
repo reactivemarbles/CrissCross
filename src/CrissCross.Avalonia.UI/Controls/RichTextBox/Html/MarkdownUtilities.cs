@@ -4,7 +4,11 @@
 
 using Markdig;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the MarkdownUtilities member.</summary>
 internal static class MarkdownUtilities

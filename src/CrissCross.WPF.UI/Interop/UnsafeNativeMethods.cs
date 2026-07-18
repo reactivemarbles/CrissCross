@@ -8,11 +8,23 @@
 
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls;
+#else
 using CrissCross.WPF.UI.Controls;
+#endif
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Hardware;
+#else
 using CrissCross.WPF.UI.Hardware;
+#endif
 using Window = System.Windows.Window;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>A set of dangerous methods to modify the appearance.</summary>
 public static class UnsafeNativeMethods

@@ -8,7 +8,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop;
+#else
 namespace CrissCross.WPF.UI.Interop;
+#endif
 
 /// <summary>USER procedure declarations, constant definitions and macros.</summary>
 internal static class User32

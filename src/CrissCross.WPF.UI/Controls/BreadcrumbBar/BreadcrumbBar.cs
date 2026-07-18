@@ -7,7 +7,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Provides the BreadcrumbBar member.</summary>
 /// <example>

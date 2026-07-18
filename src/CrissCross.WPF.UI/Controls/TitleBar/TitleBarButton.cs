@@ -4,9 +4,17 @@
 
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Extensions;
+#else
 using CrissCross.WPF.UI.Extensions;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents TitleBarButton.</summary>
 /// <seealso cref="Button" />
@@ -229,8 +237,7 @@ public class TitleBarButton : Button
             TitleBarButtonType.Help => User32.WM_NCHITTEST.HTHELP,
             TitleBarButtonType.Minimize => User32.WM_NCHITTEST.HTMINBUTTON,
             TitleBarButtonType.Close => User32.WM_NCHITTEST.HTCLOSE,
-            TitleBarButtonType.Restore => User32.WM_NCHITTEST.HTMAXBUTTON,
-            TitleBarButtonType.Maximize => User32.WM_NCHITTEST.HTMAXBUTTON,
+            TitleBarButtonType.Restore or TitleBarButtonType.Maximize => User32.WM_NCHITTEST.HTMAXBUTTON,
             _ => throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null),
         };
 }

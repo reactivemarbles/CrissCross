@@ -4,7 +4,11 @@
 
 using System.Collections.ObjectModel;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>App Bar Mixins.</summary>
 public static class AppBarMixins

@@ -5,7 +5,11 @@
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents an image with additional properties for Borders and Rounded corners.</summary>
 public class GifImage : Control

@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Converters;
+#else
 using CrissCross.WPF.UI.Converters;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Inherited from the ButtonBase interactive card styled according to Fluent Design.</summary>
 [ToolboxItem(true)]

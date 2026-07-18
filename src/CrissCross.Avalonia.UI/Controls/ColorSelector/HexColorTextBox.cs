@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>A text box for entering hex color values.</summary>
 public class HexColorTextBox : TextBox

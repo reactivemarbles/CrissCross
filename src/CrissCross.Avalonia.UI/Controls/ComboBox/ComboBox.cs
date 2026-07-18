@@ -4,7 +4,11 @@
 
 using Avalonia;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>
 /// Represents a combo box control that allows users to select an item from a drop-down list, with support for

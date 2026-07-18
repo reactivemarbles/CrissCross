@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Layout;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that allows the user to select both a date and time.</summary>
 public class DateTimePicker : StackPanel

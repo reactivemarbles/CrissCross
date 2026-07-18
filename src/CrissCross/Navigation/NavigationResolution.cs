@@ -5,7 +5,11 @@
 using System;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Describes a resolved platform-neutral ViewModel/View navigation pair.</summary>
 /// <remarks>

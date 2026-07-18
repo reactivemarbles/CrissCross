@@ -5,9 +5,11 @@
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Presents a form input with shared validation state, helper text, and required-field metadata.</summary>
 public class ReactiveFormField : ContentControl

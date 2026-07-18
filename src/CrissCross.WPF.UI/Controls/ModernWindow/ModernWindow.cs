@@ -5,11 +5,29 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.UI.Controls;
+#else
 using CrissCross.WPF.UI.Controls;
+#endif
 using ReactiveMarbles.Extensions.Hosting.Wpf;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVE_SHIM
+using StringReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<string>;
+using VisibilityReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<System.Windows.Visibility>;
+#else
+using StringReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<string>;
+using VisibilityReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<System.Windows.Visibility>;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI;
+#else
 namespace CrissCross.WPF.UI;
+#endif
 
 /// <summary>Represents a Modern UI styled window.</summary>
 public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, IDisposable
@@ -164,10 +182,10 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         new PropertyMetadata(null));
 
     /// <summary>Stores the _busyStatusTextSubject value.</summary>
-    private readonly ReplaySignal<string> _busyStatusTextSubject = new(1);
+    private readonly StringReplaySignal _busyStatusTextSubject = new(1);
 
     /// <summary>Stores the _busyVisibilitySubject value.</summary>
-    private readonly ReplaySignal<Visibility> _busyVisibilitySubject = new(1);
+    private readonly VisibilityReplaySignal _busyVisibilitySubject = new(1);
 
     /// <summary>Stores the _cleanUp value.</summary>
     private readonly CompositeDisposable _cleanUp = [];

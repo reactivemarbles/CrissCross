@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set
 /// to true, PasswordProperty always contains raw password.</summary>

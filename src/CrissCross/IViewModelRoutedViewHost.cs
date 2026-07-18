@@ -7,7 +7,11 @@ using System.Collections.ObjectModel;
 using ReactiveUI;
 using Splat;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>IViewModel Routed ViewHost.</summary>
 public interface IViewModelRoutedViewHost : IActivatableView, IEnableLogger

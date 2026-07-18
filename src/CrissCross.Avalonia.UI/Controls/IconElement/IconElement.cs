@@ -6,7 +6,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents the base class for an icon UI element.</summary>
 public class IconElement : Control

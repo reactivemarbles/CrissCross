@@ -4,7 +4,11 @@
 
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Extensions;
+#else
 namespace CrissCross.Avalonia.UI.Extensions;
+#endif
 
 /// <summary>Adds an extension for <see cref="Color"/> that allows manipulation with HSL and HSV color spaces.</summary>
 public static class ColorExtensions

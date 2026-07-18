@@ -5,7 +5,11 @@
 using System;
 using System.Collections.Generic;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Represents platform-neutral theme preference state for theme picker controls.</summary>
 public sealed class ThemePreferenceState

@@ -6,7 +6,11 @@ using System.Linq;
 using System.Windows.Input;
 using Avalonia.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the History members for <see cref="RichTextBox"/>.</summary>
 public partial class RichTextBox

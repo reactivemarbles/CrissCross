@@ -13,7 +13,11 @@ using System.Windows.Media;
 using System.Xml.Linq;
 using WpfButton = System.Windows.Controls.Button;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Adds icon content to a standard button.</summary>
 public class AppBarButton : WpfButton
@@ -295,7 +299,11 @@ public class AppBarButton : WpfButton
         private const string MaterialDesignPrefix = "Md_";
 
         /// <summary>The common manifest resource prefix for migrated AppBarButton assets.</summary>
+#if REACTIVE_SHIM
+        private const string ResourcePrefix = "CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets";
+#else
         private const string ResourcePrefix = "CrissCross.WPF.UI.Controls.AppBarButton.Assets";
+#endif
 
         /// <summary>Stores the assembly containing the embedded icon resources.</summary>
         private readonly Assembly _assembly;

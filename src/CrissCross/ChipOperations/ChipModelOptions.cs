@@ -4,7 +4,11 @@
 
 using System.Windows.Input;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Configures the state, presentation, and commands for a <see cref="ChipModel"/>.</summary>
 public sealed class ChipModelOptions

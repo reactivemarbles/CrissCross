@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Immutable aggregate validation state for form summary controls and submit gating.</summary>
 public sealed class ValidationSummaryState

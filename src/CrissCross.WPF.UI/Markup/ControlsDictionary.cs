@@ -4,7 +4,11 @@
 
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Markup;
+#else
 namespace CrissCross.WPF.UI.Markup;
+#endif
 
 /// <summary>Provides a dictionary implementation that contains controls resources used by components and other elements
 /// of a WPF application.</summary>
@@ -28,8 +32,13 @@ namespace CrissCross.WPF.UI.Markup;
 public class ControlsDictionary : ResourceDictionary
 {
     /// <summary>Provides the DictionaryUri member.</summary>
+#if REACTIVE_SHIM
+    private const string DictionaryUri =
+        "pack://application:,,,/CrissCross.WPF.UI.Reactive;component/Resources/CrissCross.Ui.xaml";
+#else
     private const string DictionaryUri =
         "pack://application:,,,/CrissCross.WPF.UI;component/Resources/CrissCross.Ui.xaml";
+#endif
 
     /// <summary>Initializes a new instance of the <see cref="ControlsDictionary"/> class.</summary>
     public ControlsDictionary() => Source = new(DictionaryUri, UriKind.Absolute);

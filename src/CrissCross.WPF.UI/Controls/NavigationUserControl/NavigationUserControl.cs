@@ -4,9 +4,18 @@
 
 using System.Windows.Controls;
 using ReactiveUI;
-using static ReactiveUI.TransitioningContentControl;
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Reactive.TransitioningContentControl;
+#else
+using static ReactiveUI.TransitioningContentControl;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>A reactive UserControl that hosts a ViewModelRoutedViewHost for ViewModel-based navigation.</summary>
 /// <seealso cref="UserControl" />

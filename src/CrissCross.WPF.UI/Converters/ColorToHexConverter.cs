@@ -5,7 +5,11 @@
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Converts between a Color and its hexadecimal string representation, with optional alpha support.</summary>
 [ValueConversion(typeof(Color), typeof(string))]

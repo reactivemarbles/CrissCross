@@ -6,9 +6,18 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
-using ReactiveUI;
 
+#if REACTIVE_SHIM
+using ReactiveUI.Reactive;
+#else
+using ReactiveUI;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia;
+#else
 namespace CrissCross.Avalonia;
+#endif
 
 /// <summary>Displays <see cref="ContentControl.Content" /> according to an <see cref="IDataTemplate" />.</summary>
 /// <seealso cref="ContentControl" />

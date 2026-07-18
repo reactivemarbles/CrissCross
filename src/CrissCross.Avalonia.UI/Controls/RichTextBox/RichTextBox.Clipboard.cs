@@ -8,7 +8,11 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Provides the Clipboard members for <see cref="RichTextBox"/>.</summary>
 public partial class RichTextBox

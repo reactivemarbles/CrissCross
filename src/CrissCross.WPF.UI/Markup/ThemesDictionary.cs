@@ -4,7 +4,11 @@
 
 using System.Windows.Markup;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Markup;
+#else
 namespace CrissCross.WPF.UI.Markup;
+#endif
 
 /// <summary>Provides a dictionary implementation that contains theme resources used by components and other elements of
 /// a WPF application.</summary>

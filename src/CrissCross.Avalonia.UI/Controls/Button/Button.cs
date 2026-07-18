@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>
 /// Represents a button control that can display an icon and supports customizable appearance, including visual states

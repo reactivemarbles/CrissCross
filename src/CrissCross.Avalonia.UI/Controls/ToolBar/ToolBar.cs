@@ -4,7 +4,11 @@
 
 using Avalonia.Layout;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a control that displays a horizontal bar of commands or tools.</summary>
 public class ToolBar : StackPanel

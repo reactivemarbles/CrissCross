@@ -5,7 +5,11 @@
 using Avalonia;
 using Avalonia.Media;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Represents a compact command button with a circular icon surface and caption.</summary>
 public class AppBarButton : global::Avalonia.Controls.Button

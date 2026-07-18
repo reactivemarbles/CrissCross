@@ -172,7 +172,6 @@ public class RxObjectTests
     /// <summary>Provides the PropertyChanged_IsRaisedWhenDisplayNameChanges member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
-    [Skip("DisplayName is an auto-property and doesn't raise PropertyChanged - would need to use RaiseAndSetIfChanged")]
     public async Task PropertyChanged_IsRaisedWhenDisplayNameChanges()
     {
         // Arrange

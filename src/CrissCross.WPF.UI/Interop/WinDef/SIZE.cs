@@ -8,7 +8,11 @@
 
 using System.Runtime.InteropServices;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Interop.WinDef;
+#else
 namespace CrissCross.WPF.UI.Interop.WinDef;
+#endif
 
 /// <summary>The SIZE structure defines the width and height of a rectangle.</summary>
 [StructLayout(LayoutKind.Sequential)]

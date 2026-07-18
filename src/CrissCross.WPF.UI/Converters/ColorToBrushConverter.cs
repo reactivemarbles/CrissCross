@@ -4,11 +4,15 @@
 
 using System.Windows.Data;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Converters;
+#else
 namespace CrissCross.WPF.UI.Converters;
+#endif
 
 /// <summary>Provides the ColorToBrushConverter member.</summary>
 [ValueConversion(typeof(Color), typeof(SolidColorBrush))]
-internal sealed class ColorToBrushConverter : IValueConverter
+public sealed class ColorToBrushConverter : IValueConverter
 {
     /// <summary>Provides the Convert member.</summary>
     /// <param name="value">The value.</param>

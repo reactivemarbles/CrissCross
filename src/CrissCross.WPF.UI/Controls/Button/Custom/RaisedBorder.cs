@@ -4,7 +4,11 @@
 
 using System.Windows.Controls;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents AICSBorder.</summary>
 /// <seealso cref="System.Windows.Controls.ContentControl" />

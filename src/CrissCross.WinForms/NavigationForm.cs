@@ -4,7 +4,11 @@
 
 using System.ComponentModel;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WinForms;
+#else
 namespace CrissCross.WinForms;
+#endif
 
 /// <summary>Hosts WinForms navigation content.</summary>
 /// <seealso cref="Form" />

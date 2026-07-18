@@ -2,14 +2,21 @@
 // ReactiveUI and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Represents SnackbarPresenter.</summary>
 /// <seealso cref="System.Windows.Controls.ContentPresenter" />
-public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
+public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisposable
 {
     /// <summary>Provides the duration of the snackbar hide transition.</summary>
     private const int HideTransitionDurationMilliseconds = 300;
+
+    /// <summary>Tracks whether owned resources have been released.</summary>
+    private bool _disposed;
 
     /// <summary>Initializes a new instance of the <see cref="SnackbarPresenter"/> class.</summary>
     public SnackbarPresenter() =>
@@ -18,17 +25,6 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
             var self = (SnackbarPresenter)sender;
             self.OnUnloaded();
         };
-
-    /// <summary>Finalizes an instance of the <see cref="SnackbarPresenter"/> class.</summary>
-    ~SnackbarPresenter()
-    {
-        if (!CancellationTokenSource.IsCancellationRequested)
-        {
-            CancellationTokenSource.Cancel();
-        }
-
-        CancellationTokenSource.Dispose();
-    }
 
     /// <summary>Gets the Gets or sets the content. value.</summary>
     /// <value>
@@ -100,6 +96,13 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
         ResetCancellationTokenSource();
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
     /// <summary>Called when [unloaded].</summary>
     protected virtual void OnUnloaded()
     {
@@ -110,6 +113,24 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter
 
         ImmediatelyHideCurrent();
         ResetCancellationTokenSource();
+    }
+
+    /// <summary>Releases resources owned by the presenter.</summary>
+    /// <param name="disposing">Whether the call originates from <see cref="Dispose()"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing || _disposed)
+        {
+            return;
+        }
+
+        if (!CancellationTokenSource.IsCancellationRequested)
+        {
+            CancellationTokenSource.Cancel();
+        }
+
+        CancellationTokenSource.Dispose();
+        _disposed = true;
     }
 
     /// <summary>Resets the cancellation token source.</summary>

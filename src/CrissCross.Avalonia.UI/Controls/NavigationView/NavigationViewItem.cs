@@ -9,7 +9,11 @@ using Avalonia;
 using Avalonia.Controls.Templates;
 using Avalonia.Interactivity;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>
 /// Represents the container for an item in a NavigationView control.

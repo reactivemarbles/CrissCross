@@ -3,9 +3,17 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Media;
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.Avalonia.UI.Appearance;
+#else
 using CrissCross.Avalonia.UI.Appearance;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI;
+#else
 namespace CrissCross.Avalonia.UI;
+#endif
 
 /// <summary>Lets you set the Avalonia application theme.</summary>
 public class ThemeService : IThemeService
@@ -23,16 +31,10 @@ public class ThemeService : IThemeService
 
         return systemTheme switch
         {
-            SystemTheme.Light => ApplicationTheme.Light,
-            SystemTheme.Dark => ApplicationTheme.Dark,
-            SystemTheme.Glow => ApplicationTheme.Dark,
-            SystemTheme.CapturedMotion => ApplicationTheme.Dark,
-            SystemTheme.Sunrise => ApplicationTheme.Light,
-            SystemTheme.Flow => ApplicationTheme.Light,
-            SystemTheme.HCBlack => ApplicationTheme.HighContrast,
-            SystemTheme.HC1 => ApplicationTheme.HighContrast,
-            SystemTheme.HC2 => ApplicationTheme.HighContrast,
-            SystemTheme.HCWhite => ApplicationTheme.HighContrast,
+            SystemTheme.Light or SystemTheme.Sunrise or SystemTheme.Flow => ApplicationTheme.Light,
+            SystemTheme.Dark or SystemTheme.Glow or SystemTheme.CapturedMotion => ApplicationTheme.Dark,
+            SystemTheme.HCBlack or SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCWhite =>
+                ApplicationTheme.HighContrast,
             _ => ApplicationTheme.Unknown
         };
     }

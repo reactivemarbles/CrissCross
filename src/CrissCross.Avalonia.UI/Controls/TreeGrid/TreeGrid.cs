@@ -6,7 +6,11 @@ using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.UI.Controls;
+#else
 namespace CrissCross.Avalonia.UI.Controls;
+#endif
 
 /// <summary>Work in progress.</summary>
 public class TreeGrid : TemplatedControl

@@ -4,9 +4,11 @@
 
 using System.Windows.Controls;
 using System.Windows.Input;
-using CrissCross;
-
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.UI.Controls;
+#else
 namespace CrissCross.WPF.UI.Controls;
+#endif
 
 /// <summary>Presents aggregate validation messages and exposes a field navigation command hook.</summary>
 public class ValidationSummary : ItemsControl

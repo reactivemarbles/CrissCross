@@ -5,7 +5,11 @@
 using System;
 using ReactiveUI;
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive;
+#else
 namespace CrissCross;
+#endif
 
 /// <summary>Stores closed factory delegates for one bidirectional navigation pair.</summary>
 /// <param name="viewModelKey">The view model lookup type.</param>

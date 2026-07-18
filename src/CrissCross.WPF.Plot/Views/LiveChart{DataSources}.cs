@@ -3,9 +3,15 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
+#if !REACTIVE_SHIM
 using ReactiveUI;
+#endif
 
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
 namespace CrissCross.WPF.Plot;
+#endif
 
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
 public partial class LiveChart
