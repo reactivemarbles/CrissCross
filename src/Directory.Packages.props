@@ -56,10 +56,10 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
     <PackageVersion Include="Microsoft.Bcl.Memory" Version="$(DotNetVersion)" />
@@ -68,7 +68,7 @@
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
 
     <!-- Source Generators (PrivateAssets) -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.1.0" />
 
     <!-- Other UI/Framework Packages -->
