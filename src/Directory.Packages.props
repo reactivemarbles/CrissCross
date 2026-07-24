@@ -8,7 +8,7 @@
     <ReactiveUIVersion>24.0.0-beta.3</ReactiveUIVersion>
     <ReactiveUIPrimitivesVersion>6.0.0</ReactiveUIPrimitivesVersion>
     <WebViewVersion>1.0.4078.44</WebViewVersion>
-    <DotNetVersion>10.0.9</DotNetVersion>
+    <DotNetVersion>10.0.10</DotNetVersion>
     <DotNet11Version>11.0.0-preview.6.26359.118</DotNet11Version>
     <ExtensionsHostingVersion>4.0.0-beta.2</ExtensionsHostingVersion>
   </PropertyGroup>
@@ -54,7 +54,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.6.26360.8" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
@@ -95,7 +95,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.9.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" Condition="!$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301" Condition="!$(IsTestProject)" />
 
     <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="StyleSharp.Analyzers" Version="3.28.1" />
