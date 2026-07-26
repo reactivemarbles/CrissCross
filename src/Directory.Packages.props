@@ -55,10 +55,10 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.6.26360.8" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
