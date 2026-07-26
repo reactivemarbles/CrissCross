@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Documents;
@@ -102,12 +102,12 @@ internal sealed partial class BbCodeRenderer
 
     /// <summary>Initializes a new instance of the <see cref="BbCodeRenderer"/> class.</summary>
     /// <param name="source">The owning control.</param>
-    public BbCodeRenderer(BBCodeBlock source) => _source = source ?? throw new ArgumentNullException(nameof(source));
+    internal BbCodeRenderer(BBCodeBlock source) => _source = source ?? throw new ArgumentNullException(nameof(source));
 
     /// <summary>Renders a parsed document.</summary>
     /// <param name="root">The document root.</param>
     /// <returns>The rendered span.</returns>
-    public Span Render(BbCodeNode root)
+    internal Span Render(BbCodeNode root)
     {
         var span = new Span();
         AddChildren(span.Inlines, root.Children);
@@ -184,21 +184,21 @@ internal sealed partial class BbCodeRenderer
         {
             case "b" or "strong":
             {
-                AddStyledSpan(target, node, span => span.FontWeight = FontWeights.Bold);
+                AddStyledSpan(target, node, static span => span.FontWeight = FontWeights.Bold);
                 return true;
             }
 
             case "i"
             or "em":
             {
-                AddStyledSpan(target, node, span => span.FontStyle = FontStyles.Italic);
+                AddStyledSpan(target, node, static span => span.FontStyle = FontStyles.Italic);
                 return true;
             }
 
             case "u"
             or "ins":
             {
-                AddStyledSpan(target, node, span => span.TextDecorations = TextDecorations.Underline);
+                AddStyledSpan(target, node, static span => span.TextDecorations = TextDecorations.Underline);
                 return true;
             }
 
@@ -206,19 +206,19 @@ internal sealed partial class BbCodeRenderer
             or "strike"
             or "del":
             {
-                AddStyledSpan(target, node, span => span.TextDecorations = TextDecorations.Strikethrough);
+                AddStyledSpan(target, node, static span => span.TextDecorations = TextDecorations.Strikethrough);
                 return true;
             }
 
             case "sup":
             {
-                AddStyledSpan(target, node, span => span.BaselineAlignment = BaselineAlignment.Superscript);
+                AddStyledSpan(target, node, static span => span.BaselineAlignment = BaselineAlignment.Superscript);
                 return true;
             }
 
             case "sub":
             {
-                AddStyledSpan(target, node, span => span.BaselineAlignment = BaselineAlignment.Subscript);
+                AddStyledSpan(target, node, static span => span.BaselineAlignment = BaselineAlignment.Subscript);
                 return true;
             }
 
@@ -472,7 +472,7 @@ internal sealed partial class BbCodeRenderer
         var address = node.Value ?? node.GetText();
         if (node.Name is "email" or "mail" && !address.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
         {
-            address = "mailto:" + address;
+            address = $"mailto:{address}";
         }
 
         if (!BbCodeRenderHelpers.TryCreateAllowedUri(address, out var uri))
@@ -506,12 +506,7 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The themed text block.</returns>
     private TextBlock CreateThemedTextBlock()
     {
-        TextBlock textBlock = new()
-        {
-            FontFamily = _source.FontFamily,
-            FontSize = _source.FontSize,
-            TextWrapping = TextWrapping.Wrap,
-        };
+        TextBlock textBlock = new() { FontFamily = _source.FontFamily, FontSize = _source.FontSize, TextWrapping = TextWrapping.Wrap, };
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
         return textBlock;
     }
@@ -521,12 +516,7 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The themed border.</returns>
     private Border CreateThemedBorder(string backgroundKey)
     {
-        Border border = new()
-        {
-            BorderThickness = new(1D),
-            CornerRadius = new(GeneratedCornerRadius),
-            FlowDirection = _source.FlowDirection,
-        };
+        Border border = new() { BorderThickness = new(1D), CornerRadius = new(GeneratedCornerRadius), FlowDirection = _source.FlowDirection, };
         border.SetResourceReference(Border.BackgroundProperty, backgroundKey);
         border.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
         return border;
@@ -535,40 +525,69 @@ internal sealed partial class BbCodeRenderer
     /// <summary>Creates a themed grid from table rows.</summary>
     /// <param name="rows">The table rows.</param>
     /// <returns>The table grid.</returns>
-    private Grid CreateTableGrid(IReadOnlyList<IReadOnlyList<BbCodeNode>> rows)
+    private Grid CreateTableGrid(List<IReadOnlyList<BbCodeNode>> rows)
     {
         Grid grid = new() { Margin = new(0D, TableSpacing, 0D, TableSpacing) };
-        var columnCount = rows.Count == 0 ? 0 : rows.Max(row => row.Count);
+        var columnCount = 0;
+        foreach (var row in rows)
+        {
+            if (row.Count > columnCount)
+            {
+                columnCount = row.Count;
+            }
+        }
+
         for (var column = 0; column < columnCount; column++)
         {
             grid.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
         }
 
+        AddTableRows(grid, rows);
+
+        return grid;
+    }
+
+    /// <summary>Adds the table cell controls to a themed table grid.</summary>
+    /// <param name="grid">The target grid.</param>
+    /// <param name="rows">The table rows.</param>
+    private void AddTableRows(Grid grid, List<IReadOnlyList<BbCodeNode>> rows)
+    {
         for (var rowIndex = 0; rowIndex < rows.Count; rowIndex++)
         {
             grid.RowDefinitions.Add(new() { Height = GridLength.Auto });
-            for (var columnIndex = 0; columnIndex < rows[rowIndex].Count; columnIndex++)
-            {
-                var cellNode = rows[rowIndex][columnIndex];
-                var backgroundKey =
-                    cellNode.Name == "th" ? "ControlFillColorDefaultBrush" : "CardBackgroundFillColorDefaultBrush";
-                var border = CreateThemedBorder(backgroundKey);
-                border.CornerRadius = default;
-                border.Padding = new(
-                    TableCellHorizontalPadding,
-                    TableCellVerticalPadding,
-                    TableCellHorizontalPadding,
-                    TableCellVerticalPadding);
-                var cell = CreateTextBlock(cellNode.Children.Count > 0 ? cellNode.Children : [cellNode]);
-                cell.FontWeight = cellNode.Name == "th" ? FontWeights.SemiBold : FontWeights.Normal;
-                border.Child = cell;
-                Grid.SetRow(border, rowIndex);
-                Grid.SetColumn(border, columnIndex);
-                _ = grid.Children.Add(border);
-            }
+            AddTableRow(grid, rows[rowIndex], rowIndex);
         }
+    }
 
-        return grid;
+    /// <summary>Adds a single table row to the grid.</summary>
+    /// <param name="grid">The target grid.</param>
+    /// <param name="row">The table row.</param>
+    /// <param name="rowIndex">The row index.</param>
+    private void AddTableRow(Grid grid, IReadOnlyList<BbCodeNode> row, int rowIndex)
+    {
+        for (var columnIndex = 0; columnIndex < row.Count; columnIndex++)
+        {
+            var cellNode = row[columnIndex];
+            var border = CreateTableCell(cellNode);
+            Grid.SetRow(border, rowIndex);
+            Grid.SetColumn(border, columnIndex);
+            _ = grid.Children.Add(border);
+        }
+    }
+
+    /// <summary>Creates a themed table cell.</summary>
+    /// <param name="cellNode">The cell node.</param>
+    /// <returns>The table cell border.</returns>
+    private Border CreateTableCell(BbCodeNode cellNode)
+    {
+        var isHeader = cellNode.Name == "th";
+        var border = CreateThemedBorder(isHeader ? "ControlFillColorDefaultBrush" : "CardBackgroundFillColorDefaultBrush");
+        border.CornerRadius = default;
+        border.Padding = new(TableCellHorizontalPadding, TableCellVerticalPadding, TableCellHorizontalPadding, TableCellVerticalPadding);
+        var cell = CreateTextBlock(cellNode.Children.Count > 0 ? cellNode.Children : [cellNode]);
+        cell.FontWeight = isHeader ? FontWeights.SemiBold : FontWeights.Normal;
+        border.Child = cell;
+        return border;
     }
 
     /// <summary>Renders a known alias transparently or preserves an unknown tag literally.</summary>
@@ -584,6 +603,6 @@ internal sealed partial class BbCodeRenderer
 
         target.Add(new Run(node.RawOpeningTag));
         AddChildren(target, node.Children);
-        target.Add(new Run("[/" + node.Name + "]"));
+        target.Add(new Run($"[/{node.Name}]"));
     }
 }

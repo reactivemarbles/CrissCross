@@ -1,11 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 
 #if REACTIVELIST_REACTIVE
@@ -76,9 +73,12 @@ public partial class RichTextBox
         var hasSelection = HasSelection;
         var canEdit = !IsReadOnlyInternal;
 
-        foreach (var menuItem in items.OfType<global::Avalonia.Controls.MenuItem>())
+        foreach (var item in items)
         {
-            menuItem.IsEnabled = IsContextMenuItemEnabled(menuItem, hasSelection, canEdit);
+            if (item is global::Avalonia.Controls.MenuItem menuItem)
+            {
+                menuItem.IsEnabled = IsContextMenuItemEnabled(menuItem, hasSelection, canEdit);
+            }
         }
     }
 
@@ -156,6 +156,6 @@ public partial class RichTextBox
             return;
         }
 
-        RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
+        RaiseEvent(new(SelectionChangedEvent));
     }
 }

@@ -1,10 +1,11 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using SystemTimeProvider = System.TimeProvider;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI;
@@ -13,6 +14,7 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Interaction logic for DateTimePicker.xaml.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class DateTimePicker : UserControl
 {
     /// <summary>The selected date property.</summary>
@@ -20,21 +22,21 @@ public partial class DateTimePicker : UserControl
         nameof(SelectedDate),
         typeof(DateTimeOffset),
         typeof(DateTimePicker),
-        new FrameworkPropertyMetadata(DateTimeOffset.Now, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        new FrameworkPropertyMetadata(SystemTimeProvider.System.GetLocalNow(), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     /// <summary>The display date start property.</summary>
     public static readonly DependencyProperty DisplayDateStartProperty = DependencyProperty.Register(
         nameof(DisplayDateStart),
         typeof(DateTimeOffset),
         typeof(DateTimePicker),
-        new PropertyMetadata(DateTimeOffset.MinValue, DateChanged));
+        new(DateTimeOffset.MinValue, DateTimePickerCallbacks.DateChanged));
 
     /// <summary>The display date end property.</summary>
     public static readonly DependencyProperty DisplayDateEndProperty = DependencyProperty.Register(
         nameof(DisplayDateEnd),
         typeof(DateTimeOffset),
         typeof(DateTimePicker),
-        new PropertyMetadata(DateTimeOffset.Now, DateChanged));
+        new(SystemTimeProvider.System.GetLocalNow(), DateTimePickerCallbacks.DateChanged));
 
     /// <summary>Provides the DateTimeFormat member.</summary>
     private const string DateTimeFormat = "dd.MM.yyyy HH:mm";
@@ -44,8 +46,12 @@ public partial class DateTimePicker : UserControl
     {
         InitializeComponent();
         CalDisplay.SelectedDatesChanged += CalDisplay_SelectedDatesChanged;
-        CalDisplay.SelectedDate = DateTime.UtcNow;
+        CalDisplay.PreviewMouseUp += DateTimePickerCallbacks.CalDisplayPreviewMouseUp;
+        CalDisplay.SelectedDate = TimeProvider.GetUtcNow().UtcDateTime;
     }
+
+    /// <summary>Gets or sets the source of current time used by this control.</summary>
+    public SystemTimeProvider TimeProvider { get; set; } = SystemTimeProvider.System;
 
     /// <summary>Gets or sets the selected date.</summary>
     /// <value>
@@ -77,6 +83,10 @@ public partial class DateTimePicker : UserControl
         set => SetValue(DisplayDateEndProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the SaveTime_Click member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
@@ -85,30 +95,6 @@ public partial class DateTimePicker : UserControl
         CalDisplay_SelectedDatesChanged(SaveTime, EventArgs.Empty);
         PopUpCalendarButton.IsChecked = false;
     }
-
-    /// <summary>Provides the DateChanged member.</summary>
-    /// <param name="d">The d value.</param>
-    /// <param name="e">The event arguments.</param>
-    private static void DateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        _ = e;
-        if (d is not DateTimePicker dateTimePicker)
-        {
-            return;
-        }
-
-        dateTimePicker.CoerceDisplayDateRange();
-        dateTimePicker.CoerceSelectedDate();
-
-        dateTimePicker.CalDisplay_SelectedDatesChanged(null, EventArgs.Empty);
-    }
-
-    /// <summary>Determines whether two values represent the same calendar date.</summary>
-    /// <param name="left">The first date.</param>
-    /// <param name="right">The second date.</param>
-    /// <returns><c>true</c> when the calendar dates match; otherwise, <c>false</c>.</returns>
-    private static bool IsSameDate(DateTime left, DateTime right) =>
-        left.Year == right.Year && left.Month == right.Month && left.Day == right.Day;
 
     /// <summary>Ensures the display date range is valid.</summary>
     private void CoerceDisplayDateRange() =>
@@ -145,20 +131,20 @@ public partial class DateTimePicker : UserControl
     {
         var hours = (Hours?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
         var minutes = (Min?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "0";
-        return TimeSpan.Parse(hours + ":" + minutes);
+        return TimeSpan.Parse($"{hours}:{minutes}");
     }
 
     /// <summary>Coerces the selected time when today's selected time has passed.</summary>
     /// <param name="timeSpan">The selected time.</param>
     /// <returns>The coerced selected time.</returns>
     private TimeSpan CoerceSelectedTime(TimeSpan timeSpan) =>
-        ShouldUseSelectedTime(timeSpan) ? timeSpan : TimeSpan.FromHours(DateTime.Now.Hour + 1);
+        ShouldUseSelectedTime(timeSpan) ? timeSpan : TimeSpan.FromHours(TimeProvider.GetLocalNow().Hour + 1);
 
     /// <summary>Determines whether the selected time can be used as-is.</summary>
     /// <param name="timeSpan">The selected time.</param>
     /// <returns><c>true</c> when the selected time can be used as-is; otherwise, <c>false</c>.</returns>
     private bool ShouldUseSelectedTime(TimeSpan timeSpan) =>
-        !IsSameDate(CalDisplay.SelectedDate!.Value, DateTime.Today) || timeSpan.CompareTo(DateTime.Now.TimeOfDay) >= 0;
+        !DateTimePickerCallbacks.IsSameDate(CalDisplay.SelectedDate!.Value, TimeProvider.GetLocalNow().Date) || timeSpan.CompareTo(TimeProvider.GetLocalNow().TimeOfDay) >= 0;
 
     /// <summary>Provides the Time_SelectionChanged member.</summary>
     /// <param name="sender">The event sender.</param>
@@ -166,16 +152,43 @@ public partial class DateTimePicker : UserControl
     private void Time_SelectionChanged(object sender, SelectionChangedEventArgs e) =>
         CalDisplay_SelectedDatesChanged(sender, e);
 
-    /// <summary>Provides the CalDisplay_PreviewMouseUp member.</summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
-    private void CalDisplay_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+    /// <summary>Provides static callbacks used by dependency properties and mouse events.</summary>
+    private static class DateTimePickerCallbacks
     {
-        if (Mouse.Captured is not CalendarItem)
+        /// <summary>Coerces dates when a range boundary changes.</summary>
+        /// <param name="d">The source dependency object.</param>
+        /// <param name="e">The property change arguments.</param>
+        internal static void DateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            return;
+            _ = e;
+            if (d is not DateTimePicker dateTimePicker)
+            {
+                return;
+            }
+
+            dateTimePicker.CoerceDisplayDateRange();
+            dateTimePicker.CoerceSelectedDate();
+            dateTimePicker.CalDisplay_SelectedDatesChanged(null, EventArgs.Empty);
         }
 
-        _ = Mouse.Capture(null);
+        /// <summary>Releases an active calendar capture when the mouse button is released.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The mouse event arguments.</param>
+        internal static void CalDisplayPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (Mouse.Captured is not CalendarItem)
+            {
+                return;
+            }
+
+            _ = Mouse.Capture(null);
+        }
+
+        /// <summary>Determines whether two values represent the same calendar date.</summary>
+        /// <param name="left">The first date.</param>
+        /// <param name="right">The second date.</param>
+        /// <returns><c>true</c> when the calendar dates match; otherwise, <c>false</c>.</returns>
+        internal static bool IsSameDate(DateTime left, DateTime right) =>
+            left.Year == right.Year && left.Month == right.Month && left.Day == right.Day;
     }
 }

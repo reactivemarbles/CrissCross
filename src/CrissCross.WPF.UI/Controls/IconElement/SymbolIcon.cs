@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents a text element containing an icon glyph.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(SymbolIcon), "SymbolIcon.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class SymbolIcon : FontIcon
 {
     /// <summary>Property for <see cref="Symbol"/>.</summary>
@@ -25,14 +26,14 @@ public partial class SymbolIcon : FontIcon
         nameof(Symbol),
         typeof(SymbolRegular),
         typeof(SymbolIcon),
-        new PropertyMetadata(SymbolRegular.Empty, static (o, _) => ((SymbolIcon)o).OnGlyphChanged()));
+        new(SymbolRegular.Empty, static (o, _) => ((SymbolIcon)o).OnGlyphChanged()));
 
     /// <summary>Property for <see cref="Filled"/>.</summary>
     public static readonly DependencyProperty FilledProperty = DependencyProperty.Register(
         nameof(Filled),
         typeof(bool),
         typeof(SymbolIcon),
-        new PropertyMetadata(false, OnFilledChanged));
+        new(false, OnFilledChanged));
 
     /// <summary>Initializes a new instance of the <see cref="SymbolIcon"/> class.</summary>
     public SymbolIcon() { }
@@ -72,6 +73,10 @@ public partial class SymbolIcon : FontIcon
         get => (bool)GetValue(FilledProperty);
         set => SetValue(FilledProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked
     /// whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to true internally.</summary>

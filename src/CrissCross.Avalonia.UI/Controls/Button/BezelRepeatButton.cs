@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -24,11 +24,11 @@ public class BezelRepeatButton : global::Avalonia.Controls.RepeatButton
 
     /// <summary>Property for <see cref="OuterCornerRadius"/>.</summary>
     public static readonly StyledProperty<CornerRadius> OuterCornerRadiusProperty =
-        AvaloniaProperty.Register<BezelRepeatButton, CornerRadius>(nameof(OuterCornerRadius), new CornerRadius(3.0));
+        AvaloniaProperty.Register<BezelRepeatButton, CornerRadius>(nameof(OuterCornerRadius), new(3.0));
 
     /// <summary>Property for <see cref="InnerCornerRadius"/>.</summary>
     public static readonly StyledProperty<CornerRadius> InnerCornerRadiusProperty =
-        AvaloniaProperty.Register<BezelRepeatButton, CornerRadius>(nameof(InnerCornerRadius), new CornerRadius(2.0));
+        AvaloniaProperty.Register<BezelRepeatButton, CornerRadius>(nameof(InnerCornerRadius), new(2.0));
 
     /// <summary>Gets or sets the glare opacity mask.</summary>
     public IBrush? GlareOpacityMask

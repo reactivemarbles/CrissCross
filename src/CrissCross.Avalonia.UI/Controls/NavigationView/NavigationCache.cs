@@ -1,6 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
+
+using System.Runtime.InteropServices;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.UI.Controls;
@@ -19,7 +21,7 @@ internal sealed class NavigationCache
     /// <param name="cacheMode">The cache mode.</param>
     /// <param name="generate">The generate function.</param>
     /// <returns>The cached or generated instance.</returns>
-    public object? Remember(Type? entryType, NavigationCacheMode cacheMode, Func<object?> generate)
+    internal object? Remember(Type? entryType, NavigationCacheMode cacheMode, Func<object?> generate)
     {
         if (entryType is null)
         {
@@ -36,7 +38,8 @@ internal sealed class NavigationCache
             return generate.Invoke();
         }
 
-        if (!_entries.TryGetValue(entryType, out var value))
+        ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(_entries, entryType, out var exists);
+        if (!exists)
         {
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(
@@ -44,8 +47,6 @@ internal sealed class NavigationCache
 #endif
 
             value = generate.Invoke();
-
-            _entries.Add(entryType, value);
         }
 
 #if DEBUG
@@ -56,5 +57,5 @@ internal sealed class NavigationCache
     }
 
     /// <summary>Clears the cache.</summary>
-    public void Clear() => _entries.Clear();
+    internal void Clear() => _entries.Clear();
 }

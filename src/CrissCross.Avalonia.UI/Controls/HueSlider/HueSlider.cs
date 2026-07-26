@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -30,8 +30,8 @@ public class HueSlider : RangeBase
 
         MinimumProperty.OverrideDefaultValue<HueSlider>(0.0);
         MaximumProperty.OverrideDefaultValue<HueSlider>(hueDegrees);
-        _ = ValueProperty.Changed.AddClassHandler<HueSlider>((x, _) => x.OnValueChanged());
-        _ = SelectedHueProperty.Changed.AddClassHandler<HueSlider>((x, e) => x.OnSelectedHueChanged(e));
+        _ = ValueProperty.Changed.AddClassHandler<HueSlider>(static (x, _) => x.OnValueChanged());
+        _ = SelectedHueProperty.Changed.AddClassHandler<HueSlider>(static (x, e) => x.OnSelectedHueChanged(e));
     }
 
     /// <summary>Gets or sets the selected hue (0-360).</summary>

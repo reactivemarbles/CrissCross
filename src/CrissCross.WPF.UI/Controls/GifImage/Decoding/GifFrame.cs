@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -18,19 +18,19 @@ internal sealed class GifFrame : GifBlock
     private GifFrame() { }
 
     /// <summary>Gets the Descriptor value.</summary>
-    public GifImageDescriptor? Descriptor { get; private set; }
+    internal GifImageDescriptor? Descriptor { get; private set; }
 
     /// <summary>Gets the LocalColorTable value.</summary>
-    public GifColor[]? LocalColorTable { get; private set; }
+    internal GifColor[]? LocalColorTable { get; private set; }
 
     /// <summary>Gets the Extensions value.</summary>
-    public IList<GifExtension>? Extensions { get; private set; }
+    internal IList<GifExtension>? Extensions { get; private set; }
 
     /// <summary>Gets the ImageData value.</summary>
-    public GifImageData? ImageData { get; private set; }
+    internal GifImageData? ImageData { get; private set; }
 
     /// <summary>Gets or sets GraphicControl.</summary>
-    public GifGraphicControlExtension? GraphicControl { get; set; }
+    internal GifGraphicControlExtension? GraphicControl { get; set; }
 
     internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
@@ -63,7 +63,18 @@ internal sealed class GifFrame : GifBlock
         }
 
         ImageData = await GifImageData.ReadAsync(stream).ConfigureAwait(false);
-        Extensions = controlExtensions.ToList().AsReadOnly();
-        GraphicControl = Extensions.OfType<GifGraphicControlExtension>().LastOrDefault();
+        List<GifExtension> extensions = [];
+        GifGraphicControlExtension? graphicControl = null;
+        foreach (var extension in controlExtensions)
+        {
+            extensions.Add(extension);
+            if (extension is GifGraphicControlExtension candidate)
+            {
+                graphicControl = candidate;
+            }
+        }
+
+        Extensions = extensions.AsReadOnly();
+        GraphicControl = graphicControl;
     }
 }

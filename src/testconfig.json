@@ -12,11 +12,17 @@
                 "skipAutoProperties": true,
                 "modulePaths": {
                     "include": [
-                        "CrissCross\\..*"
+                        "CrissCross(?:\\..*)?"
                     ],
                     "exclude": [
                         ".*Tests.*",
-                        ".*TestRunner.*"
+                        ".*TestRunner.*",
+                        ".*\\.Test($|\\..*)",
+                        ".*Benchmarks.*",
+                        ".*Benchmark.*",
+                        ".*Gallery.*",
+                        ".*Example.*",
+                        ".*Demo.*"
                     ]
                 }
             }

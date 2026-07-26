@@ -1,11 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -23,10 +22,47 @@ public sealed class ValidationSummaryState
     /// <param name="messages">The validation messages to summarize.</param>
     public ValidationSummaryState(IEnumerable<ValidationMessage>? messages)
     {
-        Messages = new ReadOnlyCollection<ValidationMessage>((messages ?? []).ToList());
-        ErrorCount = Messages.Count(message => message.Severity == ValidationSeverity.Error);
-        WarningCount = Messages.Count(message => message.Severity == ValidationSeverity.Warning);
-        PendingCount = Messages.Count(message => message.Severity == ValidationSeverity.Pending);
+        var messageList = new List<ValidationMessage>();
+        var errorCount = 0;
+        var warningCount = 0;
+        var pendingCount = 0;
+        if (messages is not null)
+        {
+            foreach (var message in messages)
+            {
+                messageList.Add(message);
+                switch (message.Severity)
+                {
+                    case ValidationSeverity.Error:
+                        {
+                            errorCount++;
+                            break;
+                        }
+
+                    case ValidationSeverity.Warning:
+                        {
+                            warningCount++;
+                            break;
+                        }
+
+                    case ValidationSeverity.Pending:
+                        {
+                            pendingCount++;
+                            break;
+                        }
+
+                    default:
+                        {
+                            break;
+                        }
+                }
+            }
+        }
+
+        Messages = new ReadOnlyCollection<ValidationMessage>(messageList);
+        ErrorCount = errorCount;
+        WarningCount = warningCount;
+        PendingCount = pendingCount;
     }
 
     /// <summary>Gets the summarized validation messages.</summary>
@@ -57,8 +93,7 @@ public sealed class ValidationSummaryState
     public bool IsValid => !HasErrors && !IsPending;
 
     /// <summary>Gets the first blocking error, if one exists.</summary>
-    public ValidationMessage? FirstError =>
-        Messages.FirstOrDefault(message => message.Severity == ValidationSeverity.Error);
+    public ValidationMessage? FirstError => FindFirstError();
 
     /// <summary>Gets a compact summary string suitable for validation summary headers.</summary>
     public string SummaryText
@@ -84,9 +119,16 @@ public sealed class ValidationSummaryState
         }
 
         var normalized = fieldKey.Trim();
-        return Messages
-            .Where(message => string.Equals(message.FieldKey, normalized, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        var matchingMessages = new List<ValidationMessage>();
+        foreach (var message in Messages)
+        {
+            if (string.Equals(message.FieldKey, normalized, StringComparison.OrdinalIgnoreCase))
+            {
+                matchingMessages.Add(message);
+            }
+        }
+
+        return matchingMessages;
     }
 
     /// <summary>Adds a labeled count to the summary parts.</summary>
@@ -100,7 +142,22 @@ public sealed class ValidationSummaryState
             return;
         }
 
-        var label = count == 1 ? singular : singular + "s";
+        var label = count == 1 ? singular : $"{singular}s";
         parts.Add($"{count} {label}");
+    }
+
+    /// <summary>Finds the first blocking validation error.</summary>
+    /// <returns>The first error, or <c>null</c> when none exists.</returns>
+    private ValidationMessage? FindFirstError()
+    {
+        foreach (var message in Messages)
+        {
+            if (message.Severity == ValidationSeverity.Error)
+            {
+                return message;
+            }
+        }
+
+        return null;
     }
 }

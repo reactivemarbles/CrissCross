@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics.CodeAnalysis;
@@ -56,7 +56,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Adds compatibility attributes from the legacy comma-delimited image form.</summary>
     /// <param name="node">The image node.</param>
     /// <param name="attributes">The legacy attributes.</param>
-    public static void AddLegacyImageAttributes(BbCodeNode node, IEnumerable<string> attributes)
+    internal static void AddLegacyImageAttributes(BbCodeNode node, IEnumerable<string> attributes)
     {
         foreach (var attribute in attributes)
         {
@@ -73,7 +73,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies an author-selected foreground color to a span.</summary>
     /// <param name="span">The target span.</param>
     /// <param name="value">The color value.</param>
-    public static void ApplyColor(Span span, string? value)
+    internal static void ApplyColor(Span span, string? value)
     {
         if (!TryCreateBrush(value, out var brush))
         {
@@ -86,7 +86,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies an author-selected font family to a span.</summary>
     /// <param name="span">The target span.</param>
     /// <param name="value">The font-family value.</param>
-    public static void ApplyFont(Span span, string? value)
+    internal static void ApplyFont(Span span, string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -99,7 +99,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies an author-selected foreground to a text block.</summary>
     /// <param name="textBlock">The target text block.</param>
     /// <param name="value">The color value.</param>
-    public static void ApplyForeground(TextBlock textBlock, string? value)
+    internal static void ApplyForeground(TextBlock textBlock, string? value)
     {
         if (!TryCreateBrush(value, out var brush))
         {
@@ -112,7 +112,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies standard and complex image dimensions.</summary>
     /// <param name="image">The target image.</param>
     /// <param name="node">The image node.</param>
-    public static void ApplyImageSize(Image image, BbCodeNode node)
+    internal static void ApplyImageSize(Image image, BbCodeNode node)
     {
         AddShorthandDimensions(node);
         ApplyImageDimension(node, WidthAttribute, value => image.Width = value);
@@ -122,7 +122,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies named style attributes to a span.</summary>
     /// <param name="span">The target span.</param>
     /// <param name="node">The style node.</param>
-    public static void ApplyStyle(Span span, BbCodeNode node)
+    internal static void ApplyStyle(Span span, BbCodeNode node)
     {
         _ = node.Attributes.TryGetValue("size", out var size);
         _ = node.Attributes.TryGetValue("color", out var color);
@@ -135,7 +135,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Applies a named, numeric, or percentage font size to a span.</summary>
     /// <param name="span">The target span.</param>
     /// <param name="value">The font-size value.</param>
-    public static void ApplySize(Span span, string? value)
+    internal static void ApplySize(Span span, string? value)
     {
         if (!TryParseFontSize(value, out var size))
         {
@@ -149,14 +149,14 @@ internal static class BbCodeRenderHelpers
     /// <param name="style">The list style.</param>
     /// <param name="number">The one-based item number.</param>
     /// <returns>The marker text.</returns>
-    public static string CreateListMarker(string style, int number) =>
+    internal static string CreateListMarker(string style, int number) =>
         style switch
         {
-            "1" => number.ToString(CultureInfo.InvariantCulture) + ".",
-            "a" => ((char)('a' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
-            "A" => ((char)('A' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture) + ".",
-            "i" => ToRoman(number).ToLowerInvariant() + ".",
-            "I" => ToRoman(number) + ".",
+            "1" => $"{number.ToString(CultureInfo.InvariantCulture)}.",
+            "a" => $"{((char)('a' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture)}.",
+            "A" => $"{((char)('A' + ((number - 1) % AlphabetLength))).ToString(CultureInfo.InvariantCulture)}.",
+            "i" => $"{ToRoman(number).ToLowerInvariant()}.",
+            "I" => $"{ToRoman(number)}.",
             "circle" => "○",
             "square" => "▪",
             _ => "•",
@@ -166,7 +166,7 @@ internal static class BbCodeRenderHelpers
     /// <param name="value">The image URI text.</param>
     /// <param name="bitmap">The resulting bitmap.</param>
     /// <returns><see langword="true"/> when a supported bitmap URI was initialized.</returns>
-    public static bool TryCreateBitmap(string value, [NotNullWhen(true)] out BitmapImage? bitmap)
+    internal static bool TryCreateBitmap(string value, [NotNullWhen(true)] out BitmapImage? bitmap)
     {
         bitmap = null;
         if (
@@ -192,7 +192,7 @@ internal static class BbCodeRenderHelpers
     /// <summary>Splits list children into logical items.</summary>
     /// <param name="list">The list node.</param>
     /// <returns>The list items.</returns>
-    public static List<IReadOnlyList<BbCodeNode>> ExtractListItems(BbCodeNode list)
+    internal static List<IReadOnlyList<BbCodeNode>> ExtractListItems(BbCodeNode list)
     {
         var items = new List<IReadOnlyList<BbCodeNode>>();
         var current = new List<BbCodeNode>();
@@ -207,7 +207,7 @@ internal static class BbCodeRenderHelpers
             FlushListItem(items, current);
             if (child.Name == "li")
             {
-                items.Add(child.Children.ToList());
+                items.Add(new List<BbCodeNode>(child.Children));
             }
         }
 
@@ -218,12 +218,26 @@ internal static class BbCodeRenderHelpers
     /// <summary>Gets table rows from canonical and alias nodes.</summary>
     /// <param name="table">The table node.</param>
     /// <returns>The table rows.</returns>
-    public static List<IReadOnlyList<BbCodeNode>> GetRows(BbCodeNode table)
+    internal static List<IReadOnlyList<BbCodeNode>> GetRows(BbCodeNode table)
     {
         var rows = new List<IReadOnlyList<BbCodeNode>>();
-        foreach (var row in table.Children.Where(child => child.Name is "tr" or "row"))
+        foreach (var row in table.Children)
         {
-            rows.Add(row.Children.Where(child => child.Name is "th" or "td" or "cell").ToList());
+            if (row.Name is not ("tr" or "row"))
+            {
+                continue;
+            }
+
+            List<BbCodeNode> cells = [];
+            foreach (var child in row.Children)
+            {
+                if (child.Name is "th" or "td" or "cell")
+                {
+                    cells.Add(child);
+                }
+            }
+
+            rows.Add(cells);
         }
 
         return rows;
@@ -232,17 +246,17 @@ internal static class BbCodeRenderHelpers
     /// <summary>Gets a value indicating whether a value resembles an image address.</summary>
     /// <param name="value">The candidate value.</param>
     /// <returns><see langword="true"/> when the value is address-like.</returns>
-    public static bool LooksLikeAddress(string value) =>
+    internal static bool LooksLikeAddress(string value) =>
         value.StartsWith("http:", StringComparison.OrdinalIgnoreCase)
         || value.StartsWith("https:", StringComparison.OrdinalIgnoreCase)
         || value.StartsWith("pack:", StringComparison.OrdinalIgnoreCase)
-        || value.StartsWith("/", StringComparison.Ordinal);
+        || value.StartsWith('/');
 
     /// <summary>Creates a URI only for supported navigation schemes.</summary>
     /// <param name="value">The URI text.</param>
     /// <param name="uri">The resulting URI.</param>
     /// <returns><see langword="true"/> when the URI is supported.</returns>
-    public static bool TryCreateAllowedUri(string value, out Uri? uri)
+    internal static bool TryCreateAllowedUri(string value, out Uri? uri)
     {
         uri = null;
         if (
@@ -304,7 +318,7 @@ internal static class BbCodeRenderHelpers
             return;
         }
 
-        items.Add(current.ToList());
+        items.Add(new List<BbCodeNode>(current));
         current.Clear();
     }
 
@@ -371,7 +385,7 @@ internal static class BbCodeRenderHelpers
     /// <returns><see langword="true"/> when parsing succeeds.</returns>
     private static bool TryParseNumericSize(string value, out double size)
     {
-        var isPercentage = value.EndsWith("%", StringComparison.Ordinal);
+        var isPercentage = value.EndsWith('%');
         var numeric = value.TrimEnd('%');
         if (!double.TryParse(numeric, NumberStyles.Float, CultureInfo.InvariantCulture, out size))
         {
@@ -387,16 +401,16 @@ internal static class BbCodeRenderHelpers
     /// <returns>The Roman numeral.</returns>
     private static string ToRoman(int value)
     {
-        var result = string.Empty;
+        StringBuilder result = new();
         foreach (var pair in RomanMap)
         {
             while (value >= pair.Value)
             {
-                result += pair.Text;
+                _ = result.Append(pair.Text);
                 value -= pair.Value;
             }
         }
 
-        return result;
+        return result.ToString();
     }
 }

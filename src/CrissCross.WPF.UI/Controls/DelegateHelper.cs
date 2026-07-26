@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -18,7 +18,7 @@ internal static class DelegateHelper
     /// <typeparam name="T">The type.</typeparam>
     /// <param name="method">The method value.</param>
     /// <returns>The result.</returns>
-    public static T CreateDelegate<T>(MethodInfo method)
+    internal static T CreateDelegate<T>(MethodInfo method)
         where T : Delegate => (T)Delegate.CreateDelegate(typeof(T), method);
 
     /// <summary>Creates a delegate from a reflected instance method and target.</summary>
@@ -26,16 +26,16 @@ internal static class DelegateHelper
     /// <param name="firstArgument">The firstArgument value.</param>
     /// <param name="method">The method value.</param>
     /// <returns>The result.</returns>
-    public static T CreateDelegate<T>(object firstArgument, MethodInfo method)
+    internal static T CreateDelegate<T>(object firstArgument, MethodInfo method)
         where T : Delegate => (T)Delegate.CreateDelegate(typeof(T), firstArgument, method);
 
     /// <summary>Creates a delegate from a target type and method name.</summary>
-    /// <param name="bindingAttr">The bindingAttr value.</param>
-    /// <typeparam name="T">The type.</typeparam>
     /// <param name="target">The target object.</param>
+    /// <typeparam name="T">The type.</typeparam>
     /// <param name="method">The method value.</param>
+    /// <param name="bindingAttr">The bindingAttr value.</param>
     /// <returns>The result.</returns>
-    public static T CreateDelegate<T>(Type target, string method, BindingFlags bindingAttr = DefaultLookup)
+    internal static T CreateDelegate<T>(Type target, string method, BindingFlags bindingAttr = DefaultLookup)
         where T : Delegate
     {
         if (bindingAttr != DefaultLookup)
@@ -48,12 +48,12 @@ internal static class DelegateHelper
     }
 
     /// <summary>Creates a delegate from a target instance and method name.</summary>
-    /// <param name="bindingAttr">The bindingAttr value.</param>
+    /// <param name="target">The target object.</param>
     /// <typeparam name="T">The type.</typeparam>
     /// <returns>The result.</returns>
-    /// <param name="target">The target object.</param>
     /// <param name="method">The method value.</param>
-    public static T CreateDelegate<T>(object target, string method, BindingFlags bindingAttr = DefaultLookup)
+    /// <param name="bindingAttr">The bindingAttr value.</param>
+    internal static T CreateDelegate<T>(object target, string method, BindingFlags bindingAttr = DefaultLookup)
         where T : Delegate
     {
         if (bindingAttr != DefaultLookup)
@@ -67,12 +67,12 @@ internal static class DelegateHelper
 
     /// <summary>Provides the CreatePropertyGetter member.</summary>
     /// <typeparam name="TProperty">The TProperty type.</typeparam>
-    /// <param name="nonPublic">The nonPublic value.</param>
-    /// <typeparam name="TType">The type that owns the property.</typeparam>
     /// <param name="name">The name value.</param>
-    /// <returns>The result.</returns>
+    /// <typeparam name="TType">The type that owns the property.</typeparam>
     /// <param name="bindingAttr">The bindingAttr value.</param>
-    public static Func<TType, TProperty> CreatePropertyGetter<TType, TProperty>(
+    /// <returns>The result.</returns>
+    /// <param name="nonPublic">The nonPublic value.</param>
+    internal static Func<TType, TProperty> CreatePropertyGetter<TType, TProperty>(
         string name,
         BindingFlags bindingAttr = DefaultLookup,
         bool nonPublic = false)
@@ -97,7 +97,7 @@ internal static class DelegateHelper
     /// <param name="nonPublic">The nonPublic value.</param>
     /// <returns>The result.</returns>
     /// <typeparam name="TType">The type that owns the property.</typeparam>
-    public static Action<TType, TProperty> CreatePropertySetter<TType, TProperty>(
+    internal static Action<TType, TProperty> CreatePropertySetter<TType, TProperty>(
         string name,
         BindingFlags bindingAttr = DefaultLookup,
         bool nonPublic = false)

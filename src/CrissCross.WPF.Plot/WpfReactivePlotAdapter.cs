@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if !REACTIVE_SHIM
@@ -59,9 +59,12 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="key">The key value.</param>
     /// <param name="plotType">The plotType value.</param>
     /// <param name="color">The color value.</param>
-    public WpfReactivePlotAdapter(LiveChartViewModel chart, PlotSeriesKey key, PlotType plotType, string color)
+    internal WpfReactivePlotAdapter(LiveChartViewModel chart, PlotSeriesKey key, PlotType plotType, string color)
     {
-        _chart = chart ?? throw new ArgumentNullException(nameof(chart));
+        ThrowHelper.ThrowIfNull(chart, nameof(chart));
+        ThrowHelper.ThrowIfNull(color, nameof(color));
+
+        _chart = chart;
         _color = color;
         Key = key;
         PlotType = plotType;
@@ -268,7 +271,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     {
         var snapshot = PrepareSnapshotUpdate(update);
         var x = ConvertXValues(snapshot.X, snapshot.XAxisKind);
-        var y = snapshot.Y.ToArray();
+        var y = CopyToArray(snapshot.Y);
         var plot =
             _chart.WpfPlot1vm?.Plot ?? throw new InvalidOperationException("The WPF plot has not been initialized.");
         RemoveSnapshotPlottable();
@@ -346,7 +349,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     private void ApplySignal(ReactivePlotUpdate update)
     {
         EnsureSignalUi(update.XAxisKind);
-        _signalSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _signalSubject?.OnNext((update.Key.Name, CopyToList(update.Y), CopyToList(update.X), update.Key.Axis));
     }
 
     /// <summary>Applies a scatter update.</summary>
@@ -355,19 +358,19 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     {
         var scatterUpdate = PrepareSnapshotUpdate(update);
         _scatterSubject?.OnNext(
-            (scatterUpdate.Key.Name, scatterUpdate.X.ToList(), scatterUpdate.Y.ToList(), scatterUpdate.Key.Axis));
+            (scatterUpdate.Key.Name, CopyToList(scatterUpdate.X), CopyToList(scatterUpdate.Y), scatterUpdate.Key.Axis));
     }
 
     /// <summary>Applies a data logger update.</summary>
     /// <param name="update">The update value.</param>
     private void ApplyDataLogger(ReactivePlotUpdate update) =>
         _dataLoggerSubject?.OnNext(
-            (update.Key.Name, update.Y.ToList(), update.Key.Axis, update.MaxPoints ?? int.MaxValue));
+            (update.Key.Name, CopyToList(update.Y), update.Key.Axis, update.MaxPoints ?? int.MaxValue));
 
     /// <summary>Applies a streamer update.</summary>
     /// <param name="update">The update value.</param>
     private void ApplyStreamer(ReactivePlotUpdate update) =>
-        _streamerSubject?.OnNext((update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis));
+        _streamerSubject?.OnNext((update.Key.Name, CopyToList(update.Y), CopyToList(update.X), update.Key.Axis));
 
     /// <summary>Handles the AddUi operation.</summary>
     private void AddUi()
@@ -454,14 +457,14 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         {
             _ui = new SignalXY_UI(
                 _chart.WpfPlot1vm!,
-                (update.Key.Name, update.Y.ToList(), update.X.ToList(), update.Key.Axis),
+                (update.Key.Name, CopyToList(update.Y), CopyToList(update.X), update.Key.Axis),
                 _color,
                 coordinatesObs: _chart.MouseCoordinatesObservable);
             AddUi();
             return;
         }
 
-        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(update.X.ToArray(), update.Y.ToArray());
+        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray(CopyToArray(update.X), CopyToArray(update.Y));
     }
 
     /// <summary>Handles the ApplyClear operation.</summary>

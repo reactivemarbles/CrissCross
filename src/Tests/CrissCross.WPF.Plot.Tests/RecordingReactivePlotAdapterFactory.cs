@@ -1,8 +1,12 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.Plot;
+#else
 using CrissCross.WPF.Plot;
+#endif
 
 namespace CrissCross.WPF.Plot.Tests;
 
@@ -13,10 +17,10 @@ internal sealed class RecordingReactivePlotAdapterFactory : IReactivePlotAdapter
     private readonly Dictionary<PlotSeriesKey, RecordingReactivePlotAdapter> _adapters = [];
 
     /// <summary>Gets the number of created adapters.</summary>
-    public int CreatedAdapters { get; private set; }
+    internal int CreatedAdapters { get; private set; }
 
     /// <summary>Gets the created adapters.</summary>
-    public IReadOnlyList<RecordingReactivePlotAdapter> Adapters => [.. _adapters.Values];
+    internal IReadOnlyList<RecordingReactivePlotAdapter> Adapters => [.. _adapters.Values];
 
     /// <inheritdoc />
     public IReactivePlotAdapter Create(PlotSeriesKey key, PlotType plotType)
@@ -30,5 +34,5 @@ internal sealed class RecordingReactivePlotAdapterFactory : IReactivePlotAdapter
     /// <summary>Finds an adapter by key.</summary>
     /// <param name="key">The series key.</param>
     /// <returns>The adapter for the key.</returns>
-    public RecordingReactivePlotAdapter Find(PlotSeriesKey key) => _adapters[key];
+    internal RecordingReactivePlotAdapter Find(PlotSeriesKey key) => _adapters[key];
 }

@@ -40,15 +40,15 @@
     </Style>
     
     <Style Selector="controls|InfoBadge[Severity=Success] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|InfoBadge[Severity=Caution] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarCautionSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarWarningSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|InfoBadge[Severity=Critical] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackgroundBrush}" />
     </Style>
     
 </Styles>

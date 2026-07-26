@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Splat;
@@ -20,15 +20,12 @@ public partial class ViewModelRoutedViewHostMixinsTests
         using var vm = new TestViewModel(hostName);
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterTestViewModel(new TestViewModel(hostName), ProfileContract);
+        RegisterTestViewModel(new(hostName), ProfileContract);
         setNav.SetMainNavigationHost(viewHost);
 
         // Act
         ((IUseNavigation)vm).NavigateToView(
-            new NavigationKeyRequest<TestViewModel>
-            {
-                Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter },
-            });
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter }, });
 
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
@@ -80,15 +77,12 @@ public partial class ViewModelRoutedViewHostMixinsTests
         using var vm = new TestHostedViewModel();
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterTestViewModel(new TestViewModel(hostName));
+        RegisterTestViewModel(new(hostName));
         setNav.SetMainNavigationHost(viewHost);
 
         // Act
         vm.NavigateToView(
-            new NavigationKeyRequest<TestViewModel>
-            {
-                Options = new NavigationRequestOptions { HostName = hostName },
-            });
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = hostName }, });
 
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
@@ -115,12 +109,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         // Act
         vm.NavigateToView(
             viewModelType,
-            new NavigationRequestOptions
-            {
-                HostName = hostName,
-                Contract = ProfileContract,
-                Parameter = parameter,
-            });
+            new NavigationRequestOptions { HostName = hostName, Contract = ProfileContract, Parameter = parameter, });
 
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
@@ -148,10 +137,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
         // Act
         ((IUseNavigation)vm).NavigateTo(
-            new NavigationKeyRequest<INavigationTargetViewModel>
-            {
-                Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter },
-            });
+            new NavigationKeyRequest<INavigationTargetViewModel> { Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter }, });
 
         // Assert
         await Assert.That(viewHost.LastResolution).IsNotNull();
@@ -181,15 +167,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
         // Act
         vm.NavigateTo(
-            new NavigationKeyRequest<INavigationTargetView>
-            {
-                Options = new NavigationRequestOptions
-                {
-                    HostName = hostName,
-                    Contract = ProfileContract,
-                    Parameter = parameter,
-                },
-            });
+            new NavigationKeyRequest<INavigationTargetView> { Options = new NavigationRequestOptions { HostName = hostName, Contract = ProfileContract, Parameter = parameter, }, });
 
         // Assert
         await Assert.That(viewHost.LastResolution).IsNotNull();
@@ -292,21 +270,14 @@ public partial class ViewModelRoutedViewHostMixinsTests
         using var vm = new TestHostedViewModel();
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterNavigationRegistry(new NavigationTargetViewModel(), new NavigationTargetView(), ProfileContract);
+        RegisterNavigationRegistry(new(), new(), ProfileContract);
         setNav.SetMainNavigationHost(viewHost);
 
         // Act & Assert
         await Assert
             .That(() =>
                 vm.NavigateTo(
-                    new NavigationKeyRequest<INavigationTargetViewModel>
-                    {
-                        Options = new NavigationRequestOptions
-                        {
-                            HostName = hostName,
-                            Contract = ProfileContract,
-                        },
-                    }))
+                    new NavigationKeyRequest<INavigationTargetViewModel> { Options = new NavigationRequestOptions { HostName = hostName, Contract = ProfileContract, }, }))
             .Throws<InvalidOperationException>();
     }
 
@@ -323,10 +294,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         await Assert
             .That(() =>
                 ((IUseHostedNavigation)vm).NavigateToView(
-                    new NavigationKeyRequest<TestViewModel>
-                    {
-                        Options = new NavigationRequestOptions { HostName = hostName },
-                    }))
+                    new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = hostName }, }))
             .Throws<Exception>();
     }
 
@@ -340,7 +308,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         using var vm = new TestViewModel(hostName);
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterTestViewModel(new TestViewModel(hostName));
+        RegisterTestViewModel(new(hostName));
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
         viewHost.NavigationStack.Add(typeof(TestViewModel));
@@ -394,16 +362,13 @@ public partial class ViewModelRoutedViewHostMixinsTests
         using var vm = new TestHostedViewModel();
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterTestViewModel(new TestViewModel(hostName));
+        RegisterTestViewModel(new(hostName));
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
 
         // Act
         vm.NavigateToViewAndClearHistory(
-            new NavigationKeyRequest<TestViewModel>
-            {
-                Options = new NavigationRequestOptions { HostName = hostName },
-            });
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = hostName }, });
 
         // Assert
         await Assert.That(viewHost.NavigationStack.Count).IsEqualTo(1);
@@ -423,10 +388,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         await Assert
             .That(() =>
                 ((IUseHostedNavigation)vm).NavigateToViewAndClearHistory(
-                    new NavigationKeyRequest<TestViewModel>
-                    {
-                        Options = new NavigationRequestOptions { HostName = hostName },
-                    }))
+                    new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = hostName }, }))
             .Throws<Exception>();
     }
 }

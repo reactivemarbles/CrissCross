@@ -1,8 +1,12 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.Plot;
+#else
 using CrissCross.WPF.Plot;
+#endif
 
 namespace CrissCross.WPF.Plot.Tests;
 
@@ -24,11 +28,7 @@ public sealed partial class ReactivePlotBinderTests
             [
                 ReactivePlotSource.FromUpdates(firstKey, PlotType.Signal, first),
                 ReactivePlotSource.FromUpdates(secondKey, PlotType.Signal, second),],
-            new ReactivePlotBindingOptions
-            {
-                UiScheduler = ImmediateScheduler.Instance,
-                ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries,
-            });
+            new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance, ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries });
 
         first.OnNext(
             CreateUpdate(
@@ -56,8 +56,9 @@ public sealed partial class ReactivePlotBinderTests
                 [SecondSampleValue]));
 
         await Assert.That(connection.CurrentState).IsEqualTo(ReactivePlotConnectionState.Faulted);
-        await Assert.That(factory.Adapters.Select(x => x.Key).ToArray()).IsEquivalentTo([secondKey]);
-        await Assert.That(factory.Find(secondKey).Updates.Single().Y).IsEquivalentTo([SecondSampleValue]);
+        await Assert.That(factory.Adapters).Count().IsEqualTo(ExpectedSingleItemCount);
+        await Assert.That(factory.Adapters[DefaultAxisIndex].Key).IsEqualTo(secondKey);
+        await Assert.That(factory.Find(secondKey).Updates[DefaultAxisIndex].Y).IsEquivalentTo([SecondSampleValue]);
     }
 
     /// <summary>Verifies Bind CreatesAdapterForEveryPlotType.</summary>
@@ -66,25 +67,30 @@ public sealed partial class ReactivePlotBinderTests
     public async Task Bind_CreatesAdapterForEveryPlotType()
     {
         var factory = new RecordingReactivePlotAdapterFactory();
-        var sources = Enum.GetValues<PlotType>()
-            .Select(plotType =>
-                CreateUpdate(
-                    plotType.ToString(),
-                    plotType,
-                    DefaultAxisIndex,
-                    ReactivePlotUpdateKind.Append,
-                    [FirstSampleValue],
-                    [SecondSampleValue]))
-            .Select(update => ReactivePlotSource.FromUpdates(update.Key, update.PlotType, Observable.Return(update)))
-            .ToArray();
+        var sources = new List<IReactivePlotSource>();
+        foreach (var plotType in Enum.GetValues<PlotType>())
+        {
+            var update = CreateUpdate(
+                plotType.ToString(),
+                plotType,
+                DefaultAxisIndex,
+                ReactivePlotUpdateKind.Append,
+                [FirstSampleValue],
+                [SecondSampleValue]);
+            sources.Add(ReactivePlotSource.FromUpdates(update.Key, update.PlotType, Observable.Return(update)));
+        }
 
         using var connection = new ReactivePlotBinder(factory).Bind(
             sources,
             new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance });
 
-        await Assert
-            .That(factory.Adapters.Select(x => x.PlotType).OrderBy(x => x.ToString()).ToArray())
-            .IsEquivalentTo(Enum.GetValues<PlotType>().OrderBy(x => x.ToString()).ToArray());
+        var expectedPlotTypes = new List<PlotType>(Enum.GetValues<PlotType>());
+        foreach (var adapter in factory.Adapters)
+        {
+            await Assert.That(expectedPlotTypes.Remove(adapter.PlotType)).IsTrue();
+        }
+
+        await Assert.That(expectedPlotTypes).IsEmpty();
     }
 
     /// <summary>Verifies Bind DoesNotReinitializeUnchangedSeries.</summary>
@@ -142,8 +148,8 @@ public sealed partial class ReactivePlotBinderTests
         var factory = new RecordingReactivePlotAdapterFactory();
         var firstKey = new PlotSeriesKey("A", DefaultAxisIndex);
         var secondKey = new PlotSeriesKey("B", SecondaryAxisIndex);
-        var updates = new[]
-        {
+        ReactivePlotUpdate[] updates =
+        [
             CreateUpdate(
                 "A",
                 PlotType.SignalXY,
@@ -159,10 +165,16 @@ public sealed partial class ReactivePlotBinderTests
                 [SecondSampleValue],
                 [SecondSampleValue]),
             CreateUpdate("A", PlotType.SignalXY, DefaultAxisIndex, ReactivePlotUpdateKind.Clear, [], []),
-        };
+        ];
+
+        var sources = new List<IReactivePlotSource>(updates.Length);
+        foreach (var update in updates)
+        {
+            sources.Add(ReactivePlotSource.FromUpdates(update.Key, update.PlotType, Observable.Return(update)));
+        }
 
         using var connection = new ReactivePlotBinder(factory).Bind(
-            updates.Select(x => ReactivePlotSource.FromUpdates(x.Key, x.PlotType, Observable.Return(x))),
+            sources,
             new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance });
 
         await Assert.That(factory.Find(firstKey).ClearCount).IsEqualTo(ExpectedSingleItemCount);
@@ -182,7 +194,7 @@ public sealed partial class ReactivePlotBinderTests
             ReactivePlotUpdateKind.Append,
             [FirstSampleValue],
             [SecondSampleValue]);
-        var errors = new List<Exception>();
+        List<Exception> errors = [];
 
         using var connection = new ReactivePlotBinder(factory).Bind(
             [ReactivePlotSource.FromUpdates(update.Key, update.PlotType, Observable.Return(update))],
@@ -204,18 +216,10 @@ public sealed partial class ReactivePlotBinderTests
 
         using var ignored = new ReactivePlotBinder(ignoredFactory).Bind(
             [ReactivePlotSource.FromUpdates(bad.Key, bad.PlotType, Observable.Return(bad))],
-            new ReactivePlotBindingOptions
-            {
-                UiScheduler = ImmediateScheduler.Instance,
-                ErrorMode = ReactivePlotErrorMode.IgnoreInvalidUpdates,
-            });
+            new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance, ErrorMode = ReactivePlotErrorMode.IgnoreInvalidUpdates });
         using var faulted = new ReactivePlotBinder(faultedFactory).Bind(
             [ReactivePlotSource.FromUpdates(bad.Key, bad.PlotType, Observable.Return(bad))],
-            new ReactivePlotBindingOptions
-            {
-                UiScheduler = ImmediateScheduler.Instance,
-                ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries,
-            });
+            new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance, ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries });
 
         await Assert.That(ignored.CurrentState).IsNotEqualTo(ReactivePlotConnectionState.Faulted);
         await Assert.That(ignoredFactory.Adapters).IsEmpty();
@@ -247,11 +251,7 @@ public sealed partial class ReactivePlotBinderTests
 
         using var connection = new ReactivePlotBinder(factory).Bind(
             [ReactivePlotSource.FromUpdates(bad.Key, bad.PlotType, updates)],
-            new ReactivePlotBindingOptions
-            {
-                UiScheduler = ImmediateScheduler.Instance,
-                ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries,
-            });
+            new ReactivePlotBindingOptions { UiScheduler = ImmediateScheduler.Instance, ErrorMode = ReactivePlotErrorMode.SurfaceAndStopSeries });
         updates.OnNext(bad);
         updates.OnNext(good);
 

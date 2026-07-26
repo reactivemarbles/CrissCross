@@ -1,8 +1,12 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if REACTIVELIST_REACTIVE
+using CrissCross.Reactive.WPF.Plot;
+#else
 using CrissCross.WPF.Plot;
+#endif
 
 namespace CrissCross.WPF.Plot.Tests;
 
@@ -18,16 +22,16 @@ internal sealed class RecordingReactivePlotAdapter(PlotSeriesKey key, PlotType p
     public PlotType PlotType { get; } = plotType;
 
     /// <summary>Gets applied updates.</summary>
-    public List<ReactivePlotUpdate> Updates { get; } = [];
+    internal List<ReactivePlotUpdate> Updates { get; } = [];
 
     /// <summary>Gets the number of apply calls.</summary>
-    public int ApplyCallCount { get; private set; }
+    internal int ApplyCallCount { get; private set; }
 
     /// <summary>Gets the number of clear updates.</summary>
-    public int ClearCount { get; private set; }
+    internal int ClearCount { get; private set; }
 
     /// <summary>Gets a value indicating whether the adapter has been disposed.</summary>
-    public bool IsDisposed { get; private set; }
+    internal bool IsDisposed { get; private set; }
 
     /// <inheritdoc />
     public void Apply(ReactivePlotUpdate update)

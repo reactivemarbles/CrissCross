@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -19,6 +19,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <para>In order to work properly all items must have the same size.</para>
 /// <para>Based on <see href="https://github.com/sbaeumlisberger/VirtualizingWrapPanel"/>.</para>
 /// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class VirtualizingGridView : ListView
 {
     /// <summary>Property for <see cref="Orientation"/>.</summary>
@@ -26,21 +27,21 @@ public class VirtualizingGridView : ListView
         nameof(Orientation),
         typeof(Orientation),
         typeof(VirtualizingGridView),
-        new PropertyMetadata(Orientation.Vertical));
+        new(Orientation.Vertical));
 
     /// <summary>Property for <see cref="SpacingMode"/>.</summary>
     public static readonly DependencyProperty SpacingModeProperty = DependencyProperty.Register(
         nameof(SpacingMode),
         typeof(SpacingMode),
         typeof(VirtualizingGridView),
-        new PropertyMetadata(SpacingMode.Uniform));
+        new(SpacingMode.Uniform));
 
     /// <summary>Property for <see cref="StretchItems"/>.</summary>
     public static readonly DependencyProperty StretchItemsProperty = DependencyProperty.Register(
         nameof(StretchItems),
         typeof(bool),
         typeof(VirtualizingGridView),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Gets or sets a value that specifies the orientation in which items are arranged.</summary>
     public Orientation Orientation
@@ -68,6 +69,10 @@ public class VirtualizingGridView : ListView
         set => SetValue(StretchItemsProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Raises the <see cref="E:Initialized" /> event.</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected override void OnInitialized(EventArgs e)
@@ -75,7 +80,7 @@ public class VirtualizingGridView : ListView
         base.OnInitialized(e);
 
         VirtualizingPanel.SetCacheLengthUnit(this, VirtualizationCacheLengthUnit.Page);
-        VirtualizingPanel.SetCacheLength(this, new VirtualizationCacheLength(1));
+        VirtualizingPanel.SetCacheLength(this, new(1));
         VirtualizingPanel.SetIsVirtualizingWhenGrouping(this, true);
         InitializeItemsPanel();
     }
@@ -87,28 +92,13 @@ public class VirtualizingGridView : ListView
 
         factory.SetBinding(
             VirtualizingWrapPanel.OrientationProperty,
-            new Binding
-            {
-                Source = this,
-                Path = new(nameof(Orientation)),
-                Mode = BindingMode.OneWay,
-            });
+            new Binding { Source = this, Path = new(nameof(Orientation)), Mode = BindingMode.OneWay, });
         factory.SetBinding(
             VirtualizingWrapPanel.SpacingModeProperty,
-            new Binding
-            {
-                Source = this,
-                Path = new(nameof(SpacingMode)),
-                Mode = BindingMode.OneWay,
-            });
+            new Binding { Source = this, Path = new(nameof(SpacingMode)), Mode = BindingMode.OneWay, });
         factory.SetBinding(
             VirtualizingWrapPanel.StretchItemsProperty,
-            new Binding
-            {
-                Source = this,
-                Path = new(nameof(StretchItems)),
-                Mode = BindingMode.OneWay,
-            });
+            new Binding { Source = this, Path = new(nameof(StretchItems)), Mode = BindingMode.OneWay, });
 
         ItemsPanel = new(factory);
     }

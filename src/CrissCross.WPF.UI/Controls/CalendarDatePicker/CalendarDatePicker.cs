@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -24,6 +24,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// &lt;ui:CalendarDatePicker /&gt;
 /// </code>
 /// </example>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CalendarDatePicker : Button
 {
     /// <summary>Property for <see cref="IsCalendarOpen"/>.</summary>
@@ -31,28 +32,28 @@ public class CalendarDatePicker : Button
         nameof(IsCalendarOpen),
         typeof(bool),
         typeof(CalendarDatePicker),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="IsTodayHighlighted"/>.</summary>
     public static readonly DependencyProperty IsTodayHighlightedProperty = DependencyProperty.Register(
         nameof(IsTodayHighlighted),
         typeof(bool),
         typeof(CalendarDatePicker),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Date"/>.</summary>
     public static readonly DependencyProperty DateProperty = DependencyProperty.Register(
         nameof(Date),
         typeof(DateTimeOffset?),
         typeof(CalendarDatePicker),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="FirstDayOfWeek"/>.</summary>
     public static readonly DependencyProperty FirstDayOfWeekProperty = DependencyProperty.Register(
         nameof(FirstDayOfWeek),
         typeof(DayOfWeek),
         typeof(CalendarDatePicker),
-        new PropertyMetadata(DateTimeHelper.GetCurrentDateFormat().FirstDayOfWeek));
+        new(DateTimeHelper.GetCurrentDateFormat().FirstDayOfWeek));
 
     /// <summary>Stores the _popup value.</summary>
     private Popup? _popup;
@@ -86,6 +87,10 @@ public class CalendarDatePicker : Button
         get => (DateTimeOffset?)GetValue(DateProperty);
         set => SetValue(DateProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     protected override void OnClick()
@@ -140,29 +145,13 @@ public class CalendarDatePicker : Button
         var calendar = new System.Windows.Controls.Calendar();
         _ = calendar.SetBinding(
             System.Windows.Controls.Calendar.SelectedDateProperty,
-            new Binding(nameof(Date))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                Converter = new DateTimeOffsetToDateTimeConverter(),
-            });
+            new Binding(nameof(Date)) { Source = this, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, Converter = new DateTimeOffsetToDateTimeConverter(), });
         _ = calendar.SetBinding(
             System.Windows.Controls.Calendar.IsTodayHighlightedProperty,
-            new Binding(nameof(IsTodayHighlighted))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            });
+            new Binding(nameof(IsTodayHighlighted)) { Source = this, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, });
         _ = calendar.SetBinding(
             System.Windows.Controls.Calendar.FirstDayOfWeekProperty,
-            new Binding(nameof(FirstDayOfWeek))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            });
+            new Binding(nameof(FirstDayOfWeek)) { Source = this, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, });
 
         calendar.SelectedDatesChanged += OnSelectedDatesChanged;
 
@@ -181,11 +170,6 @@ public class CalendarDatePicker : Button
 
         _ = _popup.SetBinding(
             Popup.IsOpenProperty,
-            new Binding(nameof(IsCalendarOpen))
-            {
-                Source = this,
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            });
+            new Binding(nameof(IsCalendarOpen)) { Source = this, Mode = BindingMode.TwoWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged, });
     }
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -14,6 +14,20 @@ namespace CrissCross;
 /// <summary>Represents a platform-neutral date/time range for filtering, reporting, and dashboard controls.</summary>
 public sealed class DateTimeRange
 {
+    /// <summary>Formats a valid date/time range.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat ValidRangeFormat = System.Text.CompositeFormat.Parse("{0}: {1} - {2}");
+#else
+    private const string ValidRangeFormat = "{0}: {1} - {2}";
+#endif
+
+    /// <summary>Formats an invalid date/time range.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat InvalidRangeFormat = System.Text.CompositeFormat.Parse("{0}: invalid range");
+#else
+    private const string InvalidRangeFormat = "{0}: invalid range";
+#endif
+
     /// <inheritdoc />
     public DateTimeRange(DateTimeOffset? start, DateTimeOffset? end)
         : this(start, end, DateTimeRangePreset.Custom, null, true, null) { }
@@ -117,11 +131,11 @@ public sealed class DateTimeRange
         IsValid
             ? string.Format(
                 CultureInfo.InvariantCulture,
-                "{0}: {1} - {2}",
+                ValidRangeFormat,
                 Label,
                 FormatDateTime(Start!.Value),
                 FormatDateTime(End!.Value))
-            : string.Format(CultureInfo.InvariantCulture, "{0}: invalid range", Label);
+            : string.Format(CultureInfo.InvariantCulture, InvalidRangeFormat, Label);
 
     /// <summary>Determines whether the supplied value falls inside this range.</summary>
     /// <param name="value">The value to test.</param>

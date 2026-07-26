@@ -1,0 +1,58 @@
+<UserControl
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.WorkflowPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    x:DataType="vm:WorkflowPageViewModel">
+    <ScrollViewer>
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock FontSize="32" FontWeight="Bold" Text="Workflow &amp; feedback" />
+            <controls:TextBlock
+                Opacity="0.7"
+                Text="Interactive, themed examples of workflow, notification, and card controls."
+                TextWrapping="Wrap" />
+
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock FontSize="18" FontWeight="Bold" Text="Cards and choice controls" />
+                    <controls:StackPanel Orientation="Horizontal" Spacing="12">
+                        <controls:CardColor Color="#005FB8" Subtitle="Primary" Title="Blue" />
+                        <controls:CardColor Color="#0F7B0F" Subtitle="Success" Title="Green" />
+                        <controls:PersonPicture BadgeText="3" DisplayName="Ada Lovelace" Initials="AL" />
+                    </controls:StackPanel>
+                    <controls:CardControl Content="Use this for a compact, actionable summary." Header="CardControl" />
+                    <controls:CardAction Content="Open the advanced settings" />
+                    <controls:CardExpander Header="CardExpander" IsExpanded="True">
+                        <controls:TextBlock Text="Expanded content stays readable in both theme variants." TextWrapping="Wrap" />
+                    </controls:CardExpander>
+                    <controls:StackPanel Orientation="Horizontal" Spacing="8">
+                        <controls:Chip Text="Telemetry" />
+                        <controls:Chip Text="Reviewed" />
+                    </controls:StackPanel>
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock FontSize="18" FontWeight="Bold" Text="Feedback and form presentation" />
+                    <controls:AlarmBanner
+                        IsAcknowledgeVisible="False"
+                        IsActive="True"
+                        IsClosable="False"
+                        Message="A sample warning alarm is active."
+                        Severity="Warning" />
+                    <controls:Snackbar
+                        IsCloseButtonEnabled="False"
+                        IsShown="True"
+                        Title="Saved">
+                        Preferences were saved successfully.
+                    </controls:Snackbar>
+                    <controls:ReactiveFormField Header="Plant name" HelperText="A clear label and helper text are retained in both themes." IsRequired="True">
+                        <controls:TextBox Text="North wind farm" />
+                    </controls:ReactiveFormField>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Security.Cryptography;
@@ -159,7 +159,9 @@ public partial class MainViewModel : RxObject
         _historicSources = CreateHistoricSources();
         _indicatorSources = CreateIndicatorSources();
         ActiveSources = _allChartSources;
-        ReactivePlotSources = this.WhenAnyValue(viewModel => viewModel.ActiveSources).Select(static sources => sources);
+        ReactivePlotSources = this
+            .WhenAnyValue(static viewModel => viewModel.ActiveSources)
+            .Select(static sources => sources);
 
         ShowAllChartTypesCommand = ReactiveCommand.Create(() => SelectScenario("All chart types", _allChartSources));
         ShowLiveCommand = ReactiveCommand.Create(() => SelectScenario("Live reactive streams", _liveSources));
@@ -174,7 +176,7 @@ public partial class MainViewModel : RxObject
         _ = ToggleThemeCommand.DisposeWith(Disposables);
 
         LiveChartSubject = [_signalPoints];
-        _ = this.WhenAnyValue(vm => vm.LiveChartViewModel)
+        _ = this.WhenAnyValue(static vm => vm.LiveChartViewModel)
             .Where(static liveChartViewModel => liveChartViewModel is not null)
             .Select(static liveChartViewModel => liveChartViewModel!)
             .Subscribe(_ => StartReactiveDemoStreams());
@@ -289,14 +291,9 @@ public partial class MainViewModel : RxObject
                     "Area",
                     primaryAxis,
                     samples.X,
-                    samples.Wave.Select(static value => value - areaOffset).ToArray()),
+                    OffsetValues(samples.Wave, -areaOffset)),
                 PlotType.Area,
-                new()
-                {
-                    Color = "#66BB6A",
-                    BaselineMode = PlotBaselineMode.Custom,
-                    Baseline = areaOffset,
-                }),];
+                new() { Color = "#66BB6A", BaselineMode = PlotBaselineMode.Custom, Baseline = areaOffset }),];
     }
 
     /// <summary>Creates the bar, stem, and points examples.</summary>
@@ -319,7 +316,7 @@ public partial class MainViewModel : RxObject
                     "Stem",
                     sparseAxis,
                     samples.SparseX,
-                    samples.SparseY.Select(static value => value + stemOffset).ToArray()),
+                    OffsetValues(samples.SparseY, stemOffset)),
                 PlotType.Stem,
                 new() { Color = "#EF5350", LineMode = PlotLineMode.LineAndMarkers }),
             ReactivePlotSource.FromStatic(
@@ -327,14 +324,9 @@ public partial class MainViewModel : RxObject
                     "Points",
                     sparseAxis,
                     samples.SparseX,
-                    samples.SparseY.Select(static value => value + pointOffset).ToArray()),
+                    OffsetValues(samples.SparseY, pointOffset)),
                 PlotType.Points,
-                new()
-                {
-                    Color = "#26C6DA",
-                    LineMode = PlotLineMode.MarkersOnly,
-                    MarkerSize = markerSize,
-                }),];
+                new() { Color = "#26C6DA", LineMode = PlotLineMode.MarkersOnly, MarkerSize = markerSize }),];
     }
 
     /// <summary>Creates the shared samples for the static chart type examples.</summary>
@@ -351,13 +343,24 @@ public partial class MainViewModel : RxObject
         const double sparseBaseline = 20;
         const double sparsePeriod = 7;
         const double sparseAmplitude = 15;
-        var x = Enumerable.Range(0, sampleCount).Select(static value => (double)value).ToArray();
-        var wave = x.Select(static value => waveBaseline + (Math.Sin(value / wavePeriod) * waveAmplitude)).ToArray();
-        var step = x.Select(static value => Math.Floor(value / stepWidth) * stepWidth).ToArray();
-        var sparseX = Enumerable.Range(0, sparseSampleCount).Select(static value => value * sparseSpacing).ToArray();
-        var sparseY = sparseX
-            .Select(static value => sparseBaseline + (Math.Sin(value / sparsePeriod) * sparseAmplitude))
-            .ToArray();
+        double[] x = new double[sampleCount];
+        double[] wave = new double[sampleCount];
+        double[] step = new double[sampleCount];
+        for (var index = 0; index < sampleCount; index++)
+        {
+            x[index] = index;
+            wave[index] = waveBaseline + (Math.Sin(x[index] / wavePeriod) * waveAmplitude);
+            step[index] = Math.Floor(x[index] / stepWidth) * stepWidth;
+        }
+
+        double[] sparseX = new double[sparseSampleCount];
+        double[] sparseY = new double[sparseSampleCount];
+        for (var index = 0; index < sparseSampleCount; index++)
+        {
+            sparseX[index] = index * sparseSpacing;
+            sparseY[index] = sparseBaseline + (Math.Sin(sparseX[index] / sparsePeriod) * sparseAmplitude);
+        }
+
         return new(x, wave, step, sparseX, sparseY);
     }
 
@@ -414,13 +417,18 @@ public partial class MainViewModel : RxObject
         const int simpleMovingAveragePeriod = 20;
         const int exponentialMovingAveragePeriod = 12;
         const int relativeStrengthIndexPeriod = 14;
-        var x = Enumerable.Range(0, sampleCount).Select(static value => (double)value).ToArray();
-        var close = x.Select(static value =>
+        double[] x = new double[sampleCount];
+        double[] close = new double[sampleCount];
+        for (var index = 0; index < sampleCount; index++)
+        {
+            x[index] = index;
+            close[index] =
                 priceBaseline
-                + (value * trendPerSample)
-                + (Math.Sin(value / shortPeriod) * shortAmplitude)
-                + (Math.Cos(value / longPeriod) * longAmplitude))
-            .ToArray();
+                + (x[index] * trendPerSample)
+                + (Math.Sin(x[index] / shortPeriod) * shortAmplitude)
+                + (Math.Cos(x[index] / longPeriod) * longAmplitude);
+        }
+
         var price = PlotSeriesData.Numeric("Price", priceAxis, x, close);
         var priceSource = ReactivePlotSource.FromStatic(
             price,
@@ -450,6 +458,21 @@ public partial class MainViewModel : RxObject
                 oscillatorAxis,
                 new() { Color = "#26A69A" }),
             .. macd,];
+    }
+
+    /// <summary>Creates an offset copy of the supplied values.</summary>
+    /// <param name="values">The values to copy.</param>
+    /// <param name="offset">The offset to apply to every value.</param>
+    /// <returns>The offset values.</returns>
+    private static double[] OffsetValues(double[] values, double offset)
+    {
+        double[] offsetValues = new double[values.Length];
+        for (var index = 0; index < values.Length; index++)
+        {
+            offsetValues[index] = values[index] + offset;
+        }
+
+        return offsetValues;
     }
 
     /// <summary>Starts the reactive demo data streams.</summary>

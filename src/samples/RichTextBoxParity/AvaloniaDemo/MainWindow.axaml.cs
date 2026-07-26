@@ -1,9 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -28,6 +28,9 @@ public partial class MainWindow : Window
 
     /// <summary>Refreshes observable editor and clipboard state.</summary>
     private readonly DispatcherTimer _stateTimer;
+
+    /// <summary>Supplies timestamps used by interactive clipboard and drop probes.</summary>
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>The RichTextBox under test.</summary>
     private DemoRichTextBox _editor = null!;
@@ -64,8 +67,16 @@ public partial class MainWindow : Window
 
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
+        : this(TimeProvider.System)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
+    /// <param name="timeProvider">The time source for interactive sample timestamps.</param>
+    public MainWindow(TimeProvider timeProvider)
     {
         InitializeComponent();
+        _timeProvider = timeProvider;
         ResolveControls();
         ConfigureEditor();
         WireToolbar();
@@ -117,7 +128,7 @@ public partial class MainWindow : Window
 
         var normalized = text.Replace("\r", "\\r", StringComparison.Ordinal)
             .Replace("\n", "\\n", StringComparison.Ordinal);
-        return normalized.Length <= PreviewMaxLength ? normalized : normalized[..PreviewTrimmedLength] + "...";
+        return normalized.Length <= PreviewMaxLength ? normalized : $"{normalized[..PreviewTrimmedLength]}...";
     }
 
     /// <summary>Resolves named controls from the loaded XAML tree.</summary>
@@ -136,11 +147,10 @@ public partial class MainWindow : Window
     /// <summary>Configures the RichTextBox with sample content and event reporting.</summary>
     private void ConfigureEditor()
     {
-        _editor.SetHtml(
-            "<p><strong>RichTextBox parity baseline</strong></p>"
-            + "<p>Select text, apply formatting, cut/copy/paste, undo/redo, or drop text and files here.</p>"
-            + "<p>The editor remains in rendered-text coordinates while preserving formatting outside the changed "
-            + "range.</p>");
+        _editor.SetHtml(string.Concat(
+            "<p><strong>RichTextBox parity baseline</strong></p>",
+            "<p>Select text, apply formatting, cut/copy/paste, undo/redo, or drop text and files here.</p>",
+            "<p>The editor remains in rendered-text coordinates while preserving formatting outside the changed range.</p>"));
         _editor.SelectionChanged += (_, _) => UpdateAction("Selection changed.");
         _editor.TextChanged += (_, _) => UpdateAction("Text changed.");
         _editor.FormattingApplied += (_, args) =>
@@ -232,7 +242,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        await clipboard.SetTextAsync($"Seeded platform clipboard text at {DateTime.Now:T}.").ConfigureAwait(true);
+        await clipboard.SetTextAsync($"Seeded platform clipboard text at {_timeProvider.GetLocalNow():T}.").ConfigureAwait(true);
         UpdateAction("Platform clipboard seeded with plain text.");
         await RefreshClipboardStateAsync().ConfigureAwait(true);
     }
@@ -240,7 +250,7 @@ public partial class MainWindow : Window
     /// <summary>Exercises the RichTextBox drop insertion path.</summary>
     private void SimulateTextDrop()
     {
-        var inserted = _editor.TryDropText($"Dropped text at {DateTime.Now:T}.");
+        var inserted = _editor.TryDropText($"Dropped text at {_timeProvider.GetLocalNow():T}.");
         _dropState = inserted ? "Simulated text drop inserted content." : "Simulated text drop was rejected.";
         UpdateAction("Simulated drop probe invoked.");
     }
@@ -319,9 +329,21 @@ public partial class MainWindow : Window
         }
 
         using var transfer = await clipboard.TryGetDataAsync().ConfigureAwait(true);
-        _clipboardState = transfer is null
-            ? "empty"
-            : string.Join(", ", transfer.Formats.Select(format => format.Identifier));
+        if (transfer is null)
+        {
+            _clipboardState = "empty";
+        }
+        else
+        {
+            var formatIdentifiers = new List<string>();
+            foreach (var format in transfer.Formats)
+            {
+                formatIdentifiers.Add(format.Identifier);
+            }
+
+            _clipboardState = string.Join(", ", formatIdentifiers);
+        }
+
         RefreshState();
     }
 

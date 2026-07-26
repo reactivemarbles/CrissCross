@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Customized window for notifications.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(MessageBox), "MessageBox.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class MessageBox : System.Windows.Window
 {
     /// <summary>Identifies the <see cref="ShowTitle"/> dependency property.</summary>
@@ -21,104 +22,97 @@ public class MessageBox : System.Windows.Window
         nameof(ShowTitle),
         typeof(bool),
         typeof(MessageBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="PrimaryButtonText"/> dependency property.</summary>
     public static readonly DependencyProperty PrimaryButtonTextProperty = DependencyProperty.Register(
         nameof(PrimaryButtonText),
         typeof(string),
         typeof(MessageBox),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the <see cref="SecondaryButtonText"/> dependency property.</summary>
     public static readonly DependencyProperty SecondaryButtonTextProperty = DependencyProperty.Register(
         nameof(SecondaryButtonText),
         typeof(string),
         typeof(MessageBox),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the <see cref="CloseButtonText"/> dependency property.</summary>
     public static readonly DependencyProperty CloseButtonTextProperty = DependencyProperty.Register(
         nameof(CloseButtonText),
         typeof(string),
         typeof(MessageBox),
-        new PropertyMetadata("Close"));
+        new("Close"));
 
     /// <summary>Identifies the <see cref="PrimaryButtonIcon"/> dependency property.</summary>
     public static readonly DependencyProperty PrimaryButtonIconProperty = DependencyProperty.Register(
         nameof(PrimaryButtonIcon),
         typeof(IconElement),
         typeof(MessageBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <see cref="SecondaryButtonIcon"/> dependency property.</summary>
     public static readonly DependencyProperty SecondaryButtonIconProperty = DependencyProperty.Register(
         nameof(SecondaryButtonIcon),
         typeof(IconElement),
         typeof(MessageBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <see cref="CloseButtonIcon"/> dependency property.</summary>
     public static readonly DependencyProperty CloseButtonIconProperty = DependencyProperty.Register(
         nameof(CloseButtonIcon),
         typeof(IconElement),
         typeof(MessageBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <see cref="PrimaryButtonAppearance"/> dependency property.</summary>
     public static readonly DependencyProperty PrimaryButtonAppearanceProperty = DependencyProperty.Register(
         nameof(PrimaryButtonAppearance),
         typeof(ControlAppearance),
         typeof(MessageBox),
-        new PropertyMetadata(ControlAppearance.Primary));
+        new(ControlAppearance.Primary));
 
     /// <summary>Identifies the <see cref="SecondaryButtonAppearance"/> dependency property.</summary>
     public static readonly DependencyProperty SecondaryButtonAppearanceProperty = DependencyProperty.Register(
         nameof(SecondaryButtonAppearance),
         typeof(ControlAppearance),
         typeof(MessageBox),
-        new PropertyMetadata(ControlAppearance.Secondary));
+        new(ControlAppearance.Secondary));
 
     /// <summary>Identifies the <see cref="CloseButtonAppearance"/> dependency property.</summary>
     public static readonly DependencyProperty CloseButtonAppearanceProperty = DependencyProperty.Register(
         nameof(CloseButtonAppearance),
         typeof(ControlAppearance),
         typeof(MessageBox),
-        new PropertyMetadata(ControlAppearance.Secondary));
+        new(ControlAppearance.Secondary));
 
     /// <summary>Identifies the <see cref="IsPrimaryButtonEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty IsPrimaryButtonEnabledProperty = DependencyProperty.Register(
         nameof(IsPrimaryButtonEnabled),
         typeof(bool),
         typeof(MessageBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="IsSecondaryButtonEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty IsSecondaryButtonEnabledProperty = DependencyProperty.Register(
         nameof(IsSecondaryButtonEnabled),
         typeof(bool),
         typeof(MessageBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="TemplateButtonCommand"/> dependency property.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(MessageBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Divisor used to calculate centered window offsets.</summary>
     private const double CenterOffsetDivisor = 2.0;
 
     /// <summary>Multiplier used to apply symmetric horizontal margins.</summary>
     private const double HorizontalMarginMultiplier = 2.0;
-
-#if !NET8_0_OR_GREATER
-    /// <summary>Provides the CanCenterOverWPFOwnerPropertyInfo member.</summary>
-    private static readonly PropertyInfo CanCenterOverWPFOwnerPropertyInfo = typeof(System.Windows.Window).GetProperty(
-        nameof(CanCenterOverWPFOwner),
-        BindingFlags.NonPublic | BindingFlags.Instance)!;
-#endif
 
     /// <summary>Initializes a new instance of the <see cref="MessageBox"/> class.</summary>
     public MessageBox()
@@ -228,6 +222,10 @@ public class MessageBox : System.Windows.Window
     /// </value>
     protected TaskCompletionSource<MessageBoxResult>? Tcs { get; set; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Prevents bypassing the asynchronous message-box workflow.</summary>
     /// <exception cref="InvalidOperationException">Use <see cref="ShowDialogAsync(bool, CancellationToken)" />
     /// instead.</exception>
@@ -263,7 +261,7 @@ public class MessageBox : System.Windows.Window
     /// <returns>The selected result.</returns>
     public async Task<MessageBoxResult> ShowDialogAsync(bool showAsDialog, CancellationToken cancellationToken)
     {
-        Tcs = new();
+        Tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
         var tokenRegistration = cancellationToken.Register(
             o => Tcs.TrySetCanceled((CancellationToken)o!),
             cancellationToken);
@@ -388,28 +386,20 @@ public class MessageBox : System.Windows.Window
         base.Close();
     }
 
-#if NET8_0_OR_GREATER
-
-    /// <summary>Provides the CanCenterOverWPFOwnerAccessor member.</summary>
-    /// <param name="w">The w value.</param>
-    /// <returns>The result.</returns>
-    [System.Runtime.CompilerServices.UnsafeAccessor(
-        System.Runtime.CompilerServices.UnsafeAccessorKind.Method,
-        Name = "get_CanCenterOverWPFOwner")]
-    private static extern bool CanCenterOverWPFOwnerAccessor(System.Windows.Window w);
-#endif
-
     /// <summary>
-    /// CanCenterOverWPFOwner property see
+    /// Mirrors WPF's CanCenterOverWPFOwner checks using public window state; see
     /// https://source.dot.net/#PresentationFramework/System/Windows/Window.cs,e679e433777b21b8.
     /// </summary>
     /// <returns><c>true</c> when the window can center over the WPF owner; otherwise, <c>false</c>.</returns>
-    private bool CanCenterOverWPFOwner() =>
-#if NET8_0_OR_GREATER
-        CanCenterOverWPFOwnerAccessor(this);
-#else
-        (bool)CanCenterOverWPFOwnerPropertyInfo.GetValue(this)!;
-#endif
+    private bool CanCenterOverWPFOwner()
+    {
+        var owner = Owner;
+        return owner is not null
+            && (PresentationSource.FromVisual(owner) is not null
+                || (!double.IsNaN(owner.Width) && !double.IsNaN(owner.Height)))
+            && !double.IsNaN(owner.Left)
+            && !double.IsNaN(owner.Top);
+    }
 
     /// <summary>Provides the CenterWindowOnOwner member.</summary>
     private void CenterWindowOnOwner()

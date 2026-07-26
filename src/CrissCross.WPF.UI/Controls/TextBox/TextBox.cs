@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Extended TextBox with additional parameters like PlaceholderText.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TextBox : System.Windows.Controls.TextBox
 {
     /// <summary>Identifies the <see cref="Icon"/> dependency property.</summary>
@@ -19,63 +20,63 @@ public class TextBox : System.Windows.Controls.TextBox
         nameof(Icon),
         typeof(IconElement),
         typeof(TextBox),
-        new PropertyMetadata(null, null, IconElement.Coerce));
+        new(null, null, IconElement.Coerce));
 
     /// <summary>Identifies the <see cref="IconPlacement"/> dependency property.</summary>
     public static readonly DependencyProperty IconPlacementProperty = DependencyProperty.Register(
         nameof(IconPlacement),
         typeof(ElementPlacement),
         typeof(TextBox),
-        new PropertyMetadata(ElementPlacement.Left));
+        new(ElementPlacement.Left));
 
     /// <summary>Identifies the <see cref="PlaceholderText"/> dependency property.</summary>
     public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
         nameof(PlaceholderText),
         typeof(string),
         typeof(TextBox),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the <see cref="PlaceholderEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty PlaceholderEnabledProperty = DependencyProperty.Register(
         nameof(PlaceholderEnabled),
         typeof(bool),
         typeof(TextBox),
-        new PropertyMetadata(true, OnPlaceholderEnabledChanged));
+        new(true, OnPlaceholderEnabledChanged));
 
     /// <summary>Identifies the <see cref="CurrentPlaceholderEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty CurrentPlaceholderEnabledProperty = DependencyProperty.Register(
         nameof(CurrentPlaceholderEnabled),
         typeof(bool),
         typeof(TextBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="ClearButtonEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty ClearButtonEnabledProperty = DependencyProperty.Register(
         nameof(ClearButtonEnabled),
         typeof(bool),
         typeof(TextBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="ShowClearButton"/> dependency property.</summary>
     public static readonly DependencyProperty ShowClearButtonProperty = DependencyProperty.Register(
         nameof(ShowClearButton),
         typeof(bool),
         typeof(TextBox),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Identifies the <see cref="IsTextSelectionEnabled"/> dependency property.</summary>
     public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
         nameof(IsTextSelectionEnabled),
         typeof(bool),
         typeof(TextBox),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Identifies the <see cref="TemplateButtonCommand"/> dependency property.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(TextBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="TextBox"/> class.</summary>
     public TextBox()
@@ -142,6 +143,10 @@ public class TextBox : System.Windows.Controls.TextBox
 
     /// <summary>Gets the command triggered when clicking the button.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     protected override void OnTextChanged(TextChangedEventArgs e)

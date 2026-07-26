@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -17,6 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents an icon that uses a glyph from the specified font.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(FontIcon), "FontIcon.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FontIcon : IconElement
 {
     /// <summary>Property for <see cref="FontFamily"/>.</summary>
@@ -104,6 +105,10 @@ public class FontIcon : IconElement
 
     /// <summary>Gets or sets the text block.</summary>
     protected TextBlock? TextBlock { get; set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Initializes the children.</summary>
     /// <returns>A UIElement.</returns>

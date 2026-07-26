@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -77,16 +77,20 @@ public partial class MainView : IDisposable
     /// <param name="disposables">The activation disposables.</param>
     private void BindChartProperties(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, vm => vm.YAxisNames, v => v.Chart.YAxisName).DisposeWith(disposables);
-        _ = this.OneWayBind(ViewModel, vm => vm.ActiveScenario, v => v.ActiveScenarioText.Text)
+        _ = this.OneWayBind(ViewModel, static vm => vm.YAxisNames, static v => v.Chart.YAxisName)
             .DisposeWith(disposables);
-        _ = this.OneWayBind(ViewModel, vm => vm.ThemeButtonText, v => v.ToggleThemeButton.Content)
+        _ = this.OneWayBind(ViewModel, static vm => vm.ActiveScenario, static v => v.ActiveScenarioText.Text)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.CheckBoxUseFixedNumberOfPoints.IsChecked)
+        _ = this.OneWayBind(ViewModel, static vm => vm.ThemeButtonText, static v => v.ToggleThemeButton.Content)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.Chart.UseFixedNumberOfPoints)
+        _ = this.Bind(
+                ViewModel,
+                static vm => vm.UseFixedNumberOfPoints,
+                static v => v.CheckBoxUseFixedNumberOfPoints.IsChecked)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted.Value)
+        _ = this.Bind(ViewModel, static vm => vm.UseFixedNumberOfPoints, static v => v.Chart.UseFixedNumberOfPoints)
+            .DisposeWith(disposables);
+        _ = this.Bind(ViewModel, static vm => vm.NumberPointsPlotted, static v => v.NumberPointsPlotted.Value)
             .DisposeWith(disposables);
     }
 
@@ -96,16 +100,28 @@ public partial class MainView : IDisposable
     {
         _ = this.BindCommand(
                 ViewModel,
-                viewModel => viewModel.ShowAllChartTypesCommand,
-                view => view.ShowAllChartTypesButton)
+                static viewModel => viewModel.ShowAllChartTypesCommand,
+                static view => view.ShowAllChartTypesButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowLiveCommand, view => view.ShowLiveButton)
+        _ = this.BindCommand(
+                ViewModel,
+                static viewModel => viewModel.ShowLiveCommand,
+                static view => view.ShowLiveButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowHistoricCommand, view => view.ShowHistoricButton)
+        _ = this.BindCommand(
+                ViewModel,
+                static viewModel => viewModel.ShowHistoricCommand,
+                static view => view.ShowHistoricButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, viewModel => viewModel.ShowIndicatorsCommand, view => view.ShowIndicatorsButton)
+        _ = this.BindCommand(
+                ViewModel,
+                static viewModel => viewModel.ShowIndicatorsCommand,
+                static view => view.ShowIndicatorsButton)
             .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, viewModel => viewModel.ToggleThemeCommand, view => view.ToggleThemeButton)
+        _ = this.BindCommand(
+                ViewModel,
+                static viewModel => viewModel.ToggleThemeCommand,
+                static view => view.ToggleThemeButton)
             .DisposeWith(disposables);
     }
 
@@ -114,17 +130,17 @@ public partial class MainView : IDisposable
     private void BindPlotData(CompositeDisposable disposables)
     {
         _ = ViewModel
-            .WhenAnyValue(vm => vm.NumberPointsPlotted)
+            .WhenAnyValue(static vm => vm.NumberPointsPlotted)
             .Where(static numberOfPoints => numberOfPoints.HasValue)
             .Select(static numberOfPoints => Math.Max(1, Convert.ToInt32(numberOfPoints.GetValueOrDefault())))
-            .BindTo(this, v => v.Chart.NumberPointsPlotted)
+            .BindTo(this, static v => v.Chart.NumberPointsPlotted)
             .DisposeWith(disposables);
         _ = ViewModel
             .ReactivePlotSources.ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(sources => Chart.ReactivePlotSources = sources)
             .DisposeWith(disposables);
-        _ = this.WhenAnyValue(x => x.Chart.ViewModel)
-            .BindTo(ViewModel, vm => vm.LiveChartViewModel)
+        _ = this.WhenAnyValue(static x => x.Chart.ViewModel)
+            .BindTo(ViewModel, static vm => vm.LiveChartViewModel)
             .DisposeWith(disposables);
     }
 }

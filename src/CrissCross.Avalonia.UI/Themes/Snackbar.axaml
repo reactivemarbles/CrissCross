@@ -6,6 +6,7 @@
     <Style Selector="controls|Snackbar">
         <Setter Property="Background" Value="{DynamicResource CardBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+        <Setter Property="ContentForeground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefault}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="16,12" />
@@ -49,8 +50,7 @@
                                 Padding="4"
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="&#xE711;"
-                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            <TextBlock Text="&#x00D7;"
                                        FontSize="12" />
                         </Button>
                     </Grid>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>A custom WinUI Window with more convenience methods.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(FluentWindow), "FluentWindow.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FluentWindow : System.Windows.Window, ICanShowMessages
 {
     /// <summary>Property for <see cref="WindowCornerPreference"/>.</summary>
@@ -21,21 +22,21 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
         nameof(WindowCornerPreference),
         typeof(WindowCornerPreference),
         typeof(FluentWindow),
-        new PropertyMetadata(WindowCornerPreference.Round, OnCornerPreferenceChanged));
+        new(WindowCornerPreference.Round, OnCornerPreferenceChanged));
 
     /// <summary>Property for <see cref="WindowBackdropType"/>.</summary>
     public static readonly DependencyProperty WindowBackdropTypeProperty = DependencyProperty.Register(
         nameof(WindowBackdropType),
         typeof(WindowBackdropType),
         typeof(FluentWindow),
-        new PropertyMetadata(WindowBackdropType.None, OnBackdropTypeChanged));
+        new(WindowBackdropType.None, OnBackdropTypeChanged));
 
     /// <summary>Property for <see cref="ExtendsContentIntoTitleBar"/>.</summary>
     public static readonly DependencyProperty ExtendsContentIntoTitleBarProperty = DependencyProperty.Register(
         nameof(ExtendsContentIntoTitleBar),
         typeof(bool),
         typeof(FluentWindow),
-        new PropertyMetadata(false, OnExtendsContentIntoTitleBarChanged));
+        new(false, OnExtendsContentIntoTitleBarChanged));
 
     /// <summary>The resize border thickness used when resize is enabled.</summary>
     private const double ResizeBorderThickness = 4D;
@@ -82,6 +83,10 @@ public class FluentWindow : System.Windows.Window, ICanShowMessages
 
     /// <summary>Gets contains helper for accessing this window handle.</summary>
     protected WindowInteropHelper InteropHelper => _interopHelper ??= new WindowInteropHelper(this);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     protected override void OnSourceInitialized(EventArgs e)

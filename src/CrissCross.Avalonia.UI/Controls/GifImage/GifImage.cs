@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -16,7 +16,7 @@ public class GifImage : global::Avalonia.Controls.Image
 {
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
     public static readonly StyledProperty<CornerRadius> CornerRadiusProperty =
-        AvaloniaProperty.Register<GifImage, CornerRadius>(nameof(CornerRadius), new CornerRadius(0));
+        AvaloniaProperty.Register<GifImage, CornerRadius>(nameof(CornerRadius), new(0));
 
     /// <summary>Property for <see cref="StretchDirection"/>.</summary>
     public static new readonly StyledProperty<StretchDirection> StretchDirectionProperty =
@@ -103,22 +103,13 @@ public class GifImage : global::Avalonia.Controls.Image
     }
 
     /// <summary>Starts the GIF animation.</summary>
-    public void StartAnimation()
-    {
-        IsAnimating = true;
-    }
+    public void StartAnimation() => IsAnimating = true;
 
     /// <summary>Stops the GIF animation.</summary>
-    public void StopAnimation()
-    {
-        IsAnimating = false;
-    }
+    public void StopAnimation() => IsAnimating = false;
 
     /// <summary>Pauses the GIF animation.</summary>
-    public void PauseAnimation()
-    {
-        IsAnimating = false;
-    }
+    public void PauseAnimation() => StopAnimation();
 
     /// <summary>Resets the animation to the first frame.</summary>
     public void ResetAnimation()

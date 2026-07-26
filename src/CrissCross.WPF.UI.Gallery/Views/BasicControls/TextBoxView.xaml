@@ -20,7 +20,7 @@
       Height="30"
       Margin="12,0,0,0"
       HorizontalAlignment="Left"
-      Source="/Assets/ControlImages/TextBox.png"
+      Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/TextBox.png"
     />
     <ui:TextBlock Margin="45,12,12,12" FontSize="24" FontWeight="Bold" Text="TextBox" />
     <Grid Grid.Row="1" Margin="12">
@@ -39,7 +39,7 @@
       <TextBox Margin="5" />
       <ui:TextBox Grid.Column="1" Height="30" Margin="5">
         <ui:TextBox.Icon>
-          <ui:ImageIcon Source="/Assets/ControlImages/TextBox.png" />
+          <ui:ImageIcon Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/TextBox.png" />
         </ui:TextBox.Icon>
       </ui:TextBox>
       <ui:HexColorTextBox Grid.Column="2" Margin="5" />

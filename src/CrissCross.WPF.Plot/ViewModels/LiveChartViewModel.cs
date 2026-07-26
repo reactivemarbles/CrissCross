@@ -1,10 +1,12 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 #if REACTIVE_SHIM
 using CP.Reactive.Collections;
 #else
@@ -48,6 +50,12 @@ public partial class LiveChartViewModel : RxObject
     /// <summary>The primary axis label color.</summary>
     private const string PrimaryAxisColor = "#377eb8";
 
+    /// <summary>Logs failures while publishing chart mouse coordinates.</summary>
+    private static readonly Action<ILogger, Exception?> MouseLocationErrorLog = LoggerMessage.Define(
+        LogLevel.Error,
+        new(1, nameof(MouseLocationErrorLog)),
+        "Mouse location error.");
+
     /// <summary>Stores the wpf plot1 value.</summary>
     private WpfPlot? _wpfPlot1;
 
@@ -73,7 +81,7 @@ public partial class LiveChartViewModel : RxObject
 
     /// <summary>Stores the legend position value.</summary>
     [Reactive]
-    private LegendPosition _legendPosition = LegendPosition.Top;
+    private LegendPosition _legendPosition;
 
     /// <summary>Initializes a new instance of the <see cref="LiveChartViewModel"/> class.</summary>
     /// <remarks>This constructor configures chart axes, UI collections, and command bindings required for
@@ -215,6 +223,9 @@ public partial class LiveChartViewModel : RxObject
     /// sequence.</remarks>
     public IXAxis XAxis1 { get; set; } = null!;
 
+    /// <summary>Gets or sets the logger used for chart diagnostics.</summary>
+    public ILogger Logger { get; set; } = NullLogger.Instance;
+
     /// <summary>
     /// Creates an action that automatically adjusts the horizontal axis scaling of a plot using the specified X-axis
     /// configuration.
@@ -229,7 +240,7 @@ public partial class LiveChartViewModel : RxObject
     /// data changes or updates. The X-axis range is not affected by this action.</remarks>
     /// <returns>An action that rescales the plot Y-axis in the render pack.
     /// provided <see cref="RenderPack"/> to encompass all visible data.</returns>
-    public static Action<RenderPack> AutoScaleY() => rp => rp.Plot.Axes.AutoScaleY();
+    public static Action<RenderPack> AutoScaleY() => static rp => rp.Plot.Axes.AutoScaleY();
 
     /// <summary>Creates an action that automatically adjusts all axes in a plot to fit the current data.</summary>
     /// <remarks>Use this action to ensure that all plot axes are scaled to include the full range of data.
@@ -237,7 +248,7 @@ public partial class LiveChartViewModel : RxObject
     /// visible.</remarks>
     /// <returns>An action that rescales all plot axes in the render pack.
     /// <see cref="RenderPack"/> to display all data points.</returns>
-    public static Action<RenderPack> AutoScaleAll() => rp => rp.Plot.Axes.AutoScale();
+    public static Action<RenderPack> AutoScaleAll() => static rp => rp.Plot.Axes.AutoScale();
 
     /// <summary>Hides all Y-axis elements by setting their visibility to false.</summary>
     /// <remarks>Call this method to remove all Y-axis visuals from the chart or plot. This affects only the
@@ -444,12 +455,11 @@ public partial class LiveChartViewModel : RxObject
 
         YAxisList.Clear();
 
-        // combine yName and hexColors lists
-        var combinedList = data.yNames.Zip(data.hexColors, (name, color) => (name, color));
-
-        // create the axes
-        foreach (var (name, color) in combinedList)
+        var axisCount = Math.Min(data.yNames.Count, data.hexColors.Count);
+        for (var index = 0; index < axisCount; index++)
         {
+            var name = data.yNames[index];
+            var color = data.hexColors[index];
             var rightAxis = WpfPlot1vm!.Plot.Axes.AddRightAxis();
             rightAxis.FrameLineStyle.Color = baseColor;
             rightAxis.TickLabelStyle.ForeColor = baseColor;
@@ -479,10 +489,7 @@ public partial class LiveChartViewModel : RxObject
     /// <param name="theme">The theme to apply.</param>
     public void ApplyTheme(ReactivePlotTheme theme)
     {
-        if (theme is null)
-        {
-            throw new ArgumentNullException(nameof(theme));
-        }
+        ThrowHelper.ThrowIfNull(theme, nameof(theme));
 
         CurrentTheme = theme;
         var figureBackground = Color.FromHex(theme.FigureBackground);
@@ -524,10 +531,16 @@ public partial class LiveChartViewModel : RxObject
             "GreenYellow",
             "BlueViolet",
             "Gray",
-            "Red",];
+            "Red",
+        ];
 
-        // add data
-        var n = legend.Count() % colors.Count;
+        var legendItemCount = 0;
+        foreach (var _ in legend)
+        {
+            legendItemCount++;
+        }
+
+        var n = legendItemCount % colors.Count;
         return colors[n];
     }
 
@@ -537,7 +550,7 @@ public partial class LiveChartViewModel : RxObject
     {
         if (WpfPlot1vm is null)
         {
-            WpfPlot1vm = new() { Name = grid?.Name + "WpfPlot" };
+            WpfPlot1vm = new() { Name = $"{grid?.Name}WpfPlot" };
             ApplyTheme(ReactivePlotTheme.Dark);
             grid?.Children.Clear();
             grid?.Children.Add(WpfPlot1vm);
@@ -559,7 +572,7 @@ public partial class LiveChartViewModel : RxObject
     /// <summary>Creates the interactive chart commands.</summary>
     private void InitializeCommands()
     {
-        GraphLocked = ReactiveCommand.Create(() => { });
+        GraphLocked = ReactiveCommand.Create(static () => { });
         EnableMarkerBtn = ReactiveCommand.Create(() =>
         {
             foreach (var plotLine in PlotLinesCollectionUI)
@@ -581,13 +594,13 @@ public partial class LiveChartViewModel : RxObject
     private void AddCrosshair()
     {
         CrosshairCollection.Add(
-            new Crosshair_UI(
+            new(
                 WpfPlot1vm!,
                 ("crosshair 1", 0),
                 color: "Blue",
                 isXAxisDateTime: IsXAxisDateTime,
                 coordinatesObs: MouseCoordinatesObservable));
-        var crosshair = CrosshairCollection.Last().PlotLine!;
+        var crosshair = CrosshairCollection[CrosshairCollection.Count - 1].PlotLine!;
         crosshair.Axes.YAxis = YAxisList[0];
         crosshair.Axes.XAxis = XAxis1;
         crosshair.VerticalLine.Axes.YAxis = YAxisList[0];
@@ -665,6 +678,10 @@ public partial class LiveChartViewModel : RxObject
 
     /// <summary>Collapses the right property panel.</summary>
     private void CollapseRightPropertyPanel() => RightPropertyVisibility = Visibility.Collapsed;
+
+    /// <summary>Logs a failure while publishing the current mouse location.</summary>
+    /// <param name="exception">The publishing failure.</param>
+    private void LogMouseLocationError(Exception exception) => MouseLocationErrorLog(Logger, exception);
 
     /// <summary>
     /// Hides the left axis of the plot by setting its foreground and tick colors to a background color, and updates the

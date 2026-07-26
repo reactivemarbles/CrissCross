@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Interaction logic for HueSlider.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed partial class HueSlider : UserControl
 {
     /// <summary>Provides the ValueProperty member.</summary>
@@ -19,14 +20,14 @@ public sealed partial class HueSlider : UserControl
         nameof(Value),
         typeof(double),
         typeof(HueSlider),
-        new PropertyMetadata(0.0));
+        new(0.0));
 
     /// <summary>Provides the SmallChangeProperty member.</summary>
     public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
         nameof(SmallChange),
         typeof(double),
         typeof(HueSlider),
-        new PropertyMetadata(1.0));
+        new(1.0));
 
     /// <summary>The number of degrees in a complete hue circle.</summary>
     private const double DegreesInFullCircle = 360D;
@@ -56,6 +57,10 @@ public sealed partial class HueSlider : UserControl
         get => (double)GetValue(SmallChangeProperty);
         set => SetValue(SmallChangeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnMouseDown member.</summary>
     /// <param name="sender">The event sender.</param>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -21,7 +21,7 @@ internal static class NavigationViewActivator
     /// <param name="pageType"><see cref="FrameworkElement"/> to instantiate.</param>
     /// <param name="dataContext">Additional context to set.</param>
     /// <returns>Instance of the <see cref="FrameworkElement"/> object or <see langword="null"/>.</returns>
-    public static FrameworkElement? CreateInstance(Type pageType, object? dataContext = null)
+    internal static FrameworkElement? CreateInstance(Type pageType, object? dataContext = null)
     {
         if (!typeof(FrameworkElement).IsAssignableFrom(pageType))
         {
@@ -32,13 +32,7 @@ internal static class NavigationViewActivator
 
         if (DesignerHelper.IsInDesignMode)
         {
-            return new Page
-            {
-                Content = new TextBlock
-                {
-                    Text = "Pages are not rendered while using the Designer. Edit the page template directly.",
-                },
-            };
+            return new Page { Content = new TextBlock { Text = "Pages are not rendered while using the Designer. Edit the page template directly.", }, };
         }
 
         FrameworkElement? instance;
@@ -90,7 +84,15 @@ internal static class NavigationViewActivator
         }
 
         var pageConstructors = pageType.GetConstructors();
-        var parameterlessCount = pageConstructors.Count(ctor => ctor.GetParameters().Length == 0);
+        var parameterlessCount = 0;
+        foreach (var constructor in pageConstructors)
+        {
+            if (constructor.GetParameters().Length == 0)
+            {
+                parameterlessCount++;
+            }
+        }
+
         var parameterfullCount = pageConstructors.Length - parameterlessCount;
 
         if (parameterlessCount == 1)
@@ -106,27 +108,31 @@ internal static class NavigationViewActivator
 
         var selectedCtor =
             FitBestConstructor(pageConstructors, dataContext)
-            ?? throw new InvalidOperationException(
-                $"The {pageType} page does not have a parameterless constructor, or the required services "
-                    + "have not been configured for dependency injection. Use the static "
-                    + $"{nameof(ControlsServices)} class to initialize the GUI library with your service provider. "
-                    + $"If you are using {typeof(IPageService)}, do not navigate initially or use Cache or Precache.");
+            ?? throw new InvalidOperationException(CreateMissingConstructorMessage(pageType));
 
         instance = InvokeElementConstructor(selectedCtor, dataContext);
         SetDataContext(instance, dataContext);
         return true;
     }
 
+    /// <summary>Creates an actionable diagnostic when page activation cannot select a constructor.</summary>
+    /// <param name="pageType">The page type being activated.</param>
+    /// <returns>The activation error message.</returns>
+    private static string CreateMissingConstructorMessage(Type pageType) =>
+        $"""
+         The {pageType} page does not have a parameterless constructor, or the required services
+         have not been configured for dependency injection. Use the static {nameof(ControlsServices)} class
+         to initialize the GUI library with your service provider. If you are using {typeof(IPageService)},
+         do not navigate initially or use Cache or Precache.
+         """;
+
     /// <summary>Provides the ResolveConstructorParameter member.</summary>
     /// <param name="parameterType">The parameter type.</param>
     /// <param name="dataContext">The dataContext value.</param>
     /// <returns>The result.</returns>
-    private static object? ResolveConstructorParameter(Type parameterType, object? dataContext)
-    {
-        return dataContext is not null && dataContext.GetType() == parameterType
-            ? dataContext
-            : ControlsServices.ControlsServiceProvider?.GetService(parameterType);
-    }
+    private static object? ResolveConstructorParameter(Type parameterType, object? dataContext) => dataContext is not null && dataContext.GetType() == parameterType
+        ? dataContext
+        : ControlsServices.ControlsServiceProvider?.GetService(parameterType);
 
     /// <summary>Picks a constructor which has the most satisfiable arguments count.</summary>
     /// <param name="parameterfullCtors">The parameterfullCtors value.</param>
@@ -134,24 +140,30 @@ internal static class NavigationViewActivator
     /// <returns>The result.</returns>
     private static ConstructorInfo? FitBestConstructor(ConstructorInfo[] parameterfullCtors, object? dataContext)
     {
-        return parameterfullCtors
-            .Select(ctor =>
-            {
-                var parameters = ctor.GetParameters();
-                var argumentResolution = parameters.Select(prm =>
-                {
-                    var resolved = ResolveConstructorParameter(prm.ParameterType, dataContext);
-                    return resolved is not null;
-                });
-                var fullyResolved = argumentResolution.All(resolved => resolved);
-                var score = fullyResolved ? parameters.Length : 0;
+        ConstructorInfo? selectedConstructor = null;
+        var selectedScore = int.MaxValue;
 
-                return (Constructor: ctor, Score: score);
-            })
-            .Where(cs => cs.Score > 0)
-            .OrderBy(cs => cs.Score)
-            .Select(cs => cs.Constructor)
-            .FirstOrDefault();
+        foreach (var constructor in parameterfullCtors)
+        {
+            var parameters = constructor.GetParameters();
+            var fullyResolved = true;
+            foreach (var parameter in parameters)
+            {
+                if (ResolveConstructorParameter(parameter.ParameterType, dataContext) is null)
+                {
+                    fullyResolved = false;
+                    break;
+                }
+            }
+
+            if (fullyResolved && parameters.Length > 0 && parameters.Length < selectedScore)
+            {
+                selectedConstructor = constructor;
+                selectedScore = parameters.Length;
+            }
+        }
+
+        return selectedConstructor;
     }
 
     /// <summary>Provides the InvokeElementConstructor member.</summary>
@@ -160,9 +172,14 @@ internal static class NavigationViewActivator
     /// <returns>The result.</returns>
     private static FrameworkElement? InvokeElementConstructor(ConstructorInfo ctor, object? dataContext)
     {
-        var args = ctor.GetParameters().Select(prm => ResolveConstructorParameter(prm.ParameterType, dataContext));
+        var parameters = ctor.GetParameters();
+        var arguments = new object?[parameters.Length];
+        for (var index = 0; index < parameters.Length; index++)
+        {
+            arguments[index] = ResolveConstructorParameter(parameters[index].ParameterType, dataContext);
+        }
 
-        return ctor.Invoke(args.ToArray()) as FrameworkElement;
+        return ctor.Invoke(arguments) as FrameworkElement;
     }
 #endif
 

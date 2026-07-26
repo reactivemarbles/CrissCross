@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -36,7 +36,7 @@ public partial class LiveChart
         nameof(UseFixedNumberOfPoints),
         typeof(bool),
         typeof(LiveChart),
-        new PropertyMetadata(false, new(UseFixedNumberOfPointsCallback)));
+        new(false, new(UseFixedNumberOfPointsCallback)));
 
     /// <summary>
     /// Identifies the NumberPointsPlotted dependency property, which specifies the maximum number of data points to
@@ -49,7 +49,7 @@ public partial class LiveChart
         nameof(NumberPointsPlotted),
         typeof(int),
         typeof(LiveChart),
-        new PropertyMetadata(600, new(NumberPointsPlottedCallback)));
+        new(600, new(NumberPointsPlottedCallback)));
 
     /// <summary>Identifies the dependency property for the displayed chart title.</summary>
     /// <remarks>This field is typically used when interacting with the LiveChart control's title in XAML or
@@ -58,7 +58,7 @@ public partial class LiveChart
         nameof(TitleContent),
         typeof(string),
         typeof(LiveChart),
-        new PropertyMetadata(" ", new(TitleCallback)));
+        new(" ", new(TitleCallback)));
 
     /// <summary>Identifies the dependency property for the chart legend position.</summary>
     /// <remarks>This field is used when referencing the LegendPosition property in property system
@@ -67,7 +67,7 @@ public partial class LiveChart
         nameof(LegendPosition),
         typeof(LegendPosition),
         typeof(LiveChart),
-        new PropertyMetadata(LegendPosition.Top, new(LegendPositionCallback)));
+        new(LegendPosition.Top, new(LegendPositionCallback)));
 
     /// <summary>Identifies the dependency property for the right panel width.</summary>
     /// <remarks>This property can be used in XAML or code to set or retrieve the width of the right panel.
@@ -77,7 +77,7 @@ public partial class LiveChart
         nameof(RightWidth),
         typeof(GridLength),
         typeof(LiveChart),
-        new PropertyMetadata(new GridLength(0), new PropertyChangedCallback(RightWidthCallback)));
+        new(new GridLength(0), new(RightWidthCallback)));
 
     /// <summary>Identifies the LegendWidth dependency property.</summary>
     /// <remarks>This field is used to reference the LegendWidth property in property system operations, such
@@ -87,7 +87,7 @@ public partial class LiveChart
         nameof(LegendWidth),
         typeof(double),
         typeof(LiveChart),
-        new(new PropertyChangedCallback(LegendWidthCallback)));
+        new(new(LegendWidthCallback)));
 
     /// <summary>Identifies the dependency property for the displayed sample count.</summary>
     /// <remarks>This field is used when referencing the NSamples property in property system operations, such
@@ -96,7 +96,7 @@ public partial class LiveChart
         nameof(NSamples),
         typeof(int),
         typeof(LiveChart),
-        new PropertyMetadata(2024, new(NSamplesCallback)));
+        new(2024, new(NSamplesCallback)));
 
     /// <summary>Identifies the dependency property for the sampling frequency.</summary>
     /// <remarks>This field is used when referencing the Frequency property in property system operations,
@@ -106,7 +106,7 @@ public partial class LiveChart
         nameof(Frequency),
         typeof(int),
         typeof(LiveChart),
-        new PropertyMetadata(32_000, new(FrequencyCallback)));
+        new(32_000, new(FrequencyCallback)));
 
     /// <summary>
     /// Identifies the Observables dependency property, which enables data binding for a collection of observable data
@@ -125,7 +125,7 @@ public partial class LiveChart
         nameof(ReactivePlotSources),
         typeof(IEnumerable<IReactivePlotSource>),
         typeof(LiveChart),
-        new PropertyMetadata(null, new PropertyChangedCallback(ReactivePlotSourcesCallback)));
+        new(null, new(ReactivePlotSourcesCallback)));
 
     /// <summary>
     /// Identifies the SignalObservablesWithTimeStamp dependency property, which enables binding to a collection of
@@ -238,9 +238,9 @@ public partial class LiveChart
         nameof(YAxisName),
         typeof((IList<string> yNames, IList<string> hexColors)),
         typeof(LiveChart),
-        new PropertyMetadata(
+        new(
             default((IList<string> yNames, IList<string> hexColors)),
-            new PropertyChangedCallback((d, _) => YAxisNameCallback(d))));
+            new(static (d, _) => YAxisNameCallback(d))));
 
     /// <summary>
     /// Identifies the ControlMenu dependency property, which represents a collection of chart objects associated with

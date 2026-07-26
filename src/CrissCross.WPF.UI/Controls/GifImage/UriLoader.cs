@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.IO.Packaging;
@@ -23,19 +23,22 @@ internal static class UriLoader
     /// <summary>The completed download percentage.</summary>
     private const int CompletedDownloadPercentage = 100;
 
+    /// <summary>The number of hexadecimal characters used for one byte.</summary>
+    private const int HexCharactersPerByte = 2;
+
+    /// <summary>The HTTP client shared by GIF downloads.</summary>
+    private static readonly HttpClient HttpClient = new();
+
     /// <summary>Gets or sets DownloadCacheLocation.</summary>
-    public static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
+    internal static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
 
     /// <summary>Provides the GetStreamFromUriAsync member.</summary>
     /// <param name="uri">The uri value.</param>
     /// <param name="progress">The progress value.</param>
     /// <returns>The result.</returns>
-    public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int>? progress)
-    {
-        return uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https")
-            ? GetNetworkStreamAsync(uri, progress)!
-            : GetStreamFromUriCoreAsync(uri);
-    }
+    internal static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int>? progress) => uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https")
+        ? GetNetworkStreamAsync(uri, progress)!
+        : GetStreamFromUriCoreAsync(uri);
 
     /// <summary>Provides the GetNetworkStreamAsync member.</summary>
     /// <param name="uri">The uri value.</param>
@@ -64,9 +67,8 @@ internal static class UriLoader
     {
         try
         {
-            using var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            var response = await client.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
             _ = response.EnsureSuccessStatusCode();
             var length = response.Content.Headers.ContentLength ?? 0;
 #if NET8_0_OR_GREATER
@@ -193,6 +195,14 @@ internal static class UriLoader
     /// <summary>Provides the ToHex member.</summary>
     /// <param name="bytes">The bytes value.</param>
     /// <returns>The result.</returns>
-    private static string ToHex(byte[] bytes) =>
-        bytes.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2")), sb => sb.ToString());
+    private static string ToHex(byte[] bytes)
+    {
+        StringBuilder text = new(bytes.Length * HexCharactersPerByte);
+        foreach (var value in bytes)
+        {
+            _ = text.Append(value.ToString("X2", CultureInfo.InvariantCulture));
+        }
+
+        return text.ToString();
+    }
 }

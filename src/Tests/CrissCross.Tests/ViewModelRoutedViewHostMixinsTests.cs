@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Splat;
@@ -42,11 +42,11 @@ public partial class ViewModelRoutedViewHostMixinsTests
     /// <summary>Provides the Setup member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Before(HookType.Test)]
-    public async Task Setup()
+    public Task Setup()
     {
         // Note: We don't clear static dictionaries as it causes test isolation issues
         // Each test should use unique host names to avoid conflicts
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     /// <summary>Verifies that the host generic navigation shim resolves and forwards a registered view model.</summary>
@@ -56,14 +56,11 @@ public partial class ViewModelRoutedViewHostMixinsTests
     {
         var parameter = new NavigationParameter("generic-host");
         var expectedViewModel = new TestViewModel();
-        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        var viewHost = new TestViewModelRoutedViewHost();
         RegisterTestViewModel(expectedViewModel, ProfileContract);
 
         viewHost.Navigate(
-            new NavigationKeyRequest<TestViewModel>
-            {
-                Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter },
-            });
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter }, });
 
         var testHost = (TestViewModelRoutedViewHost)viewHost;
         await Assert.That(ReferenceEquals(testHost.LastViewModel, expectedViewModel)).IsTrue();
@@ -84,10 +81,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         RegisterTestViewModel(expectedViewModel, ProfileContract);
 
         viewHost.NavigateAndReset(
-            new NavigationKeyRequest<TestViewModel>
-            {
-                Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter },
-            });
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter }, });
 
         await Assert.That(testHost.NavigationStack.Count).IsEqualTo(1);
         await Assert.That(ReferenceEquals(testHost.LastViewModel, expectedViewModel)).IsTrue();
@@ -124,7 +118,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
     [Test]
     public async Task Navigate_GenericHostShimWithUnregisteredViewModel_ThrowsInvalidOperationException()
     {
-        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        var viewHost = new TestViewModelRoutedViewHost();
         AppLocator.CurrentMutable.UnregisterAll<TestHostedViewModel>();
 
         await Assert
@@ -137,7 +131,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
     [Test]
     public async Task NavigateAndReset_GenericHostShimWithUnregisteredViewModel_ThrowsInvalidOperationException()
     {
-        IViewModelRoutedViewHost viewHost = new TestViewModelRoutedViewHost();
+        var viewHost = new TestViewModelRoutedViewHost();
         AppLocator.CurrentMutable.UnregisterAll<TestHostedViewModel>();
 
         await Assert
@@ -220,6 +214,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         var viewHost = new TestViewModelRoutedViewHost(hostName);
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
+        viewHost.NavigationStack.Add(typeof(TestHostedViewModel));
         viewHost.NavigationStack.Add(typeof(TestViewModel));
 
         // Act
@@ -266,6 +261,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         var viewHost = new TestViewModelRoutedViewHost(hostName);
         setNav.SetMainNavigationHost(viewHost);
         viewHost.NavigationStack.Add(typeof(TestViewModel));
+        viewHost.NavigationStack.Add(typeof(TestHostedViewModel));
 
         // Act
         vm.ClearHistory(hostName);
@@ -397,7 +393,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         var vm = new TestViewModel(hostName);
         using var setNav = new TestSetNavigationViewModel(hostName);
         var viewHost = new TestViewModelRoutedViewHost(hostName);
-        RegisterTestViewModel(new TestViewModel(hostName));
+        RegisterTestViewModel(new(hostName));
         setNav.SetMainNavigationHost(viewHost);
 
         // Act

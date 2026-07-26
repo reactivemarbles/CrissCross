@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -23,15 +23,18 @@ public partial class LiveChart
     /// <param name="sources">The sources value.</param>
     private void ConfigureReactivePlotXAxis(IEnumerable<IReactivePlotSource> sources)
     {
-        var axisKinds = sources
-            .OfType<ReactivePlotSource>()
-            .Select(source => source.XAxisKind)
-            .Where(kind => kind is not null)
-            .Select(kind => kind!.Value)
-            .Distinct()
-            .ToArray();
+        HashSet<PlotXAxisKind> axisKinds = [];
+        foreach (var source in sources)
+        {
+            if (source is ReactivePlotSource { XAxisKind: { } axisKind })
+            {
+                _ = axisKinds.Add(axisKind);
+            }
+        }
 
-        if (axisKinds.Length == 1 && axisKinds[0] is PlotXAxisKind.OADate or PlotXAxisKind.Ticks)
+        if (
+            axisKinds.Count == 1
+            && (axisKinds.Contains(PlotXAxisKind.OADate) || axisKinds.Contains(PlotXAxisKind.Ticks)))
         {
             ViewModel!.CreateAxisWithTimeStamp();
             return;
@@ -86,11 +89,8 @@ public partial class LiveChart
         var horizontalCoordinate = mouseLocation.X;
         var verticalCoordinate = mouseLocation.Y;
         var text = ViewModel.IsXAxisDateTime
-            ? "X : "
-                + DateTime.FromOADate(horizontalCoordinate).ToLongTimeString()
-                + "\nY : "
-                + verticalCoordinate.ToString("F2")
-            : "X : " + horizontalCoordinate.ToString("F2") + "\nY : " + verticalCoordinate.ToString("F2");
+            ? $"X : {DateTime.FromOADate(horizontalCoordinate).ToLongTimeString()}\nY : {verticalCoordinate:F2}"
+            : $"X : {horizontalCoordinate:F2}\nY : {verticalCoordinate:F2}";
 
         var marker = ViewModel.WpfPlot1vm.Plot.Add.Marker(mouseLocation);
         var markerText = ViewModel.WpfPlot1vm.Plot.Add.Text(text, mouseLocation);

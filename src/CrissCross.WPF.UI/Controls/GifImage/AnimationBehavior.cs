@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
@@ -30,7 +30,7 @@ public static class AnimationBehavior
         "AnimateInDesignMode",
         typeof(bool),
         typeof(AnimationBehavior),
-        new PropertyMetadata(false, AnimateInDesignModeChanged));
+        new(false, AnimateInDesignModeChanged));
 
     /// <summary>The animation completed event.</summary>
     public static readonly RoutedEvent AnimationCompletedEvent = EventManager.RegisterRoutedEvent(
@@ -51,21 +51,21 @@ public static class AnimationBehavior
         nameof(Animator),
         typeof(Animator),
         typeof(AnimationBehavior),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The automatic start property.</summary>
     public static readonly DependencyProperty AutoStartProperty = DependencyProperty.RegisterAttached(
         "AutoStart",
         typeof(bool),
         typeof(AnimationBehavior),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The cache frames in memory property.</summary>
     public static readonly DependencyProperty CacheFramesInMemoryProperty = DependencyProperty.RegisterAttached(
         "CacheFramesInMemory",
         typeof(bool),
         typeof(AnimationBehavior),
-        new PropertyMetadata(false, SourceChanged));
+        new(false, SourceChanged));
 
     /// <summary>The download progress event.</summary>
     public static readonly RoutedEvent DownloadProgressEvent = EventManager.RegisterRoutedEvent(
@@ -93,28 +93,28 @@ public static class AnimationBehavior
         nameof(RepeatBehavior),
         typeof(RepeatBehavior),
         typeof(AnimationBehavior),
-        new PropertyMetadata(default(RepeatBehavior), RepeatBehaviorChanged));
+        new(default(RepeatBehavior), RepeatBehaviorChanged));
 
     /// <summary>The source stream property.</summary>
     public static readonly DependencyProperty SourceStreamProperty = DependencyProperty.RegisterAttached(
         "SourceStream",
         typeof(Stream),
         typeof(AnimationBehavior),
-        new PropertyMetadata(null, SourceChanged));
+        new(null, SourceChanged));
 
     /// <summary>The source URI property.</summary>
     public static readonly DependencyProperty SourceUriProperty = DependencyProperty.RegisterAttached(
         "SourceUri",
         typeof(Uri),
         typeof(AnimationBehavior),
-        new PropertyMetadata(null, SourceChanged));
+        new(null, SourceChanged));
 
     /// <summary>Provides the SeqNumProperty member.</summary>
     private static readonly DependencyProperty SeqNumProperty = DependencyProperty.RegisterAttached(
         "SeqNum",
         typeof(int),
         typeof(AnimationBehavior),
-        new PropertyMetadata(0));
+        new(0));
 
     /// <summary>Gets the download cache location.</summary>
     public static string DownloadCacheLocation => UriLoader.DownloadCacheLocation;
@@ -154,10 +154,7 @@ public static class AnimationBehavior
     /// <returns>A bool.</returns>
     public static bool GetAnimateInDesignMode(DependencyObject obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         return (bool)obj.GetValue(AnimateInDesignModeProperty);
     }
@@ -168,10 +165,7 @@ public static class AnimationBehavior
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public static Animator GetAnimator(DependencyObject obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         return (Animator)obj.GetValue(AnimatorProperty);
     }
@@ -182,10 +176,7 @@ public static class AnimationBehavior
     [AttachedPropertyBrowsableForType(typeof(System.Windows.Controls.Image))]
     public static bool GetAutoStart(DependencyObject obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         return (bool)obj.GetValue(AutoStartProperty);
     }
@@ -196,10 +187,7 @@ public static class AnimationBehavior
     [AttachedPropertyBrowsableForType(typeof(System.Windows.Controls.Image))]
     public static bool GetCacheFramesInMemory(DependencyObject element)
     {
-        if (element is null)
-        {
-            throw new ArgumentNullException(nameof(element));
-        }
+        ThrowHelper.ThrowIfNull(element, nameof(element));
 
         return (bool)element.GetValue(CacheFramesInMemoryProperty);
     }
@@ -210,10 +198,7 @@ public static class AnimationBehavior
     [AttachedPropertyBrowsableForType(typeof(System.Windows.Controls.Image))]
     public static RepeatBehavior GetRepeatBehavior(DependencyObject obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         return (RepeatBehavior)obj.GetValue(RepeatBehaviorProperty);
     }
@@ -225,10 +210,7 @@ public static class AnimationBehavior
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public static Stream GetSourceStream(DependencyObject obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         return (Stream)obj.GetValue(SourceStreamProperty);
     }
@@ -239,10 +221,7 @@ public static class AnimationBehavior
     [AttachedPropertyBrowsableForType(typeof(System.Windows.Controls.Image))]
     public static Uri GetSourceUri(System.Windows.Controls.Image image)
     {
-        if (image is null)
-        {
-            throw new ArgumentNullException(nameof(image));
-        }
+        ThrowHelper.ThrowIfNull(image, nameof(image));
 
         return (Uri)image.GetValue(SourceUriProperty);
     }
@@ -282,10 +261,7 @@ public static class AnimationBehavior
     /// <param name="value">if set to <c>true</c> [value].</param>
     public static void SetAnimateInDesignMode(DependencyObject obj, bool value)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         obj.SetValue(AnimateInDesignModeProperty, value);
     }
@@ -295,10 +271,7 @@ public static class AnimationBehavior
     /// <param name="value">if set to <c>true</c> [value].</param>
     public static void SetAutoStart(DependencyObject obj, bool value)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         obj.SetValue(AutoStartProperty, value);
     }
@@ -308,10 +281,7 @@ public static class AnimationBehavior
     /// <param name="value">if set to <c>true</c> [value].</param>
     public static void SetCacheFramesInMemory(DependencyObject element, bool value)
     {
-        if (element is null)
-        {
-            throw new ArgumentNullException(nameof(element));
-        }
+        ThrowHelper.ThrowIfNull(element, nameof(element));
 
         element.SetValue(CacheFramesInMemoryProperty, value);
     }
@@ -325,10 +295,7 @@ public static class AnimationBehavior
     /// <param name="value">The value.</param>
     public static void SetRepeatBehavior(DependencyObject obj, RepeatBehavior value)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         obj.SetValue(RepeatBehaviorProperty, value);
     }
@@ -338,10 +305,7 @@ public static class AnimationBehavior
     /// <param name="value">The value.</param>
     public static void SetSourceStream(DependencyObject obj, Stream value)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ThrowHelper.ThrowIfNull(obj, nameof(obj));
 
         obj.SetValue(SourceStreamProperty, value);
     }
@@ -356,10 +320,7 @@ public static class AnimationBehavior
             throw new ArgumentException("SourceUri can't be set directly. Use SourceStream instead.");
         }
 
-        if (image is null)
-        {
-            throw new ArgumentNullException(nameof(image));
-        }
+        ThrowHelper.ThrowIfNull(image, nameof(image));
 
         image.SetValue(SourceUriProperty, value);
     }
@@ -401,7 +362,13 @@ public static class AnimationBehavior
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
     private static void AnimatorAnimationStarted(object? sender, AnimationStartedEventArgs e) =>
-        (e.Source as System.Windows.Controls.Image)?.RaiseEvent(e);
+        RaiseAnimationEvent(e.Source as System.Windows.Controls.Image, e);
+
+    /// <summary>Raises an animation routed event on its image source.</summary>
+    /// <param name="image">The image source.</param>
+    /// <param name="eventArgs">The routed event arguments.</param>
+    private static void RaiseAnimationEvent(System.Windows.Controls.Image? image, RoutedEventArgs eventArgs) =>
+        image?.RaiseEvent(eventArgs);
 
     /// <summary>Provides the AnimatorError member.</summary>
     /// <param name="sender">The event sender.</param>
@@ -672,10 +639,7 @@ public static class AnimationBehavior
 
     /// <summary>Provides the OnLoaded member.</summary>
     /// <param name="sender">The event sender.</param>
-    private static void OnLoaded(System.Windows.Controls.Image sender)
-    {
-        sender.RaiseEvent(new RoutedEventArgs(LoadedEvent, sender));
-    }
+    private static void OnLoaded(System.Windows.Controls.Image sender) => sender.RaiseEvent(new(LoadedEvent, sender));
 
     /// <summary>Provides the RepeatBehaviorChanged member.</summary>
     /// <param name="o">The o value.</param>

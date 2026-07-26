@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -19,10 +19,7 @@ public partial class MainWindow : IAmBuilt
         nameof(Tracker),
         typeof(Tracker),
         typeof(MainWindow),
-        new PropertyMetadata(null));
-
-    /// <summary>Tracks whether activation setup has been completed.</summary>
-    private bool _activationConfigured;
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
@@ -33,6 +30,7 @@ public partial class MainWindow : IAmBuilt
         // Set the data context
         ViewModel = new();
         DataContext = ViewModel;
+        ConfigureActivation();
     }
 
     /// <summary>Gets the nav breadcrumb.</summary>
@@ -43,13 +41,18 @@ public partial class MainWindow : IAmBuilt
     protected override void OnContentRendered(EventArgs e)
     {
         base.OnContentRendered(e);
-        if (_activationConfigured)
-        {
-            return;
-        }
-
-        _activationConfigured = true;
         SystemThemeWatcher.Watch(this);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnClosed(EventArgs e)
+    {
+        ViewModel?.Dispose();
+        base.OnClosed(e);
+    }
+
+    /// <summary>Registers activation bindings before the window enters the visual tree.</summary>
+    private void ConfigureActivation() =>
         _ = this.WhenActivated(d =>
         {
             // Set the tracker
@@ -66,12 +69,4 @@ public partial class MainWindow : IAmBuilt
             // Navigate to the main view
             NavBreadcrumb.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "Main");
         });
-    }
-
-    /// <inheritdoc/>
-    protected override void OnClosed(EventArgs e)
-    {
-        ViewModel?.Dispose();
-        base.OnClosed(e);
-    }
 }

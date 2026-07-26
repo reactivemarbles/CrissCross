@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI;
 /// <summary>Represents PickerControlBase.</summary>
 /// <seealso cref="UserControl" />
 /// <seealso cref="IColorStateStorage" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class PickerControlBase : UserControl, IColorStateStorage
 {
     /// <summary>The color state property.</summary>
@@ -20,20 +21,20 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
         nameof(ColorState),
         typeof(ColorState),
         typeof(PickerControlBase),
-        new PropertyMetadata(new ColorState(new(0, 0, 0), 1, new(0, 0, 0), new(0, 0, 0)), OnColorStatePropertyChange));
+        new(new ColorState(new(0, 0, 0), 1, new(0, 0, 0), new(0, 0, 0)), OnColorStatePropertyChange));
 
     /// <summary>The selected color property.</summary>
     public static readonly DependencyProperty SelectedColorProperty = DependencyProperty.Register(
         nameof(SelectedColor),
         typeof(Color),
         typeof(PickerControlBase),
-        new PropertyMetadata(Colors.Black, OnSelectedColorPropertyChange));
+        new(Colors.Black, OnSelectedColorPropertyChange));
 
     /// <summary>The color changed event.</summary>
     public static readonly RoutedEvent ColorChangedEvent = EventManager.RegisterRoutedEvent(
         nameof(ColorChanged),
         RoutingStrategy.Bubble,
-        typeof(RoutedEventHandler),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(PickerControlBase));
 
     /// <summary>The impossible alpha channel used to seed the previous color sentinel.</summary>
@@ -53,7 +54,7 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
         PreviousColorSentinelChannel);
 
     /// <summary>Occurs when [color changed].</summary>
-    public event RoutedEventHandler ColorChanged
+    public event EventHandler<RoutedEventArgs> ColorChanged
     {
         add => AddHandler(ColorChangedEvent, value);
         remove => RemoveHandler(ColorChangedEvent, value);
@@ -84,6 +85,10 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
     /// The color.
     /// </value>
     public NotifyableColor Color { get; set; } = null!;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnColorStatePropertyChange member.</summary>
     /// <param name="d">The d value.</param>

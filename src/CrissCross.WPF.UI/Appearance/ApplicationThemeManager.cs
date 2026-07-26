@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using WpfWindow = System.Windows.Window;
@@ -62,7 +62,7 @@ public static class ApplicationThemeManager
 #endif
 
     /// <summary>Stores the _cachedApplicationTheme value.</summary>
-    private static ApplicationTheme _cachedApplicationTheme = ApplicationTheme.Unknown;
+    private static ApplicationTheme _cachedApplicationTheme;
 
     /// <summary>Event triggered when the application's theme is changed.</summary>
     public static event EventHandler<ThemeChangedEventArgs>? Changed;
@@ -120,7 +120,7 @@ public static class ApplicationThemeManager
 
         var isUpdated = appDictionaries.UpdateDictionary(
             ThemeDictionaryLookup,
-            new Uri(ThemesDictionaryPath + themeDictionaryName + ".xaml", UriKind.Absolute));
+            new($"{ThemesDictionaryPath}{themeDictionaryName}.xaml", UriKind.Absolute));
 
 #if DEBUG
         System.Diagnostics.Debug.WriteLine(
@@ -156,10 +156,14 @@ public static class ApplicationThemeManager
             return;
         }
 
-        var resourcesRemove = frameworkElement
-            .Resources.MergedDictionaries.Where(e =>
-                e.Source?.ToString().Contains(LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true)
-            .ToArray();
+        List<ResourceDictionary> resourcesRemove = [];
+        foreach (var dictionary in frameworkElement.Resources.MergedDictionaries)
+        {
+            if (dictionary.Source?.ToString().Contains(LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                resourcesRemove.Add(dictionary);
+            }
+        }
 
         foreach (var resource in UiApplication.Current.Resources.MergedDictionaries)
         {

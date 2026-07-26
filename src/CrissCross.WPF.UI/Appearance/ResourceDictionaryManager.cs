@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -18,17 +18,17 @@ namespace CrissCross.WPF.UI.Appearance;
 internal sealed class ResourceDictionaryManager(string searchNamespace)
 {
     /// <summary>Gets the namespace, e.g. the library the resource is being searched for.</summary>
-    public string SearchNamespace { get; } = searchNamespace;
+    internal string SearchNamespace { get; } = searchNamespace;
 
     /// <summary>Shows whether the application contains the <see cref="ResourceDictionary"/>.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <returns><see langword="false"/> if it doesn't exist.</returns>
-    public bool HasDictionary(string resourceLookup) => GetDictionary(resourceLookup) is not null;
+    internal bool HasDictionary(string resourceLookup) => GetDictionary(resourceLookup) is not null;
 
     /// <summary>Gets the <see cref="ResourceDictionary"/> if exists.</summary>
     /// <param name="resourceLookup">Any part of the resource name.</param>
     /// <returns><see cref="ResourceDictionary"/>, <see langword="null"/> if it doesn't exist.</returns>
-    public ResourceDictionary? GetDictionary(string resourceLookup)
+    internal ResourceDictionary? GetDictionary(string resourceLookup)
     {
         var applicationDictionaries = GetApplicationMergedDictionaries();
 
@@ -46,8 +46,16 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
                 return dictionary;
             }
 
-            var mergedDictionary = dictionary.MergedDictionaries.FirstOrDefault(child =>
-                IsMatchingDictionary(child, resourceLookup));
+            ResourceDictionary? mergedDictionary = null;
+            foreach (var child in dictionary.MergedDictionaries)
+            {
+                if (IsMatchingDictionary(child, resourceLookup))
+                {
+                    mergedDictionary = child;
+                    break;
+                }
+            }
+
             if (mergedDictionary is not null)
             {
                 return mergedDictionary;
@@ -62,7 +70,7 @@ internal sealed class ResourceDictionaryManager(string searchNamespace)
     /// <param name="newResourceUri">A valid <see cref="Uri"/> for the replaced resource.</param>
     /// <returns><see langword="true"/> if the dictionary <see cref="Uri"/> was updated. <see langword="false"/>
     /// otherwise.</returns>
-    public bool UpdateDictionary(string resourceLookup, Uri? newResourceUri)
+    internal bool UpdateDictionary(string resourceLookup, Uri? newResourceUri)
     {
         var applicationDictionaries = UiApplication.Current.Resources.MergedDictionaries;
 

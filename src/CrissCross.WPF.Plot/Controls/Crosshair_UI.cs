@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
@@ -33,6 +33,9 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
 
     /// <summary>The horizontal offset for the horizontal-axis label.</summary>
     private const float HorizontalLabelOffsetX = 80;
+
+    /// <summary>Provides the local clock used to initialize date/time crosshairs.</summary>
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>Stores the chart settings value.</summary>
     [Reactive]
@@ -144,17 +147,35 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         bool autoscale,
         bool manualscale,
         IObservable<Coordinates>? coordinatesObs)
+        : this(plot, data, color, CreateOptions(isXAxisDateTime, autoscale, manualscale, coordinatesObs))
     {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="Crosshair_UI"/> class.</summary>
+    /// <param name="plot">The plot value.</param>
+    /// <param name="data">The data value.</param>
+    /// <param name="color">The color value.</param>
+    /// <param name="options">The crosshair configuration.</param>
+    public Crosshair_UI(
+        WpfPlot plot,
+        (string? Name, int Axis) data,
+        string color,
+        CrosshairUIOptions options)
+    {
+        ThrowHelper.ThrowIfNull(options, nameof(options));
+
+        _timeProvider = options.TimeProvider ?? TimeProvider.System;
         ChartSettings = new(itemName: data.Name!, color: color);
-        ManualScale = manualscale;
-        AutoScale = autoscale;
+        ManualScale = options.ManualScale;
+        AutoScale = options.AutoScale;
         Plot = plot;
+        var coordinatesObs = options.CoordinatesObservable;
 
         ChartSettings?.AppearanceSubsriptions(Plot);
         ChartSettings?.CreateCursorValues(Plot, color);
         ChartSettings!.Marker.IsVisible = false;
 
-        if (coordinatesObs is not null && !isXAxisDateTime)
+        if (coordinatesObs is not null && !options.IsXAxisDateTime)
         {
             MouseCoordinatesObs = coordinatesObs
                 .Subscribe(x =>
@@ -165,7 +186,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
                 .DisposeWith(Disposables);
             CreateCrosshair(color: color);
         }
-        else if (coordinatesObs is not null && isXAxisDateTime)
+        else if (coordinatesObs is not null && options.IsXAxisDateTime)
         {
             MouseCoordinatesObs = coordinatesObs
                 .Subscribe(x =>
@@ -175,7 +196,7 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
                     Plot?.Refresh();
                 })
                 .DisposeWith(Disposables);
-            CreateCrosshair(color: color, DateTime.Now.ToOADate());
+            CreateCrosshair(color: color, _timeProvider.GetLocalNow().DateTime.ToOADate());
         }
         else
         {
@@ -240,4 +261,17 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         MouseCoordinatesObs?.Dispose();
         base.Dispose(disposing);
     }
+
+    /// <summary>Creates configuration from the legacy scalar constructor arguments.</summary>
+    /// <param name="isXAxisDateTime">A value indicating whether the X-axis represents date/time values.</param>
+    /// <param name="autoScale">A value indicating whether automatic scaling is enabled.</param>
+    /// <param name="manualScale">A value indicating whether manual scaling is enabled.</param>
+    /// <param name="coordinatesObservable">The optional source of pointer coordinates.</param>
+    /// <returns>The crosshair configuration.</returns>
+    private static CrosshairUIOptions CreateOptions(
+        bool isXAxisDateTime,
+        bool autoScale,
+        bool manualScale,
+        IObservable<Coordinates>? coordinatesObservable) =>
+        new(isXAxisDateTime, autoScale, manualScale, coordinatesObservable, TimeProvider.System);
 }

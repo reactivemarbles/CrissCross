@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -157,7 +157,7 @@ public static partial class ViewModelRoutedViewHostMixins
             RegisterNavigationHostAliases(hostKeys, viewHost);
             SetupViewHostIfRequired(viewHost);
             ASetupCompleted.OnNext(Unit.Default);
-            PublishHostSetup(hostKey);
+            PublishHostSetup(hostKeys);
         }
     }
 
@@ -256,7 +256,7 @@ public static partial class ViewModelRoutedViewHostMixins
             "Resolving a view from a runtime view model type may require members removed by trimming.")]
 #endif
         public void NavigateToView(Type rxObject) =>
-            navigation.NavigateToView(rxObject, new NavigationRequestOptions());
+            navigation.NavigateToView(rxObject, new());
 
         /// <summary>Navigates the named host to the requested view model type.</summary>
         /// <param name="rxObject">The view model type.</param>
@@ -298,7 +298,7 @@ public static partial class ViewModelRoutedViewHostMixins
         /// <summary>Navigates the named host to the registered navigation key.</summary>
         /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
         public void NavigateTo(Type navigationKey) =>
-            navigation.NavigateTo(navigationKey, new NavigationRequestOptions());
+            navigation.NavigateTo(navigationKey, new());
 
         /// <summary>Navigates the named host to the registered navigation key.</summary>
         /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
@@ -352,7 +352,7 @@ public static partial class ViewModelRoutedViewHostMixins
                             return;
                         }
 
-                        _ = whenSetup.Where(x => x).Subscribe(observer).DisposeWith(disposable);
+                        _ = whenSetup.Where(static x => x).Subscribe(observer).DisposeWith(disposable);
                     })
                     .DisposeWith(disposable);
                 return disposable;

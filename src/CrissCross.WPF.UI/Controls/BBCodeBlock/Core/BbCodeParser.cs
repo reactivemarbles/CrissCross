@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Text;
@@ -17,34 +17,21 @@ internal sealed class BbCodeParser
     private const string RootTagName = "root";
 
     /// <summary>Tags whose contents are treated as literal text.</summary>
-    private static readonly HashSet<string> RawTags = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "c",
-        "code",
-        "nfo",
-        "noparse",
-        "pre",
-    };
+    private static readonly HashSet<string> RawTags = new(StringComparer.OrdinalIgnoreCase) { "c", "code", "nfo", "noparse", "pre", };
 
     /// <summary>Tags that do not create a nested scope.</summary>
-    private static readonly HashSet<string> SelfClosingTags = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "*",
-        "br",
-        "hr",
-        "line",
-    };
+    private static readonly HashSet<string> SelfClosingTags = new(StringComparer.OrdinalIgnoreCase) { "*", "br", "hr", "line", };
 
     /// <summary>The BBCode source.</summary>
     private readonly string _value;
 
     /// <summary>Initializes a new instance of the <see cref="BbCodeParser"/> class.</summary>
     /// <param name="value">The BBCode source.</param>
-    public BbCodeParser(string? value) => _value = value ?? throw new ArgumentNullException(nameof(value));
+    internal BbCodeParser(string? value) => _value = value ?? throw new ArgumentNullException(nameof(value));
 
     /// <summary>Parses the source into a document root.</summary>
     /// <returns>The document root.</returns>
-    public BbCodeNode Parse()
+    internal BbCodeNode Parse()
     {
         Dictionary<string, string> noAttributes = [];
         BbCodeNode root = new(RootTagName, null, noAttributes, string.Empty);
@@ -64,7 +51,7 @@ internal sealed class BbCodeParser
             FlushText(stack.Peek(), text);
             if (tag.IsClosing)
             {
-                CloseTag(stack, tag);
+                CloseTag(stack, in tag);
                 index = nextIndex;
                 continue;
             }
@@ -85,19 +72,27 @@ internal sealed class BbCodeParser
     /// <summary>Closes a matching node while keeping malformed closing tags visible.</summary>
     /// <param name="stack">The open node stack.</param>
     /// <param name="tag">The closing tag.</param>
-    private static void CloseTag(Stack<BbCodeNode> stack, ParsedTag tag)
+    private static void CloseTag(Stack<BbCodeNode> stack, in ParsedTag tag)
     {
         if (stack.Count <= 1)
         {
-            stack.Peek().Children.Add(new BbCodeNode(tag.Raw));
+            stack.Peek().Children.Add(new(tag.Raw));
             return;
         }
 
-        var matchingNode = stack.FirstOrDefault(node =>
-            string.Equals(node.Name, tag.Name, StringComparison.OrdinalIgnoreCase));
+        BbCodeNode? matchingNode = null;
+        foreach (var node in stack)
+        {
+            if (string.Equals(node.Name, tag.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                matchingNode = node;
+                break;
+            }
+        }
+
         if (matchingNode is null)
         {
-            stack.Peek().Children.Add(new BbCodeNode(tag.Raw));
+            stack.Peek().Children.Add(new(tag.Raw));
             return;
         }
 
@@ -120,7 +115,7 @@ internal sealed class BbCodeParser
             return;
         }
 
-        parent.Children.Add(new BbCodeNode(text.ToString()));
+        parent.Children.Add(new(text.ToString()));
         _ = text.Clear();
     }
 
@@ -165,10 +160,10 @@ internal sealed class BbCodeParser
     /// <returns>The index after the raw node.</returns>
     private static int ReadRawNode(string source, BbCodeNode node, int index)
     {
-        var closingTag = "[/" + node.Name + "]";
+        var closingTag = $"[/{node.Name}]";
         var closingIndex = source.IndexOf(closingTag, index, StringComparison.OrdinalIgnoreCase);
         var text = closingIndex < 0 ? source[index..] : source[index..closingIndex];
-        node.Children.Add(new BbCodeNode(text));
+        node.Children.Add(new(text));
         return closingIndex < 0 ? source.Length : closingIndex + closingTag.Length;
     }
 
@@ -295,7 +290,7 @@ internal sealed class BbCodeParser
 
         var isClosing = body[0] == '/';
         body = isClosing ? body[1..].Trim() : body;
-        var isSelfClosing = body.EndsWith("/", StringComparison.Ordinal);
+        var isSelfClosing = body.EndsWith('/');
         body = isSelfClosing ? body[..^1].TrimEnd() : body;
         var nameLength = GetNameLength(body);
         if (nameLength == 0)
@@ -305,7 +300,7 @@ internal sealed class BbCodeParser
 
         var name = body[..nameLength].ToLowerInvariant();
         var remainder = body[nameLength..].Trim();
-        var value = remainder.StartsWith("=", StringComparison.Ordinal) ? Unquote(remainder[1..].Trim()) : null;
+        var value = remainder.StartsWith('=') ? Unquote(remainder[1..].Trim()) : null;
         var attributes = value is null && remainder.Length > 0 ? ParseAttributes(remainder) : [];
         tag = new(name, value, attributes, raw, isClosing, isSelfClosing);
         nextIndex = closingBracket + 1;
@@ -330,7 +325,7 @@ internal sealed class BbCodeParser
         /// <param name="raw">The raw tag.</param>
         /// <param name="isClosing">Whether the tag closes a scope.</param>
         /// <param name="isSelfClosing">Whether the tag is self-closing.</param>
-        public ParsedTag(
+        internal ParsedTag(
             string name,
             string? value,
             IDictionary<string, string> attributes,
@@ -347,21 +342,21 @@ internal sealed class BbCodeParser
         }
 
         /// <summary>Gets the tag name.</summary>
-        public string Name { get; }
+        internal string Name { get; }
 
         /// <summary>Gets the shorthand value.</summary>
-        public string? Value { get; }
+        internal string? Value { get; }
 
         /// <summary>Gets the named attributes.</summary>
-        public IDictionary<string, string> Attributes { get; }
+        internal IDictionary<string, string> Attributes { get; }
 
         /// <summary>Gets the raw tag.</summary>
-        public string Raw { get; }
+        internal string Raw { get; }
 
         /// <summary>Gets a value indicating whether the tag closes a scope.</summary>
-        public bool IsClosing { get; }
+        internal bool IsClosing { get; }
 
         /// <summary>Gets a value indicating whether the tag is self-closing.</summary>
-        public bool IsSelfClosing { get; }
+        internal bool IsSelfClosing { get; }
     }
 }

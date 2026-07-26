@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CP.Primitives.Collections;
@@ -23,7 +23,7 @@ public class TreeViewViewModel : RxObject
     {
         Family = CreateFamily();
 
-        AddPerson = ReactiveCommand.Create(() => { });
+        AddPerson = ReactiveCommand.Create(static () => { });
         _ = AddPerson.Subscribe(_ =>
         {
             if (SelectedItem is null)
@@ -36,7 +36,7 @@ public class TreeViewViewModel : RxObject
             p.IsSelected = true;
             p.ExpandPath();
         });
-        AddPet = ReactiveCommand.Create(() => { });
+        AddPet = ReactiveCommand.Create(static () => { });
         _ = AddPet.Subscribe(_ =>
         {
             if (SelectedItem is null)
@@ -49,11 +49,11 @@ public class TreeViewViewModel : RxObject
             p.IsSelected = true;
             p.ExpandPath();
         });
-        Collapse = ReactiveCommand.Create(() => { });
+        Collapse = ReactiveCommand.Create(static () => { });
         _ = Collapse.Subscribe(_ => SelectedItem?.CollapsePath());
-        Expand = ReactiveCommand.Create(() => { });
+        Expand = ReactiveCommand.Create(static () => { });
         _ = Expand.Subscribe(_ => SelectedItem?.ExpandPath());
-        Remove = ReactiveCommand.Create(() => { });
+        Remove = ReactiveCommand.Create(static () => { });
         _ = Remove.Subscribe(_ => SelectedItem?.RemoveChild());
         var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(rti =>
             rti.WhenAnyValue(vs => vs.IsSelected)

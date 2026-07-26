@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a descriptor-driven filter editor surface for grids and lists.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DataFilterPanel : Control
 {
     /// <summary>Property for <see cref="FilterState"/>.</summary>
@@ -19,56 +20,56 @@ public class DataFilterPanel : Control
         nameof(FilterState),
         typeof(DataFilterPanelState),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SearchText"/>.</summary>
     public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register(
         nameof(SearchText),
         typeof(string),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ResultCount"/>.</summary>
     public static readonly DependencyProperty ResultCountProperty = DependencyProperty.Register(
         nameof(ResultCount),
         typeof(int?),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SubmittedQueryState"/>.</summary>
     public static readonly DependencyProperty SubmittedQueryStateProperty = DependencyProperty.Register(
         nameof(SubmittedQueryState),
         typeof(SearchQueryState),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ApplyFiltersCommand"/>.</summary>
     public static readonly DependencyProperty ApplyFiltersCommandProperty = DependencyProperty.Register(
         nameof(ApplyFiltersCommand),
         typeof(ICommand),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ClearFiltersCommand"/>.</summary>
     public static readonly DependencyProperty ClearFiltersCommandProperty = DependencyProperty.Register(
         nameof(ClearFiltersCommand),
         typeof(ICommand),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="AddFilterCommand"/>.</summary>
     public static readonly DependencyProperty AddFilterCommandProperty = DependencyProperty.Register(
         nameof(AddFilterCommand),
         typeof(ICommand),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="RemoveFilterCommand"/>.</summary>
     public static readonly DependencyProperty RemoveFilterCommandProperty = DependencyProperty.Register(
         nameof(RemoveFilterCommand),
         typeof(ICommand),
         typeof(DataFilterPanel),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="DataFilterPanel"/> class.</summary>
     public DataFilterPanel()
@@ -138,6 +139,10 @@ public class DataFilterPanel : Control
 
     /// <summary>Gets the command that clears current filters.</summary>
     public ICommand ClearCommand { get; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates a search query snapshot from the current filter state.</summary>
     /// <returns>The query state snapshot.</returns>

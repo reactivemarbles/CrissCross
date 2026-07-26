@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+             xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+             x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.BBCodeBlockPageView"
+             x:DataType="vm:BBCodeBlockPageViewModel">
+    <ScrollViewer>
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock Text="BBCodeBlock" FontSize="32" FontWeight="Bold" />
+            <controls:TextBlock Text="Theme-aware BBCode text with safe external links and reactive command links."
+                                TextWrapping="Wrap"
+                                Opacity="0.7" />
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock Text="Formatting" FontSize="18" FontWeight="Bold" />
+                    <controls:BBCodeBlock TextWrapping="Wrap"
+                                           BBCode="[b]Bold[/b], [i]italic[/i], [u]underlined[/u], [s]struck through[/s], [color=#0078D4]coloured[/color], [size=20]sized[/size], and [font=Consolas]monospace[/font]." />
+                    <controls:BBCodeBlock TextWrapping="Wrap"
+                                           BBCode="A line break follows:[br]A code sample: [code]navigation --host gallery[/code]" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock Text="Links and commands" FontSize="18" FontWeight="Bold" />
+                    <controls:BBCodeBlock Command="{Binding LinkCommand}"
+                                           TextWrapping="Wrap"
+                                           BBCode="Use the [url=cmd:refresh-preview]in-document command link[/url] to update the status. An [url=https://github.com/reactivemarbles/CrissCross]external link[/url] opens only when permitted." />
+                    <controls:TextBlock Text="{Binding LastCommand}"
+                                        TextWrapping="Wrap"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock Text="Malformed and unsupported markup" FontSize="18" FontWeight="Bold" />
+                    <controls:BBCodeBlock TextWrapping="Wrap"
+                                           BBCode="[b]An unclosed formatting tag remains readable. Unsupported [widget]content[/widget] and unmatched [/i] tags remain visible." />
+                </controls:StackPanel>
+            </controls:Card>
+
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock Text="Dark and Light readability" FontSize="18" FontWeight="Bold" />
+                    <controls:TextBlock Text="Switch themes and verify body text, links, focus indicators, and cards remain readable." TextWrapping="Wrap" />
+                    <controls:ThemeSwitcher Width="360" HorizontalAlignment="Left" />
+                    <controls:BBCodeBlock TextWrapping="Wrap"
+                                           BBCode="Theme resources are inherited by normal [b]text[/b] while interactive [url=cmd:theme-check]command links[/url] retain a visible native focus target." />
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
+    </ScrollViewer>
+</UserControl>

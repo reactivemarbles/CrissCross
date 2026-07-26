@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Specialized;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Provides the DataGrid member.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DataGrid : System.Windows.Controls.DataGrid
 {
     /// <summary>The DependencyProperty that represents the <see cref="CheckBoxColumnElementStyle"/> property.</summary>
@@ -42,6 +43,10 @@ public class DataGrid : System.Windows.Controls.DataGrid
         get => (Style)GetValue(CheckBoxColumnEditingElementStyleProperty);
         set => SetValue(CheckBoxColumnEditingElementStyleProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Raises the <see cref="E:System.Windows.FrameworkElement.Initialized" /> event. This method is invoked
     /// whenever <see cref="P:System.Windows.FrameworkElement.IsInitialized" /> is set to true internally.</summary>

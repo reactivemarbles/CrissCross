@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -141,7 +141,7 @@ public sealed class FlowDocument
     public TextPointer GetTextPointer(int offset)
     {
         ValidateOffset(offset, allowEnd: true);
-        return new TextPointer(this, offset);
+        return new(this, offset);
     }
 
     /// <summary>Gets the text within a pointer range.</summary>
@@ -230,17 +230,9 @@ public sealed class FlowDocument
     /// <summary>Provides the CreateImageInline member.</summary>
     /// <param name="segment">The segment value.</param>
     /// <returns>The result.</returns>
-    private static ImageInline? CreateImageInline(TextSegment segment)
-    {
-        return string.IsNullOrWhiteSpace(segment.ImageSource)
-            ? null
-            : new ImageInline(segment.ImageSource)
-            {
-                Alignment = segment.ImageAlignment,
-                Width = segment.ImageWidth,
-                Height = segment.ImageHeight,
-            };
-    }
+    private static ImageInline? CreateImageInline(TextSegment segment) => string.IsNullOrWhiteSpace(segment.ImageSource)
+        ? null
+        : new ImageInline(segment.ImageSource) { Alignment = segment.ImageAlignment, Width = segment.ImageWidth, Height = segment.ImageHeight, };
 
     /// <summary>Provides the AppendRuns member.</summary>
     /// <param name="paragraph">The paragraph value.</param>
@@ -324,17 +316,11 @@ public sealed class FlowDocument
     /// <param name="allowEnd">The allowEnd value.</param>
     private void ValidateOffset(int offset, bool allowEnd)
     {
-        if (offset < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(offset));
-        }
+        ArgumentOutOfRangeException.ThrowIfNegative(offset);
 
         if (allowEnd)
         {
-            if (offset > Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(offset, Length);
 
             return;
         }

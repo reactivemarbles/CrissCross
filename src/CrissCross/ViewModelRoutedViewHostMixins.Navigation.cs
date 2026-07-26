@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -27,17 +27,11 @@ public static partial class ViewModelRoutedViewHostMixins
                 var disposable = new CompositeDisposable();
                 _ = navigation
                     .WhenSetup()
-                    .Subscribe(unused =>
+                    .Select(_ => navigation.Name is not null && TryGetNavigationHost(navigation.Name, out var host) ? host : null)
+                    .Where(static host => host is not null)
+                    .Select(static host => host!)
+                    .Subscribe(host =>
                     {
-                        if (
-                            NavigationHost.Count == 0
-                            || navigation.Name is null
-                            || !TryGetNavigationHost(navigation.Name, out var host)
-                            || host is null)
-                        {
-                            return;
-                        }
-
                         _ = host
                             .CanNavigateBackObservable.DistinctUntilChanged()
                             .Subscribe(x => observer.OnNext(x == true))
@@ -96,7 +90,7 @@ public static partial class ViewModelRoutedViewHostMixins
             "Resolving a view from a runtime view model type may require members removed by trimming.")]
 #endif
         public void NavigateToView(Type rxObject) =>
-            navigation.NavigateToView(rxObject, new NavigationRequestOptions());
+            navigation.NavigateToView(rxObject, new());
 
         /// <summary>Navigates the primary host to the requested view model type.</summary>
         /// <param name="rxObject">The view model type.</param>
@@ -138,7 +132,7 @@ public static partial class ViewModelRoutedViewHostMixins
         /// <summary>Navigates the primary host to the registered navigation key.</summary>
         /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
         public void NavigateTo(Type navigationKey) =>
-            navigation.NavigateTo(navigationKey, new NavigationRequestOptions());
+            navigation.NavigateTo(navigationKey, new());
 
         /// <summary>Navigates the primary host to the registered navigation key.</summary>
         /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
@@ -180,10 +174,7 @@ public static partial class ViewModelRoutedViewHostMixins
                     _ = ASetupCompleted
                         .Subscribe(unused =>
                         {
-                            if (
-                                navigation.Name is null
-                                || !TryGetNavigationHost(navigation.Name, out var host)
-                                || host is null)
+                            if (!TryGetNavigationHost(navigation.Name, out var host) || host is null)
                             {
                                 return;
                             }
@@ -193,7 +184,7 @@ public static partial class ViewModelRoutedViewHostMixins
                                 return;
                             }
 
-                            _ = whenSetup.Where(x => x).Subscribe(observer).DisposeWith(disposable);
+                            _ = whenSetup.Where(static x => x).Subscribe(observer).DisposeWith(disposable);
                         })
                         .DisposeWith(disposable);
                 });

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Ala Pa**one color card.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CardColor : System.Windows.Controls.Control
 {
     /// <summary>Property for <see cref="Title"/>.</summary>
@@ -16,42 +17,42 @@ public class CardColor : System.Windows.Controls.Control
         nameof(Title),
         typeof(string),
         typeof(CardColor),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="Subtitle"/>.</summary>
     public static readonly DependencyProperty SubtitleProperty = DependencyProperty.Register(
         nameof(Subtitle),
         typeof(string),
         typeof(CardColor),
-        new PropertyMetadata(string.Empty, OnSubtitlePropertyChanged));
+        new(string.Empty, OnSubtitlePropertyChanged));
 
     /// <summary>Property for <see cref="SubtitleFontSize"/>.</summary>
     public static readonly DependencyProperty SubtitleFontSizeProperty = DependencyProperty.Register(
         nameof(SubtitleFontSize),
         typeof(double),
         typeof(CardColor),
-        new PropertyMetadata(11.0D));
+        new(11.0D));
 
     /// <summary>Property for <see cref="Color"/>.</summary>
     public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
         nameof(Color),
         typeof(Color),
         typeof(CardColor),
-        new PropertyMetadata(Color.FromArgb(0, 0, 0, 0), OnColorPropertyChanged));
+        new(Color.FromArgb(0, 0, 0, 0), OnColorPropertyChanged));
 
     /// <summary>Property for <see cref="Brush"/>.</summary>
     public static readonly DependencyProperty BrushProperty = DependencyProperty.Register(
         nameof(Brush),
         typeof(Brush),
         typeof(CardColor),
-        new PropertyMetadata(new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) }, OnBrushPropertyChanged));
+        new(new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) }, OnBrushPropertyChanged));
 
     /// <summary>Property for <see cref="CardBrush"/>.</summary>
     public static readonly DependencyProperty CardBrushProperty = DependencyProperty.Register(
         nameof(CardBrush),
         typeof(Brush),
         typeof(CardColor),
-        new PropertyMetadata(new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) }));
+        new(new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) }));
 
     /// <summary>Gets or sets the main text displayed below the color.</summary>
     public string Title
@@ -94,6 +95,10 @@ public class CardColor : System.Windows.Controls.Control
         get => (Brush)GetValue(CardBrushProperty);
         internal set => SetValue(CardBrushProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Virtual method triggered when <see cref="Subtitle"/> is changed.</summary>
     protected virtual void OnSubtitlePropertyChanged() { }

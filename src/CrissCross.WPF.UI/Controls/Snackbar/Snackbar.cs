@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Snackbar inform user of a process that an app has performed or will perform. It appears temporarily,
 /// towards the bottom of the window.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Snackbar : ContentControl, IAppearanceControl, IIconControl
 {
     /// <summary>Property for <see cref="IsCloseButtonEnabled"/>.</summary>
@@ -25,63 +26,63 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
         nameof(IsCloseButtonEnabled),
         typeof(bool),
         typeof(Snackbar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="SlideTransform"/>.</summary>
     public static readonly DependencyProperty SlideTransformProperty = DependencyProperty.Register(
         nameof(SlideTransform),
         typeof(TranslateTransform),
         typeof(Snackbar),
-        new PropertyMetadata(new TranslateTransform()));
+        new(new TranslateTransform()));
 
     /// <summary>Property for <see cref="IsShown"/>.</summary>
     public static readonly DependencyProperty IsShownProperty = DependencyProperty.Register(
         nameof(IsShown),
         typeof(bool),
         typeof(Snackbar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Timeout"/>.</summary>
     public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
         nameof(Timeout),
         typeof(TimeSpan),
         typeof(Snackbar),
-        new PropertyMetadata(TimeSpan.FromSeconds(2)));
+        new(TimeSpan.FromSeconds(2)));
 
     /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(object),
         typeof(Snackbar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="TitleTemplate"/>.</summary>
     public static readonly DependencyProperty TitleTemplateProperty = DependencyProperty.Register(
         nameof(TitleTemplate),
         typeof(DataTemplate),
         typeof(Snackbar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(Snackbar),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Property for <see cref="Appearance"/>.</summary>
     public static readonly DependencyProperty AppearanceProperty = DependencyProperty.Register(
         nameof(Appearance),
         typeof(ControlAppearance),
         typeof(Snackbar),
-        new PropertyMetadata(ControlAppearance.Secondary));
+        new(ControlAppearance.Secondary));
 
     /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(Snackbar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ContentForeground"/>.</summary>
     public static readonly DependencyProperty ContentForegroundProperty = DependencyProperty.Register(
@@ -214,6 +215,10 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     /// <summary>Gets the presenter.</summary>
     protected SnackbarPresenter Presenter { get; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Shows the <see cref="Snackbar"/>.</summary>
     public virtual void Show() => Show(false);
 
@@ -256,8 +261,8 @@ public class Snackbar : ContentControl, IAppearanceControl, IIconControl
     protected virtual void Hide() => _ = Presenter.HideCurrent();
 
     /// <summary>This virtual method is called when Snackbar is opening and it raises the Opened event.</summary>
-    protected virtual void OnOpened() => RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
+    protected virtual void OnOpened() => RaiseEvent(new(OpenedEvent, this));
 
     /// <summary>This virtual method is called when Snackbar is closing and it raises the Closed event.</summary>
-    protected virtual void OnClosed() => RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
+    protected virtual void OnClosed() => RaiseEvent(new(ClosedEvent, this));
 }

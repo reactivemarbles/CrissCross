@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -17,6 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Extended base class for VirtualizingPanel.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(VirtualizingWrapPanel), "VirtualizingWrapPanel.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class VirtualizingWrapPanel : VirtualizingPanelBase
 {
     /// <summary>Property for <see cref="SpacingMode"/>.</summary>
@@ -97,6 +98,10 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
 
     /// <summary>Gets or sets the amount of displayed items per row.</summary>
     protected int ItemsPerRowCount { get; set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>This virtual method is called when <see cref="Orientation"/> is changed.</summary>
     protected virtual void OnOrientationChanged() =>
@@ -211,7 +216,7 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
                  * in the viewport it has no valid arrangement. That means that the
                  * height/width is 0. Therefore the items should not be visible so
                  * that they are not falsely displayed. */
-                child.Arrange(new Rect(0, 0, 0, 0));
+                child.Arrange(new(0, 0, 0, 0));
             }
             else
             {
@@ -238,14 +243,14 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
             var maxPossibleChildWith = finalSize.Width / ItemsPerRowCount;
             var childWidth = Math.Min(maxPossibleChildWith, childMaxWidth);
 
-            return new Size(childWidth, ChildSize.Height);
+            return new(childWidth, ChildSize.Height);
         }
 
         var childMaxHeight = ReadItemContainerStyle(MaxHeightProperty, double.PositiveInfinity);
         var maxPossibleChildHeight = finalSize.Height / ItemsPerRowCount;
         var childHeight = Math.Min(maxPossibleChildHeight, childMaxHeight);
 
-        return new Size(ChildSize.Width, childHeight);
+        return new(ChildSize.Width, childHeight);
     }
 
     /// <inheritdoc />
@@ -531,10 +536,19 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
     private T ReadItemContainerStyle<T>(DependencyProperty property, T fallbackValue)
         where T : notnull
     {
-        var value = ItemsControl
-            .ItemContainerStyle?.Setters.OfType<Setter>()
-            .FirstOrDefault(setter => setter.Property == property)
-            ?.Value;
+        object? value = null;
+        if (ItemsControl.ItemContainerStyle is { } style)
+        {
+            foreach (var candidate in style.Setters)
+            {
+                if (candidate is Setter { Property: { } setterProperty } setter && setterProperty == property)
+                {
+                    value = setter.Value;
+                    break;
+                }
+            }
+        }
+
         return (T)(value ?? fallbackValue);
     }
 
@@ -595,7 +609,7 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
     {
         if (Items.Count == 0)
         {
-            return new Size(0, 0);
+            return new(0, 0);
         }
 
         var startPosition = ItemContainerGenerator.GeneratorPositionFromIndex(0);
@@ -605,7 +619,7 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
         var child = (UIElement)ItemContainerGenerator.GenerateNext();
         AddInternalChild(child);
         ItemContainerGenerator.PrepareItemContainer(child);
-        child.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+        child.Measure(new(double.PositiveInfinity, double.PositiveInfinity));
 
         return child.DesiredSize;
     }

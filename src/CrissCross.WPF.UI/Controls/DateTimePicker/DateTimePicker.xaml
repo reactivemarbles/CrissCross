@@ -78,7 +78,6 @@
             Margin="0,-3,0,0"
             DisplayDateEnd="{Binding DisplayDateEnd, ElementName=dateTimePicker, Converter={StaticResource DateTimeOffsetConverter}}"
             DisplayDateStart="{Binding DisplayDateStart, ElementName=dateTimePicker, Converter={StaticResource DateTimeOffsetConverter}}"
-            PreviewMouseUp="CalDisplay_PreviewMouseUp"
             SelectedDate="{x:Static sys:DateTime.Now}"
           />
           <ComboBox

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents AICSBorder.</summary>
 /// <seealso cref="System.Windows.Controls.ContentControl" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RaisedBorder : ContentControl
 {
     /// <summary>The corner radius1 property.</summary>
@@ -19,42 +20,42 @@ public class RaisedBorder : ContentControl
         nameof(CornerRadius1),
         typeof(CornerRadius),
         typeof(RaisedBorder),
-        new PropertyMetadata(new CornerRadius(10.0)));
+        new(new CornerRadius(10.0)));
 
     /// <summary>The corner radius2 property.</summary>
     public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(
         nameof(CornerRadius2),
         typeof(CornerRadius),
         typeof(RaisedBorder),
-        new PropertyMetadata(new CornerRadius(20.0)));
+        new(new CornerRadius(20.0)));
 
     /// <summary>The glare brush property.</summary>
     public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(
         nameof(GlareBrush),
         typeof(Brush),
         typeof(RaisedBorder),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The glare opacity mask property.</summary>
     public static readonly DependencyProperty GlareOpacityMaskProperty = DependencyProperty.Register(
         nameof(GlareOpacityMask),
         typeof(Brush),
         typeof(RaisedBorder),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The minor border brush1 property.</summary>
     public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(
         nameof(MinorBorderBrush1),
         typeof(Brush),
         typeof(RaisedBorder),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The minor border thickness1 property.</summary>
     public static readonly DependencyProperty MinorBorderThickness1Property = DependencyProperty.Register(
         nameof(MinorBorderThickness1),
         typeof(Thickness),
         typeof(RaisedBorder),
-        new PropertyMetadata(new Thickness(0.0)));
+        new(new Thickness(0.0)));
 
     /// <summary>The pen thickness used to draw raised border outlines.</summary>
     private const double BorderPenThickness = 0.5D;
@@ -126,6 +127,10 @@ public class RaisedBorder : ContentControl
         set => SetValue(MinorBorderThickness1Property, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Invoked whenever the effective value of any dependency property on this <see
     /// cref="T:System.Windows.FrameworkElement" /> has been updated. The specific dependency property that changed is
     /// reported in the arguments parameter. Overrides <see
@@ -145,10 +150,7 @@ public class RaisedBorder : ContentControl
     /// layout system.</param>
     protected override void OnRender(DrawingContext drawingContext)
     {
-        if (drawingContext is null)
-        {
-            throw new ArgumentNullException(nameof(drawingContext));
-        }
+        ThrowHelper.ThrowIfNull(drawingContext, nameof(drawingContext));
 
         var borderThickness = new Thickness(
             Math.Max(0, BorderThickness.Left + MinorBorderThickness1.Left),
@@ -192,10 +194,7 @@ public class RaisedBorder : ContentControl
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
     /// </returns>
-    protected override bool ShouldSerializeProperty(DependencyProperty dp)
-    {
-        return dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
-    }
+    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
 
     /// <summary>Provides the CreateGeometryForPath member.</summary>
     /// <param name="width">The width value.</param>
@@ -203,7 +202,7 @@ public class RaisedBorder : ContentControl
     /// <param name="cornerRadius">The cornerRadius value.</param>
     /// <returns>The result.</returns>
     private static PathGeometry CreateGeometryForPath(double width, double height, CornerRadius cornerRadius) =>
-        CreateGeometryForPath(width, height, cornerRadius, new Thickness(0));
+        CreateGeometryForPath(width, height, cornerRadius, new(0));
 
     /// <summary>Provides the CreateGeometryForPath member.</summary>
     /// <param name="actualWidth">The actualWidth value.</param>

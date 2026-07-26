@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
@@ -74,16 +74,15 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         First = false;
         var useFixedNumberOfPoints = UseFixedNumberOfPoints;
         var numberPointsPlotted = NumberPointsPlotted;
-        ViewModel = new(MainChartGrid)
-        {
-            UseFixedNumberOfPoints = useFixedNumberOfPoints,
-            NumberPointsPlotted = numberPointsPlotted,
-        };
+        LiveChartViewModel viewModel = new(MainChartGrid);
+        viewModel.UseFixedNumberOfPoints = useFixedNumberOfPoints;
+        viewModel.NumberPointsPlotted = numberPointsPlotted;
+        ViewModel = viewModel;
         DataContext = ViewModel;
         ToolTipService.SetInitialShowDelay(ViewModel.WpfPlot1vm!, 0);
         ToolTipService.SetShowDuration(ViewModel.WpfPlot1vm!, HoverTooltipDurationMilliseconds);
         _ = ViewModel
-            .ThrownExceptions.Subscribe(ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}"))
+            .ThrownExceptions.Subscribe(static ex => Debug.WriteLine($"Exception in LiveChart: {ex.Message}"))
             .DisposeWith(_dd);
         ExecuteLockUnlock();
         ExecuteManAutoScale();
@@ -113,11 +112,16 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindCommands(CompositeDisposable disposables)
     {
-        _ = this.BindCommand(ViewModel, vm => vm.GraphLocked, v => v.LiveHistoryBtn).DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.EnableMarkerBtn, v => v.EnableMarkerBtn).DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.RemoveLabelsBtn, v => v.RemoveLabelBtn).DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.AddCrosshairBtn, v => v.AddCrosshairBtn).DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, vm => vm.ExpandMenuBtn, v => v.PlotSettings).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.GraphLocked, static v => v.LiveHistoryBtn)
+            .DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.EnableMarkerBtn, static v => v.EnableMarkerBtn)
+            .DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.RemoveLabelsBtn, static v => v.RemoveLabelBtn)
+            .DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.AddCrosshairBtn, static v => v.AddCrosshairBtn)
+            .DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.ExpandMenuBtn, static v => v.PlotSettings)
+            .DisposeWith(disposables);
     }
 
     /// <summary>Binds menu expansion to command visibility.</summary>
@@ -126,27 +130,27 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     {
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.IsMenuExpanded,
-                v => v.LiveHistoryBtn.Visibility,
-                x => x ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.IsMenuExpanded,
+                static v => v.LiveHistoryBtn.Visibility,
+                static x => x ? Visibility.Visible : Visibility.Collapsed)
             .DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.IsMenuExpanded,
-                v => v.EnableMarkerBtn.Visibility,
-                x => x ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.IsMenuExpanded,
+                static v => v.EnableMarkerBtn.Visibility,
+                static x => x ? Visibility.Visible : Visibility.Collapsed)
             .DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.IsMenuExpanded,
-                v => v.AddCrosshairBtn.Visibility,
-                x => x ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.IsMenuExpanded,
+                static v => v.AddCrosshairBtn.Visibility,
+                static x => x ? Visibility.Visible : Visibility.Collapsed)
             .DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.IsMenuExpanded,
-                v => v.RemoveLabelBtn.Visibility,
-                x => x ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.IsMenuExpanded,
+                static v => v.RemoveLabelBtn.Visibility,
+                static x => x ? Visibility.Visible : Visibility.Collapsed)
             .DisposeWith(disposables);
     }
 
@@ -154,10 +158,13 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindRightProperties(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, vm => vm.RightPropertyVisibility, v => v.RightProperties.Visibility)
+        _ = this.OneWayBind(
+                ViewModel,
+                static vm => vm.RightPropertyVisibility,
+                static v => v.RightProperties.Visibility)
             .DisposeWith(disposables);
 
-        _ = this.WhenAnyValue(x => x.ViewModel!.SelectedSetting)
+        _ = this.WhenAnyValue(static x => x.ViewModel!.SelectedSetting)
             .Where(static settings => settings is not null)
             .Select(static settings => settings!)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
@@ -176,29 +183,31 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <param name="disposables">The activation disposables.</param>
     private void BindChartMetadata(CompositeDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, vm => vm.Title, v => v.Title.Text).DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                vm => vm.Title,
-                v => v.Title.Visibility,
-                x => x == " " ? Visibility.Collapsed : Visibility.Visible)
+        _ = this.OneWayBind(ViewModel, static vm => vm.Title, static v => v.Title.Text)
             .DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.LegendPosition,
-                v => v.RightLegend.Visibility,
-                x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.Title,
+                static v => v.Title.Visibility,
+                static x => x == " " ? Visibility.Collapsed : Visibility.Visible)
             .DisposeWith(disposables);
         _ = this.OneWayBind(
                 ViewModel,
-                vm => vm.LegendPosition,
-                v => v.TopLegend.Visibility,
-                x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed)
+                static vm => vm.LegendPosition,
+                static v => v.RightLegend.Visibility,
+                static x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed)
+            .DisposeWith(disposables);
+        _ = this.OneWayBind(
+                ViewModel,
+                static vm => vm.LegendPosition,
+                static v => v.TopLegend.Visibility,
+                static x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed)
             .DisposeWith(disposables);
 
-        _ = this.Bind(ViewModel, vm => vm.UseFixedNumberOfPoints, v => v.UseFixedNumberOfPoints)
+        _ = this.Bind(ViewModel, static vm => vm.UseFixedNumberOfPoints, static v => v.UseFixedNumberOfPoints)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, vm => vm.NumberPointsPlotted, v => v.NumberPointsPlotted).DisposeWith(disposables);
+        _ = this.Bind(ViewModel, static vm => vm.NumberPointsPlotted, static v => v.NumberPointsPlotted)
+            .DisposeWith(disposables);
     }
 
     /// <summary>Handles the IndexText_MouseUp operation.</summary>

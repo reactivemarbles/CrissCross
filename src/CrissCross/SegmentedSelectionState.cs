@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -24,14 +23,22 @@ public sealed class SegmentedSelectionState
     /// <param name="selectedKey">The selected segment key.</param>
     public SegmentedSelectionState(IEnumerable<SegmentItem> items, string? selectedKey)
     {
-        if (items is null)
+        ThrowHelper.ThrowIfNull(items, nameof(items));
+
+        var allItems = new List<SegmentItem>();
+        var enabledItems = new List<SegmentItem>();
+        foreach (var item in items)
         {
-            throw new ArgumentNullException(nameof(items));
+            allItems.Add(item);
+            if (item.IsEnabled)
+            {
+                enabledItems.Add(item);
+            }
         }
 
-        Items = items.ToArray();
+        Items = allItems;
         SelectedKey = selectedKey;
-        EnabledItems = Items.Where(static item => item.IsEnabled).ToArray();
+        EnabledItems = enabledItems;
         SelectedItem = selectedKey is null ? null : GetItem(selectedKey);
     }
 
@@ -53,6 +60,16 @@ public sealed class SegmentedSelectionState
     /// <summary>Gets the segment with the specified key.</summary>
     /// <param name="key">The stable segment key.</param>
     /// <returns>The matching segment, or <c>null</c> when no segment has the key.</returns>
-    public SegmentItem? GetItem(string key) =>
-        Items.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal));
+    public SegmentItem? GetItem(string key)
+    {
+        foreach (var item in Items)
+        {
+            if (string.Equals(item.Key, key, StringComparison.Ordinal))
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
 }

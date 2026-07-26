@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -26,6 +26,9 @@ public class WindowHost<TWindow> : HwndHost
     /// <summary>Stores the wSCHILD value.</summary>
     private const uint WSCHILD = 0x40000000U;
 
+    /// <summary>Stores the non-owning window handle wrapper.</summary>
+    private readonly WindowSafeHandle _windowHandle = new();
+
     /// <summary>Initializes a new instance of the <see cref="WindowHost{TWindow}" /> class.</summary>
     /// <param name="name">The name.</param>
     public WindowHost(string name)
@@ -49,11 +52,11 @@ public class WindowHost<TWindow> : HwndHost
         Window.Show();
     }
 
-    /// <summary>Gets the window handle.</summary>
+    /// <summary>Gets a safe, non-owning wrapper around the hosted window handle.</summary>
     /// <value>
     /// The window handle.
     /// </value>
-    public IntPtr WindowHandle { get; private set; }
+    public SafeHandle WindowHandle => _windowHandle;
 
     /// <summary>Gets the window.</summary>
     /// <value>
@@ -65,7 +68,8 @@ public class WindowHost<TWindow> : HwndHost
     public void Close()
     {
         Window.Close();
-        DestroyWindowCore(new HandleRef(Window, IntPtr.Zero));
+        DestroyWindowCore(new(Window, IntPtr.Zero));
+        _windowHandle.Dispose();
     }
 
     /// <summary>When overridden in a derived class, creates the window to be hosted.</summary>
@@ -77,11 +81,11 @@ public class WindowHost<TWindow> : HwndHost
     {
         HandleRef href = default;
 
-        if (WindowHandle != IntPtr.Zero)
+        if (!_windowHandle.IsInvalid)
         {
-            _ = NativeMethods.SetWindowLong(WindowHandle, GWLSTYLE, WSCHILD);
-            _ = NativeMethods.SetParent(WindowHandle, hwndParent.Handle);
-            href = new(this, WindowHandle);
+            _ = NativeMethods.SetWindowLong(_windowHandle, GWLSTYLE, WSCHILD);
+            _ = NativeMethods.SetParent(_windowHandle, hwndParent.Handle);
+            href = _windowHandle.CreateHandleRef(this);
         }
 
         return href;
@@ -91,12 +95,23 @@ public class WindowHost<TWindow> : HwndHost
     /// <param name="hwnd">A structure that contains the window handle.</param>
     protected override void DestroyWindowCore(HandleRef hwnd)
     {
-        if (WindowHandle == hwnd.Handle)
+        if (_windowHandle.Matches(hwnd.Handle))
         {
             return;
         }
 
-        _ = NativeMethods.SetParent(WindowHandle, hwnd.Handle);
+        _ = NativeMethods.SetParent(_windowHandle, hwnd.Handle);
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _windowHandle.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     /// <summary>Runs the hide From Alt Tab operation.</summary>
@@ -105,7 +120,37 @@ public class WindowHost<TWindow> : HwndHost
     private void HideFromAltTab(object sender, RoutedEventArgs e)
     {
         Window.Loaded -= HideFromAltTab;
-        WindowHandle = new WindowInteropHelper(Window).Handle;
-        NativeMethods.HideFromAltTab(WindowHandle);
+        _windowHandle.Initialize(new WindowInteropHelper(Window).Handle);
+        NativeMethods.HideFromAltTab(_windowHandle);
+    }
+
+    /// <summary>Provides safe, non-owning access to a WPF-owned window handle.</summary>
+    private sealed class WindowSafeHandle : SafeHandle
+    {
+        /// <summary>Initializes a new instance of the <see cref="WindowSafeHandle" /> class.</summary>
+        public WindowSafeHandle()
+            : base(IntPtr.Zero, ownsHandle: false)
+        {
+        }
+
+        /// <inheritdoc />
+        public override bool IsInvalid => handle == IntPtr.Zero || handle == new IntPtr(-1);
+
+        /// <summary>Sets the wrapped handle after WPF creates the hosted window.</summary>
+        /// <param name="windowHandle">The WPF-owned window handle.</param>
+        public void Initialize(IntPtr windowHandle) => SetHandle(windowHandle);
+
+        /// <summary>Creates a handle reference for the WPF hosting infrastructure.</summary>
+        /// <param name="wrapper">The managed object that owns the returned reference.</param>
+        /// <returns>The handle reference used exclusively by WPF.</returns>
+        public HandleRef CreateHandleRef(object wrapper) => new(wrapper, handle);
+
+        /// <summary>Determines whether this wrapper contains the specified handle.</summary>
+        /// <param name="windowHandle">The handle to compare.</param>
+        /// <returns><see langword="true"/> when both handles are equal; otherwise, <see langword="false"/>.</returns>
+        public bool Matches(IntPtr windowHandle) => handle == windowHandle;
+
+        /// <inheritdoc />
+        protected override bool ReleaseHandle() => true;
     }
 }

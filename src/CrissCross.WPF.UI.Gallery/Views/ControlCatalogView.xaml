@@ -1,0 +1,117 @@
+<UserControl
+  x:Class="CrissCross.WPF.UI.Gallery.Views.ControlCatalogView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:ui="https://github.com/reactivemarbles/CrissCross.ui"
+>
+  <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="12">
+      <ui:TextBlock FontSize="24" FontWeight="Bold" Text="WPF control catalog" />
+      <ui:TextBlock
+        Margin="0,6,0,12"
+        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+        Text="A curated, constructible control surface. Window chrome, event arguments, converters, parsers, templates and abstract/helper types are intentionally excluded."
+        TextWrapping="Wrap"
+      />
+      <ui:Button Width="220" HorizontalAlignment="Left" Command="{Binding RefreshCommand}" Content="Refresh catalog status" />
+      <ui:TextBlock Margin="0,6,0,12" Text="{Binding StatusText}" />
+
+      <ui:GroupBox Header="Status, containers and presentation">
+        <WrapPanel Margin="8">
+          <ui:AlarmBanner Width="280" Margin="4" IsActive="True" Message="Alarm is active." Severity="Informational" />
+          <ui:Alarms Width="160" Height="48" Margin="4" />
+          <ui:Arc Width="72" Height="72" Margin="4" Stroke="{DynamicResource TextFillColorPrimaryBrush}" StrokeThickness="4" />
+          <ui:Badge Margin="4" Content="Badge" />
+          <ui:Border Width="160" Height="48" Margin="4"><TextBlock Text="WPF UI border" /></ui:Border>
+          <ui:BusyOverlay Width="160" Height="48" Margin="4" Content="BusyOverlay content" />
+          <ui:Calendar Width="260" Margin="4" />
+          <ui:Card Width="180" Margin="4" Content="Card content" />
+          <ui:CardAction Width="160" Margin="4" Content="Card action" />
+          <ui:CardColor Width="160" Height="48" Margin="4" />
+          <ui:CardControl Width="160" Margin="4" Content="Card control" />
+          <ui:CardExpander Width="180" Margin="4" Header="Card expander" IsExpanded="True" Content="Expanded content" />
+          <ui:ClientAreaBorder Width="160" Height="48" Margin="4"><TextBlock Text="Client area border" /></ui:ClientAreaBorder>
+          <ui:ContentDialog Width="180" Margin="4" Content="Content dialog" />
+          <ui:EmptyState Width="180" Margin="4" Content="No items are available." />
+          <ui:InfoBar Width="240" Margin="4" Content="Informational message" />
+          <ui:LoadingScreen Width="180" Height="48" Margin="4" Content="Loading screen" />
+          <ui:RaisedBorder Width="160" Margin="4" Content="Raised border" />
+          <StackPanel Width="360" Margin="4">
+            <TextBlock Margin="0,0,0,4" Text="Snackbar presenter" />
+            <ui:SnackbarPresenter x:Name="CatalogSnackbarPresenter" Height="120" />
+          </StackPanel>
+        </WrapPanel>
+      </ui:GroupBox>
+
+      <ui:GroupBox Margin="0,12,0,0" Header="Input, commands and selection">
+        <WrapPanel Margin="8">
+          <ui:Anchor Margin="4" Content="Anchor" />
+          <ui:AsyncCommandButton Margin="4" Content="Async command" />
+          <ui:AutoSuggestBox Width="180" Margin="4" PlaceholderText="Auto suggest" />
+          <ui:BezelButton Margin="4" Content="Bezel button" />
+          <ui:BezelRepeatButton Margin="4" Content="Bezel repeat" />
+          <ui:BezelToggleButton Margin="4" Content="Bezel toggle" />
+          <ui:CheckBoxModern Margin="4" Text="Modern checkbox" />
+          <ui:Chip Margin="4" Text="Chip" />
+          <ui:ChipGroup Width="180" Margin="4"><ui:Chip Text="One" /><ui:Chip Text="Two" /></ui:ChipGroup>
+          <ui:CommandButton Margin="4" Content="Command button" />
+          <ui:DropDownButton Margin="4" Content="Drop down" />
+          <ui:GelButton Width="92" Margin="4" Content="Gel button" />
+          <ui:GelRepeatButton Width="92" Margin="4" Content="Gel repeat" />
+          <ui:GelToggleButton Width="92" Margin="4" Content="Gel toggle" />
+          <ui:HyperlinkButton Margin="4" Content="Hyperlink button" />
+          <ui:NumericPushButton Margin="4" Content="7" />
+          <ui:NumberBox Width="140" Margin="4" Text="42" />
+          <ui:RatingControl Width="180" Margin="4" Value="3" />
+          <ui:SearchBox Width="200" Margin="4" />
+          <ui:SplitButton Margin="4" Content="Split button" />
+          <ui:ThumbRate Width="160" Height="48" Margin="4" />
+          <ui:TimePicker Width="160" Margin="4" />
+        </WrapPanel>
+      </ui:GroupBox>
+
+      <ui:GroupBox Margin="0,12,0,0" Header="Data, navigation and layout">
+        <WrapPanel Margin="8">
+          <ui:BreadcrumbBar Width="220" Margin="4" />
+          <ui:DataFilterPanel Width="220" Height="64" Margin="4" />
+          <ui:DataGrid Width="240" Height="120" Margin="4" />
+          <ui:DataPager Width="220" Height="64" Margin="4" />
+          <ui:DateTimeRangePicker Width="220" Height="64" Margin="4" />
+          <ui:DynamicScrollBar Width="160" Margin="4" />
+          <ui:FilterBar Width="220" Height="48" Margin="4" />
+          <ui:ListView Width="180" Height="90" Margin="4"><ui:ListView.View><ui:GridView /></ui:ListView.View><ui:ListViewItem Content="List item" /></ui:ListView>
+          <ui:NavigationView Width="280" Height="140" Margin="4" PaneDisplayMode="Left"><ui:NavigationView.MenuItems><ui:NavigationViewItem Content="Catalog item" /></ui:NavigationView.MenuItems></ui:NavigationView>
+          <ui:PropertyGridLite Width="220" Height="64" Margin="4" />
+          <ui:ReactiveFormField Width="220" Margin="4" Content="Reactive form field" />
+          <ui:SegmentedControl Width="220" Height="48" Margin="4" />
+          <ui:Stepper Width="220" Height="48" Margin="4" />
+          <ui:TabView Width="220" Height="90" Margin="4"><ui:TabViewItem Header="Catalog" Content="Tab content" /></ui:TabView>
+          <ui:TreeGrid Width="220" Height="90" Margin="4" />
+          <ui:TreeView Width="180" Height="90" Margin="4"><ui:TreeViewItem Header="Tree item" /></ui:TreeView>
+          <ui:ValidationSummary Width="220" Height="48" Margin="4" />
+          <ui:VirtualizingGridView Width="180" Height="90" Margin="4" />
+          <ui:VirtualizingItemsControl Width="180" Height="48" Margin="4" />
+        </WrapPanel>
+      </ui:GroupBox>
+
+      <ui:GroupBox Margin="0,12,0,0" Header="Media, icons and visual indicators">
+        <WrapPanel Margin="8">
+          <ui:CircularGauge Width="120" Height="120" Margin="4" Value="42" />
+          <ui:ColorDisplay Width="120" Height="48" Margin="4" />
+          <ui:FontIcon Margin="4" Glyph="&#xE10F;" />
+          <ui:FontIconFallback Width="100" Height="48" Margin="4" />
+          <ui:GifImage Width="100" Height="48" Margin="4" />
+          <ui:Image Width="100" Height="48" Margin="4" />
+          <ui:ImageIcon Width="32" Height="32" Margin="4" />
+          <ui:InfoBadge Margin="4" Value="4" />
+          <ui:PersonPicture Width="72" Height="72" Margin="4" DisplayName="Ada Lovelace" />
+          <ui:ProgressRing Width="56" Height="56" Margin="4" IsActive="True" />
+          <ui:RichTextBox Width="180" Height="72" Margin="4"><FlowDocument><Paragraph>Rich text content</Paragraph></FlowDocument></ui:RichTextBox>
+          <ui:SymbolIcon Margin="4" Symbol="Home20" />
+          <ui:ThemeSwitcher Width="180" Height="48" Margin="4" />
+          <ui:ToggleSwitch Margin="4" Content="Toggle switch" />
+        </WrapPanel>
+      </ui:GroupBox>
+    </StackPanel>
+  </ui:DynamicScrollViewer>
+</UserControl>

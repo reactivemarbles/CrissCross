@@ -15,7 +15,6 @@
                     <Grid ColumnDefinitions="Auto,*,Auto,Auto">
                         <!-- Severity icon -->
                         <TextBlock Name="SeverityIcon"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
                                    FontSize="16"
                                    VerticalAlignment="Center"
                                    Margin="0,0,12,0" />
@@ -43,8 +42,7 @@
                                 Padding="4"
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center">
-                            <TextBlock Text="&#xE711;"
-                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            <TextBlock Text="&#x00D7;"
                                        FontSize="12" />
                         </Button>
                     </Grid>
@@ -55,43 +53,43 @@
     
     <!-- Severity-based styling -->
     <Style Selector="controls|AlarmBanner[Severity=Error] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarErrorSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarErrorSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Warning] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarCautionSeverityBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarCautionSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarWarningSeverityBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarWarningSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Success] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarSuccessSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Informational] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarInformationalSeverityBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarInformationalSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarInformationalSeverityBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarInformationalSeverityBackgroundBrush}" />
     </Style>
     
     <!-- Severity icons -->
     <Style Selector="controls|AlarmBanner[Severity=Error] /template/ TextBlock#SeverityIcon">
-        <Setter Property="Text" Value="&#xEA39;" />
+        <Setter Property="Text" Value="&#x2716;" />
         <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCritical}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Warning] /template/ TextBlock#SeverityIcon">
-        <Setter Property="Text" Value="&#xE7BA;" />
+        <Setter Property="Text" Value="&#x26A0;" />
         <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCaution}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Success] /template/ TextBlock#SeverityIcon">
-        <Setter Property="Text" Value="&#xE73E;" />
+        <Setter Property="Text" Value="&#x2714;" />
         <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccess}" />
     </Style>
     
     <Style Selector="controls|AlarmBanner[Severity=Informational] /template/ TextBlock#SeverityIcon">
-        <Setter Property="Text" Value="&#xE946;" />
+        <Setter Property="Text" Value="&#x2139;" />
         <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
     </Style>
     

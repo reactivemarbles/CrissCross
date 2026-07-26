@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Input;
@@ -39,18 +39,10 @@ public sealed partial class RichTextBoxFeatureTests
         var richTextBox = new RichTextBox();
 
         await Assert.That(richTextBox.TryDropImage(TestImageFileUri)).IsTrue();
-        await Assert
-            .That(
-                richTextBox.Document.Segments.Any(segment =>
-                    segment.IsImage && segment.ImageSource == TestImageFileUri))
-            .IsTrue();
+        await Assert.That(HasDroppedImageSegment(richTextBox.Document, TestImageFileUri)).IsTrue();
 
         await Assert.That(richTextBox.TryDropImage(TestImageDataUri)).IsTrue();
-        await Assert
-            .That(
-                richTextBox.Document.Segments.Any(segment =>
-                    segment.IsImage && segment.ImageSource == TestImageDataUri))
-            .IsTrue();
+        await Assert.That(HasDroppedImageSegment(richTextBox.Document, TestImageDataUri)).IsTrue();
 
         var before = richTextBox.Html;
         await Assert.That(richTextBox.TryDropImage("file:///tmp/readme.txt")).IsFalse();
@@ -87,16 +79,16 @@ public sealed partial class RichTextBoxFeatureTests
         richTextBox.Select(richTextBox.Document.Length, 0);
 
         await Assert
-            .That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(0, 0), snapToText: true)?.Offset)
+            .That(richTextBox.GetPositionFromPoint(new(0, 0), snapToText: true)?.Offset)
             .IsEqualTo(0);
         await Assert
             .That(
                 richTextBox
-                    .GetPositionFromPoint(new global::Avalonia.Point(FarRightPointX, 0), snapToText: true)
+                    .GetPositionFromPoint(new(FarRightPointX, 0), snapToText: true)
                     ?.Offset)
             .IsEqualTo(richTextBox.Document.Length);
         await Assert
-            .That(richTextBox.GetPositionFromPoint(new global::Avalonia.Point(OutsideLeftPointX, 0), snapToText: false))
+            .That(richTextBox.GetPositionFromPoint(new(OutsideLeftPointX, 0), snapToText: false))
             .IsNull();
     }
 
@@ -107,8 +99,8 @@ public sealed partial class RichTextBoxFeatureTests
     {
         var richTextBox = new RichTextBox();
 
-        var unsupported = RaiseDragOver(richTextBox, TestDataTransfer.Empty, new global::Avalonia.Point(0, 0));
-        var supported = RaiseDragOver(richTextBox, TestDataTransfer.Text("drop"), new global::Avalonia.Point(0, 0));
+        var unsupported = RaiseDragOver(richTextBox, TestDataTransfer.Empty, new(0, 0));
+        var supported = RaiseDragOver(richTextBox, TestDataTransfer.Text("drop"), new(0, 0));
 
         await Assert.That(unsupported.DragEffects).IsEqualTo(DragDropEffects.None);
         await Assert.That(unsupported.Handled).IsTrue();
@@ -126,7 +118,7 @@ public sealed partial class RichTextBoxFeatureTests
         richTextBox.SetPlainText(AlphabetText);
         richTextBox.Select(richTextBox.Document.Length, 0);
 
-        _ = RaiseDrop(richTextBox, TestDataTransfer.Text("XX"), new global::Avalonia.Point(0, 0));
+        _ = RaiseDrop(richTextBox, TestDataTransfer.Text("XX"), new(0, 0));
 
         await Assert.That(richTextBox.PlainText).IsEqualTo($"XX{AlphabetText}");
         await Assert.That(richTextBox.CaretIndex).IsEqualTo(DroppedTextLength);
@@ -142,7 +134,7 @@ public sealed partial class RichTextBoxFeatureTests
         _ = RaiseDrop(
             imageDisabled,
             TestDataTransfer.File(CreateStorageFile(".png", string.Empty)),
-            new global::Avalonia.Point(0, 0));
+            new(0, 0));
 
         await Assert.That(imageDisabled.Html).DoesNotContain("<img");
 
@@ -150,7 +142,7 @@ public sealed partial class RichTextBoxFeatureTests
         _ = RaiseDrop(
             unsupported,
             TestDataTransfer.File(CreateStorageFile(".exe", "should-not-load")),
-            new global::Avalonia.Point(0, 0));
+            new(0, 0));
         await Task.Delay(DropProcessingDelayMilliseconds);
 
         await Assert.That(unsupported.PlainText).IsEmpty();
@@ -159,7 +151,7 @@ public sealed partial class RichTextBoxFeatureTests
         _ = RaiseDrop(
             oversized,
             TestDataTransfer.File(CreateStorageFile(".txt", "12345")),
-            new global::Avalonia.Point(0, 0));
+            new(0, 0));
         await Task.Delay(DropProcessingDelayMilliseconds);
 
         await Assert.That(oversized.PlainText).IsEmpty();
@@ -182,7 +174,16 @@ public sealed partial class RichTextBoxFeatureTests
         await Assert.That(imageSource).StartsWith("file:");
         await Assert.That(richTextBox.TryDropImage(imageSource)).IsTrue();
 
-        var image = richTextBox.Document.Segments.FirstOrDefault(segment => segment.IsImage);
+        TextSegment? image = null;
+        foreach (var segment in richTextBox.Document.Segments)
+        {
+            if (segment.IsImage)
+            {
+                image = segment;
+                break;
+            }
+        }
+
         await Assert.That(image).IsNotNull();
         await Assert.That(image!.ImageSource).IsEqualTo(imageSource);
     }
@@ -216,7 +217,19 @@ public sealed partial class RichTextBoxFeatureTests
         presenter.Document = document;
         presenter.UpdateInlines();
 
-        var firstRun = presenter.Inlines?.OfType<global::Avalonia.Controls.Documents.Run>().FirstOrDefault();
+        global::Avalonia.Controls.Documents.Run? firstRun = null;
+        if (presenter.Inlines is not null)
+        {
+            foreach (var inline in presenter.Inlines)
+            {
+                if (inline is global::Avalonia.Controls.Documents.Run run)
+                {
+                    firstRun = run;
+                    break;
+                }
+            }
+        }
+
         await Assert.That(firstRun?.Text).IsEqualTo($"{AlphabetText}\u200B");
     }
 
@@ -228,17 +241,26 @@ public sealed partial class RichTextBoxFeatureTests
         var document = new FlowDocument();
         var remoteLoaderCalls = 0;
         var loadedImage = new TestImage(new global::Avalonia.Size(RemoteImageNaturalWidth, RemoteImageNaturalHeight));
-        var presenter = new FormattedTextPresenter
+        global::Avalonia.Media.IImage? LoadRemoteImage(Uri _)
         {
-            RemoteImageLoader = _ =>
-            {
-                remoteLoaderCalls++;
-                return loadedImage;
-            },
-        };
+            remoteLoaderCalls++;
+            return loadedImage;
+        }
+
+        var presenter = new FormattedTextPresenter { RemoteImageLoader = LoadRemoteImage };
 
         document.SetText("<img src=\"https://example.invalid/photo.png\" align=\"Right\" />");
-        var imageSegment = document.Segments.Single(segment => segment.IsImage);
+        TextSegment? imageSegment = null;
+        foreach (var segment in document.Segments)
+        {
+            if (segment.IsImage)
+            {
+                imageSegment = segment;
+                break;
+            }
+        }
+
+        ArgumentNullException.ThrowIfNull(imageSegment);
 
         await Assert.That(presenter.CreateImageElement(imageSegment)).IsNull();
         await Assert.That(remoteLoaderCalls).IsEqualTo(0);
@@ -259,7 +281,24 @@ public sealed partial class RichTextBoxFeatureTests
         await Assert.That(explicitlySizedImage!.Width).IsEqualTo(ExplicitImageWidth);
         await Assert.That(explicitlySizedImage.Height).IsEqualTo(ExplicitImageHeight);
 
-        presenter.RemoteImageLoader = _ => throw new InvalidOperationException("Loader failure");
+        presenter.RemoteImageLoader = static _ => throw new InvalidOperationException("Loader failure");
         await Assert.That(presenter.CreateImageElement(imageSegment)).IsNull();
+    }
+
+    /// <summary>Determines whether a document contains a dropped image source.</summary>
+    /// <param name="document">The document to search.</param>
+    /// <param name="imageSource">The expected source.</param>
+    /// <returns>Whether the image exists.</returns>
+    private static bool HasDroppedImageSegment(FlowDocument document, string imageSource)
+    {
+        foreach (var segment in document.Segments)
+        {
+            if (segment.IsImage && segment.ImageSource == imageSource)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

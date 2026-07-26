@@ -24,7 +24,7 @@
         Width="30"
         Height="30"
         VerticalAlignment="Center"
-        Source="/Assets/ControlImages/RichTextBlock.png"
+        Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/RichTextBlock.png"
       />
       <StackPanel Grid.Column="1" Margin="10,0,20,0">
         <ui:TextBlock FontSize="24" FontWeight="Bold" Text="BBCodeBlock" />

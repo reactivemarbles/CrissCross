@@ -1,0 +1,39 @@
+<UserControl
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.ControlCatalogPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    x:DataType="vm:ControlCatalogPageViewModel">
+    <ScrollViewer>
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock FontSize="32" FontWeight="Bold" Text="Control &amp; host catalog" />
+            <controls:TextBlock
+                Opacity="0.75"
+                Text="This data-driven index makes composed and application-hosted control families discoverable without placing invalid window, dialog, or virtualization topology inside a nested page."
+                TextWrapping="Wrap" />
+            <controls:Card>
+                <controls:StackPanel Spacing="10">
+                    <controls:TextBlock FontSize="18" FontWeight="Bold" Text="Coverage inventory" />
+                    <ItemsControl ItemsSource="{Binding Coverage}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ControlCoverageItem">
+                                <controls:Border
+                                    Margin="0,0,0,8"
+                                    Padding="12"
+                                    Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}"
+                                    CornerRadius="6">
+                                    <controls:StackPanel Spacing="4">
+                                        <controls:TextBlock FontWeight="SemiBold" Text="{Binding Family}" />
+                                        <controls:TextBlock Opacity="0.8" Text="{Binding Example}" />
+                                        <controls:TextBlock Opacity="0.7" Text="{Binding Notes}" TextWrapping="Wrap" />
+                                    </controls:StackPanel>
+                                </controls:Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
+    </ScrollViewer>
+</UserControl>

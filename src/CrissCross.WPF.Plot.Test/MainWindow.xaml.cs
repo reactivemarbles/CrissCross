@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -20,7 +20,7 @@ public partial class MainWindow : IAmBuilt, IDisposable
         nameof(Tracker),
         typeof(Tracker),
         typeof(MainWindow),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Stores bindings owned by the window's visual-tree lifetime.</summary>
     private CompositeDisposable? _viewBindings;
@@ -79,8 +79,9 @@ public partial class MainWindow : IAmBuilt, IDisposable
         tracker?.Track(this);
         SetCurrentValue(TrackerProperty, tracker);
         _viewBindings = new();
-        _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(_viewBindings);
-        _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource)
+        _ = this.OneWayBind(ViewModel, static vm => vm.ApplicationTitle, static v => v.Title)
+            .DisposeWith(_viewBindings);
+        _ = this.OneWayBind(ViewModel, static vm => vm.NavigationModels, static v => v.NavigationLeft.ItemsSource)
             .DisposeWith(_viewBindings);
         NavBreadcrumb.SetupNavigation(nameof(mainWindow));
         NavBreadcrumb.NavigateTo(new NavigationKeyRequest<MainViewModel>(), "Main");

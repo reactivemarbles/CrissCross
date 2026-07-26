@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Extends ListView adding customized support for GridView vs Default view states.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ListView : System.Windows.Controls.ListView, IDisposable
 {
     /// <summary>Dependency property backing <see cref="ViewState"/>.</summary>
@@ -46,6 +47,10 @@ public class ListView : System.Windows.Controls.ListView, IDisposable
         get => (ListViewViewState)GetValue(ViewStateProperty);
         set => SetValue(ViewStateProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Disposes managed / unmanaged resources.</summary>
     public void Dispose()

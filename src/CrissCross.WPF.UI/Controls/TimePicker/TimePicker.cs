@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a control that allows a user to pick a time value.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TimePicker : System.Windows.Controls.Primitives.ButtonBase
 {
     /// <summary>Property for <see cref="Header"/>.</summary>
@@ -16,35 +17,35 @@ public class TimePicker : System.Windows.Controls.Primitives.ButtonBase
         nameof(Header),
         typeof(object),
         typeof(TimePicker),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="Time"/>.</summary>
     public static readonly DependencyProperty TimeProperty = DependencyProperty.Register(
         nameof(Time),
         typeof(TimeSpan),
         typeof(TimePicker),
-        new PropertyMetadata(TimeSpan.Zero));
+        new(TimeSpan.Zero));
 
     /// <summary>Property for <see cref="SelectedTime"/>.</summary>
     public static readonly DependencyProperty SelectedTimeProperty = DependencyProperty.Register(
         nameof(SelectedTime),
         typeof(TimeSpan?),
         typeof(TimePicker),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="MinuteIncrement"/>.</summary>
     public static readonly DependencyProperty MinuteIncrementProperty = DependencyProperty.Register(
         nameof(MinuteIncrement),
         typeof(int),
         typeof(TimePicker),
-        new PropertyMetadata(1));
+        new(1));
 
     /// <summary>Property for <see cref="ClockIdentifier"/>.</summary>
     public static readonly DependencyProperty ClockIdentifierProperty = DependencyProperty.Register(
         nameof(ClockIdentifier),
         typeof(ClockIdentifier),
         typeof(TimePicker),
-        new PropertyMetadata(ClockIdentifier.Clock24Hour));
+        new(ClockIdentifier.Clock24Hour));
 
     /// <summary>Gets or sets the content for the control's header.</summary>
     public object? Header
@@ -83,4 +84,8 @@ public class TimePicker : System.Windows.Controls.Primitives.ButtonBase
         get => (ClockIdentifier)GetValue(ClockIdentifierProperty);
         set => SetValue(ClockIdentifierProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

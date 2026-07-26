@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation;
@@ -23,19 +23,13 @@ internal sealed class CardControlAutomationPeer(CardControl owner) : FrameworkEl
     /// interface if <paramref name="patternInterface" /> is <see
     /// cref="F:System.Windows.Automation.Peers.PatternInterface.SynchronizedInput" />; otherwise, null.
     /// </returns>
-    public override object GetPattern(PatternInterface patternInterface)
-    {
-        return patternInterface == PatternInterface.ItemContainer ? this : base.GetPattern(patternInterface);
-    }
+    public override object GetPattern(PatternInterface patternInterface) => patternInterface == PatternInterface.ItemContainer ? this : base.GetPattern(patternInterface);
 
     protected override string GetClassNameCore() => "CardControl";
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Pane;
 
-    protected override AutomationPeer GetLabeledByCore()
-    {
-        return owner.Header is UIElement element ? CreatePeerForElement(element) : base.GetLabeledByCore();
-    }
+    protected override AutomationPeer GetLabeledByCore() => owner.Header is UIElement element ? CreatePeerForElement(element) : base.GetLabeledByCore();
 
     protected override string GetNameCore()
     {

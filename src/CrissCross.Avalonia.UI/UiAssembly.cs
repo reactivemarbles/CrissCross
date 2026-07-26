@@ -1,6 +1,22 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
+
+global using System;
+global using System.Collections.Generic;
+global using System.ComponentModel;
+global using System.Diagnostics;
+global using System.Globalization;
+global using System.IO;
+global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Net;
+global using System.Reflection;
+global using System.Runtime.CompilerServices;
+global using System.Text;
+global using System.Threading;
+global using System.Threading.Tasks;
+global using ReactiveUI;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.UI;
@@ -12,5 +28,5 @@ namespace CrissCross.Avalonia.UI;
 public static class UiAssembly
 {
     /// <summary>Gets the assembly.</summary>
-    public static Assembly Assembly => Assembly.GetExecutingAssembly();
+    public static Assembly Assembly => typeof(UiAssembly).Assembly;
 }

@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -15,6 +14,13 @@ namespace CrissCross;
 /// <summary>Represents an immutable request for a page of data plus a stable query/filter/sort snapshot.</summary>
 public sealed class PageRequest
 {
+    /// <summary>Formats the page request display text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat DisplayTextFormat = System.Text.CompositeFormat.Parse("Page {0}, {1} per page");
+#else
+    private const string DisplayTextFormat = "Page {0}, {1} per page";
+#endif
+
     /// <inheritdoc />
     public PageRequest(int pageIndex, int pageSize)
         : this(pageIndex, pageSize, null, false, null) { }
@@ -41,7 +47,7 @@ public sealed class PageRequest
         SortDescending = sortDescending;
         QueryState = queryState;
         ActiveFilters = queryState?.ActiveFilters ?? [];
-        FilterSnapshotKey = string.Join("|", ActiveFilters.Select(static filter => filter.Key));
+        FilterSnapshotKey = CreateFilterSnapshotKey(ActiveFilters);
     }
 
     /// <summary>Gets the zero-based requested page index.</summary>
@@ -76,5 +82,29 @@ public sealed class PageRequest
 
     /// <summary>Gets compact user-facing request text for diagnostics.</summary>
     public string DisplayText =>
-        string.Format(CultureInfo.InvariantCulture, "Page {0}, {1} per page", PageIndex + 1, PageSize);
+        string.Format(CultureInfo.InvariantCulture, DisplayTextFormat, PageIndex + 1, PageSize);
+
+    /// <summary>Creates the stable key for a filter snapshot.</summary>
+    /// <param name="filters">The filters to include.</param>
+    /// <returns>The stable snapshot key.</returns>
+    private static string CreateFilterSnapshotKey(IReadOnlyList<FilterToken> filters)
+    {
+        if (filters.Count == 0)
+        {
+            return string.Empty;
+        }
+
+        var builder = new System.Text.StringBuilder();
+        for (var index = 0; index < filters.Count; index++)
+        {
+            if (index > 0)
+            {
+                _ = builder.Append('|');
+            }
+
+            _ = builder.Append(filters[index].Key);
+        }
+
+        return builder.ToString();
+    }
 }

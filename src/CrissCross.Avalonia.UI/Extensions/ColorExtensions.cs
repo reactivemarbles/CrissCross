@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Media;
@@ -118,8 +118,5 @@ public static class ColorExtensions
     /// <summary>Converts a hex string to a Color.</summary>
     /// <param name="hex">The hex string.</param>
     /// <returns>The color, or null if parsing fails.</returns>
-    public static Color? FromHex(string hex)
-    {
-        return Color.TryParse(hex, out var color) ? color : null;
-    }
+    public static Color? FromHex(string hex) => Color.TryParse(hex, out var color) ? color : null;
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -64,12 +64,9 @@ public sealed class CommandButtonStatus(
     /// <returns>A failed command status.</returns>
     public static CommandButtonStatus Failed(Exception error, bool canExecute)
     {
-        if (error is null)
-        {
-            throw new ArgumentNullException(nameof(error));
-        }
+        ThrowHelper.ThrowIfNull(error, nameof(error));
 
-        return new CommandButtonStatus(CommandButtonState.Failed, canExecute, false, error);
+        return new(CommandButtonState.Failed, canExecute, false, error);
     }
 
     /// <summary>Creates a cancelled status snapshot.</summary>

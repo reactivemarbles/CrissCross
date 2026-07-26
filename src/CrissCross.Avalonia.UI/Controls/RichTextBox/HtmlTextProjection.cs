@@ -1,7 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Buffers;
 using System.Net;
 using System.Text;
 
@@ -20,20 +21,11 @@ internal sealed class HtmlTextProjection
     /// <summary>Provides the MaximumEntityLength member.</summary>
     private const int MaximumEntityLength = 16;
 
+    /// <summary>Character delimiters that terminate an HTML tag name.</summary>
+    private static readonly SearchValues<char> TagNameSeparators = SearchValues.Create(" /\t\r\n");
+
     /// <summary>HTML block elements whose closing tag contributes a paragraph break.</summary>
-    private static readonly HashSet<string> BlockEndTags = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "P",
-        "DIV",
-        "LI",
-        "TR",
-        "H1",
-        "H2",
-        "H3",
-        "H4",
-        "H5",
-        "H6",
-    };
+    private static readonly HashSet<string> BlockEndTags = new(StringComparer.OrdinalIgnoreCase) { "P", "DIV", "LI", "TR", "H1", "H2", "H3", "H4", "H5", "H6", };
 
     /// <summary>Provides the documented member.</summary>
     private readonly List<RenderedCharacter> _characters;
@@ -50,23 +42,23 @@ internal sealed class HtmlTextProjection
     }
 
     /// <summary>Gets the value.</summary>
-    public string Source { get; }
+    internal string Source { get; }
 
     /// <summary>Gets the value.</summary>
-    public string Text { get; }
+    internal string Text { get; }
 
     /// <summary>Gets the Length value.</summary>
-    public int Length => Text.Length;
+    internal int Length => Text.Length;
 
     /// <summary>Provides the Create member.</summary>
     /// <param name="source">The source value.</param>
     /// <returns>The result.</returns>
-    public static HtmlTextProjection Create(string? source)
+    internal static HtmlTextProjection Create(string? source)
     {
         var html = source ?? string.Empty;
         if (html.Length == 0)
         {
-            return new HtmlTextProjection(string.Empty, string.Empty, []);
+            return new(string.Empty, string.Empty, []);
         }
 
         var text = new StringBuilder(html.Length);
@@ -89,14 +81,14 @@ internal sealed class HtmlTextProjection
             index++;
         }
 
-        return new HtmlTextProjection(html, text.ToString(), characters);
+        return new(html, text.ToString(), characters);
     }
 
     /// <summary>Provides the GetRangeText member.</summary>
     /// <param name="start">The start value.</param>
     /// <param name="length">The length value.</param>
     /// <returns>The result.</returns>
-    public string GetRangeText(int start, int length)
+    internal string GetRangeText(int start, int length)
     {
         if (length <= 0 || Length == 0)
         {
@@ -112,7 +104,7 @@ internal sealed class HtmlTextProjection
     /// <param name="start">The start value.</param>
     /// <param name="length">The length value.</param>
     /// <returns>The result.</returns>
-    public (int Start, int Length) GetSourceRange(int start, int length)
+    internal (int Start, int Length) GetSourceRange(int start, int length)
     {
         if (length <= 0 || _characters.Count == 0)
         {
@@ -136,7 +128,7 @@ internal sealed class HtmlTextProjection
     /// <summary>Provides the GetSourceInsertionOffset member.</summary>
     /// <param name="offset">The offset value.</param>
     /// <returns>The result.</returns>
-    public int GetSourceInsertionOffset(int offset)
+    internal int GetSourceInsertionOffset(int offset)
     {
         if (_characters.Count == 0)
         {
@@ -164,7 +156,7 @@ internal sealed class HtmlTextProjection
         List<RenderedCharacter> characters)
     {
         _ = text.Append(source[sourceIndex]);
-        characters.Add(new RenderedCharacter(sourceIndex, sourceIndex + 1));
+        characters.Add(new(sourceIndex, sourceIndex + 1));
     }
 
     /// <summary>Provides the AppendMapped member.</summary>
@@ -183,7 +175,7 @@ internal sealed class HtmlTextProjection
         foreach (var character in rendered)
         {
             _ = text.Append(character);
-            characters.Add(new RenderedCharacter(sourceStart, sourceEnd));
+            characters.Add(new(sourceStart, sourceEnd));
         }
     }
 
@@ -296,44 +288,38 @@ internal sealed class HtmlTextProjection
             return false;
         }
 
-        var tagName = tagContent
-            .TrimStart('/')
-            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
-            .FirstOrDefault();
+        var tagName = GetTagName(tagContent);
         return string.Equals(tagName, "br", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>Determines whether a tag closes a block that contributes a paragraph break.</summary>
     /// <param name="tagContent">The tag content.</param>
     /// <returns><see langword="true"/> when the tag contributes a rendered line break.</returns>
-    private static bool IsBlockEndTag(string tagContent)
-    {
-        if (!tagContent.StartsWith("/", StringComparison.Ordinal))
-        {
-            return false;
-        }
-
-        var tagName = tagContent[1..]
-            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
-            .FirstOrDefault();
-        return tagName is not null && BlockEndTags.Contains(tagName);
-    }
+    private static bool IsBlockEndTag(string tagContent) =>
+        tagContent.StartsWith('/') && BlockEndTags.Contains(GetTagName(tagContent[1..]));
 
     /// <summary>Provides the IsImageTag member.</summary>
     /// <param name="tagContent">The tagContent value.</param>
     /// <returns>The result.</returns>
     private static bool IsImageTag(string tagContent)
     {
-        if (string.IsNullOrWhiteSpace(tagContent) || tagContent.StartsWith("/", StringComparison.Ordinal))
+        if (string.IsNullOrWhiteSpace(tagContent) || tagContent.StartsWith('/'))
         {
             return false;
         }
 
-        var tagName = tagContent
-            .TrimStart('/')
-            .Split([' ', '/', '\t', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
-            .FirstOrDefault();
+        var tagName = GetTagName(tagContent);
         return string.Equals(tagName, "img", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>Gets a normalized tag name without allocating an intermediate token array.</summary>
+    /// <param name="tagContent">The tag content.</param>
+    /// <returns>The leading tag token.</returns>
+    private static string GetTagName(string tagContent)
+    {
+        var content = tagContent.AsSpan().TrimStart('/');
+        var separatorIndex = content.IndexOfAny(TagNameSeparators);
+        return (separatorIndex >= 0 ? content[..separatorIndex] : content).ToString();
     }
 
     /// <summary>Provides the RenderedCharacter member.</summary>

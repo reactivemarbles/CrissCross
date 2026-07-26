@@ -14,7 +14,7 @@
 
             <controls:TextBlock
                 FontSize="20"
-                Foreground="#4EC9B0"
+                Foreground="{DynamicResource SystemAccentColorPrimary}"
                 Text="Cross-platform control gallery" />
 
             <controls:TextBlock
@@ -48,8 +48,8 @@
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
-                            Foreground="#4EC9B0"
-                            Text="11" />
+                            Foreground="{DynamicResource SystemAccentColorPrimary}"
+                            Text="12" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"
@@ -64,7 +64,7 @@
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
-                            Foreground="#4EC9B0"
+                            Foreground="{DynamicResource SystemAccentColorPrimary}"
                             Text="Active" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"
@@ -80,7 +80,7 @@
                             HorizontalAlignment="Center"
                             FontSize="36"
                             FontWeight="Bold"
-                            Foreground="#4EC9B0"
+                            Foreground="{DynamicResource SystemAccentColorPrimary}"
                             Text="3" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"

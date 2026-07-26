@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -20,6 +20,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Adds icon content to a standard button.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AppBarButton : WpfButton
 {
     /// <summary>The background glyph font size property.</summary>
@@ -27,42 +28,42 @@ public class AppBarButton : WpfButton
         nameof(BackgroundGlyphFontSize),
         typeof(double),
         typeof(AppBarButton),
-        new PropertyMetadata(33D));
+        new(33D));
 
     /// <summary>The background glyph property.</summary>
     public static readonly DependencyProperty BackgroundGlyphProperty = DependencyProperty.Register(
         nameof(BackgroundGlyph),
         typeof(string),
         typeof(AppBarButton),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the Ellipse Diameter property.</summary>
     public static readonly DependencyProperty ElipseDiameterProperty = DependencyProperty.Register(
         nameof(ElipseDiameter),
         typeof(double),
         typeof(AppBarButton),
-        new PropertyMetadata(40D));
+        new(40D));
 
     /// <summary>The foreground glyph color property.</summary>
     public static readonly DependencyProperty ForegroundGlyphColorProperty = DependencyProperty.Register(
         nameof(ForegroundGlyphColor),
         typeof(Brush),
         typeof(AppBarButton),
-        new PropertyMetadata(Brushes.LightGray));
+        new(Brushes.LightGray));
 
     /// <summary>The foreground glyph font size property.</summary>
     public static readonly DependencyProperty ForegroundGlyphFontSizeProperty = DependencyProperty.Register(
         nameof(ForegroundGlyphFontSize),
         typeof(double),
         typeof(AppBarButton),
-        new PropertyMetadata(33D));
+        new(33D));
 
     /// <summary>The foreground glyph property.</summary>
     public static readonly DependencyProperty ForegroundGlyphProperty = DependencyProperty.Register(
         nameof(ForegroundGlyph),
         typeof(string),
         typeof(AppBarButton),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the IconData property.</summary>
     public static readonly DependencyProperty IconDataProperty = DependencyProperty.Register(
@@ -75,21 +76,21 @@ public class AppBarButton : WpfButton
         nameof(IconHeight),
         typeof(double),
         typeof(AppBarButton),
-        new PropertyMetadata(25D));
+        new(25D));
 
     /// <summary>Identifies the StandardIcon property.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(AppBarIcons),
         typeof(AppBarButton),
-        new PropertyMetadata(AppBarIcons.None, SetIcon));
+        new(AppBarIcons.None, SetIcon));
 
     /// <summary>Identifies the IconWidth property.</summary>
     public static readonly DependencyProperty IconWidthProperty = DependencyProperty.Register(
         nameof(IconWidth),
         typeof(double),
         typeof(AppBarButton),
-        new PropertyMetadata(25D));
+        new(25D));
 
     /// <summary>Loads and caches the embedded icon geometries used by app bar buttons.</summary>
     private static readonly AppBarIconProvider IconProvider = new(typeof(AppBarButton).Assembly);
@@ -207,6 +208,10 @@ public class AppBarButton : WpfButton
         get => (double)GetValue(IconWidthProperty);
         set => SetValue(IconWidthProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Sets the icon.</summary>
     /// <param name="d">The d.</param>

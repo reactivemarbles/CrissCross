@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -51,28 +51,36 @@ internal sealed class GifImageDescriptor : IGifRect
     private GifImageDescriptor() { }
 
     /// <summary>Gets the Left value.</summary>
-    public int Left { get; private set; }
+    internal int Left { get; private set; }
 
     /// <summary>Gets the Top value.</summary>
-    public int Top { get; private set; }
+    internal int Top { get; private set; }
 
     /// <summary>Gets the Width value.</summary>
-    public int Width { get; private set; }
+    internal int Width { get; private set; }
 
     /// <summary>Gets the Height value.</summary>
-    public int Height { get; private set; }
+    internal int Height { get; private set; }
 
     /// <summary>Gets the HasLocalColorTable value.</summary>
-    public bool HasLocalColorTable { get; private set; }
+    internal bool HasLocalColorTable { get; private set; }
 
     /// <summary>Gets the Interlace value.</summary>
-    public bool Interlace { get; private set; }
+    internal bool Interlace { get; private set; }
 
     /// <summary>Gets the IsLocalColorTableSorted value.</summary>
-    public bool IsLocalColorTableSorted { get; private set; }
+    internal bool IsLocalColorTableSorted { get; private set; }
 
     /// <summary>Gets the LocalColorTableSize value.</summary>
-    public int LocalColorTableSize { get; private set; }
+    internal int LocalColorTableSize { get; private set; }
+
+    int IGifRect.Left => Left;
+
+    int IGifRect.Top => Top;
+
+    int IGifRect.Width => Width;
+
+    int IGifRect.Height => Height;
 
     /// <summary>Provides the ReadAsync member.</summary>
     /// <param name="stream">The stream value.</param>

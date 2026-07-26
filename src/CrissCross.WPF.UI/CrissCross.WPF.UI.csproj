@@ -85,11 +85,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Controls\Gauges\RedCross.png" />
     <Resource Include="Images\*.png" />
     <Resource Include="Resources\Fonts\*.ttf" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Controls\Gauges\RedCross.png" />
     <EmbeddedResource Include="Controls\AppBarButton\Assets\AppBar\*.xaml">
       <LogicalName>CrissCross.WPF.UI.Controls.AppBarButton.Assets.AppBar.%(Filename)%(Extension)</LogicalName>
       <WithCulture>false</WithCulture>

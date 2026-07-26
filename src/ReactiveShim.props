@@ -5,7 +5,6 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI.Primitives.Reactive" />
-    <PackageReference Include="ReactiveUI.Primitives.Extensions.Reactive" />
 
     <Using Include="ReactiveUI.Primitives.Core" />
     <Using Include="ReactiveUI.Primitives.Disposables" />

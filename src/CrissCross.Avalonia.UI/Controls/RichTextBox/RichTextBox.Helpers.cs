@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Controls;
@@ -43,6 +43,12 @@ public partial class RichTextBox
             ".html",
             ".htm",
             ".rtf",];
+
+        /// <summary>Expected signature at the start of a PNG image.</summary>
+        private static readonly byte[] PngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+
+        /// <summary>Expected signature at the start of a JPEG image.</summary>
+        private static readonly byte[] JpegSignature = [0xFF, 0xD8, 0xFF];
 
         /// <summary>Sets drag and drop availability on a control when it exists.</summary>
         /// <param name="control">The target control.</param>
@@ -111,24 +117,6 @@ public partial class RichTextBox
             || HasObjectFormatting(segment)
             || segment.ParagraphAlignment.HasValue;
 
-        /// <summary>Determines whether one segment contains character formatting.</summary>
-        /// <param name="segment">The segment to inspect.</param>
-        /// <returns><see langword="true"/> when character formatting is present.</returns>
-        public static bool HasCharacterFormatting(TextSegment segment) =>
-            segment.IsBold
-            || segment.IsItalic
-            || segment.IsUnderline
-            || segment.IsStrikethrough
-            || segment.Foreground is not null
-            || segment.Background is not null
-            || segment.FontSize.HasValue
-            || segment.FontFamily is not null;
-
-        /// <summary>Determines whether one segment contains object formatting.</summary>
-        /// <param name="segment">The segment to inspect.</param>
-        /// <returns><see langword="true"/> when object formatting is present.</returns>
-        public static bool HasObjectFormatting(TextSegment segment) => segment.IsImage;
-
         /// <summary>Provides the GetStorageItemPath member.</summary>
         /// <param name="file">The storage item.</param>
         /// <returns>The local storage item path when available.</returns>
@@ -164,62 +152,6 @@ public partial class RichTextBox
             }
 
             return file.Path.Scheme is "http" or "https" ? file.Path.AbsoluteUri : null;
-        }
-
-        /// <summary>Provides the FormatSegmentAsHtml member.</summary>
-        /// <param name="segment">The segment value.</param>
-        /// <param name="text">The text value.</param>
-        /// <returns>The result.</returns>
-        public static string FormatSegmentAsHtml(TextSegment segment, string text)
-        {
-            var result = HtmlClipboardUtilities.EncodePlainText(text);
-            var styles = new List<string>();
-            if (segment.FontFamily is not null)
-            {
-                styles.Add($"font-family:{segment.FontFamily.Name}");
-            }
-
-            if (segment.FontSize.HasValue)
-            {
-                styles.Add(FormattableString.Invariant($"font-size:{segment.FontSize.Value}px"));
-            }
-
-            if (segment.Foreground is SolidColorBrush foreground)
-            {
-                styles.Add($"color:{foreground.Color}");
-            }
-
-            if (segment.Background is SolidColorBrush background)
-            {
-                styles.Add($"background-color:{background.Color}");
-            }
-
-            if (styles.Count > 0)
-            {
-                result = $"<span style=\"{string.Join(';', styles)}\">{result}</span>";
-            }
-
-            if (segment.IsStrikethrough)
-            {
-                result = $"<s>{result}</s>";
-            }
-
-            if (segment.IsUnderline)
-            {
-                result = $"<u>{result}</u>";
-            }
-
-            if (segment.IsItalic)
-            {
-                result = $"<em>{result}</em>";
-            }
-
-            if (segment.IsBold)
-            {
-                result = $"<strong>{result}</strong>";
-            }
-
-            return result;
         }
 
         /// <summary>Provides the LooksLikeHtml member.</summary>
@@ -298,15 +230,96 @@ public partial class RichTextBox
             }
 
             var extension = Path.GetExtension(path) ?? string.Empty;
-            return SupportedTextFileExtensions.Contains(
-                extension,
-                StringComparer.OrdinalIgnoreCase);
+            foreach (var supportedExtension in SupportedTextFileExtensions)
+            {
+                if (extension.Equals(supportedExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Provides the CreateImageHtml member.</summary>
+        /// <param name="imageSource">The imageSource value.</param>
+        /// <returns>The result.</returns>
+        public static string CreateImageHtml(string imageSource) =>
+            $"<img src=\"{imageSource.Replace("\"", "%22", StringComparison.Ordinal)}\" />";
+
+        /// <summary>Determines whether one segment contains character formatting.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <returns><see langword="true"/> when character formatting is present.</returns>
+        private static bool HasCharacterFormatting(TextSegment segment) =>
+            segment.IsBold
+            || segment.IsItalic
+            || segment.IsUnderline
+            || segment.IsStrikethrough
+            || segment.Foreground is not null
+            || segment.Background is not null
+            || segment.FontSize.HasValue
+            || segment.FontFamily is not null;
+
+        /// <summary>Determines whether one segment contains object formatting.</summary>
+        /// <param name="segment">The segment to inspect.</param>
+        /// <returns><see langword="true"/> when object formatting is present.</returns>
+        private static bool HasObjectFormatting(TextSegment segment) => segment.IsImage;
+
+        /// <summary>Provides the FormatSegmentAsHtml member.</summary>
+        /// <param name="segment">The segment value.</param>
+        /// <param name="text">The text value.</param>
+        /// <returns>The result.</returns>
+        private static string FormatSegmentAsHtml(TextSegment segment, string text)
+        {
+            var result = HtmlClipboardUtilities.EncodePlainText(text);
+            var styles = new List<string>();
+            if (segment.FontFamily is not null)
+            {
+                styles.Add($"font-family:{segment.FontFamily.Name}");
+            }
+
+            if (segment.FontSize.HasValue)
+            {
+                styles.Add(FormattableString.Invariant($"font-size:{segment.FontSize.Value}px"));
+            }
+
+            if (segment.Foreground is SolidColorBrush foreground)
+            {
+                styles.Add($"color:{foreground.Color}");
+            }
+
+            if (segment.Background is SolidColorBrush background)
+            {
+                styles.Add($"background-color:{background.Color}");
+            }
+
+            if (styles.Count > 0)
+            {
+                result = $"<span style=\"{string.Join(';', styles)}\">{result}</span>";
+            }
+
+            if (segment.IsStrikethrough)
+            {
+                result = $"<s>{result}</s>";
+            }
+
+            if (segment.IsUnderline)
+            {
+                result = $"<u>{result}</u>";
+            }
+
+            if (segment.IsItalic)
+            {
+                result = $"<em>{result}</em>";
+            }
+
+            return segment.IsBold ? $"<strong>{result}</strong>" : result;
         }
 
         /// <summary>Provides the GetImageMimeType member.</summary>
         /// <param name="path">The path value.</param>
         /// <returns>The result.</returns>
-        public static string GetImageMimeType(string? path)
+        private static string GetImageMimeType(string? path)
         {
             var extension = Path.GetExtension(path) ?? string.Empty;
             if (
@@ -330,12 +343,6 @@ public partial class RichTextBox
                 ? "image/webp"
                 : "image/png";
         }
-
-        /// <summary>Provides the CreateImageHtml member.</summary>
-        /// <param name="imageSource">The imageSource value.</param>
-        /// <returns>The result.</returns>
-        public static string CreateImageHtml(string imageSource) =>
-            $"<img src=\"{imageSource.Replace("\"", "%22", StringComparison.Ordinal)}\" />";
 
         /// <summary>Provides the TryCreateImageDataUriAsync member.</summary>
         /// <param name="file">The file value.</param>
@@ -390,9 +397,8 @@ public partial class RichTextBox
             var extension = Path.GetExtension(path) ?? string.Empty;
             return extension.ToUpperInvariant() switch
             {
-                ".PNG" => bytes.StartsWith(
-                    new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }),
-                ".JPG" or ".JPEG" => bytes.StartsWith(new byte[] { 0xFF, 0xD8, 0xFF }),
+                ".PNG" => bytes.StartsWith(PngSignature),
+                ".JPG" or ".JPEG" => bytes.StartsWith(JpegSignature),
                 ".GIF" => bytes.StartsWith("GIF87a"u8) || bytes.StartsWith("GIF89a"u8),
                 ".BMP" => bytes.StartsWith("BM"u8),
                 ".WEBP" => HasWebPImageSignature(bytes),

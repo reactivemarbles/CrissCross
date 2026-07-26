@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Work in progress.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TreeGrid : System.Windows.Controls.Primitives.Selector
 {
     /// <summary>Property for <see cref="Headers"/>.</summary>
@@ -18,7 +19,7 @@ public class TreeGrid : System.Windows.Controls.Primitives.Selector
         nameof(Headers),
         typeof(ObservableCollection<TreeGridHeader>),
         typeof(TreeGrid),
-        new PropertyMetadata(new ObservableCollection<TreeGridHeader>(), OnHeadersChanged));
+        new(new ObservableCollection<TreeGridHeader>(), OnHeadersChanged));
 
     /// <summary>Gets or sets content is the data used to generate the child elements of this control.</summary>
     [Bindable(true)]
@@ -27,6 +28,10 @@ public class TreeGrid : System.Windows.Controls.Primitives.Selector
         get => (GetValue(HeadersProperty) as ObservableCollection<TreeGridHeader>)!;
         set => SetValue(HeadersProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Called when [headers changed].</summary>
     protected virtual void OnHeadersChanged() { }

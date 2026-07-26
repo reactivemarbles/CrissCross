@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(DynamicScrollViewer), "DynamicScrollViewer.bmp")]
 [DefaultEvent("ScrollChangedEvent")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DynamicScrollViewer : PassiveScrollViewer
 {
     /// <summary>Property for <see cref="IsScrollingVertically"/>.</summary>
@@ -22,28 +23,28 @@ public class DynamicScrollViewer : PassiveScrollViewer
         nameof(IsScrollingVertically),
         typeof(bool),
         typeof(DynamicScrollViewer),
-        new PropertyMetadata(false, IsScrollingVerticallyProperty_OnChanged));
+        new(false, IsScrollingVerticallyProperty_OnChanged));
 
     /// <summary>Property for <see cref="IsScrollingHorizontally"/>.</summary>
     public static readonly DependencyProperty IsScrollingHorizontallyProperty = DependencyProperty.Register(
         nameof(IsScrollingHorizontally),
         typeof(bool),
         typeof(DynamicScrollViewer),
-        new PropertyMetadata(false, IsScrollingHorizontally_OnChanged));
+        new(false, IsScrollingHorizontally_OnChanged));
 
     /// <summary>Property for <see cref="MinimalChange"/>.</summary>
     public static readonly DependencyProperty MinimalChangeProperty = DependencyProperty.Register(
         nameof(MinimalChange),
         typeof(double),
         typeof(DynamicScrollViewer),
-        new PropertyMetadata(40D, MinimalChangeProperty_OnChanged));
+        new(40D, MinimalChangeProperty_OnChanged));
 
     /// <summary>Property for <see cref="Timeout"/>.</summary>
     public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
         nameof(Timeout),
         typeof(int),
         typeof(DynamicScrollViewer),
-        new PropertyMetadata(1200, TimeoutProperty_OnChanged));
+        new(1200, TimeoutProperty_OnChanged));
 
     /// <summary>The maximum requested timeout that is used without clamping.</summary>
     private const int MaximumRequestedDelayMilliseconds = 10_000;
@@ -98,6 +99,10 @@ public class DynamicScrollViewer : PassiveScrollViewer
         get => (int)GetValue(TimeoutProperty);
         set => SetValue(TimeoutProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnScrollChanged member.</summary>
     /// <remarks>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Presents aggregate validation messages and exposes a field navigation command hook.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ValidationSummary : ItemsControl
 {
     /// <summary>Property for <see cref="SummaryState"/>.</summary>
@@ -18,14 +19,14 @@ public class ValidationSummary : ItemsControl
         nameof(SummaryState),
         typeof(ValidationSummaryState),
         typeof(ValidationSummary),
-        new PropertyMetadata(null, OnSummaryStateChanged));
+        new(null, OnSummaryStateChanged));
 
     /// <summary>Property for <see cref="NavigateToFieldCommand"/>.</summary>
     public static readonly DependencyProperty NavigateToFieldCommandProperty = DependencyProperty.Register(
         nameof(NavigateToFieldCommand),
         typeof(ICommand),
         typeof(ValidationSummary),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the aggregate validation state shown by this summary.</summary>
     public ValidationSummaryState? SummaryState
@@ -40,6 +41,10 @@ public class ValidationSummary : ItemsControl
         get => (ICommand?)GetValue(NavigateToFieldCommandProperty);
         set => SetValue(NavigateToFieldCommandProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnSummaryStateChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>

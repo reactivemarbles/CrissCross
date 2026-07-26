@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
@@ -77,7 +77,7 @@ public sealed class ReactivePlotExampleCoverageTests
     /// <returns>The file content.</returns>
     private static string ReadRepositoryFile(params string[] relativeSegments)
     {
-        var path = Path.GetFullPath(Path.Combine(new[] { SourceRoot, ".." }.Concat(relativeSegments).ToArray()));
+        var path = Path.GetFullPath(Path.Combine(SourceRoot, "..", Path.Combine(relativeSegments)));
         if (!File.Exists(path))
         {
             throw new FileNotFoundException($"Expected repository file was not found: {path}", path);
@@ -91,7 +91,7 @@ public sealed class ReactivePlotExampleCoverageTests
     /// <returns>The file content.</returns>
     private static string ReadSource(params string[] relativeSegments)
     {
-        var path = Path.Combine(new[] { SourceRoot }.Concat(relativeSegments).ToArray());
+        var path = Path.Combine(SourceRoot, Path.Combine(relativeSegments));
         if (!File.Exists(path))
         {
             throw new FileNotFoundException($"Expected source file was not found: {path}", path);

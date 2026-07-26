@@ -1,6 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
+
+#if NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI.Controls;
@@ -19,7 +23,7 @@ internal sealed class NavigationCache
     /// <param name="cacheMode">The cacheMode value.</param>
     /// <param name="generate">The generate value.</param>
     /// <returns>The result.</returns>
-    public object? Remember(Type? entryType, NavigationCacheMode cacheMode, Func<object?> generate)
+    internal object? Remember(Type? entryType, NavigationCacheMode cacheMode, Func<object?> generate)
     {
         if (entryType is null)
         {
@@ -36,16 +40,35 @@ internal sealed class NavigationCache
             return generate.Invoke();
         }
 
-        if (!_entires.TryGetValue(entryType, out var value))
+#if NET6_0_OR_GREATER
+        ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(_entires, entryType, out var exists);
+        if (exists)
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine($"{entryType} not found in cache, generating instance using action...");
+            System.Diagnostics.Debug.WriteLine($"{entryType} found in cache.");
 #endif
 
-            value = generate.Invoke();
-
-            _entires.Add(entryType, value);
+            return value;
         }
+#else
+        if (_entires.TryGetValue(entryType, out var value))
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{entryType} found in cache.");
+#endif
+
+            return value;
+        }
+#endif
+
+#if DEBUG
+        System.Diagnostics.Debug.WriteLine($"{entryType} not found in cache, generating instance using action...");
+#endif
+
+        value = generate.Invoke();
+#if !NET6_0_OR_GREATER
+        _entires.Add(entryType, value);
+#endif
 
 #if DEBUG
         System.Diagnostics.Debug.WriteLine($"{entryType} found in cache.");

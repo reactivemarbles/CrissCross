@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -18,14 +18,9 @@ public class BoolToInvertedBoolConverter : IValueConverter
     public static BoolToInvertedBoolConverter Instance { get; } = new();
 
     /// <inheritdoc/>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is bool boolValue ? !boolValue : false;
-    }
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is bool boolValue ? !boolValue : false;
 
     /// <inheritdoc/>
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is bool boolValue ? !boolValue : false;
-    }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        Convert(value, targetType, parameter, culture);
 }

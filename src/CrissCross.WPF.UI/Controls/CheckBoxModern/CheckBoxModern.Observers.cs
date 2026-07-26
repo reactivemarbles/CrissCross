@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -14,11 +14,9 @@ namespace CrissCross.WPF.UI.Controls;
 public partial class CheckBoxModern
 {
     /// <summary>Observes click input.</summary>
-    private void ObserveInput()
-    {
-        _ = EventSignal
+    private void ObserveInput() => _ = EventSignal
             .From<MouseButtonEventHandler, MouseButtonEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => PreviewMouseLeftButtonDown += handler,
                 handler => PreviewMouseLeftButtonDown -= handler)
             .Subscribe(_ =>
@@ -31,19 +29,15 @@ public partial class CheckBoxModern
                 UpdateValue(true, !Checked);
             })
             .DisposeWith(_disposables);
-    }
 
     /// <summary>Observes control loading and command state.</summary>
-    private void ObserveLoaded()
-    {
-        _ = EventSignal
+    private void ObserveLoaded() => _ = EventSignal
             .From<RoutedEventHandler, RoutedEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => Loaded += handler,
                 handler => Loaded -= handler)
             .Subscribe(loadedArgs => _ = HandleLoadedAsync(loadedArgs))
             .DisposeWith(_disposables);
-    }
 
     /// <summary>Initializes enabled-state observation after the control loads.</summary>
     /// <param name="loadedArgs">The loaded event arguments.</param>
@@ -53,7 +47,7 @@ public partial class CheckBoxModern
         _ = loadedArgs;
         if (_isChecked.HasObservers)
         {
-            _isChecked.OnNext(new CheckBoxResultEventArgs(false, Checked));
+            _isChecked.OnNext(new(false, Checked));
         }
 
         await EnableChange(IsEnabled);
@@ -70,7 +64,7 @@ public partial class CheckBoxModern
 
         _ = EventSignal
             .From<EventHandler, EventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => Command.CanExecuteChanged += handler,
                 handler => Command.CanExecuteChanged -= handler)
             .Subscribe(ignored =>
@@ -95,14 +89,14 @@ public partial class CheckBoxModern
     {
         _ = EventSignal
             .From<MouseEventHandler, MouseEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => MouseEnter += handler,
                 handler => MouseEnter -= handler)
             .Subscribe(_ => UpdateHoverState(true))
             .DisposeWith(_disposables);
         _ = EventSignal
             .From<MouseEventHandler, MouseEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => MouseLeave += handler,
                 handler => MouseLeave -= handler)
             .Subscribe(_ => UpdateHoverState(false))

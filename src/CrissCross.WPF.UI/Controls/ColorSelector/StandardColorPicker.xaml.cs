@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI;
 
 /// <summary>Represents StandardColorPicker.</summary>
 /// <seealso cref="DualPickerControlBase" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class StandardColorPicker : DualPickerControlBase
 {
     /// <summary>The small change property.</summary>
@@ -17,49 +18,49 @@ public partial class StandardColorPicker : DualPickerControlBase
         nameof(SmallChange),
         typeof(double),
         typeof(StandardColorPicker),
-        new PropertyMetadata(1.0));
+        new(1.0));
 
     /// <summary>The show alpha property.</summary>
     public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
         nameof(ShowAlpha),
         typeof(bool),
         typeof(StandardColorPicker),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The show hexadecimal property.</summary>
     public static readonly DependencyProperty ShowHexProperty = DependencyProperty.Register(
         nameof(ShowHex),
         typeof(Visibility),
         typeof(StandardColorPicker),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The show color swap property.</summary>
     public static readonly DependencyProperty ShowColorSwapProperty = DependencyProperty.Register(
         nameof(ShowColorSwap),
         typeof(Visibility),
         typeof(StandardColorPicker),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The show sliders property.</summary>
     public static readonly DependencyProperty ShowSlidersProperty = DependencyProperty.Register(
         nameof(ShowSliders),
         typeof(Visibility),
         typeof(StandardColorPicker),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The show picker type property.</summary>
     public static readonly DependencyProperty ShowPickerTypeProperty = DependencyProperty.Register(
         nameof(ShowPickerType),
         typeof(Visibility),
         typeof(StandardColorPicker),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The picker type property.</summary>
     public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
         nameof(PickerType),
         typeof(PickerType),
         typeof(StandardColorPicker),
-        new PropertyMetadata(PickerType.HSV));
+        new(PickerType.HSV));
 
     /// <summary>Initializes a new instance of the <see cref="StandardColorPicker"/> class.</summary>
     public StandardColorPicker() => InitializeComponent();
@@ -133,4 +134,8 @@ public partial class StandardColorPicker : DualPickerControlBase
         get => (PickerType)GetValue(PickerTypeProperty);
         set => SetValue(PickerTypeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

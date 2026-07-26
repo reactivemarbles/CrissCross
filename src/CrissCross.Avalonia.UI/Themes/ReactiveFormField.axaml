@@ -15,13 +15,13 @@
                         <StackPanel Orientation="Horizontal"
                                     Spacing="4">
                             <ContentPresenter Content="{TemplateBinding Header}" />
-                            <TextBlock Foreground="#C42B1C"
+                            <TextBlock Foreground="{DynamicResource SystemFillColorCriticalBrush}"
                                        IsVisible="{TemplateBinding IsRequired}"
                                        Text="*" />
                         </StackPanel>
                     </DockPanel>
                     <Border Padding="1"
-                            BorderBrush="#33000000"
+                            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                             BorderThickness="1"
                             CornerRadius="4">
                         <ContentPresenter Content="{TemplateBinding Content}" />
@@ -33,7 +33,7 @@
                                   ItemsSource="{Binding Messages, RelativeSource={RelativeSource TemplatedParent}}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="core:ValidationMessage">
-                                <TextBlock Foreground="#C42B1C"
+                                <TextBlock Foreground="{DynamicResource SystemFillColorCriticalBrush}"
                                            Text="{Binding DisplayText}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

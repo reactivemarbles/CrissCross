@@ -9,6 +9,7 @@ The gallery/example projects are deterministic manual-QA surfaces and developer 
   - Demonstrates ViewModel-based navigation through `NavigationVMLeft` and registered `IViewFor<TViewModel>` mappings.
   - Demonstrates View-based navigation through the breadcrumb/navigation window APIs already used by the gallery shell.
   - Includes the `FeaturePlaygroundView` page for new shared controls, async reactive commands, activation/disposal, and shared WPF styles/themes.
+  - Includes a navigable `ControlCatalogView` that instantiates the remaining safely constructible public WPF controls. It intentionally excludes windows/window chrome, navigation hosts that own a shell, resource dictionaries, event arguments, converters, parser/decoder types, template settings, and abstract/helper base types.
 - `src/CrissCross.Avalonia.UI.Gallery/CrissCross.Avalonia.UI.Gallery.csproj`
   - Cross-platform Avalonia desktop gallery.
   - Demonstrates `NavigationWindow<MainViewModel>` hosting, ViewModel-based navigation commands, ReactiveUI view location, and the same feature playground concepts.
@@ -28,6 +29,7 @@ The WPF, Avalonia, and MAUI examples cover:
 - activation/disposal via `WhenNavigatedTo` plus disposable observable activity, and view `WhenActivated` patterns.
 - platform-specific behavior notes in each playground view model.
 - RichTextBox gallery coverage in the Avalonia Input page: representative formatted content, formatting toolbar/actions, context menu discovery, text/image drag-drop instructions, text/image copy-paste workflow, edit/display mode switching, and serialization/import/export samples.
+- WPF Control Catalog coverage: status/container controls (`AlarmBanner`, `Badge`, `Card`, `InfoBar`, `Snackbar`), input/command controls (`AutoSuggestBox`, `Chip`, `CommandButton`, `NumberBox`, `SplitButton`), data/navigation controls (`DataGrid`, `DataPager`, `NavigationView`, `TreeGrid`, virtualized lists), and media/indicator controls (`CircularGauge`, icons, `PersonPicture`, `ProgressRing`, `RichTextBox`, `ThemeSwitcher`). Each entry is hosted with dynamic theme resources only and the catalog exposes a reactive refresh command for an interactive smoke check.
 
 ## Build and run from WSL
 
@@ -60,3 +62,4 @@ The MAUI Android target requires installed Android workloads/emulator/device. Th
 5. Change theme selection and inspect platform-specific theme behavior.
 6. Navigate away and back to verify activation/disposal logging resets without duplicate timers.
 7. In the Avalonia Input page RichTextBox gallery, verify the formatting toolbar/actions, right-click context menu, text/image clipboard paste, text/image drag/drop sample buttons, serialization/import/export buttons, and edit/display mode switch.
+8. In the WPF Control Catalog, switch the shell theme, confirm all catalog sections remain readable, and use **Refresh catalog status** to verify the reactive command path.

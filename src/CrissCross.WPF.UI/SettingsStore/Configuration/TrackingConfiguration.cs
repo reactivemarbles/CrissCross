@@ -1,7 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using Microsoft.Extensions.Logging;
 using Expression = System.Linq.Expressions.Expression;
 
 #if REACTIVELIST_REACTIVE
@@ -11,13 +12,38 @@ namespace CrissCross.WPF.UI.Configuration;
 #endif
 
 /// <summary>A TrackingConfiguration is an object that determines how a target object will be tracked.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TrackingConfiguration : ITrackingConfiguration
 {
+    /// <summary>Logs a cancelled persistence operation.</summary>
+    private static readonly Action<ILogger, string, string, Exception?> PersistingCancelledLog = LoggerMessage.Define<string, string>(
+        LogLevel.Debug,
+        new(1, nameof(PersistingCancelledLog)),
+        "Persisting cancelled for tracking key {TrackingKey} and property {PropertyName}.");
+
+    /// <summary>Logs a failed persistence operation.</summary>
+    private static readonly Action<ILogger, string, string, Exception?> PersistingFailedLog = LoggerMessage.Define<string, string>(
+        LogLevel.Error,
+        new(2, nameof(PersistingFailedLog)),
+        "Persisting failed for tracking key {TrackingKey} and property {PropertyName}.");
+
+    /// <summary>Logs a cancelled state application operation.</summary>
+    private static readonly Action<ILogger, string, string, Exception?> ApplyingCancelledLog = LoggerMessage.Define<string, string>(
+        LogLevel.Debug,
+        new(3, nameof(ApplyingCancelledLog)),
+        "Applying cancelled for tracking key {TrackingKey} and property {PropertyName}.");
+
+    /// <summary>Logs a failed state application operation.</summary>
+    private static readonly Action<ILogger, string, Exception?> ApplyingFailedLog = LoggerMessage.Define<string>(
+        LogLevel.Error,
+        new(4, nameof(ApplyingFailedLog)),
+        "Applying tracking failed for property {PropertyName}.");
+
     /// <summary>Stores the _idFunc value.</summary>
     private Func<object, string>? _idFunc;
 
     /// <summary>Stores the _canPersistFunc value.</summary>
-    private Func<object, bool> _canPersistFunc = _ => true;
+    private Func<object, bool> _canPersistFunc = static _ => true;
 
     /// <summary>Stores the _applyingPropertyAction value.</summary>
     private Action<object, PropertyOperationData>? _applyingPropertyAction;
@@ -41,7 +67,7 @@ public class TrackingConfiguration : ITrackingConfiguration
     {
         TargetType = targetType;
         Tracker = tracker;
-        _idFunc = target => target.GetType().Name;
+        _idFunc = static target => target.GetType().Name;
 
         ReadAttributes();
     }
@@ -94,6 +120,10 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// The stop tracking trigger.
     /// </value>
     public Trigger? StopTrackingTrigger { get; set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Allows value conversion and cancallation when applying a stored value to a property.</summary>
     /// <param name="action">The action.</param>
@@ -175,7 +205,7 @@ public class TrackingConfiguration : ITrackingConfiguration
                 _ = idBuilder.Append($"{@namespace}.");
             }
 
-            _ = idBuilder.Append($"{idFunc(target)}");
+            _ = idBuilder.Append(idFunc(target));
             return idBuilder.ToString();
         };
 
@@ -205,14 +235,11 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </returns>
     public ITrackingConfiguration PersistOn(params string[] eventNames)
     {
-        if (eventNames is null)
-        {
-            throw new ArgumentNullException(nameof(eventNames));
-        }
+        ThrowHelper.ThrowIfNull(eventNames, nameof(eventNames));
 
         foreach (var eventName in eventNames)
         {
-            PersistTriggers.Add(new Trigger(eventName, s => s));
+            PersistTriggers.Add(new(eventName, static s => s));
         }
 
         return this;
@@ -238,14 +265,14 @@ public class TrackingConfiguration : ITrackingConfiguration
     /// </returns>
     public ITrackingConfiguration PersistOn(string eventName, Func<object, object> eventSourceGetter)
     {
-        PersistTriggers.Add(new Trigger(eventName, target => eventSourceGetter(target)));
+        PersistTriggers.Add(new(eventName, target => eventSourceGetter(target)));
         return this;
     }
 
     /// <summary>Stop tracking the target when it fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
     /// <returns>ITrackingConfiguration.</returns>
-    public ITrackingConfiguration StopTrackingOn(string eventName) => StopTrackingOn(eventName, target => target);
+    public ITrackingConfiguration StopTrackingOn(string eventName) => StopTrackingOn(eventName, static target => target);
 
     /// <summary>Stop tracking the target when the specified eventSource object fires the specified event.</summary>
     /// <param name="eventName">Name of the event.</param>
@@ -288,10 +315,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         Expression<Func<T, TProperty?>> propertyAccessExpression,
         string? name)
     {
-        if (propertyAccessExpression is null)
-        {
-            throw new ArgumentNullException(nameof(propertyAccessExpression));
-        }
+        ThrowHelper.ThrowIfNull(propertyAccessExpression, nameof(propertyAccessExpression));
 
         return Property(name, propertyAccessExpression, false, default);
     }
@@ -325,10 +349,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         TProperty defaultValue,
         string? name)
     {
-        if (propertyAccessExpression is null)
-        {
-            throw new ArgumentNullException(nameof(propertyAccessExpression));
-        }
+        ThrowHelper.ThrowIfNull(propertyAccessExpression, nameof(propertyAccessExpression));
 
         if (name is null && propertyAccessExpression.Body is MemberExpression me)
         {
@@ -425,27 +446,7 @@ public class TrackingConfiguration : ITrackingConfiguration
         var values = new Dictionary<string, object?>();
         foreach (var propertyName in TrackedProperties.Keys)
         {
-            try
-            {
-                var value = TrackedProperties[propertyName]?.Getter!(target);
-                var shouldPersist = OnPersistingProperty(target, propertyName, ref value);
-                if (shouldPersist)
-                {
-                    values[propertyName] = value;
-                }
-                else
-                {
-                    // keeping previously stored value in case persist cancelled
-                    originalValues ??= Tracker?.Store.GetData(name);
-                    values[propertyName] = originalValues?[propertyName];
-                    Trace.WriteLine($"Persisting cancelled, key='{name}', property='{propertyName}'.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(
-                    $"Persisting failed, property key = '{name}', property = {propertyName}, message='{ex.Message}'.");
-            }
+            PersistProperty(target, name, propertyName, values, ref originalValues);
         }
 
         Tracker?.Store.SetData(name, values);
@@ -481,14 +482,12 @@ public class TrackingConfiguration : ITrackingConfiguration
                     }
                     else
                     {
-                        Trace.WriteLine($"Persisting cancelled, key='{name}', property='{propertyName}'.");
+                        ApplyingCancelledLog(Tracker!.Logger, name, propertyName, null);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine(
-                        $"TRACKING: Applying tracking to property with key='{propertyName}' failed. "
-                            + $"ExceptionType:'{ex.GetType().Name}', message: '{ex.Message}'!");
+                    ApplyingFailedLog(Tracker!.Logger, propertyName, ex);
                 }
             }
             else if (descriptor.IsDefaultSpecified)
@@ -652,44 +651,111 @@ public class TrackingConfiguration : ITrackingConfiguration
         return value;
     }
 
+    /// <summary>Persists a single tracked property while preserving the prior value when requested.</summary>
+    /// <param name="target">The tracked object.</param>
+    /// <param name="name">The tracking key.</param>
+    /// <param name="propertyName">The property name.</param>
+    /// <param name="values">The values to persist.</param>
+    /// <param name="originalValues">The lazily loaded prior values.</param>
+    private void PersistProperty(
+        object target,
+        string name,
+        string propertyName,
+        Dictionary<string, object?> values,
+        ref IDictionary<string, object?>? originalValues)
+    {
+        try
+        {
+            var value = TrackedProperties[propertyName].Getter!(target);
+            if (OnPersistingProperty(target, propertyName, ref value))
+            {
+                values[propertyName] = value;
+                return;
+            }
+
+            originalValues ??= Tracker!.Store.GetData(name);
+            values[propertyName] = originalValues[propertyName];
+            PersistingCancelledLog(Tracker!.Logger, name, propertyName, null);
+        }
+        catch (Exception ex)
+        {
+            PersistingFailedLog(Tracker!.Logger, name, propertyName, ex);
+        }
+    }
+
     /// <summary>Provides the ReadAttributes member.</summary>
     private void ReadAttributes()
     {
-        var keyProperty = TargetType
-            ?.GetProperties()
-            .SingleOrDefault(pi => pi.IsDefined(typeof(TrackingIdAttribute), true));
-        if (keyProperty is not null)
+        if (TargetType is null)
         {
-            _idFunc = (t) => keyProperty.GetValue(t, null)?.ToString()!;
+            return;
         }
 
-        foreach (var pi in TargetType?.GetProperties()!)
+        var properties = TargetType.GetProperties();
+        ConfigureTrackingId(properties);
+        ConfigureTrackedProperties(properties);
+        ConfigureTrackedEvents(TargetType);
+    }
+
+    /// <summary>Configures the property that determines each tracked object identity.</summary>
+    /// <param name="properties">The target properties.</param>
+    private void ConfigureTrackingId(IEnumerable<PropertyInfo> properties)
+    {
+        PropertyInfo? keyProperty = null;
+        foreach (var property in properties)
         {
-            var propTrackableAtt = pi.GetCustomAttributes(true).OfType<TrackableAttribute>().SingleOrDefault();
-            if (propTrackableAtt is not null)
+            if (!property.IsDefined(typeof(TrackingIdAttribute), true))
             {
-                var defaultAtt = pi.GetCustomAttribute<DefaultValueAttribute>();
-                if (defaultAtt is not null)
-                {
-                    TrackedProperties[pi.Name] = new(pi.GetValue, (x, v) => SetValue(x, pi, v), defaultAtt.Value);
-                }
-                else
-                {
-                    TrackedProperties[pi.Name] = new(pi.GetValue, (x, v) => SetValue(x, pi, v));
-                }
+                continue;
             }
+
+            if (keyProperty is not null)
+            {
+                throw new InvalidOperationException("Only one property can be marked with TrackingIdAttribute.");
+            }
+
+            keyProperty = property;
         }
 
-        foreach (var eventInfo in TargetType.GetEvents())
+        if (keyProperty is null)
         {
-            var attributes = eventInfo.GetCustomAttributes(true);
+            return;
+        }
 
-            if (attributes.OfType<PersistOnAttribute>().Any())
+        var trackingIdProperty = keyProperty;
+        _idFunc = target => trackingIdProperty.GetValue(target, null)?.ToString()!;
+    }
+
+    /// <summary>Configures properties marked for persistence.</summary>
+    /// <param name="properties">The target properties.</param>
+    private void ConfigureTrackedProperties(IEnumerable<PropertyInfo> properties)
+    {
+        foreach (var property in properties)
+        {
+            if (property.GetCustomAttribute<TrackableAttribute>() is null)
+            {
+                continue;
+            }
+
+            var defaultValue = property.GetCustomAttribute<DefaultValueAttribute>();
+            TrackedProperties[property.Name] = defaultValue is null
+                ? new(property.GetValue, (target, value) => SetValue(target, property, value))
+                : new(property.GetValue, (target, value) => SetValue(target, property, value), defaultValue.Value);
+        }
+    }
+
+    /// <summary>Configures events that begin or stop persistence.</summary>
+    /// <param name="targetType">The target type.</param>
+    private void ConfigureTrackedEvents(Type targetType)
+    {
+        foreach (var eventInfo in targetType.GetEvents())
+        {
+            if (eventInfo.IsDefined(typeof(PersistOnAttribute), true))
             {
                 _ = PersistOn(eventInfo.Name);
             }
 
-            if (attributes.OfType<StopTrackingOnAttribute>().Any())
+            if (eventInfo.IsDefined(typeof(StopTrackingOnAttribute), true))
             {
                 _ = StopTrackingOn(eventInfo.Name);
             }

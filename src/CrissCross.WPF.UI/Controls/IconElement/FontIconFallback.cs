@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents FontIconFallback.</summary>
 /// <seealso cref="Control" />
 [EditorBrowsable(EditorBrowsableState.Never)]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FontIconFallback : Control
 {
     /// <summary>The data property.</summary>
@@ -40,4 +41,8 @@ public class FontIconFallback : Control
         get => (Geometry)GetValue(DataProperty);
         set => SetValue(DataProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

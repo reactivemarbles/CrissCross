@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -22,6 +22,12 @@ public partial class NavigationShell
     public void Setup()
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(Name);
+        if (_isSetup)
+        {
+            return;
+        }
+
+        _isSetup = true;
         SubscribeToShellNavigationEvents();
         SubscribeToNavigationRequests();
         OnAppearing();
@@ -34,10 +40,10 @@ public partial class NavigationShell
             .FromEventPattern<ShellNavigatingEventArgs>(
                 handler => Navigating += handler,
                 handler => Navigating -= handler)
-            .Select(pattern => pattern.EventArgs);
+            .Select(static pattern => pattern.EventArgs);
         var navigatedEvent = Observable
             .FromEventPattern<ShellNavigatedEventArgs>(handler => Navigated += handler, handler => Navigated -= handler)
-            .Select(pattern => pattern.EventArgs);
+            .Select(static pattern => pattern.EventArgs);
 
         _ = navigatingEvent.Subscribe(HandleShellNavigating);
         _ = navigatedEvent.Subscribe(HandleShellNavigated);
@@ -118,20 +124,18 @@ public partial class NavigationShell
     private bool IsForwardNavigation(ShellNavigationSource source) =>
         !_userInstigated
         && (
-            source == ShellNavigationSource.Push
-            || source == ShellNavigationSource.Insert
-            || source == ShellNavigationSource.ShellItemChanged
-            || source == ShellNavigationSource.ShellSectionChanged);
+            source is ShellNavigationSource.Push
+                or ShellNavigationSource.Insert
+                or ShellNavigationSource.ShellItemChanged
+                or ShellNavigationSource.ShellSectionChanged);
 
     /// <summary>Subscribes to routed navigation requests for this host.</summary>
-    private void SubscribeToNavigationRequests()
-    {
+    private void SubscribeToNavigationRequests() =>
         _ = ViewModelRoutedViewHostMixins
             .ResultNavigating[Name]
             .DistinctUntilChanged()
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(HandleNavigationRequest);
-    }
 
     /// <summary>Handles a routed navigation request.</summary>
     /// <param name="eventArgs">The navigation event arguments.</param>
@@ -244,12 +248,12 @@ public partial class NavigationShell
         }
 
         _currentViewModel.OnNext(_toViewModel);
-        foreach (
-            var hostName in ViewModelRoutedViewHostMixins
-                .NavigationHost.Where(pair => pair.Key != Name)
-                .Select(pair => pair.Key))
+        foreach (var pair in ViewModelRoutedViewHostMixins.NavigationHost)
         {
-            ViewModelRoutedViewHostMixins.NavigationHost[hostName].Refresh();
+            if (pair.Key != Name)
+            {
+                pair.Value.Refresh();
+            }
         }
     }
 

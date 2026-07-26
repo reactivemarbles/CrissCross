@@ -1,8 +1,7 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CrissCross.Avalonia.UI.Controls;
@@ -104,18 +103,31 @@ public sealed partial class RichTextBoxFeatureTests
     {
         var document = new FlowDocument();
 
-        document.SetText(
-            "<p style=\"text-align:center\"><strong>Bold</strong><em>Italic</em><u>Under</u><s>Strike</s>"
-            + "<span style=\"font-family:Consolas;font-size:18px;color:#FFFF0000;background-color:#FFFFFF00;"
-            + "font-weight:bold;font-style:italic;text-decoration:underline\">Styled</span>"
-            + $"<img src=\"{TestImageFileUri}\" width=\"40\" height=\"30\" align=\"Right\" /></p>");
+        const string ImageMarkup = "<img src=\"file:///tmp/photo.png\" width=\"40\" height=\"30\" align=\"Right\" />";
+        var markup = new System.Text.StringBuilder("<p style=\"text-align:center\"><strong>Bold</strong><em>Italic</em><u>Under</u><s>Strike</s>")
+            .Append("<span style=\"font-family:Consolas;font-size:18px;color:#FFFF0000;background-color:#FFFFFF00;")
+            .Append("font-weight:bold;font-style:italic;text-decoration:underline\">Styled</span>")
+            .Append(ImageMarkup)
+            .Append("</p>")
+            .ToString();
+        document.SetText(markup);
 
         var bold = SingleTextSegment(document, "Bold");
         var italic = SingleTextSegment(document, "Italic");
         var underline = SingleTextSegment(document, "Under");
         var strike = SingleTextSegment(document, "Strike");
         var styled = SingleTextSegment(document, "Styled");
-        var image = document.Segments.Single(segment => segment.IsImage);
+        TextSegment? image = null;
+        foreach (var segment in document.Segments)
+        {
+            if (segment.IsImage)
+            {
+                image = segment;
+                break;
+            }
+        }
+
+        ArgumentNullException.ThrowIfNull(image);
         var paragraph = (FlowDocument.Paragraph)document.Blocks[0];
 
         await Assert.That(bold.IsBold).IsTrue();
@@ -141,10 +153,10 @@ public sealed partial class RichTextBoxFeatureTests
     [Test]
     public async Task RichTextBox_InlineFormattingCommands_ApplyExpectedMarkupToSelection()
     {
-        await AssertFormattingAsync(box => box.ToggleBold(), "Hello <strong>world</strong>");
-        await AssertFormattingAsync(box => box.ToggleItalic(), "Hello <em>world</em>");
-        await AssertFormattingAsync(box => box.ToggleUnderline(), "Hello <u>world</u>");
-        await AssertFormattingAsync(box => box.ToggleStrikethrough(), "Hello <s>world</s>");
+        await AssertFormattingAsync(static box => box.ToggleBold(), "Hello <strong>world</strong>");
+        await AssertFormattingAsync(static box => box.ToggleItalic(), "Hello <em>world</em>");
+        await AssertFormattingAsync(static box => box.ToggleUnderline(), "Hello <u>world</u>");
+        await AssertFormattingAsync(static box => box.ToggleStrikethrough(), "Hello <s>world</s>");
     }
 
     /// <summary>Provides the RichTextBox_StyleFormattingCommands_ApplyFontAndBrushStylesToSelection member.</summary>
@@ -199,12 +211,17 @@ public sealed partial class RichTextBoxFeatureTests
         richTextBox.ToggleItalic();
 
         await Assert.That(richTextBox.PlainText).IsEqualTo("Hello bold plain");
-        await Assert
-            .That(
-                richTextBox
-                    .Document.Segments.Where(segment => segment.Text is "bold" or " plain")
-                    .All(segment => segment.IsItalic))
-            .IsTrue();
+        var matchingSegmentsAreItalic = true;
+        foreach (var segment in richTextBox.Document.Segments)
+        {
+            if (segment.Text is "bold" or " plain" && !segment.IsItalic)
+            {
+                matchingSegmentsAreItalic = false;
+                break;
+            }
+        }
+
+        await Assert.That(matchingSegmentsAreItalic).IsTrue();
     }
 
     /// <summary>Verifies the documented behavior.</summary>
@@ -265,7 +282,7 @@ public sealed partial class RichTextBoxFeatureTests
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsTrue();
 
         richTextBox.IsReadOnly = true;
-        menu.RaiseEvent(new RoutedEventArgs(AvaloniaContextMenu.OpenedEvent, menu));
+        menu.RaiseEvent(new(AvaloniaContextMenu.OpenedEvent, menu));
 
         await Assert.That(FindMenuItem(menu, "Bold")!.IsEnabled).IsFalse();
     }

@@ -1,6 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
+
+using System.Text;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI.Extensions;
@@ -19,10 +21,7 @@ public static class UriExtensions
         /// <returns>A Uri.</returns>
         public Uri TrimLastSegment()
         {
-            if (uri is null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
+            ThrowHelper.ThrowIfNull(uri, nameof(uri));
 
             if (uri.Segments.Length < 2)
             {
@@ -36,7 +35,7 @@ public static class UriExtensions
 #endif
             var uriOriginalString = uri.ToString();
 
-            return new Uri(
+            return new(
                 uriOriginalString!.Substring(0, uriOriginalString.Length - uriLastSegmentLength),
                 UriKind.RelativeOrAbsolute);
         }
@@ -44,29 +43,22 @@ public static class UriExtensions
         /// <summary>Determines whether the end of <see cref="Uri" /> is equal to provided value.</summary>
         /// <param name="value">The value.</param>
         /// <returns>A bool.</returns>
-        public bool EndsWith(string value)
-        {
-            return uri?.ToString().EndsWith(value) == true;
-        }
+        public bool EndsWith(string value) => uri?.ToString().EndsWith(value, System.StringComparison.Ordinal) == true;
 
         /// <summary>Append provided segments to the <see cref="Uri" />.</summary>
         /// <param name="segments">The segments.</param>
         /// <returns>A Uri.</returns>
         public Uri Append(params string[] segments)
         {
-            if (uri is null)
+            ThrowHelper.ThrowIfNull(uri, nameof(uri));
+
+            StringBuilder path = new(uri.AbsoluteUri.TrimEnd('/', '\\'));
+            foreach (var segment in segments)
             {
-                throw new ArgumentNullException(nameof(uri));
+                _ = path.Append('/').Append(segment.TrimStart('/', '\\'));
             }
 
-            return new Uri(
-                segments.Aggregate(
-                    uri.AbsoluteUri,
-                    (current, path) =>
-                        string.Format(
-                            "{0}/{1}",
-                            current.TrimEnd('/').TrimEnd('\\'),
-                            path.TrimStart('/').TrimStart('\\'))));
+            return new(path.ToString());
         }
 
         /// <summary>Append new <see cref="Uri" /> to the <see cref="Uri" />.</summary>
@@ -74,21 +66,12 @@ public static class UriExtensions
         /// <returns>A Uri.</returns>
         public Uri Append(Uri value)
         {
-            if (uri is null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
+            ThrowHelper.ThrowIfNull(uri, nameof(uri));
 
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            ThrowHelper.ThrowIfNull(value, nameof(value));
 
-            return new Uri(
-                string.Format(
-                    "{0}/{1}",
-                    uri.ToString().TrimEnd('/').TrimEnd('\\'),
-                    value.ToString().TrimStart('/').TrimStart('\\')),
+            return new(
+                $"{uri.ToString().TrimEnd('/').TrimEnd('\\')}/{value.ToString().TrimStart('/').TrimStart('\\')}",
                 UriKind.RelativeOrAbsolute);
         }
     }

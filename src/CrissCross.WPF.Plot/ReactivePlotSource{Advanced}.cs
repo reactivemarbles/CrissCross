@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -33,15 +33,9 @@ public sealed partial record ReactivePlotSource
         PlotType plotType,
         ReactivePlotSeriesStyle? style)
     {
-        if (series is null)
-        {
-            throw new ArgumentNullException(nameof(series));
-        }
+        ThrowHelper.ThrowIfNull(series, nameof(series));
 
-        return new ReactivePlotSource(series.Key, plotType, Observable.Return(series.ToUpdate(plotType, style: style)))
-        {
-            XAxisKind = series.XAxisKind,
-        };
+        return new ReactivePlotSource(series.Key, plotType, Observable.Return(series.ToUpdate(plotType, style: style))) { XAxisKind = series.XAxisKind };
     }
 
     /// <summary>Creates a reduced historic line source.</summary>
@@ -107,10 +101,7 @@ public sealed partial record ReactivePlotSource
         int? maxPoints,
         ReactivePlotSeriesStyle? style)
     {
-        if (points is null)
-        {
-            throw new ArgumentNullException(nameof(points));
-        }
+        ThrowHelper.ThrowIfNull(points, nameof(points));
 
         var updates = Observable.Defer(() =>
         {
@@ -180,14 +171,11 @@ public sealed partial record ReactivePlotSource
         int? maxPoints,
         ReactivePlotSeriesStyle? style)
     {
-        if (points is null)
-        {
-            throw new ArgumentNullException(nameof(points));
-        }
+        ThrowHelper.ThrowIfNull(points, nameof(points));
 
         return FromLive(
             key,
-            points.Select(point => new PlotDataPoint(point.Timestamp.ToOADate(), point.Value)),
+            points.Select(static point => new PlotDataPoint(point.Timestamp.ToOADate(), point.Value)),
             plotType,
             PlotXAxisKind.OADate,
             maxPoints,

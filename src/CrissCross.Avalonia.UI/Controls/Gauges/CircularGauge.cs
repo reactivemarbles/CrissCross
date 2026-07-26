@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -158,16 +158,16 @@ public class CircularGauge : TemplatedControl
     /// <summary>Provides the CircularGauge member.</summary>
     static CircularGauge()
     {
-        _ = ValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.UpdatePointerAngle());
-        _ = MinValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = MaxValueProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = MajorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = MinorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = ScaleStartAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = ScaleSweepAngleProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = ScaleRadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = ScaleLabelRadiusProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
-        _ = ScaleColorProperty.Changed.AddClassHandler<CircularGauge>((x, _) => x.RedrawScale());
+        _ = ValueProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.UpdatePointerAngle());
+        _ = MinValueProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = MaxValueProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = MajorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = MinorDivisionsCountProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = ScaleStartAngleProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = ScaleSweepAngleProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = ScaleRadiusProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = ScaleLabelRadiusProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
+        _ = ScaleColorProperty.Changed.AddClassHandler<CircularGauge>(static (x, _) => x.RedrawScale());
     }
 
     /// <summary>Gets or sets the current value displayed by the gauge.</summary>
@@ -448,13 +448,7 @@ public class CircularGauge : TemplatedControl
         };
         _scaleCanvas!.Children.Add(majorTick);
 
-        var label = new TextBlock
-        {
-            Text = labelValue.ToString($"F{Decimals}"),
-            FontSize = labelFontSize,
-            Foreground = ScaleColor,
-            TextAlignment = TextAlignment.Center,
-        };
+        var label = new TextBlock { Text = labelValue.ToString($"F{Decimals}"), FontSize = labelFontSize, Foreground = ScaleColor, TextAlignment = TextAlignment.Center, };
         Canvas.SetLeft(label, canvasCenterX + (ScaleLabelRadius * angleCosine) - labelHorizontalOffset);
         Canvas.SetTop(label, canvasCenterY + (ScaleLabelRadius * angleSine) - labelVerticalOffset);
         _scaleCanvas.Children.Add(label);
@@ -486,13 +480,7 @@ public class CircularGauge : TemplatedControl
             var minorStartY = canvasCenterY + (ScaleRadius * Math.Sin(minorAngleRadian));
             var minorEndX = canvasCenterX + ((ScaleRadius - minorTickLength) * Math.Cos(minorAngleRadian));
             var minorEndY = canvasCenterY + ((ScaleRadius - minorTickLength) * Math.Sin(minorAngleRadian));
-            var minorTick = new Line
-            {
-                StartPoint = new(minorStartX, minorStartY),
-                EndPoint = new(minorEndX, minorEndY),
-                Stroke = ScaleColor,
-                StrokeThickness = minorTickStrokeThickness,
-            };
+            var minorTick = new Line { StartPoint = new(minorStartX, minorStartY), EndPoint = new(minorEndX, minorEndY), Stroke = ScaleColor, StrokeThickness = minorTickStrokeThickness, };
             _scaleCanvas!.Children.Add(minorTick);
         }
     }

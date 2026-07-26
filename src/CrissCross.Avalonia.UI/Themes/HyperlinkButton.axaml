@@ -35,7 +35,7 @@
     </Style>
     
     <Style Selector="controls|HyperlinkButton:pressed">
-        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorPrimary}" />
     </Style>
     
     <Style Selector="controls|HyperlinkButton:disabled">

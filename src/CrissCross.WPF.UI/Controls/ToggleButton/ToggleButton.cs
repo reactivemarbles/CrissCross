@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Extended <see cref="System.Windows.Controls.Primitives.ToggleButton"/>.</summary>
 /// <seealso cref="System.Windows.Controls.Primitives.ToggleButton" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ToggleButton : System.Windows.Controls.Primitives.ToggleButton
 {
     /// <summary>The TreeView item chevron size property.</summary>
@@ -17,7 +18,7 @@ public class ToggleButton : System.Windows.Controls.Primitives.ToggleButton
         nameof(ChevronSize),
         typeof(double),
         typeof(ToggleButton),
-        new PropertyMetadata(10D));
+        new(10D));
 
     /// <summary>Gets or sets the size of the TreeView item chevron.</summary>
     /// <value>
@@ -28,4 +29,8 @@ public class ToggleButton : System.Windows.Controls.Primitives.ToggleButton
         get => (double)GetValue(ChevronSizeProperty);
         set => SetValue(ChevronSizeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

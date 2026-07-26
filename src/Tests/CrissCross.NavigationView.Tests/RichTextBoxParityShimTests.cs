@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Avalonia.UI.Controls;
@@ -122,7 +122,7 @@ public sealed class RichTextBoxParityShimTests
         var header =
             $"StartFragment:{fragmentStartOffset:0000000000}\r\n"
             + $"EndFragment:{fragmentEndOffset:0000000000}\r\n";
-        var payload = header.PadRight(fragmentStartOffset) + "abc";
+        var payload = $"{header.PadRight(fragmentStartOffset)}abc";
 
         await Assert.That(HtmlClipboardUtilities.ExtractFragment(payload)).IsEqualTo("abc");
     }
@@ -134,10 +134,7 @@ public sealed class RichTextBoxParityShimTests
     [Arguments("StartFragment:x\r\nEndFragment:3\r\nabc")]
     [Arguments("StartFragment:999999999999999999999\r\nEndFragment:3\r\nabc")]
     [Arguments("StartFragment:9\r\nEndFragment:3\r\nabc")]
-    public async Task HtmlClipboardEnvelope_PreservesMalformedOffsetPayload(string payload)
-    {
-        await Assert.That(HtmlClipboardUtilities.ExtractFragment(payload)).IsEqualTo(payload);
-    }
+    public async Task HtmlClipboardEnvelope_PreservesMalformedOffsetPayload(string payload) => await Assert.That(HtmlClipboardUtilities.ExtractFragment(payload)).IsEqualTo(payload);
 
     /// <summary>Verifies plain text is HTML encoded and all newline forms become breaks.</summary>
     /// <param name="text">The plain text.</param>
@@ -147,10 +144,7 @@ public sealed class RichTextBoxParityShimTests
     [Arguments(null, "")]
     [Arguments("", "")]
     [Arguments("<&>\r\nA\nB\rC", "&lt;&amp;&gt;<br />A<br />B<br />C")]
-    public async Task HtmlClipboardEnvelope_EncodesPlainText(string? text, string expected)
-    {
-        await Assert.That(HtmlClipboardUtilities.EncodePlainText(text)).IsEqualTo(expected);
-    }
+    public async Task HtmlClipboardEnvelope_EncodesPlainText(string? text, string expected) => await Assert.That(HtmlClipboardUtilities.EncodePlainText(text)).IsEqualTo(expected);
 
     /// <summary>Verifies that HTML block boundaries remain visible to the editing surface.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -125,21 +125,14 @@ public class TextSegment(string text, int startIndex)
         HorizontalAlignment alignment,
         double? width,
         double? height) =>
-        new(string.Empty, offset)
-        {
-            IsImage = true,
-            ImageSource = source,
-            ImageAlignment = alignment,
-            ImageWidth = width,
-            ImageHeight = height,
-        };
+        new(string.Empty, offset) { IsImage = true, ImageSource = source, ImageAlignment = alignment, ImageWidth = width, ImageHeight = height, };
 
     /// <summary>Creates a clone of this segment.</summary>
     /// <returns>A new TextSegment with the same properties.</returns>
     public TextSegment Clone()
     {
         var source = this;
-        return new TextSegment(source.Text, source.StartIndex)
+        return new(source.Text, source.StartIndex)
         {
             IsBold = source.IsBold,
             IsItalic = source.IsItalic,
@@ -163,13 +156,10 @@ public class TextSegment(string text, int startIndex)
     /// <summary>Checks if this segment has the same formatting as another segment.</summary>
     /// <param name="other">The other segment to compare.</param>
     /// <returns>True if formatting matches.</returns>
-    public bool HasSameFormatting(TextSegment other)
-    {
-        return other is not null
+    public bool HasSameFormatting(TextSegment other) => other is not null
             && HasSameTextFormatting(other)
             && HasSameBlockFormatting(other)
             && HasSameImageFormatting(other);
-    }
 
     /// <summary>Creates text decorations for underline and strikethrough state.</summary>
     /// <param name="isUnderline">Whether underline decoration is enabled.</param>

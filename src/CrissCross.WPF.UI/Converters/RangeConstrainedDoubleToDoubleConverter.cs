@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Data;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Converters;
 /// <seealso cref="DependencyObject" />
 /// <seealso cref="IValueConverter" />
 [ValueConversion(typeof(double), typeof(string))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, IValueConverter
 {
     /// <summary>The minimum property.</summary>
@@ -21,14 +22,14 @@ public sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, 
         nameof(Min),
         typeof(double),
         typeof(RangeConstrainedDoubleToDoubleConverter),
-        new PropertyMetadata(0.0));
+        new(0.0));
 
     /// <summary>The maximum property.</summary>
     private static readonly DependencyProperty _maxProperty = DependencyProperty.Register(
         nameof(Max),
         typeof(double),
         typeof(RangeConstrainedDoubleToDoubleConverter),
-        new PropertyMetadata(1.0));
+        new(1.0));
 
     /// <summary>Gets or sets determines the minimum of the parameters.</summary>
     /// <value>
@@ -50,6 +51,10 @@ public sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, 
         set => SetValue(_maxProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Converts a value.</summary>
     /// <param name="value">The value produced by the binding source.</param>
     /// <param name="targetType">The type of the binding target property.</param>
@@ -70,10 +75,7 @@ public sealed class RangeConstrainedDoubleToDoubleConverter : DependencyObject, 
     /// </returns>
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ThrowHelper.ThrowIfNull(value, nameof(value));
 
         return !double.TryParse(
             ((string)value).Replace(',', '.'),

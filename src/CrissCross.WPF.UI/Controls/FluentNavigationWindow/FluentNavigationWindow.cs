@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -21,6 +21,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
 /// <seealso cref="IActivatableView" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigation, IActivatableView
 {
     /// <summary>The navigate back is enabled property.</summary>
@@ -28,7 +29,7 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         nameof(NavigateBackIsEnabled),
         typeof(bool?),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The navigation frame property.</summary>
     public static readonly DependencyProperty NavigationFrameProperty = DependencyProperty.Register(
@@ -41,7 +42,7 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         nameof(Transition),
         typeof(TransitionType),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(TransitionType.Fade));
+        new(TransitionType.Fade));
 
     /// <summary>The TitleIcon property.</summary>
     public static readonly DependencyProperty TitleIconProperty = DependencyProperty.Register(
@@ -90,28 +91,28 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         nameof(ShowMaximize),
         typeof(bool),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="ShowMinimize"/>.</summary>
     public static readonly DependencyProperty ShowMinimizeProperty = DependencyProperty.Register(
         nameof(ShowMinimize),
         typeof(bool),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="ShowHelp"/>.</summary>
     public static readonly DependencyProperty ShowHelpProperty = DependencyProperty.Register(
         nameof(ShowHelp),
         typeof(bool),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="ShowClose"/>.</summary>
     public static readonly DependencyProperty ShowCloseProperty = DependencyProperty.Register(
         nameof(ShowClose),
         typeof(bool),
         typeof(FluentNavigationWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Provides the FluentNavigationWindow member.</summary>
     static FluentNavigationWindow() =>
@@ -253,6 +254,10 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         set => SetValue(TransitionProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <inheritdoc/>
     public override void OnApplyTemplate()
     {
@@ -260,8 +265,7 @@ public class FluentNavigationWindow : FluentWindow, ISetNavigation, IUseNavigati
         NavigationFrame =
             (ViewModelRoutedViewHost)Template.FindName(nameof(NavigationFrame), this)
             ?? throw new InvalidOperationException(
-                $"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "
-                    + "is missing from the Style template.");
+                $"{$"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "}is missing from the Style template.");
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);

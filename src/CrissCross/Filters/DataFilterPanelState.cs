@@ -1,9 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -14,6 +13,13 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for a descriptor-driven data filter panel.</summary>
 public sealed class DataFilterPanelState
 {
+    /// <summary>Formats the active-filter summary text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat SummaryFormat = System.Text.CompositeFormat.Parse("{0} active filters");
+#else
+    private const string SummaryFormat = "{0} active filters";
+#endif
+
     /// <inheritdoc />
     public DataFilterPanelState()
         : this(null, null, false, false) { }
@@ -50,10 +56,21 @@ public sealed class DataFilterPanelState
         Expressions = expressions ?? [];
         IsDirty = isDirty;
         IsApplying = isApplying;
-        ActiveExpressions = [.. Expressions.Where(static expression => expression.IsActive)];
-        ActiveTokens =
-        [
-            .. ActiveExpressions.Select(expression => expression.ToToken(GetDescriptor(expression.FieldKey))),];
+        var activeExpressions = new List<FilterExpression>();
+        var activeTokens = new List<FilterToken>();
+        foreach (var expression in Expressions)
+        {
+            if (!expression.IsActive)
+            {
+                continue;
+            }
+
+            activeExpressions.Add(expression);
+            activeTokens.Add(expression.ToToken(GetDescriptor(expression.FieldKey)));
+        }
+
+        ActiveExpressions = activeExpressions;
+        ActiveTokens = activeTokens;
     }
 
     /// <summary>Gets the available filter descriptors.</summary>
@@ -92,14 +109,24 @@ public sealed class DataFilterPanelState
         {
             0 => "No filters",
             1 => "1 active filter",
-            var count => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} active filters", count),
+            var count => string.Format(System.Globalization.CultureInfo.InvariantCulture, SummaryFormat, count),
         };
 
     /// <summary>Finds a descriptor by stable key.</summary>
     /// <param name="key">The descriptor key.</param>
     /// <returns>The descriptor when present; otherwise, <c>null</c>.</returns>
-    public FilterDescriptor? GetDescriptor(string key) =>
-        Descriptors.FirstOrDefault(descriptor => descriptor.Key == key);
+    public FilterDescriptor? GetDescriptor(string key)
+    {
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.Key == key)
+            {
+                return descriptor;
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>Projects the active panel expressions into a search query state.</summary>
     /// <returns>The projected search query state.</returns>

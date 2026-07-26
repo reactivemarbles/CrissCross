@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -35,14 +35,14 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         nameof(AutoDispose),
         typeof(bool),
         typeof(NavigationWebView),
-        new PropertyMetadata(true, AutoDisposePropertyChanged));
+        new(true, AutoDisposePropertyChanged));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
         nameof(NavigateBackIsEnabled),
         typeof(bool?),
         typeof(NavigationWebView),
-        new PropertyMetadata(true, NavigateBackChanged));
+        new(true, NavigateBackChanged));
 
     /// <summary>The navigation frame property.</summary>
     public static readonly DependencyProperty NavigationFrameProperty = DependencyProperty.Register(
@@ -55,49 +55,49 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         nameof(Transition),
         typeof(TransitionType),
         typeof(NavigationWebView),
-        new PropertyMetadata(TransitionType.Fade, TransitionChanged));
+        new(TransitionType.Fade, TransitionChanged));
 
     /// <summary>The source property.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(Uri),
         typeof(NavigationWebView),
-        new PropertyMetadata(SourceChanged));
+        new(SourceChanged));
 
     /// <summary>Provides the Register member.</summary>
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
         typeof(NavigationWebView),
-        new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
+        new(1.0, ZoomFactorPropertyChanged));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static new readonly DependencyProperty ContentProperty = DependencyProperty.Register(
         nameof(Content),
         typeof(object),
         typeof(NavigationWebView),
-        new PropertyMetadata(null, ContentChanged));
+        new(null, ContentChanged));
 
     /// <summary>The default background color property.</summary>
     public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
         nameof(DefaultBackgroundColor),
         typeof(System.Drawing.Color),
         typeof(NavigationWebView),
-        new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+        new(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
 
     /// <summary>The allow external drop property.</summary>
     public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
         nameof(AllowExternalDrop),
         typeof(bool),
         typeof(NavigationWebView),
-        new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+        new(true, AllowExternalDropPropertyChanged));
 
     /// <summary>The design mode foreground color property.</summary>
     public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
         nameof(DesignModeForegroundColor),
         typeof(System.Drawing.Color),
         typeof(NavigationWebView),
-        new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
+        new(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
 
     /// <summary>Stores the web browser.</summary>
     private readonly WebView2 _webBrowser;
@@ -110,11 +110,7 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
 
     /// <summary>Initializes a new instance of the <see cref="NavigationWebView"/> class.</summary>
     public NavigationWebView() =>
-        _webBrowser = new()
-        {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
+        _webBrowser = new() { HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch, };
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
@@ -401,7 +397,7 @@ public class NavigationWebView : ContentControl, IDisposable, IUseNavigation, IA
         _ = layoutRoot.Children.Add(_webBrowser);
         _ = layoutRoot.Children.Add(_navigationWindowHost);
         Content = layoutRoot;
-        AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
+        AutoDisposePropertyChanged(this, new(AutoDisposeProperty, null, null));
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>

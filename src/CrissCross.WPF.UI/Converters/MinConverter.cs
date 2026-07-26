@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Data;
@@ -11,15 +11,37 @@ namespace CrissCross.WPF.UI.Converters;
 #endif
 
 /// <summary>Provides the MinConverter member.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class MinConverter : IMultiValueConverter
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the Convert member.</summary>
     /// <param name="values">The values value.</param>
     /// <param name="targetType">The targetType value.</param>
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture) => values.Min()!;
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (values.Length == 0)
+        {
+            throw new InvalidOperationException("At least one value is required.");
+        }
+
+        var minimum = values[0];
+        for (var index = 1; index < values.Length; index++)
+        {
+            if (Comparer<object>.Default.Compare(values[index], minimum) < 0)
+            {
+                minimum = values[index];
+            }
+        }
+
+        return minimum;
+    }
 
     /// <summary>Provides the ConvertBack member.</summary>
     /// <param name="value">The value.</param>

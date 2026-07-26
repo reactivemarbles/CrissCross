@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -37,21 +37,13 @@ public partial class MainWindow : Window
     private const string PreviewEllipsis = "...";
 
     /// <summary>Image extensions that WPF can decode for inline file drops.</summary>
-    private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ".bmp",
-        ".gif",
-        ".ico",
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".tif",
-        ".tiff",
-        ".wdp",
-    };
+    private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase) { ".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".wdp" };
 
     /// <summary>Timer used to refresh clipboard availability state.</summary>
     private readonly DispatcherTimer _clipboardTimer;
+
+    /// <summary>Supplies the local timestamps displayed in the interaction log.</summary>
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>Last editor command that used the clipboard.</summary>
     private string _lastClipboardAction = "none";
@@ -64,15 +56,21 @@ public partial class MainWindow : Window
 
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
+        : this(TimeProvider.System)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
+    /// <param name="timeProvider">The time source used for interaction log timestamps.</param>
+    public MainWindow(TimeProvider timeProvider)
     {
         InitializeComponent();
         _isReady = true;
+        _timeProvider = timeProvider;
 
-        _clipboardTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(ClipboardPollIntervalMilliseconds),
-        };
+        _clipboardTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(ClipboardPollIntervalMilliseconds) };
         _clipboardTimer.Tick += ClipboardTimerTick;
+        DragSourceButton.PreviewMouseLeftButtonDown += DragSourceMouseLeftButtonDown;
         _clipboardTimer.Start();
 
         AddLog("Demo started");
@@ -87,6 +85,16 @@ public partial class MainWindow : Window
         data.GetDataPresent(DataFormats.UnicodeText)
         || data.GetDataPresent(DataFormats.Text)
         || data.GetDataPresent(DataFormats.FileDrop);
+
+    /// <summary>Starts a real OLE text drag for comparison with the Avalonia harness.</summary>
+    /// <param name="sender">The drag source.</param>
+    /// <param name="e">The mouse event.</param>
+    private static void DragSourceMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var data = new DataObject(DataFormats.UnicodeText, "Dropped parity text from WPF");
+        _ = DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Copy);
+        e.Handled = true;
+    }
 
     /// <summary>Builds a display string containing the data formats on a drag/drop payload.</summary>
     /// <param name="data">The drag/drop data object.</param>
@@ -247,16 +255,6 @@ public partial class MainWindow : Window
         AddLog(action);
         UpdateState(action);
         return true;
-    }
-
-    /// <summary>Starts a real OLE text drag for comparison with the Avalonia harness.</summary>
-    /// <param name="sender">The drag source.</param>
-    /// <param name="e">The mouse event.</param>
-    private void DragSourceMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        var data = new DataObject(DataFormats.UnicodeText, "Dropped parity text from WPF");
-        _ = DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Copy);
-        e.Handled = true;
     }
 
     /// <summary>Resets the editor text to a simple baseline paragraph.</summary>
@@ -485,7 +483,7 @@ public partial class MainWindow : Window
     /// <param name="message">The message to add.</param>
     private void AddLog(string message)
     {
-        string entry = $"{DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture)} {message}";
+        string entry = $"{_timeProvider.GetLocalNow().ToString("HH:mm:ss", CultureInfo.InvariantCulture)} {message}";
         InteractionLog.Items.Insert(0, entry);
         while (InteractionLog.Items.Count > 40)
         {

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -30,6 +30,7 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Represents a Modern UI styled window.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICanShowMessages, IHaveAppBar, IDisposable
 {
     /// <summary>The application bar enabled property.</summary>
@@ -37,14 +38,14 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(AppBarEnabled),
         typeof(bool),
         typeof(ModernWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Holds AppBar open until explicitly closed.</summary>
     public static readonly DependencyProperty AppBarIsStickyProperty = DependencyProperty.Register(
         nameof(AppBarIsSticky),
         typeof(bool),
         typeof(ModernWindow),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Recommended Height 88.</summary>
     public static readonly DependencyProperty AppBarLeftProperty = DependencyProperty.Register(
@@ -75,7 +76,7 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(IsTitleVisible),
         typeof(bool),
         typeof(ModernWindow),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Identifies the LogoData dependency property.</summary>
     public static readonly DependencyProperty LogoDataProperty = DependencyProperty.Register(
@@ -94,21 +95,21 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(MainMenuVisible),
         typeof(Visibility),
         typeof(ModernWindow),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The main title font property.</summary>
     public static readonly DependencyProperty MainTitleFontProperty = DependencyProperty.Register(
         nameof(MainTitleFont),
         typeof(FontFamily),
         typeof(ModernWindow),
-        new PropertyMetadata(new FontFamily("Segoe UI")));
+        new(new FontFamily("Segoe UI")));
 
     /// <summary>The main title property.</summary>
     public static readonly DependencyProperty MainTitleProperty = DependencyProperty.Register(
         nameof(MainTitle),
         typeof(string),
         typeof(ModernWindow),
-        new PropertyMetadata("CrissCross"));
+        new("CrissCross"));
 
     /// <summary>Identifies the MenuLinkGroups dependency property.</summary>
     public static readonly DependencyProperty MainMenuProperty = DependencyProperty.Register(
@@ -121,7 +122,7 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(NavBarBackButtonVisible),
         typeof(Visibility),
         typeof(ModernWindow),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The navigation bar left property.</summary>
     public static readonly DependencyProperty NavBarLeftProperty = DependencyProperty.Register(
@@ -134,7 +135,7 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(NavBarLogoVisible),
         typeof(Visibility),
         typeof(ModernWindow),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The navigation bar property.</summary>
     public static readonly DependencyProperty NavBarProperty = DependencyProperty.Register(
@@ -147,7 +148,7 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(NavBarVisible),
         typeof(Visibility),
         typeof(ModernWindow),
-        new PropertyMetadata(Visibility.Visible));
+        new(Visibility.Visible));
 
     /// <summary>The status bar property.</summary>
     public static readonly DependencyProperty StatusBarProperty = DependencyProperty.Register(
@@ -172,14 +173,14 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         nameof(TitleMargin),
         typeof(Thickness),
         typeof(ModernWindow),
-        new PropertyMetadata(new Thickness(0)));
+        new(new Thickness(0)));
 
     /// <summary>The browse back property.</summary>
     public static readonly DependencyProperty BrowseBackProperty = DependencyProperty.Register(
         nameof(BrowseBack),
         typeof(ICommand),
         typeof(ModernWindow),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Stores the _busyStatusTextSubject value.</summary>
     private readonly StringReplaySignal _busyStatusTextSubject = new(1);
@@ -228,13 +229,13 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         SetCurrentValue(MainMenuProperty, new ObservableCollection<FrameworkElement>());
 
         // associate window commands with this instance
-        _ = CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
+        _ = CommandBindings.Add(new(SystemCommands.CloseWindowCommand, OnCloseWindow));
         _ = CommandBindings.Add(
-            new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
+            new(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
         _ = CommandBindings.Add(
-            new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
+            new(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
         _ = CommandBindings.Add(
-            new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
+            new(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
 
         // listen for theme changes
         PreviewMouseDown += ModernWindow_PreviewMouseDown;
@@ -497,6 +498,10 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
     /// <value>The busy visibility.</value>
     protected IObservable<Visibility> BusyVisibility => _busyVisibilitySubject.Publish().RefCount();
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Themes the changed.</summary>
     /// <param name="theme">The theme.</param>
     public virtual void ThemeChanged(string theme) { }
@@ -613,8 +618,14 @@ public class ModernWindow : NavigationWindow, IWpfShell, IListenForMessages, ICa
         }
         else
         {
+            string? latestCall = null;
+            foreach (var activeCall in BusyCalls.Keys)
+            {
+                latestCall = activeCall;
+            }
+
             _busyVisibilitySubject.OnNext(Visibility.Visible);
-            _busyStatusTextSubject.OnNext(BusyCalls[BusyCalls.Keys.Last()]);
+            _busyStatusTextSubject.OnNext(latestCall is null ? string.Empty : BusyCalls[latestCall]);
         }
     }
 

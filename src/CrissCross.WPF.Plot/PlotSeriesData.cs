@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -25,15 +25,8 @@ public sealed record PlotSeriesData
     /// <param name="axisKind">The interpretation of X values.</param>
     public PlotSeriesData(PlotSeriesKey key, IReadOnlyList<double> x, IReadOnlyList<double> y, PlotXAxisKind axisKind)
     {
-        if (x is null)
-        {
-            throw new ArgumentNullException(nameof(x));
-        }
-
-        if (y is null)
-        {
-            throw new ArgumentNullException(nameof(y));
-        }
+        ThrowHelper.ThrowIfNull(x, nameof(x));
+        ThrowHelper.ThrowIfNull(y, nameof(y));
 
         if (x.Count != y.Count)
         {
@@ -81,10 +74,7 @@ public sealed record PlotSeriesData
         IReadOnlyList<DateTime> timestamps,
         IReadOnlyList<double> y)
     {
-        if (timestamps is null)
-        {
-            throw new ArgumentNullException(nameof(timestamps));
-        }
+        ThrowHelper.ThrowIfNull(timestamps, nameof(timestamps));
 
         var x = new double[timestamps.Count];
         for (var i = 0; i < timestamps.Count; i++)

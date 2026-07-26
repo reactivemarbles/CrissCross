@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
@@ -24,6 +24,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Numeric Push Button.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class NumericPushButton : System.Windows.Controls.Button, INumberPadButton, IDisposable
 {
     /// <summary>Defaults decimal points.</summary>
@@ -38,21 +39,21 @@ public partial class NumericPushButton : System.Windows.Controls.Button, INumber
         nameof(ErrorText),
         typeof(string),
         typeof(NumericPushButton),
-        new PropertyMetadata("Action disallowed - Please press and hold safety button first"));
+        new("Action disallowed - Please press and hold safety button first"));
 
     /// <summary>The error visible property.</summary>
     public static readonly DependencyProperty ErrorVisibleProperty = DependencyProperty.Register(
         nameof(ErrorVisible),
         typeof(Visibility),
         typeof(NumericPushButton),
-        new PropertyMetadata(Visibility.Hidden));
+        new(Visibility.Hidden));
 
     /// <summary>The mask color property.</summary>
     public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register(
         nameof(MaskColor),
         typeof(Brush),
         typeof(NumericPushButton),
-        new PropertyMetadata(Brushes.Black, UpdateMask));
+        new(Brushes.Black, UpdateMask));
 
     /// <summary>Maximum of the size of value.</summary>
     public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
@@ -73,49 +74,49 @@ public partial class NumericPushButton : System.Windows.Controls.Button, INumber
         nameof(ShowKeypad),
         typeof(ReactiveCommand<Unit, Unit>),
         typeof(NumericPushButton),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The units on new line property.</summary>
     public static readonly DependencyProperty UnitsOnNewLineProperty = DependencyProperty.Register(
         nameof(UnitsOnNewLine),
         typeof(bool),
         typeof(NumericPushButton),
-        new PropertyMetadata(false, UpdateNewLine));
+        new(false, UpdateNewLine));
 
     /// <summary>The units on new line property.</summary>
     public static readonly DependencyProperty UseSeperateEditValueProperty = DependencyProperty.Register(
         nameof(UseSeperateEditValue),
         typeof(bool),
         typeof(NumericPushButton),
-        new PropertyMetadata(false, UpdateValue));
+        new(false, UpdateValue));
 
     /// <summary>Units Dependency Property.</summary>
     public static readonly DependencyProperty UnitsProperty = DependencyProperty.Register(
         nameof(Units),
         typeof(string),
         typeof(NumericPushButton),
-        new PropertyMetadata("Units", UnitsChanged));
+        new("Units", UnitsChanged));
 
     /// <summary>Value Change.</summary>
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
         typeof(double),
         typeof(NumericPushButton),
-        new PropertyMetadata(0D, UpdateValue));
+        new(0D, UpdateValue));
 
     /// <summary>Edited Value Change.</summary>
     public static readonly DependencyProperty EditedValueProperty = DependencyProperty.Register(
         nameof(EditedValue),
         typeof(double),
         typeof(NumericPushButton),
-        new PropertyMetadata(0D, UpdateValue));
+        new(0D, UpdateValue));
 
     /// <summary>The use criss cross theme manager property.</summary>
     public static readonly DependencyProperty UseCrissCrossThemeManagerProperty = DependencyProperty.Register(
         nameof(UseCrissCrossThemeManager),
         typeof(bool),
         typeof(NumericPushButton),
-        new PropertyMetadata(true, UpdateUseCrissCross));
+        new(true, UpdateUseCrissCross));
 
     /// <summary>Delay before collapsing the keypad after the owner is disabled.</summary>
     private const int IsEnabledFalseDelayMilliseconds = 100;
@@ -298,6 +299,10 @@ public partial class NumericPushButton : System.Windows.Controls.Button, INumber
     ///   <c>true</c> if this instance is in design mode; otherwise, <c>false</c>.
     /// </value>
     protected bool InDesignMode => DesignerProperties.GetIsInDesignMode(this);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Disposes the keypad.</summary>
     public void DisposeKeypad()

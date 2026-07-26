@@ -100,14 +100,14 @@
   <ItemGroup>
     <PackageReference Include="MinVer" PrivateAssets="all" />
     <PackageReference Include="StyleSharp.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="PerformanceSharp.Analyzers" PrivateAssets="all"/>
+    <PackageReference Include="SecuritySharp.Analyzers" PrivateAssets="all"/>
     <PackageReference Include="Roslynator.Analyzers" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition="!$(MSBuildProjectName.Contains('.Reactive'))">
     <PackageReference Include="ReactiveUI.Disposables" />
     <PackageReference Include="ReactiveUI.Primitives" />
     <PackageReference Include="ReactiveUI.Primitives.Core" />
-    <PackageReference Include="ReactiveUI.Primitives.Extensions" />
-    <PackageReference Include="ReactiveUI.Primitives.Extensions.Core" />
     <Using Include="ReactiveUI.Primitives" />
     <Using Include="ReactiveUI.Primitives.Concurrency" />
     <Using Include="ReactiveUI.Primitives.Core" />

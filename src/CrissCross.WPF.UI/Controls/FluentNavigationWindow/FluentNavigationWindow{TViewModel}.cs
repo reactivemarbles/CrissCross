@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <typeparam name="TViewModel">The type of the view model.</typeparam>
 /// <seealso cref="FluentNavigationWindow" />
 /// <seealso cref="IViewFor&lt;TViewModel&gt;" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FluentNavigationWindow<TViewModel> : FluentNavigationWindow, IViewFor<TViewModel>
     where TViewModel : class, IRxObject, new()
 {
@@ -23,7 +24,7 @@ public class FluentNavigationWindow<TViewModel> : FluentNavigationWindow, IViewF
         nameof(ViewModel),
         typeof(TViewModel),
         typeof(FluentNavigationWindow<TViewModel>),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="FluentNavigationWindow{TViewModel}"/> class.</summary>
     public FluentNavigationWindow() =>
@@ -46,4 +47,8 @@ public class FluentNavigationWindow<TViewModel> : FluentNavigationWindow, IViewF
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

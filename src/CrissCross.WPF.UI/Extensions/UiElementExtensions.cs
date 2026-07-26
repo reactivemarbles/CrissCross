@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -18,7 +18,7 @@ internal static class UiElementExtensions
         /// <summary>Do not call it outside of NCHITTEST, NCLBUTTONUP, NCLBUTTONDOWN messages.</summary>
         /// <param name="messageParameter">The message parameter value.</param>
         /// <returns><see langword="true"/> if mouse is over the element. <see langword="false"/> otherwise.</returns>
-        public bool IsMouseOverElement(IntPtr messageParameter)
+        internal bool IsMouseOverElement(IntPtr messageParameter)
         {
             // This method will be invoked very often and must be as simple as possible.
             if (messageParameter == IntPtr.Zero)

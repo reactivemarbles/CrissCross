@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
@@ -116,13 +116,7 @@ public static class TransitionAnimationProvider
     /// <param name="duration">The duration value.</param>
     private static void FadeInTransition(UIElement animatedUiElement, Duration duration)
     {
-        var opacityDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = 0.0,
-            To = 1.0,
-        };
+        var opacityDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = 0.0, To = 1.0, };
 
         animatedUiElement.BeginAnimation(UIElement.OpacityProperty, opacityDoubleAnimation);
     }
@@ -132,20 +126,14 @@ public static class TransitionAnimationProvider
     /// <param name="duration">The duration value.</param>
     private static void FadeInWithSlideTransition(UIElement animatedUiElement, Duration duration)
     {
-        var translateDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = VerticalSlideOffset,
-            To = 0,
-        };
+        var translateDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = VerticalSlideOffset, To = 0, };
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
             animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new(TransformOriginCenter, TransformOriginCenter)))
         {
             animatedUiElement.SetCurrentValue(
                 UIElement.RenderTransformOriginProperty,
@@ -154,13 +142,7 @@ public static class TransitionAnimationProvider
 
         animatedUiElement.RenderTransform.BeginAnimation(TranslateTransform.YProperty, translateDoubleAnimation);
 
-        var opacityDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = 0.0,
-            To = 1.0,
-        };
+        var opacityDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = 0.0, To = 1.0, };
 
         animatedUiElement.BeginAnimation(UIElement.OpacityProperty, opacityDoubleAnimation);
     }
@@ -170,20 +152,14 @@ public static class TransitionAnimationProvider
     /// <param name="duration">The duration value.</param>
     private static void SlideBottomTransition(UIElement animatedUiElement, Duration duration)
     {
-        var translateDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = VerticalSlideOffset,
-            To = 0,
-        };
+        var translateDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = VerticalSlideOffset, To = 0, };
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
             animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new(TransformOriginCenter, TransformOriginCenter)))
         {
             animatedUiElement.SetCurrentValue(
                 UIElement.RenderTransformOriginProperty,
@@ -198,20 +174,14 @@ public static class TransitionAnimationProvider
     /// <param name="duration">The duration value.</param>
     private static void SlideRightTransition(UIElement animatedUiElement, Duration duration)
     {
-        var translateDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = HorizontalSlideOffset,
-            To = 0,
-        };
+        var translateDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = HorizontalSlideOffset, To = 0, };
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
             animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new(TransformOriginCenter, TransformOriginCenter)))
         {
             animatedUiElement.SetCurrentValue(
                 UIElement.RenderTransformOriginProperty,
@@ -226,20 +196,14 @@ public static class TransitionAnimationProvider
     /// <param name="duration">The duration value.</param>
     private static void SlideLeftTransition(UIElement animatedUiElement, Duration duration)
     {
-        var translateDoubleAnimation = new DoubleAnimation
-        {
-            Duration = duration,
-            DecelerationRatio = DefaultDecelerationRatio,
-            From = -HorizontalSlideOffset,
-            To = 0,
-        };
+        var translateDoubleAnimation = new DoubleAnimation { Duration = duration, DecelerationRatio = DefaultDecelerationRatio, From = -HorizontalSlideOffset, To = 0, };
 
         if (animatedUiElement.RenderTransform is not TranslateTransform)
         {
             animatedUiElement.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform(0, 0));
         }
 
-        if (!animatedUiElement.RenderTransformOrigin.Equals(new Point(TransformOriginCenter, TransformOriginCenter)))
+        if (!animatedUiElement.RenderTransformOrigin.Equals(new(TransformOriginCenter, TransformOriginCenter)))
         {
             animatedUiElement.SetCurrentValue(
                 UIElement.RenderTransformOriginProperty,

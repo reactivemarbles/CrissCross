@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -14,8 +14,13 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Contains CircularGauge template behavior and value handling.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed partial class CircularGauge
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Load the visualization template.</summary>
     public override void OnApplyTemplate()
     {
@@ -166,11 +171,7 @@ public sealed partial class CircularGauge
     {
         var gradient = new LinearGradientBrush { StartPoint = new(0, 0), EndPoint = new(1, 1) };
 
-        var color1 = new GradientStop
-        {
-            Offset = RangeGradientStartOffset,
-            Color = Equals(gradientColor, Brushes.Transparent) ? Colors.Transparent : Colors.LightGray,
-        };
+        var color1 = new GradientStop { Offset = RangeGradientStartOffset, Color = Equals(gradientColor, Brushes.Transparent) ? Colors.Transparent : Colors.LightGray, };
         gradient.GradientStops.Add(color1);
         gradient.GradientStops.Add(
             new GradientStop { Color = ((SolidColorBrush)gradientColor).Color, Offset = RangeGradientMiddleOffset });
@@ -294,12 +295,7 @@ public sealed partial class CircularGauge
             return;
         }
 
-        var da = new DoubleAnimation
-        {
-            From = oldValueAngle,
-            To = newValueAngle,
-            Duration = new(TimeSpan.FromMilliseconds(Math.Abs(oldValueAngle - newValueAngle) * AnimatingSpeedFactor)),
-        };
+        var da = new DoubleAnimation { From = oldValueAngle, To = newValueAngle, Duration = new(TimeSpan.FromMilliseconds(Math.Abs(oldValueAngle - newValueAngle) * AnimatingSpeedFactor)), };
 
         var sb = new Storyboard();
         sb.Completed += Sb_Completed;
@@ -307,7 +303,7 @@ public sealed partial class CircularGauge
         Storyboard.SetTarget(da, _pointer);
         Storyboard.SetTargetProperty(
             da,
-            new PropertyPath("(Path.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
+            new("(Path.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"));
         sb.Begin();
     }
 

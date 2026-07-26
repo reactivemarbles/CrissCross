@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -19,6 +19,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = "PART_Star3", Type = typeof(SymbolIcon))]
 [TemplatePart(Name = "PART_Star4", Type = typeof(SymbolIcon))]
 [TemplatePart(Name = "PART_Star5", Type = typeof(SymbolIcon))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RatingControl : System.Windows.Controls.ContentControl
 {
     /// <summary>Property for <see cref="Value"/>.</summary>
@@ -26,27 +27,27 @@ public class RatingControl : System.Windows.Controls.ContentControl
         nameof(Value),
         typeof(double),
         typeof(RatingControl),
-        new PropertyMetadata(0.0D, OnValuePropertyChanged));
+        new(0.0D, OnValuePropertyChanged));
 
     /// <summary>Property for <see cref="MaxRating"/>.</summary>
     public static readonly DependencyProperty MaxRatingProperty = DependencyProperty.Register(
         nameof(MaxRating),
         typeof(int),
         typeof(RatingControl),
-        new PropertyMetadata(StarCount));
+        new(StarCount));
 
     /// <summary>Property for <see cref="HalfStarEnabled"/>.</summary>
     public static readonly DependencyProperty HalfStarEnabledProperty = DependencyProperty.Register(
         nameof(HalfStarEnabled),
         typeof(bool),
         typeof(RatingControl),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Routed event for <see cref="ValueChanged"/>.</summary>
     public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(
         nameof(ValueChanged),
         RoutingStrategy.Bubble,
-        typeof(RoutedEventHandler),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(RatingControl));
 
     /// <summary>Provides the number of stars displayed by the control.</summary>
@@ -110,7 +111,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
     private SymbolIcon? _symbolIconStarFive;
 
     /// <summary>Occurs after the user selects the rating.</summary>
-    public event RoutedEventHandler ValueChanged
+    public event EventHandler<RoutedEventArgs> ValueChanged
     {
         add => AddHandler(ValueChangedEvent, value);
         remove => RemoveHandler(ValueChangedEvent, value);
@@ -149,6 +150,10 @@ public class RatingControl : System.Windows.Controls.ContentControl
         get => (bool)GetValue(HalfStarEnabledProperty);
         set => SetValue(HalfStarEnabledProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Is called when Template is changed.</summary>
     public override void OnApplyTemplate()
@@ -203,7 +208,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
 
         if (!Value.Equals(oldValue))
         {
-            RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
+            RaiseEvent(new(ValueChangedEvent));
         }
 
         UpdateStarsFromValue();

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -14,10 +14,10 @@ internal static class NavigationContract
     /// <summary>Normalizes empty navigation contracts to null.</summary>
     /// <param name="contract">The requested contract.</param>
     /// <returns>The normalized contract.</returns>
-    public static string? Normalize(string? contract) => string.IsNullOrWhiteSpace(contract) ? null : contract;
+    internal static string? Normalize(string? contract) => string.IsNullOrWhiteSpace(contract) ? null : contract;
 
     /// <summary>Formats a contract for diagnostics.</summary>
     /// <param name="contract">The requested contract.</param>
     /// <returns>The diagnostic display value.</returns>
-    public static string ToDisplay(string? contract) => Normalize(contract) ?? "<default>";
+    internal static string ToDisplay(string? contract) => Normalize(contract) ?? "<default>";
 }

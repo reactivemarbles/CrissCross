@@ -1,10 +1,11 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Input;
+using SystemTimeProvider = System.TimeProvider;
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI.Controls;
 #else
@@ -12,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a date/time range picker surface for reports, logs, and dashboard filters.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DateTimeRangePicker : Control
 {
     /// <summary>Property for <see cref="Start"/>.</summary>
@@ -39,35 +41,35 @@ public class DateTimeRangePicker : Control
         nameof(CurrentRange),
         typeof(DateTimeRange),
         typeof(DateTimeRangePicker),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SelectedPreset"/>.</summary>
     public static readonly DependencyProperty SelectedPresetProperty = DependencyProperty.Register(
         nameof(SelectedPreset),
         typeof(DateTimeRangePreset),
         typeof(DateTimeRangePicker),
-        new PropertyMetadata(DateTimeRangePreset.Custom, OnRangeInputChanged));
+        new(DateTimeRangePreset.Custom, OnRangeInputChanged));
 
     /// <summary>Property for <see cref="RangeLabel"/>.</summary>
     public static readonly DependencyProperty RangeLabelProperty = DependencyProperty.Register(
         nameof(RangeLabel),
         typeof(string),
         typeof(DateTimeRangePicker),
-        new PropertyMetadata(null, OnRangeInputChanged));
+        new(null, OnRangeInputChanged));
 
     /// <summary>Property for <see cref="ReferenceTime"/>.</summary>
     public static readonly DependencyProperty ReferenceTimeProperty = DependencyProperty.Register(
         nameof(ReferenceTime),
         typeof(DateTimeOffset),
         typeof(DateTimeRangePicker),
-        new PropertyMetadata(default(DateTimeOffset)));
+        new(default(DateTimeOffset)));
 
     /// <summary>Property for <see cref="RangeChangedCommand"/>.</summary>
     public static readonly DependencyProperty RangeChangedCommandProperty = DependencyProperty.Register(
         nameof(RangeChangedCommand),
         typeof(ICommand),
         typeof(DateTimeRangePicker),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="DateTimeRangePicker"/> class.</summary>
     public DateTimeRangePicker()
@@ -76,6 +78,9 @@ public class DateTimeRangePicker : Control
         ApplyPresetCommand = new RangePickerParameterCommand(ApplyPreset);
         CurrentRange = CreateRange();
     }
+
+    /// <summary>Gets or sets the source of current time used when no reference time is supplied.</summary>
+    public SystemTimeProvider TimeProvider { get; set; } = SystemTimeProvider.System;
 
     /// <summary>Gets or sets the selected range start.</summary>
     public DateTimeOffset? Start
@@ -131,6 +136,10 @@ public class DateTimeRangePicker : Control
 
     /// <summary>Gets the command that applies a named range preset.</summary>
     public ICommand ApplyPresetCommand { get; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates a range from the current picker state.</summary>
     /// <returns>The resolved date/time range.</returns>
@@ -214,7 +223,7 @@ public class DateTimeRangePicker : Control
 
     /// <summary>Provides the ResolveReferenceTime member.</summary>
     /// <returns>The result.</returns>
-    private DateTimeOffset ResolveReferenceTime() => ReferenceTime == default ? DateTimeOffset.Now : ReferenceTime;
+    private DateTimeOffset ResolveReferenceTime() => ReferenceTime == default ? TimeProvider.GetLocalNow() : ReferenceTime;
 
     /// <summary>Provides the RangePickerCommand member.</summary>
     private sealed class RangePickerCommand : ICommand

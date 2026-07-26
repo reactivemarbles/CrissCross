@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -122,8 +122,8 @@ public sealed partial class CircularGauge
 
             DrawMinorTicks(angle, majorTickUnitAngle, minValue);
 
-            _ht.Add("tb_" + _numberOfpoints, label);
-            _ht.Add("rec_" + _numberOfpoints, tick);
+            _ht.Add($"tb_{_numberOfpoints}", label);
+            _ht.Add($"rec_{_numberOfpoints}", tick);
             _numberOfpoints++;
         }
     }
@@ -218,7 +218,7 @@ public sealed partial class CircularGauge
                 RenderTransform = minorTickTransform,
             };
             _ = _rootGrid!.Children.Add(tick);
-            _ht.Add("mr_" + _numberOfpoints + "_" + _numberOfMinorpoints, tick);
+            _ht.Add($"mr_{_numberOfpoints}_{_numberOfMinorpoints}", tick);
             _numberOfMinorpoints++;
         }
     }
@@ -237,21 +237,9 @@ public sealed partial class CircularGauge
         var segments = new PathSegmentCollection
         {
             new LineSegment { Point = p2 },
-            new ArcSegment
-            {
-                Size = new(_arcradius2, _arcradius2),
-                Point = p3,
-                SweepDirection = SweepDirection.Clockwise,
-                IsLargeArc = reflexangle,
-            },
+            new ArcSegment { Size = new(_arcradius2, _arcradius2), Point = p3, SweepDirection = SweepDirection.Clockwise, IsLargeArc = reflexangle, },
             new LineSegment { Point = p4 },
-            new ArcSegment
-            {
-                Size = new(_arcradius1, _arcradius1),
-                Point = p1,
-                SweepDirection = SweepDirection.Counterclockwise,
-                IsLargeArc = reflexangle,
-            },
+            new ArcSegment { Size = new(_arcradius1, _arcradius1), Point = p1, SweepDirection = SweepDirection.Counterclockwise, IsLargeArc = reflexangle, },
         };
 
         // First line segment from pt p1 - pt p2
@@ -267,17 +255,7 @@ public sealed partial class CircularGauge
             Fill = clr,
             Opacity = RangeSegmentOpacity,
             StrokeThickness = RangeSegmentStrokeThickness,
-            Data = new PathGeometry
-            {
-                Figures =
-                [
-                    new PathFigure
-                    {
-                        IsClosed = true,
-                        StartPoint = p1,
-                        Segments = segments,
-                    },],
-            },
+            Data = new PathGeometry { Figures = [ new PathFigure { IsClosed = true, StartPoint = p1, Segments = segments, },], },
         };
 
         // Set Z index of range indicator
@@ -298,7 +276,7 @@ public sealed partial class CircularGauge
         var angleRadian = angle * Math.PI / SemiCircleDegrees;
 
         // Radius-- is the Radius of the gauge
-        return new Point(Radius + (radius * Math.Cos(angleRadian)), Radius + (radius * Math.Sin(angleRadian)));
+        return new(Radius + (radius * Math.Cos(angleRadian)), Radius + (radius * Math.Sin(angleRadian)));
     }
 
     /// <summary>Provides the MovePointer member.</summary>

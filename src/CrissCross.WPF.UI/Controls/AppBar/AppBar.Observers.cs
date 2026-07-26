@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -12,27 +12,29 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Contains application-bar input observers.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class AppBar
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Observes whether the pointer is over the application bar.</summary>
-    private void ObservePointerState()
-    {
-        _ = EventSignal
+    private void ObservePointerState() => _ = EventSignal
             .From<MouseEventHandler, MouseEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => BottomAppBar.MouseEnter += handler,
                 handler => BottomAppBar.MouseEnter -= handler)
-            .Select(_ => true)
+            .Select(static _ => true)
             .Merge(
                 EventSignal
                     .From<MouseEventHandler, MouseEventArgs>(
-                        handler => handler.Invoke,
+                        static handler => handler.Invoke,
                         handler => BottomAppBar.MouseLeave += handler,
                         handler => BottomAppBar.MouseLeave -= handler)
-                    .Select(_ => false))
+                    .Select(static _ => false))
             .Subscribe(isOver => _mouseIsOverAppBar = isOver)
             .DisposeWith(_disposables);
-    }
 
     /// <summary>Registers window-level input and message listeners.</summary>
     /// <param name="sender">The event sender.</param>
@@ -56,11 +58,9 @@ public partial class AppBar
 
     /// <summary>Observes pointer input on the owning window.</summary>
     /// <param name="parentWindow">The owning window.</param>
-    private void ObserveWindowPointer(Window parentWindow)
-    {
-        _ = EventSignal
+    private void ObserveWindowPointer(Window parentWindow) => _ = EventSignal
             .From<MouseButtonEventHandler, MouseButtonEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => parentWindow.PreviewMouseDown += handler,
                 handler => parentWindow.PreviewMouseDown -= handler)
             .Subscribe(e =>
@@ -83,5 +83,4 @@ public partial class AppBar
                 }
             })
             .DisposeWith(_disposables);
-    }
 }

@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\ReactiveShim.props" />
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <AssemblyName>CrissCross.Tests</AssemblyName>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -8,8 +11,25 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CrissCross.Reactive\CrissCross.Reactive.csproj" />
+    <ProjectReference Include="..\..\CrissCross.MAUI.Reactive\CrissCross.MAUI.Reactive.csproj" />
     <Using Include="TUnit.Core" />
     <Using Include="TUnit.Assertions" />
     <Using Include="TUnit.Assertions.Extensions" />
+    <Using Include="CrissCross.Reactive" />
+    <Using Include="CrissCross.Reactive.NavigationRequest" Alias="NavigationRequest" />
+    <Using Include="CrissCross.Reactive.NavigationType" Alias="NavigationType" />
+    <Using Include="ReactiveUI.Reactive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CrissCross.Tests\ApplicationControlStateTests.cs" Link="Shared\ApplicationControlStateTests.cs" />
+    <Compile Include="..\CrissCross.Tests\BidirectionalNavigationRegistryTests.cs" Link="Shared\BidirectionalNavigationRegistryTests.cs" />
+    <Compile Include="..\CrissCross.Tests\CoverageCompletionTests.cs" Link="Shared\CoverageCompletionTests.cs" />
+    <Compile Include="..\CrissCross.Tests\EventSignalTests.cs" Link="Shared\EventSignalTests.cs" />
+    <Compile Include="..\CrissCross.Tests\ICustomerPageView.cs" Link="Shared\ICustomerPageView.cs" />
+    <Compile Include="..\CrissCross.Tests\ICustomerPageViewModel.cs" Link="Shared\ICustomerPageViewModel.cs" />
+    <Compile Include="..\CrissCross.Tests\NavigationJournalTests.cs" Link="Shared\NavigationJournalTests.cs" />
+    <Compile Include="..\CrissCross.Tests\SemanticThemePaletteTests.cs" Link="Shared\SemanticThemePaletteTests.cs" />
+    <Compile Include="..\CrissCross.Tests\StateModelEdgeCaseTests.cs" Link="Shared\StateModelEdgeCaseTests.cs" />
   </ItemGroup>
 </Project>

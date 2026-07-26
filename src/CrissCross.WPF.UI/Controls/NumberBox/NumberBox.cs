@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents a control that can be used to display and edit numbers.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(NumberBox), "NumberBox.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class NumberBox : TextBox
 {
     /// <summary>Property for <see cref="Value"/>.</summary>
@@ -35,69 +36,69 @@ public partial class NumberBox : TextBox
         nameof(MaxDecimalPlaces),
         typeof(int),
         typeof(NumberBox),
-        new PropertyMetadata(6));
+        new(6));
 
     /// <summary>Property for <see cref="SmallChange"/>.</summary>
     public static readonly DependencyProperty SmallChangeProperty = DependencyProperty.Register(
         nameof(SmallChange),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(1.0D));
+        new(1.0D));
 
     /// <summary>Property for <see cref="LargeChange"/>.</summary>
     public static readonly DependencyProperty LargeChangeProperty = DependencyProperty.Register(
         nameof(LargeChange),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(10.0D));
+        new(10.0D));
 
     /// <summary>Property for <see cref="Maximum"/>.</summary>
     public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
         nameof(Maximum),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(double.MaxValue));
+        new(double.MaxValue));
 
     /// <summary>Property for <see cref="Minimum"/>.</summary>
     public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register(
         nameof(Minimum),
         typeof(double),
         typeof(NumberBox),
-        new PropertyMetadata(double.MinValue));
+        new(double.MinValue));
 
     /// <summary>Property for <see cref="AcceptsExpression"/>.</summary>
     public static readonly DependencyProperty AcceptsExpressionProperty = DependencyProperty.Register(
         nameof(AcceptsExpression),
         typeof(bool),
         typeof(NumberBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="SpinButtonPlacementMode"/>.</summary>
     public static readonly DependencyProperty SpinButtonPlacementModeProperty = DependencyProperty.Register(
         nameof(SpinButtonPlacementMode),
         typeof(NumberBoxSpinButtonPlacementMode),
         typeof(NumberBox),
-        new PropertyMetadata(NumberBoxSpinButtonPlacementMode.Inline));
+        new(NumberBoxSpinButtonPlacementMode.Inline));
 
     /// <summary>Property for <see cref="ValidationMode"/>.</summary>
     public static readonly DependencyProperty ValidationModeProperty = DependencyProperty.Register(
         nameof(ValidationMode),
         typeof(NumberBoxValidationMode),
         typeof(NumberBox),
-        new PropertyMetadata(NumberBoxValidationMode.InvalidInputOverwritten));
+        new(NumberBoxValidationMode.InvalidInputOverwritten));
 
     /// <summary>Property for <see cref="NumberFormatter"/>.</summary>
     public static readonly DependencyProperty NumberFormatterProperty = DependencyProperty.Register(
         nameof(NumberFormatter),
         typeof(INumberFormatter),
         typeof(NumberBox),
-        new PropertyMetadata(null, static (_, e) => OnNumberFormatterPropertyChanged(e.NewValue)));
+        new(null, static (_, e) => OnNumberFormatterPropertyChanged(e.NewValue)));
 
     /// <summary>Routed event for <see cref="ValueChanged"/>.</summary>
     public static readonly RoutedEvent ValueChangedEvent = EventManager.RegisterRoutedEvent(
         nameof(ValueChanged),
         RoutingStrategy.Bubble,
-        typeof(RoutedEventHandler),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(NumberBox));
 
     /// <summary>Stores the _valueUpdating value.</summary>
@@ -119,7 +120,7 @@ public partial class NumberBox : TextBox
 
     /// <summary>Occurs after the user triggers evaluation of new input by pressing the Enter key, clicking a spin
     /// button, or by changing focus.</summary>
-    public event RoutedEventHandler ValueChanged
+    public event EventHandler<RoutedEventArgs> ValueChanged
     {
         add => AddHandler(ValueChangedEvent, value);
         remove => RemoveHandler(ValueChangedEvent, value);
@@ -197,6 +198,10 @@ public partial class NumberBox : TextBox
         get => (NumberBoxValidationMode)GetValue(ValidationModeProperty);
         set => SetValue(ValidationModeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     protected override void OnKeyUp(KeyEventArgs e)
@@ -336,7 +341,7 @@ public partial class NumberBox : TextBox
 
         if (!Equals(newValue, oldValue))
         {
-            RaiseEvent(new RoutedEventArgs(ValueChangedEvent));
+            RaiseEvent(new(ValueChangedEvent));
         }
 
         UpdateTextToValue();
@@ -365,10 +370,7 @@ public partial class NumberBox : TextBox
     /// <summary>Provides the OnValuePropertyChanged member.</summary>
     /// <param name="numberBox">The number box.</param>
     /// <param name="oldValue">The old value.</param>
-    private static void OnValuePropertyChanged(NumberBox numberBox, double? oldValue)
-    {
-        numberBox.OnValueChanged(numberBox, oldValue);
-    }
+    private static void OnValuePropertyChanged(NumberBox numberBox, double? oldValue) => numberBox.OnValueChanged(numberBox, oldValue);
 
     /// <summary>Provides the OnNumberFormatterPropertyChanged member.</summary>
     /// <param name="newValue">The new value.</param>

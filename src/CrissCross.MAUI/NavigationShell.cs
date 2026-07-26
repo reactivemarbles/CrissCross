@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -92,6 +92,9 @@ public partial class NavigationShell
     /// <summary>Stores the disposed value.</summary>
     private bool _disposedValue;
 
+    /// <summary>Stores whether routed shell subscriptions have been initialized.</summary>
+    private bool _isSetup;
+
     /// <summary>Initializes a new instance of the <see cref="NavigationShell"/> class.</summary>
     public NavigationShell()
     {
@@ -110,7 +113,7 @@ public partial class NavigationShell
                     }
                     else if (NavigationStack?.Count > 1)
                     {
-                        _ = NavigationStack.Remove(NavigationStack.Last());
+                        NavigationStack.RemoveAt(NavigationStack.Count - 1);
                         if (_navigationViews.Count > 1)
                         {
                             _navigationViews.RemoveAt(_navigationViews.Count - 1);
@@ -190,7 +193,7 @@ public partial class NavigationShell
     /// <value>
     ///   <c>true</c> if [requires setup]; otherwise, <c>false</c>.
     /// </value>
-    public bool RequiresSetup => true;
+    public bool RequiresSetup => !_isSetup;
 
     /// <summary>Gets or sets the view  AppLocator.</summary>
     /// <value>
@@ -211,7 +214,7 @@ public partial class NavigationShell
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate<T>(T viewModel, string? contract, object? parameter)
-        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+        where T : class, IRxObject => InternalNavigateTyped(viewModel, contract, parameter);
 
     /// <summary>Navigates the specified contract.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -243,7 +246,7 @@ public partial class NavigationShell
         where T : class, IRxObject
     {
         _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
+        InternalNavigateTyped(viewModel, contract, parameter);
     }
 
     /// <summary>Navigates the and reset.</summary>
@@ -417,7 +420,7 @@ public partial class NavigationShell
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
-    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
+    private void InternalNavigateTyped<T>(T? viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
         _userInstigated = true;

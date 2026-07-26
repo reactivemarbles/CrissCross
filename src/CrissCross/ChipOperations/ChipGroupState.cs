@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -24,15 +23,29 @@ public sealed class ChipGroupState
     /// <param name="selectionMode">The selection mode used by the group.</param>
     public ChipGroupState(IEnumerable<ChipModel> chips, ChipGroupSelectionMode selectionMode)
     {
-        if (chips is null)
+        ThrowHelper.ThrowIfNull(chips, nameof(chips));
+
+        var allChips = new List<ChipModel>();
+        var selectedChips = new List<ChipModel>();
+        var removableChips = new List<ChipModel>();
+        foreach (var chip in chips)
         {
-            throw new ArgumentNullException(nameof(chips));
+            allChips.Add(chip);
+            if (chip.IsSelected)
+            {
+                selectedChips.Add(chip);
+            }
+
+            if (chip.IsRemovable)
+            {
+                removableChips.Add(chip);
+            }
         }
 
-        Chips = [.. chips];
+        Chips = allChips;
         SelectionMode = selectionMode;
-        SelectedChips = [.. Chips.Where(static chip => chip.IsSelected)];
-        RemovableChips = [.. Chips.Where(static chip => chip.IsRemovable)];
+        SelectedChips = selectedChips;
+        RemovableChips = removableChips;
     }
 
     /// <summary>Gets the chips displayed by the group.</summary>
@@ -56,6 +69,16 @@ public sealed class ChipGroupState
     /// <summary>Gets the chip with the specified key.</summary>
     /// <param name="key">The stable chip key.</param>
     /// <returns>The matching chip, or <c>null</c> when no chip has the key.</returns>
-    public ChipModel? GetChip(string key) =>
-        Chips.FirstOrDefault(chip => string.Equals(chip.Key, key, StringComparison.Ordinal));
+    public ChipModel? GetChip(string key)
+    {
+        foreach (var chip in Chips)
+        {
+            if (string.Equals(chip.Key, key, StringComparison.Ordinal))
+            {
+                return chip;
+            }
+        }
+
+        return null;
+    }
 }

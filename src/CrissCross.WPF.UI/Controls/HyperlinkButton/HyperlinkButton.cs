@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Button that opens a URL in a web browser.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class HyperlinkButton : Button
 {
     /// <summary>Property for <see cref="NavigateUri"/>.</summary>
@@ -16,7 +17,7 @@ public class HyperlinkButton : Button
         nameof(NavigateUri),
         typeof(string),
         typeof(HyperlinkButton),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Gets or sets the URL (or application shortcut) to open.</summary>
     public string NavigateUri
@@ -24,6 +25,10 @@ public class HyperlinkButton : Button
         get => (GetValue(NavigateUriProperty) as string) ?? string.Empty;
         set => SetValue(NavigateUriProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Called when a <see cref="T:System.Windows.Controls.Button" /> is clicked.</summary>
     protected override void OnClick()

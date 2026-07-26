@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -46,6 +46,9 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     /// <summary>Workflow key used by the review step.</summary>
     private const string ReviewStepKey = "review";
 
+    /// <summary>Provides the current time for demo state and activation messages.</summary>
+    private readonly TimeProvider _timeProvider;
+
     /// <summary>Tracks whether the import command is running.</summary>
     private ObservableAsPropertyHelper<bool>? _isOperationRunning;
 
@@ -68,18 +71,27 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     private StepperState _stepperState;
 
     /// <summary>Stores the selected theme choice.</summary>
-    private ThemeChoice _selectedTheme = ThemeChoice.System;
+    private ThemeChoice _selectedTheme;
 
     /// <summary>Stores the current theme preference state.</summary>
     private ThemePreferenceState _themeState;
 
     /// <summary>Initializes a new instance of the <see cref="FeaturePlaygroundViewModel"/> class.</summary>
     public FeaturePlaygroundViewModel()
+        : this(TimeProvider.System)
     {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="FeaturePlaygroundViewModel"/> class.</summary>
+    /// <param name="timeProvider">The time source used by the feature playground.</param>
+    public FeaturePlaygroundViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timeProvider = timeProvider;
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
         _paginationState = new(SamplePageIndex, SamplePageSize, SampleResultCount);
-        _currentRange = CreateRange(DateTimeOffset.Now);
+        _currentRange = CreateRange(_timeProvider.GetLocalNow());
         _segmentState = new(CreateSegments(), "table");
         _stepperState = new(CreateSteps(ReviewStepKey), ReviewStepKey, StepperOrientation.Horizontal);
         _themeState = CreateThemeState(_selectedTheme);
@@ -234,14 +246,14 @@ public sealed class FeaturePlaygroundViewModel : RxObject
         ArgumentNullException.ThrowIfNull(e);
         ArgumentNullException.ThrowIfNull(disposables);
 
-        var initialTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+        var initialTimestamp = _timeProvider.GetLocalNow().ToString("HH:mm:ss", CultureInfo.InvariantCulture);
         ActivationLog = $"Activated {initialTimestamp} from {e.From?.Name ?? "<cold start>"}.";
         _ = Observable
             .Interval(TimeSpan.FromSeconds(ActivationRefreshSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
-                var heartbeatTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                var heartbeatTimestamp = _timeProvider.GetLocalNow().ToString("HH:mm:ss", CultureInfo.InvariantCulture);
                 ActivationLog = $"Still active {heartbeatTimestamp}; dispose this page by navigating away.";
             })
             .DisposeWith(disposables);
@@ -293,24 +305,15 @@ public sealed class FeaturePlaygroundViewModel : RxObject
             new StepDescriptor(
                 "connect",
                 "Connect",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed }),
             new StepDescriptor(
                 "query",
                 "Query",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed }),
             new StepDescriptor(
                 ReviewStepKey,
                 "Review",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending,
-                }),
+                new StepDescriptorOptions { Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending }),
             new StepDescriptor(
                 "publish",
                 "Publish",
@@ -391,7 +394,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
 
     /// <summary>Applies a date/time range.</summary>
     /// <param name="range">The date/time range.</param>
-    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(DateTimeOffset.Now);
+    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(_timeProvider.GetLocalNow());
 
     /// <summary>Applies the selected segment.</summary>
     /// <param name="key">The selected segment key.</param>

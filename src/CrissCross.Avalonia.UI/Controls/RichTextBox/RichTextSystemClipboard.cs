@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Input;
@@ -22,14 +22,14 @@ internal static class RichTextSystemClipboard
     /// <summary>Gets a value indicating whether a platform clipboard is available.</summary>
     /// <param name="clipboard">The platform clipboard.</param>
     /// <returns><see langword="true"/> when the clipboard is available.</returns>
-    public static bool IsAvailable(IClipboard? clipboard) => clipboard is not null;
+    internal static bool IsAvailable(IClipboard? clipboard) => clipboard is not null;
 
     /// <summary>Writes plain and rich text representations to the platform clipboard.</summary>
     /// <param name="clipboard">The platform clipboard.</param>
     /// <param name="plainText">The plain-text representation.</param>
     /// <param name="htmlText">The optional HTML representation.</param>
     /// <returns>A task that completes when the clipboard has been updated.</returns>
-    public static async Task WriteAsync(IClipboard? clipboard, string plainText, string? htmlText)
+    internal static async Task WriteAsync(IClipboard? clipboard, string plainText, string? htmlText)
     {
         if (clipboard is null)
         {
@@ -52,7 +52,7 @@ internal static class RichTextSystemClipboard
     /// <summary>Reads supported rich text representations from the platform clipboard.</summary>
     /// <param name="clipboard">The platform clipboard.</param>
     /// <returns>The clipboard content.</returns>
-    public static async Task<RichTextClipboardContent> ReadAsync(IClipboard? clipboard)
+    internal static async Task<RichTextClipboardContent> ReadAsync(IClipboard? clipboard)
     {
         if (clipboard is null)
         {
@@ -78,7 +78,7 @@ internal static class RichTextSystemClipboard
             {
                 await using var stream = new MemoryStream();
                 bitmap.Save(stream, PngBitmapEncoderOptions.Default);
-                imageSource = "data:image/png;base64," + Convert.ToBase64String(stream.ToArray());
+                imageSource = $"data:image/png;base64,{Convert.ToBase64String(stream.ToArray())}";
             }
         }
 

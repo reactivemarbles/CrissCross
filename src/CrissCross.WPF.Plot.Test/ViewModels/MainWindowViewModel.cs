@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -29,18 +29,11 @@ public partial class MainWindowViewModel : RxObject
         _tracker = new();
         SetupTracker();
         NavigationModels = [];
+        var menuIcon = new SymbolIcon(SymbolRegular.LineHorizontal320);
+        var homeIcon = new SymbolIcon(SymbolRegular.Home20);
         NavigationModels.AddRange([
-            new NavigationModel(null, NavigationModels)
-            {
-                IsExpander = true,
-                Icon = new SymbolIcon(SymbolRegular.LineHorizontal320),
-            },
-            new NavigationModel(typeof(MainViewModel), NavigationModels)
-            {
-                Name = "Main",
-                Icon = new SymbolIcon(SymbolRegular.Home20),
-                IsSelected = true,
-            },]);
+            new(null, NavigationModels) { IsExpander = true, Icon = menuIcon },
+            new(typeof(MainViewModel), NavigationModels) { Name = "Main", Icon = homeIcon, IsSelected = true },]);
 
         // Register ViewModels and Views
         AppLocator
@@ -62,13 +55,13 @@ public partial class MainWindowViewModel : RxObject
         AppLocator.CurrentMutable.RegisterConstant(_tracker);
         _tracker
             ?.Configure(new TrackingRequest<MainWindow>())
-            .Id(w => w.Name, windowId)
-            .Property(w => w.Height)
-            .Property(w => w.Width)
-            .Property(w => w.Left)
-            .Property(w => w.Top)
-            .Property(w => w.WindowState)
-            .PersistOn(w => nameof(w.Closing))
-            .StopTrackingOn(w => nameof(w.Closing));
+            .Id(static w => w.Name, windowId)
+            .Property(static w => w.Height)
+            .Property(static w => w.Width)
+            .Property(static w => w.Left)
+            .Property(static w => w.Top)
+            .Property(static w => w.WindowState)
+            .PersistOn(static w => nameof(w.Closing))
+            .StopTrackingOn(static w => nameof(w.Closing));
     }
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -20,21 +20,21 @@ public partial class NumberPad : IDisposable
         nameof(HideMask),
         typeof(bool),
         typeof(NumberPad),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>The mask color property.</summary>
     public static readonly DependencyProperty MaskColorProperty = DependencyProperty.Register(
         nameof(MaskColor),
         typeof(Brush),
         typeof(NumberPad),
-        new PropertyMetadata(Brushes.Black, UpdateMask));
+        new(Brushes.Black, UpdateMask));
 
     /// <summary>The use criss cross theme manager property.</summary>
     public static readonly DependencyProperty UseCrissCrossThemeManagerProperty = DependencyProperty.Register(
         nameof(UseCrissCrossThemeManager),
         typeof(bool?),
         typeof(NumberPad),
-        new PropertyMetadata(null, UpdateTheme));
+        new(null, UpdateTheme));
 
     /// <summary>Delay used before and after keypad fade operations.</summary>
     private const int CloseAnimationDelayMilliseconds = 20;
@@ -232,7 +232,7 @@ public partial class NumberPad : IDisposable
         {
             _ = EventSignal
                 .From<RoutedEventHandler, RoutedEventArgs>(
-                    handler => handler.Invoke,
+                    static handler => handler.Invoke,
                     handler => c.Loaded += handler,
                     handler => c.Loaded -= handler)
                 .Take(1)
@@ -381,7 +381,7 @@ public partial class NumberPad : IDisposable
         Width = window.ActualWidth;
         Height = window.ActualHeight;
 
-        var ownerPosition = button.TransformToAncestor(presentationSource.RootVisual).Transform(new Point(0, 0));
+        var ownerPosition = button.TransformToAncestor(presentationSource.RootVisual).Transform(new(0, 0));
         SetTopMargin(window, ownerPosition);
         SetLeftMargin(button, window, ownerPosition);
 
@@ -510,10 +510,7 @@ public partial class NumberPad : IDisposable
     /// <summary>Sets the keypad top margin near the owner button.</summary>
     /// <param name="window">The owner window.</param>
     /// <param name="ownerPosition">The owner position.</param>
-    private void SetTopMargin(System.Windows.Window window, Point ownerPosition)
-    {
-        _margin[MarginTopIndex] = Math.Min(
+    private void SetTopMargin(System.Windows.Window window, Point ownerPosition) => _margin[MarginTopIndex] = Math.Min(
             ownerPosition.Y - KeypadVerticalOffset,
             window.ActualHeight - WGrid.Height - KeypadHorizontalMargin);
-    }
 }

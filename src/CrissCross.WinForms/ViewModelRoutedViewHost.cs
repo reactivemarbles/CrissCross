@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -168,7 +168,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate<T>(T viewModel, string? contract, object? parameter)
-        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+        where T : class, IRxObject => NavigateTyped(viewModel, contract, parameter);
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -181,7 +181,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
     public void Navigate(IRxObject viewModel, string? contract, object? parameter) =>
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateRuntime(viewModel, contract, parameter);
 
     /// <summary>Navigates the resolved ViewModel/View pair.</summary>
     /// <param name="resolution">The resolved navigation pair.</param>
@@ -200,7 +200,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         where T : class, IRxObject
     {
         _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateTyped(viewModel, contract, parameter);
     }
 
     /// <summary>Navigates the and reset.</summary>
@@ -216,7 +216,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     public void NavigateAndReset(IRxObject viewModel, string? contract, object? parameter)
     {
         _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateRuntime(viewModel, contract, parameter);
     }
 
     /// <summary>Navigates the resolved ViewModel/View pair and resets history.</summary>
@@ -456,12 +456,12 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <summary>Refreshes every registered navigation host except this host.</summary>
     private void RefreshOtherNavigationHosts()
     {
-        foreach (
-            var hostName in ViewModelRoutedViewHostMixins
-                .NavigationHost.Where(pair => pair.Key != HostName)
-                .Select(pair => pair.Key))
+        foreach (var pair in ViewModelRoutedViewHostMixins.NavigationHost)
         {
-            ViewModelRoutedViewHostMixins.NavigationHost[hostName].Refresh();
+            if (pair.Key != HostName)
+            {
+                pair.Value.Refresh();
+            }
         }
     }
 
@@ -470,7 +470,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The navigation contract.</param>
     /// <param name="parameter">The navigation parameter.</param>
-    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
+    private void NavigateTyped<T>(T? viewModel, string? contract, object? parameter)
         where T : class, IRxObject
     {
         _toViewModel = viewModel;
@@ -509,7 +509,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
+    private void NavigateRuntime(IRxObject viewModel, string? contract, object? parameter)
     {
         _toViewModel = viewModel;
         _lastView = _currentView;

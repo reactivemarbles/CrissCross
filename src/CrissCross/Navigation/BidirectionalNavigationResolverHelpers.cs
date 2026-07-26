@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ReactiveUI;
 
 #if REACTIVELIST_REACTIVE
@@ -22,7 +21,7 @@ internal static class BidirectionalNavigationResolverHelpers
     /// <param name="sourceKey">The source key.</param>
     /// <param name="contract">The requested contract.</param>
     /// <returns>The matching descriptor.</returns>
-    public static NavigationRegistrationDescriptor GetDescriptor(
+    internal static NavigationRegistrationDescriptor GetDescriptor(
         IReadOnlyDictionary<NavigationLookupKey, NavigationRegistrationDescriptor> registrations,
         NavigationSourceKind sourceKind,
         Type sourceKey,
@@ -35,10 +34,14 @@ internal static class BidirectionalNavigationResolverHelpers
             return descriptor;
         }
 
-        var knownContracts = registrations
-            .Keys.Where(candidate => candidate.SourceKind == sourceKind && candidate.ServiceType == sourceKey)
-            .Select(candidate => candidate.Contract)
-            .ToArray();
+        var knownContracts = new List<string?>();
+        foreach (var candidate in registrations.Keys)
+        {
+            if (candidate.SourceKind == sourceKind && candidate.ServiceType == sourceKey)
+            {
+                knownContracts.Add(candidate.Contract);
+            }
+        }
 
         throw new NavigationResolutionException(sourceKind, sourceKey, normalizedContract, knownContracts);
     }
@@ -48,7 +51,7 @@ internal static class BidirectionalNavigationResolverHelpers
     /// <typeparam name="TView">The view type.</typeparam>
     /// <param name="resolution">The untyped resolution.</param>
     /// <returns>The typed resolution.</returns>
-    public static NavigationResolution<TViewModel, TView> ToTyped<TViewModel, TView>(NavigationResolution resolution)
+    internal static NavigationResolution<TViewModel, TView> ToTyped<TViewModel, TView>(NavigationResolution resolution)
         where TViewModel : class, IRxObject
         where TView : class, IViewFor<TViewModel> =>
         new(

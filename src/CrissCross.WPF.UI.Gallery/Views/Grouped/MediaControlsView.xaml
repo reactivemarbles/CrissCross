@@ -9,7 +9,12 @@
       <ui:TextBlock FontSize="24" FontWeight="Bold" Text="Media" />
       <ui:TextBlock Margin="0,6,0,12" Text="Image and person visuals." />
       <WrapPanel>
-        <ui:Image Width="140" Height="140" Margin="4" Source="/Assets/ControlImages/Image.png" />
+        <ui:Image
+          Width="140"
+          Height="140"
+          Margin="4"
+          Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/Image.png"
+        />
         <ui:GifImage
           Width="140"
           Height="140"

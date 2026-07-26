@@ -16,7 +16,7 @@
     </Style>
     
     <Style Selector="controls|Anchor:pressed">
-        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorPrimary}" />
     </Style>
     
     <Style Selector="controls|Anchor:disabled">

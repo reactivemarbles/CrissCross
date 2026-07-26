@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation.Peers;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents TitleBarButton.</summary>
 /// <seealso cref="Button" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TitleBarButton : Button
 {
     /// <summary>Property for <see cref="ButtonType"/>.</summary>
@@ -25,7 +26,7 @@ public class TitleBarButton : Button
         nameof(ButtonType),
         typeof(TitleBarButtonType),
         typeof(TitleBarButton),
-        new PropertyMetadata(TitleBarButtonType.Unknown, ButtonTypePropertyCallback));
+        new(TitleBarButtonType.Unknown, ButtonTypePropertyCallback));
 
     /// <summary>Property for <see cref="ButtonsForeground"/>.</summary>
     public static readonly DependencyProperty ButtonsForegroundProperty = DependencyProperty.Register(
@@ -106,6 +107,10 @@ public class TitleBarButton : Button
     ///   <c>true</c> if this instance is hovered; otherwise, <c>false</c>.
     /// </value>
     public bool IsHovered { get; private set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Forces button background to change.</summary>
     public void Hover()

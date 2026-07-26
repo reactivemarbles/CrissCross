@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Reflection;
@@ -23,7 +23,10 @@ public class JsonFileStore : IStore
     private const string TypePropertyName = nameof(Type);
 
     /// <summary>Provides the SerializerOptions member.</summary>
-    private static readonly JsonSerializerOptions SerializerOptions = CreateOptions();
+    private static readonly JsonSerializerOptions SerializerOptions = new() { WriteIndented = true, PropertyNameCaseInsensitive = false, DefaultIgnoreCondition = JsonIgnoreCondition.Never, };
+
+    /// <summary>Options used to write indented JSON to disk.</summary>
+    private static readonly JsonWriterOptions WriterOptions = new() { Indented = true };
 
     /// <summary>Initializes a new instance of the <see cref="JsonFileStore"/> class.</summary>
     public JsonFileStore()
@@ -109,7 +112,7 @@ public class JsonFileStore : IStore
         }
 
         using var ms = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(ms, new JsonWriterOptions { Indented = true }))
+        using (var writer = new Utf8JsonWriter(ms, WriterOptions))
         {
             writer.WriteStartArray();
             foreach (var kvp in values)
@@ -147,9 +150,19 @@ public class JsonFileStore : IStore
     /// <inheritdoc/>
     public IEnumerable<string> ListIds()
     {
-        return !Directory.Exists(FolderPath)
-            ? []
-            : Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension).OfType<string>();
+        if (!Directory.Exists(FolderPath))
+        {
+            yield break;
+        }
+
+        foreach (var filePath in Directory.EnumerateFiles(FolderPath, "*.json"))
+        {
+            var id = Path.GetFileNameWithoutExtension(filePath);
+            if (id is not null)
+            {
+                yield return id;
+            }
+        }
     }
 
     /// <inheritdoc/>
@@ -184,10 +197,8 @@ public class JsonFileStore : IStore
             JsonValueKind.True => true,
             JsonValueKind.False => false,
             JsonValueKind.Null => null,
-            JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
-            JsonValueKind.Object => element
-                .EnumerateObject()
-                .ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
+            JsonValueKind.Array => DeserializeArray(element),
+            JsonValueKind.Object => DeserializeObject(element),
             _ => null,
         };
 
@@ -276,16 +287,32 @@ public class JsonFileStore : IStore
         }
     }
 
-    /// <summary>Provides the CreateOptions member.</summary>
-    /// <returns>The result.</returns>
-    private static JsonSerializerOptions CreateOptions()
+    /// <summary>Deserializes a JSON array without intermediate LINQ enumerables.</summary>
+    /// <param name="element">The JSON array.</param>
+    /// <returns>The corresponding list.</returns>
+    private static List<object?> DeserializeArray(JsonElement element)
     {
-        return new JsonSerializerOptions
+        var values = new List<object?>();
+        foreach (var item in element.EnumerateArray())
         {
-            WriteIndented = true,
-            PropertyNameCaseInsensitive = false,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-        };
+            values.Add(DeserializeUnknown(item));
+        }
+
+        return values;
+    }
+
+    /// <summary>Deserializes a JSON object without intermediate LINQ enumerables.</summary>
+    /// <param name="element">The JSON object.</param>
+    /// <returns>The corresponding dictionary.</returns>
+    private static Dictionary<string, object?> DeserializeObject(JsonElement element)
+    {
+        var values = new Dictionary<string, object?>();
+        foreach (var property in element.EnumerateObject())
+        {
+            values[property.Name] = DeserializeUnknown(property.Value);
+        }
+
+        return values;
     }
 
     /// <summary>Provides the DeserializeNumber member.</summary>

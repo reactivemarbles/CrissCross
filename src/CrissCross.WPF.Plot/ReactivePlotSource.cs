@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -42,10 +42,7 @@ public sealed partial record ReactivePlotSource(
         IObservable<ReactivePlotUpdate> updates,
         PlotXAxisKind? axisKind)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         return new ReactivePlotSource(key, plotType, updates) { XAxisKind = axisKind };
     }
@@ -56,10 +53,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromSignalTicks(
         IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -75,10 +69,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
-        {
-            XAxisKind = PlotXAxisKind.Ticks,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected) { XAxisKind = PlotXAxisKind.Ticks };
     }
 
     /// <summary>Adapts legacy signal point observables to append updates with numeric X-axis values.</summary>
@@ -87,10 +78,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromSignalPoints(
         IObservable<(string? Name, IList<double>? Value, IList<double> X, int Axis)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -106,10 +94,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected)
-        {
-            XAxisKind = PlotXAxisKind.Numeric,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Signal, projected) { XAxisKind = PlotXAxisKind.Numeric };
     }
 
     /// <summary>Adapts legacy scatter point observables to replace updates.</summary>
@@ -118,10 +103,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromScatterPoints(
         IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -137,10 +119,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Scatter, projected)
-        {
-            XAxisKind = PlotXAxisKind.Numeric,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Scatter, projected) { XAxisKind = PlotXAxisKind.Numeric };
     }
 
     /// <summary>Adapts legacy data logger observables to append updates.</summary>
@@ -149,10 +128,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromDataLoggerPoints(
         IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -170,10 +146,7 @@ public sealed partial record ReactivePlotSource(
                 maxPoints);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.DataLogger, projected)
-        {
-            XAxisKind = PlotXAxisKind.Numeric,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.DataLogger, projected) { XAxisKind = PlotXAxisKind.Numeric };
     }
 
     /// <summary>Adapts legacy streamer observables to append updates.</summary>
@@ -182,10 +155,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromStreamerPoints(
         IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -201,10 +171,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Streamer, projected)
-        {
-            XAxisKind = PlotXAxisKind.Numeric,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.Streamer, projected) { XAxisKind = PlotXAxisKind.Numeric };
     }
 
     /// <summary>Adapts SignalXY observable snapshots to replace updates.</summary>
@@ -213,10 +180,7 @@ public sealed partial record ReactivePlotSource(
     public static IReactivePlotSource FromSignalXyPoints(
         IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)> updates)
     {
-        if (updates is null)
-        {
-            throw new ArgumentNullException(nameof(updates));
-        }
+        ThrowHelper.ThrowIfNull(updates, nameof(updates));
 
         var sequence = 0L;
         var projected = updates.Select(update =>
@@ -232,10 +196,7 @@ public sealed partial record ReactivePlotSource(
                 null);
         });
 
-        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.SignalXY, projected)
-        {
-            XAxisKind = PlotXAxisKind.Numeric,
-        };
+        return new ReactivePlotSource(new PlotSeriesKey(string.Empty, 0), PlotType.SignalXY, projected) { XAxisKind = PlotXAxisKind.Numeric };
     }
 
     /// <summary>Adapts a SignalXY snapshot to a single replace update.</summary>
@@ -264,12 +225,12 @@ public sealed partial record ReactivePlotSource(
         var key = new PlotSeriesKey(
             string.IsNullOrWhiteSpace(identity.Name) ? identity.PlotType.ToString() : identity.Name!,
             identity.Axis);
-        return new ReactivePlotUpdate(
+        return new(
             key,
             identity.PlotType,
             identity.Kind,
-            x?.ToArray() ?? [],
-            y?.ToArray() ?? [],
+            CopyToArray(x),
+            CopyToArray(y),
             axisKind,
             sequence,
             maxPoints);
@@ -293,6 +254,12 @@ public sealed partial record ReactivePlotSource(
 
         return x;
     }
+
+    /// <summary>Copies optional source values into an owned array.</summary>
+    /// <param name="values">The source values.</param>
+    /// <returns>The copied values.</returns>
+    private static double[] CopyToArray(IEnumerable<double>? values) =>
+        values is null ? [] : new List<double>(values).ToArray();
 
     /// <summary>Groups the stable identity of a legacy update.</summary>
     /// <param name="Name">The optional series name.</param>

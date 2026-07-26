@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Simple Card with content and <see cref="Footer"/>.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(Card), "Card.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Card : System.Windows.Controls.ContentControl
 {
     /// <summary>Property for <see cref="Footer"/>.</summary>
@@ -20,28 +21,28 @@ public class Card : System.Windows.Controls.ContentControl
         nameof(Footer),
         typeof(object),
         typeof(Card),
-        new PropertyMetadata(null, FooterChangedCallback));
+        new(null, FooterChangedCallback));
 
     /// <summary>Property for <see cref="HasFooter"/>.</summary>
     public static readonly DependencyProperty HasFooterProperty = DependencyProperty.Register(
         nameof(HasFooter),
         typeof(bool),
         typeof(Card),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Header"/>.</summary>
     public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
         nameof(Header),
         typeof(object),
         typeof(Card),
-        new PropertyMetadata(null, HeaderChangedCallback));
+        new(null, HeaderChangedCallback));
 
     /// <summary>Property for <see cref="HasHeader"/>.</summary>
     public static readonly DependencyProperty HasHeaderProperty = DependencyProperty.Register(
         nameof(HasHeader),
         typeof(bool),
         typeof(Card),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Gets or sets additional content displayed at the bottom.</summary>
     public object Footer
@@ -70,6 +71,10 @@ public class Card : System.Windows.Controls.ContentControl
         get => (bool)GetValue(HasHeaderProperty);
         internal set => SetValue(HasHeaderProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the FooterChangedCallback member.</summary>
     /// <param name="d">The d value.</param>

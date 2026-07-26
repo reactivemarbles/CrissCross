@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -32,6 +32,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <remarks>
 /// The <see cref="Button"/> class inherits from the base <see cref="System.Windows.Controls.Button"/> class.
 /// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconControl
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
@@ -39,28 +40,28 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         nameof(Icon),
         typeof(IconElement),
         typeof(Button),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Property for <see cref="Appearance"/>.</summary>
     public static readonly DependencyProperty AppearanceProperty = DependencyProperty.Register(
         nameof(Appearance),
         typeof(ControlAppearance),
         typeof(Button),
-        new PropertyMetadata(ControlAppearance.Primary));
+        new(ControlAppearance.Primary));
 
     /// <summary>Property for <see cref="MouseOverBackground"/>.</summary>
     public static readonly DependencyProperty MouseOverBackgroundProperty = DependencyProperty.Register(
         nameof(MouseOverBackground),
         typeof(Brush),
         typeof(Button),
-        new PropertyMetadata(Border.BackgroundProperty.DefaultMetadata.DefaultValue));
+        new(Border.BackgroundProperty.DefaultMetadata.DefaultValue));
 
     /// <summary>Property for <see cref="MouseOverBorderBrush"/>.</summary>
     public static readonly DependencyProperty MouseOverBorderBrushProperty = DependencyProperty.Register(
         nameof(MouseOverBorderBrush),
         typeof(Brush),
         typeof(Button),
-        new PropertyMetadata(Border.BorderBrushProperty.DefaultMetadata.DefaultValue));
+        new(Border.BorderBrushProperty.DefaultMetadata.DefaultValue));
 
     /// <summary>Property for <see cref="PressedForeground"/>.</summary>
     public static readonly DependencyProperty PressedForegroundProperty = DependencyProperty.Register(
@@ -74,14 +75,14 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         nameof(PressedBackground),
         typeof(Brush),
         typeof(Button),
-        new PropertyMetadata(Border.BackgroundProperty.DefaultMetadata.DefaultValue));
+        new(Border.BackgroundProperty.DefaultMetadata.DefaultValue));
 
     /// <summary>Property for <see cref="PressedBorderBrush"/>.</summary>
     public static readonly DependencyProperty PressedBorderBrushProperty = DependencyProperty.Register(
         nameof(PressedBorderBrush),
         typeof(Brush),
         typeof(Button),
-        new PropertyMetadata(Border.BorderBrushProperty.DefaultMetadata.DefaultValue));
+        new(Border.BorderBrushProperty.DefaultMetadata.DefaultValue));
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
@@ -162,4 +163,8 @@ public class Button : System.Windows.Controls.Button, IAppearanceControl, IIconC
         get => (CornerRadius)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, (object)value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

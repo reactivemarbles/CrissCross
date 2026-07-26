@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
@@ -27,7 +27,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="metadata">The metadata value.</param>
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="image">The image value.</param>
-    public ImageAnimator(
+    internal ImageAnimator(
         Stream sourceStream,
         Uri sourceUri,
         GifDataStream metadata,
@@ -42,7 +42,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="image">The image value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
-    public ImageAnimator(
+    internal ImageAnimator(
         Stream sourceStream,
         Uri sourceUri,
         GifDataStream metadata,
@@ -63,7 +63,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="progress">The progress value.</param>
     /// <param name="image">The image value.</param>
     /// <returns>The result.</returns>
-    public static Task<ImageAnimator> CreateAsync(
+    internal static Task<ImageAnimator> CreateAsync(
         Uri sourceUri,
         RepeatBehavior repeatBehavior,
         IProgress<int> progress,
@@ -76,7 +76,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="image">The image value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
     /// <returns>The result.</returns>
-    public static Task<ImageAnimator> CreateAsync(
+    internal static Task<ImageAnimator> CreateAsync(
         Uri sourceUri,
         RepeatBehavior repeatBehavior,
         IProgress<int> progress,
@@ -93,7 +93,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="repeatBehavior">The repeatBehavior value.</param>
     /// <param name="image">The image value.</param>
     /// <returns>The result.</returns>
-    public static Task<ImageAnimator> CreateAsync(
+    internal static Task<ImageAnimator> CreateAsync(
         Stream sourceStream,
         RepeatBehavior repeatBehavior,
         System.Windows.Controls.Image image) => CreateAsync(sourceStream, repeatBehavior, image);
@@ -104,7 +104,7 @@ internal sealed class ImageAnimator : Animator
     /// <param name="image">The image value.</param>
     /// <param name="cacheFrameDataInMemory">The cacheFrameDataInMemory value.</param>
     /// <returns>The result.</returns>
-    public static Task<ImageAnimator> CreateAsync(
+    internal static Task<ImageAnimator> CreateAsync(
         Stream sourceStream,
         RepeatBehavior repeatBehavior,
         System.Windows.Controls.Image image,

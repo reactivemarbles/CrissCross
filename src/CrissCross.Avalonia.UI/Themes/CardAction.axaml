@@ -37,8 +37,7 @@
                         <!-- Chevron -->
                         <TextBlock Name="ChevronIcon"
                                    Grid.Column="2"
-                                   Text="&#xE76C;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   Text="&#x203A;"
                                    FontSize="12"
                                    VerticalAlignment="Center"
                                    Margin="12,0,0,0"

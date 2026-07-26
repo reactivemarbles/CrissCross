@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Represents a button with two parts that can be invoked separately. One part behaves like a standard button
 /// and the other part invokes a flyout.</summary>
 [TemplatePart(Name = TemplateElementToggleButton, Type = typeof(ToggleButton))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SplitButton : Button, IDisposable
 {
     /// <summary>Property for <see cref="Flyout"/>.</summary>
@@ -20,14 +21,14 @@ public class SplitButton : Button, IDisposable
         nameof(Flyout),
         typeof(object),
         typeof(SplitButton),
-        new PropertyMetadata(null, OnFlyoutChangedCallback));
+        new(null, OnFlyoutChangedCallback));
 
     /// <summary>Property for <see cref="IsDropDownOpen"/>.</summary>
     public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register(
         nameof(IsDropDownOpen),
         typeof(bool),
         typeof(SplitButton),
-        new PropertyMetadata(false, OnIsDropDownOpenChanged));
+        new(false, OnIsDropDownOpenChanged));
 
     /// <summary>Template element represented by the <c>ToggleButton</c> name.</summary>
     private const string TemplateElementToggleButton = "ToggleButton";
@@ -64,6 +65,10 @@ public class SplitButton : Button, IDisposable
 
     /// <summary>Gets or sets the control responsible for toggling the drop-down button.</summary>
     protected ToggleButton SplitButtonToggleButton { get; set; } = null!;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     public override void OnApplyTemplate()

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -20,10 +20,7 @@ public static class NavigationJournal
     /// <returns><see langword="true"/> when a previous entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool CanGoBack(IReadOnlyList<string> journal, int currentIndex)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         return journal.Count > 0 && currentIndex > 0 && currentIndex < journal.Count;
     }
@@ -34,10 +31,7 @@ public static class NavigationJournal
     /// <returns><see langword="true"/> when a later entry exists; otherwise, <see langword="false"/>.</returns>
     public static bool CanGoForward(IReadOnlyList<string> journal, int currentIndex)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         return currentIndex >= 0 && currentIndex < journal.Count - 1;
     }
@@ -48,10 +42,7 @@ public static class NavigationJournal
     /// <param name="entryId">The navigation entry identifier to record.</param>
     public static void Record(IList<string> journal, ref int currentIndex, string entryId)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         ThrowHelper.ThrowIfNullOrWhiteSpace(entryId, nameof(entryId));
 
@@ -82,10 +73,7 @@ public static class NavigationJournal
         out int nextIndex,
         out string? entryId)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         if (!CanGoBack(journal, currentIndex))
         {
@@ -113,10 +101,7 @@ public static class NavigationJournal
         out int nextIndex,
         out string? entryId)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         if (!CanGoForward(journal, currentIndex))
         {
@@ -135,10 +120,7 @@ public static class NavigationJournal
     /// <param name="currentIndex">The current entry index, reset to <c>-1</c>.</param>
     public static void Clear(ICollection<string> journal, ref int currentIndex)
     {
-        if (journal is null)
-        {
-            throw new ArgumentNullException(nameof(journal));
-        }
+        ThrowHelper.ThrowIfNull(journal, nameof(journal));
 
         journal.Clear();
         currentIndex = -1;

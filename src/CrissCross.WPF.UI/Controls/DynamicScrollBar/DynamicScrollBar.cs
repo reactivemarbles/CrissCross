@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Custom ScrollBar with events depending on actions taken by the user.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(DynamicScrollBar), "DynamicScrollBar.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
 {
     /// <summary>Property for <see cref="IsScrolling"/>.</summary>
@@ -21,21 +22,21 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
         nameof(IsScrolling),
         typeof(bool),
         typeof(DynamicScrollBar),
-        new PropertyMetadata(false, IsScrollingProperty_OnChange));
+        new(false, IsScrollingProperty_OnChange));
 
     /// <summary>Property for <see cref="IsInteracted"/>.</summary>
     public static readonly DependencyProperty IsInteractedProperty = DependencyProperty.Register(
         nameof(IsInteracted),
         typeof(bool),
         typeof(DynamicScrollBar),
-        new PropertyMetadata(false, IsInteractedProperty_OnChange));
+        new(false, IsInteractedProperty_OnChange));
 
     /// <summary>Property for <see cref="Timeout"/>.</summary>
     public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
         nameof(Timeout),
         typeof(int),
         typeof(DynamicScrollBar),
-        new PropertyMetadata(1000));
+        new(1000));
 
     /// <summary>Stores the _interactiveIdentifier value.</summary>
     private readonly EventIdentifier _interactiveIdentifier = new();
@@ -75,6 +76,10 @@ public class DynamicScrollBar : System.Windows.Controls.Primitives.ScrollBar
         get => (int)GetValue(TimeoutProperty);
         set => SetValue(TimeoutProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Method reporting the mouse entered this element.</summary>
     /// <param name="e">The <see cref="T:System.Windows.Input.MouseEventArgs" /> that contains the event data.</param>

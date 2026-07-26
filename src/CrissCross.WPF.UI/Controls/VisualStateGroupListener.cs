@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents VisualStateGroupListener.</summary>
 /// <seealso cref="FrameworkElement" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class VisualStateGroupListener : FrameworkElement
 {
     /// <summary>The group property.</summary>
@@ -17,14 +18,14 @@ public class VisualStateGroupListener : FrameworkElement
         nameof(Group),
         typeof(VisualStateGroup),
         typeof(VisualStateGroupListener),
-        new PropertyMetadata(OnGroupChanged));
+        new(OnGroupChanged));
 
     /// <summary>The listener property.</summary>
     public static readonly DependencyProperty ListenerProperty = DependencyProperty.RegisterAttached(
         "Listener",
         typeof(VisualStateGroupListener),
         typeof(VisualStateGroupListener),
-        new PropertyMetadata(OnListenerChanged));
+        new(OnListenerChanged));
 
     /// <summary>Provides the CurrentStateNamePropertyKey member.</summary>
     public static readonly DependencyPropertyKey CurrentStateNamePropertyKey = DependencyProperty.RegisterReadOnly(
@@ -64,15 +65,16 @@ public class VisualStateGroupListener : FrameworkElement
         private set => SetValue(CurrentStateNamePropertyKey, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Gets the listener.</summary>
     /// <param name="group">The group.</param>
     /// <returns>Visual State Group Listener.</returns>
     public static VisualStateGroupListener GetListener(VisualStateGroup group)
     {
-        if (group is null)
-        {
-            throw new ArgumentNullException(nameof(group));
-        }
+        ThrowHelper.ThrowIfNull(group, nameof(group));
 
         return (VisualStateGroupListener)group.GetValue(ListenerProperty);
     }
@@ -82,10 +84,7 @@ public class VisualStateGroupListener : FrameworkElement
     /// <param name="value">The value.</param>
     public static void SetListener(VisualStateGroup group, VisualStateGroupListener value)
     {
-        if (group is null)
-        {
-            throw new ArgumentNullException(nameof(group));
-        }
+        ThrowHelper.ThrowIfNull(group, nameof(group));
 
         group.SetValue(ListenerProperty, value);
     }

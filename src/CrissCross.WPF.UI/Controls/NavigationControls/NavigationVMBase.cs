@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents NavigationVMBase.</summary>
 /// <seealso cref="System.Windows.Controls.Control" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class NavigationVMBase : System.Windows.Controls.Control
 {
     /// <summary>The items source property.</summary>
@@ -17,21 +18,21 @@ public class NavigationVMBase : System.Windows.Controls.Control
         nameof(ItemsSource),
         typeof(IEnumerable<NavigationModel>),
         typeof(NavigationVMBase),
-        new PropertyMetadata(null, ItemsSourceChanged));
+        new(null, ItemsSourceChanged));
 
     /// <summary>The is expanded property.</summary>
     public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
         nameof(IsExpanded),
         typeof(bool),
         typeof(NavigationVMBase),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The filter property.</summary>
     public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
         nameof(Filter),
         typeof(string),
         typeof(NavigationVMBase),
-        new PropertyMetadata(string.Empty, FilterChanged));
+        new(string.Empty, FilterChanged));
 
     /// <summary>Gets or sets the items source.</summary>
     /// <value>
@@ -72,6 +73,10 @@ public class NavigationVMBase : System.Windows.Controls.Control
         set => SetValue(FilterProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the FilterChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="e">The event arguments.</param>
@@ -83,18 +88,12 @@ public class NavigationVMBase : System.Windows.Controls.Control
         }
 
         // Get items from the ItemsSource that have a Name that contains text from the filter.
-        var items = navigation.ItemsSource.Where(x => !string.IsNullOrEmpty(x.Name) && !x.Name.Contains(filter));
-
         // Reset visibility.
         foreach (var item in navigation.ItemsSource)
         {
-            item.Visibility = Visibility.Visible;
-        }
-
-        // Hide items that do not match the filter.
-        foreach (var item in items)
-        {
-            item.Visibility = Visibility.Collapsed;
+            item.Visibility = !string.IsNullOrEmpty(item.Name) && !item.Name.Contains(filter)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
         }
     }
 
@@ -103,7 +102,7 @@ public class NavigationVMBase : System.Windows.Controls.Control
     /// <param name="e">The event arguments.</param>
     private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not NavigationVMBase navigation || e.NewValue is not IEnumerable<NavigationModel> itemsSource)
+        if (d is not NavigationVMBase navigation || e.NewValue is not IEnumerable<NavigationModel>)
         {
             return;
         }
@@ -114,18 +113,12 @@ public class NavigationVMBase : System.Windows.Controls.Control
         }
 
         // Get items from the ItemsSource that have a Name that contains text from the filter.
-        var items = itemsSource.Where(x => !string.IsNullOrEmpty(x.Name) && !x.Name.Contains(navigation.Filter));
-
         // Reset visibility.
         foreach (var item in navigation.ItemsSource)
         {
-            item.Visibility = Visibility.Visible;
-        }
-
-        // Hide items that do not match the filter.
-        foreach (var item in items)
-        {
-            item.Visibility = Visibility.Collapsed;
+            item.Visibility = !string.IsNullOrEmpty(item.Name) && !item.Name.Contains(navigation.Filter)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
         }
     }
 }

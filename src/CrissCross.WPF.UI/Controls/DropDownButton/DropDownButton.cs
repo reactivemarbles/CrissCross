@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>A control that drop downs a flyout of choices from which one can be chosen.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DropDownButton : Button
 {
     /// <summary>Property for <see cref="Flyout"/>.</summary>
@@ -18,14 +19,14 @@ public class DropDownButton : Button
         nameof(Flyout),
         typeof(object),
         typeof(DropDownButton),
-        new PropertyMetadata(null, OnFlyoutChangedCallback));
+        new(null, OnFlyoutChangedCallback));
 
     /// <summary>Property for <see cref="IsDropDownOpen"/>.</summary>
     public static readonly DependencyProperty IsDropDownOpenProperty = DependencyProperty.Register(
         nameof(IsDropDownOpen),
         typeof(bool),
         typeof(DropDownButton),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Stores the _contextMenu value.</summary>
     private ContextMenu? _contextMenu;
@@ -50,6 +51,10 @@ public class DropDownButton : Button
         get => (bool)GetValue(IsDropDownOpenProperty);
         set => SetValue(IsDropDownOpenProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Called when [flyout changed callback].</summary>
     /// <param name="value">The value.</param>

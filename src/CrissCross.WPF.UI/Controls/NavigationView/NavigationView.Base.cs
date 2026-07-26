@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -17,13 +17,14 @@ namespace CrissCross.WPF.UI.Controls;
 /// content, and a menu pane for navigation commands.</summary>
 [ToolboxItem(true)]
 [System.Drawing.ToolboxBitmap(typeof(NavigationView), "NavigationView.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class NavigationView : System.Windows.Controls.Control, INavigationView
 {
     /// <summary>The header content property.</summary>
     public static readonly DependencyProperty HeaderContentProperty = DependencyProperty.RegisterAttached(
         "HeaderContent",
         typeof(object),
-        typeof(FrameworkElement),
+        typeof(NavigationView),
         new FrameworkPropertyMetadata(null));
 
     /// <summary>Provides the titleBarPaneOpenMargin member.</summary>
@@ -63,14 +64,14 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             nameof(MenuItems),
             typeof(ObservableCollection<object>),
             typeof(NavigationView),
-            new PropertyMetadata(null));
+            new(null));
         MenuItemsProperty = MenuItemsPropertyKey.DependencyProperty;
 
         FooterMenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
             nameof(FooterMenuItems),
             typeof(ObservableCollection<object>),
             typeof(NavigationView),
-            new PropertyMetadata(null));
+            new(null));
         FooterMenuItemsProperty = FooterMenuItemsPropertyKey.DependencyProperty;
 
         DefaultStyleKeyProperty.OverrideMetadata(
@@ -102,6 +103,10 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
 
     /// <inheritdoc/>
     public INavigationViewItem? SelectedItem { get; protected set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Gets the content of the header.</summary>
     /// <param name="target">The target.</param>
@@ -310,19 +315,18 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return;
         }
 
-        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
+        foreach (var candidate in list)
         {
-            if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.Id))
+            if (candidate is not NavigationViewItem singleNavigationViewItem)
             {
-                _pageIdOrTargetTagNavigationViewsDictionary.Add(singleNavigationViewItem.Id, singleNavigationViewItem);
+                continue;
             }
 
-            if (!_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(singleNavigationViewItem.TargetPageTag))
-            {
-                _pageIdOrTargetTagNavigationViewsDictionary.Add(
+            _ = _pageIdOrTargetTagNavigationViewsDictionary.TryAdd(singleNavigationViewItem.Id, singleNavigationViewItem);
+
+            _ = _pageIdOrTargetTagNavigationViewsDictionary.TryAdd(
                     singleNavigationViewItem.TargetPageTag,
                     singleNavigationViewItem);
-            }
 
             if (
                 singleNavigationViewItem.TargetPageType is not null
@@ -358,8 +362,13 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return;
         }
 
-        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
+        foreach (var candidate in list)
         {
+            if (candidate is not NavigationViewItem singleNavigationViewItem)
+            {
+                continue;
+            }
+
             if (
                 singleNavigationViewItem is { Content: string content, TargetPageType: { } }
                 && !string.IsNullOrWhiteSpace(content))
@@ -392,8 +401,13 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
             return false;
         }
 
-        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
+        foreach (var candidate in list)
         {
+            if (candidate is not NavigationViewItem singleNavigationViewItem)
+            {
+                continue;
+            }
+
             if (singleNavigationViewItem.Content is string content && content == selectedSuggestBoxItem)
             {
                 _ = NavigateInternal(singleNavigationViewItem);
@@ -596,7 +610,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         {
             case NotifyCollectionChangedAction.Add:
             {
-                _breadcrumbBarItems.Add(new NavigationViewBreadcrumbItem((INavigationViewItem)e.NewItems![0]!));
+                _breadcrumbBarItems.Add(new((INavigationViewItem)e.NewItems![0]!));
                 break;
             }
 

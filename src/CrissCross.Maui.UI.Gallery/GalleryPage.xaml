@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="CrissCross.Maui.UI.Gallery.GalleryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CrissCross.Maui.UI.Gallery"
+    xmlns:mauiui="clr-namespace:CrissCross.Maui.UI.Controls;assembly=CrissCross.Maui.UI"
+    x:DataType="local:GalleryViewModel"
+    Title="CrissCross MAUI UI Gallery">
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+            <Label FontAttributes="Bold" FontSize="28" Text="CrissCross MAUI UI Gallery" />
+            <Label Text="All 27 shared MAUI control projections are instantiated below. Toggle the theme to verify common Light and Dark resources." />
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Commands and busy state" />
+                    <mauiui:CommandButton Command="{Binding RunCommand}" ErrorText="Operation failed" ExecutingText="Working…" IsExecuting="{Binding IsBusy}" Progress="{Binding Progress}" State="{Binding CommandState}" Text="Run reactive command" />
+                    <mauiui:AsyncCommandButton CancelCommand="{Binding CancelCommand}" CancelText="Cancel demo" Command="{Binding RunCommand}" IsExecuting="{Binding IsBusy}" Text="AsyncCommandButton" />
+                    <mauiui:BusyOverlay IsBusy="{Binding IsBusy}" Operation="{Binding BusyOperation}">
+                        <mauiui:BusyOverlay.Content>
+                            <Label Text="BusyOverlay retains and presents this content while a reactive operation is active." />
+                        </mauiui:BusyOverlay.Content>
+                    </mauiui:BusyOverlay>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Search and data flow" />
+                    <mauiui:SearchBox Placeholder="Search controls" SearchState="{Binding SearchState}" SubmitCommand="{Binding SearchCommand}" />
+                    <mauiui:FilterBar ClearFiltersCommand="{Binding ClearSearchCommand}" SearchState="{Binding SearchState}">
+                        <mauiui:FilterBar.Content><Label Text="FilterBar: active filters are projected from SearchQueryState." /></mauiui:FilterBar.Content>
+                    </mauiui:FilterBar>
+                    <mauiui:DataPager PageRequestCommand="{Binding RequestPageCommand}" PaginationState="{Binding PaginationState}" QueryState="{Binding SearchState}" SortKey="name">
+                        <mauiui:DataPager.Content><Label Text="DataPager requests pages through the reactive command." /></mauiui:DataPager.Content>
+                    </mauiui:DataPager>
+                    <mauiui:DataFilterPanel ApplyFiltersCommand="{Binding ApplyFiltersCommand}" FilterPanelState="{Binding FilterPanelState}">
+                        <mauiui:DataFilterPanel.Content><Label Text="DataFilterPanel: descriptor driven, reflection-free filters." /></mauiui:DataFilterPanel.Content>
+                    </mauiui:DataFilterPanel>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Selection and workflow" />
+                    <mauiui:Chip IsSelected="True" Model="{Binding HighlightChip}" Text="Selected chip" />
+                    <mauiui:ChipGroup SelectionCommand="{Binding SelectChipCommand}" State="{Binding ChipGroupState}" />
+                    <mauiui:SegmentedControl SelectionCommand="{Binding SelectSegmentCommand}" State="{Binding SegmentState}" />
+                    <mauiui:Stepper StepCommand="{Binding SelectStepCommand}" StepperState="{Binding StepperState}">
+                        <mauiui:Stepper.Content><Label Text="Stepper: Connect → Review → Publish." /></mauiui:Stepper.Content>
+                    </mauiui:Stepper>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Forms, feedback, and configuration" />
+                    <mauiui:ReactiveFormField FieldState="Invalid"><mauiui:ReactiveFormField.Content><Label Text="ReactiveFormField: invalid input state." /></mauiui:ReactiveFormField.Content></mauiui:ReactiveFormField>
+                    <mauiui:ValidationSummary SummaryState="{Binding ValidationState}"><mauiui:ValidationSummary.Content><Label Text="ValidationSummary: one sample validation message." /></mauiui:ValidationSummary.Content></mauiui:ValidationSummary>
+                    <mauiui:EmptyState Model="{Binding EmptyState}" PrimaryCommand="{Binding RestoreContentCommand}"><mauiui:EmptyState.Content><Label Text="EmptyState: no saved views yet; restore sample content." /></mauiui:EmptyState.Content></mauiui:EmptyState>
+                    <mauiui:PropertyGridLite PropertyGridState="{Binding PropertyGridState}" UpdatePropertyCommand="{Binding UpdatePropertyCommand}"><mauiui:PropertyGridLite.Content><Label Text="PropertyGridLite: descriptor-driven configuration." /></mauiui:PropertyGridLite.Content></mauiui:PropertyGridLite>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Time and theme" />
+                    <mauiui:DateTimeRangePicker ApplyRangeCommand="{Binding ApplyRangeCommand}" Range="{Binding DateRange}"><mauiui:DateTimeRangePicker.Content><Label Text="DateTimeRangePicker: Last four hours." /></mauiui:DateTimeRangePicker.Content></mauiui:DateTimeRangePicker>
+                    <mauiui:ThemeSwitcher ChangeThemeCommand="{Binding SetThemeCommand}" ThemeState="{Binding ThemeState}"><mauiui:ThemeSwitcher.Content><HorizontalStackLayout Spacing="8"><Button Command="{Binding SetThemeCommand}" CommandParameter="Light" Text="Light" /><Button Command="{Binding SetThemeCommand}" CommandParameter="Dark" Text="Dark" /><Label Text="{Binding ThemeDescription}" VerticalOptions="Center" /></HorizontalStackLayout></mauiui:ThemeSwitcher.Content></mauiui:ThemeSwitcher>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Identity, feedback, and cards" />
+                    <mauiui:Card>
+                        <Label Text="Card: a native Border-based content surface composed with the shared semantic palette." />
+                    </mauiui:Card>
+                    <mauiui:CardAction Command="{Binding RestoreContentCommand}" Text="CardAction: execute a reactive recovery action" />
+                    <mauiui:CardExpander>
+                        <mauiui:CardExpander.Header><Label FontAttributes="Bold" Text="CardExpander: reveal supplementary details" /></mauiui:CardExpander.Header>
+                        <mauiui:CardExpander.ExpandedContent><Label Text="Expanded MAUI content remains available to accessibility services and the selected theme." /></mauiui:CardExpander.ExpandedContent>
+                    </mauiui:CardExpander>
+                    <HorizontalStackLayout Spacing="12">
+                        <mauiui:PersonPicture DisplayName="Ada Lovelace" />
+                        <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                            <Label Text="PersonPicture: image-free initials fallback" />
+                            <mauiui:InfoBadge Text="Online" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                    <mauiui:InfoBar ActionCommand="{Binding RestoreContentCommand}" ActionText="Restore" Message="The gallery projects state changes through commands rather than event handlers." Severity="Informational" Title="Reactive feedback" />
+                    <mauiui:RatingControl Value="{Binding Rating}" ValueChangedCommand="{Binding RateCommand}" />
+                    <Label Text="{Binding RatingDescription}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label FontAttributes="Bold" FontSize="18" Text="Alarms, colour, and notifications" />
+                    <mauiui:AlarmBanner IsActive="True" Message="AlarmBanner: sample alarm actions are reactive commands." Severity="Warning" />
+                    <HorizontalStackLayout Spacing="12">
+                        <mauiui:CardColor Color="#3B55C9" Subtitle="Accent" Title="Indigo" />
+                        <mauiui:CardColor Color="#107C10" Subtitle="Success" Title="Green" />
+                    </HorizontalStackLayout>
+                    <mauiui:Snackbar IsShown="True" Message="Snackbar: inline transient feedback remains readable in both themes." Title="Saved" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

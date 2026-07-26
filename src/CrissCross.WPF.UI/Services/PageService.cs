@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -14,8 +14,13 @@ namespace CrissCross.WPF.UI;
 /// Creates new instance and attaches the <see cref="IServiceProvider" />.
 /// </remarks>
 /// <param name="serviceProvider">The service provider.</param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class PageService(IServiceProvider serviceProvider) : IPageService
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <inheritdoc />
     public T? GetPage<T>(PageNavigationRequest<T> request)
         where T : class => (T?)serviceProvider.GetService(CheckIsFrameworkElement(request.PageType));

@@ -13,8 +13,6 @@
     <PackageReference Remove="ReactiveUI.Disposables" />
     <PackageReference Remove="ReactiveUI.Primitives" />
     <PackageReference Remove="ReactiveUI.Primitives.Core" />
-    <PackageReference Remove="ReactiveUI.Primitives.Extensions" />
-    <PackageReference Remove="ReactiveUI.Primitives.Extensions.Core" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
   </ItemGroup>
 

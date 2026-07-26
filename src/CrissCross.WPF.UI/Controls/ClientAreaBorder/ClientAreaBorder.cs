@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Shell;
@@ -41,16 +41,17 @@ namespace CrissCross.WPF.UI.Controls;
 /// &lt;/Style&gt;
 /// </code>
 /// </example>
+[DebuggerDisplay("{ToString(),nq}")]
 public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
 {
-    /// <summary>Stores the _paddedBorderThickness value.</summary>
-    private static Thickness? _paddedBorderThickness;
-
     /// <summary>Stores the _resizeFrameBorderThickness value.</summary>
     private static Thickness? _resizeFrameBorderThickness;
 
     /// <summary>Stores the _windowChromeNonClientFrameThickness value.</summary>
     private static Thickness? _windowChromeNonClientFrameThickness;
+
+    /// <summary>Caches the per-instance padded border metrics.</summary>
+    private readonly Lazy<Thickness> _paddedBorderThickness;
 
     /// <summary>Stores the _windowStateChangedSubscription value.</summary>
     private IDisposable? _windowStateChangedSubscription;
@@ -67,6 +68,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     /// <summary>Initializes a new instance of the <see cref="ClientAreaBorder"/> class.</summary>
     public ClientAreaBorder()
     {
+        _paddedBorderThickness = new(CreatePaddedBorderThickness);
         ApplicationTheme = ApplicationThemeManager.GetAppTheme();
         ApplicationThemeManager.Changed += OnThemeChanged;
     }
@@ -83,31 +85,7 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
     public ApplicationTheme ApplicationTheme { get; set; } = ApplicationTheme.Unknown;
 
     /// <summary>Gets get the system SM_CXPADDEDBORDER value in WPF units.</summary>
-    public Thickness PaddedBorderThickness
-    {
-        get
-        {
-            if (_paddedBorderThickness is not null)
-            {
-                return _paddedBorderThickness.Value;
-            }
-
-            var paddedBorder = User32.GetSystemMetrics(User32.SM.CXPADDEDBORDER);
-
-            var (factorX, factorY) = GetDpi();
-
-            var frameSize = new Size(paddedBorder, paddedBorder);
-            var frameSizeInDips = new Size(frameSize.Width / factorX, frameSize.Height / factorY);
-
-            _paddedBorderThickness = new Thickness(
-                frameSizeInDips.Width,
-                frameSizeInDips.Height,
-                frameSizeInDips.Width,
-                frameSizeInDips.Height);
-
-            return _paddedBorderThickness.Value;
-        }
-    }
+    public Thickness PaddedBorderThickness => _paddedBorderThickness.Value;
 
     /// <summary>
     /// Gets if you use a <see cref="WindowChrome"/> to extend the client area of a window to the non-client area, you
@@ -142,13 +120,13 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
             _windowStateChangedSubscription?.Dispose();
             _windowStateChangedSubscription = EventSignal
                 .From<EventHandler, EventArgs>(
-                    handler => handler.Invoke,
+                    static handler => handler.Invoke,
                     handler => newWindow.StateChanged += handler,
                     handler => newWindow.StateChanged -= handler)
                 .Subscribe(e => OnWindowStateChanged(newWindow, e));
             _windowClosingSubscription = EventSignal
                 .From<CancelEventHandler, CancelEventArgs>(
-                    handler => handler.Invoke,
+                    static handler => handler.Invoke,
                     handler => newWindow.Closing += handler,
                     handler => newWindow.Closing -= handler)
                 .Subscribe(OnWindowClosing);
@@ -157,6 +135,21 @@ public class ClientAreaBorder : System.Windows.Controls.Border, IThemeControl
         _oldWindow = newWindow;
 
         ApplyDefaultWindowBorder();
+    }
+
+    /// <summary>Creates the padded-border metrics for the current window DPI.</summary>
+    /// <returns>The padded-border metrics in device-independent units.</returns>
+    private Thickness CreatePaddedBorderThickness()
+    {
+        var paddedBorder = User32.GetSystemMetrics(User32.SM.CXPADDEDBORDER);
+        var (factorX, factorY) = GetDpi();
+        var frameSize = new Size(paddedBorder, paddedBorder);
+        var frameSizeInDips = new Size(frameSize.Width / factorX, frameSize.Height / factorY);
+        return new(
+            frameSizeInDips.Width,
+            frameSizeInDips.Height,
+            frameSizeInDips.Width,
+            frameSizeInDips.Height);
     }
 
     /// <summary>Provides the OnThemeChanged member.</summary>

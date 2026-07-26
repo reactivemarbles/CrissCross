@@ -24,7 +24,7 @@
                                VerticalAlignment="Center" />
                     <!-- Badge -->
                     <Border Name="BadgeBorder"
-                            Background="{DynamicResource SystemAccentColorDark1}"
+                            Background="{DynamicResource SystemAccentColorPrimary}"
                             CornerRadius="8"
                             MinWidth="16"
                             MinHeight="16"

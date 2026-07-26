@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -14,6 +14,13 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for paged data navigation.</summary>
 public sealed class PaginationState
 {
+    /// <summary>Formats the paged item range text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat SummaryFormat = System.Text.CompositeFormat.Parse("{0}-{1} of {2}");
+#else
+    private const string SummaryFormat = "{0}-{1} of {2}";
+#endif
+
     /// <summary>Initializes a new instance of the <see cref="PaginationState"/> class.</summary>
     /// <param name="pageIndex">The zero-based requested page index.</param>
     /// <param name="pageSize">The number of items requested per page.</param>
@@ -64,7 +71,7 @@ public sealed class PaginationState
 
     /// <summary>Gets compact user-facing item range text.</summary>
     public string SummaryText => HasItems
-        ? string.Format(CultureInfo.InvariantCulture, "{0}-{1} of {2}", FirstItemNumber, LastItemNumber, TotalItemCount)
+        ? string.Format(CultureInfo.InvariantCulture, SummaryFormat, FirstItemNumber, LastItemNumber, TotalItemCount)
         : "No items";
 
     /// <summary>Creates a request for the specified page using the current page size.</summary>

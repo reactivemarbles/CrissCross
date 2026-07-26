@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
@@ -17,6 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents BrushAnimator.</summary>
 /// <seealso cref="Animator" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class BrushAnimator : Animator
 {
     /// <summary>Stores the _repeatBehavior value.</summary>
@@ -65,6 +66,10 @@ public sealed class BrushAnimator : Animator
     /// The animation source.
     /// </value>
     protected override object AnimationSource => Brush;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates the asynchronous.</summary>
     /// <param name="sourceUri">The source URI.</param>
@@ -127,10 +132,7 @@ public sealed class BrushAnimator : Animator
         RepeatBehavior repeatBehavior,
         bool cacheFrameDataInMemory)
     {
-        if (sourceStream is null)
-        {
-            throw new ArgumentNullException(nameof(sourceStream));
-        }
+        ThrowHelper.ThrowIfNull(sourceStream, nameof(sourceStream));
 
         return CreateAsyncCore(
             sourceStream,

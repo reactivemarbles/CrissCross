@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -47,7 +47,7 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
     {
         _ = SetValue(
             TemplateButtonCommandProperty,
-            ReactiveCommand.Create<object?>(content => ArgumentNullException.ThrowIfNull(content)));
+            ReactiveCommand.Create<object>(static content => ArgumentNullException.ThrowIfNull(content)));
     }
 
     /// <summary>Occurs when an item is clicked in the <see cref="BreadcrumbBar"/>.</summary>
@@ -69,10 +69,7 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
 
     /// <summary>Setups the navigation.</summary>
     /// <param name="hostName">Name of the host.</param>
-    public void SetupNavigation(string hostName)
-    {
-        _hostName = hostName;
-    }
+    public void SetupNavigation(string hostName) => _hostName = hostName;
 
     /// <summary>Navigates to the specified view as registered to the viewmodel and updates the Breadcrumb.</summary>
     /// <param name="type">Type of ViewModel.</param>
@@ -118,21 +115,13 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
             throw new InvalidOperationException(MissingHostNameMessage);
         }
 
-        if (type is null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
+        ArgumentNullException.ThrowIfNull(type);
 
         UpdateItems(type, breadcrumbItemContent);
 
         this.NavigateToView(
             type,
-            new NavigationRequestOptions
-            {
-                HostName = _hostName,
-                Contract = contract,
-                Parameter = parameter,
-            });
+            new NavigationRequestOptions { HostName = _hostName, Contract = contract, Parameter = parameter, });
     }
 
     /// <summary>Navigates back and updates the Breadcrumb to remove the last item.</summary>
@@ -207,10 +196,19 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
     /// <param name="content">The content value.</param>
     private void UpdateItems(Type typeName, string? content = null)
     {
-        var list = Items.OfType<BreadcrumbBarItem>().ToList().Where(x => x.NavigationType == typeName).ToList();
-        if (list.Count != 0)
+        BreadcrumbBarItem? existingItem = null;
+        foreach (var item in Items)
         {
-            var index = Items.IndexOf(list[0]);
+            if (item is BreadcrumbBarItem breadcrumbItem && breadcrumbItem.NavigationType == typeName)
+            {
+                existingItem = breadcrumbItem;
+                break;
+            }
+        }
+
+        if (existingItem is not null)
+        {
+            var index = Items.IndexOf(existingItem);
             for (var i = Items.Count - 1; i > index; i--)
             {
                 Items.RemoveAt(i);

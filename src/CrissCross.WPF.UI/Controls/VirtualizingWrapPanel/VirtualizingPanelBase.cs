@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -79,7 +79,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     }
 
     /// <summary>Gets or sets scroll line delta for item based scrolling. The default value is 1 item.</summary>
-    public double ScrollLineDeltaItem
+    public int ScrollLineDeltaItem
     {
         get => (int)GetValue(ScrollLineDeltaItemProperty);
         set => SetValue(ScrollLineDeltaItemProperty, value);
@@ -141,30 +141,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     protected ItemsControl ItemsControl => ItemsControl.GetItemsOwner(this);
 
     /// <summary>Gets the ItemsControl (e.g. ListView) or if the ItemsControl is grouping a GroupItem.</summary>
-    protected DependencyObject ItemsOwner
-    {
-        get
-        {
-            if (field is not null)
-            {
-                return field;
-            }
-
-            /* Use reflection to access internal method because the public
-                 * GetItemsOwner method does always return the itmes control instead
-                 * of the real items owner for example the group item when grouping */
-            var getItemsOwnerInternalMethod = typeof(ItemsControl).GetMethod(
-                "GetItemsOwnerInternal",
-                BindingFlags.Static | BindingFlags.NonPublic,
-                null,
-                [typeof(DependencyObject)],
-                null)!;
-
-            field = (DependencyObject)getItemsOwnerInternalMethod.Invoke(null, [this])!;
-
-            return field;
-        }
-    }
+    protected DependencyObject ItemsOwner => System.Windows.Controls.ItemsControl.GetItemsOwner(this);
 
     /// <summary>Gets items collection.</summary>
     protected ReadOnlyCollection<object> Items => ((ItemContainerGenerator)ItemContainerGenerator).Items;
@@ -173,7 +150,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     protected Point Offset { get; private set; } = new(0, 0);
 
     /// <summary>Gets items container.</summary>
-    protected new IRecyclingItemContainerGenerator ItemContainerGenerator
+    protected IRecyclingItemContainerGenerator RecyclingItemContainerGenerator
     {
         get
         {
@@ -185,7 +162,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
             /* Because of a bug in the framework the ItemContainerGenerator
                is null until InternalChildren accessed at least one time. */
             _ = InternalChildren;
-            field = (IRecyclingItemContainerGenerator)base.ItemContainerGenerator;
+            field = (IRecyclingItemContainerGenerator)ItemContainerGenerator;
 
             return field;
         }
@@ -195,10 +172,10 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     protected ItemRange ItemRange { get; set; }
 
     /// <summary>Gets the <see cref="Extent"/>.</summary>
-    protected Size Extent { get; private set; } = new Size(0, 0);
+    protected Size Extent { get; private set; } = new(0, 0);
 
     /// <summary>Gets the viewport.</summary>
-    protected Size Viewport { get; private set; } = new Size(0, 0);
+    protected Size Viewport { get; private set; } = new(0, 0);
 
     /// <inheritdoc />
     public virtual Rect MakeVisible(Visual visual, Rect rectangle)
@@ -241,7 +218,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         var visibleRectWidth = Math.Min(rectangle.Width, Viewport.Width);
         var visibleRectHeight = Math.Min(rectangle.Height, Viewport.Height);
 
-        return new Rect(scrollAmountX, scrollAmountY, visibleRectWidth, visibleRectHeight);
+        return new(scrollAmountX, scrollAmountY, visibleRectWidth, visibleRectHeight);
     }
 
     /// <summary>Sets the vertical offset.</summary>
@@ -388,7 +365,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     protected int GetItemIndexFromChildIndex(int childIndex)
     {
         var generatorPosition = GetGeneratorPositionFromChildIndex(childIndex);
-        return ItemContainerGenerator.IndexFromGeneratorPosition(generatorPosition);
+        return RecyclingItemContainerGenerator.IndexFromGeneratorPosition(generatorPosition);
     }
 
     /// <summary>Gets the position of children from the generator.</summary>
@@ -470,19 +447,18 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <summary>Realizes visible and cached items.</summary>
     protected virtual void RealizeItems()
     {
-        var startPosition = ItemContainerGenerator.GeneratorPositionFromIndex(ItemRange.StartIndex);
+        var startPosition = RecyclingItemContainerGenerator.GeneratorPositionFromIndex(ItemRange.StartIndex);
         var childIndex = startPosition.Offset == 0 ? startPosition.Index : startPosition.Index + 1;
 
-        using var at = ItemContainerGenerator.StartAt(startPosition, GeneratorDirection.Forward, true);
+        using var at = RecyclingItemContainerGenerator.StartAt(startPosition, GeneratorDirection.Forward, true);
 
         for (var i = ItemRange.StartIndex; i <= ItemRange.EndIndex; i++, childIndex++)
         {
-            var child = (UIElement)ItemContainerGenerator.GenerateNext(out var isNewlyRealized);
+            var child = (UIElement)RecyclingItemContainerGenerator.GenerateNext(out var isNewlyRealized);
 
             if (
                 isNewlyRealized
-                || /*recycled*/
-                !InternalChildren.Contains(child))
+                || !InternalChildren.Contains(child))
             {
                 if (childIndex >= InternalChildren.Count)
                 {
@@ -493,9 +469,9 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
                     InsertInternalChild(childIndex, child);
                 }
 
-                ItemContainerGenerator.PrepareItemContainer(child);
+                RecyclingItemContainerGenerator.PrepareItemContainer(child);
 
-                child.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                child.Measure(new(double.PositiveInfinity, double.PositiveInfinity));
             }
 
             if (child is not IHierarchicalVirtualizationAndScrollInfo groupItem)
@@ -508,7 +484,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
                 VirtualizationCacheLengthUnit.Item,
                 new Rect(0, 0, ViewportWidth, ViewportHeight));
 
-            child.Measure(new Size(ViewportWidth, ViewportHeight));
+            child.Measure(new(ViewportWidth, ViewportHeight));
         }
     }
 
@@ -519,7 +495,7 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
         {
             var generatorPosition = GetGeneratorPositionFromChildIndex(childIndex);
 
-            var itemIndex = ItemContainerGenerator.IndexFromGeneratorPosition(generatorPosition);
+            var itemIndex = RecyclingItemContainerGenerator.IndexFromGeneratorPosition(generatorPosition);
 
             if (itemIndex == -1 || ItemRange.Contains(itemIndex))
             {
@@ -528,11 +504,11 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
 
             if (VirtualizationMode == VirtualizationMode.Recycling)
             {
-                ItemContainerGenerator.Recycle(generatorPosition, 1);
+                RecyclingItemContainerGenerator.Recycle(generatorPosition, 1);
             }
             else
             {
-                ItemContainerGenerator.Remove(generatorPosition, 1);
+                RecyclingItemContainerGenerator.Remove(generatorPosition, 1);
             }
 
             RemoveInternalChildRange(childIndex, 1);

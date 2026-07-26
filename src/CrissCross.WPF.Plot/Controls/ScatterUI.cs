@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
@@ -110,7 +110,7 @@ public partial class ScatterUI : RxObject, IPlottableUI
         // Set name from first emission of the observable
         _ = observable
             .Take(1)
-            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .Where(static d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(data => ChartSettings.ItemName = data.Name!)
             .DisposeWith(Disposables);
@@ -210,15 +210,8 @@ public partial class ScatterUI : RxObject, IPlottableUI
     /// <param name="y">The y value.</param>
     public void InsertData(IList<double> x, IList<double> y)
     {
-        if (x is null)
-        {
-            throw new ArgumentNullException(nameof(x));
-        }
-
-        if (y is null)
-        {
-            throw new ArgumentNullException(nameof(y));
-        }
+        ThrowHelper.ThrowIfNull(x, nameof(x));
+        ThrowHelper.ThrowIfNull(y, nameof(y));
 
         var count = x.Count;
         Axes = PlotLine!.Axes;
@@ -265,7 +258,7 @@ public partial class ScatterUI : RxObject, IPlottableUI
     /// <param name="observable">The observable value.</param>
     public void UpdateScatter(IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)> observable) =>
         observable
-            .Where(data =>
+            .Where(static data =>
                 data.Name is not null
                 && data.X is not null
                 && data.Y is not null

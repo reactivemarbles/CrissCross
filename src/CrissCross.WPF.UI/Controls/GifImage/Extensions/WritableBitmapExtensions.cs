@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Imaging;
@@ -19,7 +19,7 @@ internal static class WritableBitmapExtensions
     {
         /// <summary>Provides the LockInScope member.</summary>
         /// <returns>The result.</returns>
-        public IDisposable LockInScope() => new WriteableBitmapLock(bitmap);
+        internal IDisposable LockInScope() => new WriteableBitmapLock(bitmap);
     }
 
     /// <summary>Provides the WriteableBitmapLock member.</summary>
@@ -30,16 +30,13 @@ internal static class WritableBitmapExtensions
 
         /// <summary>Initializes a new instance of the <see cref="WriteableBitmapLock"/> class.</summary>
         /// <param name="bitmap">The bitmap value.</param>
-        public WriteableBitmapLock(WriteableBitmap bitmap)
+        internal WriteableBitmapLock(WriteableBitmap bitmap)
         {
             _bitmap = bitmap;
             _bitmap.Lock();
         }
 
         /// <summary>Provides the Dispose member.</summary>
-        public void Dispose()
-        {
-            _bitmap.Unlock();
-        }
+        void IDisposable.Dispose() => _bitmap.Unlock();
     }
 }

@@ -1,12 +1,17 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 namespace CrissCross.Tests;
 
 /// <summary>Tests for EventSignal.</summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class EventSignalTests
 {
+    /// <summary>Gets a debugger-safe representation of this test fixture.</summary>
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the From_ForwardsEventArgsAndUnsubscribesDeterministically member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -40,7 +45,7 @@ public class EventSignalTests
         EventSignal.From<TestEventArgs>(source.AddHandler, source.RemoveHandler);
 
     /// <summary>Provides the TestEventArgs member.</summary>
-    private sealed class TestEventArgs : EventArgs
+    public sealed class TestEventArgs : EventArgs
     {
         /// <summary>Initializes a new instance of the <see cref="TestEventArgs"/> class.</summary>
         /// <param name="value">The value.</param>
@@ -54,7 +59,7 @@ public class EventSignalTests
     }
 
     /// <summary>Provides the EventSource member.</summary>
-    private sealed class EventSource
+    public sealed class EventSource
     {
         /// <summary>Provides the _raised member.</summary>
         private EventHandler<TestEventArgs>? _raised;
@@ -83,17 +88,11 @@ public class EventSignalTests
 
         /// <summary>Provides the AddHandler member.</summary>
         /// <param name="handler">The handler to subscribe.</param>
-        public void AddHandler(EventHandler<TestEventArgs> handler)
-        {
-            Raised += handler;
-        }
+        public void AddHandler(EventHandler<TestEventArgs> handler) => Raised += handler;
 
         /// <summary>Provides the RemoveHandler member.</summary>
         /// <param name="handler">The handler to unsubscribe.</param>
-        public void RemoveHandler(EventHandler<TestEventArgs> handler)
-        {
-            Raised -= handler;
-        }
+        public void RemoveHandler(EventHandler<TestEventArgs> handler) => Raised -= handler;
 
         /// <summary>Provides the Raise member.</summary>
         /// <param name="args">The args value.</param>

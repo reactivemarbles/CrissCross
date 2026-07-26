@@ -59,7 +59,7 @@
                     <Button Click="ToolbarButtonClick" CommandParameter="SelectAll" Content="Select all" />
                     <Button Click="ToolbarButtonClick" CommandParameter="Reset" Content="Reset text" />
                     <Button
-                        PreviewMouseLeftButtonDown="DragSourceMouseLeftButtonDown"
+                        x:Name="DragSourceButton"
                         Content="Drag sample text" />
                 </WrapPanel>
             </Border>

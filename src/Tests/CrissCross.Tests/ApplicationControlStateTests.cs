@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -7,6 +7,7 @@ using System.Windows.Input;
 namespace CrissCross.Tests;
 
 /// <summary>Tests for platform-neutral application control state models shared by UI stacks.</summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ApplicationControlStateTests
 {
     /// <summary>Provides the shared status field key.</summary>
@@ -107,6 +108,10 @@ public class ApplicationControlStateTests
 
     /// <summary>Gets a symbol for timeout display-name assertions.</summary>
     private static string Timeout => nameof(Timeout);
+
+    /// <summary>Gets a debugger-safe representation of this test fixture.</summary>
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the CommandButtonStatus_Executing_IsNotInteractiveAndHasNoError member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -214,13 +219,7 @@ public class ApplicationControlStateTests
         var chip = new ChipModel(
             "status-open",
             "Open",
-            new ChipModelOptions
-            {
-                IsSelected = true,
-                IsRemovable = true,
-                Icon = "StatusGlyph",
-                RemoveCommand = removeCommand,
-            });
+            new ChipModelOptions { IsSelected = true, IsRemovable = true, Icon = "StatusGlyph", RemoveCommand = removeCommand, });
 
         await Assert.That(chip.Key).IsEqualTo("status-open");
         await Assert.That(chip.HasIcon).IsTrue();
@@ -382,13 +381,7 @@ public class ApplicationControlStateTests
         var step = new StepDescriptor(
             SetupStepKey,
             "Setup connection",
-            new StepDescriptorOptions
-            {
-                Status = StepStatus.Warning,
-                IsOptional = true,
-                CanLeave = false,
-                ValidationMessages = messages,
-            });
+            new StepDescriptorOptions { Status = StepStatus.Warning, IsOptional = true, CanLeave = false, ValidationMessages = messages, });
 
         await Assert.That(step.Key).IsEqualTo(SetupStepKey);
         await Assert.That(step.DisplayTitle).IsEqualTo("Setup connection (optional)");
@@ -410,11 +403,7 @@ public class ApplicationControlStateTests
             new StepDescriptor(
                 "review",
                 "Review",
-                new StepDescriptorOptions
-                {
-                    Status = StepStatus.Error,
-                    ValidationMessages = [new ValidationMessage("review", "Review", "Resolve duplicate columns")],
-                }),
+                new StepDescriptorOptions { Status = StepStatus.Error, ValidationMessages = [new ValidationMessage("review", "Review", "Resolve duplicate columns")], }),
             new StepDescriptor("finish", "Finish", new StepDescriptorOptions { IsEnabled = false }),
         };
         var state = new StepperState(steps, MappingStepKey, StepperOrientation.Vertical);
@@ -587,22 +576,11 @@ public class ApplicationControlStateTests
             new PropertyDescriptorModel(
                 "endpoint",
                 "Endpoint",
-                new PropertyDescriptorOptions
-                {
-                    Category = ConnectionCategory,
-                    Value = "opc.tcp://localhost",
-                    OriginalValue = "opc.tcp://localhost",
-                }),
+                new PropertyDescriptorOptions { Category = ConnectionCategory, Value = "opc.tcp://localhost", OriginalValue = "opc.tcp://localhost", }),
             new PropertyDescriptorModel(
                 "timeout",
                 nameof(Timeout),
-                new PropertyDescriptorOptions
-                {
-                    Category = ConnectionCategory,
-                    EditorKind = PropertyEditorKind.Number,
-                    Value = ModifiedPropertyValue,
-                    OriginalValue = OriginalPropertyValue,
-                }),
+                new PropertyDescriptorOptions { Category = ConnectionCategory, EditorKind = PropertyEditorKind.Number, Value = ModifiedPropertyValue, OriginalValue = OriginalPropertyValue, }),
             new PropertyDescriptorModel(
                 "mode",
                 "Mode",

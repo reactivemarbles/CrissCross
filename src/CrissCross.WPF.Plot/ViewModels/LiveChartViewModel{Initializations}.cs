@@ -1,8 +1,7 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Diagnostics;
 using System.Runtime.Versioning;
 using System.Windows.Input;
 #if !REACTIVE_SHIM
@@ -72,9 +71,16 @@ public partial class LiveChartViewModel : RxObject
         ConfigureXAxis(isXAxisDateTime);
         HideAllYAxis();
 
-        foreach (var plotLine in data.Take(MaximumGenericPlotLineCount))
+        var plotLineCount = 0;
+        foreach (var plotLine in data)
         {
+            if (plotLineCount >= MaximumGenericPlotLineCount)
+            {
+                break;
+            }
+
             AddGenericPlotLine(plotLine, getYAxis!, createPlotUI);
+            plotLineCount++;
         }
 
         UpdateChartObjectsCollection();
@@ -86,7 +92,7 @@ public partial class LiveChartViewModel : RxObject
         IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
         InitializeGenericPlotLines(
             data: observables,
-            getYAxis: input => input.Select(x => x.Axis),
+            getYAxis: static input => input.Select(static x => x.Axis),
             createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
             isXAxisDateTime: true);
 
@@ -96,7 +102,7 @@ public partial class LiveChartViewModel : RxObject
         IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> observables) =>
         InitializeGenericPlotLines(
             data: observables,
-            getYAxis: input => input.Select(x => x.Axis),
+            getYAxis: static input => input.Select(static x => x.Axis),
             createPlotUI: obs => new ScatterUI(WpfPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
             isXAxisDateTime: false);
 
@@ -106,17 +112,8 @@ public partial class LiveChartViewModel : RxObject
         IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
         InitializeGenericPlotLines(
             data: observables,
-            getYAxis: input => input.Select(x => x.Axis),
-            createPlotUI: obs => new SignalUI(
-                WpfPlot1vm!,
-                observable: obs,
-                coordinatesObs: MouseCoordinatesObservable,
-                SetColorLegend(PlotLinesCollectionUI!),
-                new SignalUIOptions
-                {
-                    FixedPoints = this.WhenAnyValue(x => x.UseFixedNumberOfPoints),
-                    NumberPointsPlotted = this.WhenAnyValue(x => x.NumberPointsPlotted),
-                }),
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: CreateSignalUI,
             isXAxisDateTime: true);
 
     /// <summary>Provides the InitializeSignalPlotLines member.</summary>
@@ -125,7 +122,7 @@ public partial class LiveChartViewModel : RxObject
         (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
         InitializeGenericPlotLines(
             data: [data],
-            getYAxis: input => input.Axis,
+            getYAxis: static input => input.Axis,
             createPlotUI: d => new SignalXY_UI(
                 WpfPlot1vm!,
                 (data.Name, data.Value, data.DateTime, data.Axis),
@@ -138,7 +135,7 @@ public partial class LiveChartViewModel : RxObject
         IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> observables) =>
         InitializeGenericPlotLines(
             data: observables,
-            getYAxis: input => input.Select(x => x.Axis),
+            getYAxis: static input => input.Select(static x => x.Axis),
             createPlotUI: obs => new DataLoggerUI(
                 plot: WpfPlot1vm!,
                 observable: obs,
@@ -151,7 +148,7 @@ public partial class LiveChartViewModel : RxObject
         (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
         InitializeGenericPlotLines(
             data: [data],
-            getYAxis: input => input.Axis,
+            getYAxis: static input => input.Axis,
             createPlotUI: d => new SignalXY_UI(
                 plot: WpfPlot1vm!,
                 data: d,
@@ -165,7 +162,7 @@ public partial class LiveChartViewModel : RxObject
         IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data) =>
         InitializeGenericPlotLines(
             data: data,
-            getYAxis: input => input.Axis,
+            getYAxis: static input => input.Axis,
             createPlotUI: d => new SignalXY_UI(
                 plot: WpfPlot1vm!,
                 data: d,
@@ -184,7 +181,7 @@ public partial class LiveChartViewModel : RxObject
         uint sampleCount) =>
         InitializeGenericPlotLines(
             data: observables,
-            getYAxis: input => input.Select(x => x.Axis),
+            getYAxis: static input => input.Select(static x => x.Axis),
             createPlotUI: obs => new StreamerUI(
                 plot: WpfPlot1vm!,
                 observable: obs,
@@ -271,13 +268,6 @@ public partial class LiveChartViewModel : RxObject
             _ => throw new ArgumentNullException(nameof(newItem)),
         };
 
-    /// <summary>Throws when a required argument is null.</summary>
-    /// <typeparam name="T">The argument type.</typeparam>
-    /// <param name="value">The argument value.</param>
-    /// <param name="name">The argument name.</param>
-    private static void ThrowIfNull<T>(T? value, string name)
-        where T : class => _ = value ?? throw new ArgumentNullException(name);
-
     /// <summary>Validates generic plot line initialization arguments.</summary>
     /// <typeparam name="T">The data item type.</typeparam>
     /// <param name="data">The plot data.</param>
@@ -288,9 +278,9 @@ public partial class LiveChartViewModel : RxObject
         Func<T, object>? getYAxis,
         Func<T, object> createPlotUI)
     {
-        ThrowIfNull(data, nameof(data));
-        ThrowIfNull(getYAxis, nameof(getYAxis));
-        ThrowIfNull(createPlotUI, nameof(createPlotUI));
+        ThrowHelper.ThrowIfNull(data, nameof(data));
+        ThrowHelper.ThrowIfNull(getYAxis, nameof(getYAxis));
+        ThrowHelper.ThrowIfNull(createPlotUI, nameof(createPlotUI));
     }
 
     /// <summary>Configures the X axis mode.</summary>
@@ -319,6 +309,24 @@ public partial class LiveChartViewModel : RxObject
         var lineUI = (IPlottableUI?)newItem ?? throw new ArgumentNullException(nameof(newItem));
         AssignYAxis(getYAxis(plotLine), line, lineUI);
         PlotLinesCollectionUI.Add(lineUI);
+    }
+
+    /// <summary>Creates a signal plot UI with the current point-window settings.</summary>
+    /// <param name="observable">The signal data source.</param>
+    /// <returns>The configured signal plot UI.</returns>
+    private SignalUI CreateSignalUI(
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable)
+    {
+        var fixedPoints = this.WhenAnyValue(static x => x.UseFixedNumberOfPoints);
+        var numberPointsPlotted = this.WhenAnyValue(static x => x.NumberPointsPlotted);
+        SignalUIOptions options = new() { FixedPoints = fixedPoints, NumberPointsPlotted = numberPointsPlotted };
+
+        return new(
+            WpfPlot1vm!,
+            observable: observable,
+            coordinatesObs: MouseCoordinatesObservable,
+            SetColorLegend(PlotLinesCollectionUI!),
+            options);
     }
 
     /// <summary>Assigns the Y axis to a plot line.</summary>
@@ -406,7 +414,7 @@ public partial class LiveChartViewModel : RxObject
     private void InitializeMouseObservable() =>
         EventSignal
             .From<MouseEventHandler, MouseEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => WpfPlot1vm!.MouseMove += handler,
                 handler => WpfPlot1vm!.MouseMove -= handler)
             .Retry(int.MaxValue)
@@ -424,7 +432,7 @@ public partial class LiveChartViewModel : RxObject
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine("mouse location error: " + ex);
+                    LogMouseLocationError(ex);
                 }
             })
             .DisposeWith(Disposables);

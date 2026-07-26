@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents an icon that uses an IconSource as its content.</summary>
 [ContentProperty(nameof(IconSource))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class IconSourceElement : IconElement
 {
     /// <summary>Identifies the <see cref="IconSource"/> dependency property.</summary>
@@ -27,6 +28,10 @@ public class IconSourceElement : IconElement
         get => (IconSource?)GetValue(IconSourceProperty);
         set => SetValue(IconSourceProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates the icon element.</summary>
     /// <returns>An IconElement.</returns>

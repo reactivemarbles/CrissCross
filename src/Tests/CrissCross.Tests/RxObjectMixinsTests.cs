@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Threading;
@@ -10,6 +10,7 @@ using Splat;
 namespace CrissCross.Tests;
 
 /// <summary>Tests for RxObjectMixins class.</summary>
+[System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class RxObjectMixinsTests
 {
     /// <summary>Provides the matching test property value.</summary>
@@ -20,6 +21,10 @@ public class RxObjectMixinsTests
 
     /// <summary>Provides the expected observable item count.</summary>
     private const int ExpectedObservableItemCount = 2;
+
+    /// <summary>Gets a debugger-safe representation of this test fixture.</summary>
+    [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the InitializeReactiveUI member.</summary>
     [Before(HookType.Class)]
@@ -135,7 +140,7 @@ public class RxObjectMixinsTests
         var result = subject.ToListOfObservables(x => x.TestProperty);
 
         var observableList = new List<IObservable<string?>>();
-        var subscription = result.Subscribe(l => observableList = l.ToList());
+        var subscription = result.Subscribe(values => observableList = CopyObservables(values));
 
         // Give time for the observable to propagate
         await Task.Delay(ObservablePropagationDelayMilliseconds);
@@ -159,7 +164,7 @@ public class RxObjectMixinsTests
 
         var observableList = new List<IObservable<string?>>();
         var result = subject.ToListOfObservables(x => x.TestProperty);
-        var subscription = result.Subscribe(l => observableList = l.ToList());
+        var subscription = result.Subscribe(values => observableList = CopyObservables(values));
 
         // Give time for the observable to propagate
         await Task.Delay(ObservablePropagationDelayMilliseconds);
@@ -191,7 +196,7 @@ public class RxObjectMixinsTests
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
+        var anyMatch = observableList.AnyMatch(static x => x == MatchValue);
 
         var result = false;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -218,7 +223,7 @@ public class RxObjectMixinsTests
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
+        var anyMatch = observableList.AnyMatch(static x => x == MatchValue);
 
         var result = true;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -244,7 +249,7 @@ public class RxObjectMixinsTests
         var subject = new StateSignal<IEnumerable<TestReactiveObject>>(list);
 
         var observableList = subject.ToListOfObservables(x => x.TestProperty);
-        var anyMatch = observableList.AnyMatch(x => x == MatchValue);
+        var anyMatch = observableList.AnyMatch(static x => x == MatchValue);
 
         var result = false;
         var subscription = anyMatch.Subscribe(x => result = x);
@@ -298,7 +303,7 @@ public class RxObjectMixinsTests
         var result = subject.ToListOfObservables(x => x.TestProperty);
 
         var observableList = new List<IObservable<string?>>();
-        var subscription = result.Subscribe(l => observableList = l.ToList());
+        var subscription = result.Subscribe(values => observableList = CopyObservables(values));
 
         // Give time for the observable to propagate
         await Task.Delay(ObservablePropagationDelayMilliseconds);
@@ -309,6 +314,11 @@ public class RxObjectMixinsTests
         subscription.Dispose();
         subject.Dispose();
     }
+
+    /// <summary>Copies observable values without an iterator allocation.</summary>
+    /// <param name="values">The observable values to copy.</param>
+    /// <returns>A mutable list containing the supplied values.</returns>
+    private static List<IObservable<string?>> CopyObservables(IEnumerable<IObservable<string?>> values) => new(values);
 
     /// <summary>Gets or sets the value.</summary>
     private sealed class TestReactiveObject : ReactiveObject

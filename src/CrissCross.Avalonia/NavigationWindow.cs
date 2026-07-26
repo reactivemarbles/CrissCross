@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.CompilerServices;
@@ -39,7 +39,8 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     private string? _navigationHostName;
 
     /// <summary>Initializes static members of the <see cref="NavigationWindow"/> class.</summary>
-    static NavigationWindow() =>
+    static NavigationWindow()
+    {
         _ = NavigationFrameProperty.Changed.Subscribe(
             static (e) =>
             {
@@ -52,12 +53,29 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
 
                 navigationWindow.ConfigureNavigationHost(host, nameof(NavigationWindow));
             });
+    }
 
     /// <summary>Gets the can navigate back.</summary>
     /// <value>
     /// The can navigate back.
     /// </value>
     public IObservable<bool?>? CanNavigateBack => NavigationFrame?.CanNavigateBackObservable;
+
+    /// <summary>Gets or sets the stable routed navigation host name.</summary>
+    public string? HostName
+    {
+        get => _navigationHostName ?? Name;
+        set
+        {
+            _navigationHostName = string.IsNullOrWhiteSpace(value) ? null : value;
+            if (NavigationFrame is not { } host)
+            {
+                return;
+            }
+
+            ConfigureNavigationHost(host, nameof(NavigationWindow));
+        }
+    }
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -80,10 +98,10 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     }
 
     /// <inheritdoc/>
-    string? ISetNavigation.Name => _navigationHostName ?? Name;
+    string? ISetNavigation.Name => HostName;
 
     /// <inheritdoc/>
-    string? IUseNavigation.Name => _navigationHostName ?? Name;
+    string? IUseNavigation.Name => HostName;
 
     /// <summary>Called when the control finishes initialization.</summary>
     protected override void OnInitialized()
@@ -99,6 +117,24 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
             HostName = hostName,
             NavigateBackIsEnabled = navigateBackIsEnabled,
         };
+    }
+
+    /// <inheritdoc/>
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property != NameProperty || string.IsNullOrWhiteSpace(Name))
+        {
+            return;
+        }
+
+        _navigationHostName = Name;
+        if (NavigationFrame is not { } host)
+        {
+            return;
+        }
+
+        ConfigureNavigationHost(host, nameof(NavigationWindow));
     }
 
     /// <summary>Registers the content presenter.</summary>

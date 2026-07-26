@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -51,34 +51,19 @@ public static class EventSignal
         Action<EventHandler<TEventArgs>> addHandler,
         Action<EventHandler<TEventArgs>> removeHandler)
         where TEventArgs : EventArgs =>
-        From<EventHandler<TEventArgs>, TEventArgs>(handler => handler, addHandler, removeHandler);
+        From<EventHandler<TEventArgs>, TEventArgs>(static handler => handler, addHandler, removeHandler);
 
     /// <summary>Removes an event handler when the observable subscription is disposed.</summary>
     /// <typeparam name="TEventHandler">The event handler delegate type.</typeparam>
     /// <param name="removeHandler">The event unsubscription callback.</param>
     /// <param name="handler">The subscribed event handler.</param>
-    private sealed class EventSubscription<TEventHandler>(Action<TEventHandler> removeHandler, TEventHandler handler)
-        : IDisposable
+    private sealed class EventSubscription<TEventHandler>(Action<TEventHandler> removeHandler, TEventHandler handler) : IDisposable
         where TEventHandler : Delegate
     {
-        /// <summary>The event unsubscription callback.</summary>
-        private Action<TEventHandler>? _removeHandler = removeHandler;
-
-        /// <summary>The subscribed event handler.</summary>
-        private TEventHandler? _handler = handler;
+        /// <summary>The idempotent event unsubscription action.</summary>
+        private Action? _dispose = () => removeHandler(handler);
 
         /// <summary>Removes the subscribed event handler once.</summary>
-        public void Dispose()
-        {
-            var remove = Interlocked.Exchange(ref _removeHandler, null);
-            var eventHandler = Interlocked.Exchange(ref _handler, null);
-
-            if (remove is null || eventHandler is null)
-            {
-                return;
-            }
-
-            remove(eventHandler);
-        }
+        public void Dispose() => Interlocked.Exchange(ref _dispose, null)?.Invoke();
     }
 }

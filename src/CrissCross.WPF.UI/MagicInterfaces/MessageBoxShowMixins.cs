@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -31,7 +31,7 @@ public static class MessageBoxShowMixins
 
     /// <summary>Provides extension members.</summary>
     /// <param name="requester">The requester value.</param>
-    extension(ICanShowMessages? requester)
+    extension(ICanShowMessages requester)
     {
         /// <summary>Displays a dismiss-able message-box. Click outside of the message area to dismiss.</summary>
         /// <exception cref="System.ArgumentNullException">owner.</exception>
@@ -95,10 +95,7 @@ public static class MessageBoxShowMixins
         /// <param name="message">The message.</param>
         public void IsBusy(string call, bool busy, string message)
         {
-            if (requester is null)
-            {
-                throw new ArgumentNullException(nameof(requester));
-            }
+            ThrowHelper.ThrowIfNull(requester, nameof(requester));
 
             busyFunc.Value?.Invoke(call, busy, message);
         }
@@ -112,10 +109,7 @@ public static class MessageBoxShowMixins
         /// <param name="e">The e.</param>
         public void ListenForBusy(Action<string, bool, string> e)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             busyFunc.Assign(e);
         }
@@ -124,10 +118,7 @@ public static class MessageBoxShowMixins
         /// <param name="e">The e.</param>
         public void ListenForMessages(Func<Tuple<string, string, MessageBoxButton>, Task<MessageBoxResult>> e)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             if (dummy is not DependencyObject owner)
             {
@@ -150,10 +141,7 @@ public static class MessageBoxShowMixins
         /// <param name="e">The e.</param>
         public void ListenForCustomMessages(Func<CustomMessageBoxRequest, Task<CustomMessageBoxResult>> e)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             if (dummy is not DependencyObject owner)
             {
@@ -176,15 +164,10 @@ public static class MessageBoxShowMixins
     /// <summary>Gets the validated message requester owner.</summary>
     /// <param name="requester">The message requester.</param>
     /// <returns>The validated owner.</returns>
-    private static string GetValidatedOwner(ICanShowMessages? requester)
+    private static string GetValidatedOwner(ICanShowMessages requester)
     {
-        if (requester is null)
-        {
-            throw new ArgumentNullException(nameof(requester));
-        }
-
 #if NET8_0_OR_GREATER
-        ArgumentException.ThrowIfNullOrWhiteSpace(requester.Owner);
+        ThrowHelper.ThrowIfNullOrWhiteSpace(requester.Owner, "requester.Owner");
         return requester.Owner;
 #else
         if (string.IsNullOrWhiteSpace(requester.Owner))

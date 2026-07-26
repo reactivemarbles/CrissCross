@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -15,6 +14,27 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for a descriptor-driven property inspector.</summary>
 public sealed class PropertyGridState
 {
+    /// <summary>Formats the invalid-property summary text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat InvalidSummaryFormat = System.Text.CompositeFormat.Parse("{0} properties, {1} invalid");
+#else
+    private const string InvalidSummaryFormat = "{0} properties, {1} invalid";
+#endif
+
+    /// <summary>Formats the modified-property summary text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat ModifiedSummaryFormat = System.Text.CompositeFormat.Parse("{0} properties, {1} modified");
+#else
+    private const string ModifiedSummaryFormat = "{0} properties, {1} modified";
+#endif
+
+    /// <summary>Formats the property summary text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat PropertySummaryFormat = System.Text.CompositeFormat.Parse("{0} properties");
+#else
+    private const string PropertySummaryFormat = "{0} properties";
+#endif
+
     /// <inheritdoc />
     public PropertyGridState()
         : this(null, null, false) { }
@@ -36,11 +56,35 @@ public sealed class PropertyGridState
         Descriptors = descriptors ?? [];
         SearchText = searchText;
         IsCommitting = isCommitting;
-        VisibleDescriptors = Descriptors.Where(MatchesSearch).ToArray();
-        Categories = VisibleDescriptors
-            .GroupBy(static descriptor => descriptor.Category)
-            .Select(static group => new PropertyDescriptorGroup(group.Key, group.ToArray()))
-            .ToArray();
+        var visibleDescriptors = new List<PropertyDescriptorModel>();
+        var descriptorsByCategory = new Dictionary<string, List<PropertyDescriptorModel>>();
+        var categoryOrder = new List<string>();
+        foreach (var descriptor in Descriptors)
+        {
+            if (!MatchesSearch(descriptor))
+            {
+                continue;
+            }
+
+            visibleDescriptors.Add(descriptor);
+            if (!descriptorsByCategory.TryGetValue(descriptor.Category, out var categoryDescriptors))
+            {
+                categoryDescriptors = new();
+                descriptorsByCategory.Add(descriptor.Category, categoryDescriptors);
+                categoryOrder.Add(descriptor.Category);
+            }
+
+            categoryDescriptors.Add(descriptor);
+        }
+
+        var categories = new List<PropertyDescriptorGroup>(categoryOrder.Count);
+        foreach (var category in categoryOrder)
+        {
+            categories.Add(new(category, descriptorsByCategory[category]));
+        }
+
+        VisibleDescriptors = visibleDescriptors;
+        Categories = categories;
     }
 
     /// <summary>Gets the property descriptors.</summary>
@@ -65,13 +109,13 @@ public sealed class PropertyGridState
     public int VisibleDescriptorCount => VisibleDescriptors.Count;
 
     /// <summary>Gets the editable descriptor count.</summary>
-    public int EditableDescriptorCount => Descriptors.Count(static descriptor => descriptor.CanEdit);
+    public int EditableDescriptorCount => CountEditableDescriptors();
 
     /// <summary>Gets the modified descriptor count.</summary>
-    public int ModifiedDescriptorCount => Descriptors.Count(static descriptor => descriptor.IsModified);
+    public int ModifiedDescriptorCount => CountModifiedDescriptors();
 
     /// <summary>Gets the invalid descriptor count.</summary>
-    public int InvalidDescriptorCount => Descriptors.Count(static descriptor => descriptor.IsInvalid);
+    public int InvalidDescriptorCount => CountInvalidDescriptors();
 
     /// <summary>Gets a value indicating whether search text is active.</summary>
     public bool HasSearch => !string.IsNullOrWhiteSpace(SearchText);
@@ -86,7 +130,7 @@ public sealed class PropertyGridState
     public bool CanCommit => HasModifications && !HasValidationErrors && !IsCommitting;
 
     /// <summary>Gets a value indicating whether at least one descriptor can be reset.</summary>
-    public bool CanReset => Descriptors.Any(static descriptor => descriptor.CanReset) && !IsCommitting;
+    public bool CanReset => !IsCommitting && HasResettableDescriptor();
 
     /// <summary>Gets a compact inspector summary.</summary>
     public string SummaryText
@@ -102,7 +146,7 @@ public sealed class PropertyGridState
             {
                 return string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0} properties, {1} invalid",
+                    InvalidSummaryFormat,
                     DescriptorCount,
                     InvalidDescriptorCount);
             }
@@ -110,31 +154,40 @@ public sealed class PropertyGridState
             return HasModifications
                 ? string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0} properties, {1} modified",
+                    ModifiedSummaryFormat,
                     DescriptorCount,
                     ModifiedDescriptorCount)
-                : string.Format(CultureInfo.InvariantCulture, "{0} properties", DescriptorCount);
+                : string.Format(CultureInfo.InvariantCulture, PropertySummaryFormat, DescriptorCount);
         }
     }
 
     /// <summary>Finds a descriptor by stable key.</summary>
     /// <param name="key">The descriptor key.</param>
     /// <returns>The descriptor when present; otherwise, <c>null</c>.</returns>
-    public PropertyDescriptorModel? GetDescriptor(string key) =>
-        Descriptors.FirstOrDefault(descriptor => descriptor.Key == key);
+    public PropertyDescriptorModel? GetDescriptor(string key)
+    {
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.Key == key)
+            {
+                return descriptor;
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>Determines whether one string contains another using ordinal-ignore-case comparison.</summary>
     /// <param name="source">The source text.</param>
     /// <param name="value">The value to find.</param>
     /// <returns><c>true</c> when the source contains the value; otherwise, <c>false</c>.</returns>
-    private static bool Contains(string source, string value)
-    {
-#if NET8_0_OR_GREATER
-        return source.Contains(value, System.StringComparison.OrdinalIgnoreCase);
+#if NETFRAMEWORK
+    private static bool Contains(string source, string value) =>
+        source.IndexOf(value, System.StringComparison.OrdinalIgnoreCase) >= 0;
 #else
-        return source.IndexOf(value, System.StringComparison.OrdinalIgnoreCase) >= 0;
+    private static bool Contains(string source, string value) =>
+        source.Contains(value, System.StringComparison.OrdinalIgnoreCase);
 #endif
-    }
 
     /// <summary>Determines whether a descriptor matches the current search text.</summary>
     /// <param name="descriptor">The descriptor.</param>
@@ -151,5 +204,68 @@ public sealed class PropertyGridState
             || Contains(descriptor.DisplayName, searchText)
             || Contains(descriptor.Category, searchText)
             || Contains(descriptor.ValueDisplayText, searchText);
+    }
+
+    /// <summary>Counts editable descriptors.</summary>
+    /// <returns>The editable descriptor count.</returns>
+    private int CountEditableDescriptors()
+    {
+        var count = 0;
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.CanEdit)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /// <summary>Counts modified descriptors.</summary>
+    /// <returns>The modified descriptor count.</returns>
+    private int CountModifiedDescriptors()
+    {
+        var count = 0;
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.IsModified)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /// <summary>Counts invalid descriptors.</summary>
+    /// <returns>The invalid descriptor count.</returns>
+    private int CountInvalidDescriptors()
+    {
+        var count = 0;
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.IsInvalid)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /// <summary>Determines whether a descriptor can be reset.</summary>
+    /// <returns><c>true</c> when a descriptor can be reset; otherwise, <c>false</c>.</returns>
+    private bool HasResettableDescriptor()
+    {
+        foreach (var descriptor in Descriptors)
+        {
+            if (descriptor.CanReset)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

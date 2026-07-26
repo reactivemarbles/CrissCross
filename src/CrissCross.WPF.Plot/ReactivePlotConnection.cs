@@ -1,17 +1,17 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-
-#if REACTIVELIST_REACTIVE
-namespace CrissCross.Reactive.WPF.Plot;
-#else
-namespace CrissCross.WPF.Plot;
-#endif
 
 #if REACTIVE_SHIM
 using ExceptionReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<System.Exception>;
 #else
 using ExceptionReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<System.Exception>;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
+namespace CrissCross.WPF.Plot;
 #endif
 
 /// <summary>Tracks subscriptions, adapters, state, and errors for a reactive plot binding.</summary>
@@ -34,30 +34,45 @@ internal sealed class ReactivePlotConnection : IReactivePlotConnection
 
     /// <summary>Gets the state changes for the connection.</summary>
     /// <returns>The result.</returns>
-    public IObservable<ReactivePlotConnectionState> State => _state.AsObservable();
+    internal IObservable<ReactivePlotConnectionState> State => _state.AsObservable();
 
     /// <summary>Gets the errors surfaced by the connection.</summary>
     /// <returns>The result.</returns>
-    public IObservable<Exception> Errors => _errors.AsObservable();
+    internal IObservable<Exception> Errors => _errors.AsObservable();
 
     /// <summary>Gets the current connection state.</summary>
-    public ReactivePlotConnectionState CurrentState { get; private set; } = ReactivePlotConnectionState.Connecting;
+    internal ReactivePlotConnectionState CurrentState { get; private set; } = ReactivePlotConnectionState.Connecting;
 
     /// <summary>Gets a value indicating whether all sources completed.</summary>
-    public bool IsCompleted { get; private set; }
+    internal bool IsCompleted { get; private set; }
+
+    /// <inheritdoc />
+    IObservable<ReactivePlotConnectionState> IReactivePlotConnection.State => State;
+
+    /// <inheritdoc />
+    IObservable<Exception> IReactivePlotConnection.Errors => Errors;
+
+    /// <inheritdoc />
+    ReactivePlotConnectionState IReactivePlotConnection.CurrentState => CurrentState;
+
+    /// <inheritdoc />
+    bool IReactivePlotConnection.IsCompleted => IsCompleted;
 
     /// <summary>Handles the Attach operation.</summary>
     /// <param name="subscriptions">The subscriptions value.</param>
     /// <param name="adapters">The adapters value.</param>
-    public void Attach(CompositeDisposable subscriptions, IReadOnlyCollection<IReactivePlotAdapter> adapters)
+    internal void Attach(CompositeDisposable subscriptions, IReadOnlyCollection<IReactivePlotAdapter> adapters)
     {
+        ThrowHelper.ThrowIfNull(subscriptions, nameof(subscriptions));
+        ThrowHelper.ThrowIfNull(adapters, nameof(adapters));
+
         _subscriptions = subscriptions;
         _adapters = adapters;
     }
 
     /// <summary>Handles the SetState operation.</summary>
     /// <param name="state">The state value.</param>
-    public void SetState(ReactivePlotConnectionState state)
+    internal void SetState(ReactivePlotConnectionState state)
     {
         if (_disposed && state != ReactivePlotConnectionState.Disposed)
         {
@@ -70,17 +85,21 @@ internal sealed class ReactivePlotConnection : IReactivePlotConnection
 
     /// <summary>Handles the AddError operation.</summary>
     /// <param name="error">The error value.</param>
-    public void AddError(Exception error) => _errors.OnNext(error);
+    internal void AddError(Exception error)
+    {
+        ThrowHelper.ThrowIfNull(error, nameof(error));
+        _errors.OnNext(error);
+    }
 
     /// <summary>Marks the connection as completed.</summary>
-    public void MarkCompleted()
+    internal void MarkCompleted()
     {
         IsCompleted = true;
         SetState(ReactivePlotConnectionState.Completed);
     }
 
-    /// <inheritdoc />
-    public void Dispose()
+    /// <summary>Disposes the connection and all adapters it owns.</summary>
+    internal void Dispose()
     {
         if (_disposed)
         {
@@ -101,4 +120,7 @@ internal sealed class ReactivePlotConnection : IReactivePlotConnection
         _state.Dispose();
         _errors.Dispose();
     }
+
+    /// <inheritdoc />
+    void IDisposable.Dispose() => Dispose();
 }

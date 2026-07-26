@@ -1,12 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <Color x:Key="CrissCrossAccentColor">#4F6BED</Color>
-    <Color x:Key="CrissCrossAccentHoverColor">#3B55C9</Color>
-    <Color x:Key="CrissCrossSurfaceColor">#FFFFFFFF</Color>
-    <Color x:Key="CrissCrossSubtleSurfaceColor">#FFF7F9FC</Color>
-    <Color x:Key="CrissCrossBorderColor">#FFD8DEE9</Color>
-    <Color x:Key="CrissCrossTextColor">#FF1F2937</Color>
-    <Color x:Key="CrissCrossMutedTextColor">#FF6B7280</Color>
-    <Color x:Key="CrissCrossDangerColor">#FFD13438</Color>
-    <Color x:Key="CrissCrossSuccessColor">#FF107C10</Color>
+    <!--
+        Cross-platform semantic palette. The paired resources are consumed
+        with AppThemeBinding so values update when RequestedTheme changes.
+    -->
+    <Color x:Key="CrissCrossAccentColorLight">#3B55C9</Color>
+    <Color x:Key="CrissCrossAccentColorDark">#8EA2FF</Color>
+    <Color x:Key="CrissCrossAccentHoverColorLight">#2F43A6</Color>
+    <Color x:Key="CrissCrossAccentHoverColorDark">#B7C2FF</Color>
+    <Color x:Key="CrissCrossAccentTextColorLight">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossAccentTextColorDark">#FF1B1D23</Color>
+    <Color x:Key="CrissCrossSurfaceColorLight">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossSurfaceColorDark">#FF1B1D23</Color>
+    <Color x:Key="CrissCrossSubtleSurfaceColorLight">#FFF7F9FC</Color>
+    <Color x:Key="CrissCrossSubtleSurfaceColorDark">#FF252831</Color>
+    <Color x:Key="CrissCrossBorderColorLight">#FFD8DEE9</Color>
+    <Color x:Key="CrissCrossBorderColorDark">#FF454A57</Color>
+    <Color x:Key="CrissCrossTextColorLight">#FF1F2937</Color>
+    <Color x:Key="CrissCrossTextColorDark">#FFF4F6FA</Color>
+    <Color x:Key="CrissCrossMutedTextColorLight">#FF6B7280</Color>
+    <Color x:Key="CrissCrossMutedTextColorDark">#FFB9C0CC</Color>
+    <Color x:Key="CrissCrossOverlayColorLight">#66000000</Color>
+    <Color x:Key="CrissCrossOverlayColorDark">#66000000</Color>
+    <Color x:Key="CrissCrossAttentionColorLight">#FF005FB8</Color>
+    <Color x:Key="CrissCrossAttentionColorDark">#FF4CC2FF</Color>
+    <Color x:Key="CrissCrossAttentionSurfaceColorLight">#FFF7F7F7</Color>
+    <Color x:Key="CrissCrossAttentionSurfaceColorDark">#FF2E2E2E</Color>
+    <Color x:Key="CrissCrossDangerColorLight">#FFD13438</Color>
+    <Color x:Key="CrissCrossDangerColorDark">#FFFF9B9B</Color>
+    <Color x:Key="CrissCrossDangerSurfaceColorLight">#FFFDE7E9</Color>
+    <Color x:Key="CrissCrossDangerSurfaceColorDark">#FF442726</Color>
+    <Color x:Key="CrissCrossSuccessColorLight">#FF107C10</Color>
+    <Color x:Key="CrissCrossSuccessColorDark">#FF85D990</Color>
+    <Color x:Key="CrissCrossSuccessSurfaceColorLight">#FFDFF6DD</Color>
+    <Color x:Key="CrissCrossSuccessSurfaceColorDark">#FF393D1B</Color>
+    <Color x:Key="CrissCrossCautionColorLight">#FF9D5D00</Color>
+    <Color x:Key="CrissCrossCautionColorDark">#FFFCE100</Color>
+    <Color x:Key="CrissCrossCautionSurfaceColorLight">#FFFFF4CE</Color>
+    <Color x:Key="CrissCrossCautionSurfaceColorDark">#FF433519</Color>
+    <Color x:Key="CrissCrossNeutralColorLight">#FF6E6E6E</Color>
+    <Color x:Key="CrissCrossNeutralColorDark">#FF9D9D9D</Color>
+    <Color x:Key="CrissCrossNeutralSurfaceColorLight">#FFF3F3F3</Color>
+    <Color x:Key="CrissCrossNeutralSurfaceColorDark">#FF2E2E2E</Color>
 </ResourceDictionary>

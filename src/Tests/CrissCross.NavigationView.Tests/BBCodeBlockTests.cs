@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -29,17 +29,14 @@ public class BBCodeBlockTests
     [Test]
     public async Task BBCode_WhenNestedAndMixedCase_RendersFormattingAndPreservesUnknownTags()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
-            BBCodeBlock block = new()
-            {
-                BBCode = "[B]bold [i]italic[/I][/b] [unknown=x]literal[/unknown]",
-            };
-            var inlines = EnumerateInlines(block.Inlines).ToList();
+            BBCodeBlock block = new() { BBCode = "[B]bold [i]italic[/I][/b] [unknown=x]literal[/unknown]", };
+            var inlines = MaterializeInlines(block.Inlines);
             return new FormattingResult(
-                string.Concat(inlines.OfType<Run>().Select(run => run.Text)),
-                inlines.OfType<Span>().Any(span => span.FontWeight == FontWeights.Bold),
-                inlines.OfType<Span>().Any(span => span.FontStyle == FontStyles.Italic));
+                GetRunText(inlines),
+                HasSpan(inlines, static span => span.FontWeight == FontWeights.Bold),
+                HasSpan(inlines, static span => span.FontStyle == FontStyles.Italic));
         });
 
         await Assert.That(result.Text).IsEqualTo("bold italic [unknown=x]literal[/unknown]");
@@ -52,22 +49,14 @@ public class BBCodeBlockTests
     [Test]
     public async Task BBCode_WhenLinksAreRendered_AllowsOnlySafeSchemes()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
-            BBCodeBlock block = new()
-            {
-                BBCode = "[url=https://example.com]web[/url] [email]user@example.com[/email] " +
-                    "[url=javascript:alert(1)]blocked[/url]",
-            };
-            var inlines = EnumerateInlines(block.Inlines).ToList();
-            var schemes = inlines
-                .OfType<Hyperlink>()
-                .Select(link => link.NavigateUri.Scheme)
-                .OrderBy(value => value, StringComparer.Ordinal)
-                .ToList();
+            BBCodeBlock block = new() { BBCode = "[url=https://example.com]web[/url] [email]user@example.com[/email] " + "[url=javascript:alert(1)]blocked[/url]", };
+            var inlines = MaterializeInlines(block.Inlines);
+            var schemes = GetHyperlinkSchemes(inlines);
             return new LinkResult(
                 schemes,
-                string.Concat(inlines.OfType<Run>().Select(run => run.Text)));
+                GetRunText(inlines));
         });
 
         await Assert.That(result.Schemes.Count).IsEqualTo(ExpectedLinkCount);
@@ -81,19 +70,22 @@ public class BBCodeBlockTests
     [Test]
     public async Task CommandLink_WhenInvoked_ExecutesCompletePayload()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
             RecordingCommand command = new();
-            BBCodeBlock block = new()
+            BBCodeBlock block = new() { BBCode = "[url=cmd:refresh:all]Refresh[/url]", Command = command, };
+            Hyperlink? hyperlink = null;
+            foreach (var inline in EnumerateInlines(block.Inlines))
             {
-                BBCode = "[url=cmd:refresh:all]Refresh[/url]",
-                Command = command,
-            };
-            var hyperlink = EnumerateInlines(block.Inlines).OfType<Hyperlink>().Single();
-            RequestNavigateEventArgs eventArgs = new(hyperlink.NavigateUri, null)
-            {
-                RoutedEvent = Hyperlink.RequestNavigateEvent,
-            };
+                if (inline is Hyperlink candidate)
+                {
+                    hyperlink = candidate;
+                    break;
+                }
+            }
+
+            ArgumentNullException.ThrowIfNull(hyperlink);
+            RequestNavigateEventArgs eventArgs = new(hyperlink.NavigateUri, null) { RoutedEvent = Hyperlink.RequestNavigateEvent, };
             hyperlink.RaiseEvent(eventArgs);
             return new CommandResult(command.Parameter as string, block.CommandParameter as string, eventArgs.Handled);
         });
@@ -108,26 +100,49 @@ public class BBCodeBlockTests
     [Test]
     public async Task BBCode_WhenReferenceStructuresAreCombined_RendersEveryStructure()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
             const string Markup =
-                "[h1]Heading[/h1][center]Centered[/center][quote=Author]Quote[/quote]" +
-                "[spoiler=Details]Hidden[/spoiler][code=csharp]var value = 1;[/code]" +
-                "[list=1][*]One[*]Two[/list][table][tr][th]Name[/th][td]Value[/td][/tr][/table]" +
-                "[pipes]|One|Two|\n|Three|Four|[/pipes][rating=4 max=5][/rating]" +
-                "[youtube]dQw4w9WgXcQ[/youtube][hr]";
+                "[h1]Heading[/h1][center]Centered[/center][quote=Author]Quote[/quote]"
+                + "[spoiler=Details]Hidden[/spoiler][code=csharp]var value = 1;[/code]"
+                + "[list=1][*]One[*]Two[/list][table][tr][th]Name[/th][td]Value[/td][/tr][/table]"
+                + "[pipes]|One|Two|\n|Three|Four|[/pipes][rating=4 max=5][/rating]"
+                + "[youtube]dQw4w9WgXcQ[/youtube][hr]";
             BBCodeBlock block = new() { BBCode = Markup };
-            var inlines = EnumerateInlines(block.Inlines).ToList();
-            var containers = inlines.OfType<InlineUIContainer>().ToList();
-            var borders = containers
-                .SelectMany(container => EnumerateLogicalTree(container.Child))
-                .OfType<WpfBorder>()
-                .ToList();
+            var inlines = MaterializeInlines(block.Inlines);
+            var containers = new List<InlineUIContainer>();
+            var borders = new List<WpfBorder>();
+            foreach (var inline in inlines)
+            {
+                if (inline is not InlineUIContainer container)
+                {
+                    continue;
+                }
+
+                containers.Add(container);
+                foreach (var element in EnumerateLogicalTree(container.Child))
+                {
+                    if (element is WpfBorder border)
+                    {
+                        borders.Add(border);
+                    }
+                }
+            }
+
+            var hasDynamicThemeResource = false;
+            foreach (var border in borders)
+            {
+                if (DependencyPropertyHelper.GetValueSource(border, WpfBorder.BackgroundProperty).IsExpression)
+                {
+                    hasDynamicThemeResource = true;
+                    break;
+                }
+            }
+
             return new StructureResult(
                 containers.Count,
                 borders.Count,
-                borders.Any(border =>
-                    DependencyPropertyHelper.GetValueSource(border, WpfBorder.BackgroundProperty).IsExpression));
+                hasDynamicThemeResource);
         });
 
         await Assert.That(result.ContainerCount).IsGreaterThanOrEqualTo(MinimumContainerCount);
@@ -159,13 +174,75 @@ public class BBCodeBlockTests
     private static IEnumerable<DependencyObject> EnumerateLogicalTree(DependencyObject root)
     {
         yield return root;
-        foreach (var child in LogicalTreeHelper.GetChildren(root).OfType<DependencyObject>())
+        foreach (var child in LogicalTreeHelper.GetChildren(root))
         {
-            foreach (var descendant in EnumerateLogicalTree(child))
+            if (child is not DependencyObject dependencyObject)
+            {
+                continue;
+            }
+
+            foreach (var descendant in EnumerateLogicalTree(dependencyObject))
             {
                 yield return descendant;
             }
         }
+    }
+
+    /// <summary>Materializes inline content.</summary>
+    /// <param name="inlines">The source collection.</param>
+    /// <returns>The materialized inlines.</returns>
+    private static List<Inline> MaterializeInlines(InlineCollection inlines) => [.. EnumerateInlines(inlines)];
+
+    /// <summary>Gets the concatenated run text.</summary>
+    /// <param name="inlines">The source inlines.</param>
+    /// <returns>The rendered text.</returns>
+    private static string GetRunText(IEnumerable<Inline> inlines)
+    {
+        var text = new System.Text.StringBuilder();
+        foreach (var inline in inlines)
+        {
+            if (inline is Run run)
+            {
+                _ = text.Append(run.Text);
+            }
+        }
+
+        return text.ToString();
+    }
+
+    /// <summary>Determines whether a span matches a predicate.</summary>
+    /// <param name="inlines">The source inlines.</param>
+    /// <param name="predicate">The match predicate.</param>
+    /// <returns>Whether a matching span exists.</returns>
+    private static bool HasSpan(IEnumerable<Inline> inlines, Func<Span, bool> predicate)
+    {
+        foreach (var inline in inlines)
+        {
+            if (inline is Span span && predicate(span))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Gets hyperlink schemes in ordinal order.</summary>
+    /// <param name="inlines">The source inlines.</param>
+    /// <returns>The ordered schemes.</returns>
+    private static List<string> GetHyperlinkSchemes(IEnumerable<Inline> inlines)
+    {
+        var schemes = new List<string>();
+        foreach (var inline in inlines)
+        {
+            if (inline is Hyperlink { NavigateUri: not null } hyperlink)
+            {
+                schemes.Add(hyperlink.NavigateUri.Scheme);
+            }
+        }
+
+        schemes.Sort(StringComparer.Ordinal);
+        return schemes;
     }
 
     /// <summary>Executes a function on a dedicated STA thread.</summary>

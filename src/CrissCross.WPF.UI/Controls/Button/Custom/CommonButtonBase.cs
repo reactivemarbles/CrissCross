@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents CommonButtonBase.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CommonButtonBase : System.Windows.Controls.Button
 {
     /// <summary>The corner radius1 property.</summary>
@@ -19,42 +20,42 @@ public class CommonButtonBase : System.Windows.Controls.Button
         nameof(CornerRadius1),
         typeof(CornerRadius),
         typeof(CommonButtonBase),
-        new PropertyMetadata(new CornerRadius(3.0)));
+        new(new CornerRadius(3.0)));
 
     /// <summary>The corner radius2 property.</summary>
     public static readonly DependencyProperty CornerRadius2Property = DependencyProperty.Register(
         nameof(CornerRadius2),
         typeof(CornerRadius),
         typeof(CommonButtonBase),
-        new PropertyMetadata(new CornerRadius(2.0)));
+        new(new CornerRadius(2.0)));
 
     /// <summary>The focus border thickness property.</summary>
     public static readonly DependencyProperty FocusBorderThicknessProperty = DependencyProperty.Register(
         nameof(FocusBorderThickness),
         typeof(Thickness),
         typeof(CommonButtonBase),
-        new PropertyMetadata(new Thickness(2.0)));
+        new(new Thickness(2.0)));
 
     /// <summary>The focus brush property.</summary>
     public static readonly DependencyProperty FocusBrushProperty = DependencyProperty.Register(
         nameof(FocusBrush),
         typeof(Brush),
         typeof(CommonButtonBase),
-        new PropertyMetadata(Brushes.Orange));
+        new(Brushes.Orange));
 
     /// <summary>The glare brush property.</summary>
     public static readonly DependencyProperty GlareBrushProperty = DependencyProperty.Register(
         nameof(GlareBrush),
         typeof(Brush),
         typeof(CommonButtonBase),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The minor border brush1 property.</summary>
     public static readonly DependencyProperty MinorBorderBrush1Property = DependencyProperty.Register(
         nameof(MinorBorderBrush1),
         typeof(Brush),
         typeof(CommonButtonBase),
-        new PropertyMetadata(
+        new(
             new LinearGradientBrush(SystemColors.ControlDarkDarkColor, SystemColors.ControlDarkDarkColor, 45)));
 
     /// <summary>The minor border thickness1 property.</summary>
@@ -62,7 +63,7 @@ public class CommonButtonBase : System.Windows.Controls.Button
         nameof(MinorBorderThickness1),
         typeof(Thickness),
         typeof(CommonButtonBase),
-        new PropertyMetadata(new Thickness(0.0)));
+        new(new Thickness(0.0)));
 
     /// <summary>The inset subtracted from the configured focus border thickness.</summary>
     private const double FocusBorderInset = 2D;
@@ -168,6 +169,10 @@ public class CommonButtonBase : System.Windows.Controls.Button
         set => SetValue(MinorBorderThickness1Property, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Controls the style.</summary>
     /// <param name="styleName">Name of the style.</param>
     /// <returns>A Style.</returns>
@@ -176,7 +181,7 @@ public class CommonButtonBase : System.Windows.Controls.Button
         try
         {
             var manifestResourceStream = typeof(CommonButtonBase).Module.Assembly.GetManifestResourceStream(
-                styleName + ".xaml");
+                $"{styleName}.xaml");
             if (manifestResourceStream is null)
             {
                 return null;
@@ -233,10 +238,7 @@ public class CommonButtonBase : System.Windows.Controls.Button
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
     /// </returns>
-    protected override bool ShouldSerializeProperty(DependencyProperty dp)
-    {
-        return dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
-    }
+    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
 
     /// <summary>Provides the CommonButtonBase_IsEnabledChanged member.</summary>
     /// <param name="sender">The event sender.</param>
@@ -310,10 +312,7 @@ public class CommonButtonBase : System.Windows.Controls.Button
 
     /// <summary>Provides the UserHintBorder member.</summary>
     /// <returns>The result.</returns>
-    private System.Windows.Controls.Border? UserHintBorder()
-    {
-        return Template is null
-            ? null
-            : Template.FindName("PART_UserHintBorder", this) as System.Windows.Controls.Border;
-    }
+    private System.Windows.Controls.Border? UserHintBorder() => Template is null
+        ? null
+        : Template.FindName("PART_UserHintBorder", this) as System.Windows.Controls.Border;
 }

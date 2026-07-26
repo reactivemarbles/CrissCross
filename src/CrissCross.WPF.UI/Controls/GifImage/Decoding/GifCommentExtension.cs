@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -18,7 +18,7 @@ internal sealed class GifCommentExtension : GifExtension
     private GifCommentExtension() { }
 
     /// <summary>Gets the Text value.</summary>
-    public string? Text { get; private set; }
+    internal string? Text { get; private set; }
 
     internal override GifBlockKind Kind
     {

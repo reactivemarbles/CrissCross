@@ -1,8 +1,7 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
@@ -48,22 +47,20 @@ public partial class RichTextBox
         var stackedImageOffset = 0D;
         var overlayHeight = 0D;
 
-        foreach (var segment in Document.Segments.Where(segment => segment.IsImage))
+        foreach (var segment in Document.Segments)
         {
+            if (!segment.IsImage)
+            {
+                continue;
+            }
+
             var image = _formattedPresenter.CreateImageElement(segment);
             if (image is null)
             {
                 continue;
             }
 
-            var precedingLineCount =
-                Document.Segments.Count(candidate => candidate.StartIndex < segment.StartIndex && candidate.IsLineBreak)
-                + (
-                    Document.Segments.Count(candidate =>
-                        candidate.StartIndex < segment.StartIndex
-                        && candidate.IsParagraphBreak) * ParagraphBreakLineCount)
-                + 1;
-            var top = (precedingLineCount * lineHeight) + stackedImageOffset;
+            var top = (GetPrecedingLineCount(segment) * lineHeight) + stackedImageOffset;
             var imageHeight = double.IsNaN(image.Height) ? DefaultImageOverlayHeight : image.Height;
 
             Canvas.SetLeft(image, 0);
@@ -77,6 +74,32 @@ public partial class RichTextBox
         _imageOverlay.Height = overlayHeight;
     }
 
+    /// <summary>Gets the number of rendered lines preceding a document segment.</summary>
+    /// <param name="segment">The segment to locate.</param>
+    /// <returns>The preceding line count.</returns>
+    private int GetPrecedingLineCount(TextSegment segment)
+    {
+        var lineCount = 1;
+        foreach (var candidate in Document.Segments)
+        {
+            if (candidate.StartIndex >= segment.StartIndex)
+            {
+                continue;
+            }
+
+            if (candidate.IsLineBreak)
+            {
+                lineCount++;
+            }
+            else if (candidate.IsParagraphBreak)
+            {
+                lineCount += ParagraphBreakLineCount;
+            }
+        }
+
+        return lineCount;
+    }
+
     /// <summary>Provides the UpdateDisplayMode member.</summary>
     private void UpdateDisplayMode()
     {
@@ -86,9 +109,24 @@ public partial class RichTextBox
         }
 
         var showEditing = ShouldShowEditingSurface();
-        var showRichEditingSurface = showEditing && Document.Segments.Any(segment => segment.IsImage);
+        var showRichEditingSurface = showEditing && ContainsImageSegment();
         UpdateEditingSurface(showEditing, showRichEditingSurface);
         UpdateFormattedSurface(showEditing, showRichEditingSurface);
+    }
+
+    /// <summary>Determines whether the current document contains an image segment.</summary>
+    /// <returns><see langword="true"/> when the document contains an image.</returns>
+    private bool ContainsImageSegment()
+    {
+        foreach (var segment in Document.Segments)
+        {
+            if (segment.IsImage)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>Applies state to the editable text surface.</summary>
@@ -299,7 +337,16 @@ public partial class RichTextBox
 
         if (_editingTextBox is not null)
         {
-            var textPresenter = _editingTextBox.GetVisualDescendants().OfType<TextPresenter>().FirstOrDefault();
+            TextPresenter? textPresenter = null;
+            foreach (var visual in _editingTextBox.GetVisualDescendants())
+            {
+                if (visual is TextPresenter presenter)
+                {
+                    textPresenter = presenter;
+                    break;
+                }
+            }
+
             if (TryHitTestTextLayout(textPresenter, point, out offset))
             {
                 return true;
@@ -361,14 +408,14 @@ public partial class RichTextBox
                 ? Bounds.Width
                 : Math.Max(Document.Length * GetEstimatedCharacterWidth(), GetEstimatedCharacterWidth());
         var height = Bounds.Height > 0 ? Bounds.Height : GetEstimatedLineHeight();
-        return new Rect(0, 0, width, height);
+        return new(0, 0, width, height);
     }
 
     /// <summary>Provides the EstimateDocumentOffsetFromPoint member.</summary>
     /// <param name="point">The point value.</param>
     /// <param name="bounds">The bounds value.</param>
     /// <returns>The result.</returns>
-    private int EstimateDocumentOffsetFromPoint(Point point, Rect bounds)
+    private int EstimateDocumentOffsetFromPoint(Point point, in Rect bounds)
     {
         var text = Document.PlainText;
         if (text.Length == 0)

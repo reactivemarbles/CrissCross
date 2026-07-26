@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using ReactiveUI;
 using Splat;
@@ -28,21 +27,21 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
         nameof(CanNavigateBack),
         typeof(bool?),
         typeof(ViewModelRoutedViewHost),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>The host name property.</summary>
     public static readonly DependencyProperty HostNameProperty = DependencyProperty.Register(
         nameof(HostName),
         typeof(string),
         typeof(ViewModelRoutedViewHost),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly DependencyProperty NavigateBackIsEnabledProperty = DependencyProperty.Register(
         nameof(NavigateBackIsEnabled),
         typeof(bool?),
         typeof(ViewModelRoutedViewHost),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The offset from the end of the stack to the previous entry.</summary>
     private const int PreviousEntryOffset = 2;
@@ -169,18 +168,18 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     public void Navigate<T>(T viewModel)
-        where T : class, IRxObject => InternalNavigate(viewModel, null, null);
+        where T : class, IRxObject => Navigate((IRxObject)viewModel);
 
     /// <summary>Navigates a view model instance with request options.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     /// <param name="options">The navigation options.</param>
     public void Navigate<T>(T viewModel, NavigationRequestOptions options)
-        where T : class, IRxObject => InternalNavigate(viewModel, options.Contract, options.Parameter);
+        where T : class, IRxObject => Navigate((IRxObject)viewModel, options);
 
     /// <inheritdoc />
     public void Navigate<T>(T viewModel, string? contract, object? parameter)
-        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+        where T : class, IRxObject => Navigate((IRxObject)viewModel, contract, parameter);
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -190,7 +189,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    public void Navigate(IRxObject viewModel) => InternalNavigate(viewModel, (string?)null, null);
+    public void Navigate(IRxObject viewModel) => Navigate(viewModel, null, null);
 
     /// <summary>Navigates the supplied view model with request options.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -202,7 +201,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
     public void Navigate(IRxObject viewModel, NavigationRequestOptions options) =>
-        InternalNavigate(viewModel, options.Contract, options.Parameter);
+        Navigate(viewModel, options.Contract, options.Parameter);
 
     /// <inheritdoc />
 #if NET8_0_OR_GREATER
@@ -236,30 +235,18 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     public void NavigateAndReset<T>(T viewModel)
-        where T : class, IRxObject
-    {
-        _resetStack = true;
-        InternalNavigate(viewModel, (string?)null, null);
-    }
+        where T : class, IRxObject => NavigateAndReset((IRxObject)viewModel);
 
     /// <summary>Navigates a view model instance with request options and resets history.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     /// <param name="options">The navigation options.</param>
     public void NavigateAndReset<T>(T viewModel, NavigationRequestOptions options)
-        where T : class, IRxObject
-    {
-        _resetStack = true;
-        InternalNavigate(viewModel, options.Contract, options.Parameter);
-    }
+        where T : class, IRxObject => NavigateAndReset((IRxObject)viewModel, options);
 
     /// <inheritdoc />
     public void NavigateAndReset<T>(T viewModel, string? contract, object? parameter)
-        where T : class, IRxObject
-    {
-        _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
-    }
+        where T : class, IRxObject => NavigateAndReset((IRxObject)viewModel, contract, parameter);
 
     /// <summary>Navigates the and reset.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -269,11 +256,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    public void NavigateAndReset(IRxObject viewModel)
-    {
-        _resetStack = true;
-        InternalNavigate(viewModel, (string?)null, null);
-    }
+    public void NavigateAndReset(IRxObject viewModel) => NavigateAndReset(viewModel, null, null);
 
     /// <summary>Navigates the supplied view model with request options and resets history.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -284,11 +267,8 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
 #endif
-    public void NavigateAndReset(IRxObject viewModel, NavigationRequestOptions options)
-    {
-        _resetStack = true;
-        InternalNavigate(viewModel, options.Contract, options.Parameter);
-    }
+    public void NavigateAndReset(IRxObject viewModel, NavigationRequestOptions options) =>
+        NavigateAndReset(viewModel, options.Contract, options.Parameter);
 
     /// <inheritdoc />
 #if NET8_0_OR_GREATER
@@ -533,9 +513,12 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
 
         _currentView = ViewLocator?.ResolveView(_toViewModel);
         _currentViewModel.OnNext(_toViewModel);
-        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Keys.Where(x => x != HostName))
+        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost)
         {
-            ViewModelRoutedViewHostMixins.NavigationHost[host].Refresh();
+            if (host.Key != HostName)
+            {
+                host.Value.Refresh();
+            }
         }
     }
 

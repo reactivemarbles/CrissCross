@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -125,7 +125,7 @@ public class DataPager : TemplatedControl
         var state = PaginationState;
         var clampedPageIndex = state is null ? Math.Max(0, pageIndex) : Math.Clamp(pageIndex, 0, state.TotalPages - 1);
         var pageSize = state?.PageSize ?? defaultPageSize;
-        return new PageRequest(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
+        return new(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
     }
 
     /// <summary>Emits a page request for the specified zero-based page index.</summary>

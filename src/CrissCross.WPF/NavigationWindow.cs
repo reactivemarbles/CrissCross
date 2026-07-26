@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -30,7 +30,7 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         nameof(NavigateBackIsEnabled),
         typeof(bool?),
         typeof(NavigationWindow),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The navigation frame property.</summary>
     public static readonly DependencyProperty NavigationFrameProperty = DependencyProperty.Register(
@@ -43,7 +43,7 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         nameof(Transition),
         typeof(TransitionType),
         typeof(NavigationWindow),
-        new PropertyMetadata(TransitionType.Fade));
+        new(TransitionType.Fade));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationWindow"/> class.</summary>
     public NavigationWindow() => DefaultStyleKey = typeof(NavigationWindow);
@@ -91,8 +91,7 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         NavigationFrame =
             (Template.FindName(nameof(NavigationFrame), this) as ViewModelRoutedViewHost)
             ?? throw new InvalidOperationException(
-                $"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "
-                    + "is missing from the Style template.");
+                $"{$"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "}is missing from the Style template.");
 
         NavigationFrame.HostName = Name;
         this.SetMainNavigationHost(NavigationFrame);
