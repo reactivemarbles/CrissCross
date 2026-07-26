@@ -53,6 +53,7 @@ jobs:
         run: |
           dotnet test --solution CrissCross.slnx \
             --configuration Release \
+            --max-parallel-test-modules 1 \
             --coverage \
             --coverage-output-format cobertura \
             --results-directory ./TestResults
