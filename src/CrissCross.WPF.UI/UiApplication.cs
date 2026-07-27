@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI;
 /// <remarks>
 /// Initializes a new instance of the <see cref="UiApplication" /> class.
 /// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class UiApplication
 {
     /// <summary>Stores the _uiApplication value.</summary>
@@ -100,6 +101,10 @@ public class UiApplication
         }
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Gets or sets the application's main window.</summary>
     /// <param name="resourceKey">The resource key.</param>
     /// <returns>An object representing the resource.</returns>
@@ -111,9 +116,16 @@ public class UiApplication
     /// <summary>Provides the ApplicationHasResources member.</summary>
     /// <param name="application">The application value.</param>
     /// <returns>The result.</returns>
-    private static bool ApplicationHasResources(Application application) =>
-        application.Resources.MergedDictionaries.Any(e =>
-            e.Source?.ToString()
-                .Contains(Appearance.ApplicationThemeManager.LibraryNamespace, StringComparison.OrdinalIgnoreCase)
-            == true);
+    private static bool ApplicationHasResources(Application application)
+    {
+        foreach (var dictionary in application.Resources.MergedDictionaries)
+        {
+            if (dictionary.Source?.ToString().Contains(Appearance.ApplicationThemeManager.LibraryNamespace, StringComparison.OrdinalIgnoreCase) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

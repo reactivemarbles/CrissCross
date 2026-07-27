@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -28,8 +28,8 @@ public class AlphaSlider : RangeBase
     {
         MinimumProperty.OverrideDefaultValue<AlphaSlider>(0.0);
         MaximumProperty.OverrideDefaultValue<AlphaSlider>(1.0);
-        _ = ValueProperty.Changed.AddClassHandler<AlphaSlider>((x, _) => x.OnValueChanged());
-        _ = AlphaProperty.Changed.AddClassHandler<AlphaSlider>((x, e) => x.OnAlphaChanged(e));
+        _ = ValueProperty.Changed.AddClassHandler<AlphaSlider>(static (x, _) => x.OnValueChanged());
+        _ = AlphaProperty.Changed.AddClassHandler<AlphaSlider>(static (x, e) => x.OnAlphaChanged(e));
     }
 
     /// <summary>Gets or sets the base color (without alpha).</summary>
@@ -47,15 +47,9 @@ public class AlphaSlider : RangeBase
     }
 
     /// <summary>Provides the OnValueChanged member.</summary>
-    private void OnValueChanged()
-    {
-        Alpha = Value;
-    }
+    private void OnValueChanged() => Alpha = Value;
 
     /// <summary>Provides the OnAlphaChanged member.</summary>
     /// <param name="e">The e value.</param>
-    private void OnAlphaChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        Value = (double)e.NewValue!;
-    }
+    private void OnAlphaChanged(AvaloniaPropertyChangedEventArgs e) => Value = (double)e.NewValue!;
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI;
 
 /// <summary>Represents PortableColorPicker.</summary>
 /// <seealso cref="DualPickerControlBase" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class PortableColorPicker : DualPickerControlBase
 {
     /// <summary>The small change property.</summary>
@@ -17,21 +18,21 @@ public partial class PortableColorPicker : DualPickerControlBase
         nameof(SmallChange),
         typeof(double),
         typeof(PortableColorPicker),
-        new PropertyMetadata(1.0));
+        new(1.0));
 
     /// <summary>The show alpha property.</summary>
     public static readonly DependencyProperty ShowAlphaProperty = DependencyProperty.Register(
         nameof(ShowAlpha),
         typeof(bool),
         typeof(PortableColorPicker),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The picker type property.</summary>
     public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
         nameof(PickerType),
         typeof(PickerType),
         typeof(PortableColorPicker),
-        new PropertyMetadata(PickerType.HSV));
+        new(PickerType.HSV));
 
     /// <summary>Initializes a new instance of the <see cref="PortableColorPicker"/> class.</summary>
     public PortableColorPicker() => InitializeComponent();
@@ -65,4 +66,8 @@ public partial class PortableColorPicker : DualPickerControlBase
         get => (PickerType)GetValue(PickerTypeProperty);
         set => SetValue(PickerTypeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

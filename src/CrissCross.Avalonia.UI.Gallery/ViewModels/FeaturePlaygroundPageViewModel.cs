@@ -1,9 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using CrissCross.Avalonia.UI;
@@ -45,6 +46,15 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     /// <summary>Workflow key used by the review step.</summary>
     private const string ReviewStepKey = "review";
 
+    /// <summary>Zero-based index of the review workflow step.</summary>
+    private const int ReviewStepIndex = 2;
+
+    /// <summary>Zero-based index of the publish workflow step.</summary>
+    private const int PublishStepIndex = 3;
+
+    /// <summary>Provides a caller-controlled clock for deterministic gallery diagnostics.</summary>
+    private readonly TimeProvider _timeProvider;
+
     /// <summary>Tracks whether the import command is running.</summary>
     private ObservableAsPropertyHelper<bool>? _isOperationRunning;
 
@@ -67,18 +77,27 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     private StepperState _stepperState;
 
     /// <summary>Provides the _selectedTheme member.</summary>
-    private ThemeChoice _selectedTheme = ThemeChoice.System;
+    private ThemeChoice _selectedTheme;
 
     /// <summary>Provides the _themeState member.</summary>
     private ThemePreferenceState _themeState;
 
     /// <summary>Initializes a new instance of the <see cref="FeaturePlaygroundPageViewModel"/> class.</summary>
     public FeaturePlaygroundPageViewModel()
+        : this(TimeProvider.System)
     {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="FeaturePlaygroundPageViewModel"/> class.</summary>
+    /// <param name="timeProvider">The clock used for deterministic gallery diagnostics.</param>
+    public FeaturePlaygroundPageViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timeProvider = timeProvider;
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
         _paginationState = new(1, DefaultPageSize, SampleTotalItemCount);
-        _currentRange = CreateRange(DateTimeOffset.Now);
+        _currentRange = CreateRange(_timeProvider.GetUtcNow());
         _segmentState = new(CreateSegments(), "table");
         _stepperState = new(CreateSteps(ReviewStepKey), ReviewStepKey, StepperOrientation.Horizontal);
         _themeState = CreateThemeState(_selectedTheme);
@@ -233,12 +252,11 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
         ArgumentNullException.ThrowIfNull(e);
         ArgumentNullException.ThrowIfNull(disposables);
 
-        ActivationLog = $"Activated {DateTimeOffset.Now:HH:mm:ss} from {e.From?.Name ?? "<cold start>"}.";
+        ActivationLog = $"Activated {GetCurrentTimeText()} from {e.From?.Name ?? "<cold start>"}.";
         _ = Observable
             .Interval(TimeSpan.FromSeconds(ActivationHeartbeatSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(_ =>
-                ActivationLog = $"Still active {DateTimeOffset.Now:HH:mm:ss}; dispose this page by navigating away.")
+            .Subscribe(OnActivationHeartbeat)
             .DisposeWith(disposables);
     }
 
@@ -283,33 +301,50 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     /// <summary>Provides the CreateSteps member.</summary>
     /// <param name="currentKey">The currentKey value.</param>
     /// <returns>The result.</returns>
-    private static IReadOnlyList<StepDescriptor> CreateSteps(string currentKey) =>
+    private static IReadOnlyList<StepDescriptor> CreateSteps(string currentKey)
+    {
+        var currentIndex = currentKey switch
+        {
+            "connect" => 0,
+            "query" => 1,
+            ReviewStepKey => ReviewStepIndex,
+            "publish" => PublishStepIndex,
+            _ => ReviewStepIndex,
+        };
+
+        return
         [
             new StepDescriptor(
                 "connect",
                 "Connect",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = GetStepStatus(0, currentIndex) }),
             new StepDescriptor(
                 "query",
                 "Query",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = GetStepStatus(1, currentIndex) }),
             new StepDescriptor(
                 ReviewStepKey,
                 "Review",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending,
-                }),
+                new StepDescriptorOptions { Status = GetStepStatus(ReviewStepIndex, currentIndex) }),
             new StepDescriptor(
                 "publish",
                 "Publish",
-                new StepDescriptorOptions { Status = StepStatus.Pending, CanEnter = currentKey == ReviewStepKey }),];
+                new StepDescriptorOptions { Status = GetStepStatus(PublishStepIndex, currentIndex) }),];
+    }
+
+    /// <summary>Resolves a workflow status from the active and candidate step positions.</summary>
+    /// <param name="stepIndex">The candidate step index.</param>
+    /// <param name="currentIndex">The active step index.</param>
+    /// <returns>The status projected by the gallery workflow.</returns>
+    private static StepStatus GetStepStatus(int stepIndex, int currentIndex)
+    {
+        if (stepIndex == currentIndex)
+        {
+            return StepStatus.Active;
+        }
+
+        return stepIndex < currentIndex ? StepStatus.Completed : StepStatus.Pending;
+    }
 
     /// <summary>Provides the CreateThemeState member.</summary>
     /// <param name="selectedChoice">The selectedChoice value.</param>
@@ -386,7 +421,19 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
 
     /// <summary>Provides the ApplyRange member.</summary>
     /// <param name="range">The range value.</param>
-    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(DateTimeOffset.Now);
+    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(_timeProvider.GetUtcNow());
+
+    /// <summary>Updates the activation log for a scheduled heartbeat.</summary>
+    /// <param name="value">The heartbeat sequence value.</param>
+    private void OnActivationHeartbeat(long value)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+        ActivationLog = $"Still active {GetCurrentTimeText()}; dispose this page by navigating away.";
+    }
+
+    /// <summary>Formats the injected current time for the gallery activation trace.</summary>
+    /// <returns>The localized current time.</returns>
+    private string GetCurrentTimeText() => _timeProvider.GetLocalNow().ToString("T", CultureInfo.CurrentCulture);
 
     /// <summary>Provides the ApplySegment member.</summary>
     /// <param name="key">The key value.</param>

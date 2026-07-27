@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Media.Animation;
@@ -18,7 +18,7 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     private readonly List<TimeSpan> _timeSpans = [];
 
     /// <summary>Stores the _completedTask value.</summary>
-    private readonly Task _completedTask = Task.FromResult(0);
+    private readonly Task _completedTask = Task.CompletedTask;
 
     /// <summary>Stores the _current value.</summary>
     private int _current;
@@ -33,13 +33,13 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     private TaskCompletionSource<int>? _pauseCompletionSource;
 
     /// <summary>Provides the Completed member.</summary>
-    public event EventHandler? Completed;
+    internal event EventHandler? Completed;
 
     /// <summary>Gets or sets RepeatBehavior.</summary>
-    public RepeatBehavior RepeatBehavior { get; set; } = repeatBehavior;
+    internal RepeatBehavior RepeatBehavior { get; set; } = repeatBehavior;
 
     /// <summary>Gets a value indicating whether playback is complete.</summary>
-    public bool IsComplete
+    internal bool IsComplete
     {
         get => field;
         private set
@@ -55,16 +55,16 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     }
 
     /// <summary>Gets the IsPaused value.</summary>
-    public bool IsPaused { get; private set; }
+    internal bool IsPaused { get; private set; }
 
     /// <summary>Provides the Add member.</summary>
     /// <param name="timeSpan">The timeSpan value.</param>
-    public void Add(TimeSpan timeSpan) => _timeSpans.Add(timeSpan);
+    internal void Add(TimeSpan timeSpan) => _timeSpans.Add(timeSpan);
 
     /// <summary>Provides the NextAsync member.</summary>
     /// <param name="cancellationToken">The cancellationToken value.</param>
     /// <returns>The result.</returns>
-    public async Task<bool> NextAsync(CancellationToken cancellationToken)
+    internal async Task<bool> NextAsync(CancellationToken cancellationToken)
     {
         if (IsComplete)
         {
@@ -110,7 +110,7 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     }
 
     /// <summary>Provides the Reset member.</summary>
-    public void Reset()
+    internal void Reset()
     {
         _current = 0;
         _count = 0;
@@ -119,7 +119,7 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
     }
 
     /// <summary>Provides the Pause member.</summary>
-    public void Pause()
+    internal void Pause()
     {
         if (IsPaused)
         {
@@ -127,11 +127,11 @@ internal sealed class TimingManager(RepeatBehavior repeatBehavior)
         }
 
         IsPaused = true;
-        _pauseCompletionSource = new();
+        _pauseCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
     /// <summary>Provides the Resume member.</summary>
-    public void Resume()
+    internal void Resume()
     {
         if (!IsPaused)
         {

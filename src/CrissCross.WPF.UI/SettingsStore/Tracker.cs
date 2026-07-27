@@ -1,6 +1,11 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
+
+#if NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
+using Microsoft.Extensions.Logging;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI;
@@ -17,6 +22,7 @@ namespace CrissCross.WPF.UI;
 /// Creates a new instance of the state tracker with the specified storage.
 /// </remarks>
 /// <param name="store">The factory that will create an IStore for each tracked object's data.</param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Tracker(IStore store)
 {
     /// <summary>Configurations for types.</summary>
@@ -37,6 +43,13 @@ public class Tracker(IStore store)
 
     /// <summary>Gets or sets the object that is used to store and retrieve tracked data.</summary>
     public IStore Store { get; set; } = store;
+
+    /// <summary>Gets or sets the logger used to report state tracking failures.</summary>
+    public ILogger Logger { get; set; } = Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     // todo: allow caller to configure via action argument
     /// <summary>
@@ -74,10 +87,7 @@ public class Tracker(IStore store)
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration Configure(object target)
     {
-        if (target is null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
+        ThrowHelper.ThrowIfNull(target, nameof(target));
 
         TrackingConfiguration config;
         if (_configurationsDict.TryGetValue(target, out var cfg))
@@ -126,24 +136,32 @@ public class Tracker(IStore store)
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration Configure(Type type)
     {
-        if (type is null)
+        ThrowHelper.ThrowIfNull(type, nameof(type));
+
+#if NET6_0_OR_GREATER
+        ref var configuration = ref CollectionsMarshal.GetValueRefOrAddDefault(_typeConfigurations, type, out var exists);
+        if (exists)
         {
-            throw new ArgumentNullException(nameof(type));
+            return configuration!;
         }
-
-        if (!_typeConfigurations.TryGetValue(type, out var configuration))
+#else
+        if (_typeConfigurations.TryGetValue(type, out var configuration))
         {
-            // todo: we should make a config for each base type recursively, in case at a later point we add config for
-            // a base type
-            // tbd : should configurations delegate work to base classes, rather than copying their config data?
-            // if a config for this exact type does not exist, copy from base type's config or create a blank one
-            var baseConfig = FindConfiguration(type);
-            configuration = baseConfig is not null ? new(baseConfig, type) : new(this, type);
-
-            _typeConfigurations[type] = configuration;
+            return configuration;
         }
+#endif
 
-        return configuration;
+        // todo: we should make a config for each base type recursively, in case at a later point we add config for
+        // a base type
+        // tbd : should configurations delegate work to base classes, rather than copying their config data?
+        // if a config for this exact type does not exist, copy from base type's config or create a blank one
+        var baseConfig = FindConfiguration(type);
+        configuration = baseConfig is not null ? new(baseConfig, type) : new(this, type);
+#if !NET6_0_OR_GREATER
+        _typeConfigurations.Add(type, configuration);
+#endif
+
+        return configuration!;
     }
 
     /// <summary>
@@ -170,13 +188,16 @@ public class Tracker(IStore store)
     /// <summary>Runs a global persist for all objects that are still alive and tracked.</summary>
     public void PersistAll()
     {
-        GC.WaitForPendingFinalizers();
-
-        foreach (var target in _trackedObjects.Where(o => o.IsAlive).Select(o => o.Target))
+        foreach (var trackedObject in _trackedObjects)
         {
-            if (_configurationsDict.TryGetValue(target!, out var configuration))
+            if (!trackedObject.IsAlive || trackedObject.Target is not { } target)
             {
-                configuration.Persist(target!);
+                continue;
+            }
+
+            if (_configurationsDict.TryGetValue(target, out var configuration))
+            {
+                configuration.Persist(target);
             }
         }
     }
@@ -187,10 +208,7 @@ public class Tracker(IStore store)
     /// <param name="config">The config value.</param>
     internal void Track(object target, TrackingConfiguration config)
     {
-        if (target is null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
+        ThrowHelper.ThrowIfNull(target, nameof(target));
 
         // apply any previously stored data
         config.Apply(target);
@@ -199,7 +217,7 @@ public class Tracker(IStore store)
         config.StartTracking(target);
 
         // add to list of objects to track
-        _trackedObjects.Add(new WeakReference(target));
+        _trackedObjects.Add(new(target));
     }
 
     /// <summary>Provides the RemoveFromList member.</summary>

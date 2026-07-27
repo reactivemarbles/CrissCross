@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a compact selectable or removable chip/tag surface.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Chip : Control
 {
     /// <summary>Property for <see cref="Model"/>.</summary>
@@ -18,49 +19,49 @@ public class Chip : Control
         nameof(Model),
         typeof(ChipModel),
         typeof(Chip),
-        new PropertyMetadata(null, OnModelChanged));
+        new(null, OnModelChanged));
 
     /// <summary>Property for <see cref="Text"/>.</summary>
     public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
         nameof(Text),
         typeof(string),
         typeof(Chip),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(object),
         typeof(Chip),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="IsSelected"/>.</summary>
     public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
         nameof(IsSelected),
         typeof(bool),
         typeof(Chip),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="IsRemovable"/>.</summary>
     public static readonly DependencyProperty IsRemovableProperty = DependencyProperty.Register(
         nameof(IsRemovable),
         typeof(bool),
         typeof(Chip),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="SelectCommand"/>.</summary>
     public static readonly DependencyProperty SelectCommandProperty = DependencyProperty.Register(
         nameof(SelectCommand),
         typeof(ICommand),
         typeof(Chip),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="RemoveCommand"/>.</summary>
     public static readonly DependencyProperty RemoveCommandProperty = DependencyProperty.Register(
         nameof(RemoveCommand),
         typeof(ICommand),
         typeof(Chip),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the shared chip model.</summary>
     public ChipModel? Model
@@ -110,6 +111,10 @@ public class Chip : Control
         get => (ICommand?)GetValue(RemoveCommandProperty);
         set => SetValue(RemoveCommandProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnModelChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>

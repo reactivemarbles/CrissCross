@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -21,7 +21,7 @@ internal static class StreamExtensions
         /// <param name="count">The count value.</param>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public async Task ReadAllAsync(
+        internal async Task ReadAllAsync(
             byte[] buffer,
             int offset,
             int count,
@@ -44,7 +44,7 @@ internal static class StreamExtensions
         /// <param name="buffer">The buffer value.</param>
         /// <param name="offset">The offset value.</param>
         /// <param name="count">The count value.</param>
-        public void ReadAll(byte[] buffer, int offset, int count)
+        internal void ReadAll(byte[] buffer, int offset, int count)
         {
             var totalRead = 0;
             while (totalRead < count)
@@ -62,7 +62,7 @@ internal static class StreamExtensions
         /// <summary>Provides the ReadByteAsync member.</summary>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public async Task<int> ReadByteAsync(CancellationToken cancellationToken = default)
+        internal async Task<int> ReadByteAsync(CancellationToken cancellationToken = default)
         {
             var buffer = new byte[1];
             var n = await stream.ReadBufferAsync(buffer, 0, 1, cancellationToken);
@@ -75,10 +75,7 @@ internal static class StreamExtensions
 
         /// <summary>Provides the AsBuffered member.</summary>
         /// <returns>The result.</returns>
-        public Stream AsBuffered()
-        {
-            return stream is BufferedStream bs ? bs : new BufferedStream(stream);
-        }
+        internal Stream AsBuffered() => stream is BufferedStream bs ? bs : new BufferedStream(stream);
 
         /// <summary>Provides the CopyToAsync member.</summary>
         /// <param name="destination">The destination value.</param>
@@ -86,7 +83,7 @@ internal static class StreamExtensions
         /// <param name="bufferSize">The bufferSize value.</param>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public async Task CopyToAsync(
+        internal async Task CopyToAsync(
             Stream destination,
             IProgress<long> progress,
             int bufferSize = 81_920,
@@ -113,18 +110,19 @@ internal static class StreamExtensions
         /// <param name="count">The count value.</param>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public Task<int> ReadBufferAsync(
+#if NET472 || NET48 || NET481
+        internal Task<int> ReadBufferAsync(
             byte[] buffer,
             int offset,
             int count,
-            CancellationToken cancellationToken = default)
-        {
-#if NET472 || NET48 || NET481
-            return stream.ReadAsync(buffer, offset, count, cancellationToken);
+            CancellationToken cancellationToken = default) => stream.ReadAsync(buffer, offset, count, cancellationToken);
 #else
-            return stream.ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+        internal Task<int> ReadBufferAsync(
+            byte[] buffer,
+            int offset,
+            int count,
+            CancellationToken cancellationToken = default) => stream.ReadAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
 #endif
-        }
 
         /// <summary>Provides the WriteBufferAsync member.</summary>
         /// <param name="buffer">The buffer value.</param>
@@ -132,17 +130,18 @@ internal static class StreamExtensions
         /// <param name="count">The count value.</param>
         /// <param name="cancellationToken">The cancellationToken value.</param>
         /// <returns>The result.</returns>
-        public Task WriteBufferAsync(
+#if NET472 || NET48 || NET481
+        internal Task WriteBufferAsync(
             byte[] buffer,
             int offset,
             int count,
-            CancellationToken cancellationToken = default)
-        {
-#if NET472 || NET48 || NET481
-            return stream.WriteAsync(buffer, offset, count, cancellationToken);
+            CancellationToken cancellationToken = default) => stream.WriteAsync(buffer, offset, count, cancellationToken);
 #else
-            return stream.WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
+        internal Task WriteBufferAsync(
+            byte[] buffer,
+            int offset,
+            int count,
+            CancellationToken cancellationToken = default) => stream.WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
 #endif
-        }
     }
 }

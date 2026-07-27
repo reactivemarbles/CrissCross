@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -22,6 +22,7 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Interaction logic for MessageBox.xaml.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class MessageBoxAsync : IListenForMessages
 {
     /// <summary>Identifies the Buttons dependency property.</summary>
@@ -79,10 +80,10 @@ public partial class MessageBoxAsync : IListenForMessages
     private readonly ReactiveCommand<Unit, CustomMessageBoxResult>? _custom9Command;
 
     /// <summary>Stores the _customMessageBoxResult value.</summary>
-    private CustomMessageBoxResult _customMessageBoxResult = CustomMessageBoxResult.None;
+    private CustomMessageBoxResult _customMessageBoxResult;
 
     /// <summary>Stores the _messageBoxResult value.</summary>
-    private MessageBoxResult _messageBoxResult = MessageBoxResult.None;
+    private MessageBoxResult _messageBoxResult;
 
     /// <summary>Stores the _cancelButton value.</summary>
     private Button? _cancelButton;
@@ -106,7 +107,7 @@ public partial class MessageBoxAsync : IListenForMessages
             nameof(Buttons),
             typeof(ObservableCollection<Button>),
             typeof(MessageBoxAsync),
-            new PropertyMetadata(null));
+            new(null));
         ButtonsProperty = ButtonsPropertyKey.DependencyProperty;
     }
 
@@ -207,6 +208,10 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <value>The custom button9.</value>
     public Button? CustomButton9 { get; private set; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Creates the dialog button.</summary>
     /// <param name="content">The content.</param>
     /// <param name="isDefault">if set to <c>true</c> [is default].</param>
@@ -244,11 +249,7 @@ public partial class MessageBoxAsync : IListenForMessages
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = request.Title;
-            MessageContent.Content = new BBCodeBlock
-            {
-                BBCode = request.BBCode,
-                Margin = new(0, 0, 0, MessageContentBottomMargin),
-            };
+            MessageContent.Content = new BBCodeBlock { BBCode = request.BBCode, Margin = new(0, 0, 0, MessageContentBottomMargin), };
             Buttons.Clear();
             foreach (var button in GetButtons(request.Buttons))
             {
@@ -293,11 +294,7 @@ public partial class MessageBoxAsync : IListenForMessages
         await Dispatcher.InvokeAsync(() =>
         {
             MessageTitle.Text = title;
-            MessageContent.Content = new BBCodeBlock
-            {
-                BBCode = bbcode,
-                Margin = new(0, 0, 0, MessageContentBottomMargin),
-            };
+            MessageContent.Content = new BBCodeBlock { BBCode = bbcode, Margin = new(0, 0, 0, MessageContentBottomMargin), };
             Buttons.Clear();
             foreach (var button in GetButtons(button))
             {

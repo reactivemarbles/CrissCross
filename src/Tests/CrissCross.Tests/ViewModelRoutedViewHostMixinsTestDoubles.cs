@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -35,9 +35,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
                 INavigationTargetView,
                 NavigationTargetView
             >(_ => viewModel, _ => view)
-            {
-                Contract = contract,
-            });
+            { Contract = contract, });
 
         RegisterNavigationRegistry(registry);
     }
@@ -53,7 +51,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
     }
 
     /// <summary>Provides the RegisterEmptyNavigationRegistry member.</summary>
-    private static void RegisterEmptyNavigationRegistry() => RegisterNavigationRegistry(new NavigationRegistry());
+    private static void RegisterEmptyNavigationRegistry() => RegisterNavigationRegistry(new());
 
     /// <summary>Provides the RegisterTestViewModel member.</summary>
     /// <param name="viewModel">The view model value.</param>
@@ -66,23 +64,23 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
     /// <summary>Provides the TestViewModel member.</summary>
     /// <param name="name">The name value.</param>
-    private sealed class TestViewModel(string? name = "") : RxObject, IUseNavigation
+    public sealed class TestViewModel(string? name = "") : RxObject, IUseNavigation
     {
         string? IUseNavigation.Name => name;
     }
 
     /// <summary>Provides the TestHostedViewModel member.</summary>
-    private sealed class TestHostedViewModel : RxObject;
+    public sealed class TestHostedViewModel : RxObject;
 
     /// <summary>Provides the NavigationTargetViewModel member.</summary>
-    private sealed class NavigationTargetViewModel : RxObject, INavigationTargetViewModel
+    public sealed class NavigationTargetViewModel : RxObject, INavigationTargetViewModel
     {
         /// <summary>Gets the navigation scope.</summary>
         public string NavigationScope => "NavigationTarget";
     }
 
     /// <summary>Provides the NavigationTargetView member.</summary>
-    private sealed class NavigationTargetView : INavigationTargetView, IViewFor<NavigationTargetViewModel>
+    public sealed class NavigationTargetView : INavigationTargetView, IViewFor<NavigationTargetViewModel>
     {
         /// <summary>Gets the view scope.</summary>
         public string ViewScope => "NavigationTarget";
@@ -100,14 +98,14 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
     /// <summary>Provides the TestSetNavigationViewModel member.</summary>
     /// <param name="name">The name value.</param>
-    private sealed class TestSetNavigationViewModel(string? name = TestDoubleHostName) : RxObject, ISetNavigation
+    public sealed class TestSetNavigationViewModel(string? name = TestDoubleHostName) : RxObject, ISetNavigation
     {
         string? ISetNavigation.Name => name;
     }
 
     /// <summary>Provides the TestViewModelRoutedViewHost member.</summary>
     /// <param name="name">The name value.</param>
-    private class TestViewModelRoutedViewHost(string name = TestDoubleHostName) : IViewModelRoutedViewHost
+    public class TestViewModelRoutedViewHost(string name = TestDoubleHostName) : IViewModelRoutedViewHost
     {
         /// <summary>Provides the _currentViewModel member.</summary>
         private readonly StateSignal<INotifiyRoutableViewModel?> _currentViewModel = new(null);
@@ -119,7 +117,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         public ObservableCollection<Type?> NavigationStack { get; } = new();
 
         /// <summary>Gets the value.</summary>
-        public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Where(x => x is not null)!;
+        public IObservable<INotifiyRoutableViewModel> CurrentViewModel => _currentViewModel.Where(static x => x is not null)!;
 
         /// <summary>Gets or sets the value.</summary>
         public bool? CanNavigateBack
@@ -144,8 +142,11 @@ public partial class ViewModelRoutedViewHostMixinsTests
             set => Name = value;
         }
 
-        /// <summary>Gets the value.</summary>
-        public bool RequiresSetup => false;
+        /// <summary>Gets or sets a value indicating whether setup is required.</summary>
+        public bool RequiresSetup { get; set; }
+
+        /// <summary>Gets the number of setup calls received by this test host.</summary>
+        public int SetupCallCount { get; private set; }
 
         /// <summary>Gets the value.</summary>
         public IObservable<Unit> Activated => Observable.Return(Unit.Default);
@@ -176,10 +177,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         }
 
         /// <summary>Provides the Setup member.</summary>
-        public void Setup()
-        {
-            // Setup logic
-        }
+        public void Setup() => SetupCallCount++;
 
         /// <summary>Provides typed instance navigation.</summary>
         /// <typeparam name="T">The view model type.</typeparam>
@@ -258,7 +256,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
     /// <summary>Provides the TestResolvedViewModelRoutedViewHost member.</summary>
     /// <param name="name">The name value.</param>
-    private sealed class TestResolvedViewModelRoutedViewHost(string name = TestDoubleHostName)
+    public sealed class TestResolvedViewModelRoutedViewHost(string name = TestDoubleHostName)
         : TestViewModelRoutedViewHost(name),
             IResolvedViewModelRoutedViewHost
     {
@@ -295,7 +293,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
     /// <summary>Provides the documented member.</summary>
     /// <param name="viewModel">The view model.</param>
-    private sealed class TestView(object? viewModel = null) : INotifiyNavigation, IViewFor
+    public sealed class TestView(object? viewModel = null) : INotifiyNavigation, IViewFor
     {
         /// <summary>Gets or sets the value.</summary>
         public bool ISetupNavigatedTo { get; set; }
@@ -322,13 +320,10 @@ public partial class ViewModelRoutedViewHostMixinsTests
         public object? ViewModel { get; set; } = viewModel;
 
         /// <summary>Provides the Dispose member.</summary>
-        public void Dispose()
-        {
-            CleanUp?.Dispose();
-        }
+        public void Dispose() => CleanUp?.Dispose();
     }
 
     /// <summary>Provides the NavigationParameter member.</summary>
     /// <param name="Value">The value.</param>
-    private sealed record NavigationParameter(string Value);
+    public sealed record NavigationParameter(string Value);
 }

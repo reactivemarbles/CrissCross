@@ -4,9 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:CrissCross.Maui.UI.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="CrissCrossCommandButtonStyle" TargetType="controls:CommandButton">
-        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossAccentColor}" />
-        <Setter Property="TextColor" Value="White" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAccentColorLight}, Dark={StaticResource CrissCrossAccentColorDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAccentTextColorLight}, Dark={StaticResource CrissCrossAccentTextColorDark}}" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="14,8" />
         <Setter Property="MinimumHeightRequest" Value="40" />
@@ -16,28 +20,28 @@
     <Style TargetType="controls:AsyncCommandButton" BasedOn="{StaticResource CrissCrossCommandButtonStyle}" />
 
     <Style TargetType="controls:Chip">
-        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
-        <Setter Property="BorderColor" Value="{DynamicResource CrissCrossBorderColor}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource CrissCrossBorderColorLight}, Dark={StaticResource CrissCrossBorderColorDark}}" />
         <Setter Property="BorderWidth" Value="1" />
         <Setter Property="CornerRadius" Value="16" />
         <Setter Property="Padding" Value="12,6" />
-        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossTextColorLight}, Dark={StaticResource CrissCrossTextColorDark}}" />
     </Style>
 
     <Style TargetType="controls:BusyOverlay">
-        <Setter Property="BackgroundColor" Value="#66000000" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossOverlayColorLight}, Dark={StaticResource CrissCrossOverlayColorDark}}" />
         <Setter Property="Padding" Value="16" />
     </Style>
 
     <Style TargetType="controls:EmptyState">
         <Setter Property="Padding" Value="24" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
     </Style>
 
     <Style TargetType="controls:SearchBox">
-        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSurfaceColor}" />
-        <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
-        <Setter Property="PlaceholderColor" Value="{DynamicResource CrissCrossMutedTextColor}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSurfaceColorLight}, Dark={StaticResource CrissCrossSurfaceColorDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossTextColorLight}, Dark={StaticResource CrissCrossTextColorDark}}" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource CrissCrossMutedTextColorLight}, Dark={StaticResource CrissCrossMutedTextColorDark}}" />
     </Style>
 
     <Style TargetType="controls:FilterBar">
@@ -50,7 +54,7 @@
 
     <Style TargetType="controls:ValidationSummary">
         <Setter Property="Padding" Value="12" />
-        <Setter Property="BackgroundColor" Value="#FFFFF4CE" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossCautionSurfaceColorLight}, Dark={StaticResource CrissCrossCautionSurfaceColorDark}}" />
     </Style>
 
     <Style TargetType="controls:ChipGroup">
@@ -62,7 +66,7 @@
     <Style TargetType="controls:SegmentedControl">
         <Setter Property="Spacing" Value="4" />
         <Setter Property="Padding" Value="4" />
-        <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
     </Style>
 
     <Style TargetType="controls:DataPager">
@@ -87,5 +91,59 @@
 
     <Style TargetType="controls:PropertyGridLite">
         <Setter Property="Padding" Value="8" />
+    </Style>
+
+    <Style TargetType="controls:Card">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource CrissCrossBorderColorLight}, Dark={StaticResource CrissCrossBorderColorDark}}" />
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource CrissCrossSurfaceColorLight}, Dark={StaticResource CrissCrossSurfaceColorDark}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <Style TargetType="controls:CardAction">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossTextColorLight}, Dark={StaticResource CrissCrossTextColorDark}}" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <Style TargetType="controls:CardExpander">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
+        <Setter Property="Padding" Value="12" />
+    </Style>
+
+    <Style TargetType="controls:InfoBadge">
+        <Setter Property="Padding" Value="8,2" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAttentionSurfaceColorLight}, Dark={StaticResource CrissCrossAttentionSurfaceColorDark}}" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAttentionColorLight}, Dark={StaticResource CrissCrossAttentionColorDark}}" />
+    </Style>
+
+    <Style TargetType="controls:InfoBar">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAttentionSurfaceColorLight}, Dark={StaticResource CrissCrossAttentionSurfaceColorDark}}" />
+    </Style>
+
+    <Style TargetType="controls:PersonPicture">
+        <Setter Property="HeightRequest" Value="48" />
+        <Setter Property="WidthRequest" Value="48" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossAccentColorLight}, Dark={StaticResource CrissCrossAccentColorDark}}" />
+    </Style>
+
+    <Style TargetType="controls:RatingControl">
+        <Setter Property="Spacing" Value="2" />
+    </Style>
+
+    <Style TargetType="controls:AlarmBanner">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossDangerSurfaceColorLight}, Dark={StaticResource CrissCrossDangerSurfaceColorDark}}" />
+    </Style>
+
+    <Style TargetType="controls:CardColor">
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="WidthRequest" Value="132" />
+    </Style>
+
+    <Style TargetType="controls:Snackbar">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossNeutralSurfaceColorLight}, Dark={StaticResource CrissCrossNeutralSurfaceColorDark}}" />
     </Style>
 </ResourceDictionary>

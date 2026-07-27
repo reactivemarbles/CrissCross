@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
@@ -17,6 +17,7 @@ namespace CrissCross.WPF.UI.Styles.Controls;
 /// (because it is only accessible through Reflection it is also only possible through CodeBehind and not XAML).</para>
 /// This Code is based on a StackOverflow-Answer: https://stackoverflow.com/a/56736232/9759874.
 /// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class ContextMenu : ResourceDictionary
 {
     /// <summary>Initializes a new instance of the <see cref="ContextMenu"/> class.</summary>
@@ -25,6 +26,10 @@ public partial class ContextMenu : ResourceDictionary
         // Run asynchronously so the other resource dictionaries are loaded before adding entries.
         _ = Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(OnResourceDictionaryLoaded));
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnResourceDictionaryLoaded member.</summary>
     private void OnResourceDictionaryLoaded()
@@ -39,7 +44,7 @@ public partial class ContextMenu : ResourceDictionary
     private void AddEditorContextMenuDefaultStyle(Assembly currentAssembly)
     {
         var editorContextMenuType = Type.GetType(
-            "System.Windows.Documents.TextEditorContextMenu+EditorContextMenu, " + currentAssembly);
+            $"System.Windows.Documents.TextEditorContextMenu+EditorContextMenu, {currentAssembly}");
 
         if (editorContextMenuType is null || this["UiContextMenu"] is not Style contextMenuStyle)
         {

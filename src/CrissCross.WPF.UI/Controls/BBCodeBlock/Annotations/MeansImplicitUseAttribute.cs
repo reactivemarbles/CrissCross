@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -13,21 +13,21 @@ namespace CrissCross.WPF.UI.Controls.BBCode.Annotations;
 internal sealed class MeansImplicitUseAttribute : Attribute
 {
     /// <summary>Initializes a new instance of the <see cref="MeansImplicitUseAttribute"/> class.</summary>
-    public MeansImplicitUseAttribute()
+    internal MeansImplicitUseAttribute()
         : this(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself) { }
 
     /// <summary>Initializes a new instance of the <see cref="MeansImplicitUseAttribute"/> class.</summary>
     /// <param name="useKindFlags">The implicit use kind.</param>
     /// <param name="targetFlags">The target scope.</param>
-    public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+    internal MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
         UseKindFlags = useKindFlags;
         TargetFlags = targetFlags;
     }
 
     /// <summary>Gets the implicit use kind.</summary>
-    public ImplicitUseKindFlags UseKindFlags { get; }
+    internal ImplicitUseKindFlags UseKindFlags { get; }
 
     /// <summary>Gets the target scope.</summary>
-    public ImplicitUseTargetFlags TargetFlags { get; }
+    internal ImplicitUseTargetFlags TargetFlags { get; }
 }

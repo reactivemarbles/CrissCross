@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Data;
@@ -11,10 +11,15 @@ namespace CrissCross.WPF.UI.Controls.Gauges.Converters;
 #endif
 
 /// <summary>Decimal Converter.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DecimalConverter : IMultiValueConverter
 {
     /// <summary>Provides the required value count.</summary>
     private const int RequiredValueCount = 2;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Converts the specified values.</summary>
     /// <param name="values">The values.</param>
@@ -39,18 +44,18 @@ public class DecimalConverter : IMultiValueConverter
 
         var val = (double)values![0];
         var dec = (int)values[1];
-        var str = "0";
+        StringBuilder format = new("0");
         for (var i = 0; i < dec; i++)
         {
             if (i == 0)
             {
-                str += ".";
+                _ = format.Append('.');
             }
 
-            str += "0";
+            _ = format.Append('0');
         }
 
-        return val.ToString(str);
+        return val.ToString(format.ToString());
     }
 
     /// <summary>Converts the back.</summary>

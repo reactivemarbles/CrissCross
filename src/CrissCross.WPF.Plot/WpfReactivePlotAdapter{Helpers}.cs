@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ScottPlot;
@@ -15,6 +15,25 @@ namespace CrissCross.WPF.Plot;
 /// <summary>Applies normalized reactive plot updates to WPF plot UI elements.</summary>
 internal sealed partial class WpfReactivePlotAdapter
 {
+    /// <summary>Copies a value list into an owned list for mutable plot adapters.</summary>
+    /// <param name="values">The source values.</param>
+    /// <returns>The copied values.</returns>
+    private static List<double> CopyToList(IReadOnlyList<double> values) => new(values);
+
+    /// <summary>Copies a value list into an owned array.</summary>
+    /// <param name="values">The source values.</param>
+    /// <returns>The copied values.</returns>
+    private static double[] CopyToArray(IReadOnlyList<double> values)
+    {
+        var copied = new double[values.Count];
+        for (var i = 0; i < values.Count; i++)
+        {
+            copied[i] = values[i];
+        }
+
+        return copied;
+    }
+
     /// <summary>Clears a SignalXY UI element.</summary>
     /// <param name="signalXy">The SignalXY UI element.</param>
     private static void ClearSignalXy(SignalXY_UI signalXy) =>
@@ -126,7 +145,7 @@ internal sealed partial class WpfReactivePlotAdapter
     /// <returns>The ScottPlot color.</returns>
     private static Color ResolveColor(string colorName)
     {
-        if (colorName.StartsWith("#", StringComparison.Ordinal))
+        if (colorName.StartsWith('#'))
         {
             return Color.FromHex(colorName);
         }

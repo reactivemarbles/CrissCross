@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -34,7 +34,7 @@ internal static class NativeMethods
     /// <returns>The previous parent window handle.</returns>
     [LibraryImport("user32.dll", EntryPoint = "SetParent", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static partial IntPtr SetParent(IntPtr childWindowHandle, IntPtr newParentWindowHandle);
+    internal static partial IntPtr SetParent(SafeHandle childWindowHandle, IntPtr newParentWindowHandle);
 
     /// <summary>Changes an attribute of the specified window.</summary>
     /// <param name="windowHandle">The window handle.</param>
@@ -43,7 +43,7 @@ internal static class NativeMethods
     /// <returns>The previous attribute value.</returns>
     [LibraryImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static partial int SetWindowLong(IntPtr windowHandle, int index, uint newValue);
+    internal static partial int SetWindowLong(SafeHandle windowHandle, int index, uint newValue);
 
     /// <summary>Gets an attribute of the specified window.</summary>
     /// <param name="windowHandle">The window handle.</param>
@@ -51,7 +51,7 @@ internal static class NativeMethods
     /// <returns>The current attribute value.</returns>
     [LibraryImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static partial uint GetWindowLong(IntPtr windowHandle, int index);
+    internal static partial uint GetWindowLong(SafeHandle windowHandle, int index);
 #else
     /// <summary>Changes the parent window of the specified child window.</summary>
     /// <param name="childWindowHandle">The child window handle.</param>
@@ -59,7 +59,7 @@ internal static class NativeMethods
     /// <returns>The previous parent window handle.</returns>
     [DllImport("user32.dll", EntryPoint = "SetParent", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static extern IntPtr SetParent(IntPtr childWindowHandle, IntPtr newParentWindowHandle);
+    internal static extern IntPtr SetParent(SafeHandle childWindowHandle, IntPtr newParentWindowHandle);
 
     /// <summary>Changes an attribute of the specified window.</summary>
     /// <param name="windowHandle">The window handle.</param>
@@ -68,7 +68,7 @@ internal static class NativeMethods
     /// <returns>The previous attribute value.</returns>
     [DllImport("user32.dll", EntryPoint = "SetWindowLongW", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static extern int SetWindowLong(IntPtr windowHandle, int index, uint newValue);
+    internal static extern int SetWindowLong(SafeHandle windowHandle, int index, uint newValue);
 
     /// <summary>Gets an attribute of the specified window.</summary>
     /// <param name="windowHandle">The window handle.</param>
@@ -76,12 +76,12 @@ internal static class NativeMethods
     /// <returns>The current attribute value.</returns>
     [DllImport("user32.dll", EntryPoint = "GetWindowLongW", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-    internal static extern uint GetWindowLong(IntPtr windowHandle, int index);
+    internal static extern uint GetWindowLong(SafeHandle windowHandle, int index);
 #endif
 
     /// <summary>Removes the specified window from the Alt+Tab application list.</summary>
     /// <param name="windowHandle">The window handle.</param>
-    internal static void HideFromAltTab(IntPtr windowHandle) =>
+    internal static void HideFromAltTab(SafeHandle windowHandle) =>
         _ = SetWindowLong(
             windowHandle,
             GWLEXSTYLE,

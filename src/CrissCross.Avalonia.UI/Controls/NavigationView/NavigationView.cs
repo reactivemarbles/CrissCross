@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -86,7 +86,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     static NavigationView()
     {
         _ = IsPaneOpenProperty.Changed.AddClassHandler<NavigationView>(
-            (x, e) => x.OnIsPaneOpenChanged(e));
+            static (x, e) => x.OnIsPaneOpenChanged(e));
     }
 
     /// <summary>Initializes a new instance of the <see cref="NavigationView"/> class.</summary>
@@ -107,36 +107,25 @@ public partial class NavigationView : TemplatedControl, INavigationView
     public bool Navigate(Type pageType) => Navigate(pageType, null);
 
     /// <inheritdoc />
-    public virtual bool Navigate(Type pageType, object? dataContext)
-    {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
-            ? TryToNavigateWithoutINavigationViewItem(pageType, dataContext)
-            : NavigateInternal(navigationViewItem, dataContext);
-    }
+    public virtual bool Navigate(Type pageType, object? dataContext) => !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
+        ? TryToNavigateWithoutINavigationViewItem(pageType, dataContext)
+        : NavigateInternal(navigationViewItem, dataContext);
 
     /// <inheritdoc/>
     public bool Navigate(string pageIdOrTargetTag) => Navigate(pageIdOrTargetTag, null);
 
     /// <inheritdoc />
-    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext)
-    {
-        return !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(
+    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext) => !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(
             pageIdOrTargetTag,
             out var navigationViewItem)
-            ? false
-            : NavigateInternal(navigationViewItem, dataContext);
-    }
+        ? false
+        : NavigateInternal(navigationViewItem, dataContext);
 
     /// <inheritdoc/>
     public bool NavigateWithHierarchy(Type pageType) => NavigateWithHierarchy(pageType, null);
 
     /// <inheritdoc />
-    public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext)
-    {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
-            ? TryToNavigateWithoutINavigationViewItem(pageType, dataContext)
-            : NavigateInternal(navigationViewItem, dataContext);
-    }
+    public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext) => Navigate(pageType, dataContext);
 
     /// <inheritdoc/>
     public virtual bool ReplaceContent(Type? pageTypeToEmbed)
@@ -172,13 +161,10 @@ public partial class NavigationView : TemplatedControl, INavigationView
     }
 
     /// <inheritdoc/>
-    public virtual bool GoForward()
-    {
-        return NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId)
+    public virtual bool GoForward() => NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId)
             && itemId is not null
             && _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem)
             && NavigateInternal(navigationViewItem, isJournalNavigation: true, journalIndex: nextIndex);
-    }
 
     /// <inheritdoc/>
     public virtual bool GoBack()
@@ -193,7 +179,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
             return false;
         }
 
-        RaiseEvent(new RoutedEventArgs(BackRequestedEvent));
+        RaiseEvent(new(BackRequestedEvent));
         return _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(
                 itemId,
                 out var navigationViewItem)
@@ -214,7 +200,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// <param name="navigationViewItem">The navigation view item.</param>
     internal void OnNavigationViewItemClick(NavigationViewItem navigationViewItem)
     {
-        RaiseEvent(new RoutedEventArgs(ItemInvokedEvent));
+        RaiseEvent(new(ItemInvokedEvent));
         _ = NavigateInternal(navigationViewItem);
     }
 
@@ -259,7 +245,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
     {
         ArgumentNullException.ThrowIfNull(e);
         var isOpen = (bool)e.NewValue!;
-        RaiseEvent(new RoutedEventArgs(isOpen ? PaneOpenedEvent : PaneClosedEvent));
+        RaiseEvent(new(isOpen ? PaneOpenedEvent : PaneClosedEvent));
     }
 
     /// <summary>Adds items to dictionaries.</summary>
@@ -278,16 +264,16 @@ public partial class NavigationView : TemplatedControl, INavigationView
             return;
         }
 
-        foreach (var singleNavigationViewItem in list.OfType<NavigationViewItem>())
+        foreach (var item in list)
         {
-            if (
-                !_pageIdOrTargetTagNavigationViewsDictionary.ContainsKey(
-                    singleNavigationViewItem.Id))
+            if (item is not NavigationViewItem singleNavigationViewItem)
             {
-                _pageIdOrTargetTagNavigationViewsDictionary.Add(
+                continue;
+            }
+
+            _ = _pageIdOrTargetTagNavigationViewsDictionary.TryAdd(
                     singleNavigationViewItem.Id,
                     singleNavigationViewItem);
-            }
 
             if (
                 !string.IsNullOrEmpty(singleNavigationViewItem.TargetPageTag)
@@ -362,10 +348,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
 
         var pageInstance = GetNavigationItemInstance(viewItem);
 
-        var navigatingArgs = new NavigatingCancelEventArgs(NavigatingEvent, this)
-        {
-            Page = pageInstance,
-        };
+        var navigatingArgs = new NavigatingCancelEventArgs(NavigatingEvent, this) { Page = pageInstance, };
         RaiseEvent(navigatingArgs);
 
         if (navigatingArgs.Cancel)
@@ -389,7 +372,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
         }
 
         SelectedItem = _navigationStack[0];
-        RaiseEvent(new RoutedEventArgs(SelectionChangedEvent));
+        RaiseEvent(new(SelectionChangedEvent));
 
         return true;
     }
@@ -474,8 +457,5 @@ public partial class NavigationView : TemplatedControl, INavigationView
     /// <summary>Provides the OnMenuItemsCollectionChanged member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnMenuItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        AddItemsToDictionaries();
-    }
+    private void OnMenuItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => AddItemsToDictionaries();
 }

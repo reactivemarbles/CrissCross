@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -26,9 +26,6 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
 {
     /// <summary>The animation timer interval in milliseconds.</summary>
     private const double AnimationIntervalMilliseconds = 10D;
-
-    /// <summary>The opacity increment applied for each animation tick.</summary>
-    private const double OpacityIncrement = 0.08D;
 
     /// <summary>Stores the opacity Subject value.</summary>
     private readonly Signal<double> _opacitySubject = new();
@@ -147,33 +144,15 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
         _animationDisposable = [];
         var (from, to, current) = GetPresenters();
         _ = to!.Bind(OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
-        var opacity = 0D;
+        var opacity = new AnimationOpacityState(_opacitySubject);
         _ = Observable
             .Interval(TimeSpan.FromMilliseconds(AnimationIntervalMilliseconds))
-            .Subscribe(_ =>
-            {
-                opacity += OpacityIncrement;
-                if (opacity > 1D)
-                {
-                    opacity = 1D;
-                }
-
-                _opacitySubject.OnNext(opacity);
-            })
+            .Subscribe(opacity.OnNext)
             .DisposeWith(_animationDisposable);
-        _ = new ActionDisposable(() =>
-            RxSchedulers.MainThreadScheduler.Schedule(() =>
-            {
-                to!.Opacity = 1D;
-                from!.Opacity = 1D;
-                to.IsVisible = true;
-                from.IsVisible = false;
-                from.Content = null;
-                _currentPresenter = current == 1 ? 0 : 1;
-                _ = _animationSemaphore.Release();
-            })).DisposeWith(_animationDisposable);
+        _ = new ActionDisposable(new AnimationCompletion(this, from!, to!, current).Schedule)
+            .DisposeWith(_animationDisposable);
         _ = _opacitySubject
-            .Where(x => x >= 1D)
+            .Where(static x => x >= 1D)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
@@ -194,5 +173,63 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
         var from = _currentPresenter == 1 ? _contentPresenter1 : _contentPresenter2;
         var to = _currentPresenter == 1 ? _contentPresenter2 : _contentPresenter1;
         return (from, to, _currentPresenter);
+    }
+
+    /// <summary>Maintains the opacity for a single active content transition.</summary>
+    /// <param name="opacitySubject">The transition opacity signal.</param>
+    private sealed class AnimationOpacityState(Signal<double> opacitySubject)
+    {
+        /// <summary>The opacity increment applied for each animation tick.</summary>
+        private const double OpacityIncrement = 0.08D;
+
+        /// <summary>Stores the current transition opacity.</summary>
+        private double _opacity;
+
+        /// <summary>Advances the transition opacity for one timer tick.</summary>
+        /// <param name="_">The timer tick value.</param>
+        public void OnNext(long _)
+        {
+            _opacity = Math.Min(_opacity + OpacityIncrement, 1D);
+            opacitySubject.OnNext(_opacity);
+        }
+    }
+
+    /// <summary>Schedules the final UI update for a completed content transition.</summary>
+    /// <param name="control">The control that owns the transition.</param>
+    /// <param name="from">The outgoing content presenter.</param>
+    /// <param name="to">The incoming content presenter.</param>
+    /// <param name="current">The outgoing presenter index.</param>
+    private sealed class AnimationCompletion(
+        ReactiveTransitioningContentControl control,
+        ContentPresenter from,
+        ContentPresenter to,
+        int current)
+    {
+        /// <summary>Schedules completion on the UI scheduler.</summary>
+#if REACTIVE_SHIM
+        public void Schedule() =>
+            _ = RxSchedulers.MainThreadScheduler.Schedule(
+                this,
+                static (_, completion) =>
+                {
+                    completion.Complete();
+                    return Disposable.Empty;
+                });
+#else
+        public void Schedule() =>
+            _ = RxSchedulers.MainThreadScheduler.Schedule(this, static completion => completion.Complete());
+#endif
+
+        /// <summary>Completes the transition on the UI thread.</summary>
+        private void Complete()
+        {
+            to.Opacity = 1D;
+            from.Opacity = 1D;
+            to.IsVisible = true;
+            from.IsVisible = false;
+            from.Content = null;
+            control._currentPresenter = current == 1 ? 0 : 1;
+            _ = control._animationSemaphore.Release();
+        }
     }
 }

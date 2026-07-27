@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a paging/navigation surface for local or remote data sources.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class DataPager : Control
 {
     /// <summary>Property for <see cref="PaginationState"/>.</summary>
@@ -18,42 +19,42 @@ public class DataPager : Control
         nameof(PaginationState),
         typeof(PaginationState),
         typeof(DataPager),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="CurrentRequest"/>.</summary>
     public static readonly DependencyProperty CurrentRequestProperty = DependencyProperty.Register(
         nameof(CurrentRequest),
         typeof(PageRequest),
         typeof(DataPager),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="PageRequestCommand"/>.</summary>
     public static readonly DependencyProperty PageRequestCommandProperty = DependencyProperty.Register(
         nameof(PageRequestCommand),
         typeof(ICommand),
         typeof(DataPager),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SortKey"/>.</summary>
     public static readonly DependencyProperty SortKeyProperty = DependencyProperty.Register(
         nameof(SortKey),
         typeof(string),
         typeof(DataPager),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SortDescending"/>.</summary>
     public static readonly DependencyProperty SortDescendingProperty = DependencyProperty.Register(
         nameof(SortDescending),
         typeof(bool),
         typeof(DataPager),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="QueryState"/>.</summary>
     public static readonly DependencyProperty QueryStateProperty = DependencyProperty.Register(
         nameof(QueryState),
         typeof(SearchQueryState),
         typeof(DataPager),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The fallback page size used when no pagination state is available.</summary>
     private const int DefaultPageSize = 20;
@@ -127,6 +128,10 @@ public class DataPager : Control
     /// <summary>Gets the command that requests the last page.</summary>
     public ICommand LastPageCommand { get; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Creates a page request for the specified zero-based page index.</summary>
     /// <param name="pageIndex">The requested page index.</param>
     /// <returns>The page request snapshot.</returns>
@@ -135,7 +140,7 @@ public class DataPager : Control
         var state = PaginationState;
         var clampedPageIndex = state is null ? Math.Max(0, pageIndex) : Math.Clamp(pageIndex, 0, state.TotalPages - 1);
         var pageSize = state?.PageSize ?? DefaultPageSize;
-        return new PageRequest(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
+        return new(clampedPageIndex, pageSize, SortKey, SortDescending, QueryState);
     }
 
     /// <summary>Emits a page request for the specified zero-based page index.</summary>

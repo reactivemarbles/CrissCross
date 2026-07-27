@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents an icon source that uses a glyph from the specified font.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SymbolIconSource : IconSource
 {
     /// <summary>Property for <see cref="FontSize"/>.</summary>
@@ -16,35 +17,35 @@ public class SymbolIconSource : IconSource
         nameof(FontSize),
         typeof(double),
         typeof(SymbolIconSource),
-        new PropertyMetadata(SystemFonts.MessageFontSize));
+        new(SystemFonts.MessageFontSize));
 
     /// <summary>Property for <see cref="FontStyle"/>.</summary>
     public static readonly DependencyProperty FontStyleProperty = DependencyProperty.Register(
         nameof(FontStyle),
         typeof(FontStyle),
         typeof(SymbolIconSource),
-        new PropertyMetadata(FontStyles.Normal));
+        new(FontStyles.Normal));
 
     /// <summary>Property for <see cref="FontWeight"/>.</summary>
     public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register(
         nameof(FontWeight),
         typeof(FontWeight),
         typeof(SymbolIconSource),
-        new PropertyMetadata(FontWeights.Normal));
+        new(FontWeights.Normal));
 
     /// <summary>Property for <see cref="Symbol"/>.</summary>
     public static readonly DependencyProperty SymbolProperty = DependencyProperty.Register(
         nameof(Symbol),
         typeof(SymbolRegular),
         typeof(SymbolIconSource),
-        new PropertyMetadata(SymbolRegular.Empty));
+        new(SymbolRegular.Empty));
 
     /// <summary>Property for <see cref="Filled"/>.</summary>
     public static readonly DependencyProperty FilledProperty = DependencyProperty.Register(
         nameof(Filled),
         typeof(bool),
         typeof(SymbolIconSource),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Gets or sets the font size used to render the symbol.</summary>
     public double FontSize
@@ -80,6 +81,10 @@ public class SymbolIconSource : IconSource
         get => (bool)GetValue(FilledProperty);
         set => SetValue(FilledProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates the icon element.</summary>
     /// <returns>

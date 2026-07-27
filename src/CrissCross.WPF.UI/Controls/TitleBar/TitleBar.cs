@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -30,6 +30,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementMaximizeButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementRestoreButton, Type = typeof(TitleBarButton))]
 [TemplatePart(Name = ElementCloseButton, Type = typeof(TitleBarButton))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TitleBar : Control, IThemeControl
 {
     /// <summary>Property for <see cref="ApplicationTheme"/>.</summary>
@@ -37,28 +38,28 @@ public class TitleBar : Control, IThemeControl
         nameof(ApplicationTheme),
         typeof(ApplicationTheme),
         typeof(TitleBar),
-        new PropertyMetadata(ApplicationTheme.Unknown));
+        new(ApplicationTheme.Unknown));
 
     /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(string),
         typeof(TitleBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="Header"/>.</summary>
     public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
         nameof(Header),
         typeof(object),
         typeof(TitleBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The title content property.</summary>
     public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(
         nameof(TitleContent),
         typeof(object),
         typeof(TitleBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ButtonsForeground"/>.</summary>
     public static readonly DependencyProperty ButtonsForegroundProperty = DependencyProperty.Register(
@@ -79,56 +80,56 @@ public class TitleBar : Control, IThemeControl
         nameof(IsMaximized),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="ForceShutdown"/>.</summary>
     public static readonly DependencyProperty ForceShutdownProperty = DependencyProperty.Register(
         nameof(ForceShutdown),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="ShowMaximize"/>.</summary>
     public static readonly DependencyProperty ShowMaximizeProperty = DependencyProperty.Register(
         nameof(ShowMaximize),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="ShowMinimize"/>.</summary>
     public static readonly DependencyProperty ShowMinimizeProperty = DependencyProperty.Register(
         nameof(ShowMinimize),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="ShowHelp"/>.</summary>
     public static readonly DependencyProperty ShowHelpProperty = DependencyProperty.Register(
         nameof(ShowHelp),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="ShowClose"/>.</summary>
     public static readonly DependencyProperty ShowCloseProperty = DependencyProperty.Register(
         nameof(ShowClose),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="CanMaximize"/>.</summary>
     public static readonly DependencyProperty CanMaximizeProperty = DependencyProperty.Register(
         nameof(CanMaximize),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(TitleBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The content property.</summary>
     public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
@@ -141,7 +142,7 @@ public class TitleBar : Control, IThemeControl
         nameof(CloseWindowByDoubleClickOnIcon),
         typeof(bool),
         typeof(TitleBar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Routed event for <see cref="CloseClicked"/>.</summary>
     public static readonly RoutedEvent CloseClickedEvent = EventManager.RegisterRoutedEvent(
@@ -176,7 +177,7 @@ public class TitleBar : Control, IThemeControl
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(TitleBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Provides the ElementIcon member.</summary>
     private const string ElementIcon = "PART_Icon";
@@ -389,6 +390,10 @@ public class TitleBar : Control, IThemeControl
     /// <summary>Gets or sets lets you override the behavior of the Minimize button with an Action.</summary>
     public Action<TitleBar, System.Windows.Window>? MinimizeActionOverride { get; set; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>
     /// Invoked whenever application code or an internal process,
     /// such as a rebuilding layout pass, calls the ApplyTemplate method.
@@ -458,14 +463,11 @@ public class TitleBar : Control, IThemeControl
         var point = PointToScreen(e.GetPosition(this));
         SystemCommands.ShowSystemMenu(
             _currentWindow,
-            new Point(point.X / _dpiScale!.Value.DpiScaleX, point.Y / _dpiScale.Value.DpiScaleY));
+            new(point.X / _dpiScale!.Value.DpiScaleX, point.Y / _dpiScale.Value.DpiScaleY));
     }
 
     /// <summary>Provides the OnUnloaded member.</summary>
-    private void OnUnloaded()
-    {
-        ApplicationThemeManager.Changed -= OnThemeChanged;
-    }
+    private void OnUnloaded() => ApplicationThemeManager.Changed -= OnThemeChanged;
 
     /// <summary>Provides the CloseWindow member.</summary>
     private void CloseWindow()
@@ -544,28 +546,28 @@ public class TitleBar : Control, IThemeControl
         {
             case TitleBarButtonType.Maximize or TitleBarButtonType.Restore:
             {
-                RaiseEvent(new RoutedEventArgs(MaximizeClickedEvent, this));
+                RaiseEvent(new(MaximizeClickedEvent, this));
                 MaximizeWindow();
                 break;
             }
 
             case TitleBarButtonType.Close:
             {
-                RaiseEvent(new RoutedEventArgs(CloseClickedEvent, this));
+                RaiseEvent(new(CloseClickedEvent, this));
                 CloseWindow();
                 break;
             }
 
             case TitleBarButtonType.Minimize:
             {
-                RaiseEvent(new RoutedEventArgs(MinimizeClickedEvent, this));
+                RaiseEvent(new(MinimizeClickedEvent, this));
                 MinimizeWindow();
                 break;
             }
 
             case TitleBarButtonType.Help:
             {
-                RaiseEvent(new RoutedEventArgs(HelpClickedEvent, this));
+                RaiseEvent(new(HelpClickedEvent, this));
                 break;
             }
 

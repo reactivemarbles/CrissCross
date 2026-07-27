@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Specialized;
@@ -20,6 +20,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// </code>
 /// </example>
 [StyleTypedProperty(Property = nameof(ItemContainerStyle), StyleTargetType = typeof(BreadcrumbBarItem))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNavigation
 {
     /// <summary>Property for <see cref="Command"/>.</summary>
@@ -27,14 +28,14 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
         nameof(Command),
         typeof(ICommand),
         typeof(BreadcrumbBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(BreadcrumbBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ItemClicked"/>.</summary>
     public static readonly RoutedEvent ItemClickedRoutedEvent = EventManager.RegisterRoutedEvent(
@@ -80,6 +81,10 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
         get => (ICommand)GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Setups the navigation.</summary>
     /// <param name="hostName">Name of the host.</param>
@@ -150,21 +155,13 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
             throw new InvalidOperationException(HostNotConfiguredMessage);
         }
 
-        if (type is null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
+        ThrowHelper.ThrowIfNull(type, nameof(type));
 
         UpdateItems(type, breadcrumbItemContent);
 
         this.NavigateToView(
             type,
-            new NavigationRequestOptions
-            {
-                HostName = _hostName,
-                Contract = contract,
-                Parameter = parameter,
-            });
+            new NavigationRequestOptions { HostName = _hostName, Contract = contract, Parameter = parameter, });
     }
 
     /// <summary>Navigates back and updates the Breadcrumb to remove the last item.</summary>
@@ -184,7 +181,7 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
             throw new InvalidOperationException(HostNotConfiguredMessage);
         }
 
-        if (Items.Count == 0)
+        if (Items.IsEmpty)
         {
             return null;
         }
@@ -237,10 +234,19 @@ public class BreadcrumbBar : System.Windows.Controls.ItemsControl, IUseHostedNav
     /// <param name="content">The content value.</param>
     private void UpdateItems(Type typeName, string? content = null)
     {
-        var list = Items.OfType<BreadcrumbBarItem>().ToList().Where(x => x.NavigationType == typeName).ToList();
-        if (list.Count != 0)
+        BreadcrumbBarItem? existingItem = null;
+        foreach (var item in Items)
         {
-            var index = Items.IndexOf(list[0]);
+            if (item is BreadcrumbBarItem navigationItem && navigationItem.NavigationType == typeName)
+            {
+                existingItem = navigationItem;
+                break;
+            }
+        }
+
+        if (existingItem is not null)
+        {
+            var index = Items.IndexOf(existingItem);
             for (var i = Items.Count - 1; i > index; i--)
             {
                 Items.RemoveAt(i);

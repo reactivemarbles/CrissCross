@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -11,6 +11,7 @@ using Splat;
 namespace CrissCross.MAUI.Benchmarks;
 
 /// <summary>NavigationShellBenchmark member.</summary>
+[MemoryDiagnoser]
 public partial class NavigationShellBenchmark : IDisposable
 {
     /// <summary>Provides the _host member.</summary>
@@ -24,13 +25,23 @@ public partial class NavigationShellBenchmark : IDisposable
 
     /// <summary>Setups this instance.</summary>
     [GlobalSetup]
-    public void Setup()
-    {
-        _host = new NavigationShell { Name = "BenchmarkHost" };
-        _host.Setup();
-        _dummyViewModel = new DummyRxObject();
-        AppLocator.CurrentMutable.RegisterConstant((DummyRxObject)_dummyViewModel);
-    }
+    public void Setup() => ResetState();
+
+    /// <summary>Restores the shell to the same empty navigation state before each measured iteration.</summary>
+    [IterationSetup]
+    public void ResetBeforeIteration() => Setup();
+
+    /// <summary>Seeds one history entry before measuring navigation back.</summary>
+    [IterationSetup(Target = nameof(NavigateBack))]
+    public void SeedHistoryForNavigateBack() => SeedNavigationHistory();
+
+    /// <summary>Seeds one history entry before measuring history clearing.</summary>
+    [IterationSetup(Target = nameof(ClearHistory))]
+    public void SeedHistoryForClearHistory() => SeedHistoryForNavigateBack();
+
+    /// <summary>Releases benchmark resources after all iterations complete.</summary>
+    [GlobalCleanup]
+    public void Cleanup() => DisposeState();
 
     /// <summary>Navigates this instance.</summary>
     [Benchmark]
@@ -72,16 +83,37 @@ public partial class NavigationShellBenchmark : IDisposable
 
         if (disposing)
         {
-            AppLocator.CurrentMutable.UnregisterAll<DummyRxObject>();
-            _host?.Dispose();
-            (_dummyViewModel as IDisposable)?.Dispose();
+            DisposeState();
         }
 
         _disposedValue = true;
     }
 
+    /// <summary>Creates a fresh shell and a fresh navigation view model.</summary>
+    private void ResetState()
+    {
+        DisposeState();
+        _host = new NavigationShell { Name = "BenchmarkHost" };
+        _host.Setup();
+        _dummyViewModel = new DummyRxObject();
+        AppLocator.CurrentMutable.RegisterConstant((DummyRxObject)_dummyViewModel);
+    }
+
+    /// <summary>Creates the single deterministic history entry required by history benchmarks.</summary>
+    private void SeedNavigationHistory() => _host!.Navigate(_dummyViewModel!);
+
+    /// <summary>Disposes state created for the current benchmark invocation.</summary>
+    private void DisposeState()
+    {
+        AppLocator.CurrentMutable.UnregisterAll<DummyRxObject>();
+        _host?.Dispose();
+        (_dummyViewModel as IDisposable)?.Dispose();
+        _host = null;
+        _dummyViewModel = null;
+    }
+
     /// <summary>Dummy implementation of IRxObject for benchmarking.</summary>
-    private sealed partial class DummyRxObject : IRxObject
+    public sealed partial class DummyRxObject : IRxObject
     {
         /// <summary>Provides the PropertyChanged member.</summary>
         public event PropertyChangedEventHandler? PropertyChanged
@@ -118,10 +150,7 @@ public partial class NavigationShellBenchmark : IDisposable
             Observable.Empty<IReactivePropertyChangedEventArgs<IReactiveObject>>();
 
         /// <summary>Provides the Dispose member.</summary>
-        public void Dispose()
-        {
-            IsDisposed = true;
-        }
+        public void Dispose() => IsDisposed = true;
 
         /// <summary>Provides the SuppressChangeNotifications member.</summary>
         /// <returns>The result.</returns>

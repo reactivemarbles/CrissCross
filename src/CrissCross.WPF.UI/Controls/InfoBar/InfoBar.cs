@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -17,6 +17,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// (including titles, messages, and icons) and can be configured to be
 /// user-dismissable or persistent.
 /// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class InfoBar : System.Windows.Controls.ContentControl
 {
     /// <summary>Property for <see cref="IsClosable"/>.</summary>
@@ -24,42 +25,42 @@ public class InfoBar : System.Windows.Controls.ContentControl
         nameof(IsClosable),
         typeof(bool),
         typeof(InfoBar),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="IsOpen"/>.</summary>
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
         nameof(IsOpen),
         typeof(bool),
         typeof(InfoBar),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Title"/>.</summary>
     public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
         nameof(Title),
         typeof(string),
         typeof(InfoBar),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="Message"/>.</summary>
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
         typeof(InfoBar),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="Severity"/>.</summary>
     public static readonly DependencyProperty SeverityProperty = DependencyProperty.Register(
         nameof(Severity),
         typeof(InfoBarSeverity),
         typeof(InfoBar),
-        new PropertyMetadata(InfoBarSeverity.Informational));
+        new(InfoBarSeverity.Informational));
 
     /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(InfoBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <inheritdoc />
     public InfoBar() =>
@@ -108,4 +109,8 @@ public class InfoBar : System.Windows.Controls.ContentControl
 
     /// <summary>Gets the <see cref="ReactiveCommand{Tin, Tout}"/> triggered after clicking the close button.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

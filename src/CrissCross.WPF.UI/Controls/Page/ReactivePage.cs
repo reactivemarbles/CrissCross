@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -42,6 +42,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <typeparam name="TViewModel">
 /// The type of the view model backing the view.
 /// </typeparam>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ReactivePage<TViewModel> : Page, IViewFor<TViewModel>
     where TViewModel : class
 {
@@ -50,7 +51,7 @@ public class ReactivePage<TViewModel> : Page, IViewFor<TViewModel>
         nameof(ViewModel),
         typeof(TViewModel),
         typeof(ReactivePage<TViewModel>),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;
@@ -68,4 +69,8 @@ public class ReactivePage<TViewModel> : Page, IViewFor<TViewModel>
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

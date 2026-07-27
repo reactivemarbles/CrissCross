@@ -14,8 +14,7 @@
                             Background="Transparent"
                             BorderThickness="0"
                             CornerRadius="4">
-                        <TextBlock Text="&#xE72B;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        <TextBlock Text="&#x2190;"
                                    FontSize="14" />
                     </Button>
                     <!-- Forward button -->
@@ -25,8 +24,7 @@
                             Background="Transparent"
                             BorderThickness="0"
                             CornerRadius="4">
-                        <TextBlock Text="&#xE72A;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        <TextBlock Text="&#x2192;"
                                    FontSize="14" />
                     </Button>
                 </StackPanel>

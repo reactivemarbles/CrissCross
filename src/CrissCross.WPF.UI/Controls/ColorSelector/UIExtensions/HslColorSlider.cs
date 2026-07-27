@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.UIExtensions;
 #endif
 
 /// <summary>Provides the HslColorSlider member.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class HslColorSlider : PreviewColorSlider
 {
     /// <summary>Provides the SliderHslTypeProperty member.</summary>
@@ -16,7 +17,7 @@ public sealed class HslColorSlider : PreviewColorSlider
         nameof(SliderHslType),
         typeof(string),
         typeof(HslColorSlider),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Gets or sets SliderHslType.</summary>
     public string SliderHslType
@@ -24,6 +25,10 @@ public sealed class HslColorSlider : PreviewColorSlider
         get => (string)GetValue(SliderHslTypeProperty);
         set => SetValue(SliderHslTypeProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     protected override void GenerateBackground()
     {

@@ -1,11 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -62,8 +61,28 @@ public sealed class NavigationResolutionException : InvalidOperationException
         SourceKind = sourceKind;
         SourceKey = sourceKey ?? throw new ArgumentNullException(nameof(sourceKey));
         Contract = NavigationContract.Normalize(contract);
-        KnownContracts = new ReadOnlyCollection<string?>(
-            knownContracts.Select(NavigationContract.Normalize).Distinct(StringComparer.Ordinal).ToArray());
+        ThrowHelper.ThrowIfNull(knownContracts, nameof(knownContracts));
+        var normalizedContracts = new List<string?>();
+        foreach (var knownContract in knownContracts)
+        {
+            var normalizedContract = NavigationContract.Normalize(knownContract);
+            var alreadyKnown = false;
+            foreach (var existingContract in normalizedContracts)
+            {
+                if (string.Equals(existingContract, normalizedContract, StringComparison.Ordinal))
+                {
+                    alreadyKnown = true;
+                    break;
+                }
+            }
+
+            if (!alreadyKnown)
+            {
+                normalizedContracts.Add(normalizedContract);
+            }
+        }
+
+        KnownContracts = new ReadOnlyCollection<string?>(normalizedContracts);
     }
 
     /// <summary>Gets the source side used for lookup.</summary>

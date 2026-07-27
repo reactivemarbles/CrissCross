@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -36,6 +36,7 @@ namespace CrissCross.WPF.UI.Controls;
 [TemplatePart(Name = ElementTextBox, Type = typeof(TextBox))]
 [TemplatePart(Name = ElementSuggestionsPopup, Type = typeof(Popup))]
 [TemplatePart(Name = ElementSuggestionsList, Type = typeof(ListView))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AutoSuggestBox : ItemsControl, IIconControl
 {
     /// <summary>Property for <see cref="OriginalItemsSource"/>.</summary>
@@ -43,56 +44,56 @@ public class AutoSuggestBox : ItemsControl, IIconControl
         nameof(OriginalItemsSource),
         typeof(IList),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(Array.Empty<object>()));
+        new(Array.Empty<object>()));
 
     /// <summary>Property for <see cref="IsSuggestionListOpen"/>.</summary>
     public static readonly DependencyProperty IsSuggestionListOpenProperty = DependencyProperty.Register(
         nameof(IsSuggestionListOpen),
         typeof(bool),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Text"/>.</summary>
     public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
         nameof(Text),
         typeof(string),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(string.Empty, TextPropertyChangedCallback));
+        new(string.Empty, TextPropertyChangedCallback));
 
     /// <summary>Property for <see cref="PlaceholderText"/>.</summary>
     public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(
         nameof(PlaceholderText),
         typeof(string),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="UpdateTextOnSelect"/>.</summary>
     public static readonly DependencyProperty UpdateTextOnSelectProperty = DependencyProperty.Register(
         nameof(UpdateTextOnSelect),
         typeof(bool),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="MaxSuggestionListHeight"/>.</summary>
     public static readonly DependencyProperty MaxSuggestionListHeightProperty = DependencyProperty.Register(
         nameof(MaxSuggestionListHeight),
         typeof(double),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(0D));
+        new(0D));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="FocusCommand"/>.</summary>
     public static readonly DependencyProperty FocusCommandProperty = DependencyProperty.Register(
         nameof(FocusCommand),
         typeof(ICommand),
         typeof(AutoSuggestBox),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Routed event for <see cref="QuerySubmitted"/>.</summary>
     public static readonly RoutedEvent QuerySubmittedEvent = EventManager.RegisterRoutedEvent(
@@ -240,6 +241,10 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <summary>Gets or sets the suggestions list.</summary>
     private ListView? SuggestionsList { get; set; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Called when [apply template].</summary>
     public override void OnApplyTemplate()
     {
@@ -352,10 +357,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
     /// <param name="selectedItem">Currently selected item.</param>
     protected virtual void OnSuggestionChosen(object selectedItem)
     {
-        var args = new AutoSuggestBoxSuggestionChosenEventArgs(SuggestionChosenEvent, this)
-        {
-            SelectedItem = selectedItem,
-        };
+        var args = new AutoSuggestBoxSuggestionChosenEventArgs(SuggestionChosenEvent, this) { SelectedItem = selectedItem, };
 
         RaiseEvent(args);
 
@@ -607,7 +609,7 @@ public class AutoSuggestBox : ItemsControl, IIconControl
             var item = OriginalItemsSource[i];
             var itemText = GetStringFromObj(item!);
 
-            var found = splitText.All(key => itemText!.Contains(key, StringComparison.OrdinalIgnoreCase));
+            var found = System.Array.TrueForAll(splitText, key => itemText!.Contains(key, StringComparison.OrdinalIgnoreCase));
 
             if (found)
             {

@@ -24,8 +24,7 @@
                                     Padding="8"
                                     Background="Transparent"
                                     BorderThickness="0">
-                                <TextBlock Text="&#xE700;"
-                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                <TextBlock Text="&#x2630;"
                                            FontSize="16" />
                             </Button>
                             

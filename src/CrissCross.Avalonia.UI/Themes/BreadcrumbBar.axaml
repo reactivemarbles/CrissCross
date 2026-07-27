@@ -25,8 +25,7 @@
                                       Padding="{TemplateBinding Padding}"
                                       Foreground="{TemplateBinding Foreground}" />
                     <TextBlock Name="Separator"
-                               Text="&#xE76C;"
-                               FontFamily="{StaticResource SymbolThemeFontFamily}"
+                               Text="&#x203A;"
                                FontSize="10"
                                VerticalAlignment="Center"
                                Foreground="{DynamicResource TextFillColorTertiary}"

@@ -23,8 +23,7 @@
                     <Grid ColumnDefinitions="Auto,*,Auto">
                         <!-- Decrement button area -->
                         <TextBlock Name="DecrementIcon"
-                                   Text="&#xE738;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   Text="&#x2212;"
                                    FontSize="10"
                                    VerticalAlignment="Center"
                                    Margin="0,0,8,0" />
@@ -37,8 +36,7 @@
                         <!-- Increment button area -->
                         <TextBlock Name="IncrementIcon"
                                    Grid.Column="2"
-                                   Text="&#xE710;"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   Text="&#x002B;"
                                    FontSize="10"
                                    VerticalAlignment="Center"
                                    Margin="8,0,0,0" />

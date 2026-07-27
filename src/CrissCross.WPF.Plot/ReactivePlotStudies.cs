@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -255,35 +255,35 @@ public static class ReactivePlotStudies
             CreateStudy(
                 shared,
                 "Ichimoku Conversion",
-                data => TechnicalIndicators.Ichimoku(data).Conversion,
+                static data => TechnicalIndicators.Ichimoku(data).Conversion,
                 axis,
                 PlotType.Line,
                 new() { Color = "#EF5350" }),
             CreateStudy(
                 shared,
                 "Ichimoku Base",
-                data => TechnicalIndicators.Ichimoku(data).Base,
+                static data => TechnicalIndicators.Ichimoku(data).Base,
                 axis,
                 PlotType.Line,
                 new() { Color = "#42A5F5" }),
             CreateStudy(
                 shared,
                 "Ichimoku Span A",
-                data => TechnicalIndicators.Ichimoku(data).LeadingSpanA,
+                static data => TechnicalIndicators.Ichimoku(data).LeadingSpanA,
                 axis,
                 PlotType.Line,
                 new() { Color = "#66BB6A" }),
             CreateStudy(
                 shared,
                 "Ichimoku Span B",
-                data => TechnicalIndicators.Ichimoku(data).LeadingSpanB,
+                static data => TechnicalIndicators.Ichimoku(data).LeadingSpanB,
                 axis,
                 PlotType.Line,
                 new() { Color = "#EF5350" }),
             CreateStudy(
                 shared,
                 "Ichimoku Lagging",
-                data => TechnicalIndicators.Ichimoku(data).Lagging,
+                static data => TechnicalIndicators.Ichimoku(data).Lagging,
                 axis,
                 PlotType.Line,
                 new() { Color = "#AB47BC" }),];
@@ -305,10 +305,7 @@ public static class ReactivePlotStudies
         PlotType plotType,
         ReactivePlotSeriesStyle? style)
     {
-        if (source is null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
+        ThrowHelper.ThrowIfNull(source, nameof(source));
 
         var definition = new StudyDefinition(suffix, calculate, axis, plotType, style);
         var declaredKey = CreateKey(source.Key, definition.Suffix, definition.Axis);
@@ -319,7 +316,7 @@ public static class ReactivePlotStudies
             return source.Updates.Select(update => Transform(update, x, y, definition));
         });
 
-        return new ReactivePlotSource(declaredKey, plotType, updates) { XAxisKind = source.XAxisKind };
+        return new(declaredKey, plotType, updates) { XAxisKind = source.XAxisKind };
     }
 
     /// <summary>Transforms one source update into a derived replacement update.</summary>
@@ -378,15 +375,9 @@ public static class ReactivePlotStudies
     /// <returns>The shared source.</returns>
     private static ReactivePlotSource Share(IReactivePlotSource source)
     {
-        if (source is null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
+        ThrowHelper.ThrowIfNull(source, nameof(source));
 
-        return new ReactivePlotSource(source.Key, source.PlotType, source.Updates.Publish().RefCount())
-        {
-            XAxisKind = source.XAxisKind,
-        };
+        return new(source.Key, source.PlotType, source.Updates.Publish().RefCount()) { XAxisKind = source.XAxisKind };
     }
 
     /// <summary>Applies a rolling point limit to retained study data.</summary>

@@ -20,7 +20,7 @@
       Height="30"
       Margin="12,0,0,0"
       HorizontalAlignment="Left"
-      Source="/Assets/ControlImages/ComboBox.png"
+      Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/ComboBox.png"
     />
     <ui:TextBlock Margin="45,12,12,12" FontSize="24" FontWeight="Bold" Text="ComboBox" />
     <Grid Grid.Row="1" Margin="12">

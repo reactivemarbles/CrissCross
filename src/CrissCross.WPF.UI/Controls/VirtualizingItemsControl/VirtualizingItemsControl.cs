@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Virtualized ItemsControl.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(VirtualizingItemsControl), "VirtualizingItemsControl.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class VirtualizingItemsControl : ItemsControl
 {
     /// <summary>Property for <see cref="CacheLengthUnit"/>.</summary>
@@ -33,4 +34,8 @@ public partial class VirtualizingItemsControl : ItemsControl
             VirtualizingPanel.SetCacheLengthUnit(this, value);
         }
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

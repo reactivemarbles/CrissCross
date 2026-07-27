@@ -52,11 +52,11 @@
                 <controls:StackPanel Spacing="10">
                     <controls:TextBlock FontSize="18" FontWeight="SemiBold" Text="Workflow controls" />
                     <controls:SegmentedControl
-                        SelectedKey="{Binding SegmentState.SelectedKey}"
+                        SelectedKey="{Binding SegmentState.SelectedKey, Mode=OneWay}"
                         SelectionChangedCommand="{Binding SegmentChangedCommand}"
                         SelectionState="{Binding SegmentState}" />
                     <controls:Stepper
-                        CurrentKey="{Binding StepperState.CurrentKey}"
+                        CurrentKey="{Binding StepperState.CurrentKey, Mode=OneWay}"
                         State="{Binding StepperState}"
                         StepRequestedCommand="{Binding StepRequestedCommand}" />
                 </controls:StackPanel>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Interaction logic for SquareSlider.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
 {
     /// <summary>Provides the HueProperty member.</summary>
@@ -21,28 +22,28 @@ public sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
         nameof(Hue),
         typeof(double),
         typeof(SquareSlider),
-        new PropertyMetadata(0.0, OnHueChanged));
+        new(0.0, OnHueChanged));
 
     /// <summary>Provides the HeadXProperty member.</summary>
     public static readonly DependencyProperty HeadXProperty = DependencyProperty.Register(
         nameof(HeadX),
         typeof(double),
         typeof(SquareSlider),
-        new PropertyMetadata(0.0));
+        new(0.0));
 
     /// <summary>Provides the HeadYProperty member.</summary>
     public static readonly DependencyProperty HeadYProperty = DependencyProperty.Register(
         nameof(HeadY),
         typeof(double),
         typeof(SquareSlider),
-        new PropertyMetadata(0.0));
+        new(0.0));
 
     /// <summary>Provides the PickerTypeProperty member.</summary>
     public static readonly DependencyProperty PickerTypeProperty = DependencyProperty.Register(
         nameof(PickerType),
         typeof(PickerType),
         typeof(SquareSlider),
-        new PropertyMetadata(PickerType.HSV, OnColorSpaceChanged));
+        new(PickerType.HSV, OnColorSpaceChanged));
 
     /// <summary>Provides the width and height of the generated gradient bitmap.</summary>
     private const int GradientBitmapDimension = 32;
@@ -150,6 +151,10 @@ public sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
         }
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the OnColorSpaceChanged member.</summary>
     /// <param name="d">The d value.</param>
     /// <param name="args">The event arguments.</param>
@@ -196,7 +201,7 @@ public sealed partial class SquareSlider : UserControl, INotifyPropertyChanged
             }
         }
 
-        GradientBitmap.WritePixels(new Int32Rect(0, 0, w, h), pixels, w * RgbChannelCount, 0);
+        GradientBitmap.WritePixels(new(0, 0, w, h), pixels, w * RgbChannelCount, 0);
     }
 
     /// <summary>Provides the OnMouseDown member.</summary>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -15,19 +15,19 @@ internal sealed class GifDataStream
     private GifDataStream() { }
 
     /// <summary>Gets the Header value.</summary>
-    public GifHeader? Header { get; private set; }
+    internal GifHeader? Header { get; private set; }
 
     /// <summary>Gets GlobalColorTable.</summary>
-    public GifColor[]? GlobalColorTable { get; private set; }
+    internal GifColor[]? GlobalColorTable { get; private set; }
 
     /// <summary>Gets Frames.</summary>
-    public IList<GifFrame>? Frames { get; private set; }
+    internal IList<GifFrame>? Frames { get; private set; }
 
     /// <summary>Gets Extensions.</summary>
-    public IList<GifExtension>? Extensions { get; private set; }
+    internal IList<GifExtension>? Extensions { get; private set; }
 
     /// <summary>Gets or sets RepeatCount.</summary>
-    public ushort RepeatCount { get; set; }
+    internal ushort RepeatCount { get; set; }
 
     /// <summary>Provides the ReadAsync member.</summary>
     /// <param name="stream">The stream value.</param>
@@ -55,9 +55,18 @@ internal sealed class GifDataStream
 
         await ReadFramesAsync(stream).ConfigureAwait(false);
 
-        var netscapeExtension = Extensions
-            ?.OfType<GifApplicationExtension>()
-            .FirstOrDefault(GifHelpers.IsNetscapeExtension);
+        GifApplicationExtension? netscapeExtension = null;
+        if (Extensions is not null)
+        {
+            foreach (var extension in Extensions)
+            {
+                if (extension is GifApplicationExtension candidate && GifHelpers.IsNetscapeExtension(candidate))
+                {
+                    netscapeExtension = candidate;
+                    break;
+                }
+            }
+        }
 
         RepeatCount = netscapeExtension is not null ? GifHelpers.GetRepeatCount(netscapeExtension) : (ushort)1;
     }

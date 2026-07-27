@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -13,8 +13,10 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>A NavigationUserControl with a strongly-typed ViewModel, wired for ReactiveUI activation.</summary>
 /// <typeparam name="TViewModel">The view model type.</typeparam>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 #if NET6_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.17763.0")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 #endif
 public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor<TViewModel>
     where TViewModel : class, IRxObject, new()
@@ -24,7 +26,7 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
         nameof(ViewModel),
         typeof(TViewModel),
         typeof(NavigationUserControl<TViewModel>),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.</summary>
     public NavigationUserControl() =>
@@ -47,4 +49,8 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
         get => ViewModel;
         set => ViewModel = (TViewModel?)value;
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

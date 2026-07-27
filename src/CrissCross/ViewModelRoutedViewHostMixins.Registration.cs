@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
@@ -50,19 +50,20 @@ public static partial class ViewModelRoutedViewHostMixins
     /// <param name="dictionary">The dictionary.</param>
     /// <param name="key">The dictionary key.</param>
     /// <param name="value">The value to add.</param>
-    private static void AddIfMissing<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value)
-    {
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
+    private static void AddIfMissing<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value) =>
         _ = dictionary.TryAdd(key, value);
 #else
-        if (dictionary.ContainsKey(key))
+    private static void AddIfMissing<TValue>(Dictionary<string, TValue> dictionary, string key, TValue value)
+    {
+        if (dictionary.TryGetValue(key, out _))
         {
             return;
         }
 
         dictionary.Add(key, value);
-#endif
     }
+#endif
 
     /// <summary>Ensures the registered view host has a stable name.</summary>
     /// <param name="viewHost">The view host.</param>
@@ -91,7 +92,7 @@ public static partial class ViewModelRoutedViewHostMixins
                 NavigationHost[key] = viewHost;
                 AddIfMissing(WhenSetupSubjects, key, new(1));
                 AddIfMissing(CurrentViewDisposable, key, []);
-                AddIfMissing(ResultNavigating, key, new Signal<IViewModelNavigatingEventArgs>());
+                AddIfMissing(ResultNavigating, key, new());
             }
         }
     }
@@ -108,15 +109,18 @@ public static partial class ViewModelRoutedViewHostMixins
         viewHost.Setup();
     }
 
-    /// <summary>Publishes setup completion for a host.</summary>
-    /// <param name="hostKey">The host key.</param>
-    private static void PublishHostSetup(string hostKey)
+    /// <summary>Publishes setup completion for every registered host key.</summary>
+    /// <param name="hostKeys">The host keys.</param>
+    private static void PublishHostSetup(IEnumerable<string> hostKeys)
     {
         lock (_lockObject)
         {
-            if (WhenSetupSubjects.TryGetValue(hostKey, out var hostSetup))
+            foreach (var hostKey in hostKeys)
             {
-                hostSetup.OnNext(true);
+                if (WhenSetupSubjects.TryGetValue(hostKey, out var hostSetup))
+                {
+                    hostSetup.OnNext(true);
+                }
             }
         }
     }

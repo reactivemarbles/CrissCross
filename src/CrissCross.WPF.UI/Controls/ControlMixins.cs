@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -23,8 +23,8 @@ public static class ControlMixins
         public IObservable<T> FlattenAndSelect<T>(Func<ReactiveTreeItem, IObservable<T>> selector)
         {
 #if NET8_0_OR_GREATER
-            ArgumentNullException.ThrowIfNull(list);
-            ArgumentNullException.ThrowIfNull(selector);
+            ThrowHelper.ThrowIfNull(list, nameof(list));
+            ThrowHelper.ThrowIfNull(selector, nameof(selector));
 #else
             if (list is null)
             {
@@ -43,7 +43,7 @@ public static class ControlMixins
         /// <summary>Flattens the specified list of reactive tree roots.</summary>
         /// <returns>An observable sequence of flattened tree items.</returns>
         private IObservable<ReactiveTreeItem> Flatten() =>
-            list.Select(items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>())).Switch();
+            list.Select(static items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>())).Switch();
     }
 
     /// <summary>Provides the FlattenItems member.</summary>
@@ -51,9 +51,16 @@ public static class ControlMixins
     /// <returns>The result.</returns>
     private static IObservable<ReactiveTreeItem> FlattenItems(IEnumerable<ReactiveTreeItem> items)
     {
-        var streams = items.Where(static item => item is not null).Select(FlattenItem).ToArray();
+        List<IObservable<ReactiveTreeItem>> streams = [];
+        foreach (var item in items)
+        {
+            if (item is not null)
+            {
+                streams.Add(FlattenItem(item));
+            }
+        }
 
-        return streams.Length == 0 ? Observable.Empty<ReactiveTreeItem>() : streams.Merge();
+        return streams.Count == 0 ? Observable.Empty<ReactiveTreeItem>() : streams.Merge();
     }
 
     /// <summary>Provides the FlattenItem member.</summary>
@@ -63,7 +70,7 @@ public static class ControlMixins
         Observable
             .Return(item)
             .Concat(
-                item.Children.CurrentItems.Select(children =>
+                item.Children.CurrentItems.Select(static children =>
                         FlattenItems(children ?? Enumerable.Empty<ReactiveTreeItem>()))
                     .Switch());
 }

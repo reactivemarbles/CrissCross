@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
@@ -59,8 +59,13 @@ public partial class NavigationView : IUseHostedNavigation, IDisposable
             yield break;
         }
 
-        foreach (var child in item.MenuItems.OfType<INavigationViewItem>())
+        foreach (var candidate in item.MenuItems)
         {
+            if (candidate is not INavigationViewItem child)
+            {
+                continue;
+            }
+
             foreach (var d in EnumerateWithChildren(child))
             {
                 yield return d;
@@ -106,8 +111,17 @@ public partial class NavigationView : IUseHostedNavigation, IDisposable
     /// <param name="viewModelType">The ViewModel type.</param>
     private void ActivateItemForViewModel(Type viewModelType)
     {
-        var allItems = EnumerateAllItems().ToList();
-        var match = allItems.FirstOrDefault(x => (x as NavigationViewItem)?.TargetViewModelType == viewModelType);
+        List<INavigationViewItem> allItems = [];
+        INavigationViewItem? match = null;
+        foreach (var item in EnumerateAllItems())
+        {
+            allItems.Add(item);
+            if (match is null && item is NavigationViewItem { TargetViewModelType: { } targetViewModelType } && targetViewModelType == viewModelType)
+            {
+                match = item;
+            }
+        }
+
         if (match is null)
         {
             return;
@@ -140,24 +154,44 @@ public partial class NavigationView : IUseHostedNavigation, IDisposable
 
     /// <summary>Provides the HasAnyViewModelTargets member.</summary>
     /// <returns>The result.</returns>
-    private bool HasAnyViewModelTargets() =>
-        EnumerateAllItems().Any(i => i is NavigationViewItem { TargetViewModelType: not null });
+    private bool HasAnyViewModelTargets()
+    {
+        foreach (var item in EnumerateAllItems())
+        {
+            if (item is NavigationViewItem { TargetViewModelType: not null })
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /// <summary>Provides the EnumerateAllItems member.</summary>
     /// <returns>The result.</returns>
     private IEnumerable<INavigationViewItem> EnumerateAllItems()
     {
-        foreach (var o in MenuItems.OfType<INavigationViewItem>())
+        foreach (var candidate in MenuItems)
         {
-            foreach (var x in EnumerateWithChildren(o))
+            if (candidate is not INavigationViewItem item)
+            {
+                continue;
+            }
+
+            foreach (var x in EnumerateWithChildren(item))
             {
                 yield return x;
             }
         }
 
-        foreach (var o in FooterMenuItems.OfType<INavigationViewItem>())
+        foreach (var candidate in FooterMenuItems)
         {
-            foreach (var x in EnumerateWithChildren(o))
+            if (candidate is not INavigationViewItem item)
+            {
+                continue;
+            }
+
+            foreach (var x in EnumerateWithChildren(item))
             {
                 yield return x;
             }

@@ -1,11 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -16,6 +15,13 @@ namespace CrissCross;
 /// <summary>Describes a field that can participate in descriptor-driven data filtering.</summary>
 public sealed class FilterDescriptor
 {
+    /// <summary>Formats filter display text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat DisplayTextFormat = System.Text.CompositeFormat.Parse("{0} {1} {2}");
+#else
+    private const string DisplayTextFormat = "{0} {1} {2}";
+#endif
+
     /// <inheritdoc />
     public FilterDescriptor(string key, string displayName, FilterEditorKind editorKind)
         : this(key, displayName, editorKind, null, null, null, false) { }
@@ -105,7 +111,18 @@ public sealed class FilterDescriptor
     /// <summary>Determines whether the descriptor supports the specified operator.</summary>
     /// <param name="operator">The operator to test.</param>
     /// <returns><c>true</c> when the operator is supported; otherwise, <c>false</c>.</returns>
-    public bool SupportsOperator(FilterOperator @operator) => SupportedOperators.Contains(@operator);
+    public bool SupportsOperator(FilterOperator @operator)
+    {
+        foreach (var supportedOperator in SupportedOperators)
+        {
+            if (supportedOperator == @operator)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /// <summary>Creates a removable filter token using the descriptor's default operator.</summary>
     /// <param name="value">The filter value.</param>
@@ -126,7 +143,7 @@ public sealed class FilterDescriptor
     public FilterToken CreateToken(object? value, FilterOperator? @operator, bool isRemovable)
     {
         var resolvedOperator = @operator ?? DefaultOperator;
-        return new FilterToken(Key, resolvedOperator, value, CreateDisplayText(resolvedOperator, value), isRemovable);
+        return new(Key, resolvedOperator, value, CreateDisplayText(resolvedOperator, value), isRemovable);
     }
 
     /// <summary>Creates display text for a filter value and operator.</summary>
@@ -136,7 +153,7 @@ public sealed class FilterDescriptor
     public string CreateDisplayText(FilterOperator @operator, object? value) =>
         string.Format(
             CultureInfo.InvariantCulture,
-            "{0} {1} {2}",
+            DisplayTextFormat,
             DisplayName,
             GetOperatorDisplayText(@operator),
             FormatValue(value));

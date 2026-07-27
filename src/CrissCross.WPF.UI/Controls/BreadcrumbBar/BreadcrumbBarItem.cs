@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents an item in a <see cref="BreadcrumbBar"/> control.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class BreadcrumbBarItem : System.Windows.Controls.ContentControl
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
@@ -22,35 +23,35 @@ public class BreadcrumbBarItem : System.Windows.Controls.ContentControl
         nameof(Icon),
         typeof(IconElement),
         typeof(BreadcrumbBarItem),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Property for <see cref="IconMargin"/>.</summary>
     public static readonly DependencyProperty IconMarginProperty = DependencyProperty.Register(
         nameof(IconMargin),
         typeof(Thickness),
         typeof(BreadcrumbBarItem),
-        new PropertyMetadata(new Thickness(0)));
+        new(new Thickness(0)));
 
     /// <summary>Property for <see cref="IsLast"/>.</summary>
     public static readonly DependencyProperty IsLastProperty = DependencyProperty.Register(
         nameof(IsLast),
         typeof(bool),
         typeof(BreadcrumbBarItem),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>The self property.</summary>
     public static readonly DependencyProperty SelfProperty = DependencyProperty.Register(
         nameof(Self),
         typeof(BreadcrumbBarItem),
         typeof(BreadcrumbBarItem),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The navigation type property.</summary>
     public static readonly DependencyProperty NavigationTypeProperty = DependencyProperty.Register(
         nameof(NavigationType),
         typeof(Type),
         typeof(BreadcrumbBarItem),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="BreadcrumbBarItem"/> class.</summary>
     public BreadcrumbBarItem() => Self = this;
@@ -95,4 +96,8 @@ public class BreadcrumbBarItem : System.Windows.Controls.ContentControl
         get => (bool)GetValue(IsLastProperty);
         set => SetValue(IsLastProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

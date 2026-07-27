@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -54,22 +54,22 @@ internal sealed class GifGraphicControlExtension : GifExtension
     private GifGraphicControlExtension() { }
 
     /// <summary>Gets the BlockSize value.</summary>
-    public int BlockSize { get; private set; }
+    internal int BlockSize { get; private set; }
 
     /// <summary>Gets the DisposalMethod value.</summary>
-    public GifFrameDisposalMethod DisposalMethod { get; private set; }
+    internal GifFrameDisposalMethod DisposalMethod { get; private set; }
 
     /// <summary>Gets the UserInput value.</summary>
-    public bool UserInput { get; private set; }
+    internal bool UserInput { get; private set; }
 
     /// <summary>Gets the HasTransparency value.</summary>
-    public bool HasTransparency { get; private set; }
+    internal bool HasTransparency { get; private set; }
 
     /// <summary>Gets the Delay value.</summary>
-    public int Delay { get; private set; }
+    internal int Delay { get; private set; }
 
     /// <summary>Gets the TransparencyIndex value.</summary>
-    public int TransparencyIndex { get; private set; }
+    internal int TransparencyIndex { get; private set; }
 
     internal override GifBlockKind Kind => GifBlockKind.Control;
 

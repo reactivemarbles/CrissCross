@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Allows to rate positively or negatively by clicking on one of the thumbs.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(ThumbRate), "ThumbRate.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ThumbRate : System.Windows.Controls.Control
 {
     /// <summary>Property for <see cref="State"/>.</summary>
@@ -21,7 +22,7 @@ public class ThumbRate : System.Windows.Controls.Control
         nameof(State),
         typeof(ThumbRateState),
         typeof(ThumbRate),
-        new PropertyMetadata(ThumbRateState.None, OnStateChanged));
+        new(ThumbRateState.None, OnStateChanged));
 
     /// <summary>Event property for <see cref="StateChanged"/>.</summary>
     public static readonly RoutedEvent StateChangedEvent = EventManager.RegisterRoutedEvent(
@@ -35,7 +36,7 @@ public class ThumbRate : System.Windows.Controls.Control
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(ThumbRate),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="ThumbRate"/> class.</summary>
     public ThumbRate() =>
@@ -58,6 +59,10 @@ public class ThumbRate : System.Windows.Controls.Control
     /// <summary>Gets command triggered after clicking the button.</summary>
     public IReactiveCommand TemplateButtonCommand => (IReactiveCommand)GetValue(TemplateButtonCommandProperty);
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Triggered by clicking a button in the control template.</summary>
     /// <param name="parameter">The parameter.</param>
     protected virtual void OnTemplateButtonClick(ThumbRateState parameter)
@@ -75,7 +80,7 @@ public class ThumbRate : System.Windows.Controls.Control
     /// <param name="previousState">State of the previous.</param>
     /// <param name="currentState">State of the current.</param>
     protected virtual void OnStateChanged(ThumbRateState previousState, ThumbRateState currentState) =>
-        RaiseEvent(new RoutedEventArgs(StateChangedEvent, this));
+        RaiseEvent(new(StateChangedEvent, this));
 
     /// <summary>Provides the OnStateChanged member.</summary>
     /// <param name="d">The d value.</param>

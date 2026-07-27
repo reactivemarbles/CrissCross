@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents an icon that uses an <see cref="System.Windows.Controls.Image"/> as its content.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ImageIcon : IconElement
 {
     /// <summary>Property for <see cref="Source"/>.</summary>
@@ -30,6 +31,10 @@ public class ImageIcon : IconElement
 
     /// <summary>Gets or sets the image.</summary>
     protected System.Windows.Controls.Image? Image { get; set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Initializes the children.</summary>
     /// <returns>

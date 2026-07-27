@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
@@ -21,7 +21,7 @@ internal sealed class ObservedWindow
     /// <param name="backdrop">The backdrop value.</param>
     /// <param name="forceBackgroundReplace">The forceBackgroundReplace value.</param>
     /// <param name="updateAccents">The updateAccents value.</param>
-    public ObservedWindow(IntPtr handle, WindowBackdropType backdrop, bool forceBackgroundReplace, bool updateAccents)
+    internal ObservedWindow(IntPtr handle, WindowBackdropType backdrop, bool forceBackgroundReplace, bool updateAccents)
     {
         Handle = handle;
         Backdrop = backdrop;
@@ -34,26 +34,26 @@ internal sealed class ObservedWindow
     }
 
     /// <summary>Gets the RootVisual value.</summary>
-    public Window? RootVisual => (Window?)_source.RootVisual;
+    internal Window? RootVisual => (Window?)_source.RootVisual;
 
     /// <summary>Gets the Handle value.</summary>
-    public IntPtr Handle { get; }
+    internal IntPtr Handle { get; }
 
     /// <summary>Gets the Backdrop value.</summary>
-    public WindowBackdropType Backdrop { get; }
+    internal WindowBackdropType Backdrop { get; }
 
     /// <summary>Gets the ForceBackgroundReplace value.</summary>
-    public bool ForceBackgroundReplace { get; }
+    internal bool ForceBackgroundReplace { get; }
 
     /// <summary>Gets the UpdateAccents value.</summary>
-    public bool UpdateAccents { get; }
+    internal bool UpdateAccents { get; }
 
     /// <summary>Gets the HasHook value.</summary>
-    public bool HasHook { get; private set; }
+    internal bool HasHook { get; private set; }
 
     /// <summary>Provides the AddHook member.</summary>
     /// <param name="hook">The hook value.</param>
-    public void AddHook(HwndSourceHook hook)
+    internal void AddHook(HwndSourceHook hook)
     {
         _source.AddHook(hook);
 
@@ -62,7 +62,7 @@ internal sealed class ObservedWindow
 
     /// <summary>Provides the RemoveHook member.</summary>
     /// <param name="hook">The hook value.</param>
-    public void RemoveHook(HwndSourceHook hook)
+    internal void RemoveHook(HwndSourceHook hook)
     {
         _source.RemoveHook(hook);
 

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -29,14 +29,14 @@ public class WebView2Wpf : ContentControl, IWebView2
         nameof(AutoDispose),
         typeof(bool),
         typeof(WebView2Wpf),
-        new PropertyMetadata(true, AutoDisposePropertyChanged));
+        new(true, AutoDisposePropertyChanged));
 
     /// <summary>The allow external drop property.</summary>
     public static readonly DependencyProperty AllowExternalDropProperty = DependencyProperty.Register(
         nameof(AllowExternalDrop),
         typeof(bool),
         typeof(WebView2Wpf),
-        new PropertyMetadata(true, AllowExternalDropPropertyChanged));
+        new(true, AllowExternalDropPropertyChanged));
 
     /// <summary>The dependency property for <see cref="CanGoBack" />.</summary>
     public static readonly DependencyProperty CanGoBackProperty;
@@ -49,42 +49,42 @@ public class WebView2Wpf : ContentControl, IWebView2
         nameof(CreationProperties),
         typeof(CoreWebView2CreationProperties),
         typeof(WebView2Wpf),
-        new PropertyMetadata(CreationPropertiesChanged));
+        new(CreationPropertiesChanged));
 
     /// <summary>The navigate back is enabled property.</summary>
     public static new readonly DependencyProperty ContentProperty = DependencyProperty.Register(
         nameof(Content),
         typeof(object),
         typeof(WebView2Wpf),
-        new PropertyMetadata(null, ContentChanged));
+        new(null, ContentChanged));
 
     /// <summary>The default background color property.</summary>
     public static readonly DependencyProperty DefaultBackgroundColorProperty = DependencyProperty.Register(
         nameof(DefaultBackgroundColor),
         typeof(System.Drawing.Color),
         typeof(WebView2Wpf),
-        new PropertyMetadata(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
+        new(System.Drawing.Color.White, DefaultBackgroundColorPropertyChanged));
 
     /// <summary>The design mode foreground color property.</summary>
     public static readonly DependencyProperty DesignModeForegroundColorProperty = DependencyProperty.Register(
         nameof(DesignModeForegroundColor),
         typeof(System.Drawing.Color),
         typeof(WebView2Wpf),
-        new PropertyMetadata(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
+        new(System.Drawing.Color.Black, DesignModeForegroundColorChanged));
 
     /// <summary>The dependency property for <see cref="Source" />.</summary>
     public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
         nameof(Source),
         typeof(Uri),
         typeof(WebView2Wpf),
-        new PropertyMetadata(SourcePropertyChanged));
+        new(SourcePropertyChanged));
 
     /// <summary>The dependency property for <see cref="ZoomFactor" />.</summary>
     public static readonly DependencyProperty ZoomFactorProperty = DependencyProperty.Register(
         nameof(ZoomFactor),
         typeof(double),
         typeof(WebView2Wpf),
-        new PropertyMetadata(1.0, ZoomFactorPropertyChanged));
+        new(1.0, ZoomFactorPropertyChanged));
 
     /// <summary>The dependency property key for <see cref="CanGoBack" />.</summary>
     private static readonly DependencyPropertyKey CanGoBackPropertyKey;
@@ -111,13 +111,13 @@ public class WebView2Wpf : ContentControl, IWebView2
             nameof(CanGoBack),
             typeof(bool),
             typeof(WebView2Wpf),
-            new PropertyMetadata(false));
+            new(false));
 
         CanGoForwardPropertyKey = DependencyProperty.RegisterReadOnly(
             nameof(CanGoForward),
             typeof(bool),
             typeof(WebView2Wpf),
-            new PropertyMetadata(false));
+            new(false));
 
         CanGoBackProperty = CanGoBackPropertyKey.DependencyProperty;
         CanGoForwardProperty = CanGoForwardPropertyKey.DependencyProperty;
@@ -126,11 +126,7 @@ public class WebView2Wpf : ContentControl, IWebView2
     /// <summary>Initializes a new instance of the <see cref="WebView2Wpf"/> class.</summary>
     public WebView2Wpf()
     {
-        _webBrowser = new()
-        {
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch,
-        };
+        _webBrowser = new() { HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
     }
 
     /// <summary>Occurs when [content loading].</summary>
@@ -618,7 +614,7 @@ public class WebView2Wpf : ContentControl, IWebView2
         _ = layoutRoot.Children.Add(_webBrowser);
         _ = layoutRoot.Children.Add(_windowHost);
         base.Content = layoutRoot;
-        AutoDisposePropertyChanged(this, new DependencyPropertyChangedEventArgs(AutoDisposeProperty, null, null));
+        AutoDisposePropertyChanged(this, new(AutoDisposeProperty, null, null));
     }
 
     /// <summary>Runs the web browser unloaded operation.</summary>

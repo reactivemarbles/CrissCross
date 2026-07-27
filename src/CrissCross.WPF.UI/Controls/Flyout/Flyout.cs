@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls.Primitives;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents the Flyout type.</summary>
 [TemplatePart(Name = "PART_Popup", Type = typeof(Popup))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Flyout : System.Windows.Controls.ContentControl
 {
     /// <summary>Property for <see cref="IsOpen"/>.</summary>
@@ -19,14 +20,14 @@ public class Flyout : System.Windows.Controls.ContentControl
         nameof(IsOpen),
         typeof(bool),
         typeof(Flyout),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Placement"/>.</summary>
     public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
         nameof(Placement),
         typeof(PlacementMode),
         typeof(Flyout),
-        new PropertyMetadata(PlacementMode.Top));
+        new(PlacementMode.Top));
 
     /// <summary>Routed event for <see cref="Opened"/>.</summary>
     public static readonly RoutedEvent OpenedEvent = EventManager.RegisterRoutedEvent(
@@ -82,6 +83,10 @@ public class Flyout : System.Windows.Controls.ContentControl
         set => SetValue(PlacementProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>
     /// Invoked whenever application code or an internal process,
     /// such as a rebuilding layout pass, calls the ApplyTemplate method.
@@ -131,14 +136,14 @@ public class Flyout : System.Windows.Controls.ContentControl
 
     /// <summary>Called when [popup opened].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-    protected virtual void OnPopupOpened(EventArgs e) => RaiseEvent(new RoutedEventArgs(OpenedEvent, this));
+    protected virtual void OnPopupOpened(EventArgs e) => RaiseEvent(new(OpenedEvent, this));
 
     /// <summary>Called when [popup closed].</summary>
     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     protected virtual void OnPopupClosed(EventArgs e)
     {
         Hide();
-        RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
+        RaiseEvent(new(ClosedEvent, this));
     }
 
     /// <summary>Provides the OnPopupOpened member.</summary>

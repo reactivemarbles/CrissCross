@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Inherited from the ButtonBase interactive card styled according to Fluent Design.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(CardAction), "CardAction.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CardAction : System.Windows.Controls.Primitives.ButtonBase
 {
     /// <summary>Property for <see cref="IsChevronVisible"/>.</summary>
@@ -25,14 +26,14 @@ public class CardAction : System.Windows.Controls.Primitives.ButtonBase
         nameof(IsChevronVisible),
         typeof(bool),
         typeof(CardAction),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(CardAction),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Gets or sets a value indicating whether gets or sets information whether to display the chevron icon on
     /// the right side of the card.</summary>
@@ -52,4 +53,8 @@ public class CardAction : System.Windows.Controls.Primitives.ButtonBase
         get => (IconElement)GetValue(IconProperty);
         set => SetValue(IconProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

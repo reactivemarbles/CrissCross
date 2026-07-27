@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Work in progress.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TreeGridHeader : FrameworkElement
 {
     /// <summary>Property for <see cref="Title"/>.</summary>
@@ -16,14 +17,14 @@ public class TreeGridHeader : FrameworkElement
         nameof(Title),
         typeof(string),
         typeof(TreeGridHeader),
-        new PropertyMetadata(string.Empty, OnTitleChanged));
+        new(string.Empty, OnTitleChanged));
 
     /// <summary>Property for <see cref="Group"/>.</summary>
     public static readonly DependencyProperty GroupProperty = DependencyProperty.Register(
         nameof(Group),
         typeof(string),
         typeof(TreeGridHeader),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Gets or sets the title that will be displayed.</summary>
     public string Title
@@ -40,6 +41,10 @@ public class TreeGridHeader : FrameworkElement
         get => (string)GetValue(GroupProperty);
         set => SetValue(GroupProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>This virtual method is called when <see cref="Title"/> is changed.</summary>
     protected virtual void OnTitleChanged()

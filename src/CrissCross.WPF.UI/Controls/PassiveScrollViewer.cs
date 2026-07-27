@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>A custom ScrollViewer that allows certain mouse events to bubble through when it's inactive.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class PassiveScrollViewer : ScrollViewer
 {
     /// <summary>Identifies the <see cref="IsScrollSpillEnabled"/> dependency property.</summary>
@@ -19,7 +20,7 @@ public class PassiveScrollViewer : ScrollViewer
         nameof(IsScrollSpillEnabled),
         typeof(bool),
         typeof(PassiveScrollViewer),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Gets or sets a value indicating whether blocked inner scrolling should be propagated forward.</summary>
     public bool IsScrollSpillEnabled
@@ -34,14 +35,15 @@ public class PassiveScrollViewer : ScrollViewer
     /// <summary>Gets the IsContentSmallerThanViewport value.</summary>
     private bool IsContentSmallerThanViewport => ScrollableHeight <= 0;
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Responds to a click of the mouse wheel.</summary>
     /// <param name="e">Required arguments that describe this event.</param>
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ThrowHelper.ThrowIfNull(e, nameof(e));
 
         if (
             IsVerticalScrollingDisabled

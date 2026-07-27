@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -35,7 +35,7 @@ internal static class DateTimeHelper
     /// <param name="time">The time value.</param>
     /// <param name="days">The days value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? AddDays(DateTime time, int days)
+    internal static DateTime? AddDays(DateTime time, int days)
     {
         try
         {
@@ -51,7 +51,7 @@ internal static class DateTimeHelper
     /// <param name="time">The time value.</param>
     /// <param name="months">The months value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? AddMonths(DateTime time, int months)
+    internal static DateTime? AddMonths(DateTime time, int months)
     {
         try
         {
@@ -67,7 +67,7 @@ internal static class DateTimeHelper
     /// <param name="time">The time value.</param>
     /// <param name="years">The years value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? AddYears(DateTime time, int years)
+    internal static DateTime? AddYears(DateTime time, int years)
     {
         try
         {
@@ -83,13 +83,13 @@ internal static class DateTimeHelper
     /// <param name="date">The date value.</param>
     /// <param name="year">The year value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? SetYear(DateTime date, int year) => AddYears(date, year - date.Year);
+    internal static DateTime? SetYear(DateTime date, int year) => AddYears(date, year - date.Year);
 
     /// <summary>Provides the SetYearMonth member.</summary>
     /// <param name="date">The date value.</param>
     /// <param name="yearMonth">The yearMonth value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? SetYearMonth(DateTime date, DateTime yearMonth)
+    internal static DateTime? SetYearMonth(DateTime date, DateTime yearMonth)
     {
         var target = SetYear(date, yearMonth.Year);
         if (target.HasValue)
@@ -104,30 +104,30 @@ internal static class DateTimeHelper
     /// <param name="dt1">The dt1 value.</param>
     /// <param name="dt2">The dt2 value.</param>
     /// <returns>The result.</returns>
-    public static int CompareDays(DateTime dt1, DateTime dt2) =>
+    internal static int CompareDays(DateTime dt1, DateTime dt2) =>
         DateTime.Compare(DiscardTime(dt1)!.Value, DiscardTime(dt2)!.Value);
 
     /// <summary>Provides the CompareYearMonth member.</summary>
     /// <param name="dt1">The dt1 value.</param>
     /// <param name="dt2">The dt2 value.</param>
     /// <returns>The result.</returns>
-    public static int CompareYearMonth(DateTime dt1, DateTime dt2) =>
+    internal static int CompareYearMonth(DateTime dt1, DateTime dt2) =>
         ((dt1.Year - dt2.Year) * MonthsInYear) + (dt1.Month - dt2.Month);
 
     /// <summary>Provides the DecadeOfDate member.</summary>
     /// <param name="date">The date value.</param>
     /// <returns>The result.</returns>
-    public static int DecadeOfDate(DateTime date) => date.Year - (date.Year % YearsInDecade);
+    internal static int DecadeOfDate(DateTime date) => date.Year - (date.Year % YearsInDecade);
 
     /// <summary>Provides the DiscardDayTime member.</summary>
     /// <param name="d">The d value.</param>
     /// <returns>The result.</returns>
-    public static DateTime DiscardDayTime(DateTime d) => new(d.Year, d.Month, 1, 0, 0, 0, d.Kind);
+    internal static DateTime DiscardDayTime(DateTime d) => new(d.Year, d.Month, 1, 0, 0, 0, d.Kind);
 
     /// <summary>Provides the DiscardTime member.</summary>
     /// <param name="d">The d value.</param>
     /// <returns>The result.</returns>
-    public static DateTime? DiscardTime(DateTime? d) =>
+    internal static DateTime? DiscardTime(DateTime? d) =>
         d switch
         {
             null => null,
@@ -137,36 +137,32 @@ internal static class DateTimeHelper
     /// <summary>Provides the EndOfDecade member.</summary>
     /// <param name="date">The date value.</param>
     /// <returns>The result.</returns>
-    public static int EndOfDecade(DateTime date) => DecadeOfDate(date) + DecadeEndOffset;
+    internal static int EndOfDecade(DateTime date) => DecadeOfDate(date) + DecadeEndOffset;
 
     /// <summary>Provides the GetCurrentDateFormat member.</summary>
     /// <returns>The result.</returns>
-    public static DateTimeFormatInfo GetCurrentDateFormat() => GetDateFormat(CultureInfo.CurrentCulture);
+    internal static DateTimeFormatInfo GetCurrentDateFormat() => GetDateFormat(CultureInfo.CurrentCulture);
 
     // returns if the date is included in the range
     /// <summary>Ins the range.</summary>
     /// <param name="date">The date.</param>
     /// <param name="range">The range.</param>
     /// <returns>A bool.</returns>
-    public static bool InRange(DateTime date, CalendarDateRange range) => InRange(date, range.Start, range.End);
+    internal static bool InRange(DateTime date, CalendarDateRange range) => InRange(date, range.Start, range.End);
 
     /// <summary>Returns if the date is included in the range.</summary>
     /// <param name="date">The date value.</param>
     /// <param name="start">The start value.</param>
     /// <param name="end">The end value.</param>
     /// <returns><c>true</c> if the date is within the range; otherwise, <c>false</c>.</returns>
-    public static bool InRange(DateTime date, DateTime start, DateTime end)
-    {
-        Debug.Assert(DateTime.Compare(start, end) < 1, "Less than 1");
-
-        return CompareDays(date, start) > -1 && CompareDays(date, end) < 1;
-    }
+    internal static bool InRange(DateTime date, DateTime start, DateTime end) =>
+        start <= end && CompareDays(date, start) > -1 && CompareDays(date, end) < 1;
 
     /// <summary>Provides the ToDayString member.</summary>
     /// <param name="date">The date value.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public static string ToDayString(DateTime? date, CultureInfo culture)
+    internal static string ToDayString(DateTime? date, CultureInfo culture)
     {
         var result = string.Empty;
         var format = GetDateFormat(culture);
@@ -183,7 +179,7 @@ internal static class DateTimeHelper
     /// <param name="date">The date value.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public static string ToYearMonthPatternString(DateTime? date, CultureInfo culture)
+    internal static string ToYearMonthPatternString(DateTime? date, CultureInfo culture)
     {
         var result = string.Empty;
         var format = GetDateFormat(culture);
@@ -200,7 +196,7 @@ internal static class DateTimeHelper
     /// <param name="date">The date value.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public static string ToYearString(DateTime? date, CultureInfo culture)
+    internal static string ToYearString(DateTime? date, CultureInfo culture)
     {
         var result = string.Empty;
         var format = GetDateFormat(culture);
@@ -217,7 +213,7 @@ internal static class DateTimeHelper
     /// <param name="date">The date value.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public static string ToAbbreviatedMonthString(DateTime? date, CultureInfo culture)
+    internal static string ToAbbreviatedMonthString(DateTime? date, CultureInfo culture)
     {
         var result = string.Empty;
         var format = GetDateFormat(culture);
@@ -239,7 +235,7 @@ internal static class DateTimeHelper
     /// <param name="date">The date value.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public static string ToLongDateString(DateTime? date, CultureInfo culture)
+    internal static string ToLongDateString(DateTime? date, CultureInfo culture)
     {
         var result = string.Empty;
         var format = GetDateFormat(culture);

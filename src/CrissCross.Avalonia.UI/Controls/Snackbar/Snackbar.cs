@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -50,7 +50,7 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
     public static readonly StyledProperty<IBrush?> ContentForegroundProperty = AvaloniaProperty.Register<
         Snackbar,
         IBrush?
-    >(nameof(ContentForeground), Brushes.Black);
+    >(nameof(ContentForeground));
 
     /// <summary>Provides the _presenter member.</summary>
     private readonly SnackbarPresenter? _presenter;
@@ -110,9 +110,6 @@ public class Snackbar : global::Avalonia.Controls.ContentControl
         get => GetValue(ContentForegroundProperty);
         set => SetValue(ContentForegroundProperty, value);
     }
-
-    /// <summary>Gets or sets the snackbar presenter.</summary>
-    protected new SnackbarPresenter? Presenter { get; set; }
 
     /// <summary>Shows the snackbar.</summary>
     public void Show() => Show(false);

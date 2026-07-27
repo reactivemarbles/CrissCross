@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Window = System.Windows.Window;
@@ -37,7 +37,7 @@ public static class WindowBackgroundManager
             _ = UnsafeNativeMethods.ApplyWindowDarkMode(window);
         }
 
-        window.Loaded += (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as Window);
+        window.Loaded += static (sender, _) => UnsafeNativeMethods.ApplyWindowDarkMode(sender as Window);
     }
 
     /// <summary>Tries to remove dark theme from <see cref="Window" />.</summary>
@@ -54,7 +54,7 @@ public static class WindowBackgroundManager
             _ = UnsafeNativeMethods.RemoveWindowDarkMode(window);
         }
 
-        window.Loaded += (sender, _) => UnsafeNativeMethods.RemoveWindowDarkMode(sender as Window);
+        window.Loaded += static (sender, _) => UnsafeNativeMethods.RemoveWindowDarkMode(sender as Window);
     }
 
     /// <summary>Forces change to application background.</summary>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
@@ -114,12 +114,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         string color,
         bool autoscale,
         bool manualscale)
-        : this(
-            plot,
-            observable,
-            coordinatesObs,
-            color,
-            new SignalUIOptions { AutoScale = autoscale, ManualScale = manualscale })
+        : this(plot, observable, coordinatesObs, color, CreateOptions(autoscale, manualscale))
     {
     }
 
@@ -139,17 +134,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         bool autoscale,
         bool manualscale,
         IObservable<bool>? fixedPoints)
-        : this(
-            plot,
-            observable,
-            coordinatesObs,
-            color,
-            new SignalUIOptions
-            {
-                AutoScale = autoscale,
-                ManualScale = manualscale,
-                FixedPoints = fixedPoints,
-            })
+        : this(plot, observable, coordinatesObs, color, CreateOptions(autoscale, manualscale, fixedPoints))
     {
     }
 
@@ -166,10 +151,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         string color,
         SignalUIOptions options)
     {
-        if (options is null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ThrowHelper.ThrowIfNull(options, nameof(options));
 
         ChartSettings = new("---", color);
         ManualScale = options.ManualScale;
@@ -184,7 +166,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         // Set name from first emission of the observable
         _ = observable
             .Take(1)
-            .Where(d => !string.IsNullOrEmpty(d.Name))
+            .Where(static d => !string.IsNullOrEmpty(d.Name))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(data => ChartSettings.ItemName = data.Name!)
             .DisposeWith(Disposables);
@@ -258,7 +240,7 @@ public partial class SignalUI : RxObject, IPlottableUI
         IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable) =>
         observable
             .ObserveOn(RxSchedulers.TaskpoolScheduler)
-            .Where(d =>
+            .Where(static d =>
                 !string.IsNullOrEmpty(d.Name)
                 && d.Value is not null
                 && d.DateTime is not null
@@ -288,6 +270,25 @@ public partial class SignalUI : RxObject, IPlottableUI
         _uniqueTimeBuffer.Clear();
         base.Dispose(disposing);
     }
+
+    /// <summary>Creates configuration from the legacy scalar constructor arguments.</summary>
+    /// <param name="autoScale">A value indicating whether automatic scaling is enabled.</param>
+    /// <param name="manualScale">A value indicating whether manual scaling is enabled.</param>
+    /// <returns>The signal configuration.</returns>
+    private static SignalUIOptions CreateOptions(
+        bool autoScale,
+        bool manualScale) => new() { AutoScale = autoScale, ManualScale = manualScale };
+
+    /// <summary>Creates configuration from the legacy scalar constructor arguments.</summary>
+    /// <param name="autoScale">A value indicating whether automatic scaling is enabled.</param>
+    /// <param name="manualScale">A value indicating whether manual scaling is enabled.</param>
+    /// <param name="fixedPoints">The optional stream controlling fixed-point display mode.</param>
+    /// <returns>The signal configuration.</returns>
+    private static SignalUIOptions CreateOptions(
+        bool autoScale,
+        bool manualScale,
+        IObservable<bool>? fixedPoints) =>
+        new() { AutoScale = autoScale, ManualScale = manualScale, FixedPoints = fixedPoints };
 
     /// <summary>Provides the FindClosestCoordinate member.</summary>
     /// <remarks>If multiple coordinates are equally close to the target X value, the first such coordinate in

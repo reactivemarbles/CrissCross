@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents active filter tokens associated with a <see cref="SearchBox"/>.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FilterBar : ItemsControl
 {
     /// <summary>Property for <see cref="QueryState"/>.</summary>
@@ -18,21 +19,21 @@ public class FilterBar : ItemsControl
         nameof(QueryState),
         typeof(SearchQueryState),
         typeof(FilterBar),
-        new PropertyMetadata(null, OnQueryStateChanged));
+        new(null, OnQueryStateChanged));
 
     /// <summary>Property for <see cref="RemoveFilterCommand"/>.</summary>
     public static readonly DependencyProperty RemoveFilterCommandProperty = DependencyProperty.Register(
         nameof(RemoveFilterCommand),
         typeof(ICommand),
         typeof(FilterBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ClearAllCommand"/>.</summary>
     public static readonly DependencyProperty ClearAllCommandProperty = DependencyProperty.Register(
         nameof(ClearAllCommand),
         typeof(ICommand),
         typeof(FilterBar),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the aggregate search state that supplies active filter tokens.</summary>
     public SearchQueryState? QueryState
@@ -54,6 +55,10 @@ public class FilterBar : ItemsControl
         get => (ICommand?)GetValue(ClearAllCommandProperty);
         set => SetValue(ClearAllCommandProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnQueryStateChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>

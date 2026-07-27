@@ -1,7 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
@@ -25,11 +28,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
     /// <param name="adapterFactory">The adapter factory used by pure binder tests and non-WPF hosts.</param>
     public ReactivePlotBinder(IReactivePlotAdapterFactory adapterFactory)
     {
-        if (adapterFactory is null)
-        {
-            throw new ArgumentNullException(nameof(adapterFactory));
-        }
-
+        ThrowHelper.ThrowIfNull(adapterFactory, nameof(adapterFactory));
         _adapterFactory = adapterFactory;
     }
 
@@ -43,10 +42,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         IEnumerable<IReactivePlotSource> sources,
         ReactivePlotBindingOptions? options)
     {
-        if (chart is null)
-        {
-            throw new ArgumentNullException(nameof(chart));
-        }
+        ThrowHelper.ThrowIfNull(chart, nameof(chart));
 
         return BindCore(sources, new WpfReactivePlotAdapterFactory(chart), options);
     }
@@ -92,15 +88,16 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         connection.Attach(subscriptions, adapters.Values);
         connection.SetState(ReactivePlotConnectionState.Connecting);
 
-        var sourceArray = sources.ToArray();
-        if (sourceArray.Length == 0)
+        var sourceList = new List<IReactivePlotSource>(sources);
+
+        if (sourceList.Count == 0)
         {
             connection.MarkCompleted();
             return connection;
         }
 
         var completed = 0;
-        foreach (var source in sourceArray)
+        foreach (var source in sourceList)
         {
             var updateStream = source.Updates;
             if (bindingOptions.SourceScheduler is not null)
@@ -119,7 +116,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
                 {
                     completed++;
                     if (
-                        completed != sourceArray.Length
+                        completed != sourceList.Count
                         || connection.CurrentState == ReactivePlotConnectionState.Faulted)
                     {
                         return;
@@ -149,15 +146,7 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
     /// <param name="value">The collaborator value.</param>
     /// <param name="parameterName">The public parameter name.</param>
     private static void ValidateBindingArgument<T>(T value, string parameterName)
-        where T : class
-    {
-        if (value is not null)
-        {
-            return;
-        }
-
-        throw new ArgumentNullException(parameterName);
-    }
+        where T : class => ThrowHelper.ThrowIfNull(value, parameterName);
 
     /// <summary>Handles the ApplyBatching operation.</summary>
     /// <param name="updates">The updates value.</param>
@@ -171,12 +160,12 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         {
             return updates
                 .Buffer(batchWindow, options.SourceScheduler ?? RxSchedulers.TaskpoolScheduler)
-                .Where(batch => batch.Count > 0)
+                .Where(static batch => batch.Count > 0)
                 .SelectMany(AggregateBatch);
         }
 
         return options.MaxBatchSize > 1
-            ? updates.Buffer(options.MaxBatchSize).Where(batch => batch.Count > 0).SelectMany(AggregateBatch)
+            ? updates.Buffer(options.MaxBatchSize).Where(static batch => batch.Count > 0).SelectMany(AggregateBatch)
             : updates;
     }
 
@@ -236,12 +225,32 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
 
         pendingAppend = pendingAppend with
         {
-            X = pendingAppend.X.Concat(update.X).ToArray(),
-            Y = pendingAppend.Y.Concat(update.Y).ToArray(),
+            X = Append(pendingAppend.X, update.X),
+            Y = Append(pendingAppend.Y, update.Y),
             Sequence = update.Sequence,
             MaxPoints = update.MaxPoints ?? pendingAppend.MaxPoints,
         };
         return true;
+    }
+
+    /// <summary>Appends two value lists into one contiguous array.</summary>
+    /// <param name="first">The first value list.</param>
+    /// <param name="second">The second value list.</param>
+    /// <returns>The combined values.</returns>
+    private static double[] Append(IReadOnlyList<double> first, IReadOnlyList<double> second)
+    {
+        var combined = new double[first.Count + second.Count];
+        for (var i = 0; i < first.Count; i++)
+        {
+            combined[i] = first[i];
+        }
+
+        for (var i = 0; i < second.Count; i++)
+        {
+            combined[first.Count + i] = second[i];
+        }
+
+        return combined;
     }
 
     /// <summary>Handles the CanAggregateAppend operation.</summary>
@@ -296,13 +305,21 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         }
 
         var boundedUpdate = ApplyRetention(update, options, retained);
+#if NET6_0_OR_GREATER
+        ref var adapter = ref CollectionsMarshal.GetValueRefOrAddDefault(adapters, boundedUpdate.Key, out var adapterExists);
+        if (!adapterExists)
+        {
+            adapter = adapterFactory.Create(boundedUpdate.Key, boundedUpdate.PlotType);
+        }
+#else
         if (!adapters.TryGetValue(boundedUpdate.Key, out var adapter))
         {
             adapter = adapterFactory.Create(boundedUpdate.Key, boundedUpdate.PlotType);
             adapters.Add(boundedUpdate.Key, adapter);
         }
+#endif
 
-        adapter.Apply(boundedUpdate);
+        adapter!.Apply(boundedUpdate);
         if (connection.CurrentState is not ReactivePlotConnectionState.Connecting)
         {
             return;
@@ -454,13 +471,21 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             return update with { MaxPoints = visiblePoints };
         }
 
-        if (!retained.TryGetValue(update.Key, out var series) || update.Kind == ReactivePlotUpdateKind.Replace)
+#if NET6_0_OR_GREATER
+        ref var series = ref CollectionsMarshal.GetValueRefOrAddDefault(retained, update.Key, out var seriesExists);
+        if (update.Kind == ReactivePlotUpdateKind.Replace || !seriesExists)
+        {
+            series = new();
+        }
+#else
+        if (update.Kind == ReactivePlotUpdateKind.Replace || !retained.TryGetValue(update.Key, out var series))
         {
             series = new();
             retained[update.Key] = series;
         }
+#endif
 
-        series.Append(update.X, update.Y, visiblePoints, options.OverflowStrategy);
+        series!.Append(update.X, update.Y, visiblePoints, options.OverflowStrategy);
         return update with { X = series.X.ToArray(), Y = series.Y.ToArray(), MaxPoints = visiblePoints };
     }
 

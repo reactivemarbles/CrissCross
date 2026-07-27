@@ -7,6 +7,7 @@
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <UseSystemDrawing>true</UseSystemDrawing>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
     <EnablePackageValidation>true</EnablePackageValidation>
@@ -37,6 +38,10 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
     <PackageReference Include="ReactiveList.Reactive" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
+    <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">

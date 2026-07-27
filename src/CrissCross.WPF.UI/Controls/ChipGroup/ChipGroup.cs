@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a group of selectable or removable chips/tags.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ChipGroup : ItemsControl
 {
     /// <summary>Property for <see cref="GroupState"/>.</summary>
@@ -18,28 +19,28 @@ public class ChipGroup : ItemsControl
         nameof(GroupState),
         typeof(ChipGroupState),
         typeof(ChipGroup),
-        new PropertyMetadata(null, OnGroupStateChanged));
+        new(null, OnGroupStateChanged));
 
     /// <summary>Property for <see cref="SelectionMode"/>.</summary>
     public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(
         nameof(SelectionMode),
         typeof(ChipGroupSelectionMode),
         typeof(ChipGroup),
-        new PropertyMetadata(ChipGroupSelectionMode.None));
+        new(ChipGroupSelectionMode.None));
 
     /// <summary>Property for <see cref="SelectChipCommand"/>.</summary>
     public static readonly DependencyProperty SelectChipCommandProperty = DependencyProperty.Register(
         nameof(SelectChipCommand),
         typeof(ICommand),
         typeof(ChipGroup),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="RemoveChipCommand"/>.</summary>
     public static readonly DependencyProperty RemoveChipCommandProperty = DependencyProperty.Register(
         nameof(RemoveChipCommand),
         typeof(ICommand),
         typeof(ChipGroup),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the shared chip group state.</summary>
     public ChipGroupState? GroupState
@@ -68,6 +69,10 @@ public class ChipGroup : ItemsControl
         get => (ICommand?)GetValue(RemoveChipCommandProperty);
         set => SetValue(RemoveChipCommandProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnGroupStateChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>

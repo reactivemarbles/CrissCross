@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics.CodeAnalysis;
@@ -18,10 +18,17 @@ namespace CrissCross.WPF.UI.Storage;
 /// Creates a JsonFileStore that will store files in the specified folder.
 /// </remarks>
 /// <param name="storeFolderPath">The folder inside which the json files for tracked objects will be stored.</param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class JsonFileStore(string storeFolderPath) : IStore
 {
     /// <summary>Provides the SerializerOptions member.</summary>
-    private static readonly JsonSerializerOptions SerializerOptions = CreateOptions();
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNameCaseInsensitive = false,
+        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+        Converters = { new IPAddressJsonConverter(), },
+    };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonFileStore"/> class.
@@ -56,6 +63,10 @@ public class JsonFileStore(string storeFolderPath) : IStore
 
     /// <summary>Gets or sets the folder in which the store files will be located.</summary>
     public string FolderPath { get; set; } = storeFolderPath;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Loads values from the json file into a dictionary.</summary>
     /// <param name="id">The identifier.</param>
@@ -99,15 +110,9 @@ public class JsonFileStore(string storeFolderPath) : IStore
     /// <param name="values">The values.</param>
     public void SetData(string id, IDictionary<string, object?> values)
     {
-        if (id is null)
-        {
-            throw new ArgumentNullException(nameof(id));
-        }
+        ThrowHelper.ThrowIfNull(id, nameof(id));
 
-        if (values is null)
-        {
-            throw new ArgumentNullException(nameof(values));
-        }
+        ThrowHelper.ThrowIfNull(values, nameof(values));
 
         var filePath = GetfilePath(id);
         var directory = Path.GetDirectoryName(filePath);
@@ -154,8 +159,16 @@ public class JsonFileStore(string storeFolderPath) : IStore
 
     /// <summary>Lists the ids.</summary>
     /// <returns>A string array.</returns>
-    public IEnumerable<string> ListIds() =>
-        Directory.GetFiles(FolderPath, "*.json").Select(Path.GetFileNameWithoutExtension)!;
+    public IEnumerable<string> ListIds()
+    {
+        List<string> identifiers = [];
+        foreach (var filePath in Directory.GetFiles(FolderPath, "*.json"))
+        {
+            identifiers.Add(Path.GetFileNameWithoutExtension(filePath));
+        }
+
+        return identifiers;
+    }
 
     /// <summary>Clears the data.</summary>
     /// <param name="id">The identifier.</param>
@@ -181,12 +194,38 @@ public class JsonFileStore(string storeFolderPath) : IStore
             JsonValueKind.True => true,
             JsonValueKind.False => false,
             JsonValueKind.Null => null,
-            JsonValueKind.Array => element.EnumerateArray().Select(DeserializeUnknown).ToList(),
-            JsonValueKind.Object => element
-                .EnumerateObject()
-                .ToDictionary(p => p.Name, p => DeserializeUnknown(p.Value)),
+            JsonValueKind.Array => DeserializeArray(element),
+            JsonValueKind.Object => DeserializeObject(element),
             _ => null,
         };
+
+    /// <summary>Deserializes a JSON array.</summary>
+    /// <param name="element">The array element.</param>
+    /// <returns>The materialized array values.</returns>
+    private static List<object?> DeserializeArray(JsonElement element)
+    {
+        List<object?> values = [];
+        foreach (var value in element.EnumerateArray())
+        {
+            values.Add(DeserializeUnknown(value));
+        }
+
+        return values;
+    }
+
+    /// <summary>Deserializes a JSON object.</summary>
+    /// <param name="element">The object element.</param>
+    /// <returns>The materialized object properties.</returns>
+    private static Dictionary<string, object?> DeserializeObject(JsonElement element)
+    {
+        Dictionary<string, object?> values = [];
+        foreach (var property in element.EnumerateObject())
+        {
+            values[property.Name] = DeserializeUnknown(property.Value);
+        }
+
+        return values;
+    }
 
     /// <summary>Deserializes a JSON number.</summary>
     /// <param name="element">The element value.</param>
@@ -283,20 +322,6 @@ public class JsonFileStore(string storeFolderPath) : IStore
 
         name = nameProp.GetString();
         return !string.IsNullOrEmpty(name);
-    }
-
-    /// <summary>Provides the CreateOptions member.</summary>
-    /// <returns>The result.</returns>
-    private static JsonSerializerOptions CreateOptions()
-    {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            PropertyNameCaseInsensitive = false,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-        };
-        options.Converters.Add(new IPAddressJsonConverter());
-        return options;
     }
 
     /// <summary>Provides the ConstructPath member.</summary>

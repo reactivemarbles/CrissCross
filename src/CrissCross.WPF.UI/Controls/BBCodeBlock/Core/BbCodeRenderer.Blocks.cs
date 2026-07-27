@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -78,13 +78,8 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The image container.</returns>
     private InlineUIContainer CreateImage(BbCodeNode node)
     {
-        var source = node.Attributes.TryGetValue("src", out var src) ? src : node.GetText().Trim();
         var legacyParts = (node.Value ?? string.Empty).Split(',');
-        if (legacyParts.Length > 0 && BbCodeRenderHelpers.LooksLikeAddress(legacyParts[0]))
-        {
-            source = legacyParts[0];
-            BbCodeRenderHelpers.AddLegacyImageAttributes(node, legacyParts.Skip(1));
-        }
+        var source = ImageNodeHelper.GetImageSource(node, legacyParts);
 
         Image image = new() { Stretch = Stretch.Uniform, MaxWidth = MaximumImagePreviewWidth };
         image.SetResourceReference(FrameworkElement.ToolTipProperty, "BBCodeBlockImageUnavailableText");
@@ -96,18 +91,11 @@ internal sealed partial class BbCodeRenderer
         BbCodeRenderHelpers.ApplyImageSize(image, node);
         StackPanel panel = new() { Orientation = Orientation.Vertical };
         _ = panel.Children.Add(image);
-        var hasCaption =
-            node.Attributes.TryGetValue("alt", out var alt) || node.Attributes.TryGetValue("title", out alt);
-        if (!hasCaption && BbCodeRenderHelpers.LooksLikeAddress(legacyParts[0]))
-        {
-            alt = node.GetText().Trim();
-            hasCaption = alt.Length > 0;
-        }
-
-        if (hasCaption)
+        var captionText = ImageNodeHelper.GetImageCaption(node, legacyParts);
+        if (captionText is not null)
         {
             var caption = CreateThemedTextBlock();
-            caption.Text = alt;
+            caption.Text = captionText;
             caption.TextAlignment = TextAlignment.Center;
             _ = panel.Children.Add(caption);
         }
@@ -124,7 +112,7 @@ internal sealed partial class BbCodeRenderer
         if (!string.IsNullOrWhiteSpace(node.Value))
         {
             var author = CreateThemedTextBlock();
-            author.Text = node.Value + " wrote:";
+            author.Text = $"{node.Value} wrote:";
             author.FontWeight = FontWeights.SemiBold;
             author.Margin = new(0D, 0D, 0D, CompactSpacing);
             _ = content.Children.Add(author);
@@ -184,7 +172,7 @@ internal sealed partial class BbCodeRenderer
         content.TextWrapping = TextWrapping.Wrap;
         if (!string.IsNullOrWhiteSpace(node.Value))
         {
-            content.ToolTip = "Language: " + node.Value;
+            content.ToolTip = $"Language: {node.Value}";
         }
 
         var border = CreateThemedBorder(ControlFillBrushKey);
@@ -208,7 +196,7 @@ internal sealed partial class BbCodeRenderer
             row.ColumnDefinitions.Add(new() { Width = GridLength.Auto });
             row.ColumnDefinitions.Add(new() { Width = new(1D, GridUnitType.Star) });
             var marker = CreateThemedTextBlock();
-            marker.Text = BbCodeRenderHelpers.CreateListMarker(markerStyle, index + 1) + " ";
+            marker.Text = $"{BbCodeRenderHelpers.CreateListMarker(markerStyle, index + 1)} ";
             marker.Margin = new(0D, 0D, ListMarkerSpacing, 0D);
             var content = CreateTextBlock(items[index]);
             Grid.SetColumn(content, 1);
@@ -231,11 +219,21 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The table container.</returns>
     private InlineUIContainer CreatePipeTable(BbCodeNode node)
     {
-        var rows = node.GetText()
-            .Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries)
-            .Select(line => line.Trim().Trim('|').Split('|').Select(value => new BbCodeNode(value.Trim())).ToList())
-            .Where(row => row.Count > 0)
-            .ToList();
+        List<IReadOnlyList<BbCodeNode>> rows = [];
+        foreach (var line in node.GetText().Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries))
+        {
+            List<BbCodeNode> row = [];
+            foreach (var value in line.Trim().Trim('|').Split('|'))
+            {
+                row.Add(new(value.Trim()));
+            }
+
+            if (row.Count > 0)
+            {
+                rows.Add(row);
+            }
+        }
+
         return new(CreateTableGrid(rows)) { BaselineAlignment = BaselineAlignment.Center };
     }
 
@@ -301,16 +299,11 @@ internal sealed partial class BbCodeRenderer
         rating = Math.Max(0D, Math.Min(rating, maximum));
         var fullStars = (int)Math.Round(rating, MidpointRounding.AwayFromZero);
         var text =
-            new string('★', fullStars)
-            + new string('☆', maximum - fullStars)
-            + " "
-            + rating.ToString("0.#", CultureInfo.InvariantCulture)
-            + "/"
-            + maximum.ToString(CultureInfo.InvariantCulture);
+            $"{new string('★', fullStars)}{new string('☆', maximum - fullStars)} {rating.ToString("0.#", CultureInfo.InvariantCulture)}/{maximum.ToString(CultureInfo.InvariantCulture)}";
         var ratingBlock = CreateThemedTextBlock();
         ratingBlock.Text = text;
         ratingBlock.SetResourceReference(TextBlock.ForegroundProperty, "SystemAccentColorBrush");
-        ratingBlock.ToolTip = "Rating " + rating.ToString("0.#", CultureInfo.InvariantCulture) + " out of " + maximum;
+        ratingBlock.ToolTip = $"Rating {rating.ToString("0.#", CultureInfo.InvariantCulture)} out of {maximum}";
         return new(ratingBlock) { BaselineAlignment = BaselineAlignment.Center };
     }
 
@@ -322,14 +315,14 @@ internal sealed partial class BbCodeRenderer
         var value = node.Value ?? node.GetText().Trim();
         var address = node.Name switch
         {
-            "youtube" => "https://www.youtube.com/watch?v=" + value,
-            "gvideo" => "https://video.google.com/videoplay?docid=" + value,
+            "youtube" => $"https://www.youtube.com/watch?v={value}",
+            "gvideo" => $"https://video.google.com/videoplay?docid={value}",
             _ => value,
         };
         var textBlock = CreateThemedTextBlock();
         if (BbCodeRenderHelpers.TryCreateAllowedUri(address, out var uri))
         {
-            Hyperlink hyperlink = new(new Run("▶ Open " + node.Name + " media")) { NavigateUri = uri };
+            Hyperlink hyperlink = new(new Run($"▶ Open {node.Name} media")) { NavigateUri = uri };
             hyperlink.SetResourceReference(TextElement.ForegroundProperty, "HyperlinkButtonForeground");
             textBlock.Inlines.Add(hyperlink);
         }
@@ -348,13 +341,53 @@ internal sealed partial class BbCodeRenderer
     /// <returns>The separator container.</returns>
     private InlineUIContainer CreateSeparator()
     {
-        Rectangle separator = new()
-        {
-            Height = 1D,
-            MinWidth = Math.Max(_source.ActualWidth, MinimumSeparatorWidth),
-            Margin = new(0D, StandardSpacing, 0D, StandardSpacing),
-        };
+        Rectangle separator = new() { Height = 1D, MinWidth = Math.Max(_source.ActualWidth, MinimumSeparatorWidth), Margin = new(0D, StandardSpacing, 0D, StandardSpacing), };
         separator.SetResourceReference(Shape.FillProperty, "DividerStrokeColorDefaultBrush");
         return new(separator) { BaselineAlignment = BaselineAlignment.Center };
+    }
+
+    /// <summary>Provides stateless helpers for image node compatibility rendering.</summary>
+    private static class ImageNodeHelper
+    {
+        /// <summary>Gets an image address and applies legacy dimensions when supplied.</summary>
+        /// <param name="node">The image node.</param>
+        /// <param name="legacyParts">The legacy comma-delimited values.</param>
+        /// <returns>The image address.</returns>
+        internal static string GetImageSource(BbCodeNode node, string[] legacyParts)
+        {
+            if (legacyParts.Length == 0 || !BbCodeRenderHelpers.LooksLikeAddress(legacyParts[0]))
+            {
+                return node.Attributes.TryGetValue("src", out var source) ? source : node.GetText().Trim();
+            }
+
+            List<string> legacyAttributes = [];
+            for (var index = 1; index < legacyParts.Length; index++)
+            {
+                legacyAttributes.Add(legacyParts[index]);
+            }
+
+            BbCodeRenderHelpers.AddLegacyImageAttributes(node, legacyAttributes);
+            return legacyParts[0];
+        }
+
+        /// <summary>Gets the optional image caption.</summary>
+        /// <param name="node">The image node.</param>
+        /// <param name="legacyParts">The legacy comma-delimited values.</param>
+        /// <returns>The caption, when supplied.</returns>
+        internal static string? GetImageCaption(BbCodeNode node, string[] legacyParts)
+        {
+            if (node.Attributes.TryGetValue("alt", out var caption) || node.Attributes.TryGetValue("title", out caption))
+            {
+                return caption;
+            }
+
+            if (legacyParts.Length == 0 || !BbCodeRenderHelpers.LooksLikeAddress(legacyParts[0]))
+            {
+                return null;
+            }
+
+            caption = node.GetText().Trim();
+            return caption.Length > 0 ? caption : null;
+        }
     }
 }

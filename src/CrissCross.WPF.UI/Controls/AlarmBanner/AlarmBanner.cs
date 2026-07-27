@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using ReactiveUI;
@@ -14,6 +14,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// AlarmBanner is an inline notification optimized for industrial/commercial alarm messages.
 /// It reuses the InfoBar visual language and supports acknowledgement and close actions.
 /// </summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class AlarmBanner : System.Windows.Controls.ContentControl
 {
     /// <summary>Identifies the <see cref="IsActive"/> dependency property.</summary>
@@ -21,56 +22,56 @@ public class AlarmBanner : System.Windows.Controls.ContentControl
         nameof(IsActive),
         typeof(bool),
         typeof(AlarmBanner),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Identifies the <see cref="IsClosable"/> dependency property.</summary>
     public static readonly DependencyProperty IsClosableProperty = DependencyProperty.Register(
         nameof(IsClosable),
         typeof(bool),
         typeof(AlarmBanner),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="Message"/> dependency property.</summary>
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         nameof(Message),
         typeof(string),
         typeof(AlarmBanner),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Identifies the <see cref="Severity"/> dependency property.</summary>
     public static readonly DependencyProperty SeverityProperty = DependencyProperty.Register(
         nameof(Severity),
         typeof(InfoBarSeverity),
         typeof(AlarmBanner),
-        new PropertyMetadata(InfoBarSeverity.Error));
+        new(InfoBarSeverity.Error));
 
     /// <summary>Identifies the <see cref="AcknowledgeText"/> dependency property.</summary>
     public static readonly DependencyProperty AcknowledgeTextProperty = DependencyProperty.Register(
         nameof(AcknowledgeText),
         typeof(string),
         typeof(AlarmBanner),
-        new PropertyMetadata("Acknowledge"));
+        new("Acknowledge"));
 
     /// <summary>Identifies the <see cref="IsAcknowledgeVisible"/> dependency property.</summary>
     public static readonly DependencyProperty IsAcknowledgeVisibleProperty = DependencyProperty.Register(
         nameof(IsAcknowledgeVisible),
         typeof(bool),
         typeof(AlarmBanner),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Identifies the <see cref="AcknowledgeCommand"/> dependency property.</summary>
     public static readonly DependencyProperty AcknowledgeCommandProperty = DependencyProperty.Register(
         nameof(AcknowledgeCommand),
         typeof(IReactiveCommand),
         typeof(AlarmBanner),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <see cref="CloseCommand"/> dependency property.</summary>
     public static readonly DependencyProperty CloseCommandProperty = DependencyProperty.Register(
         nameof(CloseCommand),
         typeof(IReactiveCommand),
         typeof(AlarmBanner),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="AlarmBanner"/> class.</summary>
     public AlarmBanner()
@@ -129,4 +130,8 @@ public class AlarmBanner : System.Windows.Controls.ContentControl
 
     /// <summary>Gets the close command.</summary>
     public IReactiveCommand CloseCommand => (IReactiveCommand)GetValue(CloseCommandProperty);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

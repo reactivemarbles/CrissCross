@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ReactiveUI;
 
 #if REACTIVELIST_REACTIVE
@@ -31,9 +30,7 @@ public sealed class NavigationRegistry : INavigationRegistry
         where TView : class, IViewFor<TViewModel> =>
         Register(
             new NavigationRegistration<TViewModel, TViewModel, TView, TView>(createViewModel, createView)
-            {
-                Contract = contract,
-            });
+            { Contract = contract });
 
     /// <inheritdoc/>
     public INavigationRegistry Register<TViewModelKey, TViewModel, TViewKey, TView>(
@@ -74,7 +71,7 @@ public sealed class NavigationRegistry : INavigationRegistry
     /// <inheritdoc/>
     public IBidirectionalNavigator CreateNavigator(IServiceProvider? serviceProvider) =>
         new BidirectionalNavigator(
-            _viewModelRegistrations.Values.ToArray(),
+            _viewModelRegistrations.Values,
             serviceProvider ?? EmptyServiceProvider.Instance);
 
     /// <summary>Throws when a lookup key is already registered.</summary>

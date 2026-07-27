@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -27,6 +27,7 @@ namespace CrissCross.WPF.UI.Controls;
 [ToolboxItem(true)]
 [System.Drawing.ToolboxBitmap(typeof(NavigationViewItem), "NavigationViewItem.bmp")]
 [TemplatePart(Name = TemplateElementChevronGrid, Type = typeof(Grid))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class NavigationViewItem
     : System.Windows.Controls.Primitives.ButtonBase,
         INavigationViewItem,
@@ -41,7 +42,7 @@ public class NavigationViewItem
         nameof(MenuItemsSource),
         typeof(object),
         typeof(NavigationViewItem),
-        new PropertyMetadata(null, OnMenuItemsSourceChanged));
+        new(null, OnMenuItemsSourceChanged));
 
     /// <summary>Identifies the <see cref="HasMenuItems"/> dependency property.</summary>
     public static readonly DependencyProperty HasMenuItemsProperty;
@@ -51,49 +52,49 @@ public class NavigationViewItem
         nameof(IsActive),
         typeof(bool),
         typeof(NavigationViewItem),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="IsPaneOpen"/>.</summary>
     public static readonly DependencyProperty IsPaneOpenProperty = DependencyProperty.Register(
         nameof(IsPaneOpen),
         typeof(bool),
         typeof(NavigationViewItem),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="IsExpanded"/>.</summary>
     public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register(
         nameof(IsExpanded),
         typeof(bool),
         typeof(NavigationViewItem),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>Property for <see cref="Icon"/>.</summary>
     public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
         nameof(Icon),
         typeof(IconElement),
         typeof(NavigationViewItem),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Property for <see cref="TargetPageTag"/>.</summary>
     public static readonly DependencyProperty TargetPageTagProperty = DependencyProperty.Register(
         nameof(TargetPageTag),
         typeof(string),
         typeof(NavigationViewItem),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="TargetPageType"/>.</summary>
     public static readonly DependencyProperty TargetPageTypeProperty = DependencyProperty.Register(
         nameof(TargetPageType),
         typeof(Type),
         typeof(NavigationViewItem),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="InfoBadge"/>.</summary>
     public static readonly DependencyProperty InfoBadgeProperty = DependencyProperty.Register(
         nameof(InfoBadge),
         typeof(InfoBadge),
         typeof(NavigationViewItem),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="NavigationCacheMode"/>.</summary>
     public static readonly DependencyProperty NavigationCacheModeProperty = DependencyProperty.Register(
@@ -107,14 +108,14 @@ public class NavigationViewItem
         nameof(TargetViewModelType),
         typeof(Type),
         typeof(NavigationViewItem),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Target host name for ViewModel-first navigation.</summary>
     public static readonly DependencyProperty TargetHostNameProperty = DependencyProperty.Register(
         nameof(TargetHostName),
         typeof(string),
         typeof(NavigationViewItem),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>The template element chevron grid.</summary>
     private const string TemplateElementChevronGrid = "PART_ChevronGrid";
@@ -138,14 +139,14 @@ public class NavigationViewItem
             nameof(HasMenuItems),
             typeof(bool),
             typeof(NavigationViewItem),
-            new PropertyMetadata(false));
+            new(false));
         HasMenuItemsProperty = HasMenuItemsPropertyKey.DependencyProperty;
 
         MenuItemsPropertyKey = DependencyProperty.RegisterReadOnly(
             nameof(MenuItems),
             typeof(ObservableCollection<object>),
             typeof(NavigationViewItem),
-            new PropertyMetadata(null));
+            new(null));
         MenuItemsProperty = MenuItemsPropertyKey.DependencyProperty;
 
         DefaultStyleKeyProperty.OverrideMetadata(
@@ -234,11 +235,7 @@ public class NavigationViewItem
     /// <summary>Gets a value indicating whether this item has menu items.</summary>
     [Browsable(false)]
     [ReadOnly(true)]
-    public bool HasMenuItems
-    {
-        get => (bool)GetValue(HasMenuItemsProperty);
-        private set => SetValue(HasMenuItemsProperty, value);
-    }
+    public bool HasMenuItems => (bool)GetValue(HasMenuItemsProperty);
 
     /// <summary>Gets or sets a value indicating whether this item is active.</summary>
     [Browsable(false)]
@@ -329,6 +326,10 @@ public class NavigationViewItem
 
     /// <summary>Gets or sets the chevron grid element from template.</summary>
     protected Grid? ChevronGrid { get; set; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Activates this item.</summary>
     /// <param name="navigationView">The navigation view.</param>
@@ -574,9 +575,12 @@ public class NavigationViewItem
     {
         SetValue(HasMenuItemsPropertyKey, MenuItems.Count > 0);
 
-        foreach (var item in MenuItems.OfType<INavigationViewItem>())
+        foreach (var candidate in MenuItems)
         {
-            item.NavigationViewItemParent = this;
+            if (candidate is INavigationViewItem item)
+            {
+                item.NavigationViewItemParent = this;
+            }
         }
     }
 

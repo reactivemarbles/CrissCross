@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -22,6 +22,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// &lt;/ListView&gt;
 /// </code>
 /// </example>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GridView : System.Windows.Controls.GridView
 {
 #if REACTIVE_SHIM
@@ -37,10 +38,7 @@ public class GridView : System.Windows.Controls.GridView
     /// <summary>Provides the GridView member.</summary>
     static GridView()
     {
-        ResourceDictionary resourceDict = new()
-        {
-            Source = new(GridViewColumnHeaderUri),
-        };
+        ResourceDictionary resourceDict = new() { Source = new(GridViewColumnHeaderUri), };
 
         var defaultStyle = (Style)resourceDict["UiGridViewColumnHeaderStyle"];
 
@@ -48,4 +46,8 @@ public class GridView : System.Windows.Controls.GridView
             typeof(GridView),
             new FrameworkPropertyMetadata(defaultStyle));
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

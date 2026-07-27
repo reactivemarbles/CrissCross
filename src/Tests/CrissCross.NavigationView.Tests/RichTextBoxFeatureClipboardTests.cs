@@ -1,11 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.IO;
 using System.Text;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using CrissCross.Avalonia.UI.Controls;
@@ -51,11 +50,7 @@ public sealed partial class RichTextBoxFeatureTests
         await Assert.That(richTextBox.CanPaste).IsTrue();
         richTextBox.Paste();
 
-        await Assert
-            .That(
-                richTextBox.Document.Segments.Any(segment =>
-                    segment.IsImage && segment.ImageSource == TestImageDataUri))
-            .IsTrue();
+        await Assert.That(HasImageSegment(richTextBox.Document, TestImageDataUri)).IsTrue();
 
         var before = richTextBox.Html;
         clipboard.ImageSource = "data:image/png;base64,BBBB";
@@ -120,8 +115,35 @@ public sealed partial class RichTextBoxFeatureTests
     /// <param name="document">The document value.</param>
     /// <param name="text">The text value.</param>
     /// <returns>The result.</returns>
-    private static TextSegment SingleTextSegment(FlowDocument document, string text) =>
-        document.Segments.Single(segment => segment.Text == text);
+    private static TextSegment SingleTextSegment(FlowDocument document, string text)
+    {
+        foreach (var segment in document.Segments)
+        {
+            if (segment.Text == text)
+            {
+                return segment;
+            }
+        }
+
+        throw new InvalidOperationException($"No text segment contains '{text}'.");
+    }
+
+    /// <summary>Determines whether a document contains an image source.</summary>
+    /// <param name="document">The document to search.</param>
+    /// <param name="imageSource">The expected source.</param>
+    /// <returns>Whether the image exists.</returns>
+    private static bool HasImageSegment(FlowDocument document, string imageSource)
+    {
+        foreach (var segment in document.Segments)
+        {
+            if (segment.IsImage && segment.ImageSource == imageSource)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /// <summary>Provides the GetSolidColor member.</summary>
     /// <param name="brush">The brush value.</param>
@@ -207,7 +229,7 @@ public sealed partial class RichTextBoxFeatureTests
     /// <summary>Provides the InvokeMenuItem member.</summary>
     /// <param name="menuItem">The menuItem value.</param>
     private static void InvokeMenuItem(AvaloniaMenuItem menuItem) =>
-        menuItem.RaiseEvent(new RoutedEventArgs(AvaloniaMenuItem.ClickEvent, menuItem));
+        menuItem.RaiseEvent(new(AvaloniaMenuItem.ClickEvent, menuItem));
 
     /// <summary>Provides the FlattenMenuItems member.</summary>
     /// <param name="source">The source value.</param>
@@ -288,7 +310,7 @@ public sealed partial class RichTextBoxFeatureTests
         public static readonly TestDataTransfer Empty = new();
 
         /// <summary>Gets the available formats.</summary>
-        public IReadOnlyList<DataFormat> Formats { get; } = items.SelectMany(item => item.Formats).Distinct().ToArray();
+        public IReadOnlyList<DataFormat> Formats { get; } = GetFormats(items);
 
         /// <summary>Gets the data transfer items.</summary>
         public IReadOnlyList<IDataTransferItem> Items { get; } = items;
@@ -305,6 +327,26 @@ public sealed partial class RichTextBoxFeatureTests
 
         /// <summary>Provides the Dispose member.</summary>
         public void Dispose() { }
+
+        /// <summary>Collects the distinct transfer formats.</summary>
+        /// <param name="source">The transfer items.</param>
+        /// <returns>The distinct formats.</returns>
+        private static List<DataFormat> GetFormats(IEnumerable<IDataTransferItem> source)
+        {
+            var formats = new List<DataFormat>();
+            foreach (var item in source)
+            {
+                foreach (var format in item.Formats)
+                {
+                    if (!formats.Contains(format))
+                    {
+                        formats.Add(format);
+                    }
+                }
+            }
+
+            return formats;
+        }
     }
 
     /// <summary>Provides the TestDataTransferItem member.</summary>
@@ -319,6 +361,17 @@ public sealed partial class RichTextBoxFeatureTests
         /// <summary>Provides the TryGetRaw member.</summary>
         /// <param name="format">The format value.</param>
         /// <returns>The result.</returns>
-        public object? TryGetRaw(DataFormat format) => Formats.Contains(format) ? value : null;
+        public object? TryGetRaw(DataFormat format)
+        {
+            foreach (var availableFormat in Formats)
+            {
+                if (availableFormat == format)
+                {
+                    return value;
+                }
+            }
+
+            return null;
+        }
     }
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -34,7 +34,7 @@ public partial class RichTextBox
     /// <returns><see langword="true"/> when a command handled the gesture.</returns>
     private bool TryHandleShortcut(KeyEventArgs e)
     {
-        if (!e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        if ((e.KeyModifiers & KeyModifiers.Control) != KeyModifiers.Control)
         {
             return false;
         }
@@ -54,11 +54,9 @@ public partial class RichTextBox
     /// <summary>Gets a standard editing command for a key gesture.</summary>
     /// <param name="e">The key event.</param>
     /// <returns>The editing command, or <see langword="null"/>.</returns>
-    private ICommand? GetEditingShortcutCommand(KeyEventArgs e)
-    {
-        return e.Key == Key.Y || (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-            ? RedoCommand
-            : e.Key switch
+    private ICommand? GetEditingShortcutCommand(KeyEventArgs e) => e.Key == Key.Y || (e.Key == Key.Z && ((e.KeyModifiers & KeyModifiers.Shift) == KeyModifiers.Shift))
+        ? RedoCommand
+        : e.Key switch
             {
                 Key.C => CopyCommand,
                 Key.X => CutCommand,
@@ -67,24 +65,20 @@ public partial class RichTextBox
                 Key.A => SelectAllCommand,
                 _ => null,
             };
-    }
 
     /// <summary>Gets a rich-text formatting command for a key gesture.</summary>
     /// <param name="e">The key event.</param>
     /// <returns>The formatting command, or <see langword="null"/>.</returns>
-    private ICommand? GetFormattingShortcutCommand(KeyEventArgs e)
-    {
-        return !IsFormattingEnabled || IsReadOnlyInternal
-            ? null
-            : e.Key switch
+    private ICommand? GetFormattingShortcutCommand(KeyEventArgs e) => !IsFormattingEnabled || IsReadOnlyInternal
+        ? null
+        : e.Key switch
             {
                 Key.B => ToggleBoldCommand,
                 Key.I => ToggleItalicCommand,
                 Key.U => ToggleUnderlineCommand,
-                Key.S when e.KeyModifiers.HasFlag(KeyModifiers.Shift) => ToggleStrikethroughCommand,
+                Key.S when (e.KeyModifiers & KeyModifiers.Shift) == KeyModifiers.Shift => ToggleStrikethroughCommand,
                 _ => null,
             };
-    }
 
     /// <summary>Provides the OnTextBoxTextChanged member.</summary>
     /// <param name="sender">The sender value.</param>

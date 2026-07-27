@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -22,8 +22,10 @@ namespace CrissCross.WPF.UI.Controls;
 /// <seealso cref="ISetNavigation" />
 /// <seealso cref="IUseNavigation" />
 /// <seealso cref="IActivatableView" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 #if NET6_0_OR_GREATER
 [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.17763.0")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 #endif
 public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation, IActivatableView
 {
@@ -32,7 +34,7 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
         nameof(NavigateBackIsEnabled),
         typeof(bool?),
         typeof(NavigationUserControl),
-        new PropertyMetadata(true, OnNavigateBackIsEnabledChanged));
+        new(true, OnNavigateBackIsEnabledChanged));
 
     /// <summary>The navigation frame property.</summary>
     public static readonly DependencyProperty NavigationFrameProperty = DependencyProperty.Register(
@@ -45,7 +47,7 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
         nameof(Transition),
         typeof(TransitionType),
         typeof(NavigationUserControl),
-        new PropertyMetadata(TransitionType.Fade, OnTransitionChanged));
+        new(TransitionType.Fade, OnTransitionChanged));
 
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl"/> class.</summary>
     public NavigationUserControl() => Loaded += (_, _) => EnsureHost();
@@ -73,6 +75,10 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
         get => (TransitionType)GetValue(TransitionProperty);
         set => SetValue(TransitionProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnNavigateBackIsEnabledChanged member.</summary>
     /// <param name="d">The d value.</param>

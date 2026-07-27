@@ -32,7 +32,7 @@
                     <TextBlock Margin="0,0,0,8"
                                Opacity="0.72"
                                Text="{Binding State.ProgressText, RelativeSource={RelativeSource TemplatedParent}}" />
-                    <ItemsPresenter />
+                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                         <Button MinWidth="72"
                                 Margin="0,0,8,0"

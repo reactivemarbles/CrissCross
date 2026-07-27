@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Buffer = System.Buffer;
@@ -13,7 +13,7 @@ namespace CrissCross.WPF.UI.Controls.Decompression;
 /// <summary>Provides the LzwDecompressStream member.</summary>
 /// <param name="compressedBuffer">The compressedBuffer value.</param>
 /// <param name="minimumCodeLength">The minimumCodeLength value.</param>
-internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLength) : Stream
+public sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCodeLength) : Stream
 {
     /// <summary>Stores the _reader value.</summary>
     private readonly BitReader _reader = new(compressedBuffer);
@@ -109,20 +109,11 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
     [Conditional("DISABLED")]
     private static void ValidateReadArgs(byte[] buffer, int offset, int count)
     {
-        if (buffer is null)
-        {
-            throw new ArgumentNullException(nameof(buffer));
-        }
+        ThrowHelper.ThrowIfNull(buffer, nameof(buffer));
 
-        if (offset < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(offset), "Offset can't be negative");
-        }
+        ThrowHelper.ThrowIfNegative(offset, nameof(offset));
 
-        if (count < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(count), "Count can't be negative");
-        }
+        ThrowHelper.ThrowIfNegative(count, nameof(count));
 
         if (offset + count <= buffer.Length)
         {
@@ -199,11 +190,11 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
     }
 
     /// <summary>Provides the Sequence member.</summary>
-    private readonly struct Sequence
+    internal readonly struct Sequence : IEquatable<Sequence>
     {
         /// <summary>Initializes a new instance of the <see cref="Sequence"/> struct.</summary>
         /// <param name="bytes">The bytes value.</param>
-        public Sequence(byte[] bytes)
+        internal Sequence(byte[] bytes)
             : this() => Bytes = bytes;
 
         /// <summary>Initializes a new instance of the <see cref="Sequence"/> struct.</summary>
@@ -217,34 +208,58 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         }
 
         /// <summary>Gets the ClearCode value.</summary>
-        public static Sequence ClearCode { get; } = new Sequence(true, false);
+        internal static Sequence ClearCode { get; } = new(true, false);
 
         /// <summary>Gets the StopCode value.</summary>
-        public static Sequence StopCode { get; } = new Sequence(false, true);
+        internal static Sequence StopCode { get; } = new(false, true);
 
         /// <summary>Gets the Bytes value.</summary>
-        public byte[]? Bytes { get; }
+        internal byte[]? Bytes { get; }
 
         /// <summary>Gets the IsClearCode value.</summary>
-        public bool IsClearCode { get; }
+        internal bool IsClearCode { get; }
 
         /// <summary>Gets the IsStopCode value.</summary>
-        public bool IsStopCode { get; }
+        internal bool IsStopCode { get; }
+
+        /// <inheritdoc />
+        public bool Equals(Sequence other) =>
+            IsClearCode == other.IsClearCode
+            && IsStopCode == other.IsStopCode
+            && ReferenceEquals(Bytes, other.Bytes);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is Sequence other && Equals(other);
+
+        /// <inheritdoc />
+#if NET6_0_OR_GREATER
+        public override int GetHashCode() => HashCode.Combine(Bytes, IsClearCode, IsStopCode);
+#else
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Bytes?.GetHashCode() ?? 0;
+                hashCode = (hashCode * 397) ^ IsClearCode.GetHashCode();
+                return (hashCode * 397) ^ IsStopCode.GetHashCode();
+            }
+        }
+#endif
 
         /// <summary>Provides the Append member.</summary>
         /// <param name="b">The b value.</param>
         /// <returns>The result.</returns>
-        public Sequence Append(byte b)
+        internal Sequence Append(byte b)
         {
             var bytes = new byte[Bytes!.Length + 1];
             Bytes.CopyTo(bytes, 0);
             bytes[Bytes.Length] = b;
-            return new Sequence(bytes);
+            return new(bytes);
         }
     }
 
     /// <summary>Provides the CodeTable member.</summary>
-    private sealed class CodeTable
+    internal sealed class CodeTable
     {
         /// <summary>Provides the MaxCodeLength member.</summary>
         private const int MaxCodeLength = 12;
@@ -266,7 +281,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
 
         /// <summary>Initializes a new instance of the <see cref="CodeTable"/> class.</summary>
         /// <param name="minimumCodeLength">The minimumCodeLength value.</param>
-        public CodeTable(int minimumCodeLength)
+        internal CodeTable(int minimumCodeLength)
         {
             _minimumCodeLength = minimumCodeLength;
             _codeLength = _minimumCodeLength + 1;
@@ -283,20 +298,20 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         }
 
         /// <summary>Gets Count.</summary>
-        public int Count
+        internal int Count
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _count;
         }
 
         /// <summary>Gets CodeLength.</summary>
-        public int CodeLength
+        internal int CodeLength
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _codeLength;
         }
 
-        public Sequence this[int index]
+        internal Sequence this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => _table[index];
@@ -304,7 +319,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
 
         /// <summary>Provides the Reset member.</summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Reset()
+        internal void Reset()
         {
             _count = (1 << _minimumCodeLength) + ReservedCodeCount;
             _codeLength = _minimumCodeLength + 1;
@@ -313,7 +328,7 @@ internal sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCo
         /// <summary>Provides the Add member.</summary>
         /// <param name="sequence">The sequence value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(Sequence sequence)
+        internal void Add(Sequence sequence)
         {
             // Code table is full, stop adding new codes
             if (_count >= _table.Length)

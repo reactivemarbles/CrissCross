@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Markup;
@@ -29,6 +29,7 @@ namespace CrissCross.WPF.UI.Markup;
 [Localizability(LocalizationCategory.Ignore)]
 [Ambient]
 [UsableDuringInitialization(true)]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ThemesDictionary : ResourceDictionary
 {
     /// <summary>Initializes a new instance of the <see cref="ThemesDictionary"/> class.</summary>
@@ -41,6 +42,10 @@ public class ThemesDictionary : ResourceDictionary
         set => SetSourceBasedOnSelectedTheme(value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Provides the GetSystemApplicationTheme member.</summary>
     /// <returns>The result.</returns>
     private static ApplicationTheme GetSystemApplicationTheme() =>
@@ -52,6 +57,17 @@ public class ThemesDictionary : ResourceDictionary
             _ => ApplicationTheme.Light,
         };
 
+    /// <summary>Resolves the closest packaged high-contrast palette for the current system theme.</summary>
+    /// <returns>The packaged high-contrast resource name without its extension.</returns>
+    private static string GetHighContrastThemeName() =>
+        SystemThemeManager.GetCachedSystemTheme() switch
+        {
+            SystemTheme.HC1 => "HC1",
+            SystemTheme.HC2 => "HC2",
+            SystemTheme.HCWhite => "HCWhite",
+            _ => "HCBlack",
+        };
+
     /// <summary>Provides the SetSourceBasedOnSelectedTheme member.</summary>
     /// <param name="selectedApplicationTheme">The selectedApplicationTheme value.</param>
     private void SetSourceBasedOnSelectedTheme(ApplicationTheme? selectedApplicationTheme)
@@ -59,7 +75,7 @@ public class ThemesDictionary : ResourceDictionary
         var themeName = selectedApplicationTheme switch
         {
             ApplicationTheme.Dark => "Dark",
-            ApplicationTheme.HighContrast => "HighContrast",
+            ApplicationTheme.HighContrast => GetHighContrastThemeName(),
             _ => "Light",
         };
 

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -12,8 +12,13 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Contains number-pad initialization behavior.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class NumberPad
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <inheritdoc />
     protected override void OnInitialized(EventArgs e)
     {
@@ -32,19 +37,19 @@ public partial class NumberPad
     {
         _ = EventSignal
             .From<MouseButtonEventHandler, MouseButtonEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => MouseLeftButtonDown += handler,
                 handler => MouseLeftButtonDown -= handler)
             .Merge(
                 EventSignal.From<MouseButtonEventHandler, MouseButtonEventArgs>(
-                    handler => handler.Invoke,
+                    static handler => handler.Invoke,
                     handler => Mask.MouseLeftButtonDown += handler,
                     handler => Mask.MouseLeftButtonDown -= handler))
             .Subscribe(CloseWhenOutside)
             .DisposeWith(_disposables);
         _ = EventSignal
             .From<KeyEventHandler, KeyEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => PreviewKeyDown += handler,
                 handler => PreviewKeyDown -= handler)
             .Subscribe(Window_PreviewKeyDown)
@@ -73,17 +78,17 @@ public partial class NumberPad
     private void ObserveFocus() =>
         EventSignal
             .From<RoutedEventHandler, RoutedEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => Value.GotFocus += handler,
                 handler => Value.GotFocus -= handler)
-            .Select(_ => true)
+            .Select(static _ => true)
             .Merge(
                 EventSignal
                     .From<RoutedEventHandler, RoutedEventArgs>(
-                        handler => handler.Invoke,
+                        static handler => handler.Invoke,
                         handler => Value.LostFocus += handler,
                         handler => Value.LostFocus -= handler)
-                    .Select(_ => false))
+                    .Select(static _ => false))
             .Subscribe(x => _hasFocus = x)
             .DisposeWith(_disposables);
 
@@ -101,7 +106,7 @@ public partial class NumberPad
     private void ObserveAction(System.Windows.Controls.Button button, Action action) =>
         EventSignal
             .From<RoutedEventHandler, RoutedEventArgs>(
-                handler => handler.Invoke,
+                static handler => handler.Invoke,
                 handler => button.Click += handler,
                 handler => button.Click -= handler)
             .Subscribe(_ => action())

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -21,8 +21,7 @@ namespace CrissCross;
 public class ViewModelNavigationBaseEventArgs(
     IRxObject? from = null,
     IRxObject? to = null,
-    object? navigationParameter = null)
-                : EventArgs, IViewModelNavigationBaseEventArgs
+    object? navigationParameter = null) : EventArgs, IViewModelNavigationBaseEventArgs
 {
     /// <summary>Gets where navigation starts.</summary>
     /// <value>From.</value>

@@ -1,12 +1,11 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -17,6 +16,13 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral state for steppers and wizard progress controls.</summary>
 public sealed class StepperState
 {
+    /// <summary>Formats the stepper progress text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat ProgressFormat = System.Text.CompositeFormat.Parse("Step {0} of {1}");
+#else
+    private const string ProgressFormat = "Step {0} of {1}";
+#endif
+
     /// <inheritdoc />
     public StepperState(IEnumerable<StepDescriptor> steps)
         : this(steps, null, StepperOrientation.Horizontal) { }
@@ -31,18 +37,31 @@ public sealed class StepperState
     /// <param name="orientation">The preferred presentation orientation.</param>
     public StepperState(IEnumerable<StepDescriptor> steps, string? currentKey, StepperOrientation orientation)
     {
-        if (steps is null)
+        ThrowHelper.ThrowIfNull(steps, nameof(steps));
+
+        var stepList = new List<StepDescriptor>(steps);
+
+        Steps = new ReadOnlyCollection<StepDescriptor>(stepList);
+        Orientation = orientation;
+        (CurrentKey, CurrentIndex) = ResolveCurrentStep(currentKey);
+        CurrentStep = CurrentIndex >= 0 ? Steps[CurrentIndex] : null;
+        var completedCount = 0;
+        var blockingStepCount = 0;
+        foreach (var step in Steps)
         {
-            throw new ArgumentNullException(nameof(steps));
+            if (step.Status == StepStatus.Completed)
+            {
+                completedCount++;
+            }
+
+            if (step.IsBlocking)
+            {
+                blockingStepCount++;
+            }
         }
 
-        Steps = new ReadOnlyCollection<StepDescriptor>(steps.ToList());
-        Orientation = orientation;
-        CurrentKey = ResolveCurrentKey(currentKey);
-        CurrentIndex = ResolveCurrentIndex(CurrentKey);
-        CurrentStep = CurrentIndex >= 0 ? Steps[CurrentIndex] : null;
-        CompletedCount = Steps.Count(static step => step.Status == StepStatus.Completed);
-        BlockingStepCount = Steps.Count(static step => step.IsBlocking);
+        CompletedCount = completedCount;
+        BlockingStepCount = blockingStepCount;
     }
 
     /// <summary>Gets the steps projected by the workflow.</summary>
@@ -87,48 +106,52 @@ public sealed class StepperState
     /// <summary>Gets compact progress text for diagnostics and screen-reader labels.</summary>
     public string ProgressText =>
         HasSteps
-            ? string.Format(CultureInfo.InvariantCulture, "Step {0} of {1}", CurrentIndex + 1, Steps.Count)
+            ? string.Format(CultureInfo.InvariantCulture, ProgressFormat, CurrentIndex + 1, Steps.Count)
             : "No steps";
 
     /// <summary>Gets the step with the specified stable key.</summary>
     /// <param name="key">The stable step key.</param>
     /// <returns>The matching step, or <c>null</c> when no step has the key.</returns>
-    public StepDescriptor? GetStep(string key) =>
-        Steps.FirstOrDefault(step => string.Equals(step.Key, key, StringComparison.Ordinal));
-
-    /// <summary>Resolves the current step key from a requested key or active step.</summary>
-    /// <param name="requestedKey">The requested current key.</param>
-    /// <returns>The resolved current key.</returns>
-    private string? ResolveCurrentKey(string? requestedKey)
+    public StepDescriptor? GetStep(string key)
     {
-        var normalizedKey = (requestedKey ?? string.Empty).Trim();
-        if (normalizedKey.Length > 0 && GetStep(normalizedKey) is { } requestedStep)
+        foreach (var step in Steps)
         {
-            return requestedStep.Key;
+            if (string.Equals(step.Key, key, StringComparison.Ordinal))
+            {
+                return step;
+            }
         }
 
-        var activeStep = Steps.FirstOrDefault(static step => step.IsCurrent);
-        return activeStep?.Key ?? (Steps.Count > 0 ? Steps[0].Key : null);
+        return null;
     }
 
-    /// <summary>Resolves the current step index for a key.</summary>
-    /// <param name="currentKey">The current step key.</param>
-    /// <returns>The zero-based step index, or -1 when not found.</returns>
-    private int ResolveCurrentIndex(string? currentKey)
+    /// <summary>Resolves the current step key and index from a requested key or active step.</summary>
+    /// <param name="requestedKey">The requested current key.</param>
+    /// <returns>The resolved current step key and zero-based index.</returns>
+    private (string? Key, int Index) ResolveCurrentStep(string? requestedKey)
     {
-        if (string.IsNullOrWhiteSpace(currentKey))
+        var normalizedKey = (requestedKey ?? string.Empty).Trim();
+        if (normalizedKey.Length > 0)
         {
-            return -1;
+            for (var index = 0; index < Steps.Count; index++)
+            {
+                var step = Steps[index];
+                if (string.Equals(step.Key, normalizedKey, StringComparison.Ordinal))
+                {
+                    return (step.Key, index);
+                }
+            }
         }
 
         for (var index = 0; index < Steps.Count; index++)
         {
-            if (string.Equals(Steps[index].Key, currentKey, StringComparison.Ordinal))
+            var step = Steps[index];
+            if (step.IsCurrent)
             {
-                return index;
+                return (step.Key, index);
             }
         }
 
-        return -1;
+        return Steps.Count > 0 ? (Steps[0].Key, 0) : (null, -1);
     }
 }

@@ -7,8 +7,8 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Padding="10,4"
-                        Background="#14000000"
-                        BorderBrush="#22000000"
+                        Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="14">
                     <StackPanel Orientation="Horizontal"

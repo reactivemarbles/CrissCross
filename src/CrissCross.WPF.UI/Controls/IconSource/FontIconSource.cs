@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents an icon source that uses a glyph from the specified font.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class FontIconSource : IconSource
 {
     /// <summary>Property for <see cref="FontFamily"/>.</summary>
@@ -16,35 +17,35 @@ public class FontIconSource : IconSource
         nameof(FontFamily),
         typeof(FontFamily),
         typeof(FontIconSource),
-        new PropertyMetadata(SystemFonts.MessageFontFamily));
+        new(SystemFonts.MessageFontFamily));
 
     /// <summary>Property for <see cref="FontSize"/>.</summary>
     public static readonly DependencyProperty FontSizeProperty = DependencyProperty.Register(
         nameof(FontSize),
         typeof(double),
         typeof(FontIconSource),
-        new PropertyMetadata(SystemFonts.MessageFontSize));
+        new(SystemFonts.MessageFontSize));
 
     /// <summary>Property for <see cref="FontStyle"/>.</summary>
     public static readonly DependencyProperty FontStyleProperty = DependencyProperty.Register(
         nameof(FontStyle),
         typeof(FontStyle),
         typeof(FontIconSource),
-        new PropertyMetadata(FontStyles.Normal));
+        new(FontStyles.Normal));
 
     /// <summary>Property for <see cref="FontWeight"/>.</summary>
     public static readonly DependencyProperty FontWeightProperty = DependencyProperty.Register(
         nameof(FontWeight),
         typeof(FontWeight),
         typeof(FontIconSource),
-        new PropertyMetadata(FontWeights.Normal));
+        new(FontWeights.Normal));
 
     /// <summary>Property for <see cref="Glyph"/>.</summary>
     public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register(
         nameof(Glyph),
         typeof(string),
         typeof(FontIconSource),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Gets or sets the font family used to render the icon glyph.</summary>
     public FontFamily FontFamily
@@ -81,6 +82,10 @@ public class FontIconSource : IconSource
         get => (string)GetValue(GlyphProperty);
         set => SetValue(GlyphProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates the icon element.</summary>
     /// <returns>A IconElement.</returns>

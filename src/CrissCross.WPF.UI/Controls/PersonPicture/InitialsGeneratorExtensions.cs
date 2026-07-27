@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -79,18 +79,15 @@ internal static class InitialsGeneratorExtensions
         /// <summary>Provides the SafeSubstring member.</summary>
         /// <param name="startIndex">The startIndex value.</param>
         /// <returns>The result.</returns>
-        public string SafeSubstring(int startIndex) => s.SafeSubstring(startIndex, s.Length - startIndex);
+        internal string SafeSubstring(int startIndex) => s.SafeSubstring(startIndex, s.Length - startIndex);
 
         /// <summary>Provides the SafeSubstring member.</summary>
         /// <param name="startIndex">The startIndex value.</param>
         /// <param name="length">The length value.</param>
         /// <returns>The result.</returns>
-        public string SafeSubstring(int startIndex, int length)
+        internal string SafeSubstring(int startIndex, int length)
         {
-            if (s is null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
+            ThrowHelper.ThrowIfNull(s, nameof(s));
 
             if (startIndex > s.Length)
             {
@@ -114,7 +111,7 @@ internal static class InitialsGeneratorExtensions
     /// <returns>
     /// String containing the initials representation of the given DisplayName.
     /// </returns>
-    public static string InitialsFromDisplayName(string contactDisplayName)
+    internal static string InitialsFromDisplayName(string contactDisplayName)
     {
         var type = GetCharacterType(contactDisplayName);
 
@@ -164,7 +161,7 @@ internal static class InitialsGeneratorExtensions
     /// <returns>
     /// Character set of the string: Latin, Symbolic, Glyph, or other.
     /// </returns>
-    public static CharacterType GetCharacterType(string str)
+    internal static CharacterType GetCharacterType(string str)
     {
         // Since we're doing initials, we're really only interested in the first
         // few characters. If the first three characters aren't a glyph then
@@ -232,7 +229,7 @@ internal static class InitialsGeneratorExtensions
     /// <returns>
     /// Character set of the string: Latin, Symbolic, Glyph, or other.
     /// </returns>
-    public static CharacterType GetCharacterType(char character)
+    internal static CharacterType GetCharacterType(char character)
     {
         if (IsInAnyRange(character, _glyphRanges))
         {
@@ -343,7 +340,7 @@ internal static class InitialsGeneratorExtensions
     /// <param name="ranges">The ranges to inspect.</param>
     /// <returns><c>true</c> when the code point is in a range; otherwise, <c>false</c>.</returns>
     private static bool IsInAnyRange(int codePoint, (int Start, int End)[] ranges) =>
-        ranges.Any(range => codePoint >= range.Start && codePoint <= range.End);
+        System.Array.Exists(ranges, range => codePoint >= range.Start && codePoint <= range.End);
 
     /// <summary>Determines whether the character is a combining diacritical mark.</summary>
     /// <param name="character">The character to inspect.</param>

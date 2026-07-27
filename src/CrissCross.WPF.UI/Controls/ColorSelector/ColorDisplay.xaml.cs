@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI;
 /// <summary>Represents ColorDisplay.</summary>
 /// <seealso cref="DualPickerControlBase" />
 /// <seealso cref="System.Windows.Markup.IComponentConnector" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class ColorDisplay : DualPickerControlBase
 {
     /// <summary>The corner radius property.</summary>
@@ -20,7 +21,7 @@ public partial class ColorDisplay : DualPickerControlBase
         nameof(CornerRadius),
         typeof(double),
         typeof(ColorDisplay),
-        new PropertyMetadata(0D));
+        new(0D));
 
     /// <summary>Initializes a new instance of the <see cref="ColorDisplay"/> class.</summary>
     public ColorDisplay() => InitializeComponent();
@@ -34,6 +35,10 @@ public partial class ColorDisplay : DualPickerControlBase
         get => (double)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the SwapButton_Click member.</summary>
     /// <param name="sender">The event sender.</param>

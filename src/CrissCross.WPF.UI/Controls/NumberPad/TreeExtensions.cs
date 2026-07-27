@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -18,7 +18,7 @@ internal static class TreeExtensions
         /// <summary>Provides the FindChildren member.</summary>
         /// <typeparam name="T">The type of the queried items.</typeparam>
         /// <returns>All descendants of <paramref name="source"/> that match the requested type.</returns>
-        public IEnumerable<T> FindChildren<T>()
+        internal IEnumerable<T> FindChildren<T>()
             where T : DependencyObject
         {
             if (source is null)
@@ -48,7 +48,7 @@ internal static class TreeExtensions
         /// falls back to the logical tree of the element.
         /// </summary>
         /// <returns>The submitted item's child elements, if available.</returns>
-        public IEnumerable<DependencyObject> GetChildObjects()
+        internal IEnumerable<DependencyObject> GetChildObjects()
         {
             if (source is null)
             {
@@ -84,7 +84,7 @@ internal static class TreeExtensions
         /// falls back to the logical tree of the element!.
         /// </summary>
         /// <returns>The submitted item's parent, if available. Otherwise null.</returns>
-        public DependencyObject? GetParentObject()
+        internal DependencyObject? GetParentObject()
         {
             if (source is null)
             {
@@ -124,7 +124,7 @@ internal static class TreeExtensions
         /// The first parent item that matches the submitted type parameter. If not matching item can
         /// be found, a null reference is being returned.
         /// </returns>
-        public T? TryFindParent<T>()
+        internal T? TryFindParent<T>()
             where T : DependencyObject
         {
             // get parent item
@@ -151,7 +151,7 @@ internal static class TreeExtensions
     /// <param name="reference">The main element which is used to perform hit testing.</param>
     /// <param name="point">The position to be evaluated on the origin.</param>
     /// <returns>A T.</returns>
-    public static T? TryFindFromPoint<T>(UIElement reference, Point point)
+    internal static T? TryFindFromPoint<T>(UIElement reference, Point point)
         where T : DependencyObject
     {
         if (reference.InputHitTest(point) is not DependencyObject element)

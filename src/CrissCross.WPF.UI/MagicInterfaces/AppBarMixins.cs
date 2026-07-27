@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -50,10 +50,7 @@ public static class AppBarMixins
         /// </returns>
         public ObservableCollection<FrameworkElement>? AppBarLeft()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getAppBarLeftFunc.Value?.Invoke();
         }
@@ -64,10 +61,7 @@ public static class AppBarMixins
         /// </returns>
         public ObservableCollection<FrameworkElement>? MainMenu()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getMainMenuFunc.Value?.Invoke();
         }
@@ -78,10 +72,7 @@ public static class AppBarMixins
         /// </returns>
         public ObservableCollection<FrameworkElement>? NavBarLeft()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getNavBarLeftFunc.Value?.Invoke();
         }
@@ -92,10 +83,7 @@ public static class AppBarMixins
         /// </returns>
         public ObservableCollection<FrameworkElement>? AppBarRight()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getAppBarRightFunc.Value?.Invoke();
         }
@@ -106,10 +94,7 @@ public static class AppBarMixins
         /// </returns>
         public ObservableCollection<FrameworkElement>? NavBar()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getNavBarFunc.Value?.Invoke();
         }
@@ -121,10 +106,7 @@ public static class AppBarMixins
         /// <param name="isSticky">if set to <c>true</c> [is sticky].</param>
         public void ShowAppBar(bool isSticky)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _showAppBarFunc.Value?.Invoke(isSticky);
         }
@@ -132,10 +114,7 @@ public static class AppBarMixins
         /// <summary>Hides the application bar.</summary>
         public void HideAppBar()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _hideAppBarFunc.Value?.Invoke();
         }
@@ -144,10 +123,7 @@ public static class AppBarMixins
         /// <param name="value">if set to <c>true</c> [value].</param>
         public void AppBarIsSticky(bool value)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _setAppBarIsStickyFunc.Value?.Invoke(value);
         }
@@ -158,10 +134,7 @@ public static class AppBarMixins
         /// </returns>
         public bool? AppBarIsSticky()
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             return _getAppBarIsStickyFunc.Value?.Invoke();
         }
@@ -176,10 +149,7 @@ public static class AppBarMixins
         /// <param name="setValue">The set value.</param>
         public void AppBarIsStickyListener(Func<bool> getValue, Action<bool> setValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _setAppBarIsStickyFunc.Assign(setValue);
             _getAppBarIsStickyFunc.Assign(getValue);
@@ -189,10 +159,7 @@ public static class AppBarMixins
         /// <param name="getValue">The get value.</param>
         public void NavBarListener(Func<ObservableCollection<FrameworkElement>> getValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _getNavBarFunc.Assign(getValue);
         }
@@ -201,10 +168,7 @@ public static class AppBarMixins
         /// <param name="getValue">The get value.</param>
         public void MainMenuListener(Func<ObservableCollection<FrameworkElement>> getValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _getMainMenuFunc.Assign(getValue);
         }
@@ -213,10 +177,7 @@ public static class AppBarMixins
         /// <param name="getValue">The get value.</param>
         public void NavBarLeftListener(Func<ObservableCollection<FrameworkElement>> getValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _getNavBarLeftFunc.Assign(getValue);
         }
@@ -225,10 +186,7 @@ public static class AppBarMixins
         /// <param name="getValue">The get value.</param>
         public void AppBarLeftListener(Func<ObservableCollection<FrameworkElement>> getValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _getAppBarLeftFunc.Assign(getValue);
         }
@@ -237,10 +195,7 @@ public static class AppBarMixins
         /// <param name="getValue">The get value.</param>
         public void AppBarRightListener(Func<ObservableCollection<FrameworkElement>> getValue)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _getAppBarRightFunc.Assign(getValue);
         }
@@ -249,10 +204,7 @@ public static class AppBarMixins
         /// <param name="e">The e.</param>
         public void ShowAppBarListener(Action<bool> e)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _showAppBarFunc.Assign(e);
         }
@@ -261,10 +213,7 @@ public static class AppBarMixins
         /// <param name="e">The e.</param>
         public void HideAppBarListener(Action e)
         {
-            if (dummy is null)
-            {
-                throw new ArgumentNullException(nameof(dummy));
-            }
+            ThrowHelper.ThrowIfNull(dummy, nameof(dummy));
 
             _hideAppBarFunc.Assign(e);
         }

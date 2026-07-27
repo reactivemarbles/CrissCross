@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -23,7 +23,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
 {
     /// <summary>Property for <see cref="MenuItems"/>.</summary>
     public static readonly DirectProperty<NavigationViewItem, IList> MenuItemsProperty =
-        AvaloniaProperty.RegisterDirect<NavigationViewItem, IList>(nameof(MenuItems), o => o.MenuItems);
+        AvaloniaProperty.RegisterDirect<NavigationViewItem, IList>(nameof(MenuItems), static o => o.MenuItems);
 
     /// <summary>Property for <see cref="MenuItemsSource"/>.</summary>
     public static readonly StyledProperty<object?> MenuItemsSourceProperty = AvaloniaProperty.Register<
@@ -33,7 +33,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
 
     /// <summary>Property for <see cref="HasMenuItems"/>.</summary>
     public static readonly DirectProperty<NavigationViewItem, bool> HasMenuItemsProperty =
-        AvaloniaProperty.RegisterDirect<NavigationViewItem, bool>(nameof(HasMenuItems), o => o.HasMenuItems);
+        AvaloniaProperty.RegisterDirect<NavigationViewItem, bool>(nameof(HasMenuItems), static o => o.HasMenuItems);
 
     /// <summary>Property for <see cref="IsActive"/>.</summary>
     public static readonly StyledProperty<bool> IsActiveProperty = AvaloniaProperty.Register<NavigationViewItem, bool>(
@@ -101,7 +101,7 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     static NavigationViewItem()
     {
         _ = MenuItemsSourceProperty.Changed.AddClassHandler<NavigationViewItem>(
-            (x, e) => x.OnMenuItemsSourceChanged(e));
+            static (x, e) => x.OnMenuItemsSourceChanged(e));
     }
 
     /// <summary>Initializes a new instance of the <see cref="NavigationViewItem"/> class.</summary>
@@ -130,7 +130,11 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         : this(name, targetPageType) => TargetPageFactory = targetPageFactory;
 
     /// <inheritdoc/>
-    public new event EventHandler<RoutedEventArgs>? Click;
+    event EventHandler<RoutedEventArgs>? INavigationViewItem.Click
+    {
+        add => Click += value;
+        remove => Click -= value;
+    }
 
     /// <inheritdoc/>
     public string Id { get; }
@@ -281,13 +285,6 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
         IsExpanded = false;
     }
 
-    /// <inheritdoc/>
-    protected override void OnClick()
-    {
-        base.OnClick();
-        Click?.Invoke(this, new RoutedEventArgs());
-    }
-
     /// <summary>Provides the OnMenuItemsSourceChanged member.</summary>
     /// <param name="e">The e value.</param>
     private void OnMenuItemsSourceChanged(AvaloniaPropertyChangedEventArgs e)
@@ -314,9 +311,12 @@ public class NavigationViewItem : global::Avalonia.Controls.Button, INavigationV
     {
         HasMenuItems = _menuItems.Count > 0;
 
-        foreach (var item in _menuItems.OfType<INavigationViewItem>())
+        foreach (var menuItem in _menuItems)
         {
-            item.NavigationViewItemParent = this;
+            if (menuItem is INavigationViewItem item)
+            {
+                item.NavigationViewItemParent = this;
+            }
         }
     }
 }

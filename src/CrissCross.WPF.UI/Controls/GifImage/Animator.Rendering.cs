@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -70,14 +70,17 @@ public abstract partial class Animator
     {
         // Find the size of the largest frame pixel data
         // (ignoring the fact that we include the next frame's header)
-        var lastSize = stream.Length - metadata.Frames![^1].ImageData!.CompressedDataStartOffset;
-        var maxSize = lastSize;
-        if (metadata.Frames?.Count > 1)
+        var maxSize = stream.Length - metadata.Frames![^1].ImageData!.CompressedDataStartOffset;
+        if (metadata.Frames is { Count: > 1 } frames)
         {
-            var sizes = metadata.Frames.Zip(
-                metadata.Frames.Skip(1),
-                (f1, f2) => f2.ImageData!.CompressedDataStartOffset - f1.ImageData!.CompressedDataStartOffset);
-            maxSize = Math.Max(sizes.Max(), lastSize);
+            for (var index = 1; index < frames.Count; index++)
+            {
+                var size = frames[index].ImageData!.CompressedDataStartOffset - frames[index - 1].ImageData!.CompressedDataStartOffset;
+                if (size > maxSize)
+                {
+                    maxSize = size;
+                }
+            }
         }
 
         return new byte[maxSize + BitReaderLookaheadPaddingBytes];
@@ -92,9 +95,7 @@ public abstract partial class Animator
         Color[]? globalColorTable = null;
         if (metadata.Header?.LogicalScreenDescriptor?.HasGlobalColorTable == true)
         {
-            globalColorTable = metadata
-                .GlobalColorTable?.Select(gc => Color.FromArgb(0xFF, gc.R, gc.G, gc.B))
-                .ToArray();
+            globalColorTable = ConvertColorTable(metadata.GlobalColorTable);
         }
 
         for (var i = 0; i < metadata.Frames?.Count; i++)
@@ -110,11 +111,28 @@ public abstract partial class Animator
     /// <param name="frame">The GIF frame.</param>
     /// <param name="globalColorTable">The global color table.</param>
     /// <returns>The frame color table.</returns>
-    private static Color[]? GetFrameColorTable(GifFrame frame, Color[]? globalColorTable)
+    private static Color[]? GetFrameColorTable(GifFrame frame, Color[]? globalColorTable) => frame.Descriptor?.HasLocalColorTable == true
+        ? ConvertColorTable(frame.LocalColorTable)
+        : globalColorTable;
+
+    /// <summary>Converts GIF palette entries to WPF colors.</summary>
+    /// <param name="colors">The GIF palette entries.</param>
+    /// <returns>The converted color table, or <see langword="null"/>.</returns>
+    private static Color[]? ConvertColorTable(GifColor[]? colors)
     {
-        return frame.Descriptor?.HasLocalColorTable == true
-            ? frame.LocalColorTable?.Select(gc => Color.FromArgb(0xFF, gc.R, gc.G, gc.B)).ToArray()
-            : globalColorTable;
+        if (colors is null)
+        {
+            return null;
+        }
+
+        Color[] converted = new Color[colors.Length];
+        for (var index = 0; index < colors.Length; index++)
+        {
+            var color = colors[index];
+            converted[index] = Color.FromArgb(0xFF, color.R, color.G, color.B);
+        }
+
+        return converted;
     }
 
     /// <summary>Gets the transparency index for a GIF frame.</summary>
@@ -144,15 +162,12 @@ public abstract partial class Animator
     /// <summary>Provides the GetRepeatBehaviorFromGif member.</summary>
     /// <param name="metadata">The metadata value.</param>
     /// <returns>The result.</returns>
-    private static RepeatBehavior GetRepeatBehaviorFromGif(GifDataStream metadata)
-    {
-        return metadata.RepeatCount == 0 ? RepeatBehavior.Forever : new RepeatBehavior(metadata.RepeatCount);
-    }
+    private static RepeatBehavior GetRepeatBehaviorFromGif(GifDataStream metadata) => metadata.RepeatCount == 0 ? RepeatBehavior.Forever : new RepeatBehavior(metadata.RepeatCount);
 
     /// <summary>Provides the InterlacedRows member.</summary>
     /// <param name="height">The height value.</param>
     /// <returns>The result.</returns>
-    private static IEnumerable<int> InterlacedRows(int height)
+    private static int[] InterlacedRows(int height)
     {
         /*
          * 4 passes:
@@ -161,28 +176,37 @@ public abstract partial class Animator
          * Pass 3: rows 2, 6, 10, 14...
          * Pass 4: rows 1, 3, 5, 7...
          * */
-        var passes = new[]
+        int[] rows = new int[height];
+        var rowIndex = 0;
+        var starts = new[] { InterlaceFirstPassStart, InterlaceSecondPassStart, InterlaceThirdPassStart, InterlaceFourthPassStart };
+        var steps = new[] { InterlaceCoarseStep, InterlaceCoarseStep, InterlaceMediumStep, InterlaceFineStep };
+        for (var passIndex = 0; passIndex < starts.Length; passIndex++)
         {
-            (Start: InterlaceFirstPassStart, Step: InterlaceCoarseStep),
-            (Start: InterlaceSecondPassStart, Step: InterlaceCoarseStep),
-            (Start: InterlaceThirdPassStart, Step: InterlaceMediumStep),
-            (Start: InterlaceFourthPassStart, Step: InterlaceFineStep),
-        };
-        foreach (var pass in passes)
-        {
-            var y = pass.Start;
+            var y = starts[passIndex];
             while (y < height)
             {
-                yield return y;
-                y += pass.Step;
+                rows[rowIndex] = y;
+                rowIndex++;
+                y += steps[passIndex];
             }
         }
+
+        return rows;
     }
 
     /// <summary>Provides the NormalRows member.</summary>
     /// <param name="height">The height value.</param>
     /// <returns>The result.</returns>
-    private static IEnumerable<int> NormalRows(int height) => Enumerable.Range(0, height);
+    private static int[] NormalRows(int height)
+    {
+        int[] rows = new int[height];
+        for (var index = 0; index < rows.Length; index++)
+        {
+            rows[index] = index;
+        }
+
+        return rows;
+    }
 
     /// <summary>Provides the WriteColor member.</summary>
     /// <param name="lineBuffer">The lineBuffer value.</param>
@@ -212,7 +236,7 @@ public abstract partial class Animator
             CopyToBitmap(lineBuffer, _bitmap, offset, bufferLength);
         }
 
-        _bitmap.AddDirtyRect(new Int32Rect(rect.X, rect.Y, rect.Width, rect.Height));
+        _bitmap.AddDirtyRect(new(rect.X, rect.Y, rect.Width, rect.Height));
     }
 
     /// <summary>Provides the CreateTimingManager member.</summary>
@@ -370,7 +394,11 @@ public abstract partial class Animator
             indexStream = await GetIndexStreamAsync(frame, cancellationToken);
         }
 
+#if NET6_0_OR_GREATER
+        await using (indexStream)
+#else
         using (indexStream)
+#endif
         using (_bitmap.LockInScope())
         {
             UpdatePreviousFrame(frameIndex, frame);
@@ -380,7 +408,7 @@ public abstract partial class Animator
 
             var palette = _palettes[frameIndex];
             var transparencyIndex = palette.TransparencyIndex ?? -1;
-            var rows = desc!.Interlace ? InterlacedRows(rect.Height).ToArray() : NormalRows(rect.Height).ToArray();
+            var rows = desc!.Interlace ? InterlacedRows(rect.Height) : NormalRows(rect.Height);
             var indexBuffer = await GetFrameIndexBufferAsync(frameIndex, frame, desc, indexStream, cancellationToken);
 
             RenderFrameRows(desc, rect, rows, indexBuffer, lineBuffer, palette, transparencyIndex);
@@ -513,11 +541,11 @@ public abstract partial class Animator
     /// <summary>Provides the GifPalette member.</summary>
     /// <param name="transparencyIndex">The transparencyIndex value.</param>
     /// <param name="colors">The colors value.</param>
-    private sealed class GifPalette(int? transparencyIndex, Color[] colors)
+    internal sealed class GifPalette(int? transparencyIndex, Color[] colors)
     {
         /// <summary>Gets the TransparencyIndex value.</summary>
-        public int? TransparencyIndex { get; } = transparencyIndex;
+        internal int? TransparencyIndex { get; } = transparencyIndex;
 
-        public Color this[int i] => colors[i];
+        internal Color this[int i] => colors[i];
     }
 }

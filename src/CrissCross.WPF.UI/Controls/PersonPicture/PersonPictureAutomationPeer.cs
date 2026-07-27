@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation.Peers;
@@ -16,8 +16,13 @@ namespace CrissCross.WPF.UI.Controls;
 /// Initializes a new instance of the <see cref="PersonPictureAutomationPeer"/> class.
 /// </remarks>
 /// <param name="owner">The owner.</param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class PersonPictureAutomationPeer(PersonPicture owner) : FrameworkElementAutomationPeer(owner)
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Gets the control type for the <see cref="T:System.Windows.UIElement" /> that is associated with this
     /// <see cref="T:System.Windows.Automation.Peers.UIElementAutomationPeer" />. This method is called by <see
     /// cref="M:System.Windows.Automation.Peers.AutomationPeer.GetAutomationControlType" />.</summary>

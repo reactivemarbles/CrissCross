@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -52,7 +52,7 @@ internal static class ColorSpaceHelper
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Value (0-1).</returns>
-    public static Tuple<double, double, double> RgbToHsv(double r, double g, double b)
+    internal static Tuple<double, double, double> RgbToHsv(double r, double g, double b)
     {
         double min;
         double max;
@@ -74,7 +74,7 @@ internal static class ColorSpaceHelper
             // pure black
             s = -1;
             h = -1;
-            return new Tuple<double, double, double>(h, s, v);
+            return new(h, s, v);
         }
 
         h = max switch
@@ -96,7 +96,7 @@ internal static class ColorSpaceHelper
             h = -1;
         }
 
-        return new Tuple<double, double, double>(h, s, v);
+        return new(h, s, v);
     }
 
     /// <summary>Converts RGB to HSL, returns -1 for undefined channels.</summary>
@@ -104,7 +104,7 @@ internal static class ColorSpaceHelper
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Lightness (0-1).</returns>
-    public static Tuple<double, double, double> RgbToHsl(double r, double g, double b)
+    internal static Tuple<double, double, double> RgbToHsl(double r, double g, double b)
     {
         double h;
         double s;
@@ -118,13 +118,13 @@ internal static class ColorSpaceHelper
         if (max == 0)
         {
             // pure black
-            return new Tuple<double, double, double>(-1, -1, 0);
+            return new(-1, -1, 0);
         }
 
         if (delta == 0)
         {
             // gray
-            return new Tuple<double, double, double>(-1, 0, l);
+            return new(-1, 0, l);
         }
 
         // magic
@@ -149,7 +149,7 @@ internal static class ColorSpaceHelper
 
         h *= DegreesInFullCircle;
 
-        return new Tuple<double, double, double>(h, s, l);
+        return new(h, s, l);
     }
 
     /// <summary>Converts HSV to RGB.</summary>
@@ -157,12 +157,12 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
     /// <returns>Values (0-1) in order: R, G, B.</returns>
-    public static Tuple<double, double, double> HsvToRgb(double h, double s, double v)
+    internal static Tuple<double, double, double> HsvToRgb(double h, double s, double v)
     {
         if (s == 0)
         {
             // achromatic (grey)
-            return new Tuple<double, double, double>(v, v, v);
+            return new(v, v, v);
         }
 
         if (h >= DegreesInFullCircle)
@@ -193,7 +193,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Lightness (0-1).</returns>
-    public static Tuple<double, double, double> HsvToHsl(double h, double s, double v)
+    internal static Tuple<double, double, double> HsvToHsl(double h, double s, double v)
     {
         var hsl_l = v * (1 - (s / LightnessScale));
         var hsl_s =
@@ -201,7 +201,7 @@ internal static class ColorSpaceHelper
                 ? -1
                 : (v - hsl_l) / Math.Min(hsl_l, 1 - hsl_l);
 
-        return new Tuple<double, double, double>(h, hsl_s, hsl_l);
+        return new(h, hsl_s, hsl_l);
     }
 
     /// <summary>Converts HSL to RGB.</summary>
@@ -209,7 +209,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
     /// <returns>Values (0-1) in order: R, G, B.</returns>
-    public static Tuple<double, double, double> HslToRgb(double h, double s, double l)
+    internal static Tuple<double, double, double> HslToRgb(double h, double s, double l)
     {
         var hueCircleSegment = (int)(h / DegreesPerHueSector);
         var circleSegmentFraction = (h - (DegreesPerHueSector * hueCircleSegment)) / DegreesPerHueSector;
@@ -252,11 +252,11 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Value (0-1).</returns>
-    public static Tuple<double, double, double> HslToHsv(double h, double s, double l)
+    internal static Tuple<double, double, double> HslToHsv(double h, double s, double l)
     {
         var hsv_v = l + (s * Math.Min(l, 1 - l));
         var hsv_s = hsv_v == 0 ? -1 : LightnessScale * (1 - (l / hsv_v));
 
-        return new Tuple<double, double, double>(h, hsv_s, hsv_v);
+        return new(h, hsv_s, hsv_v);
     }
 }

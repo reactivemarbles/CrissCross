@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -14,17 +14,16 @@ namespace CrissCross;
 /// <param name="sourceKind">The navigation source kind.</param>
 /// <param name="serviceType">The registered service type.</param>
 /// <param name="contract">The optional navigation contract.</param>
-internal readonly struct NavigationLookupKey(NavigationSourceKind sourceKind, Type serviceType, string? contract)
-    : IEquatable<NavigationLookupKey>
+internal readonly struct NavigationLookupKey(NavigationSourceKind sourceKind, Type serviceType, string? contract) : IEquatable<NavigationLookupKey>
 {
     /// <summary>Gets the navigation source kind.</summary>
-    public NavigationSourceKind SourceKind { get; } = sourceKind;
+    internal NavigationSourceKind SourceKind { get; } = sourceKind;
 
     /// <summary>Gets the registered service type.</summary>
-    public Type ServiceType { get; } = serviceType;
+    internal Type ServiceType { get; } = serviceType;
 
     /// <summary>Gets the optional navigation contract.</summary>
-    public string? Contract { get; } = contract;
+    internal string? Contract { get; } = contract;
 
     /// <summary>Compares two lookup keys for equality.</summary>
     /// <param name="left">The left lookup key.</param>

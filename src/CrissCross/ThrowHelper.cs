@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -16,34 +16,36 @@ internal static class ThrowHelper
     /// <summary>Throws when a required value is null.</summary>
     /// <param name="value">The value to validate.</param>
     /// <param name="paramName">The parameter name.</param>
-    public static void ThrowIfNull(object? value, string paramName)
-    {
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
+    internal static void ThrowIfNull(object? value, string paramName) =>
         ArgumentNullException.ThrowIfNull(value, paramName);
 #else
+    internal static void ThrowIfNull(object? value, string paramName)
+    {
         if (value is not null)
         {
             return;
         }
 
         throw new ArgumentNullException(paramName);
-#endif
     }
+#endif
 
     /// <summary>Throws when a required string is null, empty, or whitespace.</summary>
     /// <param name="value">The value to validate.</param>
     /// <param name="paramName">The parameter name.</param>
-    public static void ThrowIfNullOrWhiteSpace(string? value, string paramName)
-    {
 #if NET8_0_OR_GREATER
+    internal static void ThrowIfNullOrWhiteSpace(string? value, string paramName) =>
         ArgumentException.ThrowIfNullOrWhiteSpace(value, paramName);
 #else
+    internal static void ThrowIfNullOrWhiteSpace(string? value, string paramName)
+    {
         if (!string.IsNullOrWhiteSpace(value))
         {
             return;
         }
 
         throw new ArgumentException("Value cannot be null or whitespace.", paramName);
-#endif
     }
+#endif
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents an image with additional properties for Borders and Rounded corners.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GifImage : Control
 {
     /// <summary>Gets/Sets the Source on this Image.</summary>
@@ -31,7 +32,7 @@ public class GifImage : Control
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(GifImage),
-        new PropertyMetadata(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged)));
+        new(new CornerRadius(0), new PropertyChangedCallback(OnCornerRadiusChanged)));
 
     /// <summary>DependencyProperty for StretchDirection property.</summary>
     /// <seealso cref="Viewbox.Stretch" />
@@ -59,7 +60,7 @@ public class GifImage : Control
         nameof(InnerCornerRadius),
         typeof(CornerRadius),
         typeof(GifImage),
-        new PropertyMetadata(new CornerRadius(0)));
+        new(new CornerRadius(0)));
 
     /// <summary>DependencyProperty for InnerCornerRadius property.</summary>
     public static readonly DependencyProperty InnerCornerRadiusProperty =
@@ -70,21 +71,21 @@ public class GifImage : Control
         nameof(RepeatBehavior),
         typeof(RepeatBehavior),
         typeof(GifImage),
-        new PropertyMetadata(default(RepeatBehavior)));
+        new(default(RepeatBehavior)));
 
     /// <summary>Identifies the <c>AnimationSpeedRatio</c> attached property.</summary>
     public static readonly DependencyProperty AnimationSpeedRatioProperty = DependencyProperty.Register(
         nameof(AnimationSpeedRatio),
         typeof(double?),
         typeof(GifImage),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <c>AnimationDuration</c> attached property.</summary>
     public static readonly DependencyProperty AnimationDurationProperty = DependencyProperty.Register(
         nameof(AnimationDuration),
         typeof(Duration?),
         typeof(GifImage),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Identifies the <c>AnimateInDesignMode</c> attached property.</summary>
     public static readonly DependencyProperty AnimateInDesignModeProperty = DependencyProperty.Register(
@@ -98,7 +99,7 @@ public class GifImage : Control
         nameof(AutoStart),
         typeof(bool),
         typeof(GifImage),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Gets or sets the Source on this Image.</summary>
     public Uri Source
@@ -189,6 +190,10 @@ public class GifImage : Control
 
     /// <summary>Gets the CornerRadius for the inner image's Mask.</summary>
     internal CornerRadius InnerCornerRadius => (CornerRadius)GetValue(InnerCornerRadiusProperty);
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnCornerRadiusChanged member.</summary>
     /// <param name="d">The d value.</param>

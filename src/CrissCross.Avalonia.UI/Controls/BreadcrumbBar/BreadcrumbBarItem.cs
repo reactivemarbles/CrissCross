@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -21,7 +21,7 @@ public class BreadcrumbBarItem : global::Avalonia.Controls.ContentControl
     public static readonly StyledProperty<Thickness> IconMarginProperty = AvaloniaProperty.Register<
         BreadcrumbBarItem,
         Thickness
-    >(nameof(IconMargin), new Thickness(0));
+    >(nameof(IconMargin), new(0));
 
     /// <summary>Property for <see cref="IsLast"/>.</summary>
     public static readonly StyledProperty<bool> IsLastProperty = AvaloniaProperty.Register<BreadcrumbBarItem, bool>(

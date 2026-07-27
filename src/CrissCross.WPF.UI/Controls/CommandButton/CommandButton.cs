@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,6 +9,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a command-aware button that can project execution state, progress, and error content.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CommandButton : Button
 {
     /// <summary>Property for <see cref="State"/>.</summary>
@@ -16,35 +17,35 @@ public class CommandButton : Button
         nameof(State),
         typeof(CommandButtonState),
         typeof(CommandButton),
-        new PropertyMetadata(CommandButtonState.Idle));
+        new(CommandButtonState.Idle));
 
     /// <summary>Property for <see cref="IsExecuting"/>.</summary>
     public static readonly DependencyProperty IsExecutingProperty = DependencyProperty.Register(
         nameof(IsExecuting),
         typeof(bool),
         typeof(CommandButton),
-        new PropertyMetadata(false, OnIsExecutingChanged));
+        new(false, OnIsExecutingChanged));
 
     /// <summary>Property for <see cref="Progress"/>.</summary>
     public static readonly DependencyProperty ProgressProperty = DependencyProperty.Register(
         nameof(Progress),
         typeof(double?),
         typeof(CommandButton),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ExecutingContent"/>.</summary>
     public static readonly DependencyProperty ExecutingContentProperty = DependencyProperty.Register(
         nameof(ExecutingContent),
         typeof(object),
         typeof(CommandButton),
-        new PropertyMetadata("Working..."));
+        new("Working..."));
 
     /// <summary>Property for <see cref="ErrorContent"/>.</summary>
     public static readonly DependencyProperty ErrorContentProperty = DependencyProperty.Register(
         nameof(ErrorContent),
         typeof(object),
         typeof(CommandButton),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the command execution state displayed by the button.</summary>
     public CommandButtonState State
@@ -80,6 +81,10 @@ public class CommandButton : Button
         get => GetValue(ErrorContentProperty);
         set => SetValue(ErrorContentProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Provides the OnIsExecutingChanged member.</summary>
     /// <param name="dependencyObject">The dependencyObject value.</param>

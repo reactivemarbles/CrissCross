@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Text.RegularExpressions;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Converters;
 
 /// <summary>Converts between a Color and its hexadecimal string representation, with optional alpha support.</summary>
 [ValueConversion(typeof(Color), typeof(string))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 #if NET7_0_OR_GREATER
 public partial class ColorToHexConverter : DependencyObject, IValueConverter
 #else
@@ -24,7 +25,7 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
         nameof(ShowAlpha),
         typeof(bool),
         typeof(ColorToHexConverter),
-        new PropertyMetadata(
+        new(
             true,
             static (dependencyObject, _) => ((ColorToHexConverter)dependencyObject).RaiseShowAlphaChange()));
 
@@ -71,22 +72,23 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
         set => SetValue(ShowAlphaProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Convert a Color to a hex string without alpha.</summary>
     /// <exception cref="System.ArgumentNullException">value.</exception>
     /// <param name="value">The value.</param>
     /// <returns>The converted value.</returns>
     public static object ConvertNoAlpha(object value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ThrowHelper.ThrowIfNull(value, nameof(value));
 
         var colorText = ((Color)value).ToString();
 #if NET8_0_OR_GREATER
         return string.Concat("#".AsSpan(), colorText.AsSpan(RgbStartIndex, RgbLength));
 #else
-        return "#" + colorText.Substring(RgbStartIndex, RgbLength);
+        return $"#{colorText.Substring(RgbStartIndex, RgbLength)}";
 #endif
     }
 
@@ -98,10 +100,7 @@ public class ColorToHexConverter : DependencyObject, IValueConverter
     /// </returns>
     public static object ConvertBackNoAlpha(object value)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
+        ThrowHelper.ThrowIfNull(value, nameof(value));
 
         var text = (string)value;
         text = HexCharacterRegex().Replace(text.ToUpperInvariant(), string.Empty);

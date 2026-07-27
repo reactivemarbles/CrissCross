@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -54,37 +54,37 @@ internal sealed class GifPlainTextExtension : GifExtension
     private GifPlainTextExtension() { }
 
     /// <summary>Gets the BlockSize value.</summary>
-    public int BlockSize { get; private set; }
+    internal int BlockSize { get; private set; }
 
     /// <summary>Gets the Left value.</summary>
-    public int Left { get; private set; }
+    internal int Left { get; private set; }
 
     /// <summary>Gets the Top value.</summary>
-    public int Top { get; private set; }
+    internal int Top { get; private set; }
 
     /// <summary>Gets the Width value.</summary>
-    public int Width { get; private set; }
+    internal int Width { get; private set; }
 
     /// <summary>Gets the Height value.</summary>
-    public int Height { get; private set; }
+    internal int Height { get; private set; }
 
     /// <summary>Gets the CellWidth value.</summary>
-    public int CellWidth { get; private set; }
+    internal int CellWidth { get; private set; }
 
     /// <summary>Gets the CellHeight value.</summary>
-    public int CellHeight { get; private set; }
+    internal int CellHeight { get; private set; }
 
     /// <summary>Gets the ForegroundColorIndex value.</summary>
-    public int ForegroundColorIndex { get; private set; }
+    internal int ForegroundColorIndex { get; private set; }
 
     /// <summary>Gets the BackgroundColorIndex value.</summary>
-    public int BackgroundColorIndex { get; private set; }
+    internal int BackgroundColorIndex { get; private set; }
 
     /// <summary>Gets the Text value.</summary>
-    public string? Text { get; private set; }
+    internal string? Text { get; private set; }
 
     /// <summary>Gets the Extensions value.</summary>
-    public IList<GifExtension>? Extensions { get; private set; }
+    internal IList<GifExtension>? Extensions { get; private set; }
 
     internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
@@ -128,6 +128,6 @@ internal sealed class GifPlainTextExtension : GifExtension
 
         var dataBytes = await GifHelpers.ReadDataBlocksAsync(stream).ConfigureAwait(false);
         Text = GifHelpers.GetString(dataBytes);
-        Extensions = controlExtensions.ToList().AsReadOnly();
+        Extensions = new List<GifExtension>(controlExtensions).AsReadOnly();
     }
 }

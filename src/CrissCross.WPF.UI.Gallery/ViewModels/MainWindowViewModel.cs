@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -32,6 +32,7 @@ public partial class MainWindowViewModel : RxObject
             CreateNavigationModel(null, null, SymbolRegular.LineHorizontal320, isExpander: true),
             CreateNavigationModel(typeof(MainViewModel), "Main", SymbolRegular.Home20, isSelected: true),
             CreateNavigationModel(typeof(AllControlsViewModel), "All Controls", SymbolRegular.ControlButton20),
+            CreateNavigationModel(typeof(ControlCatalogViewModel), "Control Catalog", SymbolRegular.AppFolder20),
             CreateNavigationModel(typeof(InputControlsViewModel), "Input", SymbolRegular.Keyboard20),
             CreateNavigationModel(typeof(DateTimeControlsViewModel), "Date / Time", SymbolRegular.CalendarLtr20),
             CreateNavigationModel(typeof(MediaControlsViewModel), "Media", SymbolRegular.Image20),
@@ -62,6 +63,7 @@ public partial class MainWindowViewModel : RxObject
     {
         Register<MainViewModel, MainView>();
         Register<AllControlsViewModel, AllControlsView>();
+        Register<ControlCatalogViewModel, ControlCatalogView>();
         Register<AppBarButtonViewModel, AppBarButtonView>();
         Register<BBCodeBlockViewModel, BBCodeBlockView>();
         Register<ButtonsViewModel, ButtonsView>();
@@ -116,13 +118,7 @@ public partial class MainWindowViewModel : RxObject
         SymbolRegular symbol,
         bool isSelected = false,
         bool isExpander = false) =>
-        new(viewModelType, NavigationModels, MainWindow.Navigation)
-        {
-            Name = name ?? string.Empty,
-            Icon = new SymbolIcon(symbol),
-            IsSelected = isSelected,
-            IsExpander = isExpander,
-        };
+        new(viewModelType, NavigationModels, MainWindow.Navigation) { Name = name ?? string.Empty, Icon = new SymbolIcon(symbol), IsSelected = isSelected, IsExpander = isExpander };
 
     /// <summary>Configures persisted main window tracking.</summary>
     private void SetupTracker()
@@ -131,14 +127,14 @@ public partial class MainWindowViewModel : RxObject
         _tracker
             ?.Configure(new TrackingRequest<MainWindow>())
             .Id(
-                w => w.Name,
+                static w => w.Name,
                 $"[Width={SystemParameters.VirtualScreenWidth},Height{SystemParameters.VirtualScreenHeight}]")
-            .Property(w => w.Height)
-            .Property(w => w.Width)
-            .Property(w => w.Left)
-            .Property(w => w.Top)
-            .Property(w => w.WindowState)
-            .PersistOn(w => nameof(w.Closing))
-            .StopTrackingOn(w => nameof(w.Closing));
+            .Property(static w => w.Height)
+            .Property(static w => w.Width)
+            .Property(static w => w.Left)
+            .Property(static w => w.Top)
+            .Property(static w => w.WindowState)
+            .PersistOn(static w => nameof(w.Closing))
+            .StopTrackingOn(static w => nameof(w.Closing));
     }
 }

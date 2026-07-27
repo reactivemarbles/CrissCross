@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -26,6 +26,13 @@ public sealed class FilterToken(
     bool isRemovable = true,
     object? icon = null)
 {
+    /// <summary>Formats a stable filter token key.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat KeyFormat = System.Text.CompositeFormat.Parse("{0}:{1}:{2}");
+#else
+    private const string KeyFormat = "{0}:{1}:{2}";
+#endif
+
     /// <summary>Gets the stable field key represented by the token.</summary>
     public string Field { get; } = field;
 
@@ -47,7 +54,7 @@ public sealed class FilterToken(
     /// <summary>Gets a stable key for equality-aware UI reconciliation.</summary>
     public string Key => string.Format(
         System.Globalization.CultureInfo.InvariantCulture,
-        "{0}:{1}:{2}",
+        KeyFormat,
         Field,
         Operator,
         Value);

@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Splat;
 
 #if REACTIVELIST_REACTIVE
@@ -21,21 +20,29 @@ public static partial class ViewModelRoutedViewHostMixins
     /// <returns>The active disposable collection.</returns>
     private static CompositeDisposable GetCurrentViewDisposable(IViewModelNavigationEventArgs args)
     {
-        if (
-            args.NavigationType == NavigationType.New
-            && CurrentViewDisposable.TryGetValue(args.HostName!, out var cleanupCompositeDisposable))
+#if NET6_0_OR_GREATER
+        ref var disposable = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(
+            CurrentViewDisposable,
+            args.HostName!,
+            out var exists);
+        if (!exists || args.NavigationType == NavigationType.New)
         {
-            cleanupCompositeDisposable.Dispose();
-            CurrentViewDisposable[args.HostName!] = [];
+            disposable?.Dispose();
+            disposable = new();
         }
 
-        if (!CurrentViewDisposable.TryGetValue(args.HostName!, out var disposable))
+        return disposable!;
+#else
+        if (!CurrentViewDisposable.TryGetValue(args.HostName!, out var disposable)
+            || args.NavigationType == NavigationType.New)
         {
-            disposable = [];
+            disposable?.Dispose();
+            disposable = new();
             CurrentViewDisposable[args.HostName!] = disposable;
         }
 
         return disposable;
+#endif
     }
 
     /// <summary>Navigates to a resolved view model service when one is available.</summary>
@@ -81,39 +88,27 @@ public static partial class ViewModelRoutedViewHostMixins
                 "The registered navigation host does not support resolved ViewModel/View navigation.");
         }
 
-        var resolution = ResolveNavigationKey(navigationKey, contract, parameter);
-        resolvedViewHost.Navigate(resolution);
-    }
-
-    /// <summary>Resolves a caller-facing navigation key through the registered bidirectional navigator.</summary>
-    /// <param name="navigationKey">The caller-facing view model or view lookup key.</param>
-    /// <param name="contract">The contract.</param>
-    /// <param name="parameter">The navigation parameter.</param>
-    /// <returns>The navigation resolution.</returns>
-    private static NavigationResolution ResolveNavigationKey(Type navigationKey, string? contract, object? parameter)
-    {
         ThrowHelper.ThrowIfNull(navigationKey, nameof(navigationKey));
         var navigator = GetRequiredNavigator();
-        try
-        {
-            return navigator
-                .NavigateViewModel(
-                    navigationKey,
-                    new NavigationRequestOptions { Contract = contract, Parameter = parameter })
-                .FirstAsync()
-                .GetAwaiter()
-                .GetResult();
-        }
-        catch (NavigationResolutionException)
-        {
-            return navigator
-                .NavigateView(
-                    navigationKey,
-                    new NavigationRequestOptions { Contract = contract, Parameter = parameter })
-                .FirstAsync()
-                .GetAwaiter()
-                .GetResult();
-        }
+        _ = navigator
+            .NavigateViewModel(
+                navigationKey,
+                new NavigationRequestOptions { Contract = contract, Parameter = parameter })
+            .Subscribe(
+                resolvedViewHost.Navigate,
+                error =>
+                {
+                    if (error is not NavigationResolutionException)
+                    {
+                        throw error;
+                    }
+
+                    _ = navigator
+                        .NavigateView(
+                            navigationKey,
+                            new NavigationRequestOptions { Contract = contract, Parameter = parameter })
+                        .Subscribe(resolvedViewHost.Navigate, static fallbackError => throw fallbackError);
+                });
     }
 
     /// <summary>Gets the registered bidirectional navigator.</summary>
@@ -150,8 +145,12 @@ public static partial class ViewModelRoutedViewHostMixins
 
         if (string.IsNullOrWhiteSpace(hostName))
         {
-            host = NavigationHost.First().Value;
-            return true;
+            using var enumerator = NavigationHost.Values.GetEnumerator();
+            if (enumerator.MoveNext())
+            {
+                host = enumerator.Current;
+                return true;
+            }
         }
 
         if (NavigationHost.TryGetValue(hostName!, out host))
@@ -191,23 +190,28 @@ public static partial class ViewModelRoutedViewHostMixins
     /// <param name="host">The existing host.</param>
     private static void AliasNavigationHost(string hostName, IViewModelRoutedViewHost host)
     {
-        if (NavigationHost.ContainsKey(hostName) || string.IsNullOrWhiteSpace(hostName))
-        {
-            return;
-        }
-
         lock (_lockObject)
         {
             AddIfMissing(NavigationHost, hostName, host);
 
-            if (!WhenSetupSubjects.TryGetValue(hostName, out var whenSetup))
+#if NET6_0_OR_GREATER
+            ref var whenSetup = ref System.Runtime.InteropServices.CollectionsMarshal.GetValueRefOrAddDefault(
+                WhenSetupSubjects,
+                hostName,
+                out var hasWhenSetup);
+            if (!hasWhenSetup)
             {
                 whenSetup = new(1);
-                WhenSetupSubjects.Add(hostName, whenSetup);
             }
+#else
+            if (!WhenSetupSubjects.TryGetValue(hostName, out _))
+            {
+                WhenSetupSubjects.Add(hostName, new(1));
+            }
+#endif
 
             AddIfMissing(CurrentViewDisposable, hostName, []);
-            AddIfMissing(ResultNavigating, hostName, new Signal<IViewModelNavigatingEventArgs>());
+            AddIfMissing(ResultNavigating, hostName, new());
         }
     }
 }

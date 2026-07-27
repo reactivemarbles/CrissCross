@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -17,63 +17,63 @@ public partial class PersonPicture
         nameof(BadgeGlyph),
         typeof(string),
         typeof(PersonPicture),
-        new PropertyMetadata(string.Empty, OnBadgeGlyphPropertyChanged, CoerceStringProperty));
+        new(string.Empty, OnBadgeGlyphPropertyChanged, CoerceStringProperty));
 
     /// <summary>The badge image source property.</summary>
     public static readonly DependencyProperty BadgeImageSourceProperty = DependencyProperty.Register(
         nameof(BadgeImageSource),
         typeof(ImageSource),
         typeof(PersonPicture),
-        new PropertyMetadata(null, OnBadgeImageSourcePropertyChanged));
+        new(null, OnBadgeImageSourcePropertyChanged));
 
     /// <summary>The badge number property.</summary>
     public static readonly DependencyProperty BadgeNumberProperty = DependencyProperty.Register(
         nameof(BadgeNumber),
         typeof(int),
         typeof(PersonPicture),
-        new PropertyMetadata(0, OnBadgeNumberPropertyChanged));
+        new(0, OnBadgeNumberPropertyChanged));
 
     /// <summary>The badge text property.</summary>
     public static readonly DependencyProperty BadgeTextProperty = DependencyProperty.Register(
         nameof(BadgeText),
         typeof(string),
         typeof(PersonPicture),
-        new PropertyMetadata(string.Empty, OnBadgeTextPropertyChanged, CoerceStringProperty));
+        new(string.Empty, OnBadgeTextPropertyChanged, CoerceStringProperty));
 
     /// <summary>The display name property.</summary>
     public static readonly DependencyProperty DisplayNameProperty = DependencyProperty.Register(
         nameof(DisplayName),
         typeof(string),
         typeof(PersonPicture),
-        new PropertyMetadata(string.Empty, OnDisplayNamePropertyChanged, CoerceStringProperty));
+        new(string.Empty, OnDisplayNamePropertyChanged, CoerceStringProperty));
 
     /// <summary>The initials property.</summary>
     public static readonly DependencyProperty InitialsProperty = DependencyProperty.Register(
         nameof(Initials),
         typeof(string),
         typeof(PersonPicture),
-        new PropertyMetadata(string.Empty, OnInitialsPropertyChanged, CoerceStringProperty));
+        new(string.Empty, OnInitialsPropertyChanged, CoerceStringProperty));
 
     /// <summary>The is group property.</summary>
     public static readonly DependencyProperty IsGroupProperty = DependencyProperty.Register(
         nameof(IsGroup),
         typeof(bool),
         typeof(PersonPicture),
-        new PropertyMetadata(false, OnIsGroupPropertyChanged));
+        new(false, OnIsGroupPropertyChanged));
 
     /// <summary>The profile picture property.</summary>
     public static readonly DependencyProperty ProfilePictureProperty = DependencyProperty.Register(
         nameof(ProfilePicture),
         typeof(ImageSource),
         typeof(PersonPicture),
-        new PropertyMetadata(null, OnProfilePicturePropertyChanged));
+        new(null, OnProfilePicturePropertyChanged));
 
     /// <summary>Provides the TemplateSettingsPropertyKey member.</summary>
     public static readonly DependencyPropertyKey TemplateSettingsPropertyKey = DependencyProperty.RegisterReadOnly(
         nameof(TemplateSettings),
         typeof(PersonPictureTemplateSettings),
         typeof(PersonPicture),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The template settings property.</summary>
     public static readonly DependencyProperty TemplateSettingsProperty = TemplateSettingsPropertyKey.DependencyProperty;
@@ -182,67 +182,44 @@ public partial class PersonPicture
     /// <summary>Provides the OnBadgeGlyphPropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnBadgeGlyphPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnBadgeGlyphPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnBadgeImageSourcePropertyChanged(sender, args);
 
     /// <summary>Provides the OnBadgeNumberPropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnBadgeNumberPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnBadgeNumberPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnBadgeGlyphPropertyChanged(sender, args);
 
     /// <summary>Provides the OnBadgeTextPropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnBadgeTextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnBadgeTextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnBadgeNumberPropertyChanged(sender, args);
 
     /// <summary>Provides the OnDisplayNamePropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnDisplayNamePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnDisplayNamePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnBadgeTextPropertyChanged(sender, args);
 
     /// <summary>Provides the OnInitialsPropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnInitialsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnInitialsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnDisplayNamePropertyChanged(sender, args);
 
     /// <summary>Provides the OnIsGroupPropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnIsGroupPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnIsGroupPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnInitialsPropertyChanged(sender, args);
 
     /// <summary>Provides the OnProfilePicturePropertyChanged member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="args">The event arguments.</param>
-    private static void OnProfilePicturePropertyChanged(
-        DependencyObject sender,
-        DependencyPropertyChangedEventArgs args)
-    {
-        var owner = (PersonPicture)sender;
-        owner.PrivateOnPropertyChanged(args);
-    }
+    private static void OnProfilePicturePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        OnIsGroupPropertyChanged(sender, args);
 
     /// <summary>Provides the CoerceStringProperty member.</summary>
     /// <param name="_">The dependency object.</param>

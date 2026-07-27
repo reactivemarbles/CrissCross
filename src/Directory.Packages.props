@@ -4,9 +4,9 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AvaloniaVersion>12.1.0</AvaloniaVersion>
-    <SplatVersion>20.0.0</SplatVersion>
-    <ReactiveUIVersion>24.0.0-beta.3</ReactiveUIVersion>
-    <ReactiveUIPrimitivesVersion>6.0.0</ReactiveUIPrimitivesVersion>
+    <SplatVersion>20.2.0</SplatVersion>
+    <ReactiveUIVersion>24.0.0</ReactiveUIVersion>
+    <ReactiveUIPrimitivesVersion>7.1.0</ReactiveUIPrimitivesVersion>
     <WebViewVersion>1.0.4078.44</WebViewVersion>
     <DotNetVersion>10.0.10</DotNetVersion>
     <DotNet11Version>11.0.0-preview.6.26359.118</DotNet11Version>
@@ -27,8 +27,8 @@
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.0-beta.1" />
-    <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.0-beta.1" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.0" />
+    <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.0" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Maui.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WinForms" Version="$(ReactiveUIVersion)" />
@@ -38,11 +38,8 @@
     <PackageVersion Include="ReactiveUI.Disposables" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Core" Version="$(ReactiveUIPrimitivesVersion)" />
-    <PackageVersion Include="ReactiveUI.Primitives.Extensions" Version="$(ReactiveUIPrimitivesVersion)" />
-    <PackageVersion Include="ReactiveUI.Primitives.Extensions.Core" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Async.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
-    <PackageVersion Include="ReactiveUI.Primitives.Extensions.Reactive" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Wpf" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.WinForms" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Maui" Version="$(ReactiveUIPrimitivesVersion)" />
@@ -55,13 +52,15 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.6.26360.8" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.80" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+    <PackageVersion Include="System.Drawing.Common" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="System.Drawing.Common" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Bcl.Memory" Version="$(DotNetVersion)" />
     <PackageVersion Include="System.Buffers" Version="4.6.1" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
@@ -90,15 +89,17 @@
     <PackageVersion Include="Polyfill" Version="11.0.1" Condition="$(TargetFramework.StartsWith('net4'))" />
 
     <!-- Testing Packages -->
-    <PackageVersion Include="TUnit" Version="1.61.0" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Verify.TUnit" Version="31.24.2" Condition="$(IsTestProject)" />
+    <PackageVersion Include="TUnit" Version="1.61.38" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Verify.TUnit" Version="31.27.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.9.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301" Condition="!$(IsTestProject)" />
 
     <PackageVersion Include="MinVer" Version="7.0.0" />
-    <PackageVersion Include="StyleSharp.Analyzers" Version="3.28.1" />
+    <PackageVersion Include="StyleSharp.Analyzers" Version="3.39.0" />
+    <PackageVersion Include="PerformanceSharp.Analyzers" Version="3.39.0" />
+    <PackageVersion Include="SecuritySharp.Analyzers" Version="3.39.0" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
 
     <!-- Benchmarking -->

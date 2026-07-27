@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a theme preference picker over the platform theme service.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ThemeSwitcher : Control
 {
     /// <summary>Property for <see cref="SelectedChoice"/>.</summary>
@@ -35,35 +36,35 @@ public class ThemeSwitcher : Control
         nameof(SystemChoice),
         typeof(ThemeChoice),
         typeof(ThemeSwitcher),
-        new PropertyMetadata(ThemeChoice.Light, OnThemeInputChanged));
+        new(ThemeChoice.Light, OnThemeInputChanged));
 
     /// <summary>Property for <see cref="SupportsHighContrast"/>.</summary>
     public static readonly DependencyProperty SupportsHighContrastProperty = DependencyProperty.Register(
         nameof(SupportsHighContrast),
         typeof(bool),
         typeof(ThemeSwitcher),
-        new PropertyMetadata(true, OnThemeInputChanged));
+        new(true, OnThemeInputChanged));
 
     /// <summary>Property for <see cref="CurrentState"/>.</summary>
     public static readonly DependencyProperty CurrentStateProperty = DependencyProperty.Register(
         nameof(CurrentState),
         typeof(ThemePreferenceState),
         typeof(ThemeSwitcher),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ThemeService"/>.</summary>
     public static readonly DependencyProperty ThemeServiceProperty = DependencyProperty.Register(
         nameof(ThemeService),
         typeof(IThemeService),
         typeof(ThemeSwitcher),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="ThemeChangedCommand"/>.</summary>
     public static readonly DependencyProperty ThemeChangedCommandProperty = DependencyProperty.Register(
         nameof(ThemeChangedCommand),
         typeof(ICommand),
         typeof(ThemeSwitcher),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="ThemeSwitcher"/> class.</summary>
     public ThemeSwitcher()
@@ -116,6 +117,10 @@ public class ThemeSwitcher : Control
 
     /// <summary>Gets the command that applies a selected theme choice.</summary>
     public ICommand ApplyThemeCommand { get; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Creates a platform-neutral theme preference state from the current control inputs.</summary>
     /// <returns>The resolved preference state.</returns>

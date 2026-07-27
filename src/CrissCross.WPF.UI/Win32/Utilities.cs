@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
@@ -42,31 +42,31 @@ internal static class Utilities
 #endif
 
     /// <summary>Gets a value indicating whether the operating system is NT or newer.</summary>
-    public static bool IsNT => _platform == PlatformID.Win32NT;
+    internal static bool IsNT => _platform == PlatformID.Win32NT;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 6.0.</summary>
-    public static bool IsOSVistaOrNewer => new Version(6, 0) <= _version;
+    internal static bool IsOSVistaOrNewer => new Version(6, 0) <= _version;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 6.1.</summary>
-    public static bool IsOSWindows7OrNewer => new Version(6, 1) <= _version;
+    internal static bool IsOSWindows7OrNewer => new Version(6, 1) <= _version;
 
     /// <summary>Gets a value indicating whether the operating system version is greater than or equal to 6.2.</summary>
-    public static bool IsOSWindows8OrNewer => new Version(6, 2) <= _version;
+    internal static bool IsOSWindows8OrNewer => new Version(6, 2) <= _version;
 
     /// <summary>Gets whether the operating system build is Windows 10 or newer.</summary>
-    public static bool IsOSWindows10OrNewer => _version.Build >= Windows10InitialBuild;
+    internal static bool IsOSWindows10OrNewer => _version.Build >= Windows10InitialBuild;
 
     /// <summary>Gets whether the operating system build is Windows 11 or newer.</summary>
-    public static bool IsOSWindows11OrNewer => _version.Build >= Windows11InitialBuild;
+    internal static bool IsOSWindows11OrNewer => _version.Build >= Windows11InitialBuild;
 
     /// <summary>Gets whether the OS includes Windows 11 Insider build 22523.</summary>
-    public static bool IsOSWindows11Insider1OrNewer => _version.Build >= Windows11InsiderBuild22523;
+    internal static bool IsOSWindows11Insider1OrNewer => _version.Build >= Windows11InsiderBuild22523;
 
     /// <summary>Gets whether the OS includes Windows 11 Insider build 22557.</summary>
-    public static bool IsOSWindows11Insider2OrNewer => _version.Build >= Windows11InsiderBuild22557;
+    internal static bool IsOSWindows11Insider2OrNewer => _version.Build >= Windows11InsiderBuild22557;
 
     /// <summary>Gets whether Desktop Window Manager composition is enabled.</summary>
-    public static bool IsCompositionEnabled
+    internal static bool IsCompositionEnabled
     {
         get
         {
@@ -84,7 +84,7 @@ internal static class Utilities
     /// <summary>Provides the SafeDispose member.</summary>
     /// <param name="disposable">The disposable value.</param>
     /// <typeparam name="T">The type.</typeparam>
-    public static void SafeDispose<T>(ref T disposable)
+    internal static void SafeDispose<T>(ref T disposable)
         where T : IDisposable
     {
         // Dispose can safely be called on an object multiple times.
@@ -102,7 +102,7 @@ internal static class Utilities
     /// <summary>Provides the SafeRelease member.</summary>
     /// <param name="comObject">The comObject value.</param>
     /// <typeparam name="T">The type.</typeparam>
-    public static void SafeRelease<T>(ref T comObject)
+    internal static void SafeRelease<T>(ref T comObject)
         where T : class
     {
         var t = comObject;
@@ -113,7 +113,6 @@ internal static class Utilities
             return;
         }
 
-        Debug.Assert(Marshal.IsComObject(t), "Safe Release");
         _ = Marshal.ReleaseComObject(t);
     }
 

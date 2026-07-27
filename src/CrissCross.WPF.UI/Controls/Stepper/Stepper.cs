@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -11,6 +11,7 @@ namespace CrissCross.WPF.UI.Controls;
 #endif
 
 /// <summary>Represents a workflow stepper or wizard-progress surface.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Stepper : ItemsControl
 {
     /// <summary>Property for <see cref="State"/>.</summary>
@@ -18,7 +19,7 @@ public class Stepper : ItemsControl
         nameof(State),
         typeof(StepperState),
         typeof(Stepper),
-        new PropertyMetadata(null, OnStateChanged));
+        new(null, OnStateChanged));
 
     /// <summary>Property for <see cref="CurrentKey"/>.</summary>
     public static readonly DependencyProperty CurrentKeyProperty = DependencyProperty.Register(
@@ -32,21 +33,21 @@ public class Stepper : ItemsControl
         nameof(StepRequestedCommand),
         typeof(ICommand),
         typeof(Stepper),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="FinishCommand"/>.</summary>
     public static readonly DependencyProperty FinishCommandProperty = DependencyProperty.Register(
         nameof(FinishCommand),
         typeof(ICommand),
         typeof(Stepper),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="CancelCommand"/>.</summary>
     public static readonly DependencyProperty CancelCommandProperty = DependencyProperty.Register(
         nameof(CancelCommand),
         typeof(ICommand),
         typeof(Stepper),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Initializes a new instance of the <see cref="Stepper"/> class.</summary>
     public Stepper()
@@ -99,6 +100,10 @@ public class Stepper : ItemsControl
 
     /// <summary>Gets the command that requests a specific step key or descriptor.</summary>
     public ICommand JumpToStepCommand { get; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Requests navigation to the specified step key.</summary>
     /// <param name="stepKey">The stable step key.</param>

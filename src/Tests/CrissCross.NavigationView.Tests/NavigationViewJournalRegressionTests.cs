@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ public class NavigationViewJournalRegressionTests
     [Test]
     public async Task WpfGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
             var item = new WpfControls.NavigationViewItem(typeof(WpfTestPage));
             var navigationView = new TestWpfNavigationView();
@@ -41,7 +41,7 @@ public class NavigationViewJournalRegressionTests
     [Test]
     public async Task WpfGoBack_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex()
     {
-        var result = RunOnStaThread(() =>
+        var result = RunOnStaThread(static () =>
         {
             var item = new WpfControls.NavigationViewItem(typeof(WpfTestPage));
             var navigationView = new TestWpfNavigationView();
@@ -179,10 +179,7 @@ public class NavigationViewJournalRegressionTests
     /// <summary>Provides the SetCurrentIndex member.</summary>
     /// <param name="navigationView">The navigationView value.</param>
     /// <param name="currentIndex">The currentIndex value.</param>
-    private static void SetCurrentIndex(object navigationView, int currentIndex)
-    {
-        FindField(navigationView.GetType(), "_currentIndexInJournal").SetValue(navigationView, currentIndex);
-    }
+    private static void SetCurrentIndex(object navigationView, int currentIndex) => FindField(navigationView.GetType(), "_currentIndexInJournal").SetValue(navigationView, currentIndex);
 
     /// <summary>Provides the RunOnStaThread member.</summary>
     /// <typeparam name="T">The T type.</typeparam>
@@ -225,10 +222,12 @@ public class NavigationViewJournalRegressionTests
         var current = type;
         while (current is not null)
         {
-            var field = current.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
-            if (field is not null)
+            foreach (var field in current.GetTypeInfo().DeclaredFields)
             {
-                return field;
+                if (!field.IsStatic && field.Name == fieldName)
+                {
+                    return field;
+                }
             }
 
             current = current.BaseType;

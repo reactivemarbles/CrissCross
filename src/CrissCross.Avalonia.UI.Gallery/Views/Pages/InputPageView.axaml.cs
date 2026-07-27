@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -181,7 +181,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
         var normalized = value
             .Replace("\r", " ", StringComparison.Ordinal)
             .Replace("\n", " ", StringComparison.Ordinal);
-        return normalized.Length <= StatusPreviewMaxLength ? normalized : normalized[..StatusPreviewMaxLength] + "...";
+        return normalized.Length <= StatusPreviewMaxLength ? normalized : $"{normalized[..StatusPreviewMaxLength]}...";
     }
 
     /// <summary>References XAML click handlers so code analysis can see their generated markup usage.</summary>
@@ -336,20 +336,20 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
     private void OnRichTextBoldClick(object? sender, RoutedEventArgs e) =>
-        ApplySelectionAction(richTextBox => richTextBox.ToggleBold(), "Bold toggled for the current selection.");
+        ApplySelectionAction(static richTextBox => richTextBox.ToggleBold(), "Bold toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextItalicClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
     private void OnRichTextItalicClick(object? sender, RoutedEventArgs e) =>
-        ApplySelectionAction(richTextBox => richTextBox.ToggleItalic(), "Italic toggled for the current selection.");
+        ApplySelectionAction(static richTextBox => richTextBox.ToggleItalic(), "Italic toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextUnderlineClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
     private void OnRichTextUnderlineClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.ToggleUnderline(),
+            static richTextBox => richTextBox.ToggleUnderline(),
             "Underline toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextStrikeClick member.</summary>
@@ -357,7 +357,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextStrikeClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.ToggleStrikethrough(),
+            static richTextBox => richTextBox.ToggleStrikethrough(),
             "Strikethrough toggled for the current selection.");
 
     /// <summary>Provides the OnRichTextClearFormattingClick member.</summary>
@@ -365,7 +365,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextClearFormattingClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.ClearFormatting(),
+            static richTextBox => richTextBox.ClearFormatting(),
             "Formatting cleared for the current selection.");
 
     /// <summary>Provides the OnRichTextFontFamilyClick member.</summary>
@@ -373,7 +373,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextFontFamilyClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.SetSelectionFontFamily("Consolas"),
+            static richTextBox => richTextBox.SetSelectionFontFamily("Consolas"),
             "Font Family changed to Consolas.");
 
     /// <summary>Provides the OnRichTextFontSizeClick member.</summary>
@@ -381,7 +381,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextFontSizeClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.SetSelectionFontSize(FormattingFontSize),
+            static richTextBox => richTextBox.SetSelectionFontSize(FormattingFontSize),
             $"Font Size changed to {FormattingFontSize}.");
 
     /// <summary>Provides the OnRichTextForegroundClick member.</summary>
@@ -389,7 +389,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextForegroundClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.SetSelectionForeground(Colors.DeepSkyBlue),
+            static richTextBox => richTextBox.SetSelectionForeground(Colors.DeepSkyBlue),
             "Foreground changed to DeepSkyBlue.");
 
     /// <summary>Provides the OnRichTextHighlightClick member.</summary>
@@ -397,7 +397,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="e">The e value.</param>
     private void OnRichTextHighlightClick(object? sender, RoutedEventArgs e) =>
         ApplySelectionAction(
-            richTextBox => richTextBox.SetSelectionHighlight(Colors.DarkSlateBlue),
+            static richTextBox => richTextBox.SetSelectionHighlight(Colors.DarkSlateBlue),
             "Highlight changed to DarkSlateBlue.");
 
     /// <summary>Provides the OnRichTextUndoClick member.</summary>

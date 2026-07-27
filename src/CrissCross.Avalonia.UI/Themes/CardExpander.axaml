@@ -38,8 +38,7 @@
                                 <!-- Expand chevron -->
                                 <TextBlock Name="ExpandChevron"
                                            Grid.Column="2"
-                                           Text="&#xE70D;"
-                                           FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                           Text="&#x25BC;"
                                            FontSize="12"
                                            VerticalAlignment="Center"
                                            RenderTransformOrigin="50%,50%">

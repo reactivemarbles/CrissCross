@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -19,7 +19,7 @@ internal static class ColorSpaceHelper
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Value (0-1).</returns>
-    public static (double H, double S, double V) RgbToHsv(double r, double g, double b)
+    internal static (double H, double S, double V) RgbToHsv(double r, double g, double b)
     {
         const double undefinedChannel = -1.0;
         const double rgbToHsvGreenSector = 2.0;
@@ -77,7 +77,7 @@ internal static class ColorSpaceHelper
     /// <param name="g">Green channel.</param>
     /// <param name="b">Blue channel.</param>
     /// <returns>Values in order: Hue (0-360 or -1), Saturation (0-1 or -1), Lightness (0-1).</returns>
-    public static (double H, double S, double L) RgbToHsl(double r, double g, double b)
+    internal static (double H, double S, double L) RgbToHsl(double r, double g, double b)
     {
         const double undefinedChannel = -1.0;
         const double halfScale = 0.5;
@@ -139,7 +139,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
     /// <returns>Values (0-1) in order: R, G, B.</returns>
-    public static (double R, double G, double B) HsvToRgb(double h, double s, double v)
+    internal static (double R, double G, double B) HsvToRgb(double h, double s, double v)
     {
         const int redYellowSector = 0;
         const int yellowGreenSector = 1;
@@ -183,7 +183,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="v">Value, 0-1.</param>
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Lightness (0-1).</returns>
-    public static (double H, double S, double L) HsvToHsl(double h, double s, double v)
+    internal static (double H, double S, double L) HsvToHsl(double h, double s, double v)
     {
         const double undefinedChannel = -1.0;
         const double doubleScale = 2.0;
@@ -201,7 +201,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
     /// <returns>Values (0-1) in order: R, G, B.</returns>
-    public static (double R, double G, double B) HslToRgb(double h, double s, double l)
+    internal static (double R, double G, double B) HslToRgb(double h, double s, double l)
     {
         const double halfScale = 0.5;
         const double doubleScale = 2.0;
@@ -235,7 +235,7 @@ internal static class ColorSpaceHelper
     /// <param name="s">Saturation, 0-1.</param>
     /// <param name="l">Lightness, 0-1.</param>
     /// <returns>Values in order: Hue (same), Saturation (0-1 or -1), Value (0-1).</returns>
-    public static (double H, double S, double V) HslToHsv(double h, double s, double l)
+    internal static (double H, double S, double V) HslToHsv(double h, double s, double l)
     {
         const double undefinedChannel = -1.0;
         const double doubleScale = 2.0;

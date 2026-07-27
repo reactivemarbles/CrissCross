@@ -1,10 +1,9 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -35,7 +34,13 @@ public sealed class StepDescriptor
         IsEnabled = options.IsEnabled;
         CanEnter = options.CanEnter;
         CanLeave = options.CanLeave;
-        ValidationMessages = new ReadOnlyCollection<ValidationMessage>((options.ValidationMessages ?? []).ToList());
+        var validationMessages = new List<ValidationMessage>();
+        if (options.ValidationMessages is not null)
+        {
+            validationMessages.AddRange(options.ValidationMessages);
+        }
+
+        ValidationMessages = new ReadOnlyCollection<ValidationMessage>(validationMessages);
         EnterCommand = options.EnterCommand;
         LeaveCommand = options.LeaveCommand;
     }
@@ -74,8 +79,7 @@ public sealed class StepDescriptor
     public bool HasValidationMessages => ValidationMessages.Count > 0;
 
     /// <summary>Gets a value indicating whether the step blocks forward progress.</summary>
-    public bool IsBlocking =>
-        Status == StepStatus.Error || ValidationMessages.Any(static message => message.IsBlocking);
+    public bool IsBlocking => Status == StepStatus.Error || HasBlockingValidationMessage();
 
     /// <summary>Gets a value indicating whether the step is active/current.</summary>
     public bool IsCurrent => Status == StepStatus.Active;
@@ -87,5 +91,20 @@ public sealed class StepDescriptor
     public bool IsAvailable => IsEnabled && CanEnter && !IsBlocking;
 
     /// <summary>Gets display text including optional-step hinting.</summary>
-    public string DisplayTitle => IsOptional ? Title + " (optional)" : Title;
+    public string DisplayTitle => IsOptional ? $"{Title} (optional)" : Title;
+
+    /// <summary>Determines whether the step has a blocking validation message.</summary>
+    /// <returns><c>true</c> when a validation message blocks the step; otherwise, <c>false</c>.</returns>
+    private bool HasBlockingValidationMessage()
+    {
+        foreach (var validationMessage in ValidationMessages)
+        {
+            if (validationMessage.IsBlocking)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

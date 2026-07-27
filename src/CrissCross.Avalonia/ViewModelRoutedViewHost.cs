@@ -1,9 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Layout;
 using ReactiveUI;
@@ -187,7 +188,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="contract">The contract.</param>
     /// <param name="parameter">The parameter.</param>
     public void Navigate<T>(T viewModel, string? contract, object? parameter)
-        where T : class, IRxObject => InternalNavigate(viewModel, contract, parameter);
+        where T : class, IRxObject => NavigateTyped(viewModel, contract, parameter);
 
     /// <summary>Navigates the ViewModel contract.</summary>
     /// <param name="viewModel">The view model.</param>
@@ -198,14 +199,14 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     [RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
     public void Navigate(IRxObject viewModel, string? contract, object? parameter) =>
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateRuntime(viewModel, contract, parameter);
 
     /// <summary>Navigates the resolved ViewModel/View pair.</summary>
     /// <param name="resolution">The resolved navigation pair.</param>
     public void Navigate(NavigationResolution resolution)
     {
         ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
-        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+        NavigateResolved(resolution.ViewModel, resolution.View, resolution.Parameter);
     }
 
     /// <summary>Navigates a view model instance whose type is known at compile time and resets history.</summary>
@@ -217,7 +218,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
         where T : class, IRxObject
     {
         _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateTyped(viewModel, contract, parameter);
     }
 
     /// <summary>Navigates the and reset.</summary>
@@ -231,7 +232,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     public void NavigateAndReset(IRxObject viewModel, string? contract, object? parameter)
     {
         _resetStack = true;
-        InternalNavigate(viewModel, contract, parameter);
+        NavigateRuntime(viewModel, contract, parameter);
     }
 
     /// <summary>Navigates the resolved ViewModel/View pair and resets history.</summary>
@@ -240,7 +241,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     {
         ThrowHelper.ThrowIfNull(resolution, nameof(resolution));
         _resetStack = true;
-        InternalNavigate(resolution.ViewModel, resolution.View, resolution.Parameter);
+        NavigateResolved(resolution.ViewModel, resolution.View, resolution.Parameter);
     }
 
     /// <summary>Navigates back.</summary>
@@ -341,8 +342,13 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="hostName">The active navigation host name.</param>
     private static void RefreshOtherHosts(string hostName)
     {
-        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values.Where(x => x.Name != hostName))
+        foreach (var host in ViewModelRoutedViewHostMixins.NavigationHost.Values)
         {
+            if (host.Name == hostName)
+            {
+                continue;
+            }
+
             host.Refresh();
         }
     }
@@ -459,13 +465,16 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     {
         if (callNavigatedTo)
         {
-            if (!ViewModelRoutedViewHostMixins.CurrentViewDisposable.TryGetValue(hostName, out var disposable))
+            ref var disposable = ref CollectionsMarshal.GetValueRefOrAddDefault(
+                ViewModelRoutedViewHostMixins.CurrentViewDisposable,
+                hostName,
+                out var exists);
+            if (!exists)
             {
                 disposable = [];
-                ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName] = disposable;
             }
 
-            _toViewModel?.WhenNavigatedTo(navigationEvent, disposable);
+            _toViewModel?.WhenNavigatedTo(navigationEvent, disposable!);
         }
 
         if (!callNavigatedFrom)
@@ -476,43 +485,16 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
         previousViewModel?.WhenNavigatedFrom(navigationEvent);
     }
 
-    /// <summary>Runs typed navigation for a supplied view model instance.</summary>
+    /// <summary>Runs AOT-compatible typed navigation for a supplied view model instance.</summary>
     /// <typeparam name="T">The view model type.</typeparam>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
-    private void InternalNavigate<T>(T? viewModel, string? contract, object? parameter)
-        where T : class, IRxObject
-    {
-        _toViewModel = viewModel;
-        _lastView = _currentView;
-        var hostName = ResolveHostName();
+    private void NavigateTyped<T>(T viewModel, string? contract, object? parameter)
+        where T : class, IRxObject =>
+        NavigateCore(viewModel, ViewLocator?.ResolveView<T>(contract), parameter);
 
-        // The generic locator path is fully AOT-compatible because the view model type is known here.
-        _currentView = ViewLocator?.ResolveView<T>(contract);
-        if (_currentView is not null)
-        {
-            _currentView.ViewModel = _toViewModel;
-        }
-
-        var ea = new ViewModelNavigatingEventArgs(
-            _activeViewModel,
-            _toViewModel,
-            NavigationType.New,
-            _currentView,
-            hostName,
-            parameter);
-        if (_currentView is INotifiyNavigation { ISetupNavigating: true })
-        {
-            ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
-        }
-        else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
-        {
-            resultNavigating.OnNext(ea);
-        }
-    }
-
-    /// <summary>Runs the internal Navigate operation.</summary>
+    /// <summary>Runs runtime-resolved navigation, creating a new view instance.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="contract">The optional navigation contract.</param>
     /// <param name="parameter">The optional navigation parameter.</param>
@@ -520,43 +502,30 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
         "Resolving a view from a runtime view model instance requires ReactiveUI runtime type inspection.")]
     [RequiresUnreferencedCode(
         "Resolving a view from a runtime view model instance may require members removed by trimming.")]
-    private void InternalNavigate(IRxObject viewModel, string? contract, object? parameter)
-    {
-        _toViewModel = viewModel;
-        _lastView = _currentView;
-        var hostName = ResolveHostName();
-
-        // NOTE: This gets a new instance of the View
-        _currentView = ViewLocator?.ResolveView(_toViewModel, contract);
-
-        var ea = new ViewModelNavigatingEventArgs(
-            _activeViewModel,
-            _toViewModel,
-            NavigationType.New,
-            _currentView,
-            hostName,
-            parameter);
-        if (_currentView is INotifiyNavigation { ISetupNavigating: true })
-        {
-            ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
-        }
-        else if (ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(hostName, out var resultNavigating))
-        {
-            resultNavigating.OnNext(ea);
-        }
-    }
+    private void NavigateRuntime(IRxObject viewModel, string? contract, object? parameter) =>
+        NavigateCore(viewModel, ViewLocator?.ResolveView(viewModel, contract), parameter);
 
     /// <summary>Runs the internal Navigate operation for an already resolved ViewModel/View pair.</summary>
     /// <param name="viewModel">The view model.</param>
     /// <param name="view">The resolved view.</param>
     /// <param name="parameter">The navigation parameter.</param>
-    private void InternalNavigate(IRxObject viewModel, IViewFor view, object? parameter)
+    private void NavigateResolved(IRxObject viewModel, IViewFor view, object? parameter) =>
+        NavigateCore(viewModel, view, parameter);
+
+    /// <summary>Updates the pending navigation target and raises the navigation event.</summary>
+    /// <param name="viewModel">The target view model.</param>
+    /// <param name="view">The resolved target view.</param>
+    /// <param name="parameter">The navigation parameter.</param>
+    private void NavigateCore(IRxObject viewModel, IViewFor? view, object? parameter)
     {
         _toViewModel = viewModel;
         _lastView = _currentView;
         var hostName = ResolveHostName();
         _currentView = view;
-        _currentView.ViewModel = viewModel;
+        if (_currentView is not null)
+        {
+            _currentView.ViewModel = viewModel;
+        }
 
         var ea = new ViewModelNavigatingEventArgs(
             _activeViewModel,

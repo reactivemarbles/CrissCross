@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections;
@@ -23,7 +23,7 @@ public partial class NavigationView
 {
     /// <summary>Property for <see cref="MenuItems"/>.</summary>
     public static readonly DirectProperty<NavigationView, IList> MenuItemsProperty =
-        AvaloniaProperty.RegisterDirect<NavigationView, IList>(nameof(MenuItems), o => o.MenuItems);
+        AvaloniaProperty.RegisterDirect<NavigationView, IList>(nameof(MenuItems), static o => o.MenuItems);
 
     /// <summary>Property for <see cref="MenuItemsSource"/>.</summary>
     public static readonly StyledProperty<object?> MenuItemsSourceProperty =
@@ -33,7 +33,7 @@ public partial class NavigationView
     public static readonly DirectProperty<NavigationView, IList> FooterMenuItemsProperty =
         AvaloniaProperty.RegisterDirect<NavigationView, IList>(
             nameof(FooterMenuItems),
-            o => o.FooterMenuItems);
+            static o => o.FooterMenuItems);
 
     /// <summary>Property for <see cref="FooterMenuItemsSource"/>.</summary>
     public static readonly StyledProperty<object?> FooterMenuItemsSourceProperty =

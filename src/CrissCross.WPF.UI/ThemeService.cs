@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -9,8 +9,13 @@ namespace CrissCross.WPF.UI;
 #endif
 
 /// <summary>Lets you set the app theme.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ThemeService : IThemeService
 {
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <inheritdoc />
     public virtual ApplicationTheme GetTheme() => ApplicationThemeManager.GetAppTheme();
 
@@ -64,10 +69,7 @@ public class ThemeService : IThemeService
     /// <inheritdoc />
     public bool SetAccent(SolidColorBrush accentSolidBrush)
     {
-        if (accentSolidBrush is null)
-        {
-            throw new ArgumentNullException(nameof(accentSolidBrush));
-        }
+        ThrowHelper.ThrowIfNull(accentSolidBrush, nameof(accentSolidBrush));
 
         var color = accentSolidBrush.Color;
         color.A = (byte)Math.Round(accentSolidBrush.Opacity * byte.MaxValue);

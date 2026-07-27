@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Rotating loading ring.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(ProgressRing), "ProgressRing.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ProgressRing : System.Windows.Controls.Control
 {
     /// <summary>Property for <see cref="Progress"/>.</summary>
@@ -22,35 +23,35 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(Progress),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(DefaultProgress, PropertyChangedCallback));
+        new(DefaultProgress, PropertyChangedCallback));
 
     /// <summary>Property for <see cref="IsIndeterminate"/>.</summary>
     public static readonly DependencyProperty IsIndeterminateProperty = DependencyProperty.Register(
         nameof(IsIndeterminate),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(false, Callbacks.OnIsIndeterminateChanged));
+        new(false, Callbacks.OnIsIndeterminateChanged));
 
     /// <summary>Property for backward compatibility with common ProgressRing templates expecting IsActive.</summary>
     public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
         nameof(IsActive),
         typeof(bool),
         typeof(ProgressRing),
-        new PropertyMetadata(false, Callbacks.OnIsActiveChanged));
+        new(false, Callbacks.OnIsActiveChanged));
 
     /// <summary>Property for <see cref="EngAngle"/>.</summary>
     public static readonly DependencyProperty EngAngleProperty = DependencyProperty.Register(
         nameof(EngAngle),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(180.0D));
+        new(180.0D));
 
     /// <summary>Property for <see cref="IndeterminateAngle"/>.</summary>
     public static readonly DependencyProperty IndeterminateAngleProperty = DependencyProperty.Register(
         nameof(IndeterminateAngle),
         typeof(double),
         typeof(ProgressRing),
-        new PropertyMetadata(180.0D));
+        new(180.0D));
 
     /// <summary>Property for <see cref="CoverRingStroke"/>.</summary>
     public static readonly DependencyProperty CoverRingStrokeProperty = DependencyProperty.Register(
@@ -68,7 +69,7 @@ public class ProgressRing : System.Windows.Controls.Control
         nameof(CoverRingVisibility),
         typeof(Visibility),
         typeof(ProgressRing),
-        new PropertyMetadata(System.Windows.Visibility.Visible));
+        new(System.Windows.Visibility.Visible));
 
     /// <summary>Default progress value.</summary>
     private const double DefaultProgress = 50.0D;
@@ -136,6 +137,10 @@ public class ProgressRing : System.Windows.Controls.Control
         get => (Visibility)GetValue(CoverRingVisibilityProperty);
         set => SetValue(CoverRingVisibilityProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Validates the entered <see cref="Progress" /> and redraws the arc.</summary>
     /// <param name="d">The d.</param>

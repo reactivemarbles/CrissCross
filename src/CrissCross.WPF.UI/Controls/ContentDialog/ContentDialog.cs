@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -41,6 +41,7 @@ namespace CrissCross.WPF.UI.Controls;
 ///     );
 /// </code>
 /// </example>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class ContentDialog : ContentControl
 {
     /// <summary>Property for <see cref="Title"/>.</summary>
@@ -48,42 +49,42 @@ public class ContentDialog : ContentControl
         nameof(Title),
         typeof(object),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="TitleTemplate"/>.</summary>
     public static readonly DependencyProperty TitleTemplateProperty = DependencyProperty.Register(
         nameof(TitleTemplate),
         typeof(DataTemplate),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="DialogWidth"/>.</summary>
     public static readonly DependencyProperty DialogWidthProperty = DependencyProperty.Register(
         nameof(DialogWidth),
         typeof(double),
         typeof(ContentDialog),
-        new PropertyMetadata(double.PositiveInfinity));
+        new(double.PositiveInfinity));
 
     /// <summary>Property for <see cref="DialogHeight"/>.</summary>
     public static readonly DependencyProperty DialogHeightProperty = DependencyProperty.Register(
         nameof(DialogHeight),
         typeof(double),
         typeof(ContentDialog),
-        new PropertyMetadata(double.PositiveInfinity));
+        new(double.PositiveInfinity));
 
     /// <summary>Property for <see cref="DialogMaxWidth"/>.</summary>
     public static readonly DependencyProperty DialogMaxWidthProperty = DependencyProperty.Register(
         nameof(DialogMaxWidth),
         typeof(double),
         typeof(ContentDialog),
-        new PropertyMetadata(double.PositiveInfinity));
+        new(double.PositiveInfinity));
 
     /// <summary>Property for <see cref="DialogMaxHeight"/>.</summary>
     public static readonly DependencyProperty DialogMaxHeightProperty = DependencyProperty.Register(
         nameof(DialogMaxHeight),
         typeof(double),
         typeof(ContentDialog),
-        new PropertyMetadata(double.PositiveInfinity));
+        new(double.PositiveInfinity));
 
     /// <summary>Property for <see cref="DialogMargin"/>.</summary>
     public static readonly DependencyProperty DialogMarginProperty = DependencyProperty.Register(
@@ -96,98 +97,98 @@ public class ContentDialog : ContentControl
         nameof(PrimaryButtonText),
         typeof(string),
         typeof(ContentDialog),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="SecondaryButtonText"/>.</summary>
     public static readonly DependencyProperty SecondaryButtonTextProperty = DependencyProperty.Register(
         nameof(SecondaryButtonText),
         typeof(string),
         typeof(ContentDialog),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Property for <see cref="CloseButtonText"/>.</summary>
     public static readonly DependencyProperty CloseButtonTextProperty = DependencyProperty.Register(
         nameof(CloseButtonText),
         typeof(string),
         typeof(ContentDialog),
-        new PropertyMetadata("Close"));
+        new("Close"));
 
     /// <summary>Property for <see cref="PrimaryButtonIcon"/>.</summary>
     public static readonly DependencyProperty PrimaryButtonIconProperty = DependencyProperty.Register(
         nameof(PrimaryButtonIcon),
         typeof(IconElement),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="SecondaryButtonIcon"/>.</summary>
     public static readonly DependencyProperty SecondaryButtonIconProperty = DependencyProperty.Register(
         nameof(SecondaryButtonIcon),
         typeof(IconElement),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="CloseButtonIcon"/>.</summary>
     public static readonly DependencyProperty CloseButtonIconProperty = DependencyProperty.Register(
         nameof(CloseButtonIcon),
         typeof(IconElement),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="IsPrimaryButtonEnabled"/>.</summary>
     public static readonly DependencyProperty IsPrimaryButtonEnabledProperty = DependencyProperty.Register(
         nameof(IsPrimaryButtonEnabled),
         typeof(bool),
         typeof(ContentDialog),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="IsSecondaryButtonEnabled"/>.</summary>
     public static readonly DependencyProperty IsSecondaryButtonEnabledProperty = DependencyProperty.Register(
         nameof(IsSecondaryButtonEnabled),
         typeof(bool),
         typeof(ContentDialog),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="PrimaryButtonAppearance"/>.</summary>
     public static readonly DependencyProperty PrimaryButtonAppearanceProperty = DependencyProperty.Register(
         nameof(PrimaryButtonAppearance),
         typeof(ControlAppearance),
         typeof(ContentDialog),
-        new PropertyMetadata(ControlAppearance.Primary));
+        new(ControlAppearance.Primary));
 
     /// <summary>Property for <see cref="SecondaryButtonAppearance"/>.</summary>
     public static readonly DependencyProperty SecondaryButtonAppearanceProperty = DependencyProperty.Register(
         nameof(SecondaryButtonAppearance),
         typeof(ControlAppearance),
         typeof(ContentDialog),
-        new PropertyMetadata(ControlAppearance.Secondary));
+        new(ControlAppearance.Secondary));
 
     /// <summary>Property for <see cref="CloseButtonAppearance"/>.</summary>
     public static readonly DependencyProperty CloseButtonAppearanceProperty = DependencyProperty.Register(
         nameof(CloseButtonAppearance),
         typeof(ControlAppearance),
         typeof(ContentDialog),
-        new PropertyMetadata(ControlAppearance.Secondary));
+        new(ControlAppearance.Secondary));
 
     /// <summary>Property for <see cref="DefaultButton"/>.</summary>
     public static readonly DependencyProperty DefaultButtonProperty = DependencyProperty.Register(
         nameof(DefaultButton),
         typeof(ContentDialogButton),
         typeof(ContentDialog),
-        new PropertyMetadata(ContentDialogButton.Primary));
+        new(ContentDialogButton.Primary));
 
     /// <summary>Property for <see cref="IsFooterVisible"/>.</summary>
     public static readonly DependencyProperty IsFooterVisibleProperty = DependencyProperty.Register(
         nameof(IsFooterVisible),
         typeof(bool),
         typeof(ContentDialog),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Property for <see cref="TemplateButtonCommand"/>.</summary>
     public static readonly DependencyProperty TemplateButtonCommandProperty = DependencyProperty.Register(
         nameof(TemplateButtonCommand),
         typeof(IReactiveCommand),
         typeof(ContentDialog),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Property for <see cref="Opened"/>.</summary>
     public static readonly RoutedEvent OpenedEvent = EventManager.RegisterRoutedEvent(
@@ -422,6 +423,10 @@ public class ContentDialog : ContentControl
     /// <summary>Gets or sets the task completion source.</summary>
     protected TaskCompletionSource<ContentDialogResult>? Tcs { get; set; }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Shows the dialog.</summary>
     /// <exception cref="InvalidOperationException">ContentPresenter is not set.</exception>
     /// <returns>A ContentDialogResult.</returns>
@@ -438,7 +443,7 @@ public class ContentDialog : ContentControl
             throw new InvalidOperationException("ContentPresenter is not set");
         }
 
-        Tcs = new();
+        Tcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
         var tokenRegistration = cancellationToken.Register(
             o => Tcs.TrySetCanceled((CancellationToken)o!),
             cancellationToken);
@@ -536,7 +541,7 @@ public class ContentDialog : ContentControl
     {
         _ = Focus();
 
-        RaiseEvent(new RoutedEventArgs(OpenedEvent));
+        RaiseEvent(new(OpenedEvent));
     }
 
     /// <summary>Provides the GetNewDialogSize member.</summary>
@@ -553,7 +558,7 @@ public class ContentDialog : ContentControl
         var width = desiredSize.Width - marginWidth + paddingWidth;
         var height = desiredSize.Height - marginHeight + paddingHeight;
 
-        return new Size(width, height);
+        return new(width, height);
     }
 
     /// <summary>Provides the ResizeWidth member.</summary>

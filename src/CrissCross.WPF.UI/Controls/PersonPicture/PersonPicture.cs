@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Automation;
@@ -15,6 +15,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents PersonPicture.</summary>
 /// <seealso cref="Control" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class PersonPicture : Control, IDisposable
 {
     /// <summary>Divisor used to evaluate plural resource suffixes.</summary>
@@ -91,6 +92,10 @@ public partial class PersonPicture : Control, IDisposable
         Unloaded += OnUnloaded;
         SizeChanged += OnSizeChanged;
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Disposes resources.</summary>
     public void Dispose()
@@ -473,8 +478,5 @@ public partial class PersonPicture : Control, IDisposable
     /// <summary>Provides the OnUnloaded member.</summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">The event arguments.</param>
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        Dispose();
-    }
+    private void OnUnloaded(object sender, RoutedEventArgs e) => Dispose();
 }

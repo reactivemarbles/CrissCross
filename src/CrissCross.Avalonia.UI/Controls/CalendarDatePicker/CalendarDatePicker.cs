@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -126,12 +126,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
         var isTodayHighlighted = IsTodayHighlighted;
         var firstDayOfWeek = FirstDayOfWeek;
 
-        _calendar = new global::Avalonia.Controls.Calendar
-        {
-            IsTodayHighlighted = isTodayHighlighted,
-            FirstDayOfWeek = firstDayOfWeek,
-            SelectedDate = Date?.DateTime,
-        };
+        _calendar = new global::Avalonia.Controls.Calendar { IsTodayHighlighted = isTodayHighlighted, FirstDayOfWeek = firstDayOfWeek, SelectedDate = Date?.DateTime, };
 
         var calendar = _calendar;
         _ = this.GetObservable(DateProperty).Subscribe(SyncCalendarDate);
@@ -146,15 +141,7 @@ public class CalendarDatePicker : global::Avalonia.Controls.Button
 
         _calendar.SelectedDatesChanged += OnSelectedDatesChanged;
 
-        _popup = new Popup
-        {
-            PlacementTarget = this,
-            Placement = PlacementMode.Bottom,
-            Child = _calendar,
-            IsLightDismissEnabled = true,
-            IsOpen = false,
-            VerticalOffset = 1D,
-        };
+        _popup = new Popup { PlacementTarget = this, Placement = PlacementMode.Bottom, Child = _calendar, IsLightDismissEnabled = true, IsOpen = false, VerticalOffset = 1D, };
 
         var popup = _popup;
         _ = this.GetObservable(IsCalendarOpenProperty).Subscribe(SyncPopupOpenState);

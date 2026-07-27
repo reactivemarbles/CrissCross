@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -21,13 +21,13 @@ internal sealed class GifHeader : GifBlock
     private GifHeader() { }
 
     /// <summary>Gets the Signature value.</summary>
-    public string? Signature { get; private set; }
+    internal string? Signature { get; private set; }
 
     /// <summary>Gets the Version value.</summary>
-    public string? Version { get; private set; }
+    internal string? Version { get; private set; }
 
     /// <summary>Gets the LogicalScreenDescriptor value.</summary>
-    public GifLogicalScreenDescriptor? LogicalScreenDescriptor { get; private set; }
+    internal GifLogicalScreenDescriptor? LogicalScreenDescriptor { get; private set; }
 
     internal override GifBlockKind Kind => GifBlockKind.Other;
 

@@ -43,8 +43,7 @@
                                 Padding="0"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center">
-                            <TextBlock Text="&#xE921;"
-                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            <TextBlock Text="&#x2212;"
                                        FontSize="10"
                                        Foreground="{TemplateBinding ButtonsForeground}" />
                         </Button>
@@ -58,8 +57,7 @@
                                 Padding="0"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center">
-                            <TextBlock Text="&#xE922;"
-                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            <TextBlock Text="&#x25A1;"
                                        FontSize="10"
                                        Foreground="{TemplateBinding ButtonsForeground}" />
                         </Button>
@@ -73,8 +71,7 @@
                                 Padding="0"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center">
-                            <TextBlock Text="&#xE8BB;"
-                                       FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            <TextBlock Text="&#x00D7;"
                                        FontSize="10"
                                        Foreground="{TemplateBinding ButtonsForeground}" />
                         </Button>

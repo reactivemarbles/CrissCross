@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Extended <see cref="System.Windows.Controls.TreeView"/>.</summary>
 /// <seealso cref="System.Windows.Controls.TreeView" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class TreeView : System.Windows.Controls.TreeView
 {
     /// <summary>Identifies the SelectedItem dependency property for the TreeView control.</summary>
@@ -19,7 +20,7 @@ public class TreeView : System.Windows.Controls.TreeView
         nameof(SelectedItem),
         typeof(ReactiveTreeItem),
         typeof(TreeView),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>Gets or sets the currently selected item in the tree.</summary>
     /// <remarks>If no item is selected, the property value is <see langword="null"/>. Changing this property
@@ -30,6 +31,10 @@ public class TreeView : System.Windows.Controls.TreeView
         set => SetValue(SelectedItemProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <inheritdoc/>
     protected override DependencyObject GetContainerForItemOverride() => new TreeViewItem();
 
@@ -39,10 +44,7 @@ public class TreeView : System.Windows.Controls.TreeView
     /// <inheritdoc/>
     protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ThrowHelper.ThrowIfNull(e, nameof(e));
 
         base.OnSelectedItemChanged(e);
         SetCurrentValue(SelectedItemProperty, e.NewValue as ReactiveTreeItem);

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
@@ -16,6 +16,11 @@ namespace CrissCross.WPF.Plot;
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
 public partial class LiveChart
 {
+    /// <summary>Copies reactive plot sources to a stable array for rebinding.</summary>
+    /// <param name="sources">The sources to copy.</param>
+    /// <returns>A snapshot of the supplied sources.</returns>
+    private static IReactivePlotSource[] CopyReactivePlotSources(IEnumerable<IReactivePlotSource> sources) => [.. sources];
+
     /// <summary>Handles the ChangeReactivePlotSources operation.</summary>
     /// <param name="sources">The sources value.</param>
     private void ChangeReactivePlotSources(IEnumerable<IReactivePlotSource>? sources)
@@ -33,18 +38,19 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel.ClearContent();
-        var sourceArray = (sources as IReactivePlotSource[]) ?? sources.ToArray();
+        var sourceArray = sources as IReactivePlotSource[] ?? CopyReactivePlotSources(sources);
         ConfigureReactivePlotXAxis(sourceArray);
         ViewModel.HideAllYAxis();
+        ReactivePlotBindingOptions options = new()
+        {
+            UiScheduler = RxSchedulers.MainThreadScheduler,
+            MaxVisiblePoints = (UseFixedNumberOfPoints ? NumberPointsPlotted : null),
+            MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
+        };
         _reactivePlotConnection = new ReactivePlotBinder().Bind(
             ViewModel,
             sourceArray,
-            new ReactivePlotBindingOptions
-            {
-                UiScheduler = RxSchedulers.MainThreadScheduler,
-                MaxVisiblePoints = (UseFixedNumberOfPoints ? NumberPointsPlotted : null),
-                MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
-            });
+            options);
         ViewModel.InitializeAxisLines();
     }
 
@@ -106,7 +112,7 @@ public partial class LiveChart
         _crosshairDisposable?.Dispose();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
-            .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
+            .Subscribe(ApplyCrosshairVisibility);
     }
 
     /// <summary>Handles the ChangeSignalObserver operation.</summary>
@@ -123,7 +129,7 @@ public partial class LiveChart
         _crosshairDisposable?.Dispose();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
-            .Subscribe(d => ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings.IsCrossHairVisible = d));
+            .Subscribe(ApplyCrosshairVisibility);
     }
 
     /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
@@ -186,7 +192,12 @@ public partial class LiveChart
 
     /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
     /// <param name="input">The input value.</param>
-    private void ChangeSignalDataWithPoints(SignalXYPoints input)
+    private void ChangeSignalDataWithPoints(SignalXYPoints input) => ChangeSignalDataWithPoints([input.Data]);
+
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
+    /// <param name="data">The signal data points.</param>
+    private void ChangeSignalDataWithPoints(
+        IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data)
     {
         _needLock = true;
         ExecuteLockUnlock();
@@ -194,59 +205,21 @@ public partial class LiveChart
         ExecuteManAutoScale();
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
-        ViewModel?.InitializeLinesForSignalPoints(input.Data);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        ViewModel?.InitializeLinesForSignalPoints(data);
+        InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
 
     /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
-    private void ChangeSignalDataWithPoints()
-    {
-        _needLock = true;
-        ExecuteLockUnlock();
-        _needAutoScale = true;
-        ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
-        ViewModel?.InitializeLinesForSignalPoints(SignalWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
-        ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
-    }
+    private void ChangeSignalDataWithPoints() => ChangeSignalDataWithPoints([SignalWithPoints]);
 
     /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
     /// <param name="input">The input value.</param>
-    private void ChangeSignalsDataWithPoints(SignalXYEnumPoints input)
-    {
-        _needLock = true;
-        ExecuteLockUnlock();
-        _needAutoScale = true;
-        ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
-
-        ViewModel?.InitializeLinesForSignalPoints(input.Data);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
-        ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
-    }
+    private void ChangeSignalsDataWithPoints(SignalXYEnumPoints input) => ChangeSignalDataWithPoints(input.Data);
 
     /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
-    private void ChangeSignalsDataWithPoints()
-    {
-        _needLock = true;
-        ExecuteLockUnlock();
-        _needAutoScale = true;
-        ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
-
-        ViewModel?.InitializeLinesForSignalPoints(SignalsWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
-        ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
-    }
+    private void ChangeSignalsDataWithPoints() => ChangeSignalsDataWithPoints(new(SignalsWithPoints));
 
     /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
     /// <param name="input">The input value.</param>
@@ -294,7 +267,7 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForScatterPoints(input.Data);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
     }
@@ -309,8 +282,40 @@ public partial class LiveChart
         _needCrossHairOff = true;
         ExecuteMarkerOnOff();
         ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
-        ViewModel?.InitializeControlMenu(ViewModel?.PlotLinesCollectionUI.Select(x => x.ChartSettings).ToList());
+        InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
         _crosshairDisposable?.Dispose();
+    }
+
+    /// <summary>Updates crosshair visibility for every active plot line.</summary>
+    /// <param name="isVisible">A value indicating whether crosshairs are visible.</param>
+    private void ApplyCrosshairVisibility(bool isVisible)
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        foreach (var plotLine in ViewModel.PlotLinesCollectionUI)
+        {
+            plotLine.ChartSettings.IsCrossHairVisible = isVisible;
+        }
+    }
+
+    /// <summary>Initializes the control menu from the active plot-line settings.</summary>
+    private void InitializeControlMenu()
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        List<ChartObjects> settings = [];
+        foreach (var plotLine in ViewModel.PlotLinesCollectionUI)
+        {
+            settings.Add(plotLine.ChartSettings);
+        }
+
+        ViewModel.InitializeControlMenu(settings);
     }
 }

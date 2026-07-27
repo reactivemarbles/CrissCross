@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -12,6 +12,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>The modified password control. TextProperty contains asterisks OR raw password if IsPasswordRevealed is set
 /// to true, PasswordProperty always contains raw password.</summary>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class PasswordBox : TextBox
 {
     /// <summary>Property for <see cref="Password"/>.</summary>
@@ -19,34 +20,34 @@ public partial class PasswordBox : TextBox
         nameof(Password),
         typeof(string),
         typeof(PasswordBox),
-        new PropertyMetadata(string.Empty, static (d, _) => OnPasswordPropertyChanged((PasswordBox)d)));
+        new(string.Empty, static (d, _) => OnPasswordPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="PasswordChar"/>.</summary>
     public static readonly DependencyProperty PasswordCharProperty = DependencyProperty.Register(
         nameof(PasswordChar),
         typeof(char),
         typeof(PasswordBox),
-        new PropertyMetadata('*', static (d, _) => OnPasswordCharPropertyChanged((PasswordBox)d)));
+        new('*', static (d, _) => OnPasswordCharPropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="IsPasswordRevealed"/>.</summary>
     public static readonly DependencyProperty IsPasswordRevealedProperty = DependencyProperty.Register(
         nameof(IsPasswordRevealed),
         typeof(bool),
         typeof(PasswordBox),
-        new PropertyMetadata(false, static (d, _) => OnPasswordRevealModePropertyChanged((PasswordBox)d)));
+        new(false, static (d, _) => OnPasswordRevealModePropertyChanged((PasswordBox)d)));
 
     /// <summary>Property for <see cref="RevealButtonEnabled"/>.</summary>
     public static readonly DependencyProperty RevealButtonEnabledProperty = DependencyProperty.Register(
         nameof(RevealButtonEnabled),
         typeof(bool),
         typeof(PasswordBox),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>Event for "Password has changed".</summary>
     public static readonly RoutedEvent PasswordChangedEvent = EventManager.RegisterRoutedEvent(
         nameof(PasswordChanged),
         RoutingStrategy.Bubble,
-        typeof(RoutedEventHandler),
+        typeof(EventHandler<RoutedEventArgs>),
         typeof(PasswordBox));
 
     /// <summary>Stores the _passwordHelper value.</summary>
@@ -65,7 +66,7 @@ public partial class PasswordBox : TextBox
     /// <remarks>
     /// It is redirected from inner TextContainer.Changed event.
     /// </remarks>
-    public event RoutedEventHandler PasswordChanged
+    public event EventHandler<RoutedEventArgs> PasswordChanged
     {
         add => AddHandler(PasswordChangedEvent, value);
         remove => RemoveHandler(PasswordChangedEvent, value);
@@ -98,6 +99,10 @@ public partial class PasswordBox : TextBox
         get => (bool)GetValue(RevealButtonEnabledProperty);
         set => SetValue(RevealButtonEnabledProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <inheritdoc />
     protected override void OnTextChanged(TextChangedEventArgs e)
@@ -175,24 +180,15 @@ public partial class PasswordBox : TextBox
 
     /// <summary>Called when <see cref="Password"/> is changed.</summary>
     /// <param name="control">The password box.</param>
-    private static void OnPasswordPropertyChanged(PasswordBox control)
-    {
-        control.OnPasswordChanged();
-    }
+    private static void OnPasswordPropertyChanged(PasswordBox control) => control.OnPasswordChanged();
 
     /// <summary>Called if the character is changed in the during the run.</summary>
     /// <param name="control">The password box.</param>
-    private static void OnPasswordCharPropertyChanged(PasswordBox control)
-    {
-        control.OnPasswordCharChanged();
-    }
+    private static void OnPasswordCharPropertyChanged(PasswordBox control) => control.OnPasswordCharChanged();
 
     /// <summary>Called if the reveal mode is changed in the during the run.</summary>
     /// <param name="control">The password box.</param>
-    private static void OnPasswordRevealModePropertyChanged(PasswordBox control)
-    {
-        control.OnPasswordRevealModeChanged();
-    }
+    private static void OnPasswordRevealModePropertyChanged(PasswordBox control) => control.OnPasswordRevealModeChanged();
 
     /// <summary>Provides the UpdateTextContents member.</summary>
     /// <param name="isTriggeredByTextInput">The isTriggeredByTextInput value.</param>
@@ -222,7 +218,7 @@ public partial class PasswordBox : TextBox
                 CaretIndex = Text.Length;
             }
 
-            RaiseEvent(new RoutedEventArgs(PasswordChangedEvent));
+            RaiseEvent(new(PasswordChangedEvent));
 
             _lockUpdatingContents = false;
 
@@ -243,7 +239,7 @@ public partial class PasswordBox : TextBox
         Password = newPasswordValue ?? string.Empty;
         CaretIndex = caretIndex;
 
-        RaiseEvent(new RoutedEventArgs(PasswordChangedEvent));
+        RaiseEvent(new(PasswordChangedEvent));
 
         _lockUpdatingContents = false;
     }

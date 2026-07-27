@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -14,6 +14,20 @@ namespace CrissCross;
 /// <summary>Represents platform-neutral theme preference state for theme picker controls.</summary>
 public sealed class ThemePreferenceState
 {
+    /// <summary>Formats the system theme display text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat SystemDisplayFormat = System.Text.CompositeFormat.Parse("System ({0})");
+#else
+    private const string SystemDisplayFormat = "System ({0})";
+#endif
+
+    /// <summary>Formats the fallback high-contrast display text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat HighContrastDisplayFormat = System.Text.CompositeFormat.Parse("High contrast (using {0})");
+#else
+    private const string HighContrastDisplayFormat = "High contrast (using {0})";
+#endif
+
     /// <summary>Gets the theme choices available when high contrast is supported.</summary>
     private static readonly IReadOnlyList<ThemeChoice> ChoicesWithHighContrast = Array.AsReadOnly([
         ThemeChoice.System,
@@ -77,11 +91,11 @@ public sealed class ThemePreferenceState
         {
             (true, _) => string.Format(
                 System.Globalization.CultureInfo.InvariantCulture,
-                "System ({0})",
+                SystemDisplayFormat,
                 FormatChoice(EffectiveChoice)),
             (_, true) => string.Format(
                 System.Globalization.CultureInfo.InvariantCulture,
-                "High contrast (using {0})",
+                HighContrastDisplayFormat,
                 FormatChoice(EffectiveChoice)),
             _ => FormatChoice(SelectedChoice),
         };
@@ -114,7 +128,7 @@ public sealed class ThemePreferenceState
     /// <returns>The normalized concrete choice.</returns>
     private static ThemeChoice NormalizeConcreteChoice(ThemeChoice choice, bool supportsHighContrast)
     {
-        if (choice == ThemeChoice.Dark || choice == ThemeChoice.Light)
+        if (choice is ThemeChoice.Dark or ThemeChoice.Light)
         {
             return choice;
         }

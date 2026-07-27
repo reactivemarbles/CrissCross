@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Globalization;
@@ -26,6 +26,20 @@ public sealed class FilterExpression(
     string? displayName = null,
     bool isEnabled = true)
 {
+    /// <summary>Formats a stable filter expression key.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat KeyFormat = System.Text.CompositeFormat.Parse("{0}:{1}:{2}");
+#else
+    private const string KeyFormat = "{0}:{1}:{2}";
+#endif
+
+    /// <summary>Formats filter expression display text.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat DisplayTextFormat = System.Text.CompositeFormat.Parse("{0} {1} {2}");
+#else
+    private const string DisplayTextFormat = "{0} {1} {2}";
+#endif
+
     /// <summary>Gets the stable field key.</summary>
     public string FieldKey { get; } = fieldKey;
 
@@ -50,7 +64,7 @@ public sealed class FilterExpression(
     };
 
     /// <summary>Gets a stable expression key for reconciliation and saved-filter persistence.</summary>
-    public string Key => string.Format(CultureInfo.InvariantCulture, "{0}:{1}:{2}", FieldKey, Operator, Value);
+    public string Key => string.Format(CultureInfo.InvariantCulture, KeyFormat, FieldKey, Operator, Value);
 
     /// <summary>Creates a token for this expression without descriptor metadata.</summary>
     /// <returns>The projected filter token.</returns>
@@ -67,7 +81,7 @@ public sealed class FilterExpression(
         }
 
         var displayName = string.IsNullOrWhiteSpace(DisplayName) ? FieldKey : DisplayName;
-        var displayText = string.Format(CultureInfo.InvariantCulture, "{0} {1} {2}", displayName, Operator, Value);
-        return new FilterToken(FieldKey, Operator, Value, displayText);
+        var displayText = string.Format(CultureInfo.InvariantCulture, DisplayTextFormat, displayName, Operator, Value);
+        return new(FieldKey, Operator, Value, displayText);
     }
 }

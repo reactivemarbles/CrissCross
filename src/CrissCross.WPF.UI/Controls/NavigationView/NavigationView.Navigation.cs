@@ -1,8 +1,11 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
+#if NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
+#endif
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.UI.Controls;
 #else
@@ -51,34 +54,25 @@ public partial class NavigationView
     public bool Navigate(Type pageType) => Navigate(pageType, null);
 
     /// <inheritdoc />
-    public virtual bool Navigate(Type pageType, object? dataContext)
-    {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
-            ? TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext)
-            : NavigateInternal(navigationViewItem, dataContext);
-    }
+    public virtual bool Navigate(Type pageType, object? dataContext) => !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
+        ? TryToNavigateWithoutINavigationViewItem(pageType, false, dataContext)
+        : NavigateInternal(navigationViewItem, dataContext);
 
     /// <inheritdoc />
     public bool Navigate(string pageIdOrTargetTag) => Navigate(pageIdOrTargetTag, null);
 
     /// <inheritdoc />
-    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext)
-    {
-        return !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem)
-            ? false
-            : NavigateInternal(navigationViewItem, dataContext);
-    }
+    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext) => !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem)
+        ? false
+        : NavigateInternal(navigationViewItem, dataContext);
 
     /// <inheritdoc />
     public bool NavigateWithHierarchy(Type pageType) => NavigateWithHierarchy(pageType, null);
 
     /// <inheritdoc />
-    public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext)
-    {
-        return !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
-            ? TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext)
-            : NavigateInternal(navigationViewItem, dataContext, true);
-    }
+    public virtual bool NavigateWithHierarchy(Type pageType, object? dataContext) => !_pageTypeNavigationViewsDictionary.TryGetValue(pageType, out var navigationViewItem)
+        ? TryToNavigateWithoutINavigationViewItem(pageType, true, dataContext)
+        : NavigateInternal(navigationViewItem, dataContext, true);
 
     /// <inheritdoc />
     public virtual bool ReplaceContent(Type? pageTypeToEmbed)
@@ -117,13 +111,10 @@ public partial class NavigationView
     }
 
     /// <inheritdoc />
-    public virtual bool GoForward()
-    {
-        return NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId)
+    public virtual bool GoForward() => NavigationJournal.TryMoveForward(_journal, _currentIndexInJournal, out var nextIndex, out var itemId)
             && itemId is not null
             && _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(itemId, out var navigationViewItem)
             && NavigateInternal(navigationViewItem, null, false, false, true, nextIndex);
-    }
 
     /// <inheritdoc />
     public virtual bool GoBack()
@@ -283,22 +274,20 @@ public partial class NavigationView
     /// <returns>The result.</returns>
     private object GetNavigationItemInstance(INavigationViewItem viewItem)
     {
-        if (viewItem.TargetPageType is null)
-        {
-            throw new ArgumentNullException(nameof(viewItem.TargetPageType));
-        }
+        ThrowHelper.ThrowIfNull(viewItem.TargetPageType, "viewItem.TargetPageType");
+        var targetPageType = viewItem.TargetPageType!;
 
         return (_serviceProvider, _pageService) switch
         {
-            ({ } serviceProvider, _) => serviceProvider.GetService(viewItem.TargetPageType)
+            ({ } serviceProvider, _) => serviceProvider.GetService(targetPageType)
                 ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null"),
-            (_, { } pageService) => pageService.GetPage(viewItem.TargetPageType)
+            (_, { } pageService) => pageService.GetPage(targetPageType)
                 ?? throw new InvalidOperationException($"{nameof(_pageService.GetPage)} returned null"),
-            _ => _cache.Remember(viewItem.TargetPageType, viewItem.NavigationCacheMode, ComputeCachedNavigationInstance)
+            _ => _cache.Remember(targetPageType, viewItem.NavigationCacheMode, ComputeCachedNavigationInstance)
                 ?? throw new ArgumentNullException(
-                    $"Unable to get or create instance of {viewItem.TargetPageType} from cache."),
+                    $"Unable to get or create instance of {targetPageType} from cache."),
         };
-        object? ComputeCachedNavigationInstance() => GetPageInstanceFromCache(viewItem.TargetPageType);
+        object? ComputeCachedNavigationInstance() => GetPageInstanceFromCache(targetPageType);
     }
 
     /// <summary>Provides the GetPageInstanceFromCache member.</summary>
@@ -319,15 +308,8 @@ public partial class NavigationView
                     ?? throw new ArgumentException("Failed to create instance of the page"),
             };
 
-            object GetPageFromServiceProvider(IServiceProvider serviceProvider)
-            {
-#if DEBUG
-                System.Diagnostics.Debug.WriteLine($"Getting {targetPageType} from cache using IServiceProvider.");
-#endif
-
-                return serviceProvider.GetService(pageType)
+            object GetPageFromServiceProvider(IServiceProvider serviceProvider) => serviceProvider.GetService(pageType)
                     ?? throw new InvalidOperationException($"{nameof(_serviceProvider.GetService)} returned null");
-            }
         }
     }
 
@@ -342,21 +324,6 @@ public partial class NavigationView
         }
 
         _ = NavigationViewContentPresenter.Navigate(content);
-    }
-
-    /// <summary>Provides the OnNavigationViewContentPresenterNavigated member.</summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event arguments.</param>
-    private void OnNavigationViewContentPresenterNavigated(
-        object sender,
-        System.Windows.Navigation.NavigationEventArgs e)
-    {
-        if (sender is not System.Windows.Controls.Frame frame)
-        {
-            return;
-        }
-
-        _ = frame.RemoveBackEntry();
     }
 
     /// <summary>Provides the AddToNavigationStack member.</summary>
@@ -461,26 +428,35 @@ public partial class NavigationView
             startIndex = 0;
         }
 
+#if NET6_0_OR_GREATER
+        ref var historyList = ref CollectionsMarshal.GetValueRefOrAddDefault(_complexNavigationStackHistory, lastItem, out var exists);
+        if (!exists)
+        {
+            const int initialHistoryCapacity = 5;
+            historyList = new(initialHistoryCapacity);
+        }
+#else
         if (!_complexNavigationStackHistory.TryGetValue(lastItem, out var historyList))
         {
             const int initialHistoryCapacity = 5;
             historyList = new(initialHistoryCapacity);
             _complexNavigationStackHistory.Add(lastItem, historyList);
         }
+#endif
 
+        var navigationHistory = historyList!;
         var arrayLength = _navigationStack.Count - 1 - startIndex;
-        INavigationViewItem[] array;
 
         //// Initializing an array every time well... not an ideal
 #if NET6_0_OR_GREATER
-        array = System.Buffers.ArrayPool<INavigationViewItem>.Shared.Rent(arrayLength);
+        var array = System.Buffers.ArrayPool<INavigationViewItem>.Shared.Rent(arrayLength);
 #else
-        array = new INavigationViewItem[arrayLength];
+        var array = new INavigationViewItem[arrayLength];
 #endif
 
-        historyList.Add(array);
+        navigationHistory.Add(array);
 
-        var latestHistory = historyList[^1];
+        var latestHistory = navigationHistory[^1];
         var i = 0;
 
         for (var j = startIndex; j < _navigationStack.Count - 1; j++)
@@ -544,5 +520,22 @@ public partial class NavigationView
         _navigationStack[0].Deactivate(this);
         _navigationStack[0] = newItem;
         _navigationStack[0].Activate(this);
+    }
+
+    /// <summary>Handles frame navigation without capturing a navigation view instance.</summary>
+    internal static class NavigationFrameEventHandler
+    {
+        /// <summary>Removes the frame journal entry created by content navigation.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The navigation event arguments.</param>
+        internal static void OnNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            if (sender is not System.Windows.Controls.Frame frame)
+            {
+                return;
+            }
+
+            _ = frame.RemoveBackEntry();
+        }
     }
 }

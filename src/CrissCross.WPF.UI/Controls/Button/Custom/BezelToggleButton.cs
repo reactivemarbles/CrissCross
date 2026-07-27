@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents GenericToggleButton.</summary>
 /// <seealso cref="CommonToggleButtonBase" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class BezelToggleButton : CommonToggleButtonBase
 {
     /// <summary>The glare opacity mask property.</summary>
@@ -17,21 +18,21 @@ public class BezelToggleButton : CommonToggleButtonBase
         nameof(GlareOpacityMask),
         typeof(Brush),
         typeof(BezelToggleButton),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The minor background1 property.</summary>
     public static readonly DependencyProperty MinorBackground1Property = DependencyProperty.Register(
         nameof(MinorBackground1),
         typeof(Brush),
         typeof(BezelToggleButton),
-        new PropertyMetadata(null));
+        new(null));
 
     /// <summary>The pressed brush property.</summary>
     public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(
         nameof(PressedBrush),
         typeof(Brush),
         typeof(BezelToggleButton),
-        new PropertyMetadata(Brushes.Green));
+        new(Brushes.Green));
 
     /// <summary>Initializes a new instance of the <see cref="BezelToggleButton"/> class.</summary>
     public BezelToggleButton()
@@ -66,4 +67,8 @@ public class BezelToggleButton : CommonToggleButtonBase
         get => (Brush)GetValue(PressedBrushProperty);
         set => SetValue(PressedBrushProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

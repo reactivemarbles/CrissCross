@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Check Box Modern.</summary>
 /// <seealso cref="Control"/>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public partial class CheckBoxModern : Control, ICommandSource, IDisposable
 {
     /// <summary>The automatic text font size property.</summary>
@@ -20,28 +21,28 @@ public partial class CheckBoxModern : Control, ICommandSource, IDisposable
         nameof(AutoTextFontSize),
         typeof(bool),
         typeof(CheckBoxModern),
-        new PropertyMetadata(false, UpdateFontSize));
+        new(false, UpdateFontSize));
 
     /// <summary>The box size property.</summary>
     public static readonly DependencyProperty BoxSizeProperty = DependencyProperty.Register(
         nameof(BoxSize),
         typeof(double),
         typeof(CheckBoxModern),
-        new PropertyMetadata(40D, UpdateBoxSize));
+        new(40D, UpdateBoxSize));
 
     /// <summary>The check background property.</summary>
     public static readonly DependencyProperty CheckBackgroundProperty = DependencyProperty.Register(
         nameof(CheckBackground),
         typeof(Brush),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Brushes.White));
+        new(Brushes.White));
 
     /// <summary>The is checked background property.</summary>
     public static readonly DependencyProperty IsCheckedBackgroundProperty = DependencyProperty.Register(
         nameof(IsCheckedBackground),
         typeof(Brush),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Brushes.LightGray));
+        new(Brushes.LightGray));
 
     /// <summary>Value Change.</summary>
     public static readonly DependencyProperty CheckBoxTickFontSizeProperty = DependencyProperty.Register(
@@ -65,7 +66,7 @@ public partial class CheckBoxModern : Control, ICommandSource, IDisposable
         nameof(CheckedSymbol),
         typeof(Icons),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Icons.Tick, UpdateTickSymbol));
+        new(Icons.Tick, UpdateTickSymbol));
 
     /// <summary>The command parameter property.</summary>
     public static readonly DependencyProperty CommandParameterProperty = DependencyProperty.Register(
@@ -93,21 +94,21 @@ public partial class CheckBoxModern : Control, ICommandSource, IDisposable
         nameof(DisabledState),
         typeof(DisabledState),
         typeof(CheckBoxModern),
-        new PropertyMetadata(DisabledState.Ignore));
+        new(DisabledState.Ignore));
 
     /// <summary>The dock side property.</summary>
     public static readonly DependencyProperty DockSideProperty = DependencyProperty.Register(
         nameof(DockSide),
         typeof(Dock),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Dock.Left));
+        new(Dock.Left));
 
     /// <summary>The RadioButton style property.</summary>
     public static readonly DependencyProperty RadioButtonStyleProperty = DependencyProperty.Register(
         nameof(RadioButtonStyle),
         typeof(bool),
         typeof(CheckBoxModern),
-        new PropertyMetadata(false));
+        new(false));
 
     /// <summary>The stroke property.</summary>
     public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
@@ -128,28 +129,28 @@ public partial class CheckBoxModern : Control, ICommandSource, IDisposable
         nameof(Text),
         typeof(string),
         typeof(CheckBoxModern),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>Value Change.</summary>
     public static readonly DependencyProperty TickTextProperty = DependencyProperty.Register(
         nameof(TickText),
         typeof(string),
         typeof(CheckBoxModern),
-        new PropertyMetadata(string.Empty));
+        new(string.Empty));
 
     /// <summary>The unchecked symbol property.</summary>
     public static readonly DependencyProperty UncheckedSymbolProperty = DependencyProperty.Register(
         nameof(UncheckedSymbol),
         typeof(Icons),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Icons.None, UpdateTickSymbol));
+        new(Icons.None, UpdateTickSymbol));
 
     /// <summary>Value Change.</summary>
     public static readonly DependencyProperty WarningVisibleProperty = DependencyProperty.Register(
         nameof(WarningVisible),
         typeof(Visibility),
         typeof(CheckBoxModern),
-        new PropertyMetadata(Visibility.Collapsed));
+        new(Visibility.Collapsed));
 
     /// <summary>The RGB channel used for the disabled check background.</summary>
     private const byte DisabledColorChannel = 137;
@@ -394,6 +395,10 @@ public partial class CheckBoxModern : Control, ICommandSource, IDisposable
         get => (Visibility)GetValue(WarningVisibleProperty);
         private set => SetValue(WarningVisibleProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Gets the icon.</summary>
     /// <param name="icon">The icon.</param>

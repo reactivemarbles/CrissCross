@@ -14,6 +14,9 @@
     <ProjectReference Include="..\..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
     <ProjectReference Include="..\..\CrissCross.Avalonia\CrissCross.Avalonia.csproj" />
     <ProjectReference Include="..\..\CrissCross.Avalonia.UI\CrissCross.Avalonia.UI.csproj" />
+    <ProjectReference Include="..\..\CrissCross.Avalonia.Reactive\CrissCross.Avalonia.Reactive.csproj" />
+    <ProjectReference Include="..\..\CrissCross.Avalonia.UI.Reactive\CrissCross.Avalonia.UI.Reactive.csproj" />
+    <ProjectReference Include="..\..\CrissCross.Avalonia.UI.Gallery\CrissCross.Avalonia.UI.Gallery.csproj" />
     <Using Include="TUnit.Core" />
     <Using Include="TUnit.Assertions" />
     <Using Include="TUnit.Assertions.Extensions" />

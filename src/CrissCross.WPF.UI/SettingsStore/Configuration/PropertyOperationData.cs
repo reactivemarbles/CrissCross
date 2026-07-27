@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -16,6 +16,7 @@ namespace CrissCross.WPF.UI.Configuration;
 /// </remarks>
 /// <param name="Property">The property that is being persisted or applied to.</param>
 /// <param name="Value">The value that is being persited or applied.</param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed record PropertyOperationData(string Property, object? Value)
 {
     /// <summary>Gets the value.</summary>
@@ -23,4 +24,8 @@ public sealed record PropertyOperationData(string Property, object? Value)
     ///   <c>true</c> if cancel; otherwise, <c>false</c>.
     /// </value>
     public bool Cancel { get; init; }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

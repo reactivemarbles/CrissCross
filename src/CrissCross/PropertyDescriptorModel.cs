@@ -1,11 +1,10 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
@@ -16,6 +15,13 @@ namespace CrissCross;
 /// <summary>Describes a single AOT-friendly property inspector field without reflection-based discovery.</summary>
 public sealed class PropertyDescriptorModel
 {
+    /// <summary>Formats a combined category and property key.</summary>
+#if NET8_0_OR_GREATER
+    private static readonly System.Text.CompositeFormat CategoryKeyFormat = System.Text.CompositeFormat.Parse("{0}:{1}");
+#else
+    private const string CategoryKeyFormat = "{0}:{1}";
+#endif
+
     /// <inheritdoc />
     public PropertyDescriptorModel(string key, string displayName)
         : this(key, displayName, new PropertyDescriptorOptions())
@@ -95,10 +101,10 @@ public sealed class PropertyDescriptorModel
     public bool HasValidationMessages => ValidationMessages.Count > 0;
 
     /// <summary>Gets a value indicating whether any validation message blocks commit.</summary>
-    public bool IsInvalid => ValidationMessages.Any(static message => message.IsBlocking);
+    public bool IsInvalid => HasValidationMessage(static message => message.IsBlocking);
 
     /// <summary>Gets a value indicating whether any validation message is pending.</summary>
-    public bool IsPending => ValidationMessages.Any(static message => message.Severity == ValidationSeverity.Pending);
+    public bool IsPending => HasValidationMessage(static message => message.Severity == ValidationSeverity.Pending);
 
     /// <summary>Gets a value indicating whether the value has changed from the original snapshot.</summary>
     public bool IsModified => !ValuesEqual(Value, OriginalValue);
@@ -113,7 +119,7 @@ public sealed class PropertyDescriptorModel
     public string ValueDisplayText => FormatValue(Value);
 
     /// <summary>Gets a stable key that combines category and property key.</summary>
-    public string CategoryKey => string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Category, Key);
+    public string CategoryKey => string.Format(CultureInfo.InvariantCulture, CategoryKeyFormat, Category, Key);
 
     /// <summary>Creates a descriptor snapshot with an updated value.</summary>
     /// <param name="value">The updated value.</param>
@@ -148,12 +154,6 @@ public sealed class PropertyDescriptorModel
             });
     }
 
-    /// <summary>Compares two property values for equality.</summary>
-    /// <param name="left">The left value.</param>
-    /// <param name="right">The right value.</param>
-    /// <returns><c>true</c> when the values are equal; otherwise, <c>false</c>.</returns>
-    private static bool ValuesEqual(object? left, object? right) => Equals(left, right);
-
     /// <summary>Formats a property value for display.</summary>
     /// <param name="value">The property value.</param>
     /// <returns>The formatted value.</returns>
@@ -165,4 +165,26 @@ public sealed class PropertyDescriptorModel
         bool boolean => boolean ? "True" : "False",
         _ => Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty
     };
+
+    /// <summary>Compares two property values for equality.</summary>
+    /// <param name="left">The left value.</param>
+    /// <param name="right">The right value.</param>
+    /// <returns><c>true</c> when the values are equal; otherwise, <c>false</c>.</returns>
+    private static bool ValuesEqual(object? left, object? right) => Equals(left, right);
+
+    /// <summary>Determines whether a validation message meets the supplied condition.</summary>
+    /// <param name="predicate">The condition to evaluate.</param>
+    /// <returns><c>true</c> when a validation message meets the condition; otherwise, <c>false</c>.</returns>
+    private bool HasValidationMessage(Func<ValidationMessage, bool> predicate)
+    {
+        foreach (var message in ValidationMessages)
+        {
+            if (predicate(message))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia;
@@ -32,23 +32,29 @@ public class App : Application
         AppLocator.CurrentMutable.RegisterConstant<SliderPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<DatePickerPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<ColorPickerPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<BBCodeBlockPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<FeaturePlaygroundPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<WorkflowPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<ControlCatalogPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
 
         // Register Views for ViewModels - these registrations are used by the default ReactiveUI ViewLocator
         // The ViewLocator will resolve IViewFor<T> to find the appropriate view for a viewmodel
-        AppLocator.CurrentMutable.Register<IViewFor<HomePageViewModel>>(() => new HomePageView());
-        AppLocator.CurrentMutable.Register<IViewFor<ButtonsPageViewModel>>(() => new ButtonsPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<InputPageViewModel>>(() => new InputPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<ProgressPageViewModel>>(() => new ProgressPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<CheckBoxPageViewModel>>(() => new CheckBoxPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<RadioButtonPageViewModel>>(() => new RadioButtonPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<ComboBoxPageViewModel>>(() => new ComboBoxPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<SliderPageViewModel>>(() => new SliderPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<DatePickerPageViewModel>>(() => new DatePickerPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<ColorPickerPageViewModel>>(() => new ColorPickerPageView());
-        AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(() =>
+        AppLocator.CurrentMutable.Register<IViewFor<HomePageViewModel>>(static () => new HomePageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ButtonsPageViewModel>>(static () => new ButtonsPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<InputPageViewModel>>(static () => new InputPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ProgressPageViewModel>>(static () => new ProgressPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<CheckBoxPageViewModel>>(static () => new CheckBoxPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<RadioButtonPageViewModel>>(static () => new RadioButtonPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ComboBoxPageViewModel>>(static () => new ComboBoxPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<SliderPageViewModel>>(static () => new SliderPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<DatePickerPageViewModel>>(static () => new DatePickerPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ColorPickerPageViewModel>>(static () => new ColorPickerPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<BBCodeBlockPageViewModel>>(static () => new BBCodeBlockPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(static () =>
             new FeaturePlaygroundPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<WorkflowPageViewModel>>(static () => new WorkflowPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<ControlCatalogPageViewModel>>(static () => new ControlCatalogPageView());
 
         // NOTE: SetupComplete is called in OnFrameworkInitializationCompleted() to ensure
         // the MainWindow and navigation host are created before BuildComplete callbacks fire

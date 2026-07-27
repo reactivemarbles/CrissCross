@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -13,6 +13,7 @@ namespace CrissCross.WPF.UI.Hardware;
 /// <param name="DpiY"> Gets the DPI on the Y axis. </param>
 /// <param name="DpiScaleX"> Gets the DPI scale on the X axis. </param>
 /// <param name="DpiScaleY"> Gets the DPI scale on the Y axis. </param>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly record struct DisplayDpi(int DpiX, int DpiY, double DpiScaleX, double DpiScaleY)
 {
     /// <summary>Initializes a new instance of the <see cref="DisplayDpi"/> structure.</summary>
@@ -42,4 +43,8 @@ public readonly record struct DisplayDpi(int DpiX, int DpiY, double DpiScaleX, d
 
     /// <summary>Gets the DPI scale on the Y axis.</summary>
     public double DpiScaleY { get; } = DpiScaleY;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

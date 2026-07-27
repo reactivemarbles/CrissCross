@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -10,6 +10,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Represents SnackbarPresenter.</summary>
 /// <seealso cref="System.Windows.Controls.ContentPresenter" />
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisposable
 {
     /// <summary>Provides the duration of the snackbar hide transition.</summary>
@@ -51,6 +52,10 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     /// The cancellation token source.
     /// </value>
     protected CancellationTokenSource CancellationTokenSource { get; set; } = new();
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Adds to que.</summary>
     /// <param name="snackbar">The snackbar.</param>
@@ -142,21 +147,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
 
     /// <summary>Cancels the current token source.</summary>
     /// <returns>A task representing the cancellation operation.</returns>
-    private Task CancelCurrentAsync()
-    {
-#if NET8_0_OR_GREATER
-        return CancellationTokenSource.CancelAsync();
-#else
-        CancelCurrent();
-        return Task.CompletedTask;
-#endif
-    }
-
-#if !NET8_0_OR_GREATER
-
-    /// <summary>Cancels the current token source synchronously.</summary>
-    private void CancelCurrent() => CancellationTokenSource.Cancel();
-#endif
+    private Task CancelCurrentAsync() => CancellationTokenSource.CancelAsync();
 
     /// <summary>Provides the ImmediatelyHideCurrent member.</summary>
     private void ImmediatelyHideCurrent()

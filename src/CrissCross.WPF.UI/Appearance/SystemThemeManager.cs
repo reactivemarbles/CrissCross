@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.Win32;
@@ -38,7 +38,7 @@ public static class SystemThemeManager
         ("themed.theme", SystemTheme.Flow),];
 
     /// <summary>Stores the _cachedTheme value.</summary>
-    private static SystemTheme _cachedTheme = SystemTheme.Unknown;
+    private static SystemTheme _cachedTheme;
 
     /// <summary>Gets the Windows glass color.</summary>
     public static Color GlassColor => SystemParameters.WindowGlassColor;
@@ -93,7 +93,7 @@ public static class SystemThemeManager
     private static SystemTheme GetThemeFromPath(string currentTheme)
     {
         var normalizedTheme = currentTheme.ToLower().Trim();
-        var mapping = _themeFileMappings.FirstOrDefault(item => normalizedTheme.Contains(item.ThemeFile));
+        var mapping = System.Array.Find(_themeFileMappings, item => normalizedTheme.Contains(item.ThemeFile));
         return mapping.Theme;
     }
 

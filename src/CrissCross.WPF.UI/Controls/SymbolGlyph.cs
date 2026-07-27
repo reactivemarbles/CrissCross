@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -20,26 +20,12 @@ public static class SymbolGlyph
     /// <summary>Finds icon based on name.</summary>
     /// <param name="name">Name of the icon.</param>
     /// <returns>Symbol Regular.</returns>
-    public static SymbolRegular Parse(string name)
-    {
-#if DEBUG
-        return string.IsNullOrEmpty(name) ? DefaultIcon : Enum.Parse<SymbolRegular>(name);
-#else
-        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolRegular>(name, out var symbol) ? symbol : DefaultIcon;
-#endif
-    }
+    public static SymbolRegular Parse(string name) => !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolRegular>(name, out var symbol) ? symbol : DefaultIcon;
 
     /// <summary>Finds icon based on name.</summary>
     /// <param name="name">Name of the icon.</param>
     /// <returns>Symbol Regular.</returns>
-    public static SymbolFilled ParseFilled(string name)
-    {
-#if DEBUG
-        return string.IsNullOrEmpty(name) ? DefaultFilledIcon : Enum.Parse<SymbolFilled>(name);
-#else
-        return !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolFilled>(name, out var symbol)
-            ? symbol
-            : DefaultFilledIcon;
-#endif
-    }
+    public static SymbolFilled ParseFilled(string name) => !string.IsNullOrEmpty(name) && Enum.TryParse<SymbolFilled>(name, out var symbol)
+        ? symbol
+        : DefaultFilledIcon;
 }

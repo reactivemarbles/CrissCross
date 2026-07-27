@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Input;
@@ -43,8 +43,17 @@ public class MainViewModel : RxObject
     /// <summary>Gets the goto colorpicker command.</summary>
     public ICommand GotoColorPicker => field ??= CreateNavigationCommand<ColorPickerPageViewModel>();
 
+    /// <summary>Gets the BBCodeBlock gallery navigation command.</summary>
+    public ICommand GotoBBCodeBlock => field ??= CreateNavigationCommand<BBCodeBlockPageViewModel>();
+
     /// <summary>Gets the goto feature playground command.</summary>
     public ICommand GotoFeaturePlayground => field ??= CreateNavigationCommand<FeaturePlaygroundPageViewModel>();
+
+    /// <summary>Gets the workflow and feedback gallery navigation command.</summary>
+    public ICommand GotoWorkflow => field ??= CreateNavigationCommand<WorkflowPageViewModel>();
+
+    /// <summary>Gets the control and host coverage catalog navigation command.</summary>
+    public ICommand GotoControlCatalog => field ??= CreateNavigationCommand<ControlCatalogPageViewModel>();
 
     /// <summary>Creates a command that navigates to a registered view model.</summary>
     /// <typeparam name="TViewModel">The destination view model type.</typeparam>

@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Drawing;
@@ -18,6 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 /// <summary>Inherited from the Expander control which can hide the collapsible content.</summary>
 [ToolboxItem(true)]
 [ToolboxBitmap(typeof(CardExpander), "CardExpander.bmp")]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class CardExpander : System.Windows.Controls.Expander
 {
     /// <summary>Property for <see cref="Icon"/>.</summary>
@@ -25,14 +26,14 @@ public class CardExpander : System.Windows.Controls.Expander
         nameof(Icon),
         typeof(IconElement),
         typeof(CardExpander),
-        new PropertyMetadata(null, null, IconSourceElementConverter.ConvertToIconElement));
+        new(null, null, IconSourceElementConverter.ConvertToIconElement));
 
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
     public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
         nameof(CornerRadius),
         typeof(CornerRadius),
         typeof(CardExpander),
-        new PropertyMetadata(new CornerRadius(4)));
+        new(new CornerRadius(4)));
 
     /// <summary>Property for <see cref="ContentPadding"/>.</summary>
     public static readonly DependencyProperty ContentPaddingProperty = DependencyProperty.Register(
@@ -67,4 +68,8 @@ public class CardExpander : System.Windows.Controls.Expander
         get => (Thickness)GetValue(ContentPaddingProperty);
         set => SetValue(ContentPaddingProperty, value);
     }
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 }

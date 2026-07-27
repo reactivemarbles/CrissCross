@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -19,6 +19,7 @@ namespace CrissCross.WPF.UI.Configuration;
 /// This class does not provide any new functionality nor store any additional state.All calls are forwarded to the base
 /// class.
 /// </remarks>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed class TrackingConfiguration<T> : ITrackingConfiguration
 {
     /// <summary>Stores the _inner value.</summary>
@@ -61,6 +62,10 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// The tracked properties.
     /// </value>
     public Dictionary<string, TrackedPropertyInfo> TrackedProperties => _inner.TrackedProperties;
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>
     /// Start tracking the target object. This will apply any previously stored data and start
@@ -191,7 +196,13 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// </returns>
     public TrackingConfiguration<T> PersistOn(params Func<T, string>[] eventNames)
     {
-        _ = _inner.PersistOn([.. eventNames.Select(x => x(default!))]);
+        string[] names = new string[eventNames.Length];
+        for (var index = 0; index < eventNames.Length; index++)
+        {
+            names[index] = eventNames[index](default!);
+        }
+
+        _ = _inner.PersistOn(names);
         return this;
     }
 
@@ -201,10 +212,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> PersistOn(Func<T, string> eventName, object eventSourceObject)
     {
-        if (eventName is null)
-        {
-            throw new ArgumentNullException(nameof(eventName));
-        }
+        ThrowHelper.ThrowIfNull(eventName, nameof(eventName));
 
         _ = _inner.PersistOn(eventName(default!), eventSourceObject);
         return this;
@@ -216,10 +224,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> PersistOn(Func<T, string> eventName, Func<T, object> eventSourceGetter)
     {
-        if (eventName is null)
-        {
-            throw new ArgumentNullException(nameof(eventName));
-        }
+        ThrowHelper.ThrowIfNull(eventName, nameof(eventName));
 
         _ = _inner.PersistOn(eventName(default!), t => eventSourceGetter((T)t));
         return this;
@@ -230,10 +235,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> StopTrackingOn(Func<T, string> eventName)
     {
-        if (eventName is null)
-        {
-            throw new ArgumentNullException(nameof(eventName));
-        }
+        ThrowHelper.ThrowIfNull(eventName, nameof(eventName));
 
         _ = _inner.StopTrackingOn(eventName(default!));
         return this;
@@ -245,10 +247,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> StopTrackingOn(Func<T, string> eventName, object eventSource)
     {
-        if (eventName is null)
-        {
-            throw new ArgumentNullException(nameof(eventName));
-        }
+        ThrowHelper.ThrowIfNull(eventName, nameof(eventName));
 
         _ = _inner.StopTrackingOn(eventName(default!), eventSource);
         return this;
@@ -260,10 +259,7 @@ public sealed class TrackingConfiguration<T> : ITrackingConfiguration
     /// <returns>Tracking Configuration.</returns>
     public TrackingConfiguration<T> StopTrackingOn(Func<T, string> eventName, Func<T, object> eventSourceGetter)
     {
-        if (eventName is null)
-        {
-            throw new ArgumentNullException(nameof(eventName));
-        }
+        ThrowHelper.ThrowIfNull(eventName, nameof(eventName));
 
         _ = _inner.StopTrackingOn(eventName(default!), t => eventSourceGetter((T)t));
         return this;

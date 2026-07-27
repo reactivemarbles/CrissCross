@@ -1,9 +1,8 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,6 +22,7 @@ namespace CrissCross.WPF.UI.Controls;
 
 /// <summary>Displays lightweight, theme-aware rich content expressed as BBCode.</summary>
 [ContentProperty(nameof(BBCode))]
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class BBCodeBlock : TextBlock, ICommandSource
 {
     /// <summary>Identifies the <see cref="BBCode"/> dependency property.</summary>
@@ -55,7 +55,7 @@ public class BBCodeBlock : TextBlock, ICommandSource
         nameof(OpenExternalLinks),
         typeof(bool),
         typeof(BBCodeBlock),
-        new PropertyMetadata(true));
+        new(true));
 
     /// <summary>The length of the command URI scheme and separator.</summary>
     private const int CommandPrefixLength = 4;
@@ -70,8 +70,8 @@ public class BBCodeBlock : TextBlock, ICommandSource
     public BBCodeBlock() =>
         AddHandler(Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler(OnRequestNavigate));
 
-    /// <summary>Occurs when an allowed external link cannot be opened.</summary>
-    public event EventHandler<BBCodeNavigationFailedEventArgs>? NavigationFailed;
+    /// <summary>Occurs when an allowed external link is requested.</summary>
+    public event EventHandler<BBCodeExternalLinkRequestedEventArgs>? ExternalLinkRequested;
 
     /// <summary>Gets or sets the BBCode source.</summary>
     /// <value>The BBCode source to render.</value>
@@ -121,6 +121,10 @@ public class BBCodeBlock : TextBlock, ICommandSource
         set => SetValue(OpenExternalLinksProperty, value);
     }
 
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
+
     /// <summary>Updates rendered content when the source property changes.</summary>
     /// <param name="dependencyObject">The changed control.</param>
     /// <param name="eventArgs">The property change.</param>
@@ -147,18 +151,7 @@ public class BBCodeBlock : TextBlock, ICommandSource
             return;
         }
 
-        try
-        {
-            _ = Process.Start(new ProcessStartInfo(address) { UseShellExecute = true });
-        }
-        catch (Win32Exception exception)
-        {
-            NavigationFailed?.Invoke(this, new BBCodeNavigationFailedEventArgs(eventArgs.Uri, exception));
-        }
-        catch (InvalidOperationException exception)
-        {
-            NavigationFailed?.Invoke(this, new BBCodeNavigationFailedEventArgs(eventArgs.Uri, exception));
-        }
+        ExternalLinkRequested?.Invoke(this, new BBCodeExternalLinkRequestedEventArgs(eventArgs.Uri));
     }
 
     /// <summary>Executes the command attached to the control.</summary>

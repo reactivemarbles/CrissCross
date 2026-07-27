@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 #if REACTIVELIST_REACTIVE
@@ -11,20 +11,17 @@ namespace CrissCross.WPF.Plot;
 /// <summary>Defines colors used by a complete plot surface.</summary>
 public sealed record ReactivePlotTheme
 {
+    /// <summary>Stores the light-theme foreground color.</summary>
+    private const string Ink = "#202020";
+
+    /// <summary>Stores the light-theme surface color.</summary>
+    private const string White = "#FFFFFF";
+
     /// <summary>Gets the default dark chart theme.</summary>
     public static ReactivePlotTheme Dark { get; } = new();
 
     /// <summary>Gets the default light chart theme.</summary>
-    public static ReactivePlotTheme Light { get; } =
-        new()
-        {
-            FigureBackground = "#F7F7F7",
-            DataBackground = "#FFFFFF",
-            Axis = "#202020",
-            Grid = "#D8D8D8",
-            LegendBackground = "#FFFFFF",
-            LegendForeground = "#202020",
-        };
+    public static ReactivePlotTheme Light { get; } = new() { FigureBackground = "#F7F7F7", DataBackground = White, Axis = Ink, Grid = "#D8D8D8", LegendBackground = White, LegendForeground = Ink };
 
     /// <summary>Gets the plot figure background color.</summary>
     public string FigureBackground { get; init; } = "#252526";

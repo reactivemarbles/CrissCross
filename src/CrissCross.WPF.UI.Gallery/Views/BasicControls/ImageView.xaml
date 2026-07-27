@@ -20,7 +20,7 @@
       Height="30"
       Margin="12,0,0,0"
       HorizontalAlignment="Left"
-      Source="/Assets/ControlImages/Image.png"
+      Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/Image.png"
     />
     <ui:TextBlock Margin="45,12,12,12" FontSize="24" FontWeight="Bold" Text="Image" />
     <Grid Grid.Row="1" Margin="12">
@@ -36,9 +36,9 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
-      <Image Margin="5" Source="/Assets/ControlImages/Image.png" />
-      <ui:Image Grid.Column="1" Margin="5" Source="/Assets/ControlImages/Image.png" />
-      <ui:GifImage Grid.Column="2" Margin="5" Source="/Assets/working.gif" />
+      <Image Margin="5" Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/Image.png" />
+      <ui:Image Grid.Column="1" Margin="5" Source="/CrissCross.WPF.UI.Gallery;component/Assets/ControlImages/Image.png" />
+      <ui:GifImage Grid.Column="2" Margin="5" Source="/CrissCross.WPF.UI.Gallery;component/Assets/working.gif" />
     </Grid>
   </Grid>
 </UserControl>

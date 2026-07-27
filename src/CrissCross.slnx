@@ -68,6 +68,7 @@
     </Project>
     <Project Path="samples/RichTextBoxParity/AvaloniaDemo/RichTextBoxParity.AvaloniaDemo.csproj" />
     <Project Path="samples/RichTextBoxParity/WpfDemo/WpfDemo.csproj" />
+    <Project Path="samples/NavigationModes/CrissCross.NavigationModes.Example.csproj" />
   </Folder>
   <Folder Name="/SolutionSettings/">
     <File Path="../.editorconfig" />
@@ -93,7 +94,9 @@
     <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
     <Project Path="Tests/CrissCross.Reactive.Tests/CrissCross.Reactive.Tests.csproj" />
     <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
+    <Project Path="Tests/CrissCross.WPF.Plot.Reactive.Tests/CrissCross.WPF.Plot.Reactive.Tests.csproj" />
     <Project Path="Tests/CrissCross.WPF.Plot.Tests/CrissCross.WPF.Plot.Tests.csproj" />
+    <Project Path="Tests/CrissCross.WPF.UI.Gallery.Tests/CrissCross.WPF.UI.Gallery.Tests.csproj" />
   </Folder>
   <Project Path="../build/_build.csproj">
     <Build Project="false" />

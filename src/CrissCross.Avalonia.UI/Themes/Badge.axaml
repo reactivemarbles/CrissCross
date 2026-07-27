@@ -38,19 +38,19 @@
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Info] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarInformationalSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarInformationalSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Success] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Caution] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarCautionSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarWarningSeverityBackgroundBrush}" />
     </Style>
     
     <Style Selector="controls|Badge[Appearance=Danger] /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackground}" />
+        <Setter Property="Background" Value="{DynamicResource InfoBarErrorSeverityBackgroundBrush}" />
     </Style>
     
 </Styles>

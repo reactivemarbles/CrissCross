@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.Extensions.Configuration;
@@ -31,8 +31,8 @@ public static class HostBuilderMixins
             where TWindow : Window, INavigationWindow
             where TPage : Page =>
             hostBuilder
-                .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-                .ConfigureServices(services =>
+                .ConfigureAppConfiguration(static c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+                .ConfigureServices(static services =>
                     services
                         .AddHostedService<ApplicationHostService<TWindow, TPage>>() // App Host
                         .AddSingleton<IPageService, PageService>() // Page resolver service
@@ -51,8 +51,8 @@ public static class HostBuilderMixins
             where TWindow : NavigationWindow
             where TViewModel : class, IRxObject, new() =>
             hostBuilder
-                .ConfigureAppConfiguration(c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
-                .ConfigureServices(services =>
+                .ConfigureAppConfiguration(static c => c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!))
+                .ConfigureServices(static services =>
                     services
                         .AddHostedService<ApplicationVMHostService<TWindow, TViewModel>>() // App Host
                         .AddSingleton<IThemeService, ThemeService>() // Theme manipulation

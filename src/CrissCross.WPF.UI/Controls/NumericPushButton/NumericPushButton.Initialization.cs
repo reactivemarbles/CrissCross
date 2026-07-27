@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Threading;
@@ -28,7 +28,7 @@ public partial class NumericPushButton
     /// <summary>Configures the keypad command.</summary>
     private void ConfigureShowKeypadCommand()
     {
-        ShowKeypad = ReactiveCommand.Create(() => { });
+        ShowKeypad = ReactiveCommand.Create(static () => { });
         _keypadDisposable.Add(
             ShowKeypad.Subscribe(_ =>
             {
@@ -72,7 +72,7 @@ public partial class NumericPushButton
         _keypadDisposable.Add(
             EventSignal
                 .From<RoutedEventHandler, RoutedEventArgs>(
-                    handler => handler.Invoke,
+                    static handler => handler.Invoke,
                     handler => Loaded += handler,
                     handler => Loaded -= handler)
                 .Subscribe(_ => HandleLoaded()));

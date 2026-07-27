@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System.Threading;
@@ -57,11 +57,7 @@ public static class Make
 
     /// <summary>Signals the first application instance to activate its window.</summary>
     /// <param name="eventWaitHandle">The first-instance event handle.</param>
-    private static void ActivateFirstInstanceWindow(EventWaitHandle? eventWaitHandle)
-    {
-        // Notify the first instance to activate its main window.
-        _ = eventWaitHandle?.Set();
-    }
+    private static void ActivateFirstInstanceWindow(EventWaitHandle? eventWaitHandle) => _ = eventWaitHandle?.Set();
 
     /// <summary>Registers activation for the first application instance.</summary>
     /// <param name="app">The WPF application.</param>
@@ -84,6 +80,6 @@ public static class Make
         }
 
         _ = ((Application?)state)?.Dispatcher.BeginInvoke(
-            new Action(() => _ = Application.Current.MainWindow.Activate()));
+            new Action(static () => _ = Application.Current.MainWindow.Activate()));
     }
 }

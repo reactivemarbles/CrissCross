@@ -1,5 +1,5 @@
-// Copyright (c) 2016-2026 ReactiveUI and Contributors. All rights reserved.
-// ReactiveUI and Contributors licenses this file to you under the MIT license.
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using Point = System.Windows.Point;
@@ -22,6 +22,7 @@ namespace CrissCross.WPF.UI.Controls;
 ///     Visibility="Visible" /&gt;
 /// </code>
 /// </example>
+[DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class Arc : System.Windows.Shapes.Shape
 {
     /// <summary>Identifies the <see cref="StartAngle"/> dependency property.</summary>
@@ -29,21 +30,21 @@ public class Arc : System.Windows.Shapes.Shape
         nameof(StartAngle),
         typeof(double),
         typeof(Arc),
-        new PropertyMetadata(0.0D, PropertyChangedCallback));
+        new(0.0D, PropertyChangedCallback));
 
     /// <summary>Identifies the <see cref="EndAngle"/> dependency property.</summary>
     public static readonly DependencyProperty EndAngleProperty = DependencyProperty.Register(
         nameof(EndAngle),
         typeof(double),
         typeof(Arc),
-        new PropertyMetadata(0.0D, PropertyChangedCallback));
+        new(0.0D, PropertyChangedCallback));
 
     /// <summary>Identifies the <see cref="SweepDirection"/> dependency property.</summary>
     public static readonly DependencyProperty SweepDirectionProperty = DependencyProperty.Register(
         nameof(SweepDirection),
         typeof(SweepDirection),
         typeof(Arc),
-        new PropertyMetadata(SweepDirection.Clockwise, PropertyChangedCallback));
+        new(SweepDirection.Clockwise, PropertyChangedCallback));
 
     /// <summary>The number of degrees in a full circle.</summary>
     private const double DegreesInFullCircle = 360D;
@@ -93,6 +94,10 @@ public class Arc : System.Windows.Shapes.Shape
 
     /// <inheritdoc />
     protected override Geometry DefiningGeometry => DefinedGeometry();
+
+    /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => ToString() ?? GetType().Name;
 
     /// <summary>Event triggered when one of the key parameters is changed. Forces the geometry to be redrawn.</summary>
     /// <param name="d">The d.</param>
@@ -162,7 +167,7 @@ public class Arc : System.Windows.Shapes.Shape
             var horizontalRadius = (RenderSize.Width - StrokeThickness) / RadiusDivisor;
             var verticalRadius = (RenderSize.Height - StrokeThickness) / RadiusDivisor;
 
-            return new Point(
+            return new(
                 horizontalRadius + (horizontalRadius * Math.Cos(radAngle)),
                 verticalRadius - (verticalRadius * Math.Sin(radAngle)));
         }
@@ -178,7 +183,7 @@ public class Arc : System.Windows.Shapes.Shape
         var clockwiseHorizontalRadius = (RenderSize.Width - StrokeThickness) / RadiusDivisor;
         var clockwiseVerticalRadius = (RenderSize.Height - StrokeThickness) / RadiusDivisor;
 
-        return new Point(
+        return new(
             clockwiseHorizontalRadius + (clockwiseHorizontalRadius * Math.Cos(-clockwiseRadAngle)),
             clockwiseVerticalRadius - (clockwiseVerticalRadius * Math.Sin(-clockwiseRadAngle)));
     }
@@ -229,7 +234,7 @@ public class Arc : System.Windows.Shapes.Shape
     {
         EnsureRootLayout();
 
-        _rootLayout!.Arrange(new Rect(default, finalSize));
+        _rootLayout!.Arrange(new(default, finalSize));
         return finalSize;
     }
 
@@ -239,10 +244,7 @@ public class Arc : System.Windows.Shapes.Shape
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
-        if (drawingContext is null)
-        {
-            throw new ArgumentNullException(nameof(drawingContext));
-        }
+        ThrowHelper.ThrowIfNull(drawingContext, nameof(drawingContext));
 
         Pen pen = new(Stroke, StrokeThickness) { StartLineCap = StrokeStartLineCap, EndLineCap = StrokeStartLineCap };
 
