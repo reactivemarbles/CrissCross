@@ -71,7 +71,7 @@
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.1.0" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.5.2" />
+    <PackageVersion Include="AngleSharp" Version="1.6.0" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
