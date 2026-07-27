@@ -1,7 +1,7 @@
 
 <br>
 <a href="https://github.com/reactivemarbles/CrissCross">
-  <img width="160" heigth="160" src="https://raw.githubusercontent.com/reactivemarbles/CrissCross/master/Images/CrissCrossIcon_256.png">
+  <img width="160" height="160" src="https://raw.githubusercontent.com/reactivemarbles/CrissCross/master/Images/CrissCrossIcon_256.png">
 </a>
 <br>
 
@@ -11,34 +11,45 @@ CrissCross is a ReactiveUI-first application toolkit for .NET desktop and cross-
 
 This is the canonical documentation source for every library project and package in this solution:
 
-| Library | Purpose |
+| Library or project | Purpose |
 | --- | --- |
 | `CrissCross` | Core ReactiveUI lifecycle, view-model navigation contracts, bidirectional navigation registry, and shared UI state models. |
+| `CrissCross.Reactive` | The complete `CrissCross` API compiled against the Reactive dependency family. |
 | `CrissCross.Avalonia` | Avalonia navigation windows, routed view hosts, reactive transition content, and base Avalonia integration. |
+| `CrissCross.Avalonia.Reactive` | The complete `CrissCross.Avalonia` API compiled against Reactive Avalonia dependencies. |
 | `CrissCross.Avalonia.UI` | Avalonia themed controls, Fluent-style app shell controls, services, resources, themes, and gallery-ready user controls. |
+| `CrissCross.Avalonia.UI.Reactive` | The complete `CrissCross.Avalonia.UI` API compiled against the Reactive dependency family. |
 | `CrissCross.MAUI` | MAUI Shell navigation host and ReactiveUI integration. |
-| `CrissCross.Maui.UI` | MAUI themed controls and shared feature controls backed by the same core state models. |
+| `CrissCross.MAUI.Reactive` | The complete `CrissCross.MAUI` API compiled against Reactive MAUI dependencies. |
+| `CrissCross.Maui.UI` | Project-reference-only MAUI themed controls and shared feature controls backed by the same core state models. |
 | `CrissCross.WinForms` | WinForms navigation forms and routed view hosts. |
+| `CrissCross.WinForms.Reactive` | The complete `CrissCross.WinForms` API compiled against Reactive WinForms dependencies. |
 | `CrissCross.WPF` | WPF navigation windows, routed view hosts, WebView navigation host, single-instance helper, and WPF integration. |
+| `CrissCross.WPF.Reactive` | The complete `CrissCross.WPF` API compiled against Reactive WPF dependencies. |
 | `CrissCross.WPF.Plot` | WPF/ScottPlot live charting, reactive plot binding, plot adapters, and plot view models. |
+| `CrissCross.WPF.Plot.Reactive` | The complete `CrissCross.WPF.Plot` API compiled against the Reactive dependency family. |
 | `CrissCross.WPF.UI` | WPF themed controls, Fluent-style shell services, themes, resource dictionaries, and gallery controls. |
+| `CrissCross.WPF.UI.Reactive` | The complete `CrissCross.WPF.UI` API compiled against the Reactive dependency family. |
 | `CrissCross.WPF.WebView2` | WPF WebView2 wrapper with overlay window hosting support. |
+| `CrissCross.WPF.WebView2.Reactive` | The complete `CrissCross.WPF.WebView2` API compiled against the Reactive dependency family. |
+| `AICS.Windows.Controls.ColorPicker` | Independently packable WPF color-picker controls whose public namespace is `CrissCross.WPF.UI`. |
 
 
 ## Target Frameworks
 
-| Library | Target frameworks |
+| Library family | Target frameworks |
 | --- | --- |
-| `CrissCross` | `net8.0`, `net9.0`, `net10.0`, plus Windows TFMs from repository build props where enabled. |
-| `CrissCross.Avalonia` | `net8.0`, `net9.0`, `net10.0`. |
-| `CrissCross.Avalonia.UI` | `net8.0`, `net9.0`, `net10.0`. |
-| `CrissCross.MAUI` | `net9.0`, `net10.0`, plus MAUI platform TFMs for Android, iOS, Mac Catalyst, macOS, tvOS, and Windows. |
-| `CrissCross.Maui.UI` | `net9.0`, `net10.0`, plus MAUI platform TFMs for Android, iOS, Mac Catalyst, macOS, tvOS, and Windows. This project is currently marked `IsPackable=false` in the project file. |
-| `CrissCross.WinForms` | `net472`, `net481`, `net8.0-windows10.0.19041.0`, `net9.0-windows10.0.19041.0`, `net10.0-windows10.0.19041.0`. |
-| `CrissCross.WPF` | `net472`, `net481`, `net8.0-windows10.0.19041.0`, `net9.0-windows10.0.19041.0`, `net10.0-windows10.0.19041.0`. |
-| `CrissCross.WPF.Plot` | `net472`, `net481`, `net8.0-windows10.0.19041.0`, `net9.0-windows10.0.19041.0`, `net10.0-windows10.0.19041.0`. |
-| `CrissCross.WPF.UI` | `net472`, `net481`, `net8.0-windows10.0.19041.0`, `net9.0-windows10.0.19041.0`, `net10.0-windows10.0.19041.0`. |
-| `CrissCross.WPF.WebView2` | `net472`, `net481`, `net8.0-windows`, `net9.0-windows`, `net10.0-windows`. |
+| `CrissCross`, `CrissCross.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`; Windows builds additionally target `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.Avalonia`, `CrissCross.Avalonia.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`. |
+| `CrissCross.Avalonia.UI`, `CrissCross.Avalonia.UI.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`. |
+| `CrissCross.MAUI`, `CrissCross.MAUI.Reactive` | `net10.0`, `net10.0-android`, `net10.0-ios`, `net10.0-maccatalyst`, `net10.0-macos`, `net10.0-tvos`, and `net10.0-windows10.0.19041.0` on Windows. |
+| `CrissCross.Maui.UI` | The same .NET 10 MAUI target family as `CrissCross.MAUI`. This project is marked `IsPackable=false`. |
+| `CrissCross.WinForms`, `CrissCross.WinForms.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.WPF`, `CrissCross.WPF.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.WPF.Plot`, `CrissCross.WPF.Plot.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.WPF.UI`, `CrissCross.WPF.UI.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.WPF.WebView2`, `CrissCross.WPF.WebView2.Reactive` | `net472`, `net48`, `net481`, `net8.0-windows`, `net9.0-windows`, `net10.0-windows`, and `net11.0-windows`. |
+| `AICS.Windows.Controls.ColorPicker` | `net48`, `net6.0-windows10.0.17763`, `net7.0-windows10.0.17763`. |
 
 ## Gallery Projects
 
@@ -52,7 +63,9 @@ dotnet run --project src/CrissCross.Maui.UI.Gallery/CrissCross.Maui.UI.Gallery.c
 
 ## Package Installation
 
-Use NuGet packages where they are published, or project references when consuming the libraries from this repository.
+Choose one dependency family for an application. The standard packages use `ReactiveUI.Primitives`; the `.Reactive` packages compile the same linked CrissCross source against the corresponding `ReactiveUI.*.Reactive` packages. Do not reference both variants of the same CrissCross library in one project.
+
+Standard package family:
 
 ```powershell
 dotnet add package CrissCross
@@ -64,9 +77,39 @@ dotnet add package CrissCross.Avalonia
 dotnet add package CrissCross.Avalonia.UI
 dotnet add package CrissCross.MAUI
 dotnet add package CrissCross.WinForms
+dotnet add package AICS.Windows.Controls.ColorPicker
 ```
 
-For `CrissCross.Maui.UI`, reference the project directly while it remains non-packable:
+Reactive package family:
+
+```powershell
+dotnet add package CrissCross.Reactive
+dotnet add package CrissCross.WPF.Reactive
+dotnet add package CrissCross.WPF.UI.Reactive
+dotnet add package CrissCross.WPF.Plot.Reactive
+dotnet add package CrissCross.WPF.WebView2.Reactive
+dotnet add package CrissCross.Avalonia.Reactive
+dotnet add package CrissCross.Avalonia.UI.Reactive
+dotnet add package CrissCross.MAUI.Reactive
+dotnet add package CrissCross.WinForms.Reactive
+```
+
+The public type/member surface, XAML controls, startup sequence, navigation contracts, and behavior are shared because each `.Reactive` project links the standard project source. Use the namespace and XAML assembly for the selected family:
+
+| Standard namespace | `.Reactive` namespace |
+| --- | --- |
+| `CrissCross` | `CrissCross.Reactive` |
+| `CrissCross.WPF` | `CrissCross.Reactive.WPF` |
+| `CrissCross.WPF.UI` | `CrissCross.Reactive.WPF.UI` |
+| `CrissCross.WPF.Plot` | `CrissCross.Reactive.WPF.Plot` |
+| `CrissCross.Avalonia` | `CrissCross.Reactive.Avalonia` |
+| `CrissCross.Avalonia.UI` | `CrissCross.Reactive.Avalonia.UI` |
+| `CrissCross.MAUI` | `CrissCross.Reactive.MAUI` |
+| `CrissCross.WinForms` | `CrissCross.Reactive.WinForms` |
+
+`CrissCross.WPF.WebView2.Reactive` also exposes its linked control source under `CrissCross.Reactive.WPF`. Substitute these namespaces and the `.Reactive` assembly name in the examples below when using the Reactive package family.
+
+`CrissCross.Maui.UI` is not a NuGet package. Reference the project directly:
 
 ```xml
 <ProjectReference Include="..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
@@ -175,8 +218,12 @@ Application.Run(new MainForm());
 | Reactive base object | `RxObject`, `IRxObject`, `RxObjectMixins` | Base class and helpers for ReactiveUI view models with navigation lifecycle flags. |
 | View-model routed hosts | `IViewModelRoutedViewHost`, `ViewModelRoutedViewHostMixins` | Platform-neutral navigation contract used by WPF, Avalonia, MAUI, and WinForms hosts. |
 | Navigation lifecycle | `IAmBuilt`, `ISetNavigation`, `INotifiyNavigation`, `IUseNavigation`, `IUseHostedNavigation`, `INotifiyRoutableViewModel` | Optional interfaces for setup, hosted navigation, and navigation notifications. |
+| Build-completion signal | `EventSignal`, `RxObjectMixins.BuildComplete`, `BuildCompleteDisposable`, `SetupComplete` | Defers work until application dependency registration has completed. |
 | Navigation events | `IViewModelNavigationBaseEventArgs`, `IViewModelNavigationEventArgs`, `IViewModelNavigatingEventArgs`, `ViewModelNavigationBaseEventArgs`, `ViewModelNavigationEventArgs`, `ViewModelNavigatingEventArgs` | Event argument models for navigating, navigated, and lifecycle notifications. |
-| Bidirectional navigation | `INavigationRegistry`, `NavigationRegistry`, `IBidirectionalNavigator`, `NavigationRequest`, `NavigationResolution`, `NavigationResolution<TViewModel,TView>`, `NavigationJournal` | Resolve views from view models and view models from views, then maintain journal history. |
+| Navigation requests | `NavigationRequestOptions`, `NavigationKeyRequest<TKey>`, `ViewModelNavigationRequest<TViewModel,TView>`, `ViewNavigationRequest<TViewModel,TView>` | Carries typed/runtime lookup keys, contracts, parameters, supplied instances, and cancellation. |
+| Navigation registration | `INavigationRegistry`, `NavigationRegistry`, `NavigationRegistration<TViewModelKey,TViewModel,TViewKey,TView>`, `NavigationRegistryExtensions` | Registers concrete or interface/base-keyed ViewModel/View factory pairs. |
+| Bidirectional navigation | `IBidirectionalNavigator`, `NavigationExtensions`, `NavigationResolution`, `NavigationResolution<TViewModel,TView>`, `NavigationJournal` | Resolves views from view models and view models from views, then maintains journal history. |
+| Resolved routed hosts | `IResolvedViewModelRoutedViewHost` | Adds registry-based navigation-key resolution to a platform routed host. |
 | Navigation exceptions | `NavigationRegistrationException`, `NavigationResolutionException` | Explicit errors for duplicate, missing, or invalid navigation registrations. |
 | Navigation metadata | `NavigationType`, `NavigationSourceKind` | Describes normal, reset, and back navigation plus origin source. |
 
@@ -199,26 +246,27 @@ public sealed class DashboardViewModel : RxObject
 
     public DashboardViewModel()
     {
-        BuildComplete();
+        this.BuildComplete(() => Title = "Dashboard ready");
     }
 }
 ```
 
-`BuildComplete()` marks construction as complete. `SetupComplete()` marks the view model as ready for navigation. Controls and hosts use these flags to avoid acting on partially constructed view models.
+`BuildComplete(Action)` registers work that must wait until dependency registration is finished. `BuildCompleteDisposable(Action)` does the same and returns the subscription. After all registrations are present, call `AppLocator.CurrentMutable.SetupComplete()` once to publish the build-complete signal and run those callbacks.
 
 ### View-Model Navigation Helpers
 
-`ViewModelRoutedViewHostMixins` provides extension methods over `IViewModelRoutedViewHost`:
+`ViewModelRoutedViewHostMixins` provides navigation and lifecycle extensions over `IUseNavigation` and `IUseHostedNavigation`. `NavigationExtensions` supplies instance- and request-based helpers directly on `IViewModelRoutedViewHost`.
 
 | Method | Use |
 | --- | --- |
-| `NavigateToView<TViewModel>()` | Create and navigate to a registered or located view model type. |
-| `NavigateToView(Type)` | Navigate to a view model type selected at runtime. |
-| `NavigateToViewAndClearHistory<TViewModel>()` | Navigate and clear the host history. |
-| `NavigateBack()` | Navigate to the previous view model when available. |
-| `CanNavigateBack()` | Returns whether the host can navigate back. |
-| `ClearHistory()` | Clear the host navigation journal. |
-| `WhenSetup()` | Returns an observable that completes when host setup is complete. |
+| `NavigateToView<TViewModel>(NavigationKeyRequest<TViewModel>)` | Resolve and navigate to a registered view-model key, with optional contract, parameter, and cancellation metadata. |
+| `NavigateToView(Type, NavigationRequestOptions)` | Navigate to a view model type selected at runtime. |
+| `NavigateTo<TNavigationKey>(NavigationKeyRequest<TNavigationKey>)` | Navigate through a registered view-model or view interface/base-class key. |
+| `NavigateToViewAndClearHistory<TViewModel>(NavigationKeyRequest<TViewModel>)` | Resolve, navigate, and clear the host history. |
+| `NavigateBack([hostName], [parameter])` | Navigate to the previous view model, optionally on a named host and with a parameter. |
+| `CanNavigateBack([hostName])` | Returns `IObservable<bool>` for the default or named host's back-navigation state. |
+| `ClearHistory([hostName])` | Clear the default or named host navigation journal. |
+| `WhenSetup([hostName])` | Returns `IObservable<bool>` that emits setup state for the default or named host. |
 | `SetMainNavigationHost(...)` | Registers a platform host as the main navigation surface. |
 | `WhenNavigating(...)`, `WhenNavigatedTo(...)`, `WhenNavigatedFrom(...)` | Hooks view or view-model navigation lifecycle callbacks. |
 
@@ -233,10 +281,8 @@ public sealed class ShellViewModel : RxObject, IUseHostedNavigation
     {
         OpenSettings = ReactiveCommand.Create(() =>
         {
-            this.NavigateToView<SettingsViewModel>();
+            this.NavigateToView(new NavigationKeyRequest<SettingsViewModel>());
         });
-
-        BuildComplete();
     }
 }
 ```
@@ -272,7 +318,11 @@ var registry = provider.GetRequiredService<INavigationRegistry>();
 
 var resolution = await registry
     .CreateNavigator(provider)
-    .NavigateViewModel<HomeViewModel, HomeView>(contract: "home")
+    .NavigateViewModel(
+        new ViewModelNavigationRequest<HomeViewModel, HomeView>
+        {
+            Options = new NavigationRequestOptions { Contract = "home" }
+        })
     .FirstAsync();
 
 var viewModel = resolution.ViewModel;
@@ -290,10 +340,10 @@ Most state models are immutable snapshots. When a value changes, assign a new st
 | Busy and command state | `BusyOperation`, `CommandButtonState`, `CommandButtonStatus` |
 | Search and paging | `SearchQueryState`, `PaginationState`, `PageRequest` |
 | Filtering | `DataFilterPanelState`, `FilterDescriptor`, `FilterExpression`, `FilterToken`, `FilterOperator`, `FilterEditorKind` |
-| Chips and segmented selection | `ChipModel`, `ChipGroupState`, `ChipGroupSelectionMode`, `SegmentItem`, `SegmentedSelectionState` |
-| Workflow steps | `StepDescriptor`, `StepperState`, `StepStatus`, `StepperOrientation` |
-| Validation and forms | `ValidationMessage`, `ValidationSummaryState`, `ValidationSeverity`, `FormFieldState`, `ReactiveFormField` state models |
-| Property editing | `PropertyDescriptorModel`, `PropertyDescriptorGroup`, `PropertyGridState`, `PropertyEditorKind` |
+| Chips and segmented selection | `ChipModel`, `ChipModelOptions`, `ChipGroupState`, `ChipGroupSelectionMode`, `SegmentItem`, `SegmentedSelectionState` |
+| Workflow steps | `StepDescriptor`, `StepDescriptorOptions`, `StepperState`, `StepStatus`, `StepperOrientation` |
+| Validation and forms | `ValidationMessage`, `ValidationSummaryState`, `ValidationSeverity`, `FormFieldState` |
+| Property editing | `PropertyDescriptorModel`, `PropertyDescriptorOptions`, `PropertyDescriptorGroup`, `PropertyGridState`, `PropertyEditorKind` |
 | Date and time ranges | `DateTimeRange`, `DateTimeRangePreset`, `DateTimeRangePresetDefinition` |
 | Theme preference | `ThemeChoice`, `ThemePreferenceState` |
 | Empty states | `EmptyStateModel`, `EmptyStateVariant` |
@@ -476,9 +526,9 @@ Key members:
 | `NavigationStack` | Read-only navigation journal. |
 | `CanNavigateBack` | Returns whether back navigation is possible. |
 | `ViewLocator` | ReactiveUI view locator used to resolve views. |
-| `Navigate<TViewModel>()` | Navigate to a new view model instance. |
+| `Navigate<TViewModel>(TViewModel)` / `Navigate<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with a supplied view model or resolve one from a typed navigation key. |
 | `Navigate(IRxObject)` | Navigate to an existing view model. |
-| `NavigateAndReset<TViewModel>()` | Navigate and reset history. |
+| `NavigateAndReset<TViewModel>(TViewModel)` / `NavigateAndReset<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with an instance or typed key and reset history. |
 | `NavigateBack()` | Pop history and show the previous view. |
 | `ClearHistory()` | Clear host history. |
 | `Refresh()` | Re-resolve current view. |
@@ -601,9 +651,9 @@ Use `NavigationUserControl` or `NavigationUserControl<TViewModel>` for nested na
 | `HostName` | Names the host. |
 | `NavigationStack` | Navigation journal. |
 | `CanNavigateBack` | Indicates whether back navigation is available. |
-| `Navigate<TViewModel>()` | Navigate by view model type. |
+| `Navigate<TViewModel>(TViewModel)` / `Navigate<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with a supplied view model or resolve one from a typed navigation key. |
 | `Navigate(IRxObject)` | Navigate to an existing view model. |
-| `NavigateAndReset<TViewModel>()` | Navigate and clear history. |
+| `NavigateAndReset<TViewModel>(TViewModel)` / `NavigateAndReset<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with an instance or typed key and clear history. |
 | `NavigateBack()` | Navigate back. |
 | `ClearHistory()` | Clear journal history. |
 | `Refresh()` | Re-resolve current view. |
@@ -664,9 +714,9 @@ Key members:
 | `NavigateBackIsEnabled` | Enables shell back behavior. |
 | `RequiresSetup` | Indicates whether setup is still required. |
 | `ViewLocator` | ReactiveUI view locator used to resolve views. |
-| `Navigate<TViewModel>()` | Navigate by view model type. |
+| `Navigate<TViewModel>(TViewModel)` / `Navigate<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with a supplied view model or resolve one from a typed navigation key. |
 | `Navigate(IRxObject)` | Navigate to an existing view model. |
-| `NavigateAndReset<TViewModel>()` | Navigate and reset stack. |
+| `NavigateAndReset<TViewModel>(TViewModel)` / `NavigateAndReset<TViewModel>(NavigationKeyRequest<TViewModel>)` | Navigate with an instance or typed key and reset the stack. |
 | `NavigateBack()` | Pop shell navigation. |
 | `ClearHistory()` | Clear view-model history. |
 | `Refresh()` | Re-resolve current route. |
@@ -719,7 +769,7 @@ var host = new ViewModelRoutedViewHost
 
 Controls.Add(host);
 host.Setup();
-host.Navigate<HomeViewModel>();
+host.Navigate(new HomeViewModel());
 ```
 
 ## CrissCross.WPF.UI
@@ -769,7 +819,8 @@ using CrissCross.WPF.UI;
 using Microsoft.Extensions.Hosting;
 
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureCrissCrossForPageNavigation<MainWindow, HomePage>()
+    .ConfigureCrissCrossForPageNavigation<MainWindow, HomePage>(
+        new PageNavigationRegistration<MainWindow, HomePage>())
     .Build();
 
 await host.StartAsync();
@@ -779,7 +830,8 @@ For view-model navigation:
 
 ```csharp
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureCrissCrossForViewModelNavigation<MainWindow, ShellViewModel>()
+    .ConfigureCrissCrossForViewModelNavigation<MainWindow, ShellViewModel>(
+        new ViewModelNavigationRegistration<MainWindow, ShellViewModel>())
     .Build();
 ```
 
@@ -820,7 +872,7 @@ Snackbar example:
 snackbarService.Show(
     title: "Saved",
     message: "Changes have been written.",
-    controlAppearance: ControlAppearance.Success,
+    appearance: ControlAppearance.Success,
     icon: null,
     timeout: TimeSpan.FromSeconds(3));
 ```
@@ -845,18 +897,15 @@ themeService.SetSystemAccent();
 | `NavigationViewItem` | Selectable navigation item. |
 | `NavigationViewItemHeader` | Navigation section header. |
 | `NavigationViewItemSeparator` | Navigation separator. |
-| `NavigationViewItemPresenter` | Internal presenter for navigation items. |
-| `NavigationViewItemAutomationPeer` | Automation peer for navigation items. |
-| `NavigationViewItemTemplateSettings` | Template state for navigation items. |
-| `NavigationViewItemsFactory` | Creates navigation item containers. |
-| `NavigationViewList` | Internal item list used by `NavigationView`. |
-| `NavigationViewBackButton` | Back button integrated with navigation state. |
+| `NavigationViewContentPresenter` | Frame-based presenter for selected navigation content. |
+| `INavigationView`, `INavigationViewItem`, `INavigationAware`, `INavigableView<T>` | Navigation shell, item, lifecycle, and typed-view contracts. |
+| `NavigationViewPaneDisplayMode`, `NavigationViewBackButtonVisible`, `NavigationCacheMode` | Pane, back-button, and page-cache configuration. |
 | `BreadcrumbBar` | Hierarchical breadcrumb path with selected item navigation. |
 | `ClientAreaBorder` | Themed border used around custom chrome client content. |
 | `Frame` | Themed frame for page content. |
 | `Page` | Themed WPF page base. |
 | `NavigationUserControl` | User control base for navigation-aware content. |
-| `AppBar`, `AppBarButton`, `AppBarSeparator`, `AppBarToggleButton`, `AppBarElementContainer` | Command bar and app bar controls. |
+| `AppBar`, `AppBarButton` | Command bar surface and command button. |
 | `TabControl`, `TabView` | Themed tabbed navigation and tabbed document surfaces. |
 | `LoadingScreen` | Startup or long-running loading surface. |
 
@@ -899,6 +948,7 @@ NavigationView example:
 | `StackPanel` | Themed stack panel wrapper. |
 | `StatusBar` | Status area container. |
 | `TextBlock` | Themed text display. |
+| `BBCodeBlock` | Theme-aware BBCode text with safe external links and `cmd:` command links. |
 | `ToolBar` | Themed toolbar container. |
 | `ToolTip` | Themed tooltip. |
 
@@ -985,13 +1035,12 @@ NavigationView example:
 | `IconSource` | Source model for icon creation. |
 | `FontIcon`, `FontIconSource` | Font glyph icons. |
 | `SymbolIcon`, `SymbolIconSource` | Symbol icons. |
-| `ImageIcon`, `ImageIconSource` | Image-backed icons. |
+| `ImageIcon` | Image-backed icon. |
 | `SymbolGlyph`, `SymbolRegular`, `SymbolFilled` | Built-in symbol glyph definitions. |
 | `IAppearanceControl` | Contract for controls that expose appearance. |
 | `IIconControl` | Contract for controls exposing an icon. |
 | `IThemeControl` | Contract for theme-aware controls. |
 | `ControlAppearance` | Appearance enum used by many controls. |
-| `ColorPaletteResources` | Theme color palette resources. |
 
 ### Feature Controls
 
@@ -1014,6 +1063,68 @@ These controls share their view-model state with Avalonia and MAUI equivalents.
 | `PropertyGridLite` | `PropertyGridState` | `InspectorState`, `SearchText`, `CommitChangesCommand`, `ResetChangesCommand`. |
 | `ReactiveFormField` | `FormFieldState` | Field label, hint, validation messages, required state. |
 | `EmptyState` | `EmptyStateModel` | Title, description, icon, variant, primary action. |
+
+### BBCodeBlock Rich Text And Links
+
+WPF and Avalonia UI both provide `Controls.BBCodeBlock`. It renders lightweight BBCode including bold, italic, underline, strike-through, color, size, font, paragraph, list, break, code, URL, and email markup. A `[url=cmd:payload]...[/url]` link invokes `Command`; HTTP, HTTPS, and mail links follow `OpenExternalLinks` and raise `ExternalLinkRequested`.
+
+| Member | WPF | Avalonia |
+| --- | --- | --- |
+| `BBCode` | Dependency property | Styled property |
+| `Command`, `CommandParameter` | Supported | Supported |
+| `CommandTarget` | Supported for routed commands | Not applicable |
+| `OpenExternalLinks` | Supported | Supported |
+| `ExternalLinkRequested` | `BBCodeExternalLinkRequestedEventArgs` | `BBCodeLinkRequestedEventArgs` |
+
+```csharp
+using System.Diagnostics;
+using CrissCross.WPF.UI.Controls;
+
+var command = ReactiveCommand.Create<string>(
+    payload => Trace.WriteLine($"BBCode command: {payload}"));
+
+var message = new BBCodeBlock
+{
+    BBCode = "[b]Status[/b]: [color=#4FC3F7]ready[/color]. "
+        + "[url=cmd:refresh]Refresh[/url] or "
+        + "[url=https://github.com/reactivemarbles/CrissCross]open documentation[/url].",
+    Command = command,
+    OpenExternalLinks = false
+};
+
+message.ExternalLinkRequested +=
+    (_, eventArgs) => Trace.WriteLine(eventArgs);
+```
+
+## AICS.Windows.Controls.ColorPicker
+
+This independently packable WPF project is maintained under `CrissCross.WPF.UI/Controls/ColorSelector`. Despite the package ID, its public types use `CrissCross.WPF.UI` (or `CrissCross.Reactive.WPF.UI` when linked into the Reactive WPF UI package).
+
+| API family | Public types and members |
+| --- | --- |
+| Picker bases | `PickerControlBase` (`ColorState`, `SelectedColor`, `ColorChanged`) and `DualPickerControlBase` (`SecondaryColor`, `HintColor`, `UseHintColor`, `SwapColors()`, `SetMainColorFromHintColor()`). |
+| Complete pickers | `StandardColorPicker`, `PortableColorPicker`, `SquarePicker`, `ColorSliders`, `ColorDisplay`, `AlphaSlider`, `HexColorTextBox`. |
+| Picker configuration | `PickerType` (`HSV`, `HSL`), `SmallChange`, `ShowAlpha`, `ShowHex`, `ShowSliders`, `ShowColorSwap`, `ShowPickerType`. |
+| Color models | `NotifyableColor`, `RgbColorComponents`, `HslColorComponents`, `HsvColorComponents`, `ColorRoutedEventArgs`. |
+| Storage contracts | Public `IColorStateStorage` and `IHintColorStateStorage`; secondary-color storage remains an internal implementation detail. |
+| Channel sliders | `PreviewColorSlider`, `RgbColorSlider`, `HslColorSlider`, `HsvColorSlider`. |
+
+C# example:
+
+```csharp
+using System.Diagnostics;
+using System.Windows.Media;
+using CrissCross.WPF.UI;
+
+var picker = new StandardColorPicker
+{
+    SelectedColor = Colors.CornflowerBlue,
+    PickerType = PickerType.HSV,
+    ShowAlpha = true
+};
+
+picker.ColorChanged += (_, _) => Trace.WriteLine(picker.SelectedColor);
+```
 
 ## CrissCross.Avalonia.UI
 
@@ -1073,6 +1184,7 @@ AppBar
 Arc
 AutoSuggestBox
 Badge
+BBCodeBlock
 Border
 BreadcrumbBar
 BusyOverlay
@@ -1204,6 +1316,25 @@ The Avalonia feature controls use the same core state models as WPF:
 | `ReactiveFormField` | `FormFieldState` | Field label, hint, validation, and required state. |
 | `EmptyState` | `EmptyStateModel` | Title, description, icon, variant, and action. |
 
+### Avalonia HSV Color Selector
+
+`CrissCross.Avalonia.UI.Controls.ColorSelector` exposes two-way Avalonia styled properties for `SelectedColor`, `Hue` (0–360), `Saturation` (0–1), `Brightness` (0–1), `Alpha` (0–1), and the derived full-saturation `HueColor`.
+
+```csharp
+using Avalonia.Media;
+using CrissCross.Avalonia.UI.Controls;
+
+var selector = new ColorSelector
+{
+    Hue = 205,
+    Saturation = 0.68,
+    Brightness = 0.92,
+    Alpha = 1
+};
+
+Color selected = selector.SelectedColor;
+```
+
 ### Avalonia Examples
 
 Auto suggest input:
@@ -1284,8 +1415,10 @@ xmlns:ui="clr-namespace:CrissCross.Maui.UI.Controls;assembly=CrissCross.Maui.UI"
 
 | Control | Primary state | Important members |
 | --- | --- | --- |
+| `AlarmBanner` | alarm presentation | `IsActive`, `Message`, `Severity`, `AcknowledgeCommand`, `CloseCommand`. |
 | `AsyncCommandButton` | command state | `Command`, `CancelCommand`, `CancelText`, async/cancel presentation. |
 | `BusyOverlay` | `BusyOperation` | Busy content overlay and progress state. |
+| `Card`, `CardAction`, `CardColor`, `CardExpander` | card presentation | Base card content, actions, title/subtitle/color, expandable header/content, and `IsExpanded`. |
 | `Chip` | `ChipModel` | Text, selected state, close/remove behavior. |
 | `ChipGroup` | `ChipGroupState` | Multiple chips with selection mode. |
 | `CommandButton` | `CommandButtonState` | `State`, `IsExecuting`, `Progress`, command presentation. |
@@ -1294,10 +1427,15 @@ xmlns:ui="clr-namespace:CrissCross.Maui.UI.Controls;assembly=CrissCross.Maui.UI"
 | `DateTimeRangePicker` | `DateTimeRange` | `Range`, `ApplyRangeCommand`. |
 | `EmptyState` | `EmptyStateModel` | Empty/loading/error/success placeholder. |
 | `FilterBar` | `SearchQueryState` | `SearchState`, `ClearFiltersCommand`. |
+| `InfoBadge`, `InfoBadgeSeverity` | status badge | Severity-driven compact status indicator. |
+| `InfoBar`, `InfoBarSeverity` | message surface | `Title`, `Message`, `Severity`, `ActionText`, `ActionCommand`. |
+| `PersonPicture` | identity presentation | `DisplayName`, `Initials`, `Source`. |
 | `PropertyGridLite` | `PropertyGridState` | `PropertyGridState`, `UpdatePropertyCommand`. |
-| `ReactiveFormField` | `FormFieldState` | Field label, hint, required marker, validation messages. |
+| `RatingControl` | rating value | `Value`, `MaxRating`, `IsReadOnly`, `ValueChangedCommand`. |
+| `ReactiveFormField` | `FormFieldState` | `FieldState`. |
 | `SearchBox` | `SearchQueryState` | `Text`, `SearchState`, `SubmitCommand`, `SubmitSearch()`. |
 | `SegmentedControl` | `SegmentedSelectionState` | `State`, `SelectedKey`, `SelectionCommand`, `SelectSegment`. |
+| `Snackbar` | transient message | `IsShown`, `Title`, `Message`, `IsCloseButtonEnabled`, `CloseCommand`. |
 | `Stepper` | `StepperState` | `StepperState`, `StepCommand`. |
 | `ThemeSwitcher` | `ThemePreferenceState` | `ThemeState`, `ChangeThemeCommand`. |
 | `ValidationSummary` | `ValidationSummaryState` | `SummaryState`. |
@@ -1371,7 +1509,6 @@ public sealed class OrdersViewModel : RxObject
             Paging = new PaginationState(request.PageIndex, request.PageSize, Paging.TotalItemCount);
         });
 
-        BuildComplete();
     }
 }
 ```
@@ -1445,7 +1582,7 @@ xmlns:plot="https://github.com/reactivemarbles/CrissCross.ui"
 
 | Feature | Members |
 | --- | --- |
-| WPF plot creation | `CreateWpfPlot(...)` and plot setup helpers. |
+| WPF plot creation | Construct `LiveChartViewModel(Grid)` with the host grid; the view model initializes the ScottPlot surface and chart state. |
 | Axis configuration | `CreateAxisWithTimeStamp(...)`, `CreateAxisWithPoints(...)`, `AxisStyle(...)`, `YAxesSetup(...)`, `HideAllYAxis()`. |
 | Scaling | `ManualScaleY(...)` plus autoscale command helpers. |
 | Crosshairs and labels | `AddCrosshairBtn`, `ClearLabels()`, `ClearAxisCrosshairs()`, `ClearAxisLines()`. |
@@ -1460,9 +1597,9 @@ Create a signal source and bind it to a chart:
 ```csharp
 using CrissCross.WPF.Plot;
 using ReactiveUI.Primitives;
-using Observable = ReactiveUI.Primitives.Signals.Signal;
+using Signal = ReactiveUI.Primitives.Signals.Signal;
 
-var ticks = Observable.Interval(TimeSpan.FromMilliseconds(100))
+var ticks = Signal.Every(TimeSpan.FromMilliseconds(100))
     .Select(i => (
         Name: "temperature",
         Value: (IList<double>)new[] { Math.Sin(i / 10d) },
@@ -1495,6 +1632,50 @@ Factory methods available on `ReactivePlotSource`:
 | `FromStreamerPoints(...)` | Append streaming values. |
 | `FromSignalXyPoints(...)` | Append SignalXY points. |
 | `FromSignalXySnapshot(...)` | Replace SignalXY points with snapshot data. |
+| `FromStatic(...)` | Render an immutable `PlotSeriesData` snapshot with optional plot type and style. |
+| `FromHistoric(...)` | Reduce a historic series to a target point count before rendering. |
+| `FromLive(...)` | Stream numeric `PlotDataPoint` values with optional retention and style settings. |
+| `FromDateTimeLive(...)` | Stream timestamped values using the OLE Automation date X-axis representation. |
+
+### Historic Data, Styling, Themes, And Studies
+
+| API | Use |
+| --- | --- |
+| `PlotSeriesData` | Immutable numeric or `DateTime` X/Y series; use `Numeric(...)`, `DateTime(...)`, `Derive(...)`, and `ToUpdate(...)`. |
+| `ReactivePlotSeriesStyle` | Immutable series color, line width, marker size, line/baseline modes, baseline, and legend visibility. |
+| `ReactivePlotTheme` | Built-in `Dark` and `Light` plot palettes or an immutable custom palette. Apply with `LiveChartViewModel.ApplyTheme(...)`. |
+| `PlotDataReducer.LargestTriangleThreeBuckets(...)` | LTTB downsampling that preserves the visual shape of large historic series. |
+| `TechnicalIndicators` | Static SMA, EMA, RSI, MACD, Bollinger Bands, and Ichimoku results over `PlotSeriesData`. |
+| `ReactivePlotStudies` | Live SMA, EMA, RSI, MACD, Bollinger Bands, and Ichimoku derived `IReactivePlotSource` streams. |
+
+Continuing from the live `source` created in the previous example:
+
+```csharp
+var samples = Enumerable.Range(0, 10_000)
+    .Select(static value => Math.Sin(value / 25d))
+    .ToArray();
+
+var history = PlotSeriesData.Numeric(
+    "temperature",
+    axis: 0,
+    x: Enumerable.Range(0, samples.Count).Select(static value => (double)value).ToArray(),
+    y: samples);
+
+var reduced = PlotDataReducer.LargestTriangleThreeBuckets(history, targetPointCount: 1_000);
+var movingAverage = TechnicalIndicators.SimpleMovingAverage(reduced, period: 20);
+
+var style = new ReactivePlotSeriesStyle
+{
+    Color = "#4FC3F7",
+    LineWidth = 2,
+    ShowInLegend = true
+};
+
+var historicSource = ReactivePlotSource.FromStatic(movingAverage, PlotType.Line, style);
+var liveRsiSource = ReactivePlotStudies.RelativeStrengthIndex(source, period: 14);
+
+liveChartViewModel.ApplyTheme(ReactivePlotTheme.Dark);
+```
 
 ## CrissCross.WPF.WebView2
 
@@ -1531,7 +1712,7 @@ Key members:
 | `CanGoBack`, `CanGoForward` | Browser history state. |
 | `CoreWebView2` | Underlying WebView2 instance. |
 | `Content` | WPF overlay content. |
-| `EnsureCoreWebView2Async()` | Initializes WebView2. |
+| `EnsureCoreWebView2Async(CoreWebView2Environment, CoreWebView2ControllerOptions?)` | Initializes WebView2 with an environment and optional controller options. |
 | `ExecuteScriptAsync(string)` | Runs JavaScript. |
 | `NavigateToString(string)` | Loads HTML. |
 | `GoBack()`, `GoForward()`, `Reload()`, `Stop()` | Browser commands. |
@@ -1559,9 +1740,18 @@ using CrissCross.WPF;
 var host = new WindowHost<OverlayWindow>("Overlay");
 HostContainer.Children.Add(host);
 
+var overlayWindow = host.Window;
+var overlayHandle = host.WindowHandle;
+
 // Later
 host.Close();
 ```
+
+| Member | Use |
+| --- | --- |
+| `Window` | The hosted `TWindow` instance. |
+| `WindowHandle` | Safe handle for the hosted child HWND. |
+| `Close()` | Closes the hosted window and releases the host handle. |
 
 ## Theming
 
@@ -1650,10 +1840,8 @@ public sealed class HomeViewModel : RxObject, IUseHostedNavigation
     {
         OpenDetails = ReactiveCommand.Create(() =>
         {
-            this.NavigateToView<DetailsViewModel>();
+            this.NavigateToView(new NavigationKeyRequest<DetailsViewModel>());
         });
-
-        BuildComplete();
     }
 }
 ```
@@ -1695,7 +1883,6 @@ public sealed class SearchPageViewModel : RxObject
             Paging = new PaginationState(request.PageIndex, request.PageSize, Paging.TotalItemCount);
         });
 
-        BuildComplete();
     }
 }
 ```
@@ -1731,7 +1918,6 @@ public sealed class ImportViewModel : RxObject
             }
         });
 
-        BuildComplete();
     }
 }
 ```
@@ -1794,25 +1980,26 @@ MAUI:
 | Avalonia control templates are missing | Confirm `StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/Index.axaml"` is present after the base Avalonia theme. |
 | MAUI static resource is missing | Call `Resources.UseCrissCrossMauiUiResources()` or merge `<styles:CrissCrossMauiUi />` in application resources. |
 | Reactive command reports wrong parameter type | Bind commands with the parameter type the `ReactiveCommand<TInput,TOutput>` expects. Use `ReactiveCommand<Unit, Unit>` for parameterless buttons, or pass a strongly typed command parameter. |
-| WebView2 fails at startup | Install the Microsoft Edge WebView2 runtime and initialize the control with `EnsureCoreWebView2Async()` before script calls. |
+| WebView2 fails at startup | Install the Microsoft Edge WebView2 runtime. For `NavigationWebView`, call `EnsureCoreWebView2Async()`; for `WebView2Wpf`, create a `CoreWebView2Environment` and pass it to `EnsureCoreWebView2Async(environment)` before script calls. |
 | Navigation resolves no view | Register the view with the ReactiveUI view locator or the `NavigationRegistry`, and ensure the view implements the expected `IViewFor<TViewModel>` contract where required. |
 
 ## API Surface Checklist
 
 Use this checklist when adding or verifying package parity:
 
-| Package | Required feature families |
+| Package or project | Required feature families |
 | --- | --- |
-| `CrissCross` | `RxObject`, lifecycle interfaces, routed host interfaces, navigation registry, shared state models. |
-| `CrissCross.WPF` | `NavigationWindow`, `NavigationWindow<TViewModel>`, `ViewModelRoutedViewHost`, `NavigationWebView`, `Make.SingleInstance`, `WindowHost<TWindow>`. |
-| `CrissCross.Avalonia` | `NavigationWindow`, `NavigationWindow<TViewModel>`, `NavigationUserControl`, `NavigationUserControl<TViewModel>`, `ViewModelRoutedViewHost`, `ReactiveTransitioningContentControl`. |
-| `CrissCross.MAUI` | `NavigationShell`. |
-| `CrissCross.WinForms` | `NavigationForm`, `NavigationForm<TViewModel>`, `ViewModelRoutedViewHost`. |
-| `CrissCross.WPF.UI` | WPF controls, themes, services, theme managers, app shell, feature controls, icons, and resource dictionaries. |
-| `CrissCross.Avalonia.UI` | Avalonia controls, themes, services, theme managers, settings store, app shell, feature controls, and resources. |
-| `CrissCross.Maui.UI` | MAUI feature controls, theme resources, and state-model bindings. |
-| `CrissCross.WPF.Plot` | Live chart, reactive plot binding, adapters, sources, plot UI models, and right properties view. |
-| `CrissCross.WPF.WebView2` | `WebView2Wpf`, `WindowHost<TWindow>`, WebView2 events, browser commands, and overlay content. |
+| `CrissCross`, `CrissCross.Reactive` | `RxObject`, `EventSignal`, lifecycle and routed-host interfaces, navigation requests/registrations/resolutions/journal, and shared state models. |
+| `CrissCross.WPF`, `CrissCross.WPF.Reactive` | `NavigationWindow`, `NavigationWindow<TViewModel>`, `ViewModelRoutedViewHost`, `NavigationWebView`, `Make.SingleInstance`, `WindowHost<TWindow>`. |
+| `CrissCross.Avalonia`, `CrissCross.Avalonia.Reactive` | `NavigationWindow`, `NavigationWindow<TViewModel>`, `NavigationUserControl`, `NavigationUserControl<TViewModel>`, `ViewModelRoutedViewHost`, `ReactiveTransitioningContentControl`. |
+| `CrissCross.MAUI`, `CrissCross.MAUI.Reactive` | `NavigationShell`, routed-host setup, typed and runtime navigation. |
+| `CrissCross.WinForms`, `CrissCross.WinForms.Reactive` | `NavigationForm`, `NavigationForm<TViewModel>`, `ViewModelRoutedViewHost`. |
+| `CrissCross.WPF.UI`, `CrissCross.WPF.UI.Reactive` | WPF controls, themes, services, theme managers, app shell, feature controls, icons, color selection, and resource dictionaries. |
+| `CrissCross.Avalonia.UI`, `CrissCross.Avalonia.UI.Reactive` | Avalonia controls, themes, services, theme managers, settings store, app shell, feature controls, and resources. |
+| `CrissCross.Maui.UI` (project reference only) | MAUI feature controls, theme resources, and state-model bindings. |
+| `CrissCross.WPF.Plot`, `CrissCross.WPF.Plot.Reactive` | Live chart, reactive plot binding, adapters, sources, plot UI models, and right properties view. |
+| `CrissCross.WPF.WebView2`, `CrissCross.WPF.WebView2.Reactive` | `WebView2Wpf`, `WindowHost<TWindow>`, WebView2 events, browser commands, and overlay content. |
+| `AICS.Windows.Controls.ColorPicker` | Picker bases, complete/portable/square pickers, color-state models, storage contracts, and RGB/HSL/HSV sliders. |
 
 
 ---
