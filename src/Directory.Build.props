@@ -12,9 +12,9 @@
     <Company>ChrisPulman</Company>
     <NoWarn>CS1591;CS1701;IDE0190;IDE1006;CA1510</NoWarn>
     <Nullable>enable</Nullable>
-    <PackageIcon>CrissCross.png</PackageIcon>
+    <PackageIcon>CrissCross_500.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Compatability with Net 8/9/10 and net4.7.2 / net4.8.1</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatability with Net 8/9/10/11 and net472 / net48 / net481</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -93,7 +93,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\images\CrissCross.png" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)..\images\CrissCross_500.png" Pack="true" PackagePath="\" />
     <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Pack="true" PackagePath="LICENSE" />
     <None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
