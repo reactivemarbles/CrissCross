@@ -7,7 +7,7 @@
     <SplatVersion>20.2.0</SplatVersion>
     <ReactiveUIVersion>24.0.0</ReactiveUIVersion>
     <ReactiveUIPrimitivesVersion>7.1.0</ReactiveUIPrimitivesVersion>
-    <WebViewVersion>1.0.4078.44</WebViewVersion>
+    <WebViewVersion>1.0.4129.50</WebViewVersion>
     <DotNetVersion>10.0.10</DotNetVersion>
     <DotNet11Version>11.0.0-preview.6.26359.118</DotNet11Version>
     <ExtensionsHostingVersion>4.0.0</ExtensionsHostingVersion>
