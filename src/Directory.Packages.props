@@ -27,7 +27,7 @@
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.0" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.1" />
     <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.1" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Maui.Reactive" Version="$(ReactiveUIVersion)" />
