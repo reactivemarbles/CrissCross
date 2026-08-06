@@ -68,7 +68,7 @@
 
     <!-- Source Generators (PrivateAssets) -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.1.0" />
+    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.2.0" />
 
     <!-- Other UI/Framework Packages -->
     <PackageVersion Include="AngleSharp" Version="1.6.0" />
