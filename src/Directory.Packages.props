@@ -100,7 +100,7 @@
     <PackageVersion Include="StyleSharp.Analyzers" Version="3.45.0" />
     <PackageVersion Include="PerformanceSharp.Analyzers" Version="3.41.7" />
     <PackageVersion Include="SecuritySharp.Analyzers" Version="3.45.0" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />
 
     <!-- Benchmarking -->
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
