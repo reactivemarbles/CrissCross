@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Maui.UI;
+using ReactiveUI.Builder;
 
 namespace CrissCross.Maui.UI.Gallery;
 
@@ -14,6 +15,7 @@ public partial class App : Application
     {
         InitializeComponent();
         _ = Resources.UseCrissCrossMauiUiResources();
+        _ = RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
     }
 
     /// <inheritdoc />

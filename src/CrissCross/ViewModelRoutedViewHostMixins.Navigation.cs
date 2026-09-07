@@ -179,12 +179,12 @@ public static partial class ViewModelRoutedViewHostMixins
                                 return;
                             }
 
-                            if (!WhenSetupSubjects.TryGetValue(host.Name, out var whenSetup))
+                            if (!TryGetSetupSubject(navigation.Name, host, out var whenSetup))
                             {
                                 return;
                             }
 
-                            _ = whenSetup.Where(static x => x).Subscribe(observer).DisposeWith(disposable);
+                            _ = whenSetup!.Where(static x => x).Subscribe(observer).DisposeWith(disposable);
                         })
                         .DisposeWith(disposable);
                 });

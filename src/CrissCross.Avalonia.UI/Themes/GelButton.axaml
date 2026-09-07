@@ -5,7 +5,9 @@
     <!-- CrissCross GelButton Style - A button with a gel/glass-like appearance -->
     <Style Selector="controls|GelButton">
         <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource AccentButtonForeground}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource AccentButtonForeground}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="16,8" />
@@ -145,7 +147,7 @@
     
     <!-- Disabled state -->
     <Style Selector="controls|GelButton:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
     <Style Selector="controls|GelButton:disabled /template/ Border#Base">

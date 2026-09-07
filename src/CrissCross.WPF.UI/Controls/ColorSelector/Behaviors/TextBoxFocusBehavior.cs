@@ -61,6 +61,7 @@ public sealed class TextBoxFocusBehavior : Behavior<TextBox>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString() ?? GetType().Name;
 
+    /// <inheritdoc />
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -71,6 +72,7 @@ public sealed class TextBoxFocusBehavior : Behavior<TextBox>
         AssociatedObject.KeyUp += AssociatedObject_KeyUp;
     }
 
+    /// <inheritdoc />
     protected override void OnDetaching()
     {
         base.OnDetaching();

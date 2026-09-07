@@ -71,6 +71,12 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <summary>Stores the to View Model value.</summary>
     private IRxObject? _toViewModel;
 
+    /// <summary>Stores the navigation result subscription.</summary>
+    private IDisposable? _navigationResultSubscription;
+
+    /// <summary>Stores the disposed value.</summary>
+    private bool _disposedValue;
+
     /// <summary>Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.</summary>
     public ViewModelRoutedViewHost()
     {
@@ -317,7 +323,9 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
             return;
         }
 
-        _ = resultNavigating
+        _navigationResultSubscription?.Dispose();
+
+        _navigationResultSubscription = resultNavigating
             .DistinctUntilChanged()
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(e => HandleNavigationResult(e, hostName));
@@ -327,15 +335,23 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="disposing">Whether managed resources should also be released.</param>
     protected override void Dispose(bool disposing)
     {
+        if (_disposedValue)
+        {
+            return;
+        }
+
         base.Dispose(disposing);
         if (!disposing)
         {
             return;
         }
 
+        ViewModelRoutedViewHostMixins.UnregisterNavigationHost(this);
+        _navigationResultSubscription?.Dispose();
         _canNavigateBackSubject.Dispose();
         _currentViewModel.Dispose();
         _navigationViews.Clear();
+        _disposedValue = true;
     }
 
     /// <summary>Refreshes navigation hosts other than the active host.</summary>

@@ -187,11 +187,15 @@ public class GalleryExampleCoverageTests
         await Assert.That(view).Contains("mauiui:BusyOverlay");
         await Assert.That(view).Contains("mauiui:SearchBox");
         await Assert.That(view).Contains("mauiui:ThemeSwitcher");
+        await Assert.That(viewModel).Contains("supportsHighContrast: true");
+        await Assert.That(viewModel).Contains("UseCrissCrossMauiUiResources(ThemeState)");
+        await Assert.That(viewModel).Contains("Application.Current?.RequestedTheme");
         await Assert.That(view).Contains("mauiui:DataPager");
         await Assert.That(view).Contains("mauiui:DateTimeRangePicker");
         await Assert.That(view).Contains("mauiui:SegmentedControl");
         await Assert.That(view).Contains("mauiui:ChipGroup");
         await Assert.That(view).Contains("mauiui:Stepper");
+        await Assert.That(view).Contains("mauiui:ProcessValueIndicator");
         await Assert.That(app).Contains("UseCrissCrossMauiUiResources");
         await Assert.That(project).Contains("CrissCross.Maui.UI.csproj");
     }

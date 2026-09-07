@@ -27,16 +27,14 @@ internal static class StreamExtensions
             int count,
             CancellationToken cancellationToken = default)
         {
-            var totalRead = 0;
-            while (totalRead < count)
+            var n = 0;
+            for (var totalRead = 0; totalRead < count; totalRead += n)
             {
-                var n = await stream.ReadBufferAsync(buffer, offset + totalRead, count - totalRead, cancellationToken);
+                n = await stream.ReadBufferAsync(buffer, offset + totalRead, count - totalRead, cancellationToken);
                 if (n == 0)
                 {
                     throw new EndOfStreamException();
                 }
-
-                totalRead += n;
             }
         }
 
@@ -46,16 +44,14 @@ internal static class StreamExtensions
         /// <param name="count">The count value.</param>
         internal void ReadAll(byte[] buffer, int offset, int count)
         {
-            var totalRead = 0;
-            while (totalRead < count)
+            var n = 0;
+            for (var totalRead = 0; totalRead < count; totalRead += n)
             {
-                var n = stream.Read(buffer, offset + totalRead, count - totalRead);
+                n = stream.Read(buffer, offset + totalRead, count - totalRead);
                 if (n == 0)
                 {
                     throw new EndOfStreamException();
                 }
-
-                totalRead += n;
             }
         }
 

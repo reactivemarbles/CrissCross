@@ -4,15 +4,17 @@
 
 using Avalonia.Controls;
 using Avalonia.Styling;
+using CrissCross.Avalonia.UI.Appearance;
 using CrissCross.Avalonia.UI.Gallery.Views.Pages;
 
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Exercises every gallery page under the supported application theme variants.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaGalleryThemeCoverageTests
 {
     /// <summary>The number of catalog pages rendered for each theme.</summary>
-    private const int GalleryPageCount = 14;
+    private const int GalleryPageCount = 15;
 
     /// <summary>Verifies every gallery page can initialize with the dark variant requested.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -24,10 +26,15 @@ public sealed class AvaloniaGalleryThemeCoverageTests
     [Test]
     public Task GalleryPages_WhenLightThemeIsRequested_Initialize() => AssertPagesInitializeAsync(ThemeVariant.Light);
 
+    /// <summary>Verifies every gallery page inherits the custom high contrast variant.</summary>
+    /// <returns>A task representing the asynchronous test.</returns>
+    [Test]
+    public Task GalleryPages_WhenHighContrastIsRequested_Initialize() => AssertPagesInitializeAsync(ApplicationThemeManager.HighContrastThemeVariant);
+
     /// <summary>Creates and verifies every page for a requested theme variant.</summary>
     /// <param name="themeVariant">The requested theme variant.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    private static async Task AssertPagesInitializeAsync(ThemeVariant themeVariant)
+    private static Task AssertPagesInitializeAsync(ThemeVariant themeVariant) => AvaloniaTestUiThread.RunAsync(async () =>
     {
         Control[] pages =
         [
@@ -40,6 +47,7 @@ public sealed class AvaloniaGalleryThemeCoverageTests
             new DatePickerPageView(),
             new FeaturePlaygroundPageView(),
             new HomePageView(),
+            new IndustrialPageView(),
             new InputPageView(),
             new ProgressPageView(),
             new RadioButtonPageView(),
@@ -50,8 +58,9 @@ public sealed class AvaloniaGalleryThemeCoverageTests
         await Assert.That(pages.Length).IsEqualTo(GalleryPageCount);
         foreach (var page in pages)
         {
-            page.Tag = themeVariant;
-            await Assert.That(page.Tag).IsSameReferenceAs(themeVariant);
+            var scope = new ThemeVariantScope { RequestedThemeVariant = themeVariant, Child = page };
+            await Assert.That(page.ActualThemeVariant).IsSameReferenceAs(themeVariant);
+            scope.Child = null;
         }
-    }
+    });
 }

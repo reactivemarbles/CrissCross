@@ -87,8 +87,8 @@
     </Style>
 
     <Style Selector="controls|AppBarButton:pressed /template/ Ellipse#PART_IconBorder">
-        <Setter Property="Fill" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
-        <Setter Property="Stroke" Value="{DynamicResource SystemAccentColorSecondaryBrush}" />
+        <Setter Property="Fill" Value="{DynamicResource AccentButtonBackground}" />
+        <Setter Property="Stroke" Value="{DynamicResource ControlStrokeColorOnAccentSecondaryBrush}" />
     </Style>
 
     <Style Selector="controls|AppBarButton:pressed /template/ Path#PART_IconPath">
@@ -113,7 +113,7 @@
     </Style>
 
     <Style Selector="controls|AppBarButton:focus-visible /template/ Ellipse#PART_IconBorder">
-        <Setter Property="Stroke" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource AccentButtonBackground}" />
         <Setter Property="StrokeThickness" Value="2" />
     </Style>
 </Styles>

@@ -23,6 +23,10 @@ namespace CrissCross.Avalonia;
 /// <seealso cref="IActivatableView" />
 public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivatableView
 {
+    /// <summary>Identifies the XAML-addressable view-model property shared by all navigation window types.</summary>
+    public static readonly StyledProperty<object?> ViewModelProperty =
+        AvaloniaProperty.Register<NavigationWindow, object?>(nameof(ViewModel));
+
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty = AvaloniaProperty.Register<
         NavigationWindow,
@@ -87,6 +91,13 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         set => SetValue(NavigateBackIsEnabledProperty, value);
     }
 
+    /// <summary>Gets or sets the view model exposed to XAML and strongly typed navigation windows.</summary>
+    public object? ViewModel
+    {
+        get => GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
     /// <summary>Gets the navigation frame.</summary>
     /// <value>
     /// The navigation frame.
@@ -128,6 +139,11 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
             return;
         }
 
+        if (!string.IsNullOrWhiteSpace(_navigationHostName))
+        {
+            return;
+        }
+
         _navigationHostName = Name;
         if (NavigationFrame is not { } host)
         {
@@ -153,6 +169,13 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         }
 
         return base.RegisterContentPresenter(presenter);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnClosed(EventArgs e)
+    {
+        NavigationFrame?.Dispose();
+        base.OnClosed(e);
     }
 
     /// <summary>Runs the configure Navigation Host operation.</summary>

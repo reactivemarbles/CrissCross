@@ -55,6 +55,12 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
     /// <summary>Stores the content value.</summary>
     private Control? _content;
 
+    /// <summary>Stores the navigation result subscription.</summary>
+    private IDisposable? _navigationResultSubscription;
+
+    /// <summary>Stores the disposed value.</summary>
+    private bool _disposedValue;
+
     /// <summary>Initializes static members of the <see cref="ViewModelRoutedViewHost"/> class.</summary>
     static ViewModelRoutedViewHost() => _ = RxState.DefaultExceptionHandler;
 
@@ -254,7 +260,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
             }
             else
             {
-                ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+                PublishNavigating(ea);
             }
         }
 
@@ -301,9 +307,15 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         }
 #endif
 
+        if (!ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(HostName, out var resultNavigating))
+        {
+            return;
+        }
+
+        _navigationResultSubscription?.Dispose();
+
         // requested should return result here
-        _ = ViewModelRoutedViewHostMixins
-            .ResultNavigating[HostName]
+        _navigationResultSubscription = resultNavigating
             .DistinctUntilChanged()
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(HandleNavigationResult);
@@ -442,7 +454,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         {
             targetViewModel?.WhenNavigatedTo(
                 navigationEvent,
-                ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName]);
+                GetCurrentViewDisposable());
         }
 
         if (!callViewModelNavigatedFrom)
@@ -495,7 +507,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
     }
 
@@ -530,7 +542,7 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
     }
 
@@ -558,7 +570,33 @@ public partial class ViewModelRoutedViewHost : UserControl, IResolvedViewModelRo
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
+    }
+
+    /// <summary>Gets the disposable collection for this navigation host.</summary>
+    /// <returns>The host disposable collection.</returns>
+    private CompositeDisposable GetCurrentViewDisposable()
+    {
+        if (ViewModelRoutedViewHostMixins.CurrentViewDisposable.TryGetValue(HostName, out var disposable))
+        {
+            return disposable;
+        }
+
+        disposable = [];
+        ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName] = disposable;
+        return disposable;
+    }
+
+    /// <summary>Publishes pending navigation when this host has been registered.</summary>
+    /// <param name="eventArgs">The pending navigation event.</param>
+    private void PublishNavigating(IViewModelNavigatingEventArgs eventArgs)
+    {
+        if (!ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(HostName, out var resultNavigating))
+        {
+            return;
+        }
+
+        resultNavigating.OnNext(eventArgs);
     }
 }

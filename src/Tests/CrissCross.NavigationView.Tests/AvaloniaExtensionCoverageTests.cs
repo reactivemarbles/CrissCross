@@ -8,6 +8,7 @@ using CrissCross.Avalonia.UI.Extensions;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Exercises visual-tree helper behavior with an in-memory control tree.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaExtensionCoverageTests
 {
     /// <summary>Verifies child traversal and missing-parent fallback behavior.</summary>

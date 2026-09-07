@@ -113,7 +113,7 @@
         <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundDisabled}" />
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxForegroundDisabled}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrushDisabled}" />
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
 </Styles>

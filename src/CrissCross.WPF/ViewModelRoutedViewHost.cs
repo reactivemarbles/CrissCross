@@ -73,6 +73,9 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     /// <summary>Stores the disposed value.</summary>
     private bool _disposedValue;
 
+    /// <summary>Stores the navigation result subscription.</summary>
+    private IDisposable? _navigationResultSubscription;
+
     /// <summary>Initializes a new instance of the <see cref="ViewModelRoutedViewHost"/> class.</summary>
     public ViewModelRoutedViewHost()
     {
@@ -153,7 +156,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
     /// <value>
     /// <c>true</c> if [requires setup]; otherwise, <c>false</c>.
     /// </value>
-    public bool RequiresSetup => false;
+    public bool RequiresSetup => true;
 
     /// <summary>Clears the history.</summary>
     public void ClearHistory() => NavigationStack.Clear();
@@ -318,7 +321,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
             }
             else
             {
-                ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+                PublishNavigating(ea);
             }
         }
 
@@ -368,9 +371,15 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
         }
 #endif
 
+        if (!ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(HostName, out var resultNavigating))
+        {
+            return;
+        }
+
+        _navigationResultSubscription?.Dispose();
+
         // requested should return result here
-        _ = ViewModelRoutedViewHostMixins
-            .ResultNavigating[HostName]
+        _navigationResultSubscription = resultNavigating
             .DistinctUntilChanged()
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(HandleNavigating);
@@ -394,6 +403,8 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
 
         if (disposing)
         {
+            ViewModelRoutedViewHostMixins.UnregisterNavigationHost(this);
+            _navigationResultSubscription?.Dispose();
             _canNavigateBackSubject.Dispose();
             _currentViewModel.Dispose();
         }
@@ -475,7 +486,7 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
             return;
         }
 
-        targetViewModel?.WhenNavigatedTo(eventArgs, ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName]);
+        targetViewModel?.WhenNavigatedTo(eventArgs, GetCurrentViewDisposable());
     }
 
     /// <summary>Updates the navigation stack and active view model.</summary>
@@ -553,13 +564,14 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
             _currentView,
             HostName,
             parameter);
+
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
     }
 
@@ -587,13 +599,14 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
             _currentView,
             HostName,
             parameter);
+
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
     }
 
@@ -615,13 +628,40 @@ public class ViewModelRoutedViewHost : TransitioningContentControl, IResolvedVie
             _currentView,
             HostName,
             parameter);
+
         if (_currentView is INotifiyNavigation { ISetupNavigating: true })
         {
             ViewModelRoutedViewHostMixins.SetWhenNavigating.OnNext(ea);
         }
         else
         {
-            ViewModelRoutedViewHostMixins.ResultNavigating[HostName].OnNext(ea);
+            PublishNavigating(ea);
         }
+    }
+
+    /// <summary>Gets the disposable collection for this navigation host.</summary>
+    /// <returns>The host disposable collection.</returns>
+    private CompositeDisposable GetCurrentViewDisposable()
+    {
+        if (ViewModelRoutedViewHostMixins.CurrentViewDisposable.TryGetValue(HostName, out var disposable))
+        {
+            return disposable;
+        }
+
+        disposable = [];
+        ViewModelRoutedViewHostMixins.CurrentViewDisposable[HostName] = disposable;
+        return disposable;
+    }
+
+    /// <summary>Publishes pending navigation when this host has been registered.</summary>
+    /// <param name="eventArgs">The pending navigation event.</param>
+    private void PublishNavigating(IViewModelNavigatingEventArgs eventArgs)
+    {
+        if (!ViewModelRoutedViewHostMixins.ResultNavigating.TryGetValue(HostName, out var resultNavigating))
+        {
+            return;
+        }
+
+        resultNavigating.OnNext(eventArgs);
     }
 }

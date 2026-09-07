@@ -7,6 +7,7 @@ using CrissCross.WPF.UI.Appearance;
 using CrissCross.WPF.UI.Configuration;
 using CrissCross.WPF.UI.Hardware;
 using CrissCross.WPF.UI.Interop.WinDef;
+using CrissCross.WPF.UI.TaskBar;
 using ReactiveDisplayDpi = CrissCross.Reactive.WPF.UI.Hardware.DisplayDpi;
 using ReactiveRect = CrissCross.Reactive.WPF.UI.Interop.WinDef.RECT;
 using ReactiveRectLong = CrissCross.Reactive.WPF.UI.Interop.WinDef.RECTL;
@@ -96,6 +97,21 @@ public sealed class PublicValueSurfaceTests
 
     /// <summary>The dialog secondary-button text.</summary>
     private const string DialogSecondaryText = "Cancel";
+
+    /// <summary>The taskbar progress none flag value.</summary>
+    private const int TaskBarProgressNoneValue = 0;
+
+    /// <summary>The taskbar progress indeterminate flag value.</summary>
+    private const int TaskBarProgressIndeterminateValue = 1;
+
+    /// <summary>The taskbar progress normal flag value.</summary>
+    private const int TaskBarProgressNormalValue = 2;
+
+    /// <summary>The taskbar progress error flag value.</summary>
+    private const int TaskBarProgressErrorValue = 4;
+
+    /// <summary>The taskbar progress paused flag value.</summary>
+    private const int TaskBarProgressPausedValue = 8;
 
     /// <summary>Verifies rectangle projection, union, offset, equality, and hashing.</summary>
     /// <returns>A task representing the asynchronous test.</returns>
@@ -212,5 +228,34 @@ public sealed class PublicValueSurfaceTests
         await Assert.That(dialog.SecondaryButtonText).IsEqualTo(DialogSecondaryText);
         await Assert.That(theme.CurrentApplicationTheme).IsEqualTo(ApplicationTheme.Dark);
         await Assert.That(theme.SystemAccent).IsEqualTo(Colors.CornflowerBlue);
+    }
+
+    /// <summary>Verifies taskbar progress state values preserve Windows flag-compatible semantics.</summary>
+    /// <returns>A task representing the asynchronous test.</returns>
+    [Test]
+    public async Task TaskBarProgressState_UsesWindowsFlagCompatibleValues()
+    {
+        await Assert.That(typeof(TaskBarProgressState).IsDefined(typeof(FlagsAttribute), inherit: false)).IsTrue();
+        await Assert.That(GetTaskBarProgressValue(TaskBarProgressState.None)).IsEqualTo(TaskBarProgressNoneValue);
+        await Assert.That(GetTaskBarProgressValue(TaskBarProgressState.Indeterminate)).IsEqualTo(TaskBarProgressIndeterminateValue);
+        await Assert.That(GetTaskBarProgressValue(TaskBarProgressState.Normal)).IsEqualTo(TaskBarProgressNormalValue);
+        await Assert.That(GetTaskBarProgressValue(TaskBarProgressState.Error)).IsEqualTo(TaskBarProgressErrorValue);
+        await Assert.That(GetTaskBarProgressValue(TaskBarProgressState.Paused)).IsEqualTo(TaskBarProgressPausedValue);
+    }
+
+    /// <summary>Gets the integer value for a taskbar progress state through the public enum surface.</summary>
+    /// <param name="expectedState">The state to locate.</param>
+    /// <returns>The integer value for the matching state.</returns>
+    private static int GetTaskBarProgressValue(TaskBarProgressState expectedState)
+    {
+        foreach (var state in Enum.GetValues<TaskBarProgressState>())
+        {
+            if (state == expectedState)
+            {
+                return (int)state;
+            }
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(expectedState), expectedState, "State was not defined.");
     }
 }

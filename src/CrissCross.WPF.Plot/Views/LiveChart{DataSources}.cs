@@ -2,7 +2,6 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Windows;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
@@ -59,14 +58,15 @@ public partial class LiveChart
     {
         _reactivePlotConnection?.Dispose();
         _reactivePlotConnection = null;
+        DisposeCrosshairSubscription();
     }
 
-    /// <summary>Handles the UnloadedObservable operation.</summary>
-    /// <returns>The result.</returns>
-    private IObservable<EventPattern<RoutedEventArgs>> UnloadedObservable() =>
-        Observable.FromEventPattern<RoutedEventHandler, RoutedEventArgs>(
-            handler => Unloaded += handler,
-            handler => Unloaded -= handler);
+    /// <summary>Disposes the crosshair visibility subscription.</summary>
+    private void DisposeCrosshairSubscription()
+    {
+        _crosshairDisposable?.Dispose();
+        _crosshairDisposable = null;
+    }
 
     /// <summary>Handles the ChangeScatterObserver operation.</summary>
     /// <param name="input">The input value.</param>
@@ -80,7 +80,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeScatterPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeScatterObserver operation.</summary>
@@ -94,7 +94,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeScatterPlotLines(ScatterObservablesWithTimeStamp);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalObserver operation.</summary>
@@ -109,7 +109,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
@@ -126,7 +126,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
         _crosshairDisposable = ViewModel
             .WhenAnyValue(x => x.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
@@ -144,7 +144,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeDataLoggerPlotLinesWithPoints(input.Data);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
@@ -158,7 +158,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeDataLoggerPlotLinesWithPoints(DataLoggerObservablesWithPoints);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalData operation.</summary>
@@ -173,7 +173,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalData operation.</summary>
@@ -187,7 +187,7 @@ public partial class LiveChart
         ExecuteMarkerOnOff();
         ViewModel?.InitializeSignalPlotLines(DataWithTimeStamp);
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
@@ -208,7 +208,7 @@ public partial class LiveChart
         ViewModel?.InitializeLinesForSignalPoints(data);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
@@ -236,7 +236,7 @@ public partial class LiveChart
             fs: Frequency,
             sampleCount: Convert.ToUInt32(NSamples));
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
@@ -253,7 +253,7 @@ public partial class LiveChart
             fs: Frequency,
             sampleCount: Convert.ToUInt32(NSamples));
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
@@ -269,7 +269,7 @@ public partial class LiveChart
         ViewModel?.InitializeLinesForScatterPoints(input.Data);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
@@ -284,7 +284,7 @@ public partial class LiveChart
         ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
-        _crosshairDisposable?.Dispose();
+        DisposeCrosshairSubscription();
     }
 
     /// <summary>Updates crosshair visibility for every active plot line.</summary>

@@ -4,12 +4,14 @@
 
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows;
 using System.Windows.Threading;
 using CrissCross.WPF;
 using ReactiveUI;
 using FormsHost = CrissCross.WinForms.ViewModelRoutedViewHost;
 using FormsUserControl = System.Windows.Forms.UserControl;
 using WpfHost = CrissCross.WPF.ViewModelRoutedViewHost;
+using WpfUserControl = System.Windows.Controls.UserControl;
 
 namespace CrissCross.WPF.UI.Gallery.Tests;
 
@@ -47,6 +49,11 @@ public sealed class PlatformHostRuntimeTests
         await Assert.That(snapshot.Background).IsEqualTo(System.Drawing.Color.Navy);
         await Assert.That(snapshot.Foreground).IsEqualTo(System.Drawing.Color.White);
         await Assert.That(snapshot.Content).IsSameReferenceAs(snapshot.Overlay);
+        await Assert.That(snapshot.HostCreatedAfterLoad).IsTrue();
+        await Assert.That(snapshot.HostClearedAfterDispose).IsTrue();
+        await Assert.That(snapshot.ParentClearedAfterDispose).IsTrue();
+        await Assert.That(snapshot.DisposedAfterExplicitDispose).IsTrue();
+        await Assert.That(snapshot.DisposeIsIdempotent).IsTrue();
     }
 
     /// <summary>Exercises both platform navigation hosts.</summary>
@@ -130,7 +137,7 @@ public sealed class PlatformHostRuntimeTests
     private static WebViewSnapshot ExerciseWebView()
     {
         var overlay = new System.Windows.Controls.Border();
-        using var browser = new WebView2Wpf
+        var browser = new WebView2Wpf
         {
             AllowExternalDrop = false,
             AutoDispose = false,
@@ -139,25 +146,52 @@ public sealed class PlatformHostRuntimeTests
             DesignModeForegroundColor = System.Drawing.Color.White,
             ZoomFactor = BrowserZoomFactor,
         };
+        var window = new Window { Content = browser };
 
-        browser.GoBack();
-        browser.GoForward();
-        bool reloadRequiresInitialization = ThrowsBeforeCoreInitialization(browser.Reload);
-        bool stopRequiresInitialization = ThrowsBeforeCoreInitialization(browser.Stop);
+        try
+        {
+            window.Show();
+            DrainDispatcher();
+            var hostCreatedAfterLoad = browser.IsOverlayHostLoaded;
 
-        return new(
-            browser.AllowExternalDrop,
-            browser.AutoDispose,
-            reloadRequiresInitialization,
-            stopRequiresInitialization,
-            browser.ZoomFactor,
-            browser.DefaultBackgroundColor,
-            browser.DesignModeForegroundColor,
-            browser.Content,
-            overlay);
+            browser.GoBack();
+            browser.GoForward();
+            bool reloadRequiresInitialization = ThrowsBeforeCoreInitialization(browser.Reload);
+            bool stopRequiresInitialization = ThrowsBeforeCoreInitialization(browser.Stop);
+
+            browser.Dispose();
+            DrainDispatcher();
+            var hostClearedAfterDispose = !browser.IsOverlayHostLoaded;
+            var parentClearedAfterDispose = !browser.IsParentWindowAssigned;
+            var disposedAfterExplicitDispose = browser.IsDisposed;
+            browser.Dispose();
+            var disposeIsIdempotent = browser.IsDisposed;
+
+            return new(
+                browser.AllowExternalDrop,
+                browser.AutoDispose,
+                reloadRequiresInitialization,
+                stopRequiresInitialization,
+                browser.ZoomFactor,
+                browser.DefaultBackgroundColor,
+                browser.DesignModeForegroundColor,
+                browser.Content,
+                overlay,
+                hostCreatedAfterLoad,
+                hostClearedAfterDispose,
+                parentClearedAfterDispose,
+                disposedAfterExplicitDispose,
+                disposeIsIdempotent);
+        }
+        finally
+        {
+            window.Content = null;
+            window.Close();
+            browser.Dispose();
+        }
     }
 
-    /// <summary>Invokes an operation that requires the WebView2 core and captures its documented pre-init failure.</summary>
+    /// <summary>Captures the documented WebView2 pre-init failure.</summary>
     /// <param name="operation">The WebView2 operation.</param>
     /// <returns><c>true</c> when the operation requires core initialization.</returns>
     private static bool ThrowsBeforeCoreInitialization(Action operation)
@@ -203,7 +237,7 @@ public sealed class PlatformHostRuntimeTests
 
     /// <summary>Provides a WPF view for resolved navigation.</summary>
     /// <param name="viewModel">The initial view model.</param>
-    private sealed class WpfTestView(TestViewModel viewModel) : System.Windows.Controls.UserControl, IViewFor<TestViewModel>
+    private sealed class WpfTestView(TestViewModel viewModel) : WpfUserControl, IViewFor<TestViewModel>
     {
         /// <inheritdoc/>
         public TestViewModel? ViewModel { get; set; } = viewModel;
@@ -260,6 +294,12 @@ public sealed class PlatformHostRuntimeTests
     /// <param name="Foreground">The configured design-mode foreground.</param>
     /// <param name="Content">The configured overlay content.</param>
     /// <param name="Overlay">The expected overlay.</param>
+    /// <param name="HostCreatedAfterLoad">Whether the overlay host was created when the wrapper loaded.</param>
+    /// <param name="HostClearedAfterDispose">Whether the overlay host was cleared by explicit disposal.</param>
+    /// <param name="ParentClearedAfterDispose">Whether the parent window reference was cleared by explicit
+    /// disposal.</param>
+    /// <param name="DisposedAfterExplicitDispose">Whether the wrapper marked itself disposed.</param>
+    /// <param name="DisposeIsIdempotent">Whether a second dispose call preserved the disposed state.</param>
     private sealed record WebViewSnapshot(
         bool AllowExternalDrop,
         bool AutoDispose,
@@ -269,5 +309,10 @@ public sealed class PlatformHostRuntimeTests
         Color Background,
         Color Foreground,
         object Content,
-        object Overlay);
+        object Overlay,
+        bool HostCreatedAfterLoad,
+        bool HostClearedAfterDispose,
+        bool ParentClearedAfterDispose,
+        bool DisposedAfterExplicitDispose,
+        bool DisposeIsIdempotent);
 }

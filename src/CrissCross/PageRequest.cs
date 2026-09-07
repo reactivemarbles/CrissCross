@@ -57,7 +57,8 @@ public sealed class PageRequest
     public int PageSize { get; }
 
     /// <summary>Gets the zero-based offset for data-source skip operations.</summary>
-    public int Offset => PageIndex * PageSize;
+    /// <exception cref="System.OverflowException">The requested offset exceeds <see cref="int.MaxValue"/>.</exception>
+    public int Offset => checked(PageIndex * PageSize);
 
     /// <summary>Gets the explicit sort key, when present.</summary>
     public string? SortKey { get; }
@@ -82,7 +83,7 @@ public sealed class PageRequest
 
     /// <summary>Gets compact user-facing request text for diagnostics.</summary>
     public string DisplayText =>
-        string.Format(CultureInfo.InvariantCulture, DisplayTextFormat, PageIndex + 1, PageSize);
+        string.Format(CultureInfo.InvariantCulture, DisplayTextFormat, (long)PageIndex + 1, PageSize);
 
     /// <summary>Creates the stable key for a filter snapshot.</summary>
     /// <param name="filters">The filters to include.</param>

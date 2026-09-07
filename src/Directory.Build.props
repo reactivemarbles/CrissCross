@@ -10,7 +10,6 @@
     <LangVersion>preview</LangVersion>
     <Configuration>$(TargetFramework)</Configuration>
     <Company>ChrisPulman</Company>
-    <NoWarn>CS1591;CS1701;IDE0190;IDE1006;CA1510</NoWarn>
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross_500.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -46,7 +45,6 @@
     <TUnitImplicitUsings>false</TUnitImplicitUsings>
     <TUnitAssertionsImplicitUsings>false</TUnitAssertionsImplicitUsings>
     <EnableVSTestReferences>false</EnableVSTestReferences>
-    <NoWarn>$(NoWarn);CS4014</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net11.0'))">
@@ -118,6 +116,7 @@
     <Using Include="ReactiveUI.Primitives.Concurrency.ISequencer" Alias="IScheduler" />
     <Using Include="ReactiveUI.Primitives.Concurrency.ImmediateSequencer" Alias="ImmediateScheduler" />
     <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="CompositeDisposable" />
+    <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="ActivationDisposable" />
     <Using Include="ReactiveUI.Primitives.Disposables.SwapDisposable" Alias="SerialDisposable" />
     <Using Include="ReactiveUI.Primitives.Signals.Signal" Alias="Observable" />
     <Using Include="ReactiveUI.Primitives.Disposables.Scope" Alias="Disposable" />

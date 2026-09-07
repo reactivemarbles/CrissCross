@@ -11,8 +11,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a control that allows the user to select a date.</summary>
-public class DatePicker : global::Avalonia.Controls.DatePicker
-{
-    /// <inheritdoc/>
-    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.DatePicker);
-}
+public class DatePicker : global::Avalonia.Controls.DatePicker;

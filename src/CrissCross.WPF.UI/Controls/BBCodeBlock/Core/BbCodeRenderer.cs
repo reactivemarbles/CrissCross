@@ -114,6 +114,17 @@ internal sealed partial class BbCodeRenderer
         return span;
     }
 
+    /// <summary>Adds an inline element and reports the node as handled.</summary>
+    /// <param name="target">The target inline collection.</param>
+    /// <param name="inline">The inline element.</param>
+    /// <returns><see langword="true"/>.</returns>
+    private bool AddInlineAndReturnTrue(InlineCollection target, Inline inline)
+    {
+        _ = _source;
+        target.Add(inline);
+        return true;
+    }
+
     /// <summary>Adds rendered child nodes to an inline collection.</summary>
     /// <param name="target">The target inline collection.</param>
     /// <param name="nodes">The child nodes.</param>
@@ -178,207 +189,63 @@ internal sealed partial class BbCodeRenderer
     /// <param name="target">The target inline collection.</param>
     /// <param name="node">The formatting node.</param>
     /// <returns><see langword="true"/> when the node was handled.</returns>
-    private bool TryAddFormatting(InlineCollection target, BbCodeNode node)
-    {
-        switch (node.Name)
+    private bool TryAddFormatting(InlineCollection target, BbCodeNode node) =>
+        node.Name switch
         {
-            case "b" or "strong":
-            {
-                AddStyledSpan(target, node, static span => span.FontWeight = FontWeights.Bold);
-                return true;
-            }
-
-            case "i"
-            or "em":
-            {
-                AddStyledSpan(target, node, static span => span.FontStyle = FontStyles.Italic);
-                return true;
-            }
-
-            case "u"
-            or "ins":
-            {
-                AddStyledSpan(target, node, static span => span.TextDecorations = TextDecorations.Underline);
-                return true;
-            }
-
-            case "s"
-            or "strike"
-            or "del":
-            {
-                AddStyledSpan(target, node, static span => span.TextDecorations = TextDecorations.Strikethrough);
-                return true;
-            }
-
-            case "sup":
-            {
-                AddStyledSpan(target, node, static span => span.BaselineAlignment = BaselineAlignment.Superscript);
-                return true;
-            }
-
-            case "sub":
-            {
-                AddStyledSpan(target, node, static span => span.BaselineAlignment = BaselineAlignment.Subscript);
-                return true;
-            }
-
-            default:
-            {
-                return TryAddParameterizedFormatting(target, node);
-            }
-        }
-    }
+            "b" or "strong" => AddStyledSpanAndReturnTrue(target, node, static span => span.FontWeight = FontWeights.Bold),
+            "i" or "em" => AddStyledSpanAndReturnTrue(target, node, static span => span.FontStyle = FontStyles.Italic),
+            "u" or "ins" => AddStyledSpanAndReturnTrue(target, node, static span => span.TextDecorations = TextDecorations.Underline),
+            "s" or "strike" or "del" => AddStyledSpanAndReturnTrue(target, node, static span => span.TextDecorations = TextDecorations.Strikethrough),
+            "sup" => AddStyledSpanAndReturnTrue(target, node, static span => span.BaselineAlignment = BaselineAlignment.Superscript),
+            "sub" => AddStyledSpanAndReturnTrue(target, node, static span => span.BaselineAlignment = BaselineAlignment.Subscript),
+            _ => TryAddParameterizedFormatting(target, node),
+        };
 
     /// <summary>Attempts to render formatting that accepts a parameter.</summary>
     /// <param name="target">The target inline collection.</param>
     /// <param name="node">The formatting node.</param>
     /// <returns><see langword="true"/> when the node was handled.</returns>
-    private bool TryAddParameterizedFormatting(InlineCollection target, BbCodeNode node)
-    {
-        switch (node.Name)
+    private bool TryAddParameterizedFormatting(InlineCollection target, BbCodeNode node) =>
+        node.Name switch
         {
-            case "color":
-            {
-                AddStyledSpan(target, node, span => BbCodeRenderHelpers.ApplyColor(span, node.Value));
-                return true;
-            }
-
-            case "font":
-            {
-                AddStyledSpan(target, node, span => BbCodeRenderHelpers.ApplyFont(span, node.Value));
-                return true;
-            }
-
-            case "size":
-            {
-                AddStyledSpan(target, node, span => BbCodeRenderHelpers.ApplySize(span, node.Value));
-                return true;
-            }
-
-            case "style":
-            {
-                AddStyledSpan(target, node, span => BbCodeRenderHelpers.ApplyStyle(span, node));
-                return true;
-            }
-
-            default:
-            {
-                return false;
-            }
-        }
-    }
+            "color" => AddStyledSpanAndReturnTrue(target, node, span => BbCodeRenderHelpers.ApplyColor(span, node.Value)),
+            "font" => AddStyledSpanAndReturnTrue(target, node, span => BbCodeRenderHelpers.ApplyFont(span, node.Value)),
+            "size" => AddStyledSpanAndReturnTrue(target, node, span => BbCodeRenderHelpers.ApplySize(span, node.Value)),
+            "style" => AddStyledSpanAndReturnTrue(target, node, span => BbCodeRenderHelpers.ApplyStyle(span, node)),
+            _ => false,
+        };
 
     /// <summary>Attempts to render an inline or inline-hosted node.</summary>
     /// <param name="target">The target inline collection.</param>
     /// <param name="node">The node.</param>
     /// <returns><see langword="true"/> when the node was handled.</returns>
-    private bool TryAddInlineElement(InlineCollection target, BbCodeNode node)
-    {
-        switch (node.Name)
+    private bool TryAddInlineElement(InlineCollection target, BbCodeNode node) =>
+        node.Name switch
         {
-            case "br":
-            {
-                target.Add(new LineBreak());
-                return true;
-            }
-
-            case "hr"
-            or "line":
-            {
-                target.Add(CreateSeparator());
-                return true;
-            }
-
-            case "url"
-            or "link"
-            or "email"
-            or "mail":
-            {
-                AddHyperlink(target, node);
-                return true;
-            }
-
-            case "img"
-            or "image":
-            {
-                target.Add(CreateImage(node));
-                return true;
-            }
-
-            case "quote"
-            or "q":
-            {
-                target.Add(CreateQuote(node));
-                return true;
-            }
-
-            case "spoiler"
-            or "spoil"
-            or "hide":
-            {
-                target.Add(CreateSpoiler(node));
-                return true;
-            }
-
-            case "blur":
-            {
-                target.Add(CreateBlur(node));
-                return true;
-            }
-
-            case "noparse":
-            {
-                target.Add(new Run(node.GetText()));
-                return true;
-            }
-
-            default:
-            {
-                return false;
-            }
-        }
-    }
+            "br" => AddInlineAndReturnTrue(target, new LineBreak()),
+            "hr" or "line" => AddInlineAndReturnTrue(target, CreateSeparator()),
+            "url" or "link" or "email" or "mail" => AddHyperlinkAndReturnTrue(target, node),
+            "img" or "image" => AddInlineAndReturnTrue(target, CreateImage(node)),
+            "quote" or "q" => AddInlineAndReturnTrue(target, CreateQuote(node)),
+            "spoiler" or "spoil" or "hide" => AddInlineAndReturnTrue(target, CreateSpoiler(node)),
+            "blur" => AddInlineAndReturnTrue(target, CreateBlur(node)),
+            "noparse" => AddInlineAndReturnTrue(target, new Run(node.GetText())),
+            _ => false,
+        };
 
     /// <summary>Attempts to render a block-like node.</summary>
     /// <param name="target">The target inline collection.</param>
     /// <param name="node">The node.</param>
     /// <returns><see langword="true"/> when the node was handled.</returns>
-    private bool TryAddDocumentBlock(InlineCollection target, BbCodeNode node)
-    {
-        switch (node.Name)
+    private bool TryAddDocumentBlock(InlineCollection target, BbCodeNode node) =>
+        node.Name switch
         {
-            case "code" or "c" or "pre" or "nfo":
-            {
-                target.Add(CreateCode(node));
-                return true;
-            }
-
-            case "ul"
-            or "ol"
-            or "list":
-            {
-                target.Add(CreateList(node));
-                return true;
-            }
-
-            case "table":
-            {
-                target.Add(CreateTable(node));
-                return true;
-            }
-
-            case "pipes":
-            {
-                target.Add(CreatePipeTable(node));
-                return true;
-            }
-
-            default:
-            {
-                return false;
-            }
-        }
-    }
+            "code" or "c" or "pre" or "nfo" => AddInlineAndReturnTrue(target, CreateCode(node)),
+            "ul" or "ol" or "list" => AddInlineAndReturnTrue(target, CreateList(node)),
+            "table" => AddInlineAndReturnTrue(target, CreateTable(node)),
+            "pipes" => AddInlineAndReturnTrue(target, CreatePipeTable(node)),
+            _ => false,
+        };
 
     /// <summary>Attempts to render alignment and paragraph blocks.</summary>
     /// <param name="target">The target inline collection.</param>
@@ -449,6 +316,27 @@ internal sealed partial class BbCodeRenderer
         }
 
         AddChildren(target, node.Children);
+        return true;
+    }
+
+    /// <summary>Renders a styled inline span and reports the node as handled.</summary>
+    /// <param name="target">The target inline collection.</param>
+    /// <param name="node">The source node.</param>
+    /// <param name="configure">The style operation.</param>
+    /// <returns><see langword="true"/>.</returns>
+    private bool AddStyledSpanAndReturnTrue(InlineCollection target, BbCodeNode node, Action<Span> configure)
+    {
+        AddStyledSpan(target, node, configure);
+        return true;
+    }
+
+    /// <summary>Renders a hyperlink and reports the node as handled.</summary>
+    /// <param name="target">The target inline collection.</param>
+    /// <param name="node">The link node.</param>
+    /// <returns><see langword="true"/>.</returns>
+    private bool AddHyperlinkAndReturnTrue(InlineCollection target, BbCodeNode node)
+    {
+        AddHyperlink(target, node);
         return true;
     }
 

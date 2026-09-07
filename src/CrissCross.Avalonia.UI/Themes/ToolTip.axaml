@@ -6,13 +6,13 @@
     <Style Selector="controls|ToolTip">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="{DynamicResource ToolTipBackground}"
-                        BorderBrush="{DynamicResource ToolTipBorderBrush}"
+                <Border Background="{DynamicResource FlyoutBackground}"
+                        BorderBrush="{DynamicResource FlyoutBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="4"
                         Padding="12,8">
                     <TextBlock Text="{TemplateBinding Text}"
-                               Foreground="{DynamicResource ToolTipForeground}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                FontSize="12"
                                TextWrapping="Wrap" />
                 </Border>

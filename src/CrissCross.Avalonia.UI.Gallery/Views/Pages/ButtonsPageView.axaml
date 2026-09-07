@@ -22,6 +22,13 @@
                     <controls:StackPanel Orientation="Horizontal" Spacing="8">
                         <controls:Button Content="Primary" Appearance="Primary" />
                         <controls:Button Content="Secondary" Appearance="Secondary" />
+                        <controls:Button Content="Info" Appearance="Info" />
+                        <controls:Button Content="Success" Appearance="Success" />
+                        <controls:Button Content="Caution" Appearance="Caution" />
+                        <controls:Button Content="Danger" Appearance="Danger" />
+                        <controls:Button Content="Dark" Appearance="Dark" />
+                        <controls:Button Content="Light" Appearance="Light" />
+                        <controls:Button Content="Transparent" Appearance="Transparent" />
                         <controls:Button Content="Disabled" IsEnabled="False" />
                     </controls:StackPanel>
                 </controls:StackPanel>

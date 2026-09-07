@@ -25,10 +25,9 @@ public partial class ViewModelRoutedViewHostMixinsTests
         // Arrange
         using var vm = new TestViewModel(LifecycleTestHostName);
         using var view = new TestView(vm);
-        var called = false;
 
         // Act
-        view.WhenNavigatedFrom(_ => called = true);
+        view.WhenNavigatedFrom(static _ => { });
 
         // Assert
         await Assert.That(view.ISetupNavigatedFrom).IsTrue();
@@ -54,10 +53,9 @@ public partial class ViewModelRoutedViewHostMixinsTests
         // Arrange
         using var vm = new TestViewModel(LifecycleTestHostName);
         using var view = new TestView(vm);
-        var called = false;
 
         // Act
-        view.WhenNavigatedTo((_, _) => called = true);
+        view.WhenNavigatedTo(static (_, _) => { });
 
         // Assert
         await Assert.That(view.ISetupNavigatedTo).IsTrue();

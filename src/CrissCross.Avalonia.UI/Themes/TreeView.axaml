@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross TreeView Style -->
-    <Style Selector="controls|TreeView">
+    <Style Selector=":is(controls|TreeView)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type TreeView}}" />
         <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefault}" />
@@ -13,15 +14,15 @@
     </Style>
     
     <!-- TreeView Item Style -->
-    <Style Selector="controls|TreeView TreeViewItem">
+    <Style Selector=":is(controls|TreeView) TreeViewItem">
         <Setter Property="Padding" Value="8,4" />
     </Style>
     
-    <Style Selector="controls|TreeView TreeViewItem:pointerover">
+    <Style Selector=":is(controls|TreeView) TreeViewItem:pointerover">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
     </Style>
     
-    <Style Selector="controls|TreeView TreeViewItem:selected">
+    <Style Selector=":is(controls|TreeView) TreeViewItem:selected">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
     </Style>
     

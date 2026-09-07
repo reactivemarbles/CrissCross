@@ -112,32 +112,28 @@ internal sealed partial class WpfReactivePlotAdapter
     private static void SetLegendText(IPlottable plottable, string name, bool showInLegend)
     {
         var legendText = showInLegend ? name : string.Empty;
-        switch (plottable)
+        if (plottable is Scatter scatter)
         {
-            case Scatter scatter:
-            {
-                scatter.LegendText = legendText;
-                break;
-            }
-
-            case BarPlot bars:
-            {
-                bars.LegendText = legendText;
-                break;
-            }
-
-            case LollipopPlot stem:
-            {
-                stem.LegendText = legendText;
-                break;
-            }
-
-            default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(plottable),
-                    plottable,
-                    "The plottable does not support legend text.");
+            scatter.LegendText = legendText;
+            return;
         }
+
+        if (plottable is BarPlot bars)
+        {
+            bars.LegendText = legendText;
+            return;
+        }
+
+        if (plottable is LollipopPlot stem)
+        {
+            stem.LegendText = legendText;
+            return;
+        }
+
+        throw new ArgumentOutOfRangeException(
+            nameof(plottable),
+            plottable,
+            "The plottable does not support legend text.");
     }
 
     /// <summary>Resolves a named or hexadecimal series color.</summary>

@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Separator Style -->
-    <Style Selector="controls|Separator">
+    <Style Selector=":is(controls|Separator)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type Separator}}" />
         <Setter Property="Background" Value="{DynamicResource DividerStrokeColorDefault}" />
         <Setter Property="Height" Value="1" />
         <Setter Property="Margin" Value="0,4" />

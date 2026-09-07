@@ -10,14 +10,14 @@
                 <styles:CrissCrossMauiUi />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="ContentPage">
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSurfaceColorLight}, Dark={StaticResource CrissCrossSurfaceColorDark}}" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSurfaceColor}" />
             </Style>
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource CrissCrossTextColorLight}, Dark={StaticResource CrissCrossTextColorDark}}" />
+                <Setter Property="TextColor" Value="{DynamicResource CrissCrossTextColor}" />
             </Style>
             <Style TargetType="Frame">
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CrissCrossSubtleSurfaceColorLight}, Dark={StaticResource CrissCrossSubtleSurfaceColorDark}}" />
-                <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource CrissCrossBorderColorLight}, Dark={StaticResource CrissCrossBorderColorDark}}" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource CrissCrossSubtleSurfaceColor}" />
+                <Setter Property="BorderColor" Value="{DynamicResource CrissCrossBorderColor}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

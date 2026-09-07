@@ -81,11 +81,22 @@ public class CommandButton : Button
     /// <param name="newValue">The new value.</param>
     private static void OnIsExecutingChanged(BindableObject bindable, object newValue)
     {
-        if (bindable is not CommandButton button || newValue is not true)
+        if (bindable is not CommandButton button)
         {
             return;
         }
 
-        button.SetValue(StateProperty, CommandButtonState.Executing);
+        if (newValue is true)
+        {
+            button.SetValue(StateProperty, CommandButtonState.Executing);
+            return;
+        }
+
+        if (button.State != CommandButtonState.Executing)
+        {
+            return;
+        }
+
+        button.SetValue(StateProperty, CommandButtonState.Idle);
     }
 }

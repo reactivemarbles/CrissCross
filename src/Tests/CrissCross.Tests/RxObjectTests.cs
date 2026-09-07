@@ -132,7 +132,7 @@ public class RxObjectTests
 
         // Act & Assert - should not throw
         rxObject.WhenNavigatedFrom(eventArgs);
-        await Assert.That(true).IsTrue();
+        await Assert.That(rxObject.IsDisposed).IsFalse();
     }
 
     /// <summary>Provides the WhenNavigatedTo_CanBeCalled member.</summary>
@@ -152,7 +152,7 @@ public class RxObjectTests
 
         // Act & Assert - should not throw
         rxObject.WhenNavigatedTo(eventArgs, disposables);
-        await Assert.That(true).IsTrue();
+        await Assert.That(rxObject.IsDisposed).IsFalse();
     }
 
     /// <summary>Provides the WhenNavigating_CanBeCalled member.</summary>
@@ -171,7 +171,7 @@ public class RxObjectTests
 
         // Act & Assert - should not throw
         rxObject.WhenNavigating(eventArgs);
-        await Assert.That(true).IsTrue();
+        await Assert.That(rxObject.IsDisposed).IsFalse();
     }
 
     /// <summary>Provides the PropertyChanged_IsRaisedWhenDisplayNameChanges member.</summary>

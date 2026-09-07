@@ -6,6 +6,12 @@ using System;
 using System.Collections.Generic;
 using Splat;
 
+#if REACTIVE_SHIM
+using BooleanReplaySignal = ReactiveUI.Primitives.Reactive.Signals.ReplaySignal<bool>;
+#else
+using BooleanReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<bool>;
+#endif
+
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive;
 #else
@@ -183,6 +189,26 @@ public static partial class ViewModelRoutedViewHostMixins
 
         var requestedHostName = string.IsNullOrWhiteSpace(hostName) ? "<default>" : hostName;
         throw new KeyNotFoundException($"Navigation host '{requestedHostName}' has not been registered.");
+    }
+
+    /// <summary>Attempts to resolve a setup signal for a host key.</summary>
+    /// <param name="hostName">The requested host name.</param>
+    /// <param name="host">The resolved navigation host.</param>
+    /// <param name="whenSetup">The setup signal.</param>
+    /// <returns><c>true</c> when a setup signal was found; otherwise, <c>false</c>.</returns>
+    private static bool TryGetSetupSubject(
+        string? hostName,
+        IViewModelRoutedViewHost host,
+        out BooleanReplaySignal? whenSetup)
+    {
+        if (hostName is not null && !string.IsNullOrWhiteSpace(hostName) && WhenSetupSubjects.TryGetValue(hostName, out whenSetup))
+        {
+            return true;
+        }
+
+        var logicalHostName = host.HostName;
+        return (logicalHostName is not null && !string.IsNullOrWhiteSpace(logicalHostName) && WhenSetupSubjects.TryGetValue(logicalHostName, out whenSetup))
+            || WhenSetupSubjects.TryGetValue(host.Name, out whenSetup);
     }
 
     /// <summary>Adds an alias for an existing navigation host.</summary>

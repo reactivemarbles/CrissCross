@@ -10,6 +10,7 @@ using WpfControls = CrissCross.WPF.UI.Controls;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Regression tests for platform navigation view journal moves.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public class NavigationViewJournalRegressionTests
 {
     /// <summary>Provides the WpfGoForward_WhenRequestedJournalItemIsAlreadyStackTop_MovesJournalIndex member.</summary>
@@ -19,7 +20,7 @@ public class NavigationViewJournalRegressionTests
     {
         var result = RunOnStaThread(static () =>
         {
-            var item = new WpfControls.NavigationViewItem(typeof(WpfTestPage));
+            var item = new WpfControls.NavigationViewItem(typeof(System.Windows.Controls.UserControl));
             var navigationView = new TestWpfNavigationView();
             SeedWpfAlreadyCurrentJournalMove(navigationView, item, currentIndex: 0);
             var moved = navigationView.GoForward();
@@ -43,7 +44,7 @@ public class NavigationViewJournalRegressionTests
     {
         var result = RunOnStaThread(static () =>
         {
-            var item = new WpfControls.NavigationViewItem(typeof(WpfTestPage));
+            var item = new WpfControls.NavigationViewItem(typeof(System.Windows.Controls.UserControl));
             var navigationView = new TestWpfNavigationView();
             SeedWpfAlreadyCurrentJournalMove(navigationView, item, currentIndex: 1);
             var moved = navigationView.GoBack();
@@ -241,9 +242,6 @@ public class NavigationViewJournalRegressionTests
 
     /// <summary>Provides the TestAvaloniaNavigationView member.</summary>
     private sealed class TestAvaloniaNavigationView : AvaloniaControls.NavigationView;
-
-    /// <summary>Provides the WpfTestPage member.</summary>
-    private sealed class WpfTestPage : System.Windows.Controls.UserControl;
 
     /// <summary>Provides the AvaloniaTestPage member.</summary>
     private sealed class AvaloniaTestPage : global::Avalonia.Controls.UserControl;

@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a scrollbar control (wrapper for Avalonia ScrollBar).</summary>
-public class ScrollBar : global::Avalonia.Controls.Primitives.ScrollBar
-{
-    // Inherits all functionality from Avalonia ScrollBar
-}
+public class ScrollBar : global::Avalonia.Controls.Primitives.ScrollBar;

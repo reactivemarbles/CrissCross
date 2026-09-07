@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents the ContextMenu type.</summary>
-public class ContextMenu : global::Avalonia.Controls.ContextMenu
-{
-    // Inherits all functionality from Avalonia ContextMenu
-}
+public class ContextMenu : global::Avalonia.Controls.ContextMenu;

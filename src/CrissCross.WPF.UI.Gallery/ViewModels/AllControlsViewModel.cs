@@ -236,16 +236,9 @@ public class AllControlsViewModel : RxObject
     /// <summary>Filters a control item by the current search text.</summary>
     /// <param name="obj">The item to filter.</param>
     /// <returns>true when the item is visible.</returns>
-    private bool FilterPredicate(object obj)
-    {
-        if (obj is not ControlItem item)
-        {
-            return false;
-        }
-
-        return string.IsNullOrWhiteSpace(FilterText)
-            ? true
-            : item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
-                || (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false);
-    }
+    private bool FilterPredicate(object obj) =>
+        obj is ControlItem item
+        && (string.IsNullOrWhiteSpace(FilterText)
+            || item.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
+            || (item.Description?.Contains(FilterText, StringComparison.OrdinalIgnoreCase) ?? false));
 }

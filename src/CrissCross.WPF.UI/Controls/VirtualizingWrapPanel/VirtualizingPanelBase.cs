@@ -325,19 +325,23 @@ public abstract class VirtualizingPanelBase : VirtualizingPanel, IScrollInfo
     /// <inheritdoc />
     protected override void OnItemsChanged(object sender, ItemsChangedEventArgs args)
     {
-        switch (args?.Action)
+        if (args is null)
         {
-            case NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace:
-            {
-                RemoveInternalChildRange(args.Position.Index, args.ItemUICount);
-                break;
-            }
+            return;
+        }
 
-            case NotifyCollectionChangedAction.Move:
-            {
-                RemoveInternalChildRange(args.OldPosition.Index, args.ItemUICount);
-                break;
-            }
+        _ = args.Action switch
+        {
+            NotifyCollectionChangedAction.Remove or NotifyCollectionChangedAction.Replace =>
+                RemoveInternalChildRangeAndReturnTrue(args.Position.Index, args.ItemUICount),
+            NotifyCollectionChangedAction.Move => RemoveInternalChildRangeAndReturnTrue(args.OldPosition.Index, args.ItemUICount),
+            _ => false,
+        };
+
+        bool RemoveInternalChildRangeAndReturnTrue(int index, int count)
+        {
+            RemoveInternalChildRange(index, count);
+            return true;
         }
     }
 

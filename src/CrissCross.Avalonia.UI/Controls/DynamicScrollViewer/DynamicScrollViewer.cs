@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a scroll viewer with dynamic scrollbar visibility.</summary>
-public class DynamicScrollViewer : global::Avalonia.Controls.ScrollViewer
-{
-    // Inherits from Avalonia ScrollViewer with dynamic features
-}
+public class DynamicScrollViewer : global::Avalonia.Controls.ScrollViewer;

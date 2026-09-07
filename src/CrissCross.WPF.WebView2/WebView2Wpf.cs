@@ -349,6 +349,15 @@ public class WebView2Wpf : ContentControl, IWebView2
         set => SetValue(AutoDisposeProperty, value);
     }
 
+    /// <summary>Gets a value indicating whether the overlay window host is loaded.</summary>
+    internal bool IsOverlayHostLoaded => _windowHost is not null;
+
+    /// <summary>Gets a value indicating whether the parent window reference is assigned.</summary>
+    internal bool IsParentWindowAssigned => _parentWindow is not null;
+
+    /// <summary>Gets a value indicating whether this instance has been disposed.</summary>
+    internal bool IsDisposed => _disposedValue;
+
     /// <summary>Releases managed and unmanaged resources.</summary>
     public void Dispose()
     {
@@ -458,9 +467,17 @@ public class WebView2Wpf : ContentControl, IWebView2
 
         if (disposing)
         {
+            if (_parentWindow is not null)
+            {
+                _parentWindow.Loaded -= ParentWindow_Loaded;
+            }
+
+            _webBrowser.Unloaded -= OnWebBrowserUnloaded;
             _webBrowser.Dispose();
             _windowHost?.Close();
             _windowHost?.Dispose();
+            _windowHost = null;
+            _parentWindow = null;
         }
 
         _disposedValue = true;

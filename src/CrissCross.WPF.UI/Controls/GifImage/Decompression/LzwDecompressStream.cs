@@ -30,26 +30,35 @@ public sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCode
     /// <summary>Stores the _endOfStream value.</summary>
     private bool _endOfStream;
 
+    /// <inheritdoc />
     public override bool CanRead => true;
 
+    /// <inheritdoc />
     public override bool CanSeek => false;
 
+    /// <inheritdoc />
     public override bool CanWrite => true;
 
+    /// <inheritdoc />
     public override long Length => throw new NotSupportedException();
 
+    /// <inheritdoc />
     public override long Position
     {
         get => throw new NotSupportedException();
         set => throw new NotSupportedException();
     }
 
+    /// <inheritdoc />
     public override void Flush() { }
 
+    /// <inheritdoc />
     public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
+    /// <inheritdoc />
     public override void SetLength(long value) => throw new NotSupportedException();
 
+    /// <inheritdoc />
     public override int Read(byte[] buffer, int offset, int count)
     {
         ValidateReadArgs(buffer, offset, count);
@@ -77,6 +86,7 @@ public sealed class LzwDecompressStream(byte[] compressedBuffer, int minimumCode
         return read;
     }
 
+    /// <inheritdoc />
     public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
     /// <summary>Provides the CopySequenceToBuffer member.</summary>

@@ -10,8 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.Binding.Wpf" />
     <PackageReference Include="ReactiveList" />
     <PackageReference Include="ScottPlot.WPF" />
+    <PackageReference Include="ReactiveUI.Primitives.ObservableEvents" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">

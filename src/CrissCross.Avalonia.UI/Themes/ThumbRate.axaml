@@ -6,8 +6,8 @@
     <Style Selector="controls|ThumbRate">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="ThumbSize" Value="24" />
-        <Setter Property="SelectedBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-        <Setter Property="UnselectedBrush" Value="{DynamicResource TextFillColorSecondary}" />
+        <Setter Property="SelectedBrush" Value="{DynamicResource AccentButtonBackground}" />
+        <Setter Property="UnselectedBrush" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Background="{TemplateBinding Background}"

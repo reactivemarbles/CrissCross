@@ -22,6 +22,10 @@ namespace CrissCross.Avalonia;
 /// <seealso cref="IActivatableView" />
 public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation, IActivatableView
 {
+    /// <summary>Identifies the XAML-addressable view-model property shared by all navigation control types.</summary>
+    public static readonly StyledProperty<object?> ViewModelProperty =
+        AvaloniaProperty.Register<NavigationUserControl, object?>(nameof(ViewModel));
+
     /// <summary>The navigate back is enabled property.</summary>
     public static readonly StyledProperty<bool?> NavigateBackIsEnabledProperty = AvaloniaProperty.Register<
         NavigationUserControl,
@@ -66,6 +70,13 @@ public class NavigationUserControl : UserControl, ISetNavigation, IUseNavigation
     {
         get => GetValue(NavigateBackIsEnabledProperty);
         set => SetValue(NavigateBackIsEnabledProperty, value);
+    }
+
+    /// <summary>Gets or sets the view model exposed to XAML and strongly typed navigation controls.</summary>
+    public object? ViewModel
+    {
+        get => GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
     }
 
     /// <summary>Gets the navigation frame.</summary>

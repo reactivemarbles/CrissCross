@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a menu control that displays a list of items.</summary>
-public class Menu : global::Avalonia.Controls.Menu
-{
-    // Inherits all functionality from Avalonia Menu
-}
+public class Menu : global::Avalonia.Controls.Menu;

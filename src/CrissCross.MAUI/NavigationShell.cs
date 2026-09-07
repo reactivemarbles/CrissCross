@@ -65,6 +65,9 @@ public partial class NavigationShell
     /// <summary>Stores resolved views in the same order as the view model navigation stack.</summary>
     private readonly List<IViewFor?> _navigationViews = [];
 
+    /// <summary>Stores event and routed navigation subscriptions created by this shell.</summary>
+    private readonly List<IDisposable> _subscriptions = [];
+
     /// <summary>Stores the current View Model value.</summary>
     private readonly Signal<INotifiyRoutableViewModel> _currentViewModel = new();
 
@@ -99,7 +102,7 @@ public partial class NavigationShell
     public NavigationShell()
     {
         ViewLocator = AppLocator.Current.GetService<IViewLocator>();
-        _ = CurrentViewModel
+        _subscriptions.Add(CurrentViewModel
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(vm =>
             {
@@ -130,7 +133,7 @@ public partial class NavigationShell
 
                 CanNavigateBack = NavigationStack?.Count > 1;
                 _canNavigateBackSubject.OnNext(CanNavigateBack);
-            });
+            }));
     }
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
@@ -359,6 +362,14 @@ public partial class NavigationShell
 
         if (disposing)
         {
+            UnregisterNavigationHost();
+
+            foreach (var subscription in _subscriptions)
+            {
+                subscription.Dispose();
+            }
+
+            _subscriptions.Clear();
             _canNavigateBackSubject.Dispose();
             _currentViewModel.Dispose();
         }
@@ -376,6 +387,35 @@ public partial class NavigationShell
         }
 
         ns.SetMainNavigationHost(ns);
+    }
+
+    /// <summary>Removes shared navigation registrations that still point to this shell.</summary>
+    private void UnregisterNavigationHost()
+    {
+        var hostNames = new List<string>();
+        foreach (var pair in ViewModelRoutedViewHostMixins.NavigationHost)
+        {
+            if (ReferenceEquals(pair.Value, this))
+            {
+                hostNames.Add(pair.Key);
+            }
+        }
+
+        foreach (var hostName in hostNames)
+        {
+            _ = ViewModelRoutedViewHostMixins.NavigationHost.Remove(hostName);
+            if (ViewModelRoutedViewHostMixins.CurrentViewDisposable.Remove(hostName, out var disposable))
+            {
+                disposable.Dispose();
+            }
+
+            if (ViewModelRoutedViewHostMixins.ResultNavigating.Remove(hostName, out var resultNavigating))
+            {
+                resultNavigating.Dispose();
+            }
+
+            _ = ViewModelRoutedViewHostMixins.WhenSetupSubjects.Remove(hostName);
+        }
     }
 
     /// <summary>Runs the goto Page operation.</summary>

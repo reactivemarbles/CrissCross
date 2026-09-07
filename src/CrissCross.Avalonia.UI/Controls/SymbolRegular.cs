@@ -9,10 +9,6 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents Fluent System Icons regular symbols.</summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage(
-    "Design",
-    "CA1069:Enums values should not be duplicated",
-    Justification = "By design for mirroring purposes.")]
 public enum SymbolRegular
 {
     /// <summary>Empty symbol.</summary>

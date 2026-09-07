@@ -41,6 +41,9 @@ public class ValidationSummary : ItemsControl
     }
 
     /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(ValidationSummary);
+
+    /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         ArgumentNullException.ThrowIfNull(change);

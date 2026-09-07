@@ -95,6 +95,9 @@ public class Stepper : ItemsControl
     /// <summary>Gets the command that requests a specific step key or descriptor.</summary>
     public ICommand JumpToStepCommand { get; }
 
+    /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(Stepper);
+
     /// <summary>Requests navigation to the specified step key.</summary>
     /// <param name="stepKey">The stable step key.</param>
     public void RequestStep(string? stepKey)
@@ -134,13 +137,14 @@ public class Stepper : ItemsControl
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != StateProperty || change.GetNewValue<StepperState?>() is not { } state)
+        if (change.Property != StateProperty)
         {
             return;
         }
 
-        CurrentKey = state.CurrentKey;
-        ItemsSource = state.Steps;
+        var state = change.GetNewValue<StepperState?>();
+        CurrentKey = state?.CurrentKey;
+        ItemsSource = state?.Steps;
     }
 
     /// <summary>Provides the RequestPreviousStep member.</summary>

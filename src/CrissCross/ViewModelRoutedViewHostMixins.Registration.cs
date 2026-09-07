@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -22,6 +23,7 @@ public static partial class ViewModelRoutedViewHostMixins
     {
         var hostKeys = new List<string>();
         AddHostKey(hostKeys, navigation.Name);
+        AddHostKey(hostKeys, viewHost.HostName);
         AddHostKey(hostKeys, viewHost.Name);
 
         if (hostKeys.Count == 0)
@@ -71,6 +73,11 @@ public static partial class ViewModelRoutedViewHostMixins
     /// <param name="hostKeys">The host key list.</param>
     private static void EnsureViewHostName(IViewModelRoutedViewHost viewHost, string hostKey, List<string> hostKeys)
     {
+        if (!string.Equals(viewHost.HostName, hostKey, StringComparison.Ordinal))
+        {
+            viewHost.HostName = hostKey;
+        }
+
         if (!string.IsNullOrWhiteSpace(viewHost.Name))
         {
             return;
@@ -89,6 +96,13 @@ public static partial class ViewModelRoutedViewHostMixins
         {
             foreach (var key in hostKeys)
             {
+                if (NavigationHost.TryGetValue(key, out var existingHost) && !ReferenceEquals(existingHost, viewHost))
+                {
+                    DisposeAndRemove(CurrentViewDisposable, key);
+                    DisposeAndRemove(ResultNavigating, key);
+                    DisposeAndRemove(WhenSetupSubjects, key);
+                }
+
                 NavigationHost[key] = viewHost;
                 AddIfMissing(WhenSetupSubjects, key, new(1));
                 AddIfMissing(CurrentViewDisposable, key, []);

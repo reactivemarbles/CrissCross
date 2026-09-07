@@ -18,6 +18,7 @@
     <Using Include="System.Reactive.Concurrency.ImmediateScheduler" Alias="ImmediateScheduler" />
     <Using Include="System.Reactive.Concurrency" />
     <Using Include="ReactiveUI.Primitives.Disposables.MultipleDisposable" Alias="CompositeDisposable" />
+    <Using Include="ReactiveUI.Primitives.Reactive.Disposables.ContainerDisposable" Alias="ActivationDisposable" />
     <Using Include="ReactiveUI.Primitives.Disposables.SwapDisposable" Alias="SerialDisposable" />
     <Using Include="ReactiveUI.Primitives.Disposables.Scope" Alias="Disposable" />
     <Using Include="ReactiveUI.Primitives.Reactive.Signals.Signal" Alias="Observable" />

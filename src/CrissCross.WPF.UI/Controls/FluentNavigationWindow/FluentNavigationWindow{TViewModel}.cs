@@ -29,7 +29,7 @@ public class FluentNavigationWindow<TViewModel> : FluentNavigationWindow, IViewF
     /// <summary>Initializes a new instance of the <see cref="FluentNavigationWindow{TViewModel}"/> class.</summary>
     public FluentNavigationWindow() =>
         this.WhenActivated(
-            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+            (ActivationDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;

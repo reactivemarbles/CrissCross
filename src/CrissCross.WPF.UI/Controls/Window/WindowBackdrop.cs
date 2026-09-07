@@ -45,7 +45,7 @@ public static class WindowBackdrop
         {
             var windowHandle = new WindowInteropHelper(window).Handle;
 
-            return windowHandle == IntPtr.Zero ? false : ApplyBackdrop(windowHandle, backdropType);
+            return windowHandle != IntPtr.Zero && ApplyBackdrop(windowHandle, backdropType);
         }
 
         window.Loaded += (sender, eventArgs) =>
@@ -93,19 +93,9 @@ public static class WindowBackdrop
         _ = UnsafeNativeMethods.RemoveWindowCaption(windowHandle);
 
         // 22H1
-        if (!Win32.Utilities.IsOSWindows11Insider1OrNewer)
-        {
-            return backdropType != WindowBackdropType.None ? ApplyLegacyMicaBackdrop(windowHandle) : false;
-        }
-
-        return backdropType switch
-        {
-            WindowBackdropType.Auto => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_AUTO),
-            WindowBackdropType.Mica => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_MAINWINDOW),
-            WindowBackdropType.Acrylic => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_TRANSIENTWINDOW),
-            WindowBackdropType.Tabbed => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_TABBEDWINDOW),
-            _ => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_DISABLE),
-        };
+        return Win32.Utilities.IsOSWindows11Insider1OrNewer
+            ? ApplyWindows11Backdrop(windowHandle, backdropType)
+            : backdropType != WindowBackdropType.None && ApplyLegacyMicaBackdrop(windowHandle);
     }
 
     /// <summary>Tries to remove backdrop effects if they have been applied to the <see cref="Window" />.</summary>
@@ -234,6 +224,20 @@ public static class WindowBackdrop
 
         return true;
     }
+
+    /// <summary>Applies a Windows 11 backdrop effect to the selected handle.</summary>
+    /// <param name="windowHandle">The window handle.</param>
+    /// <param name="backdropType">Type of the backdrop.</param>
+    /// <returns>The result.</returns>
+    private static bool ApplyWindows11Backdrop(IntPtr windowHandle, WindowBackdropType backdropType) =>
+        backdropType switch
+        {
+            WindowBackdropType.Auto => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_AUTO),
+            WindowBackdropType.Mica => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_MAINWINDOW),
+            WindowBackdropType.Acrylic => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_TRANSIENTWINDOW),
+            WindowBackdropType.Tabbed => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_TABBEDWINDOW),
+            _ => ApplyDwmwWindowAttrubute(windowHandle, Dwmapi.DWMSBT.DWMSBT_DISABLE),
+        };
 
     /// <summary>Provides the ApplyDwmwWindowAttrubute member.</summary>
     /// <param name="windowHandle">The window handle.</param>

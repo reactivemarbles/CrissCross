@@ -45,8 +45,8 @@ public partial class NavigationShell
             .FromEventPattern<ShellNavigatedEventArgs>(handler => Navigated += handler, handler => Navigated -= handler)
             .Select(static pattern => pattern.EventArgs);
 
-        _ = navigatingEvent.Subscribe(HandleShellNavigating);
-        _ = navigatedEvent.Subscribe(HandleShellNavigated);
+        _subscriptions.Add(navigatingEvent.Subscribe(HandleShellNavigating));
+        _subscriptions.Add(navigatedEvent.Subscribe(HandleShellNavigated));
     }
 
     /// <summary>Handles a shell navigating event.</summary>
@@ -131,11 +131,11 @@ public partial class NavigationShell
 
     /// <summary>Subscribes to routed navigation requests for this host.</summary>
     private void SubscribeToNavigationRequests() =>
-        _ = ViewModelRoutedViewHostMixins
+        _subscriptions.Add(ViewModelRoutedViewHostMixins
             .ResultNavigating[Name]
             .DistinctUntilChanged()
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(HandleNavigationRequest);
+            .Subscribe(HandleNavigationRequest));
 
     /// <summary>Handles a routed navigation request.</summary>
     /// <param name="eventArgs">The navigation event arguments.</param>

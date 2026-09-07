@@ -3,7 +3,14 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Button Style -->
-    <Style Selector="controls|Button">
+    <Style Selector=":is(controls|Button)">
+        <Setter Property="Appearance" Value="Secondary" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+        <Setter Property="MouseOverBorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource ButtonForegroundPointerOver}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource ButtonBackgroundPressed}" />
+        <Setter Property="PressedBorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource ButtonForegroundPressed}" />
         <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
@@ -26,14 +33,16 @@
                                           Content="{TemplateBinding Icon}"
                                           IsVisible="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static ObjectConverters.IsNotNull}}"
                                           Margin="0,0,8,0"
-                                          VerticalAlignment="Center" />
+                                          VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
                         <!-- Content -->
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Grid.Column="1"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Grid>
                 </Border>
             </ControlTemplate>
@@ -41,7 +50,7 @@
     </Style>
     
     <!-- Button without icon - single column layout -->
-    <Style Selector="controls|Button[Icon={x:Null}]">
+    <Style Selector=":is(controls|Button)[Icon={x:Null}]">
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Name="RootBorder"
@@ -54,27 +63,111 @@
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}"
                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      TextElement.Foreground="{TemplateBinding Foreground}" />
                 </Border>
             </ControlTemplate>
         </Setter>
     </Style>
     
+    <Style Selector=":is(controls|Button)[Appearance=Primary]">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource AccentButtonBackgroundPressed}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource AccentButtonForeground}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource AccentButtonForeground}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Info]">
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorAttention}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource SystemFillColorAttention}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource SystemFillColorAttention}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Danger]">
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Success]">
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Caution]">
+        <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBrush}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Dark]">
+        <Setter Property="Background" Value="Black" />
+        <Setter Property="MouseOverBackground" Value="Black" />
+        <Setter Property="PressedBackground" Value="Black" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="MouseOverForeground" Value="White" />
+        <Setter Property="PressedForeground" Value="White" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Light]">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="MouseOverBackground" Value="White" />
+        <Setter Property="PressedBackground" Value="White" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="MouseOverForeground" Value="Black" />
+        <Setter Property="PressedForeground" Value="Black" />
+    </Style>
+
+    <Style Selector=":is(controls|Button)[Appearance=Transparent]">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MouseOverBackground" Value="Transparent" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="MouseOverForeground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource ButtonForeground}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button):pointerover:not(:disabled)">
+        <Setter Property="Foreground" Value="{Binding MouseOverForeground, RelativeSource={RelativeSource Self}}" />
+    </Style>
+
+    <Style Selector=":is(controls|Button):pressed:not(:disabled)">
+        <Setter Property="Foreground" Value="{Binding PressedForeground, RelativeSource={RelativeSource Self}}" />
+    </Style>
+
     <!-- PointerOver State -->
-    <Style Selector="controls|Button:pointerover /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
+    <Style Selector=":is(controls|Button):pointerover:not(:disabled) /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{Binding MouseOverBackground, RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="BorderBrush" Value="{Binding MouseOverBorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
     </Style>
     
     <!-- Pressed State -->
-    <Style Selector="controls|Button:pressed /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
+    <Style Selector=":is(controls|Button):pressed:not(:disabled) /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{Binding PressedBackground, RelativeSource={RelativeSource TemplatedParent}}" />
+        <Setter Property="BorderBrush" Value="{Binding PressedBorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
     </Style>
     
     <!-- Disabled State -->
-    <Style Selector="controls|Button:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+    <Style Selector=":is(controls|Button):disabled">
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushDisabled}" />
     </Style>
     
 </Styles>

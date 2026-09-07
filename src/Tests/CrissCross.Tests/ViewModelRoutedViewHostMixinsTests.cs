@@ -12,6 +12,12 @@ public partial class ViewModelRoutedViewHostMixinsTests
     /// <summary>Provides the ProfileContract member.</summary>
     private const string ProfileContract = "profile";
 
+    /// <summary>The visual frame name, distinct from its logical navigation host name.</summary>
+    private const string VisualFrameName = "NavigationFrame";
+
+    /// <summary>Provides the expected history count after two navigation entries are recorded.</summary>
+    private const int ExpectedTwoItemHistoryCount = 2;
+
     /// <summary>Provides the propagation delay used by observable tests.</summary>
     private const int ObservablePropagationDelayMilliseconds = 100;
 
@@ -157,6 +163,68 @@ public partial class ViewModelRoutedViewHostMixinsTests
         await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(viewHost);
     }
 
+    /// <summary>Verifies that a logical host name registers even when the visual host name differs.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task SetMainNavigationHost_RegistersLogicalHostNameAlias()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        using var setNav = new TestSetNavigationViewModel(string.Empty);
+        var viewHost = new TestViewModelRoutedViewHost(VisualFrameName, hostName) { RequiresSetup = true };
+
+        // Act
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Assert
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost.ContainsKey(hostName)).IsTrue();
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(viewHost);
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[VisualFrameName]).IsEqualTo(viewHost);
+        await Assert.That(viewHost.SetupCallCount).IsEqualTo(1);
+    }
+
+    /// <summary>Verifies that an owning navigation name controls the host setup identity when a visual frame name is shared.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task SetMainNavigationHost_WithOwnerNameAndSharedFrameName_UsesOwnerHostNameForSetupIdentity()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        using var setNav = new TestSetNavigationViewModel(hostName);
+        var viewHost = new TestViewModelRoutedViewHost(VisualFrameName, VisualFrameName) { RequiresSetup = true };
+
+        // Act
+        setNav.SetMainNavigationHost(viewHost);
+
+        // Assert
+        await Assert.That(viewHost.HostName).IsEqualTo(hostName);
+        await Assert.That(viewHost.Name).IsEqualTo(VisualFrameName);
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(viewHost);
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[VisualFrameName]).IsEqualTo(viewHost);
+        await Assert.That(viewHost.SetupCallCount).IsEqualTo(1);
+    }
+
+    /// <summary>Verifies that setup notifications use the logical host name when it differs from the view name.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task WhenSetup_WithLogicalHostNameAlias_NotifiesSubscriber()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        var observed = false;
+        using var vm = new TestViewModel(hostName);
+        using var setNav = new TestSetNavigationViewModel(string.Empty);
+        using var subscription = vm.WhenSetup().Subscribe(value => observed = value);
+        var viewHost = new TestViewModelRoutedViewHost(VisualFrameName, hostName);
+
+        // Act
+        setNav.SetMainNavigationHost(viewHost);
+        await Task.Delay(ObservablePropagationDelayMilliseconds);
+
+        // Assert
+        await Assert.That(observed).IsTrue();
+    }
+
     /// <summary>Provides the SetMainNavigationHost_ThrowsWhenSetNavigationIsNull member.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
@@ -200,6 +268,67 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
         // Assert - recreated shells/windows must not keep navigating through stale hosts.
         await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(replacementHost);
+    }
+
+    /// <summary>Verifies that unregistering one visual host leaves another logical host usable.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task UnregisterNavigationHost_WithTwoLogicalHosts_RemovesOnlyDisposedHost()
+    {
+        // Arrange
+        var firstHostName = GetUniqueHostName();
+        var secondHostName = GetUniqueHostName();
+        using var firstSetup = new TestSetNavigationViewModel(string.Empty);
+        using var secondSetup = new TestSetNavigationViewModel(string.Empty);
+        using var hostedNavigation = new TestHostedViewModel();
+        var firstHost = new TestViewModelRoutedViewHost(VisualFrameName, firstHostName);
+        var secondHost = new TestViewModelRoutedViewHost(VisualFrameName, secondHostName);
+        RegisterTestViewModel(new(secondHostName));
+        firstSetup.SetMainNavigationHost(firstHost);
+        secondSetup.SetMainNavigationHost(secondHost);
+        firstHost.NavigationStack.Add(typeof(TestViewModel));
+        secondHost.NavigationStack.Add(typeof(TestHostedViewModel));
+
+        // Act
+        ViewModelRoutedViewHostMixins.UnregisterNavigationHost(firstHost);
+        hostedNavigation.NavigateToView(
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = secondHostName }, });
+
+        // Assert
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost.ContainsKey(firstHostName)).IsFalse();
+        await Assert.That(ViewModelRoutedViewHostMixins.ResultNavigating.ContainsKey(firstHostName)).IsFalse();
+        await Assert.That(ViewModelRoutedViewHostMixins.WhenSetupSubjects.ContainsKey(firstHostName)).IsFalse();
+        await Assert.That(ViewModelRoutedViewHostMixins.CurrentViewDisposable.ContainsKey(firstHostName)).IsFalse();
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[secondHostName]).IsEqualTo(secondHost);
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[VisualFrameName]).IsEqualTo(secondHost);
+        await Assert.That(firstHost.NavigationStack.Count).IsEqualTo(1);
+        await Assert.That(secondHost.NavigationStack.Count).IsEqualTo(ExpectedTwoItemHistoryCount);
+    }
+
+    /// <summary>Verifies that unregistering a stale host does not remove a replacement registered under the same name.</summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    [Test]
+    public async Task UnregisterNavigationHost_WithReplacementHost_DoesNotRemoveReplacement()
+    {
+        // Arrange
+        var hostName = GetUniqueHostName();
+        using var setup = new TestSetNavigationViewModel(hostName);
+        using var hostedNavigation = new TestHostedViewModel();
+        var staleHost = new TestViewModelRoutedViewHost(hostName);
+        var replacementHost = new TestViewModelRoutedViewHost(hostName);
+        RegisterTestViewModel(new(hostName));
+        setup.SetMainNavigationHost(staleHost);
+        setup.SetMainNavigationHost(replacementHost);
+
+        // Act
+        ViewModelRoutedViewHostMixins.UnregisterNavigationHost(staleHost);
+        hostedNavigation.NavigateToView(
+            new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { HostName = hostName }, });
+
+        // Assert
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(replacementHost);
+        await Assert.That(replacementHost.NavigationStack.Count).IsEqualTo(1);
+        await Assert.That(staleHost.NavigationStack.Count).IsEqualTo(0);
     }
 
     /// <summary>Provides the ClearHistory_WithIUseNavigation_ClearsHostHistory member.</summary>

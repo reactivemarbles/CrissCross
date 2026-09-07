@@ -298,31 +298,27 @@ public class MessageBox : System.Windows.Window
 
         ResizeToContentSize(rootElement);
 
-        switch (WindowStartupLocation)
+        if (WindowStartupLocation is WindowStartupLocation.Manual or WindowStartupLocation.CenterScreen)
         {
-            case WindowStartupLocation.Manual or WindowStartupLocation.CenterScreen:
+            CenterWindowOnScreen();
+            return;
+        }
+
+        if (WindowStartupLocation == WindowStartupLocation.CenterOwner)
+        {
+            if (!CanCenterOverWPFOwner() || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
             {
                 CenterWindowOnScreen();
-                break;
             }
-
-            case WindowStartupLocation.CenterOwner:
+            else
             {
-                if (!CanCenterOverWPFOwner() || Owner.WindowState is WindowState.Maximized or WindowState.Minimized)
-                {
-                    CenterWindowOnScreen();
-                }
-                else
-                {
-                    CenterWindowOnOwner();
-                }
-
-                break;
+                CenterWindowOnOwner();
             }
 
-            default:
-                throw new InvalidOperationException();
+            return;
         }
+
+        throw new InvalidOperationException();
     }
 
     /// <summary>Resizes the MessageBox to fit the content's size, including margins.</summary>

@@ -3,7 +3,7 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Label Style -->
-    <Style Selector="controls|Label">
+    <Style Selector=":is(controls|Label)">
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="FontSize" Value="14" />
     </Style>

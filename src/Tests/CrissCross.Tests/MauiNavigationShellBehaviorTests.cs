@@ -104,6 +104,19 @@ public sealed class MauiNavigationShellBehaviorTests
         await Assert.That(shell.NavigationStack).IsEmpty();
     }
 
+    /// <summary>Verifies disposal removes a named shell from the shared navigation host registry.</summary>
+    /// <returns>A task representing the asynchronous test.</returns>
+    [Test]
+    public async Task Dispose_WhenNamed_RemovesNavigationHostRegistration()
+    {
+        const string shellName = "maui-shell-dispose-registration";
+        var shell = new NavigationShell { Name = shellName };
+
+        shell.Dispose();
+
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost.ContainsKey(shellName)).IsFalse();
+    }
+
     /// <summary>Exposes protected page projection for direct contract testing.</summary>
     private sealed class NavigationShellProbe : NavigationShell
     {

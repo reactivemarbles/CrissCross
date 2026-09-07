@@ -6,7 +6,6 @@
     <Style Selector="controls|FluentWindow">
         <Setter Property="Background" Value="{DynamicResource ApplicationBackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
-        <Setter Property="FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
         <Setter Property="FontSize" Value="14" />
     </Style>
     

@@ -10,6 +10,7 @@ using AvaloniaContextMenu = Avalonia.Controls.ContextMenu;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Comprehensive feature coverage for the Avalonia RichTextBox control surface.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed partial class RichTextBoxFeatureTests
 {
     /// <summary>The image file URI used by drop tests.</summary>

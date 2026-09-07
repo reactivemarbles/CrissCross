@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using CrissCross.Maui.UI;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Controls;
 using ReactiveUI;
 
 namespace CrissCross.MAUI.Test;
@@ -90,7 +93,7 @@ public sealed class ControlsGalleryViewModel : RxObject
         _segmentState = new(CreateSegments(), "table");
         _chipGroupState = new(CreateChips(AlarmsChipKey), ChipGroupSelectionMode.Multiple);
         _stepperState = new(CreateSteps(ReviewStepKey), ReviewStepKey, StepperOrientation.Horizontal);
-        _themeState = new(_selectedTheme, ThemeChoice.Dark, supportsHighContrast: true);
+        _themeState = CreateThemeState(_selectedTheme);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
         SearchCommand = ReactiveCommand.CreateFromTask<string>(SearchAsync);
@@ -223,13 +226,12 @@ public sealed class ControlsGalleryViewModel : RxObject
         get => _selectedTheme;
         set
         {
-            if (_selectedTheme == value)
+            if (_selectedTheme != value)
             {
-                return;
+                _ = this.RaiseAndSetIfChanged(ref _selectedTheme, value);
             }
 
-            _ = this.RaiseAndSetIfChanged(ref _selectedTheme, value);
-            ThemeState = new(value, ThemeChoice.Dark, supportsHighContrast: true);
+            ThemeState = CreateThemeState(value);
         }
     }
 
@@ -239,6 +241,15 @@ public sealed class ControlsGalleryViewModel : RxObject
         get => _themeState;
         private set => this.RaiseAndSetIfChanged(ref _themeState, value);
     }
+
+    /// <summary>Gets the normal process-value sample.</summary>
+    public ProcessValueState NormalProcessValue { get; } = new("Reactor temperature", 72.4, "C", 0, 100, 10, 90);
+
+    /// <summary>Gets the alarm process-value sample.</summary>
+    public ProcessValueState AlarmProcessValue { get; } = new("Line pressure", 126.8, "bar", 0, 140, new ProcessValueOptions { HighAlarmLimit = 120 });
+
+    /// <summary>Gets the bad-quality process-value sample.</summary>
+    public ProcessValueState BadQualityProcessValue { get; } = new("Flow transmitter", null, "L/min", 0, 500, new ProcessValueOptions { IsGoodQuality = false });
 
     /// <summary>Gets deterministic platform notes for manual QA.</summary>
     public string PlatformNotes { get; } = GetPlatformNotes();
@@ -298,6 +309,27 @@ public sealed class ControlsGalleryViewModel : RxObject
             ? "iOS: safe-area and touch interaction QA."
             : "MAUI: platform-specific handlers are active for the current device.";
     }
+
+    /// <summary>Creates a theme snapshot using the current MAUI requested theme for System.</summary>
+    /// <param name="choice">The selected theme choice.</param>
+    /// <returns>The theme snapshot.</returns>
+    private static ThemePreferenceState CreateThemeState(ThemeChoice choice) =>
+        new(choice, GetSystemTheme(), supportsHighContrast: true);
+
+    /// <summary>Gets the current MAUI application theme as a shared concrete theme choice.</summary>
+    /// <returns>The current concrete system theme choice.</returns>
+    private static ThemeChoice GetSystemTheme() =>
+        Application.Current?.RequestedTheme == AppTheme.Dark ? ThemeChoice.Dark : ThemeChoice.Light;
+
+    /// <summary>Maps a shared theme choice to the MAUI app theme override.</summary>
+    /// <param name="choice">The selected shared theme choice.</param>
+    /// <returns>The MAUI app theme override.</returns>
+    private static AppTheme ToApplicationTheme(ThemeChoice choice) => choice switch
+    {
+        ThemeChoice.Dark => AppTheme.Dark,
+        ThemeChoice.Light => AppTheme.Light,
+        _ => AppTheme.Unspecified,
+    };
 
     /// <summary>Provides the CreateSearchState member.</summary>
     /// <param name="text">The text value.</param>
@@ -430,5 +462,17 @@ public sealed class ControlsGalleryViewModel : RxObject
 
     /// <summary>Provides the ApplyTheme member.</summary>
     /// <param name="choice">The choice value.</param>
-    private void ApplyTheme(ThemeChoice choice) => SelectedTheme = choice;
+    private void ApplyTheme(ThemeChoice choice)
+    {
+        if (Application.Current is { } application)
+        {
+            application.UserAppTheme = ToApplicationTheme(choice);
+        }
+
+        SelectedTheme = choice;
+        if (Application.Current is { } currentApplication)
+        {
+            _ = currentApplication.Resources.UseCrissCrossMauiUiResources(ThemeState);
+        }
+    }
 }

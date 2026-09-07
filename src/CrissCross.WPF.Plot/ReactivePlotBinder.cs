@@ -338,52 +338,87 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
         ReactivePlotUpdate update,
         ReactivePlotBindingOptions options,
         HashSet<PlotSeriesKey> stoppedSeries,
-        ReactivePlotConnection connection)
-    {
-        if (update.Key.Axis < 0 || update.Key.Axis >= options.MaxAxisCount)
+        ReactivePlotConnection connection) =>
+        HasValidAxis(update, options, stoppedSeries, connection)
+        && ((update.X, update.Y) switch
         {
-            return SurfaceValidationError(
+            ({ } x, { } y) => ValidateUpdateValues(update, options, stoppedSeries, connection, x, y),
+            _ => SurfaceValidationError(
                 update,
                 options,
                 stoppedSeries,
                 connection,
-                $"Invalid Y-axis index: {update.Key.Axis}");
-        }
+                "Reactive plot update X and Y collections must be non-null."),
+        });
 
-        if (update.X is null || update.Y is null)
-        {
-            return SurfaceValidationError(
-                update,
-                options,
-                stoppedSeries,
-                connection,
-                "Reactive plot update X and Y collections must be non-null.");
-        }
+    /// <summary>Checks whether a plot update targets a valid Y axis.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
+    /// <returns><see langword="true"/> when the update targets a valid axis.</returns>
+    private static bool HasValidAxis(
+        ReactivePlotUpdate update,
+        ReactivePlotBindingOptions options,
+        HashSet<PlotSeriesKey> stoppedSeries,
+        ReactivePlotConnection connection) =>
+        (update.Key.Axis >= 0
+        && update.Key.Axis < options.MaxAxisCount)
+        || SurfaceValidationError(
+            update,
+            options,
+            stoppedSeries,
+            connection,
+            $"Invalid Y-axis index: {update.Key.Axis}");
 
-        if (update.Kind == ReactivePlotUpdateKind.Clear)
-        {
-            return true;
-        }
+    /// <summary>Validates non-null plot update values.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
+    /// <param name="x">The X values.</param>
+    /// <param name="y">The Y values.</param>
+    /// <returns><see langword="true"/> when the update values are valid.</returns>
+    private static bool ValidateUpdateValues(
+        ReactivePlotUpdate update,
+        ReactivePlotBindingOptions options,
+        HashSet<PlotSeriesKey> stoppedSeries,
+        ReactivePlotConnection connection,
+        IReadOnlyList<double> x,
+        IReadOnlyList<double> y) =>
+        update.Kind == ReactivePlotUpdateKind.Clear
+        || (HasUpdateValues(update, options, stoppedSeries, connection, x, y)
+        && (x.Count == y.Count
+        || SurfaceValidationError(
+            update,
+            options,
+            stoppedSeries,
+            connection,
+            "Reactive plot update X and Y collections must have matching counts.")));
 
-        if (update.X.Count == 0 || update.Y.Count == 0)
-        {
-            return SurfaceValidationError(
-                update,
-                options,
-                stoppedSeries,
-                connection,
-                "Reactive plot update must contain at least one X and Y value.");
-        }
-
-        return update.X.Count != update.Y.Count
-            ? SurfaceValidationError(
-                update,
-                options,
-                stoppedSeries,
-                connection,
-                "Reactive plot update X and Y collections must have matching counts.")
-            : true;
-    }
+    /// <summary>Checks whether a plot update has non-empty X and Y collections.</summary>
+    /// <param name="update">The update value.</param>
+    /// <param name="options">The options value.</param>
+    /// <param name="stoppedSeries">The stoppedSeries value.</param>
+    /// <param name="connection">The connection value.</param>
+    /// <param name="x">The X values.</param>
+    /// <param name="y">The Y values.</param>
+    /// <returns><see langword="true"/> when the update carries at least one X and Y value.</returns>
+    private static bool HasUpdateValues(
+        ReactivePlotUpdate update,
+        ReactivePlotBindingOptions options,
+        HashSet<PlotSeriesKey> stoppedSeries,
+        ReactivePlotConnection connection,
+        IReadOnlyList<double> x,
+        IReadOnlyList<double> y) =>
+        (x.Count != 0
+        && y.Count != 0)
+        || SurfaceValidationError(
+            update,
+            options,
+            stoppedSeries,
+            connection,
+            "Reactive plot update must contain at least one X and Y value.");
 
     /// <summary>Handles the SurfaceValidationError operation.</summary>
     /// <param name="update">The update value.</param>

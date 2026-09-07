@@ -194,7 +194,7 @@ public class RaisedBorder : ContentControl
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
     /// </returns>
-    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
+    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp != StyleProperty && base.ShouldSerializeProperty(dp);
 
     /// <summary>Provides the CreateGeometryForPath member.</summary>
     /// <param name="width">The width value.</param>

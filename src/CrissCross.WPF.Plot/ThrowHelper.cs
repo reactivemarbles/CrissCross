@@ -45,4 +45,22 @@ internal static class ThrowHelper
 
         throw new ArgumentOutOfRangeException(paramName, message);
     }
+
+    /// <summary>Throws when an object has already been disposed.</summary>
+    /// <param name="condition">A value indicating whether the object is disposed.</param>
+    /// <param name="instance">The disposed object instance.</param>
+#if NET8_0_OR_GREATER
+    internal static void ThrowIfDisposed(bool condition, object instance) =>
+        ObjectDisposedException.ThrowIf(condition, instance);
+#else
+    internal static void ThrowIfDisposed(bool condition, object instance)
+    {
+        if (!condition)
+        {
+            return;
+        }
+
+        throw new ObjectDisposedException(instance.GetType().Name);
+    }
+#endif
 }

@@ -39,6 +39,36 @@ public sealed class ResourceDictionaryRuntimeTests
         }
     }
 
+    /// <summary>Verifies a missing model never exposes blank empty-state actions.</summary>
+    /// <returns>The asynchronous test operation.</returns>
+    [Test]
+    public async Task EmptyState_WhenModelIsCleared_HidesBothActions()
+    {
+        var visibility = await RunOnStaThreadAsync(ReadEmptyStateActions);
+        foreach (var actionVisibility in visibility)
+        {
+            await Assert.That(actionVisibility).IsEqualTo(System.Windows.Visibility.Collapsed);
+        }
+    }
+
+    /// <summary>Loads the actual empty-state template before and after clearing its model.</summary>
+    /// <returns>The action visibility values.</returns>
+    private static System.Windows.Visibility[] ReadEmptyStateActions()
+    {
+        CrissCross.WPF.UI.Controls.EmptyState control = new();
+        CrissCross.WPF.UI.Markup.ControlsDictionary resources = new();
+        control.Resources.MergedDictionaries.Add(resources);
+        control.Style = (System.Windows.Style)resources[typeof(CrissCross.WPF.UI.Controls.EmptyState)];
+        _ = control.ApplyTemplate();
+        var primary = (System.Windows.Controls.Button)control.Template.FindName("PrimaryActionButton", control);
+        var secondary = (System.Windows.Controls.Button)control.Template.FindName("SecondaryActionButton", control);
+        var initialPrimary = primary.Visibility;
+        var initialSecondary = secondary.Visibility;
+        control.Model = new("No results");
+        control.Model = null;
+        return [initialPrimary, initialSecondary, primary.Visibility, secondary.Visibility];
+    }
+
     /// <summary>Loads resources and returns the selected pack URIs.</summary>
     /// <returns>The resource URI snapshot.</returns>
     private static ResourceSnapshot LoadResources()

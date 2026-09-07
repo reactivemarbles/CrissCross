@@ -670,7 +670,7 @@ public sealed class CoreCoverageEdgeBehaviorTests
     [Test]
     public async Task ObservableListHelpers_IgnoreNullSnapshots()
     {
-        using var source = new StateSignal<IEnumerable<IObservable<int>>?>(null);
+        using var source = new Signal<IEnumerable<IObservable<int>>>();
         var resultCount = 0;
         using var subscription = source.AnyMatch(static value => value > 0).Subscribe(_ => resultCount++);
 

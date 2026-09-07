@@ -6,8 +6,8 @@
     <!-- Inherits from Avalonia.Controls.Calendar, provide template for the derived control -->
     <Style Selector="controls|Calendar">
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="Background" Value="{DynamicResource FlyoutPresenterBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderThemeBrush}" />
+        <Setter Property="Background" Value="{DynamicResource FlyoutBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <ControlTemplate>
@@ -24,8 +24,8 @@
     <!-- CalendarItem styling - ensure text colors work in dark mode -->
     <Style Selector="controls|Calendar CalendarItem">
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
-        <Setter Property="Background" Value="{DynamicResource FlyoutPresenterBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderThemeBrush}" />
+        <Setter Property="Background" Value="{DynamicResource FlyoutBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FlyoutBorderBrush}" />
     </Style>
     
     <!-- Style all TextBlocks inside CalendarItem -->
@@ -64,11 +64,11 @@
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:pointerover">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:pressed">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarDayButton:selected">
@@ -129,11 +129,11 @@
     </Style>
     
     <Style Selector="controls|Calendar CalendarButton:pointerover">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarButton:pressed">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarButton:selected">
@@ -156,11 +156,11 @@
     </Style>
     
     <Style Selector="controls|Calendar CalendarItem Button:pointerover">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
     </Style>
     
     <Style Selector="controls|Calendar CalendarItem Button:pressed">
-        <Setter Property="Background" Value="{DynamicResource ListViewItemBackgroundPressed}" />
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiaryBrush}" />
     </Style>
     
     <!-- Day name headers (Mon, Tue, etc.) -->

@@ -421,6 +421,9 @@ public static class UnsafeNativeMethods
         return true;
     }
 
+    /// <summary>Removes the standard non-client caption from the specified window.</summary>
+    /// <param name="window">The window to update.</param>
+    /// <returns><see langword="true"/> if the native window theme attribute was applied.</returns>
     public static bool RemoveWindowCaption(Window window)
     {
         if (window is null)
@@ -433,6 +436,9 @@ public static class UnsafeNativeMethods
         return RemoveWindowCaption(windowHandle);
     }
 
+    /// <summary>Removes the standard non-client caption from the specified window handle.</summary>
+    /// <param name="hWnd">The window handle to update.</param>
+    /// <returns><see langword="true"/> if the native window theme attribute was applied.</returns>
     public static bool RemoveWindowCaption(IntPtr hWnd)
     {
         if (hWnd == IntPtr.Zero)
@@ -460,6 +466,9 @@ public static class UnsafeNativeMethods
         return true;
     }
 
+    /// <summary>Extends the client rendering area into the title bar for the specified window.</summary>
+    /// <param name="window">The window to update.</param>
+    /// <returns><see langword="true"/> if the native frame changes were applied.</returns>
     public static bool ExtendClientAreaIntoTitleBar(Window window)
     {
         if (window is null)
@@ -472,6 +481,9 @@ public static class UnsafeNativeMethods
         return ExtendClientAreaIntoTitleBar(windowHandle);
     }
 
+    /// <summary>Extends the client rendering area into the title bar for the specified window handle.</summary>
+    /// <param name="hWnd">The window handle to update.</param>
+    /// <returns><see langword="true"/> if the native frame changes were applied.</returns>
     public static bool ExtendClientAreaIntoTitleBar(IntPtr hWnd)
     {
         // !! EXPERIMENTAl

@@ -3,8 +3,9 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Menu Style -->
-    <Style Selector="controls|Menu">
-        <Setter Property="Background" Value="{DynamicResource MenuBarBackground}" />
+    <Style Selector=":is(controls|Menu)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type Menu}}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="Padding" Value="4" />
     </Style>

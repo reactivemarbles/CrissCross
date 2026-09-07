@@ -86,10 +86,9 @@ public class RxObjectMixinsTests
     {
         // Arrange
         var testObject = new TestRxObject();
-        var actionExecuted = false;
 
         // Act
-        var disposable = testObject.BuildCompleteDisposable(() => actionExecuted = true);
+        var disposable = testObject.BuildCompleteDisposable(static () => { });
 
         // Assert
         await Assert.That(disposable).IsNotNull();
@@ -276,14 +275,13 @@ public class RxObjectMixinsTests
     public async Task ToListOfObservables_HandlesNullSource()
     {
         // Arrange
-        var subject = new StateSignal<IEnumerable<TestReactiveObject>?>(null);
-        var result = subject.ToListOfObservables(x => x.TestProperty)!;
+        var subject = new Signal<IEnumerable<TestReactiveObject>>();
+        var result = subject.ToListOfObservables(x => x.TestProperty);
 
         var receivedValue = false;
         var subscription = result.Subscribe(_ => receivedValue = true);
 
-        // Give time for the observable to propagate
-        await Task.Delay(ObservablePropagationDelayMilliseconds);
+        subject.OnNext(null!);
 
         // Assert - Should not crash and should not emit for null
         await Assert.That(receivedValue).IsFalse();

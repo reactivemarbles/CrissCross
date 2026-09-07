@@ -67,6 +67,9 @@ public class BreadcrumbBar : ItemsControl, IUseHostedNavigation
         set => SetValue(CommandProperty, value);
     }
 
+    /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(BreadcrumbBar);
+
     /// <summary>Setups the navigation.</summary>
     /// <param name="hostName">Name of the host.</param>
     public void SetupNavigation(string hostName) => _hostName = hostName;

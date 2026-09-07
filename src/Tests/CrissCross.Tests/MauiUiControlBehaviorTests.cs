@@ -418,6 +418,7 @@ public class MauiUiControlBehaviorTests
     /// <returns><c>true</c> when the property supports the round-trip test.</returns>
     private static bool IsRoundTrippableControlProperty(System.Reflection.PropertyInfo property) =>
         property is { CanRead: true, CanWrite: true }
+        && property.SetMethod?.IsPublic == true
         && property.GetIndexParameters().Length == 0
         && property.DeclaringType?.Namespace?.StartsWith("CrissCross.", StringComparison.Ordinal) == true;
 

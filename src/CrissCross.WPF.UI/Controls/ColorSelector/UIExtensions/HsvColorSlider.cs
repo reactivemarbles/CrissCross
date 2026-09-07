@@ -30,6 +30,7 @@ public sealed class HsvColorSlider : PreviewColorSlider
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString() ?? GetType().Name;
 
+    /// <inheritdoc />
     protected override void GenerateBackground()
     {
         if (SliderHsvType == "H")

@@ -16,12 +16,12 @@ public sealed class MauiUiCoverageEdgeBehaviorTests
     [Test]
     public async Task DataPager_NavigationCommands_ExecuteAvailablePageTransitions()
     {
-        const int expectedExecutionCount = 4;
-        const int expectedPageIndex = 2;
-        const int pageSize = 10;
-        const int totalItemCount = 30;
+        const int ExpectedExecutionCount = 4;
+        const int ExpectedPageIndex = 2;
+        const int PageSize = 10;
+        const int TotalItemCount = 30;
         var command = new TrackingCommand(canExecute: true);
-        var pagination = new PaginationState(pageIndex: 1, pageSize, totalItemCount);
+        var pagination = new PaginationState(pageIndex: 1, PageSize, TotalItemCount);
         var pager = new DataPager { PaginationState = pagination, PageRequestCommand = command };
         var canExecuteChangedCount = 0;
         pager.NextPageCommand.CanExecuteChanged += (_, _) => canExecuteChangedCount++;
@@ -31,10 +31,10 @@ public sealed class MauiUiCoverageEdgeBehaviorTests
         pager.NextPageCommand.Execute(null);
         pager.LastPageCommand.Execute(null);
 
-        await Assert.That(command.ExecutionCount).IsEqualTo(expectedExecutionCount);
-        await Assert.That(canExecuteChangedCount).IsEqualTo(1);
-        await Assert.That(pager.CurrentRequest?.PageIndex).IsEqualTo(expectedPageIndex);
-        await Assert.That(pager.CurrentRequest?.PageSize).IsEqualTo(pageSize);
+        await Assert.That(command.ExecutionCount).IsEqualTo(ExpectedExecutionCount);
+        await Assert.That(canExecuteChangedCount).IsEqualTo(ExpectedExecutionCount);
+        await Assert.That(pager.CurrentRequest?.PageIndex).IsEqualTo(ExpectedPageIndex);
+        await Assert.That(pager.CurrentRequest?.PageSize).IsEqualTo(PageSize);
     }
 
     /// <summary>Verifies pager and segmented controls handle unavailable command and state paths safely.</summary>
@@ -88,9 +88,9 @@ public sealed class MauiUiCoverageEdgeBehaviorTests
     [Test]
     public async Task RatingAndVisualControls_ClampAndProjectInactiveBranches()
     {
-        const int maxRating = 3;
-        const int oversizedRating = 99;
-        var rating = new RatingControl { MaxRating = maxRating, Value = oversizedRating };
+        const int MaxRating = 3;
+        const int OversizedRating = 99;
+        var rating = new RatingControl { MaxRating = MaxRating, Value = OversizedRating };
         var busyOverlay = new BusyOverlay { Operation = new(string.Empty) };
         var imageSource = new FileImageSource { File = "ada.png" };
         var picture = new PersonPicture { DisplayName = "Ada Lovelace", Initials = "AL", Source = imageSource };
@@ -98,8 +98,8 @@ public sealed class MauiUiCoverageEdgeBehaviorTests
 
         chip.Model = null;
 
-        await Assert.That(rating.Value).IsEqualTo(maxRating);
-        await Assert.That(rating.Children.Count).IsEqualTo(maxRating);
+        await Assert.That(rating.Value).IsEqualTo(MaxRating);
+        await Assert.That(rating.Children.Count).IsEqualTo(MaxRating);
         await Assert.That(busyOverlay.IsBusy).IsFalse();
         await Assert.That(SemanticProperties.GetDescription(picture)).IsEqualTo("Ada Lovelace");
         await Assert.That(chip.Text).IsEqualTo("Chip");

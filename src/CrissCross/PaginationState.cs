@@ -67,7 +67,7 @@ public sealed class PaginationState
     public int FirstItemNumber => HasItems ? (PageIndex * PageSize) + 1 : 0;
 
     /// <summary>Gets the one-based number of the last item displayed on the current page.</summary>
-    public int LastItemNumber => HasItems ? Math.Min(TotalItemCount, (PageIndex + 1) * PageSize) : 0;
+    public int LastItemNumber => HasItems ? (int)Math.Min(TotalItemCount, ((long)PageIndex + 1) * PageSize) : 0;
 
     /// <summary>Gets compact user-facing item range text.</summary>
     public string SummaryText => HasItems

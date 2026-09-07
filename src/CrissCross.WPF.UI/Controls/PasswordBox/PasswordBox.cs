@@ -160,22 +160,15 @@ public partial class PasswordBox : TextBox
             "CrissCross.WPF.UI.PasswordBox");
 #endif
 
-        switch (parameter)
+        if (parameter is "reveal")
         {
-            case "reveal":
-            {
-                IsPasswordRevealed = !IsPasswordRevealed;
-                _ = Focus();
-                CaretIndex = Text.Length;
-                break;
-            }
-
-            default:
-            {
-                base.OnTemplateButtonClick(parameter);
-                break;
-            }
+            IsPasswordRevealed = !IsPasswordRevealed;
+            _ = Focus();
+            CaretIndex = Text.Length;
+            return;
         }
+
+        base.OnTemplateButtonClick(parameter);
     }
 
     /// <summary>Called when <see cref="Password"/> is changed.</summary>
@@ -277,42 +270,33 @@ public partial class PasswordBox : TextBox
                 isDeleted = true;
             }
 
-            switch (newCharacters.Length)
+            if (newCharacters.Length > 1)
             {
-                case > 1:
-                {
-                    var index = _currentText.IndexOf(newCharacters[0]);
+                var index = _currentText.IndexOf(newCharacters[0]);
 
-                    _newPasswordValue =
-                        index > _newPasswordValue.Length - 1
-                            ? _newPasswordValue + newCharacters
-                            : _newPasswordValue.Insert(index, newCharacters);
-                    break;
-                }
-
-                case 1:
+                _newPasswordValue =
+                    index > _newPasswordValue.Length - 1
+                        ? _newPasswordValue + newCharacters
+                        : _newPasswordValue.Insert(index, newCharacters);
+            }
+            else if (newCharacters.Length == 1)
+            {
+                for (var i = 0; i < _currentText.Length; i++)
                 {
-                    for (var i = 0; i < _currentText.Length; i++)
+                    if (_currentText[i] == passwordChar)
                     {
-                        if (_currentText[i] == passwordChar)
-                        {
-                            continue;
-                        }
-
-                        UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
-                        break;
+                        continue;
                     }
 
+                    UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
                     break;
                 }
-
-                case 0 when !isDeleted:
-                {
-                    // The input is a PasswordChar, which is to be inserted at the designated position.
-                    var insertIndex = selectionIndex - 1;
-                    UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
-                    break;
-                }
+            }
+            else if (!isDeleted)
+            {
+                // The input is a PasswordChar, which is to be inserted at the designated position.
+                var insertIndex = selectionIndex - 1;
+                UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
             }
 
             return _newPasswordValue;

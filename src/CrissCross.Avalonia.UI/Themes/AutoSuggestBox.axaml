@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross AutoSuggestBox Style -->
-    <Style Selector="controls|AutoSuggestBox">
+    <Style Selector=":is(controls|AutoSuggestBox)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type AutoCompleteBox}}" />
         <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
@@ -19,18 +20,18 @@
     </Style>
     
     <!-- Focus state -->
-    <Style Selector="controls|AutoSuggestBox:focus-within">
+    <Style Selector=":is(controls|AutoSuggestBox):focus-within">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
     </Style>
     
     <!-- Pointer over state -->
-    <Style Selector="controls|AutoSuggestBox:pointerover">
+    <Style Selector=":is(controls|AutoSuggestBox):pointerover">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
     </Style>
     
     <!-- Disabled state -->
-    <Style Selector="controls|AutoSuggestBox:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+    <Style Selector=":is(controls|AutoSuggestBox):disabled">
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
 </Styles>

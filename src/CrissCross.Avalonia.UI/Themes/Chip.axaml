@@ -21,6 +21,7 @@
                                 CommandParameter="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{TemplateBinding Text}" />
                         <Button MinWidth="24"
+                                IsVisible="{TemplateBinding IsRemovable}"
                                 Command="{Binding RemoveCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 CommandParameter="{Binding Model, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="×" />

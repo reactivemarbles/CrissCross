@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a control that contains multiple items that share the same space on the screen.</summary>
-public class TabControl : global::Avalonia.Controls.TabControl
-{
-    // Inherits all functionality from Avalonia TabControl
-}
+public class TabControl : global::Avalonia.Controls.TabControl;

@@ -31,7 +31,7 @@ public class NavigationUserControl<TViewModel> : NavigationUserControl, IViewFor
     /// <summary>Initializes a new instance of the <see cref="NavigationUserControl{TViewModel}"/> class.</summary>
     public NavigationUserControl() =>
         this.WhenActivated(
-            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+            (ActivationDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;

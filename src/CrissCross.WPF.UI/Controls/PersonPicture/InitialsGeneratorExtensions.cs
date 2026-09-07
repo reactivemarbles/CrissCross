@@ -179,45 +179,10 @@ internal static class InitialsGeneratorExtensions
 
             // In mix-match scenarios, we'll want to follow this order of precedence:
             // Glyph > Symbolic > Roman
-            switch (GetCharacterType(str[i]))
+            var characterType = GetCharacterType(str[i]);
+            if (characterType > result)
             {
-                case CharacterType.Glyph:
-                {
-                    result = CharacterType.Glyph;
-                    break;
-                }
-
-                case CharacterType.Symbolic:
-                {
-                    // Don't override a Glyph state with a Symbolic State.
-                    if (result != CharacterType.Glyph)
-                    {
-                        result = CharacterType.Symbolic;
-                    }
-
-                    break;
-                }
-
-                case CharacterType.Standard:
-                {
-                    // Don't override a Glyph or Symbolic state with a Latin state.
-                    if ((result != CharacterType.Glyph) && (result != CharacterType.Symbolic))
-                    {
-                        result = CharacterType.Standard;
-                    }
-
-                    break;
-                }
-
-                case CharacterType.Other:
-                {
-                    break;
-                }
-
-                default:
-                {
-                    throw new ArgumentOutOfRangeException(nameof(str), str, null);
-                }
+                result = characterType;
             }
         }
 

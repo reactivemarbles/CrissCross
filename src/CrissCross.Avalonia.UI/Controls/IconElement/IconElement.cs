@@ -4,6 +4,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Media;
 
 #if REACTIVELIST_REACTIVE
@@ -16,9 +17,8 @@ namespace CrissCross.Avalonia.UI.Controls;
 public class IconElement : Control
 {
     /// <summary>Property for <see cref="Foreground"/>.</summary>
-    public static readonly StyledProperty<IBrush?> ForegroundProperty = AvaloniaProperty.Register<IconElement, IBrush?>(
-        nameof(Foreground),
-        defaultValue: Brushes.Black);
+    public static readonly StyledProperty<IBrush?> ForegroundProperty =
+        TextElement.ForegroundProperty.AddOwner<IconElement>();
 
     /// <summary>Provides the IconElement member.</summary>
     static IconElement()

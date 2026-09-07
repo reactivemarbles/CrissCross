@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross ListBox Style -->
-    <Style Selector="controls|ListBox">
+    <Style Selector=":is(controls|ListBox)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type ListBox}}" />
         <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefault}" />
@@ -13,21 +14,21 @@
     </Style>
     
     <!-- ListBox Item Style -->
-    <Style Selector="controls|ListBox ListBoxItem">
+    <Style Selector=":is(controls|ListBox) ListBoxItem">
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="Margin" Value="2" />
         <Setter Property="CornerRadius" Value="4" />
     </Style>
     
-    <Style Selector="controls|ListBox ListBoxItem:pointerover">
+    <Style Selector=":is(controls|ListBox) ListBoxItem:pointerover">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
     </Style>
     
-    <Style Selector="controls|ListBox ListBoxItem:selected">
+    <Style Selector=":is(controls|ListBox) ListBoxItem:selected">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
     </Style>
     
-    <Style Selector="controls|ListBox ListBoxItem:selected:pointerover">
+    <Style Selector=":is(controls|ListBox) ListBoxItem:selected:pointerover">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
     </Style>
     

@@ -335,29 +335,22 @@ public partial class LiveChartViewModel : RxObject
     /// <param name="lineUI">The plot UI element.</param>
     private void AssignYAxis(object axisSource, IPlottable line, IPlottableUI lineUI)
     {
-        switch (axisSource)
+        if (axisSource is IObservable<int> observable)
         {
-            case IObservable<int> observable:
-            {
-                _ = observable
-                    .DistinctUntilChanged()
-                    .Subscribe(axis => AssignYAxis(axis, line, lineUI))
-                    .DisposeWith(Disposables);
-                break;
-            }
-
-            case int axis:
-            {
-                AssignYAxis(axis, line, lineUI);
-                break;
-            }
-
-            default:
-            {
-                AssignDefaultYAxis(line, lineUI);
-                break;
-            }
+            _ = observable
+                .DistinctUntilChanged()
+                .Subscribe(axis => AssignYAxis(axis, line, lineUI))
+                .DisposeWith(Disposables);
+            return;
         }
+
+        if (axisSource is int axis)
+        {
+            AssignYAxis(axis, line, lineUI);
+            return;
+        }
+
+        AssignDefaultYAxis(line, lineUI);
     }
 
     /// <summary>Assigns a Y axis by index.</summary>

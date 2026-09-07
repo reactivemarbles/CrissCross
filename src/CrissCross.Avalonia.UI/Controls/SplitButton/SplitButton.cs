@@ -11,8 +11,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a button with two parts that can be invoked separately.</summary>
-public class SplitButton : global::Avalonia.Controls.SplitButton
-{
-    /// <inheritdoc/>
-    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.SplitButton);
-}
+public class SplitButton : global::Avalonia.Controls.SplitButton;

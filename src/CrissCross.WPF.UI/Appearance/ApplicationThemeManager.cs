@@ -255,9 +255,8 @@ public static class ApplicationThemeManager
         var appApplicationTheme = GetAppTheme();
         var sysTheme = GetSystemTheme();
 
-        return appApplicationTheme != ApplicationTheme.Dark
-            ? false
-            : sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow;
+        return appApplicationTheme == ApplicationTheme.Dark
+            && sysTheme is SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow;
     }
 
     /// <summary>Checks if the application and the operating system are currently working in a light theme.</summary>
@@ -269,9 +268,8 @@ public static class ApplicationThemeManager
         var appApplicationTheme = GetAppTheme();
         var sysTheme = GetSystemTheme();
 
-        return appApplicationTheme != ApplicationTheme.Light
-            ? false
-            : sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise;
+        return appApplicationTheme == ApplicationTheme.Light
+            && sysTheme is SystemTheme.Light or SystemTheme.Flow or SystemTheme.Sunrise;
     }
 
     /// <summary>Tries to guess the currently set application theme.</summary>
@@ -287,21 +285,27 @@ public static class ApplicationThemeManager
 
         var themeUri = themeDictionary.Source.ToString().Trim().ToLower();
 
+        if (themeUri.Contains("hc1")
+            || themeUri.Contains("hc2")
+            || themeUri.Contains("hcblack")
+            || themeUri.Contains("hcwhite")
+            || themeUri.Contains("highcontrast"))
+        {
+            _cachedApplicationTheme = ApplicationTheme.HighContrast;
+            return;
+        }
+
         if (themeUri.Contains("light"))
         {
             _cachedApplicationTheme = ApplicationTheme.Light;
+            return;
         }
 
-        if (themeUri.Contains("dark"))
-        {
-            _cachedApplicationTheme = ApplicationTheme.Dark;
-        }
-
-        if (!themeUri.Contains("highcontrast"))
+        if (!themeUri.Contains("dark"))
         {
             return;
         }
 
-        _cachedApplicationTheme = ApplicationTheme.HighContrast;
+        _cachedApplicationTheme = ApplicationTheme.Dark;
     }
 }

@@ -62,9 +62,9 @@ public partial class NavigationView
     public bool Navigate(string pageIdOrTargetTag) => Navigate(pageIdOrTargetTag, null);
 
     /// <inheritdoc />
-    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext) => !_pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem)
-        ? false
-        : NavigateInternal(navigationViewItem, dataContext);
+    public virtual bool Navigate(string pageIdOrTargetTag, object? dataContext) =>
+        _pageIdOrTargetTagNavigationViewsDictionary.TryGetValue(pageIdOrTargetTag, out var navigationViewItem)
+        && NavigateInternal(navigationViewItem, dataContext);
 
     /// <inheritdoc />
     public bool NavigateWithHierarchy(Type pageType) => NavigateWithHierarchy(pageType, null);

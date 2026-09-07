@@ -20,7 +20,7 @@ public class GifImage : global::Avalonia.Controls.Image
 
     /// <summary>Property for <see cref="StretchDirection"/>.</summary>
     public static new readonly StyledProperty<StretchDirection> StretchDirectionProperty =
-        AvaloniaProperty.Register<GifImage, StretchDirection>(nameof(StretchDirection), StretchDirection.Both);
+        global::Avalonia.Controls.Image.StretchDirectionProperty;
 
     /// <summary>Property for <see cref="SourceUri"/>.</summary>
     public static readonly StyledProperty<Uri?> SourceUriProperty =

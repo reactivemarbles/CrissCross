@@ -4,6 +4,7 @@
 
 using System.Windows.Input;
 using CrissCross;
+using Microsoft.Maui.Controls;
 using ReactiveUI;
 
 namespace CrissCross.Maui.UI.Gallery;
@@ -26,6 +27,30 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     /// <summary>Number of hours represented by the default range sample.</summary>
     private const int DefaultRangeHours = -4;
 
+    /// <summary>Defines the reactor temperature for the industrial example.</summary>
+    private const double ReactorTemperature = 72.4;
+
+    /// <summary>Defines the temperature maximum for the industrial example.</summary>
+    private const double TemperatureMaximum = 100;
+
+    /// <summary>Defines the temperature low alarm for the industrial example.</summary>
+    private const double TemperatureLowAlarm = 10;
+
+    /// <summary>Defines the temperature high alarm for the industrial example.</summary>
+    private const double TemperatureHighAlarm = 90;
+
+    /// <summary>Defines the line pressure for the industrial example.</summary>
+    private const double LinePressure = 126.8;
+
+    /// <summary>Defines the pressure maximum for the industrial example.</summary>
+    private const double PressureMaximum = 140;
+
+    /// <summary>Defines the pressure high alarm for the industrial example.</summary>
+    private const double PressureHighAlarm = 120;
+
+    /// <summary>Defines the flow maximum for the industrial example.</summary>
+    private const double FlowMaximum = 500;
+
     /// <summary>Duration of the deterministic visual QA operation.</summary>
     private static readonly TimeSpan OperationDelay = TimeSpan.FromMilliseconds(350);
 
@@ -40,14 +65,14 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
         SearchCommand = ReactiveCommand.Create<string>(Search);
         ClearSearchCommand = ReactiveCommand.Create(() => Search(string.Empty));
         RequestPageCommand = ReactiveCommand.Create<PageRequest>(request => PaginationState = new(request.PageIndex, request.PageSize, TotalItemCount));
-        ApplyFiltersCommand = ReactiveCommand.Create(() => Search("active"));
+        ApplyFiltersCommand = ReactiveCommand.Create<SearchQueryState>(state => SearchState = state);
         SelectChipCommand = ReactiveCommand.Create<string>(SelectChip);
         SelectSegmentCommand = ReactiveCommand.Create<string>(key => SegmentState = new(CreateSegments(), key));
-        SelectStepCommand = ReactiveCommand.Create<string>(key => StepperState = new(CreateSteps(), key, StepperOrientation.Horizontal));
+        SelectStepCommand = ReactiveCommand.Create<StepDescriptor>(step => StepperState = new(CreateSteps(), step.Key, StepperOrientation.Horizontal));
         ApplyRangeCommand = ReactiveCommand.Create<DateTimeRange>(range => DateRange = range);
-        SetThemeCommand = ReactiveCommand.Create<string>(SetTheme);
+        SetThemeCommand = ReactiveCommand.Create<ThemeChoice>(SetTheme);
         RestoreContentCommand = ReactiveCommand.Create(() => Search("restored"));
-        UpdatePropertyCommand = ReactiveCommand.Create(() => Search("configuration"));
+        UpdatePropertyCommand = ReactiveCommand.Create<PropertyGridState>(CommitProperties);
         RateCommand = ReactiveCommand.Create<int>(SetRating);
     }
 
@@ -166,10 +191,14 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     public EmptyStateModel EmptyState { get; } = new("Nothing saved", "Restore sample content to continue.");
 
     /// <summary>Gets the reflection-free filter panel state.</summary>
-    public DataFilterPanelState FilterPanelState { get; } = new();
+    public DataFilterPanelState FilterPanelState { get; } = CreateFilterPanelState();
 
     /// <summary>Gets the reflection-free property grid state.</summary>
-    public PropertyGridState PropertyGridState { get; } = new();
+    public PropertyGridState PropertyGridState
+    {
+        get;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
+    } = CreatePropertyGridState();
 
     /// <summary>Gets the selected date range.</summary>
     public DateTimeRange DateRange
@@ -183,14 +212,14 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     {
         get;
         private set => this.RaiseAndSetIfChanged(ref field, value);
-    } = new(ThemeChoice.Light);
+    } = CreateThemeState(ThemeChoice.System);
 
     /// <summary>Gets the current theme description.</summary>
     public string ThemeDescription
     {
         get;
         private set => this.RaiseAndSetIfChanged(ref field, value);
-    } = "Light theme selected";
+    } = CreateThemeState(ThemeChoice.System).DisplayText;
 
     /// <summary>Gets the selected gallery rating.</summary>
     public int Rating
@@ -198,6 +227,34 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
         get;
         private set => this.RaiseAndSetIfChanged(ref field, value);
     } = 4;
+
+    /// <summary>Gets a normal process-value sample.</summary>
+    public ProcessValueState NormalProcessValue { get; } = new(
+        "Reactor temperature",
+        ReactorTemperature,
+        "C",
+        0,
+        TemperatureMaximum,
+        TemperatureLowAlarm,
+        TemperatureHighAlarm);
+
+    /// <summary>Gets an alarm process-value sample.</summary>
+    public ProcessValueState AlarmProcessValue { get; } = new(
+        "Line pressure",
+        LinePressure,
+        "bar",
+        0,
+        PressureMaximum,
+        new ProcessValueOptions { HighAlarmLimit = PressureHighAlarm });
+
+    /// <summary>Gets a bad-quality process-value sample.</summary>
+    public ProcessValueState BadQualityProcessValue { get; } = new(
+        "Flow transmitter",
+        null,
+        "L/min",
+        0,
+        FlowMaximum,
+        new ProcessValueOptions { IsGoodQuality = false });
 
     /// <summary>Gets the accessible gallery rating description.</summary>
     public string RatingDescription
@@ -208,6 +265,17 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
 
     /// <inheritdoc />
     public void Dispose() => _operationCancellation?.Dispose();
+
+    /// <summary>Creates a shared theme state snapshot for the selected gallery theme.</summary>
+    /// <param name="choice">The selected theme choice.</param>
+    /// <returns>The shared theme preference state.</returns>
+    private static ThemePreferenceState CreateThemeState(ThemeChoice choice) =>
+        new(choice, GetSystemTheme(), supportsHighContrast: true);
+
+    /// <summary>Gets the current MAUI application theme as a shared concrete theme choice.</summary>
+    /// <returns>The current concrete system theme choice.</returns>
+    private static ThemeChoice GetSystemTheme() =>
+        Application.Current?.RequestedTheme == AppTheme.Dark ? ThemeChoice.Dark : ThemeChoice.Light;
 
     /// <summary>Creates the initial range without directly reading the machine clock.</summary>
     /// <returns>The default range sample.</returns>
@@ -245,6 +313,43 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
         new StepDescriptor("review", "Review"),
         new StepDescriptor("publish", "Publish"),
     ];
+
+    /// <summary>Creates filter descriptors for industrial event searches.</summary>
+    /// <returns>The editable filter state.</returns>
+    private static DataFilterPanelState CreateFilterPanelState() => new(
+    [
+        new FilterDescriptor("area", "Area", FilterEditorKind.Text),
+        new FilterDescriptor("status", "Status", FilterEditorKind.Enum, [FilterOperator.Equals], ["Running", "Stopped", "Alarm"]),
+    ]);
+
+    /// <summary>Creates editable equipment configuration descriptors.</summary>
+    /// <returns>The configuration state.</returns>
+    private static PropertyGridState CreatePropertyGridState() => new(
+    [
+        new PropertyDescriptorModel("tag", "Equipment tag", new() { Value = "PUMP-101", OriginalValue = "PUMP-101" }),
+        new PropertyDescriptorModel("enabled", "Enabled", new() { EditorKind = PropertyEditorKind.Boolean, Value = true, OriginalValue = true }),
+    ]);
+
+    /// <summary>Commits the edited descriptor snapshot as the new baseline.</summary>
+    /// <param name="state">The edited configuration state.</param>
+    private void CommitProperties(PropertyGridState state)
+    {
+        var descriptors = new List<PropertyDescriptorModel>();
+        foreach (var descriptor in state.Descriptors)
+        {
+            descriptors.Add(new(descriptor.Key, descriptor.DisplayName, new()
+            {
+                Category = descriptor.Category,
+                EditorKind = descriptor.EditorKind,
+                Value = descriptor.Value,
+                OriginalValue = descriptor.Value,
+                IsReadOnly = descriptor.IsReadOnly,
+                Choices = descriptor.Choices,
+            }));
+        }
+
+        PropertyGridState = new(descriptors);
+    }
 
     /// <summary>Runs a short cancellable operation for visual QA.</summary>
     /// <param name="cancellationToken">The reactive command cancellation token.</param>
@@ -297,15 +402,28 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     }
 
     /// <summary>Applies a supported MAUI theme preference.</summary>
-    /// <param name="themeText">The requested theme text.</param>
-    private void SetTheme(string themeText)
+    /// <param name="selected">The requested theme choice.</param>
+    private void SetTheme(ThemeChoice selected)
     {
-        var selected = string.Equals(themeText, nameof(ThemeChoice.Dark), StringComparison.OrdinalIgnoreCase)
-            ? ThemeChoice.Dark
-            : ThemeChoice.Light;
-        ThemeState = new(selected);
+        var application = Application.Current;
+        if (application is not null)
+        {
+            application.UserAppTheme = selected switch
+            {
+                ThemeChoice.Dark => AppTheme.Dark,
+                ThemeChoice.Light => AppTheme.Light,
+                _ => AppTheme.Unspecified,
+            };
+        }
+
+        ThemeState = CreateThemeState(selected);
         ThemeDescription = ThemeState.DisplayText;
-        Application.Current!.UserAppTheme = selected == ThemeChoice.Dark ? AppTheme.Dark : AppTheme.Light;
+        if (application is null)
+        {
+            return;
+        }
+
+        _ = application.Resources.UseCrissCrossMauiUiResources(ThemeState);
     }
 
     /// <summary>Updates the observable rating description from the reactive command parameter.</summary>

@@ -105,7 +105,8 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
     /// <summary>Provides the TestViewModelRoutedViewHost member.</summary>
     /// <param name="name">The name value.</param>
-    public class TestViewModelRoutedViewHost(string name = TestDoubleHostName) : IViewModelRoutedViewHost
+    /// <param name="hostName">The host name value.</param>
+    public class TestViewModelRoutedViewHost(string name = TestDoubleHostName, string? hostName = null) : IViewModelRoutedViewHost, IDisposable
     {
         /// <summary>Provides the _currentViewModel member.</summary>
         private readonly StateSignal<INotifiyRoutableViewModel?> _currentViewModel = new(null);
@@ -136,11 +137,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         public string Name { get; set; } = name;
 
         /// <summary>Gets or sets the value.</summary>
-        public string HostName
-        {
-            get => Name;
-            set => Name = value;
-        }
+        public string HostName { get; set; } = hostName ?? name;
 
         /// <summary>Gets or sets a value indicating whether setup is required.</summary>
         public bool RequiresSetup { get; set; }
@@ -178,6 +175,13 @@ public partial class ViewModelRoutedViewHostMixinsTests
 
         /// <summary>Provides the Setup member.</summary>
         public void Setup() => SetupCallCount++;
+
+        /// <summary>Disposes signals owned by the test host.</summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /// <summary>Provides typed instance navigation.</summary>
         /// <typeparam name="T">The view model type.</typeparam>
@@ -252,12 +256,26 @@ public partial class ViewModelRoutedViewHostMixinsTests
         {
             // Refresh logic
         }
+
+        /// <summary>Releases the signals owned by this host.</summary>
+        /// <param name="disposing">Whether managed signals should be released.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            _canNavigateBack.Dispose();
+            _currentViewModel.Dispose();
+        }
     }
 
     /// <summary>Provides the TestResolvedViewModelRoutedViewHost member.</summary>
     /// <param name="name">The name value.</param>
-    public sealed class TestResolvedViewModelRoutedViewHost(string name = TestDoubleHostName)
-        : TestViewModelRoutedViewHost(name),
+    /// <param name="hostName">The host name value.</param>
+    public sealed class TestResolvedViewModelRoutedViewHost(string name = TestDoubleHostName, string? hostName = null)
+        : TestViewModelRoutedViewHost(name, hostName),
             IResolvedViewModelRoutedViewHost
     {
         /// <summary>Gets the value.</summary>

@@ -2,6 +2,8 @@
 
 Task: `t_4d34bae8`.
 
+This document records the original implementation scope. The current integration results and remaining cross-platform boundaries are recorded in [quality-audit.md](quality-audit.md) and [theme-parity-audit.md](theme-parity-audit.md), updated on 2026-09-07.
+
 ## Implemented
 
 - Added a platform-neutral `CrissCross.NavigationJournal` helper for back/forward journal behavior.
@@ -120,12 +122,12 @@ The new property inspector keeps settings/admin/designer inspection platform-neu
 ## Remaining platform-specific gaps
 
 - WPF retains richer `NavigationVMLeft`/`NavigationVMTop` user-control styles, while Avalonia exposes `NavigationControls`; exact one-to-one API parity still needs a design decision before adding duplicate abstractions.
-- High-contrast resources remain WPF-only.
+- WPF provides four high-contrast palettes; Avalonia and MAUI now provide an explicit HighContrast theme. Exact palette parity remains open.
 - Gallery parity for Avalonia navigation, text, media, numeric, toggle, password, and tree pages is not covered by this slice.
-- Filter-token remove buttons are compile-verified but not yet wired to an Avalonia item-level command binding in the default template; consumers can still bind/remodel token removal through `FilterBar.RemoveFilterCommand` from custom templates.
-- Chip, ChipGroup, SegmentedControl, DataPager, Stepper, and DateTimeRangePicker styles are compile-verified but not manually rendered in WPF/Avalonia galleries.
+- Avalonia filter-token removal now binds the owning `FilterBar.RemoveFilterCommand` with the token payload. Native gallery interaction and rendering tests verify this behavior.
+- Avalonia ChipGroup and Stepper now have rendering and command-dispatch tests, and workflow step navigation has been verified in the native gallery. Complete control-by-control visual parity across all galleries remains open.
 - DataPager emits page requests and exposes navigation command hooks, but page-size picker and numbered-page templates remain future visual polish.
 - DateTimeRangePicker emits deterministic range snapshots and presets; richer shortcut menus, timezone labels, and validation integration with `ReactiveFormField` remain future visual/API polish.
-- ThemeSwitcher styles are compile-verified but not manually rendered in WPF/Avalonia galleries; persistence remains consumer-owned through settings or application preferences.
+- Theme switching has been exercised in the native WPF, Avalonia, and MAUI Windows galleries; persistence remains consumer-owned through settings or application preferences.
 - DataFilterPanel styles are compile-verified but not manually rendered in WPF/Avalonia galleries; saved filters, richer per-editor templates, and field-specific validation remain future API/visual polish.
 - PropertyGridLite styles are compile-verified but not manually rendered in WPF/Avalonia galleries; typed editor templates, two-way value editing, per-field focus routing, and saved inspector layouts remain future API/visual polish.

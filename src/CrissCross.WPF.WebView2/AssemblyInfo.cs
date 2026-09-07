@@ -2,8 +2,11 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Markup;
+
+[assembly: InternalsVisibleTo("CrissCross.WPF.UI.Gallery.Tests")]
 
 #if REACTIVELIST_REACTIVE
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross", "CrissCross.Reactive")]

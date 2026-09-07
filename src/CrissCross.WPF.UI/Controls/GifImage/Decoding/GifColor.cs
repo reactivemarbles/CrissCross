@@ -23,5 +23,6 @@ public readonly record struct GifColor(byte R, byte G, byte B)
     /// <summary>Gets the B value.</summary>
     public byte B { get; } = B;
 
+    /// <inheritdoc />
     public override string ToString() => $"#{R:x2}{G:x2}{B:x2}";
 }

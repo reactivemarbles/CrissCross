@@ -25,7 +25,7 @@ public sealed class BoolToInvertedBoolConverter : IValueConverter
     /// <param name="parameter">The parameter.</param>
     /// <param name="culture">The culture value.</param>
     /// <returns>The result.</returns>
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is not bool boolValue ? false : !boolValue;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is bool boolValue && !boolValue;
 
     /// <summary>Provides the ConvertBack member.</summary>
     /// <param name="value">The value.</param>

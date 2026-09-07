@@ -48,8 +48,13 @@
                     <controls:TextBlock Text="CheckBox with Long Content" FontSize="18" FontWeight="Bold" />
                     <controls:TextBlock Text="CheckBox can contain longer text content that wraps." Opacity="0.7" />
                     <controls:StackPanel Spacing="8" MaxWidth="400">
-                        <controls:CheckBox Content="I accept the terms and conditions of use for this application and agree to the privacy policy." />
-                        <controls:CheckBox Content="Subscribe to newsletter and promotional emails" IsChecked="True" />
+                        <controls:CheckBox>
+                            <TextBlock Text="I accept the terms and conditions of use for this application and agree to the privacy policy."
+                                       TextWrapping="Wrap" />
+                        </controls:CheckBox>
+                        <controls:CheckBox IsChecked="True">
+                            <TextBlock Text="Subscribe to newsletter and promotional emails" TextWrapping="Wrap" />
+                        </controls:CheckBox>
                     </controls:StackPanel>
                 </controls:StackPanel>
             </controls:Card>

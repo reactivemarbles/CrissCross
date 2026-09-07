@@ -30,6 +30,7 @@ public sealed class RgbColorSlider : PreviewColorSlider
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString() ?? GetType().Name;
 
+    /// <inheritdoc />
     protected override void GenerateBackground()
     {
         var colorStart = GetColorForSelectedArgb(MinimumColorChannelValue);

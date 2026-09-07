@@ -55,13 +55,13 @@
           </StackPanel>
           <ControlTemplate.Triggers>
             <DataTrigger
-              Binding="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}}"
+              Binding="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}"
               Value="False"
             >
               <Setter TargetName="PrimaryActionButton" Property="Visibility" Value="Collapsed" />
             </DataTrigger>
             <DataTrigger
-              Binding="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}}"
+              Binding="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}"
               Value="False"
             >
               <Setter TargetName="SecondaryActionButton" Property="Visibility" Value="Collapsed" />

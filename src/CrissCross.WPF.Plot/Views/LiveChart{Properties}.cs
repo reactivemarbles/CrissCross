@@ -280,57 +280,27 @@ public partial class LiveChart
     /// <param name="type">The target plot type.</param>
     public void AssignLiveChartData(object source, UserPlotType type)
     {
-        switch (type, source)
-        {
-            case (UserPlotType.SignalEnumObsTicks, SignalEnumObsTicks data):
-            {
-                ChangeSignalObserver(data);
-                break;
-            }
-
-            case (UserPlotType.DataLoggerEnumObsPoints, DataLoggerEnumObsPoints data):
-            {
-                ChangeDataLoggerObserver(data);
-                break;
-            }
-
-            case (UserPlotType.SignalXYTimestamp, SignalXYTimestamp data):
-            {
-                ChangeSignalData(data);
-                break;
-            }
-
-            case (UserPlotType.SignalXYPoints, SignalXYPoints data):
-            {
-                ChangeSignalDataWithPoints(data);
-                break;
-            }
-
-            case (UserPlotType.SignalXYEnumPoints, SignalXYEnumPoints data):
-            {
-                ChangeSignalsDataWithPoints(data);
-                break;
-            }
-
-            case (UserPlotType.StreamerEnumObsPoints, StreamerEnumObsPoints data):
-            {
-                ChangeSignalDataObserverWithPoints(data);
-                break;
-            }
-
-            case (UserPlotType.ScatterEnumObsPoints, ScatterEnumObsPoints data):
-            {
-                ChangeScatterObserver(data);
-                break;
-            }
-
-            case (UserPlotType.ScatterPoints, ScatterPoints data):
-            {
-                ChangeScatterDataWithPoints(data);
-                break;
-            }
-        }
+        var assignment = ResolveLiveChartDataAssignment(source, type);
+        assignment?.Invoke();
     }
+
+    /// <summary>Resolves a live data assignment action for the selected plot type.</summary>
+    /// <param name="source">The source value.</param>
+    /// <param name="type">The target plot type.</param>
+    /// <returns>The assignment action, or <see langword="null"/> when the source does not match the plot type.</returns>
+    private Action? ResolveLiveChartDataAssignment(object source, UserPlotType type) =>
+        (type, source) switch
+        {
+            (UserPlotType.SignalEnumObsTicks, SignalEnumObsTicks data) => () => ChangeSignalObserver(data),
+            (UserPlotType.DataLoggerEnumObsPoints, DataLoggerEnumObsPoints data) => () => ChangeDataLoggerObserver(data),
+            (UserPlotType.SignalXYTimestamp, SignalXYTimestamp data) => () => ChangeSignalData(data),
+            (UserPlotType.SignalXYPoints, SignalXYPoints data) => () => ChangeSignalDataWithPoints(data),
+            (UserPlotType.SignalXYEnumPoints, SignalXYEnumPoints data) => () => ChangeSignalsDataWithPoints(data),
+            (UserPlotType.StreamerEnumObsPoints, StreamerEnumObsPoints data) => () => ChangeSignalDataObserverWithPoints(data),
+            (UserPlotType.ScatterEnumObsPoints, ScatterEnumObsPoints data) => () => ChangeScatterObserver(data),
+            (UserPlotType.ScatterPoints, ScatterPoints data) => () => ChangeScatterDataWithPoints(data),
+            _ => null,
+        };
 
     /// <summary>Provides named observable XY signal series with axis assignments.</summary>
     /// <param name="Data">The Data value.</param>

@@ -354,48 +354,15 @@ public partial class MessageBoxAsync : IListenForMessages
     /// <summary>Gets the buttons.</summary>
     /// <param name="button">The button.</param>
     /// <returns>A IEnumerable of Buttons.</returns>
-    private List<Button> GetButtons(MessageBoxButton button)
-    {
-        var result = new List<Button>();
-        var owner = this;
-        switch (button)
+    private List<Button> GetButtons(MessageBoxButton button) =>
+        button switch
         {
-            case MessageBoxButton.OK:
-            {
-                result.Add(owner.OkButton);
-                break;
-            }
-
-            case MessageBoxButton.OKCancel:
-            {
-                result.Add(owner.OkButton);
-                result.Add(owner.CancelButton);
-                break;
-            }
-
-            case MessageBoxButton.YesNo:
-            {
-                result.Add(owner.YesButton);
-                result.Add(owner.NoButton);
-                break;
-            }
-
-            case MessageBoxButton.YesNoCancel:
-            {
-                result.Add(owner.YesButton);
-                result.Add(owner.NoButton);
-                result.Add(owner.CancelButton);
-                break;
-            }
-
-            default:
-            {
-                throw new ArgumentOutOfRangeException(nameof(button), button, null);
-            }
-        }
-
-        return result;
-    }
+            MessageBoxButton.OK => [OkButton],
+            MessageBoxButton.OKCancel => [OkButton, CancelButton],
+            MessageBoxButton.YesNo => [YesButton, NoButton],
+            MessageBoxButton.YesNoCancel => [YesButton, NoButton, CancelButton],
+            _ => throw new ArgumentOutOfRangeException(nameof(button), button, null),
+        };
 
     /// <summary>Gets the current custom message box result.</summary>
     /// <returns>The current custom message box result.</returns>

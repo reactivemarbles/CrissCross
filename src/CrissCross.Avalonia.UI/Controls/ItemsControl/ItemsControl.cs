@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a control that can be used to present a collection of items.</summary>
-public class ItemsControl : global::Avalonia.Controls.ItemsControl
-{
-    // Inherits all functionality from Avalonia ItemsControl
-}
+public class ItemsControl : global::Avalonia.Controls.ItemsControl;

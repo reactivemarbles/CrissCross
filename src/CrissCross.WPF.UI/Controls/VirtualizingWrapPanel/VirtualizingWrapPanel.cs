@@ -150,36 +150,13 @@ public class VirtualizingWrapPanel : VirtualizingPanelBase
         var totalItemsWidth = Math.Min(GetWidth(childSize) * ItemsPerRowCount, finalWidth);
         var unusedWidth = finalWidth - totalItemsWidth;
 
-        switch (SpacingMode)
+        (innerSpacing, outerSpacing) = SpacingMode switch
         {
-            case SpacingMode.Uniform:
-            {
-                innerSpacing = unusedWidth / (ItemsPerRowCount + 1);
-                outerSpacing = innerSpacing;
-                break;
-            }
-
-            case SpacingMode.BetweenItemsOnly:
-            {
-                innerSpacing = unusedWidth / Math.Max(ItemsPerRowCount - 1, 1);
-                outerSpacing = 0;
-                break;
-            }
-
-            case SpacingMode.StartAndEndOnly:
-            {
-                innerSpacing = 0;
-                outerSpacing = unusedWidth / OuterEdgeCount;
-                break;
-            }
-
-            default:
-            {
-                innerSpacing = 0;
-                outerSpacing = 0;
-                break;
-            }
-        }
+            SpacingMode.Uniform => (unusedWidth / (ItemsPerRowCount + 1), unusedWidth / (ItemsPerRowCount + 1)),
+            SpacingMode.BetweenItemsOnly => (unusedWidth / Math.Max(ItemsPerRowCount - 1, 1), 0),
+            SpacingMode.StartAndEndOnly => (0, unusedWidth / OuterEdgeCount),
+            _ => (0, 0),
+        };
     }
 
     /// <inheritdoc />
