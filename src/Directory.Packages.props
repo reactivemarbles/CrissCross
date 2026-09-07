@@ -98,7 +98,7 @@
     <PackageVersion Include="TUnit" Version="1.66.16" Condition="$(IsTestProject)" />
     <PackageVersion Include="Verify.TUnit" Version="32.0.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" Condition="!$(IsTestProject)" />
 
