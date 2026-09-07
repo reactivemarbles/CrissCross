@@ -875,4 +875,14 @@
   <sys:Double x:Key="PersonPictureEllipseBadgeImageSourceStrokeOpacity">1.0</sys:Double>
   <sys:Double x:Key="PersonPictureEllipseStrokeThickness">0</sys:Double>
   <sys:Double x:Key="PersonPictureEllipseBadgeStrokeThickness">2</sys:Double>
+
+  <!--  Bezel button rims follow the same opaque palette as the button face.  -->
+  <LinearGradientBrush x:Key="BezelButtonBorderBrush" StartPoint="0,0.26" EndPoint="0.068,1">
+    <GradientStop Offset="0" Color="{StaticResource ControlSolidFillColorDefault}" />
+    <GradientStop Offset="1" Color="{StaticResource CardStrokeColorDefaultSolid}" />
+  </LinearGradientBrush>
+  <LinearGradientBrush x:Key="BezelButtonInnerBorderBrush" StartPoint="0,0" EndPoint="0.377,1">
+    <GradientStop Offset="0" Color="{StaticResource CardStrokeColorDefaultSolid}" />
+    <GradientStop Offset="1" Color="{StaticResource ControlSolidFillColorDefault}" />
+  </LinearGradientBrush>
 </ResourceDictionary>
