@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Windows;
 using ReactiveUI;
 using Splat;
@@ -33,7 +34,7 @@ public class NavigationWindow<TViewModel> : NavigationWindow, IViewFor<TViewMode
     /// <summary>Initializes a new instance of the <see cref="NavigationWindow{TViewModel}"/> class.</summary>
     public NavigationWindow() =>
         this.WhenActivated(
-            (CompositeDisposable _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
+            (Action<IDisposable> _) => ViewModel ??= AppLocator.Current.GetService<TViewModel>() ?? new());
 
     /// <summary>Gets the binding root view model.</summary>
     public TViewModel? BindingRoot => ViewModel;

@@ -231,10 +231,16 @@ public class NavigationEventArgsTests
     [Test]
     public async Task NavigationType_Enum_HasCorrectValues()
     {
+        var values = new Dictionary<NavigationType, int>();
+        foreach (var value in Enum.GetValues<NavigationType>())
+        {
+            values.Add(value, (int)value);
+        }
+
         // Assert
-        await Assert.That((int)NavigationType.New).IsEqualTo(0);
-        await Assert.That((int)NavigationType.Back).IsEqualTo(1);
-        await Assert.That((int)NavigationType.Refresh).IsEqualTo(RefreshNavigationTypeValue);
+        await Assert.That(values[NavigationType.New]).IsEqualTo(0);
+        await Assert.That(values[NavigationType.Back]).IsEqualTo(1);
+        await Assert.That(values[NavigationType.Refresh]).IsEqualTo(RefreshNavigationTypeValue);
     }
 
     /// <summary>Provides the ViewModelNavigatingEventArgs_AllowsNullParameters member.</summary>

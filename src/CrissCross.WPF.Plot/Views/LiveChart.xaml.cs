@@ -7,14 +7,22 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+#if REACTIVE_SHIM
+using ReactiveUI.Binding.Reactive.Observables;
+#else
+using ReactiveUI.Binding.Observables;
+#endif
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using ReactiveUI.Primitives.ObservableEvents;
 using ScottPlot;
 using ScottPlot.Plottables;
 #if REACTIVELIST_REACTIVE
+using AppBarButton = CrissCross.Reactive.WPF.UI.Controls.AppBarButton;
 using AppBarIcons = CrissCross.Reactive.WPF.UI.Controls.AppBarIcons;
 #else
+using AppBarButton = CrissCross.WPF.UI.Controls.AppBarButton;
 using AppBarIcons = CrissCross.WPF.UI.Controls.AppBarIcons;
 #endif
 
@@ -96,12 +104,41 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// </value>
     public bool First { get; set; } = true;
 
+    /// <summary>Gets the live-history command button.</summary>
+    public AppBarButton LiveHistoryButton => LiveHistoryBtn;
+
+    /// <summary>Gets the marker command button.</summary>
+    public AppBarButton EnableMarkerButton => EnableMarkerBtn;
+
+    /// <summary>Gets the add-crosshair command button.</summary>
+    public AppBarButton AddCrosshairButton => AddCrosshairBtn;
+
+    /// <summary>Gets the remove-label command button.</summary>
+    public AppBarButton RemoveLabelButton => RemoveLabelBtn;
+
+    /// <summary>Gets the right properties panel.</summary>
+    public RightPropertiesView RightPropertiesPanel => RightProperties;
+
+    /// <summary>Gets the chart title text block.</summary>
+    public TextBlock ChartTitleTextBlock => Title;
+
+    /// <summary>Gets the right legend scroll viewer.</summary>
+    public ScrollViewer RightLegendViewer => RightLegend;
+
+    /// <summary>Gets the top legend scroll viewer.</summary>
+    public ScrollViewer TopLegendViewer => TopLegend;
+
+    /// <summary>Converts a Boolean visibility state to a WPF visibility value.</summary>
+    /// <param name="isVisible">Whether the target should be visible.</param>
+    /// <returns>The matching WPF visibility value.</returns>
+    private static Visibility ToVisibility(bool isVisible) => isVisible ? Visibility.Visible : Visibility.Collapsed;
+
     /// <summary>Handles the ElementBinding1 operation.</summary>
     /// <param name="d">The d value.</param>
-    private void ElementBinding1(CompositeDisposable d)
+    private void ElementBinding1(ActivationDisposable d)
     {
         _ = new ActionDisposable(DisposeReactivePlotConnection).DisposeWith(d);
-        _ = UnloadedObservable().Subscribe(_ => DisposeReactivePlotConnection()).DisposeWith(d);
+        _ = this.Events().Unloaded.Subscribe(_ => DisposeReactivePlotConnection()).DisposeWith(d);
         BindCommands(d);
         BindMenuVisibility(d);
         BindRightProperties(d);
@@ -110,7 +147,7 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
     /// <summary>Binds the chart commands.</summary>
     /// <param name="disposables">The activation disposables.</param>
-    private void BindCommands(CompositeDisposable disposables)
+    private void BindCommands(ActivationDisposable disposables)
     {
         _ = this.BindCommand(ViewModel, static vm => vm.GraphLocked, static v => v.LiveHistoryBtn)
             .DisposeWith(disposables);
@@ -126,42 +163,55 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
     /// <summary>Binds menu expansion to command visibility.</summary>
     /// <param name="disposables">The activation disposables.</param>
-    private void BindMenuVisibility(CompositeDisposable disposables)
+    private void BindMenuVisibility(ActivationDisposable disposables)
     {
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.IsMenuExpanded,
-                static v => v.LiveHistoryBtn.Visibility,
-                static x => x ? Visibility.Visible : Visibility.Collapsed)
+        var viewModel = ViewModel!;
+        _ = new PropertyObservable<bool>(
+                viewModel,
+                nameof(LiveChartViewModel.IsMenuExpanded),
+                static source => ((LiveChartViewModel)source).IsMenuExpanded,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(isExpanded => LiveHistoryButton.Visibility = ToVisibility(isExpanded))
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.IsMenuExpanded,
-                static v => v.EnableMarkerBtn.Visibility,
-                static x => x ? Visibility.Visible : Visibility.Collapsed)
+        _ = new PropertyObservable<bool>(
+                viewModel,
+                nameof(LiveChartViewModel.IsMenuExpanded),
+                static source => ((LiveChartViewModel)source).IsMenuExpanded,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(isExpanded => EnableMarkerButton.Visibility = ToVisibility(isExpanded))
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.IsMenuExpanded,
-                static v => v.AddCrosshairBtn.Visibility,
-                static x => x ? Visibility.Visible : Visibility.Collapsed)
+        _ = new PropertyObservable<bool>(
+                viewModel,
+                nameof(LiveChartViewModel.IsMenuExpanded),
+                static source => ((LiveChartViewModel)source).IsMenuExpanded,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(isExpanded => AddCrosshairButton.Visibility = ToVisibility(isExpanded))
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.IsMenuExpanded,
-                static v => v.RemoveLabelBtn.Visibility,
-                static x => x ? Visibility.Visible : Visibility.Collapsed)
+        _ = new PropertyObservable<bool>(
+                viewModel,
+                nameof(LiveChartViewModel.IsMenuExpanded),
+                static source => ((LiveChartViewModel)source).IsMenuExpanded,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(isExpanded => RemoveLabelButton.Visibility = ToVisibility(isExpanded))
             .DisposeWith(disposables);
     }
 
     /// <summary>Binds the selected chart object to the right properties panel.</summary>
     /// <param name="disposables">The activation disposables.</param>
-    private void BindRightProperties(CompositeDisposable disposables)
+    private void BindRightProperties(ActivationDisposable disposables)
     {
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.RightPropertyVisibility,
-                static v => v.RightProperties.Visibility)
+        var viewModel = ViewModel!;
+        _ = new PropertyObservable<Visibility>(
+                viewModel,
+                nameof(LiveChartViewModel.RightPropertyVisibility),
+                static source => ((LiveChartViewModel)source).RightPropertyVisibility,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(visibility => RightPropertiesPanel.Visibility = visibility)
             .DisposeWith(disposables);
 
         _ = this.WhenAnyValue(static x => x.ViewModel!.SelectedSetting)
@@ -181,32 +231,60 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
 
     /// <summary>Binds chart titles, legends, and point-window settings.</summary>
     /// <param name="disposables">The activation disposables.</param>
-    private void BindChartMetadata(CompositeDisposable disposables)
+    private void BindChartMetadata(ActivationDisposable disposables)
     {
-        _ = this.OneWayBind(ViewModel, static vm => vm.Title, static v => v.Title.Text)
+        var viewModel = ViewModel!;
+        _ = new PropertyObservable<string>(
+                viewModel,
+                nameof(LiveChartViewModel.Title),
+                static source => ((LiveChartViewModel)source).Title,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(title => ChartTitleTextBlock.Text = title)
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.Title,
-                static v => v.Title.Visibility,
-                static x => x == " " ? Visibility.Collapsed : Visibility.Visible)
+        _ = new PropertyObservable<string>(
+                viewModel,
+                nameof(LiveChartViewModel.Title),
+                static source => ((LiveChartViewModel)source).Title,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(title => ChartTitleTextBlock.Visibility = title == " " ? Visibility.Collapsed : Visibility.Visible)
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.LegendPosition,
-                static v => v.RightLegend.Visibility,
-                static x => x == LegendPosition.Right ? Visibility.Visible : Visibility.Collapsed)
+        _ = new PropertyObservable<LegendPosition>(
+                viewModel,
+                nameof(LiveChartViewModel.LegendPosition),
+                static source => ((LiveChartViewModel)source).LegendPosition,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(position => RightLegendViewer.Visibility = position == LegendPosition.Right
+                ? Visibility.Visible
+                : Visibility.Collapsed)
             .DisposeWith(disposables);
-        _ = this.OneWayBind(
-                ViewModel,
-                static vm => vm.LegendPosition,
-                static v => v.TopLegend.Visibility,
-                static x => x == LegendPosition.Top ? Visibility.Visible : Visibility.Collapsed)
+        _ = new PropertyObservable<LegendPosition>(
+                viewModel,
+                nameof(LiveChartViewModel.LegendPosition),
+                static source => ((LiveChartViewModel)source).LegendPosition,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(position => TopLegendViewer.Visibility = position == LegendPosition.Top
+                ? Visibility.Visible
+                : Visibility.Collapsed)
             .DisposeWith(disposables);
-
-        _ = this.Bind(ViewModel, static vm => vm.UseFixedNumberOfPoints, static v => v.UseFixedNumberOfPoints)
+        _ = new PropertyObservable<bool>(
+                viewModel,
+                nameof(LiveChartViewModel.UseFixedNumberOfPoints),
+                static source => ((LiveChartViewModel)source).UseFixedNumberOfPoints,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(value => UseFixedNumberOfPoints = value)
             .DisposeWith(disposables);
-        _ = this.Bind(ViewModel, static vm => vm.NumberPointsPlotted, static v => v.NumberPointsPlotted)
+        _ = new PropertyObservable<int>(
+                viewModel,
+                nameof(LiveChartViewModel.NumberPointsPlotted),
+                static source => ((LiveChartViewModel)source).NumberPointsPlotted,
+                true)
+            .ObserveOn(RxSchedulers.MainThreadScheduler)
+            .Subscribe(value => NumberPointsPlotted = value)
             .DisposeWith(disposables);
     }
 

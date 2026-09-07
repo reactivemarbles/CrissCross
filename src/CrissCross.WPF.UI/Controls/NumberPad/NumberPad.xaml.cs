@@ -158,32 +158,7 @@ public partial class NumberPad : IDisposable
             return;
         }
 
-        var key = button.Tag.ToString();
-        switch (key)
-        {
-            case ".":
-            {
-                var value = Value.Value;
-                if (value is not null)
-                {
-                    _currentValue = $"{(int)value}{key}";
-                }
-
-                break;
-            }
-
-            case "-":
-            {
-                InvertValue(key);
-                break;
-            }
-
-            default:
-            {
-                AddDigit(key);
-                break;
-            }
-        }
+        HandleDigitPress(button.Tag.ToString());
     }
 
     /// <summary>Gets the initial value for the configured range.</summary>
@@ -239,6 +214,36 @@ public partial class NumberPad : IDisposable
                 .Subscribe(_ => SystemThemeWatcher.UnWatch(c))
                 .DisposeWith(c._disposables);
         }
+    }
+
+    /// <summary>Handles keypad digit commands.</summary>
+    /// <param name="key">The selected keypad command or digit.</param>
+    private void HandleDigitPress(string? key)
+    {
+        if (key == ".")
+        {
+            AppendDecimalSeparator(key);
+        }
+        else if (key == "-")
+        {
+            InvertValue(key);
+        }
+        else
+        {
+            AddDigit(key);
+        }
+    }
+
+    /// <summary>Appends a decimal separator to the displayed value when a value exists.</summary>
+    /// <param name="key">The decimal key text.</param>
+    private void AppendDecimalSeparator(string key)
+    {
+        if (Value.Value is not { } value)
+        {
+            return;
+        }
+
+        _currentValue = $"{(int)value}{key}";
     }
 
     /// <summary>Adds the digit.</summary>
@@ -402,42 +407,21 @@ public partial class NumberPad : IDisposable
             return;
         }
 
-        switch (e.Key)
+        if (e.Key is Key.Enter or Key.Return)
         {
-            case Key.Enter or Key.Return:
-            {
-                AcceptResult();
-                break;
-            }
-
-            case Key.Escape:
-            {
-                CloseKeypad();
-                break;
-            }
-
-            case Key.OemMinus:
-            {
-                InvertValue("-");
-                break;
-            }
-
-            case Key.OemPeriod
-            or Key.Decimal:
-            {
-                var value = Value.Value;
-                if (value is not null)
-                {
-                    _currentValue = $"{(int)value}.";
-                }
-
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
+            AcceptResult();
+        }
+        else if (e.Key == Key.Escape)
+        {
+            CloseKeypad();
+        }
+        else if (e.Key == Key.OemMinus)
+        {
+            InvertValue("-");
+        }
+        else if (e.Key is Key.OemPeriod or Key.Decimal)
+        {
+            AppendDecimalSeparator(".");
         }
 
         static string? GetDigitFromKey(Key key)

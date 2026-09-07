@@ -9,4 +9,8 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Window member.</summary>
-public class Window : global::Avalonia.Controls.Window;
+public class Window : global::Avalonia.Controls.Window
+{
+    /// <inheritdoc />
+    protected override Type StyleKeyOverride => GetType();
+}

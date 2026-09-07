@@ -4,9 +4,9 @@
     
     <!-- CrissCross ToggleButton Style -->
     <Style Selector="controls|ToggleButton">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Padding" Value="12,6" />
@@ -33,7 +33,7 @@
     <!-- Checked State -->
     <Style Selector="controls|ToggleButton:checked /template/ Border#RootBorder">
         <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentControlElevationBorderBrush}" />
     </Style>
     
     <Style Selector="controls|ToggleButton:checked">
@@ -42,7 +42,7 @@
     
     <!-- PointerOver State -->
     <Style Selector="controls|ToggleButton:pointerover /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
     </Style>
     
     <!-- Disabled State -->

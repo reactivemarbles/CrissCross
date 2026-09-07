@@ -8,7 +8,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Padding="12"
-                        BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="6">
                     <StackPanel>

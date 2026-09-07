@@ -3,14 +3,14 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <AvaloniaVersion>12.1.1</AvaloniaVersion>
+    <AvaloniaVersion>12.1.2</AvaloniaVersion>
     <SplatVersion>20.2.0</SplatVersion>
-    <ReactiveUIVersion>24.1.0</ReactiveUIVersion>
-    <ReactiveUIPrimitivesVersion>7.2.0</ReactiveUIPrimitivesVersion>
-    <WebViewVersion>1.0.4129.50</WebViewVersion>
+    <ReactiveUIVersion>24.2.0</ReactiveUIVersion>
+    <ReactiveUIBindingVersion>4.1.0</ReactiveUIBindingVersion>
+    <ReactiveUIPrimitivesVersion>7.4.0</ReactiveUIPrimitivesVersion>
     <DotNetVersion>10.0.11</DotNetVersion>
     <DotNet11Version>11.0.0-preview.7.26381.103</DotNet11Version>
-    <ExtensionsHostingVersion>4.1.0</ExtensionsHostingVersion>
+    <ExtensionsHostingVersion>5.0.0</ExtensionsHostingVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +26,7 @@
 
     <!-- ReactiveUI Packages -->
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.Core" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.1" />
     <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.1" />
@@ -35,6 +36,10 @@
     <PackageVersion Include="ReactiveUI.WinForms.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WPF" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WPF.Reactive" Version="$(ReactiveUIVersion)" />
+    <PackageVersion Include="ReactiveUI.Binding" Version="$(ReactiveUIBindingVersion)" />
+    <PackageVersion Include="ReactiveUI.Binding.Reactive" Version="$(ReactiveUIBindingVersion)" />
+    <PackageVersion Include="ReactiveUI.Binding.Wpf" Version="$(ReactiveUIBindingVersion)" />
+    <PackageVersion Include="ReactiveUI.Binding.Wpf.Reactive" Version="$(ReactiveUIBindingVersion)" />
     <PackageVersion Include="ReactiveUI.Disposables" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Core" Version="$(ReactiveUIPrimitivesVersion)" />
@@ -43,6 +48,7 @@
     <PackageVersion Include="ReactiveUI.Primitives.Wpf" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.WinForms" Version="$(ReactiveUIPrimitivesVersion)" />
     <PackageVersion Include="ReactiveUI.Primitives.Maui" Version="$(ReactiveUIPrimitivesVersion)" />
+    <PackageVersion Include="ReactiveUI.Primitives.ObservableEvents" Version="$(ReactiveUIPrimitivesVersion)" />
 
     <!-- Microsoft Packages -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
@@ -52,13 +58,13 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-preview.7.26406.9" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.100" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.90" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.100" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="$(WebViewVersion)" />
-    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
+    <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.158" />
     <PackageVersion Include="System.Drawing.Common" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="System.Drawing.Common" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Bcl.Memory" Version="$(DotNetVersion)" />
@@ -71,7 +77,7 @@
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.2.0" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.7.1" />
+    <PackageVersion Include="AngleSharp" Version="1.8.0" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
@@ -89,18 +95,18 @@
     <PackageVersion Include="Polyfill" Version="11.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
 
     <!-- Testing Packages -->
-    <PackageVersion Include="TUnit" Version="1.65.0" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Verify.TUnit" Version="31.28.0" Condition="$(IsTestProject)" />
+    <PackageVersion Include="TUnit" Version="1.66.16" Condition="$(IsTestProject)" />
+    <PackageVersion Include="Verify.TUnit" Version="32.0.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.10.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" Condition="!$(IsTestProject)" />
 
-    <PackageVersion Include="MinVer" Version="7.0.0" />
-    <PackageVersion Include="StyleSharp.Analyzers" Version="3.45.0" />
-    <PackageVersion Include="PerformanceSharp.Analyzers" Version="3.45.0" />
-    <PackageVersion Include="SecuritySharp.Analyzers" Version="3.45.0" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.16.1" />
+    <PackageVersion Include="MinVer" Version="8.0.0" />
+    <PackageVersion Include="StyleSharp.Analyzers" Version="3.46.1" />
+    <PackageVersion Include="PerformanceSharp.Analyzers" Version="3.46.1" />
+    <PackageVersion Include="SecuritySharp.Analyzers" Version="3.46.1" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="5.0.0" />
 
     <!-- Benchmarking -->
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
@@ -108,7 +114,7 @@
     <!-- Android Specific -->
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation" Version="1.11.4" />
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="1.11.4" />
-    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.11.4" />
+    <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.12.0" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.3" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.11.0.1" />

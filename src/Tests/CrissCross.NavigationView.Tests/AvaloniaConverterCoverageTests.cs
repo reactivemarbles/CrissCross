@@ -11,6 +11,7 @@ using CrissCross.Avalonia.UI.Extensions;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Exercises converter success and fallback behavior without a visual host.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaConverterCoverageTests
 {
     /// <summary>The fallback value supplied to converters.</summary>

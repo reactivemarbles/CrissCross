@@ -122,7 +122,8 @@ public partial class RichTextBox
     /// <summary>Inserts a dropped image source when drag/drop, image policy, and edit state allow it.</summary>
     /// <param name="imageSource">The image file URI/path or data URI.</param>
     /// <returns><see langword="true"/> when an image was inserted.</returns>
-    public bool TryDropImage(string? imageSource) => imageSource is null ? false : TryInsertImage(imageSource, requireDragDrop: true);
+    public bool TryDropImage(string? imageSource) =>
+        imageSource is not null && TryInsertImage(imageSource, requireDragDrop: true);
 
     /// <summary>Undoes the last action.</summary>
     public void Undo() => UndoCommand.Execute(null);

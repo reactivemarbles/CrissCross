@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Contains a list of selectable items.</summary>
-public class ListBox : global::Avalonia.Controls.ListBox
-{
-    // Inherits all functionality from Avalonia ListBox
-}
+public class ListBox : global::Avalonia.Controls.ListBox;

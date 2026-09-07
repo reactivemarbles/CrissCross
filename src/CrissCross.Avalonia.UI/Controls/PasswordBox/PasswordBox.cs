@@ -183,23 +183,16 @@ public class PasswordBox : TextBox
             $"INFO: {typeof(PasswordBox)} button clicked with param: {parameter}",
             "CrissCross.Avalonia.UI.PasswordBox");
 
-        switch (parameter)
+        if (parameter == "reveal")
         {
-            case "reveal":
-            {
-                IsPasswordRevealed = !IsPasswordRevealed;
-                RevealPassword = IsPasswordRevealed;
-                _ = Focus();
-                CaretIndex = (Text ?? string.Empty).Length;
-                break;
-            }
-
-            default:
-            {
-                base.OnTemplateButtonClick(parameter);
-                break;
-            }
+            IsPasswordRevealed = !IsPasswordRevealed;
+            RevealPassword = IsPasswordRevealed;
+            _ = Focus();
+            CaretIndex = (Text ?? string.Empty).Length;
+            return;
         }
+
+        base.OnTemplateButtonClick(parameter);
     }
 
     /// <summary>Provides the UpdateTextContents member.</summary>
@@ -304,45 +297,35 @@ public class PasswordBox : TextBox
                 isDeleted = true;
             }
 
-            switch (newCharacters.Length)
+            if (newCharacters.Length > 1)
             {
-                case > 1:
-                {
-                    var index = _currentText.IndexOf(newCharacters[0]);
+                var index = _currentText.IndexOf(newCharacters[0]);
 
-                    _newPasswordValue =
-                        index > _newPasswordValue.Length - 1
-                            ? _newPasswordValue + newCharacters
-                            : _newPasswordValue.Insert(index, newCharacters);
-                    break;
-                }
-
-                case 1:
+                _newPasswordValue =
+                    index > _newPasswordValue.Length - 1
+                        ? _newPasswordValue + newCharacters
+                        : _newPasswordValue.Insert(index, newCharacters);
+            }
+            else if (newCharacters.Length == 1)
+            {
+                for (var i = 0; i < _currentText.Length; i++)
                 {
-                    for (var i = 0; i < _currentText.Length; i++)
+                    if (_currentText[i] == passwordChar)
                     {
-                        if (_currentText[i] == passwordChar)
-                        {
-                            continue;
-                        }
-
-                        UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
-                        break;
+                        continue;
                     }
 
+                    UpdatePasswordWithInputCharacter(i, _currentText[i].ToString());
                     break;
                 }
-
-                case 0 when !isDeleted:
+            }
+            else if (!isDeleted)
+            {
+                // The input is a PasswordChar, which is to be inserted at the designated position.
+                var insertIndex = selectionIndex - 1;
+                if (insertIndex >= 0)
                 {
-                    // The input is a PasswordChar, which is to be inserted at the designated position.
-                    var insertIndex = selectionIndex - 1;
-                    if (insertIndex >= 0)
-                    {
-                        UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
-                    }
-
-                    break;
+                    UpdatePasswordWithInputCharacter(insertIndex, passwordChar.ToString());
                 }
             }
 

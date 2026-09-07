@@ -53,17 +53,20 @@ public class FilterBar : ItemsControl
     }
 
     /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(FilterBar);
+
+    /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         ArgumentNullException.ThrowIfNull(change);
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != QueryStateProperty || change.GetNewValue<SearchQueryState?>() is not { } state)
+        if (change.Property != QueryStateProperty)
         {
             return;
         }
 
-        ItemsSource = state.ActiveFilters;
+        ItemsSource = change.GetNewValue<SearchQueryState?>()?.ActiveFilters;
     }
 }

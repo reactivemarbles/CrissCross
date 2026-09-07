@@ -15,7 +15,7 @@ public class Expander : global::Avalonia.Controls.Expander
 {
     /// <summary>Property for <see cref="CornerRadius"/>.</summary>
     public static new readonly StyledProperty<CornerRadius> CornerRadiusProperty =
-        AvaloniaProperty.Register<Expander, CornerRadius>(nameof(CornerRadius));
+        global::Avalonia.Controls.Expander.CornerRadiusProperty;
 
     /// <summary>Gets or sets the corner radius.</summary>
     public new CornerRadius CornerRadius

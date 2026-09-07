@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="CrissCross.Avalonia.UI.Gallery.Views.Pages.IndustrialPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CrissCross.Avalonia.UI.Controls"
+    xmlns:vm="using:CrissCross.Avalonia.UI.Gallery.ViewModels"
+    x:DataType="vm:IndustrialPageViewModel">
+    <ScrollViewer>
+        <controls:StackPanel Margin="24" Spacing="16">
+            <controls:TextBlock FontSize="32" FontWeight="Bold" Text="Industrial Controls" />
+            <controls:TextBlock
+                Opacity="0.75"
+                Text="Industrial indicators present process values, units, range position, data quality, and alarm state in compact operator-facing panels."
+                TextWrapping="Wrap" />
+
+            <controls:Card>
+                <controls:StackPanel Spacing="12">
+                    <controls:TextBlock FontSize="18" FontWeight="Bold" Text="ProcessValueIndicator" />
+                    <WrapPanel>
+                        <controls:ProcessValueIndicator Margin="0,0,12,12" State="{Binding NormalPressure}" />
+                        <controls:ProcessValueIndicator Margin="0,0,12,12" State="{Binding HighTemperature}" />
+                        <controls:ProcessValueIndicator Margin="0,0,12,12" State="{Binding BadQualityVibration}" />
+                    </WrapPanel>
+                </controls:StackPanel>
+            </controls:Card>
+        </controls:StackPanel>
+    </ScrollViewer>
+</UserControl>

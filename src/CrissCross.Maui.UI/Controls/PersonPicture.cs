@@ -37,6 +37,7 @@ public class PersonPicture : ContentView
     /// <summary>Initializes a new instance of the <see cref="PersonPicture"/> class.</summary>
     public PersonPicture()
     {
+        _initials.SetDynamicResource(Label.TextColorProperty, "CrissCrossAccentTextColor");
         Content = new Grid { Children = { _initials, _image } };
         Refresh();
     }

@@ -24,6 +24,9 @@ public static class ApplicationThemeManager
     /// <summary>Event triggered when the application's theme is changed.</summary>
     public static event EventHandler<ThemeChangedEventArgs>? Changed;
 
+    /// <summary>Gets the Avalonia high contrast theme variant.</summary>
+    public static ThemeVariant HighContrastThemeVariant { get; } = new("HighContrast", ThemeVariant.Dark);
+
     /// <summary>Gets the IsHighContrast value.</summary>
     /// <returns><see langword="true"/> if application uses high contrast theme.</returns>
     public static bool IsHighContrast => _cachedApplicationTheme == ApplicationTheme.HighContrast;
@@ -71,6 +74,7 @@ public static class ApplicationThemeManager
             {
                 ApplicationTheme.Dark => ThemeVariant.Dark,
                 ApplicationTheme.Light => ThemeVariant.Light,
+                ApplicationTheme.HighContrast => HighContrastThemeVariant,
                 _ => ThemeVariant.Default,
             };
         }
@@ -140,6 +144,12 @@ public static class ApplicationThemeManager
         }
 
         var actualTheme = Application.Current.ActualThemeVariant;
+        if (actualTheme == HighContrastThemeVariant)
+        {
+            _cachedApplicationTheme = ApplicationTheme.HighContrast;
+            return;
+        }
+
         _cachedApplicationTheme = actualTheme == ThemeVariant.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
     }
 }

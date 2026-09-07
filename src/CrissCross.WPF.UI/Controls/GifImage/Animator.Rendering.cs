@@ -182,12 +182,10 @@ public abstract partial class Animator
         var steps = new[] { InterlaceCoarseStep, InterlaceCoarseStep, InterlaceMediumStep, InterlaceFineStep };
         for (var passIndex = 0; passIndex < starts.Length; passIndex++)
         {
-            var y = starts[passIndex];
-            while (y < height)
+            for (var y = starts[passIndex]; y < height; y += steps[passIndex])
             {
                 rows[rowIndex] = y;
                 rowIndex++;
-                y += steps[passIndex];
             }
         }
 

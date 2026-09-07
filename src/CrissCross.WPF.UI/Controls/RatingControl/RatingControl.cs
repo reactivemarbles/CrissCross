@@ -359,29 +359,8 @@ public class RatingControl : System.Windows.Controls.ContentControl
             return;
         }
 
-        switch (starValue)
-        {
-            case StarValue.HalfFilled:
-            {
-                selectedIcon.Filled = false;
-                selectedIcon.Symbol = StarHalfSymbol;
-                break;
-            }
-
-            case StarValue.Filled:
-            {
-                selectedIcon.Filled = true;
-                selectedIcon.Symbol = StarSymbol;
-                break;
-            }
-
-            default:
-            {
-                selectedIcon.Filled = false;
-                selectedIcon.Symbol = StarSymbol;
-                break;
-            }
-        }
+        selectedIcon.Filled = starValue == StarValue.Filled;
+        selectedIcon.Symbol = starValue == StarValue.HalfFilled ? StarHalfSymbol : StarSymbol;
     }
 
     /// <summary>Provides the ExtractValueFromOffset member.</summary>

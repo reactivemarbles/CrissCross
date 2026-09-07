@@ -32,14 +32,14 @@
                                 <PathIcon x:Name="CheckGlyph"
                                           Width="12"
                                           Height="12"
-                                          Foreground="White"
+                                          Foreground="{DynamicResource AccentButtonForeground}"
                                           Data="M 1,5 L 4,8 L 9,2"
                                           IsVisible="False" />
                                 <!-- Indeterminate mark -->
                                 <Border x:Name="IndeterminateGlyph"
                                         Width="10"
                                         Height="10"
-                                        Background="White"
+                                        Background="{DynamicResource AccentButtonForeground}"
                                         CornerRadius="2"
                                         IsVisible="False" />
                             </Panel>
@@ -62,7 +62,7 @@
     
     <!-- Set foreground for content text -->
     <Style Selector="controls|CheckBoxModern /template/ ContentPresenter#ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
     
     <!-- Checked state -->
@@ -87,7 +87,7 @@
     
     <!-- Disabled state -->
     <Style Selector="controls|CheckBoxModern:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
     <!-- Pointer over state -->

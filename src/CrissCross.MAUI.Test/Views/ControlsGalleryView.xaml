@@ -61,6 +61,15 @@
 
                 <Frame Padding="16">
                     <VerticalStackLayout Spacing="10">
+                        <Label FontAttributes="Bold" FontSize="18" Text="Industrial process values" />
+                        <mauiui:ProcessValueIndicator State="{Binding NormalProcessValue}" />
+                        <mauiui:ProcessValueIndicator State="{Binding AlarmProcessValue}" />
+                        <mauiui:ProcessValueIndicator State="{Binding BadQualityProcessValue}" />
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Frame Padding="16">
+                    <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Theme and date/time" />
                         <mauiui:ThemeSwitcher ChangeThemeCommand="{Binding ThemeChangedCommand}" ThemeState="{Binding ThemeState}" />
                         <mauiui:DateTimeRangePicker ApplyRangeCommand="{Binding RangeChangedCommand}" Range="{Binding CurrentRange}" />

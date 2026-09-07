@@ -8,7 +8,7 @@ using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Media;
 using CrissCross.Avalonia.UI.Gallery.ViewModels;
-using Splat;
+using ReactiveUI;
 
 namespace CrissCross.Avalonia.UI.Gallery.Views;
 
@@ -47,18 +47,20 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
     {
         // Set the window name for navigation registration BEFORE InitializeComponent
         Name = NavHostName;
+        HostName = $"{NavHostName}_{System.Guid.NewGuid():N}";
 
         InitializeComponent();
 
         if (NavigationFrame is not null)
         {
             NavigationFrame.Name = NavHostName;
-            NavigationFrame.HostName = NavHostName;
+            NavigationFrame.HostName = HostName;
             this.SetMainNavigationHost(NavigationFrame);
         }
 
         // Set the DataContext to the MainViewModel
-        DataContext = AppLocator.Current.GetService<MainViewModel>();
+        ViewModel = new() { NavigationHostName = HostName };
+        DataContext = ViewModel;
     }
 
     /// <inheritdoc/>
@@ -101,7 +103,12 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             titleBorder.Classes.Add("gallery-title");
             var titleText = new UI.Controls.TextBlock { Text = "CrissCross Avalonia UI Gallery", FontSize = TitleFontSize, FontWeight = FontWeight.Bold };
             titleText.Classes.Add("gallery-shell-text");
-            titleBorder.Child = titleText;
+            var titleGrid = new UI.Controls.Grid { ColumnDefinitions = new("*,Auto") };
+            titleGrid.Children.Add(titleText);
+            var newWindowButton = new UI.Controls.Button { Content = "New window", Command = ReactiveCommand.Create(static () => new MainWindow().Show()) };
+            Grid.SetColumn(newWindowButton, 1);
+            titleGrid.Children.Add(newWindowButton);
+            titleBorder.Child = titleGrid;
             mainGrid.Children.Add(titleBorder);
             Grid.SetRow(titleBorder, 0);
 
@@ -158,6 +165,7 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
             CreateNavigationExpander("Progress", includeTopMargin: false, [("ProgressBar", "GotoProgress")]));
         AddNavigationButton(navStack, "BBCodeBlock", "GotoBBCodeBlock");
         AddNavigationButton(navStack, "Workflow & Feedback", "GotoWorkflow");
+        AddNavigationButton(navStack, "Industrial Controls", "GotoIndustrial");
         AddNavigationButton(navStack, "Control & Host Catalog", "GotoControlCatalog");
         AddNavigationButton(navStack, "✨ Reactive Feature Playground", "GotoFeaturePlayground");
 

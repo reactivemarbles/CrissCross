@@ -66,18 +66,22 @@ public class ChipGroup : ItemsControl
     }
 
     /// <inheritdoc />
+    protected override Type StyleKeyOverride => typeof(ChipGroup);
+
+    /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         ArgumentNullException.ThrowIfNull(change);
 
         base.OnPropertyChanged(change);
 
-        if (change.Property != GroupStateProperty || change.GetNewValue<ChipGroupState?>() is not { } state)
+        if (change.Property != GroupStateProperty)
         {
             return;
         }
 
-        SelectionMode = state.SelectionMode;
-        ItemsSource = state.Chips;
+        var state = change.GetNewValue<ChipGroupState?>();
+        SelectionMode = state?.SelectionMode ?? default;
+        ItemsSource = state?.Chips;
     }
 }

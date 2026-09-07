@@ -21,6 +21,9 @@ public sealed class ControlCatalogPageViewModel : RxObject
     /// <summary>Application window-host label used by dialog and chrome-control entries.</summary>
     private const string ApplicationHostExample = "MainWindow application host";
 
+    /// <summary>Industrial page label used by process-control entries.</summary>
+    private const string IndustrialExample = "Industrial Controls";
+
     /// <summary>Initializes a new instance of the <see cref="ControlCatalogPageViewModel"/> class.</summary>
     public ControlCatalogPageViewModel() => DisplayName = CatalogExample;
 
@@ -42,7 +45,7 @@ public sealed class ControlCatalogPageViewModel : RxObject
         new("EmptyState", CatalogExample, "Standalone empty-content presentation."),
         new("Expander", CatalogExample, "Standalone expandable content presentation."),
         new("Flyout", CatalogExample, "Attached flyout host example; requires an owning control."),
-        new("Frame", NavigationHostExample, "Navigation content host used by the gallery shell."),
+        new("Frame", NavigationHostExample, "Thin Avalonia UserControl wrapper retained for API compatibility; frame navigation behavior remains a tracked gap."),
         new("Gauges", "Progress", "CircularGauge sample exercises the shared gauge theme."),
         new("GifImage", CatalogExample, "Image-derived control hosted by the catalog."),
         new("GridView", CatalogExample, "Grid-oriented list host example."),
@@ -59,10 +62,11 @@ public sealed class ControlCatalogPageViewModel : RxObject
         new("MessageBox", ApplicationHostExample, "Window-backed dialog; must be owned and shown by the top-level host."),
         new("MessageBoxAsync", ApplicationHostExample, "Async window-backed dialog service owned by the top-level host."),
         new("NavigationControls", NavigationHostExample, "Back/forward controls require a navigation host."),
-        new("NavigationUserControl", NavigationHostExample, "Navigation-aware content is activated inside the navigation host."),
+        new("NavigationUserControl", CatalogExample, "Composes a per-instance routed view-model host and keeps supplied content inside that host."),
         new("NavigationView", NavigationHostExample, "Navigation host/control requires application-level routing."),
         new("NumericPushButton", CatalogExample, "Standalone numeric command button."),
-        new("Page", NavigationHostExample, "Page lifecycle requires a navigation host."),
+        new("Page", NavigationHostExample, "Thin Avalonia UserControl wrapper retained for API compatibility; page lifecycle behavior remains a tracked gap."),
+        new("ProcessValueIndicator", IndustrialExample, "Compact operator readout for process value, range, quality, and alarm state."),
         new("PropertyGridLite", CatalogExample, "Property inspection host for supplied property rows."),
         new("ScrollBar", CatalogExample, "Scroll infrastructure hosted by a scroll viewer."),
         new("ScrollViewer", CatalogExample, "Hosts the catalog’s vertically scrollable content."),

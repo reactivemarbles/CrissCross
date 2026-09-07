@@ -1,9 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
+        xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross ScrollBar Style -->
-    <Style Selector="controls|ScrollBar">
+    <Style Selector=":is(controls|ScrollBar)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type primitives:ScrollBar}}" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
     

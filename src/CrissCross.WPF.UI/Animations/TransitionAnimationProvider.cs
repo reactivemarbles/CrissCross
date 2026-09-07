@@ -72,42 +72,25 @@ public static class TransitionAnimationProvider
 
         var timespanDuration = new Duration(TimeSpan.FromMilliseconds(duration));
 
-        switch (type)
+        return type switch
         {
-            case Transition.FadeIn:
-            {
-                FadeInTransition(uiElement, timespanDuration);
-                break;
-            }
+            Transition.FadeIn => ApplyTransition(uiElement, timespanDuration, FadeInTransition),
+            Transition.FadeInWithSlide => ApplyTransition(uiElement, timespanDuration, FadeInWithSlideTransition),
+            Transition.SlideBottom => ApplyTransition(uiElement, timespanDuration, SlideBottomTransition),
+            Transition.SlideRight => ApplyTransition(uiElement, timespanDuration, SlideRightTransition),
+            Transition.SlideLeft => ApplyTransition(uiElement, timespanDuration, SlideLeftTransition),
+            _ => false,
+        };
+    }
 
-            case Transition.FadeInWithSlide:
-            {
-                FadeInWithSlideTransition(uiElement, timespanDuration);
-                break;
-            }
-
-            case Transition.SlideBottom:
-            {
-                SlideBottomTransition(uiElement, timespanDuration);
-                break;
-            }
-
-            case Transition.SlideRight:
-            {
-                SlideRightTransition(uiElement, timespanDuration);
-                break;
-            }
-
-            case Transition.SlideLeft:
-            {
-                SlideLeftTransition(uiElement, timespanDuration);
-                break;
-            }
-
-            default:
-                return false;
-        }
-
+    /// <summary>Applies a transition action and returns a handled result.</summary>
+    /// <param name="uiElement">The animated UI element.</param>
+    /// <param name="duration">The animation duration.</param>
+    /// <param name="transition">The transition action.</param>
+    /// <returns><see langword="true"/> after applying the transition.</returns>
+    private static bool ApplyTransition(UIElement uiElement, Duration duration, Action<UIElement, Duration> transition)
+    {
+        transition(uiElement, duration);
         return true;
     }
 

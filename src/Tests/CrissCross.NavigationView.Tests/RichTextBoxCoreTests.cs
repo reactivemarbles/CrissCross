@@ -8,6 +8,7 @@ using CrissCross.Avalonia.UI.Controls;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Regression tests for RichTextBox document offsets and core editing behavior.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class RichTextBoxCoreTests
 {
     /// <summary>The formatted Hello world fixture.</summary>

@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross DynamicScrollViewer Style -->
-    <Style Selector="controls|DynamicScrollViewer">
+    <Style Selector=":is(controls|DynamicScrollViewer)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type ScrollViewer}}" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
     

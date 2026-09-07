@@ -141,6 +141,7 @@ public abstract class PreviewColorSlider : Slider, INotifyPropertyChanged
         }
     } = new();
 
+    /// <inheritdoc />
     public override void EndInit()
     {
         base.EndInit();

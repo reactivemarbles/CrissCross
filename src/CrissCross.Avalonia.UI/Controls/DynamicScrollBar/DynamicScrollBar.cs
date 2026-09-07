@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a dynamic scrollbar control with custom styling.</summary>
-public class DynamicScrollBar : global::Avalonia.Controls.Primitives.ScrollBar
-{
-    // Inherits from Avalonia ScrollBar with dynamic features
-}
+public class DynamicScrollBar : global::Avalonia.Controls.Primitives.ScrollBar;

@@ -49,7 +49,7 @@
                             FontSize="36"
                             FontWeight="Bold"
                             Foreground="{DynamicResource SystemAccentColorPrimary}"
-                            Text="12" />
+                            Text="15" />
                         <controls:TextBlock
                             HorizontalAlignment="Center"
                             FontSize="14"

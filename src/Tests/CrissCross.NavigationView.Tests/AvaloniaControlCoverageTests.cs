@@ -4,16 +4,21 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 using CrissCross.Avalonia.UI.Controls;
 using CrissCrossExpander = CrissCross.Avalonia.UI.Controls.Expander;
 
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Covers the constructible Avalonia control catalog's public initialization paths.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaControlCoverageTests
 {
     /// <summary>The number of controls in the lightweight construction catalog.</summary>
     private const int ControlCount = 14;
+
+    /// <summary>The number of optional actions in the empty-state template.</summary>
+    private const int EmptyStateActionCount = 2;
 
     /// <summary>Verifies lightweight controls can be constructed without a visual host.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -48,7 +53,7 @@ public sealed class AvaloniaControlCoverageTests
     /// <summary>Verifies every public parameterless Avalonia styled element can be constructed from the UI assembly.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
-    public async Task PublicParameterlessStyledElements_WhenConstructed_ProduceStyledElements()
+    public Task PublicParameterlessStyledElements_WhenConstructed_ProduceStyledElements() => AvaloniaTestUiThread.RunAsync(static async () =>
     {
         var assembly = typeof(AppBar).Assembly;
         var constructedCount = 0;
@@ -56,7 +61,7 @@ public sealed class AvaloniaControlCoverageTests
 
         foreach (var type in assembly.GetExportedTypes())
         {
-            if (type.IsAbstract || !typeof(StyledElement).IsAssignableFrom(type) || type.GetConstructor(Type.EmptyTypes) is null)
+            if (type.IsAbstract || type.ContainsGenericParameters || !typeof(StyledElement).IsAssignableFrom(type) || type.GetConstructor(Type.EmptyTypes) is null)
             {
                 continue;
             }
@@ -80,7 +85,7 @@ public sealed class AvaloniaControlCoverageTests
 
         await Assert.That(constructedCount).IsGreaterThan(ControlCount);
         await Assert.That(roundTrippedPropertyCount).IsGreaterThan(0);
-    }
+    });
 
     /// <summary>Verifies card, badge, and chip public styled properties retain state and derived flags.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
@@ -98,6 +103,45 @@ public sealed class AvaloniaControlCoverageTests
         await Assert.That(chip.Icon).IsEqualTo("icon");
         await Assert.That(chip.IsSelected).IsTrue();
         await Assert.That(chip.IsRemovable).IsTrue();
+    }
+
+    /// <summary>Verifies missing empty-state models never expose blank action buttons.</summary>
+    /// <returns>The asynchronous test operation.</returns>
+    [Test]
+    public async Task EmptyState_WhenModelIsCleared_HidesBothActions()
+    {
+        var control = new EmptyState();
+        var window = new global::Avalonia.Controls.Window { Content = control };
+        try
+        {
+            window.Show();
+            window.UpdateLayout();
+            var actionCount = 0;
+            foreach (var descendant in control.GetVisualDescendants())
+            {
+                if (descendant is global::Avalonia.Controls.Button action)
+                {
+                    await Assert.That(action.IsVisible).IsFalse();
+                    actionCount++;
+                }
+            }
+
+            await Assert.That(actionCount).IsEqualTo(EmptyStateActionCount);
+            control.Model = new("No results");
+            control.Model = null;
+            window.UpdateLayout();
+            foreach (var descendant in control.GetVisualDescendants())
+            {
+                if (descendant is global::Avalonia.Controls.Button action)
+                {
+                    await Assert.That(action.IsVisible).IsFalse();
+                }
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     /// <summary>Determines whether a property can safely be round-tripped by the construction catalog.</summary>

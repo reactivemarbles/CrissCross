@@ -5,12 +5,13 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 
 #if REACTIVE_SHIM
-using ReactiveUI.Reactive;
+using UiScheduler = ReactiveUI.Primitives.Reactive.Concurrency.AvaloniaScheduler;
 #else
-using ReactiveUI;
+using UiScheduler = ReactiveUI.Primitives.Concurrency.AvaloniaScheduler;
 #endif
 
 #if REACTIVELIST_REACTIVE
@@ -20,33 +21,28 @@ namespace CrissCross.Avalonia;
 #endif
 
 /// <summary>Displays <see cref="ContentControl.Content" /> according to an <see cref="IDataTemplate" />.</summary>
-/// <seealso cref="ContentControl" />
-/// <seealso cref="IDisposable" />
 public class ReactiveTransitioningContentControl : ContentControl, IDisposable
 {
     /// <summary>The animation timer interval in milliseconds.</summary>
     private const double AnimationIntervalMilliseconds = 10D;
 
-    /// <summary>Stores the opacity Subject value.</summary>
-    private readonly Signal<double> _opacitySubject = new();
+    /// <summary>The number of opacity updates in one transition.</summary>
+    private const int AnimationStepCount = 13;
 
-    /// <summary>Stores the animation Semaphore value.</summary>
-    private readonly SemaphoreSlim _animationSemaphore = new(1);
+    /// <summary>Owns the current transition and cancels it when newer content arrives.</summary>
+    private readonly SerialDisposable _animationSubscription = new();
 
-    /// <summary>Stores the animation Disposable value.</summary>
-    private CompositeDisposable _animationDisposable = [];
-
-    /// <summary>Stores the content Presenter2 value.</summary>
-    private ContentPresenter? _contentPresenter2;
-
-    /// <summary>Stores the content Presenter1 value.</summary>
+    /// <summary>The primary template presenter.</summary>
     private ContentPresenter? _contentPresenter1;
 
-    /// <summary>Stores the current Presenter value.</summary>
-    private int _currentPresenter;
+    /// <summary>The secondary template presenter.</summary>
+    private ContentPresenter? _contentPresenter2;
 
-    /// <summary>Gets a value indicating whether gets a value that indicates whether the object is disposed.</summary>
-    public bool IsDisposed => _animationDisposable.IsDisposed;
+    /// <summary>Identifies the currently visible presenter.</summary>
+    private bool _isPrimaryVisible;
+
+    /// <summary>Gets a value indicating whether this control has been disposed.</summary>
+    public bool IsDisposed => _animationSubscription.IsDisposed;
 
     /// <summary>Releases resources used by this instance.</summary>
     public void Dispose()
@@ -55,181 +51,109 @@ public class ReactiveTransitioningContentControl : ContentControl, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
-    /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
-    /// only unmanaged resources.</param>
+    /// <summary>Releases the active transition subscription.</summary>
+    /// <param name="disposing">Whether managed resources should be released.</param>
     protected virtual void Dispose(bool disposing)
     {
-        if (IsDisposed || !disposing)
+        if (!disposing)
         {
             return;
         }
 
-        _animationDisposable.Dispose();
-        _opacitySubject.Dispose();
-        _animationSemaphore.Dispose();
+        _animationSubscription.Dispose();
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     protected override bool RegisterContentPresenter(ContentPresenter presenter)
     {
-        if (
-            base.RegisterContentPresenter(presenter)
-            || presenter is not ContentPresenter p2
-            || p2.Name != "PART_ContentPresenter2")
+        if (base.RegisterContentPresenter(presenter))
+        {
+            _contentPresenter1 = presenter;
+            return true;
+        }
+
+        if (presenter.Name != "PART_ContentPresenter2")
         {
             return false;
         }
 
-        _contentPresenter2 = p2;
-        _contentPresenter2.IsVisible = false;
-        _contentPresenter1 = Presenter;
-        _contentPresenter1!.IsVisible = false;
-        return _contentPresenter1 is not null;
+        _contentPresenter2 = presenter;
+        return true;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        UpdateContent(withTransition: false);
+    }
+
+    /// <inheritdoc />
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        UpdateContent(withTransition: false);
+    }
+
+    /// <inheritdoc />
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        _animationSubscription.Disposable = null;
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        if (change?.Property != ContentProperty)
+        base.OnPropertyChanged(change);
+        if (change.Property != ContentProperty)
         {
-            base.OnPropertyChanged(change!);
             return;
         }
 
-        UpdateContent(true);
-        base.OnPropertyChanged(change!);
+        UpdateContent(withTransition: true);
     }
 
-    /// <summary>Runs the update Content operation.</summary>
-    /// <param name="withTransition">A value indicating whether the content change should animate.</param>
+    /// <summary>Displays the latest content without blocking the UI thread on a preceding animation.</summary>
+    /// <param name="withTransition">Whether the incoming content should fade in.</param>
     private void UpdateContent(bool withTransition)
     {
-        var (from, to, current) = GetPresenters();
-        if (VisualRoot is null || from is null || to is null)
+        if (IsDisposed || VisualRoot is null || _contentPresenter1 is null || _contentPresenter2 is null)
         {
             return;
         }
 
-        try
-        {
-            _animationSemaphore.Wait();
-            to.Content = Content;
-            if (withTransition)
-            {
-                to.Opacity = 0D;
-                to.IsVisible = true;
-                from!.IsVisible = false;
-                AnimateContent();
-            }
-            else
-            {
-                _currentPresenter = current == 1 ? 0 : 1;
-                to.IsVisible = true;
-                from.Content = null;
-                from.IsVisible = false;
-            }
-        }
-        catch
-        {
-            _ = _animationSemaphore.Release();
-        }
-    }
+        _animationSubscription.Disposable = null;
+        var from = _isPrimaryVisible ? _contentPresenter1 : _contentPresenter2;
+        var to = _isPrimaryVisible ? _contentPresenter2 : _contentPresenter1;
+        from.Content = null;
+        from.IsVisible = false;
+        to.Content = null;
+        to.Content = Content;
+        to.Opacity = 1D;
+        to.IsVisible = true;
+        _isPrimaryVisible = !_isPrimaryVisible;
 
-    /// <summary>Runs the animate Content operation.</summary>
-    private void AnimateContent()
-    {
-        // This should be an animation but there is currently an issue with PageTransitions in Avalonia
-        _animationDisposable.Dispose();
-        _animationDisposable = [];
-        var (from, to, current) = GetPresenters();
-        _ = to!.Bind(OpacityProperty, _opacitySubject).DisposeWith(_animationDisposable);
-        var opacity = new AnimationOpacityState(_opacitySubject);
-        _ = Observable
+        if (!withTransition || Content is null)
+        {
+            return;
+        }
+
+        to.Opacity = 0D;
+        var opacity = new AnimationOpacityState(to);
+        _animationSubscription.Disposable = Observable
             .Interval(TimeSpan.FromMilliseconds(AnimationIntervalMilliseconds))
-            .Subscribe(opacity.OnNext)
-            .DisposeWith(_animationDisposable);
-        _ = new ActionDisposable(new AnimationCompletion(this, from!, to!, current).Schedule)
-            .DisposeWith(_animationDisposable);
-        _ = _opacitySubject
-            .Where(static x => x >= 1D)
-            .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(_ =>
-            {
-                if (_animationDisposable.IsDisposed)
-                {
-                    return;
-                }
-
-                _animationDisposable.Dispose();
-            })
-            .DisposeWith(_animationDisposable);
+            .Take(AnimationStepCount)
+            .ObserveOn(UiScheduler.Instance)
+            .Subscribe(opacity.OnNext);
     }
 
-    /// <summary>Gets the current and next content presenters.</summary>
-    /// <returns>The current presenter pair and active index.</returns>
-    private (ContentPresenter? from, ContentPresenter? to, int current) GetPresenters()
+    /// <summary>Updates the opacity of one incoming content presenter.</summary>
+    /// <param name="presenter">The presenter owned by this transition.</param>
+    private sealed class AnimationOpacityState(ContentPresenter presenter)
     {
-        var from = _currentPresenter == 1 ? _contentPresenter1 : _contentPresenter2;
-        var to = _currentPresenter == 1 ? _contentPresenter2 : _contentPresenter1;
-        return (from, to, _currentPresenter);
-    }
-
-    /// <summary>Maintains the opacity for a single active content transition.</summary>
-    /// <param name="opacitySubject">The transition opacity signal.</param>
-    private sealed class AnimationOpacityState(Signal<double> opacitySubject)
-    {
-        /// <summary>The opacity increment applied for each animation tick.</summary>
-        private const double OpacityIncrement = 0.08D;
-
-        /// <summary>Stores the current transition opacity.</summary>
-        private double _opacity;
-
-        /// <summary>Advances the transition opacity for one timer tick.</summary>
-        /// <param name="_">The timer tick value.</param>
-        public void OnNext(long _)
-        {
-            _opacity = Math.Min(_opacity + OpacityIncrement, 1D);
-            opacitySubject.OnNext(_opacity);
-        }
-    }
-
-    /// <summary>Schedules the final UI update for a completed content transition.</summary>
-    /// <param name="control">The control that owns the transition.</param>
-    /// <param name="from">The outgoing content presenter.</param>
-    /// <param name="to">The incoming content presenter.</param>
-    /// <param name="current">The outgoing presenter index.</param>
-    private sealed class AnimationCompletion(
-        ReactiveTransitioningContentControl control,
-        ContentPresenter from,
-        ContentPresenter to,
-        int current)
-    {
-        /// <summary>Schedules completion on the UI scheduler.</summary>
-#if REACTIVE_SHIM
-        public void Schedule() =>
-            _ = RxSchedulers.MainThreadScheduler.Schedule(
-                this,
-                static (_, completion) =>
-                {
-                    completion.Complete();
-                    return Disposable.Empty;
-                });
-#else
-        public void Schedule() =>
-            _ = RxSchedulers.MainThreadScheduler.Schedule(this, static completion => completion.Complete());
-#endif
-
-        /// <summary>Completes the transition on the UI thread.</summary>
-        private void Complete()
-        {
-            to.Opacity = 1D;
-            from.Opacity = 1D;
-            to.IsVisible = true;
-            from.IsVisible = false;
-            from.Content = null;
-            control._currentPresenter = current == 1 ? 0 : 1;
-            _ = control._animationSemaphore.Release();
-        }
+        /// <summary>Advances opacity until the incoming content is fully visible.</summary>
+        /// <param name="tick">The zero-based animation tick.</param>
+        public void OnNext(long tick) => presenter.Opacity = Math.Min((tick + 1D) / AnimationStepCount, 1D);
     }
 }

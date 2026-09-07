@@ -42,7 +42,7 @@ public class TaskBarService : ITaskBarService
     }
 
     /// <inheritdoc />
-    public virtual bool SetState(Window? window, TaskBarProgressState taskBarProgressState) => window is null ? false : TaskBarProgress.SetState(window, taskBarProgressState);
+    public virtual bool SetState(Window? window, TaskBarProgressState taskBarProgressState) => window is not null && TaskBarProgress.SetState(window, taskBarProgressState);
 
     /// <inheritdoc />
     public virtual bool SetState(IntPtr windowHandle, TaskBarProgressState taskBarProgressState) =>

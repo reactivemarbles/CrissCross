@@ -540,43 +540,50 @@ public class TitleBar : Control, IThemeControl
 
     /// <summary>Provides the OnTemplateButtonClick member.</summary>
     /// <param name="buttonType">The buttonType value.</param>
-    private void OnTemplateButtonClick(TitleBarButtonType buttonType)
-    {
-        switch (buttonType)
+    private void OnTemplateButtonClick(TitleBarButtonType buttonType) =>
+        _ = buttonType switch
         {
-            case TitleBarButtonType.Maximize or TitleBarButtonType.Restore:
-            {
-                RaiseEvent(new(MaximizeClickedEvent, this));
-                MaximizeWindow();
-                break;
-            }
+            TitleBarButtonType.Maximize or TitleBarButtonType.Restore => RaiseMaximizeAndReturnTrue(),
+            TitleBarButtonType.Close => RaiseCloseAndReturnTrue(),
+            TitleBarButtonType.Minimize => RaiseMinimizeAndReturnTrue(),
+            TitleBarButtonType.Help => RaiseHelpAndReturnTrue(),
+            TitleBarButtonType.Unknown => false,
+            _ => throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null),
+        };
 
-            case TitleBarButtonType.Close:
-            {
-                RaiseEvent(new(CloseClickedEvent, this));
-                CloseWindow();
-                break;
-            }
+    /// <summary>Raises the maximize command and reports the button as handled.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool RaiseMaximizeAndReturnTrue()
+    {
+        RaiseEvent(new(MaximizeClickedEvent, this));
+        MaximizeWindow();
+        return true;
+    }
 
-            case TitleBarButtonType.Minimize:
-            {
-                RaiseEvent(new(MinimizeClickedEvent, this));
-                MinimizeWindow();
-                break;
-            }
+    /// <summary>Raises the close command and reports the button as handled.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool RaiseCloseAndReturnTrue()
+    {
+        RaiseEvent(new(CloseClickedEvent, this));
+        CloseWindow();
+        return true;
+    }
 
-            case TitleBarButtonType.Help:
-            {
-                RaiseEvent(new(HelpClickedEvent, this));
-                break;
-            }
+    /// <summary>Raises the minimize command and reports the button as handled.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool RaiseMinimizeAndReturnTrue()
+    {
+        RaiseEvent(new(MinimizeClickedEvent, this));
+        MinimizeWindow();
+        return true;
+    }
 
-            case TitleBarButtonType.Unknown:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(buttonType), buttonType, null);
-        }
+    /// <summary>Raises the help command and reports the button as handled.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool RaiseHelpAndReturnTrue()
+    {
+        RaiseEvent(new(HelpClickedEvent, this));
+        return true;
     }
 
     /// <summary>Listening window hooks after rendering window content to SizeToContent support.</summary>
@@ -615,26 +622,25 @@ public class TitleBar : Control, IThemeControl
 
         var isMouseOverHeaderContent = IsMouseOverHeaderContent(message, longParameter);
 
-        switch (message)
+        return message switch
         {
-            case User32.WM.NCHITTEST when CloseWindowByDoubleClickOnIcon && _icon.IsMouseOverElement(longParameter):
-            {
-                handled = true;
+            User32.WM.NCHITTEST when CloseWindowByDoubleClickOnIcon && _icon.IsMouseOverElement(longParameter) =>
+                HandleTitleBarHitTest(ref handled, User32.WM_NCHITTEST.HTSYSMENU),
+            User32.WM.NCHITTEST when this.IsMouseOverElement(longParameter) && !isMouseOverHeaderContent =>
+                HandleTitleBarHitTest(ref handled, User32.WM_NCHITTEST.HTCAPTION),
+            _ => IntPtr.Zero,
+        };
+    }
 
-                // Ideally, clicking on the icon should open the system menu, but when the system menu is opened
-                // manually, double-clicking on the icon does not close the window
-                return (IntPtr)User32.WM_NCHITTEST.HTSYSMENU;
-            }
-
-            case User32.WM.NCHITTEST when this.IsMouseOverElement(longParameter) && !isMouseOverHeaderContent:
-            {
-                handled = true;
-                return (IntPtr)User32.WM_NCHITTEST.HTCAPTION;
-            }
-
-            default:
-                return IntPtr.Zero;
-        }
+    /// <summary>Marks a title bar hit test as handled and returns the native result.</summary>
+    /// <param name="handled">The handled flag.</param>
+    /// <param name="hitTestResult">The native hit test result.</param>
+    /// <returns>The native hit test result pointer.</returns>
+    private IntPtr HandleTitleBarHitTest(ref bool handled, User32.WM_NCHITTEST hitTestResult)
+    {
+        _ = _buttons;
+        handled = true;
+        return (IntPtr)hitTestResult;
     }
 
     /// <summary>Determines whether the mouse is over title/header content.</summary>

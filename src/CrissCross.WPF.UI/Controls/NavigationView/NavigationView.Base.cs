@@ -219,7 +219,7 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
         AutoSuggestBoxSymbolButton.Click -= AutoSuggestBoxSymbolButtonOnClick;
     }
 
-    /// <summary>Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />�attached event reaches
+    /// <summary>Invoked when an unhandled <see cref="E:System.Windows.Input.Mouse.MouseDown" />Ã¯Â¿Â½attached event reaches
     /// an element in its route that is derived from this class. Implement this method to add class handling for this
     /// event.</summary>
     /// <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs" /> that contains the event data.
@@ -266,28 +266,22 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     /// <summary>This virtual method is called when <see cref="PaneDisplayMode"/> is changed.</summary>
     protected virtual void OnPaneDisplayModeChanged()
     {
-        switch (PaneDisplayMode)
+        if (PaneDisplayMode == NavigationViewPaneDisplayMode.LeftFluent)
         {
-            case NavigationViewPaneDisplayMode.LeftFluent:
-            {
-                IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
-                IsPaneToggleVisible = false;
-                break;
-            }
+            IsBackButtonVisible = NavigationViewBackButtonVisible.Collapsed;
+            IsPaneToggleVisible = false;
+            return;
+        }
 
-            case NavigationViewPaneDisplayMode.Left
+        if (PaneDisplayMode is NavigationViewPaneDisplayMode.Left
             or NavigationViewPaneDisplayMode.LeftMinimal
             or NavigationViewPaneDisplayMode.Top
-            or NavigationViewPaneDisplayMode.Bottom:
-            {
-                break;
-            }
-
-            default:
-            {
-                throw new ArgumentOutOfRangeException(nameof(PaneDisplayMode), PaneDisplayMode, null);
-            }
+            or NavigationViewPaneDisplayMode.Bottom)
+        {
+            return;
         }
+
+        throw new ArgumentOutOfRangeException(nameof(PaneDisplayMode), PaneDisplayMode, null);
     }
 
     /// <summary>This virtual method is called when <see cref="ItemTemplate"/> is changed.</summary>
@@ -606,36 +600,35 @@ public partial class NavigationView : System.Windows.Controls.Control, INavigati
     [DebuggerStepThrough]
     private void NavigationStackOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        switch (e.Action)
+        if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            case NotifyCollectionChangedAction.Add:
-            {
-                _breadcrumbBarItems.Add(new((INavigationViewItem)e.NewItems![0]!));
-                break;
-            }
-
-            case NotifyCollectionChangedAction.Remove:
-            {
-                _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
-                break;
-            }
-
-            case NotifyCollectionChangedAction.Replace:
-            {
-                _breadcrumbBarItems[0] = new((INavigationViewItem)e.NewItems![0]!);
-                break;
-            }
-
-            case NotifyCollectionChangedAction.Move:
-                break;
-            case NotifyCollectionChangedAction.Reset:
-            {
-                _breadcrumbBarItems.Clear();
-                break;
-            }
-
-            default:
-                throw new ArgumentOutOfRangeException();
+            _breadcrumbBarItems.Add(new((INavigationViewItem)e.NewItems![0]!));
+            return;
         }
+
+        if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            _breadcrumbBarItems.RemoveAt(e.OldStartingIndex);
+            return;
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Replace)
+        {
+            _breadcrumbBarItems[0] = new((INavigationViewItem)e.NewItems![0]!);
+            return;
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Move)
+        {
+            return;
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            _breadcrumbBarItems.Clear();
+            return;
+        }
+
+        throw new ArgumentOutOfRangeException();
     }
 }

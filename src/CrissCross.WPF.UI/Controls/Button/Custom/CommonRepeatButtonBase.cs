@@ -238,7 +238,7 @@ public class CommonRepeatButtonBase : RepeatButton
     /// <returns>
     /// true if the dependency property that is supplied should be value-serialized; otherwise, false.
     /// </returns>
-    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp == StyleProperty ? false : base.ShouldSerializeProperty(dp);
+    protected override bool ShouldSerializeProperty(DependencyProperty dp) => dp != StyleProperty && base.ShouldSerializeProperty(dp);
 
     /// <summary>Provides the CommonButtonBase_IsEnabledChanged member.</summary>
     /// <param name="sender">The event sender.</param>

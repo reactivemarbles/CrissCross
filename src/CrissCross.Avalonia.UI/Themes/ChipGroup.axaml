@@ -1,18 +1,37 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:CrissCross.Avalonia.UI.Converters;assembly=CrissCross.Avalonia.UI"
         xmlns:core="clr-namespace:CrissCross;assembly=CrissCross"
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
 
     <Style Selector="controls|ChipGroup">
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <WrapPanel />
+            </ItemsPanelTemplate>
+        </Setter>
         <Setter Property="ItemTemplate">
             <DataTemplate x:DataType="core:ChipModel">
                 <controls:Chip Margin="0,0,6,6"
-                               Model="{Binding}" />
+                               Model="{Binding}">
+                    <controls:Chip.SelectCommand>
+                        <MultiBinding Converter="{x:Static converters:FirstCommandConverter.Instance}">
+                            <Binding Path="$parent[controls:ChipGroup].SelectChipCommand" />
+                            <Binding Path="SelectCommand" />
+                        </MultiBinding>
+                    </controls:Chip.SelectCommand>
+                    <controls:Chip.RemoveCommand>
+                        <MultiBinding Converter="{x:Static converters:FirstCommandConverter.Instance}">
+                            <Binding Path="$parent[controls:ChipGroup].RemoveChipCommand" />
+                            <Binding Path="RemoveCommand" />
+                        </MultiBinding>
+                    </controls:Chip.RemoveCommand>
+                </controls:Chip>
             </DataTemplate>
         </Setter>
         <Setter Property="Template">
             <ControlTemplate>
-                <ItemsPresenter />
+                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
             </ControlTemplate>
         </Setter>
     </Style>

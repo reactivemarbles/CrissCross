@@ -18,7 +18,8 @@ public class BoolToInvertedBoolConverter : IValueConverter
     public static BoolToInvertedBoolConverter Instance { get; } = new();
 
     /// <inheritdoc/>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is bool boolValue ? !boolValue : false;
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is bool boolValue && !boolValue;
 
     /// <inheritdoc/>
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>

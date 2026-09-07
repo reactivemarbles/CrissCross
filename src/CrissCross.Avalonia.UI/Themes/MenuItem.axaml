@@ -3,22 +3,23 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross MenuItem Style -->
-    <Style Selector="controls|MenuItem">
+    <Style Selector=":is(controls|MenuItem)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type MenuItem}}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="CornerRadius" Value="4" />
     </Style>
     
-    <Style Selector="controls|MenuItem:pointerover">
+    <Style Selector=":is(controls|MenuItem):pointerover">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondary}" />
     </Style>
     
-    <Style Selector="controls|MenuItem:pressed">
+    <Style Selector=":is(controls|MenuItem):pressed">
         <Setter Property="Background" Value="{DynamicResource SubtleFillColorTertiary}" />
     </Style>
     
-    <Style Selector="controls|MenuItem:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+    <Style Selector=":is(controls|MenuItem):disabled">
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
 </Styles>

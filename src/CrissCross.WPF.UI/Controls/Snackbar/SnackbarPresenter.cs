@@ -27,20 +27,6 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
             self.OnUnloaded();
         };
 
-    /// <summary>Gets the Gets or sets the content. value.</summary>
-    /// <value>
-    /// The content.
-    /// </value>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "WpfAnalyzers.DependencyProperty",
-        "WPF0012:CLR property type should match registered type",
-        Justification = "seems harmless")]
-    public new Snackbar? Content
-    {
-        get => (Snackbar?)GetValue(ContentProperty);
-        protected set => SetValue(ContentProperty, value);
-    }
-
     /// <summary>Gets the queue.</summary>
     /// <value>
     /// The queue.
@@ -57,13 +43,20 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => ToString() ?? GetType().Name;
 
+    /// <summary>Gets or sets the currently displayed snackbar.</summary>
+    private Snackbar? CurrentSnackbar
+    {
+        get => GetValue(ContentProperty) as Snackbar;
+        set => SetValue(ContentProperty, value);
+    }
+
     /// <summary>Adds to que.</summary>
     /// <param name="snackbar">The snackbar.</param>
     public virtual void AddToQue(Snackbar snackbar)
     {
         Queue.Enqueue(snackbar);
 
-        if (Content is not null)
+        if (CurrentSnackbar is not null)
         {
             return;
         }
@@ -91,13 +84,13 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public virtual async Task HideCurrent()
     {
-        if (Content is null)
+        if (CurrentSnackbar is not { } snackbar)
         {
             return;
         }
 
         await CancelCurrentAsync();
-        await HidSnackbar(Content);
+        await HidSnackbar(snackbar);
         ResetCancellationTokenSource();
     }
 
@@ -152,13 +145,13 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     /// <summary>Provides the ImmediatelyHideCurrent member.</summary>
     private void ImmediatelyHideCurrent()
     {
-        if (Content is null)
+        if (CurrentSnackbar is not { } snackbar)
         {
             return;
         }
 
         CancellationTokenSource.Cancel();
-        ImmediatelyHidSnackbar(Content);
+        ImmediatelyHidSnackbar(snackbar);
     }
 
     /// <summary>Provides the ImmediatelyHidSnackbar member.</summary>
@@ -166,7 +159,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     private void ImmediatelyHidSnackbar(Snackbar snackbar)
     {
         snackbar.SetCurrentValue(Snackbar.IsShownProperty, false);
-        Content = null;
+        CurrentSnackbar = null;
     }
 
     /// <summary>Provides the ShowQueuedSnackbars member.</summary>
@@ -186,7 +179,7 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
     /// <returns>The result.</returns>
     private async Task ShowSnackbar(Snackbar snackbar)
     {
-        Content = snackbar;
+        CurrentSnackbar = snackbar;
 
         snackbar.SetCurrentValue(Snackbar.IsShownProperty, true);
 
@@ -211,6 +204,6 @@ public class SnackbarPresenter : System.Windows.Controls.ContentPresenter, IDisp
 
         await Task.Delay(HideTransitionDurationMilliseconds);
 
-        Content = null;
+        CurrentSnackbar = null;
     }
 }

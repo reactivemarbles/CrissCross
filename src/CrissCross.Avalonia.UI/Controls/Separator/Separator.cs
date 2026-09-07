@@ -9,7 +9,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a separator control for dividing UI elements.</summary>
-public class Separator : global::Avalonia.Controls.Separator
-{
-    // Inherits all functionality from Avalonia Separator
-}
+public class Separator : global::Avalonia.Controls.Separator;

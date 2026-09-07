@@ -21,11 +21,15 @@ partial class ViewModelRoutedViewHost
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing && (components != null))
+        if (disposing && !_disposedValue)
         {
-            components.Dispose();
+            ViewModelRoutedViewHostMixins.UnregisterNavigationHost(this);
+            _navigationResultSubscription?.Dispose();
+            components?.Dispose();
             _canNavigateBackSubject.Dispose();
             _currentViewModel.Dispose();
+            _navigationViews.Clear();
+            _disposedValue = true;
         }
         base.Dispose(disposing);
     }

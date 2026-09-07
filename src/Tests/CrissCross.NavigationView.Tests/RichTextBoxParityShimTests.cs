@@ -7,6 +7,7 @@ using CrissCross.Avalonia.UI.Controls;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Regression tests for the WPF interaction parity shims.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class RichTextBoxParityShimTests
 {
     /// <summary>Verifies that plain-text typing does not expose or discard surrounding markup.</summary>

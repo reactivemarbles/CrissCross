@@ -4,7 +4,7 @@
     
     <!-- CrissCross RadioButton Style -->
     <Style Selector="controls|RadioButton">
-        <Setter Property="Foreground" Value="{DynamicResource RadioButtonForeground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource RadioButtonOuterEllipseFill}" />
         <Setter Property="BorderBrush" Value="{DynamicResource RadioButtonOuterEllipseStroke}" />
         <Setter Property="Padding" Value="8,0,0,0" />
@@ -25,7 +25,7 @@
                         <Ellipse Name="CheckGlyph"
                                  Width="10"
                                  Height="10"
-                                 Fill="{DynamicResource RadioButtonCheckGlyphFill}"
+                                 Fill="{DynamicResource RadioButtonOuterEllipseCheckedStroke}"
                                  IsVisible="False" />
                     </Grid>
                     <ContentPresenter Name="ContentPresenter"
@@ -34,7 +34,8 @@
                                       ContentTemplate="{TemplateBinding ContentTemplate}"
                                       Margin="{TemplateBinding Padding}"
                                       HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      TextElement.Foreground="{TemplateBinding Foreground}" />
                 </Grid>
             </ControlTemplate>
         </Setter>
@@ -42,8 +43,8 @@
     
     <!-- Checked State -->
     <Style Selector="controls|RadioButton:checked /template/ Ellipse#OuterEllipse">
-        <Setter Property="Fill" Value="{DynamicResource RadioButtonOuterEllipseFillChecked}" />
-        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokeChecked}" />
+        <Setter Property="Fill" Value="{DynamicResource ControlAltFillColorTransparentBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseCheckedStroke}" />
     </Style>
     
     <Style Selector="controls|RadioButton:checked /template/ Ellipse#CheckGlyph">
@@ -52,12 +53,22 @@
     
     <!-- PointerOver State -->
     <Style Selector="controls|RadioButton:pointerover /template/ Ellipse#OuterEllipse">
-        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseStrokePointerOver}" />
+        <Setter Property="Stroke" Value="{DynamicResource RadioButtonOuterEllipseCheckedStroke}" />
     </Style>
     
     <!-- Disabled State -->
     <Style Selector="controls|RadioButton:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
+    </Style>
+
+    <Style Selector="controls|RadioButton:disabled /template/ Ellipse#OuterEllipse">
+        <Setter Property="Fill" Value="{DynamicResource ControlAltFillColorTransparentBrush}" />
+        <Setter Property="Stroke" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}" />
+    </Style>
+
+    <Style Selector="controls|RadioButton:disabled /template/ Ellipse#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource ControlStrongStrokeColorDisabledBrush}" />
     </Style>
     
 </Styles>

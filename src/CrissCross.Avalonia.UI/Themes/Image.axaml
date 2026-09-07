@@ -3,7 +3,7 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross Image Style -->
-    <Style Selector="controls|Image">
+    <Style Selector=":is(controls|Image)">
         <Setter Property="Stretch" Value="Uniform" />
     </Style>
     

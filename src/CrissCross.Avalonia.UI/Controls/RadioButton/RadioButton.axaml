@@ -45,7 +45,7 @@
                                  Height="{StaticResource RadioButtonCheckGlyphSize}"
                                  Fill="{DynamicResource RadioButtonCheckGlyphFill}"
                                  Opacity="0"
-                                 Stroke="{DynamicResource CircleElevationBorderBrush}" />
+                                 Stroke="{DynamicResource ControlElevationBorderBrush}" />
                     </Grid>
                     <ContentPresenter Grid.Column="1"
                                       Margin="{TemplateBinding Padding}"
@@ -96,7 +96,7 @@
                                  Height="{StaticResource RadioButtonCheckGlyphSize}"
                                  Fill="{DynamicResource RadioButtonCheckGlyphFill}"
                                  Opacity="0"
-                                 Stroke="{DynamicResource CircleElevationBorderBrush}" />
+                                 Stroke="{DynamicResource ControlElevationBorderBrush}" />
                     </Grid>
                     <ContentPresenter Grid.Column="1"
                                       Margin="{TemplateBinding Padding}"

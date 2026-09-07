@@ -4,9 +4,9 @@
     
     <!-- CrissCross HexColorTextBox Style -->
     <Style Selector="controls|HexColorTextBox">
-        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource SystemAccentColor}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="8,6" />
@@ -31,7 +31,7 @@
                                 Height="24"
                                 Margin="6,0,0,0"
                                 CornerRadius="4"
-                                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                BorderBrush="{DynamicResource TextFillColorSecondaryBrush}"
                                 BorderThickness="1"
                                 ClipToBounds="True"
                                 VerticalAlignment="Center">
@@ -75,12 +75,12 @@
                         <Panel Grid.Column="1" Margin="8,0,8,0">
                             <TextBlock Name="PART_Watermark"
                                        Text="{TemplateBinding Watermark}"
-                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                        VerticalAlignment="Center"
                                        IsVisible="False" />
                             <TextPresenter Name="PART_TextPresenter"
                                            Text="{TemplateBinding Text, Mode=TwoWay}"
-                                           CaretBrush="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                           CaretBrush="{DynamicResource TextFillColorPrimaryBrush}"
                                            CaretIndex="{TemplateBinding CaretIndex}"
                                            SelectionStart="{TemplateBinding SelectionStart}"
                                            SelectionEnd="{TemplateBinding SelectionEnd}"
@@ -108,7 +108,7 @@
     
     <!-- Pointer over state -->
     <Style Selector="controls|HexColorTextBox:pointerover">
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
     
     <!-- Disabled state -->

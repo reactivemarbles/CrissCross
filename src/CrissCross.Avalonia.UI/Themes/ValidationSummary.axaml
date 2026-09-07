@@ -28,7 +28,7 @@
                     <StackPanel>
                         <TextBlock FontWeight="SemiBold"
                                    Text="{Binding SummaryState.SummaryText, RelativeSource={RelativeSource TemplatedParent}}" />
-                        <ItemsPresenter Margin="0,8,0,0" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" Margin="0,8,0,0" />
                     </StackPanel>
                 </Border>
             </ControlTemplate>

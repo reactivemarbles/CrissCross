@@ -35,6 +35,7 @@ public class App : Application
         AppLocator.CurrentMutable.RegisterConstant<BBCodeBlockPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<FeaturePlaygroundPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<WorkflowPageViewModel>(new());
+        AppLocator.CurrentMutable.RegisterConstant<IndustrialPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<ControlCatalogPageViewModel>(new());
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
 
@@ -54,6 +55,7 @@ public class App : Application
         AppLocator.CurrentMutable.Register<IViewFor<FeaturePlaygroundPageViewModel>>(static () =>
             new FeaturePlaygroundPageView());
         AppLocator.CurrentMutable.Register<IViewFor<WorkflowPageViewModel>>(static () => new WorkflowPageView());
+        AppLocator.CurrentMutable.Register<IViewFor<IndustrialPageViewModel>>(static () => new IndustrialPageView());
         AppLocator.CurrentMutable.Register<IViewFor<ControlCatalogPageViewModel>>(static () => new ControlCatalogPageView());
 
         // NOTE: SetupComplete is called in OnFrameworkInitializationCompleted() to ensure

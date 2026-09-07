@@ -56,31 +56,16 @@ public static class MessageBoxAsync
     /// <param name="buttons">The buttons value.</param>
     private static void ConfigureButtons(MessageBox messageBox, MessageBoxButton buttons)
     {
-        switch (buttons)
+        var (primaryButtonText, secondaryButtonText, closeButtonText) = buttons switch
         {
-            case MessageBoxButton.Primary:
-                {
-                    messageBox.PrimaryButtonText = "OK";
-                    messageBox.SecondaryButtonText = string.Empty;
-                    messageBox.CloseButtonText = string.Empty;
-                    break;
-                }
+            MessageBoxButton.Primary => ("OK", string.Empty, string.Empty),
+            MessageBoxButton.Secondary => (string.Empty, "Cancel", string.Empty),
+            MessageBoxButton.Close => (string.Empty, string.Empty, "Close"),
+            _ => (string.Empty, string.Empty, string.Empty),
+        };
 
-            case MessageBoxButton.Secondary:
-                {
-                    messageBox.PrimaryButtonText = string.Empty;
-                    messageBox.SecondaryButtonText = "Cancel";
-                    messageBox.CloseButtonText = string.Empty;
-                    break;
-                }
-
-            case MessageBoxButton.Close:
-                {
-                    messageBox.PrimaryButtonText = string.Empty;
-                    messageBox.SecondaryButtonText = string.Empty;
-                    messageBox.CloseButtonText = "Close";
-                    break;
-                }
-        }
+        messageBox.PrimaryButtonText = primaryButtonText;
+        messageBox.SecondaryButtonText = secondaryButtonText;
+        messageBox.CloseButtonText = closeButtonText;
     }
 }

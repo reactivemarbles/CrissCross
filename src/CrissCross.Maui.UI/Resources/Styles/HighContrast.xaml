@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    x:Class="CrissCross.Maui.UI.Resources.Styles.CrissCrossMauiHighContrastTheme"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <Color x:Key="CrissCrossAccentColor">#FFFFFF00</Color>
+    <Color x:Key="CrissCrossAccentTextColor">#FF000000</Color>
+    <Color x:Key="CrissCrossSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossSubtleSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossBorderColor">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossTextColor">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossMutedTextColor">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossOverlayColor">#99000000</Color>
+    <Color x:Key="CrissCrossAttentionColor">#FF00FFFF</Color>
+    <Color x:Key="CrissCrossAttentionSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossDangerColor">#FFFF00FF</Color>
+    <Color x:Key="CrissCrossDangerSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossSuccessColor">#FF00FF00</Color>
+    <Color x:Key="CrissCrossSuccessSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossCautionColor">#FFFFFF00</Color>
+    <Color x:Key="CrissCrossCautionSurfaceColor">#FF000000</Color>
+    <Color x:Key="CrissCrossNeutralColor">#FFFFFFFF</Color>
+    <Color x:Key="CrissCrossNeutralSurfaceColor">#FF000000</Color>
+</ResourceDictionary>

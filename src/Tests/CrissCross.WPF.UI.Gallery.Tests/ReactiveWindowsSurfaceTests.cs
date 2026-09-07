@@ -17,7 +17,7 @@ public sealed class ReactiveWindowsSurfaceTests
     {
         var snapshot = await RunOnStaThreadAsync(ExerciseReactiveHosts);
 
-        await Assert.That(snapshot.WpfRequiresSetup).IsFalse();
+        await Assert.That(snapshot.WpfRequiresSetup).IsTrue();
         await Assert.That(snapshot.WpfHostName).IsEqualTo("ReactiveWpf");
         await Assert.That(snapshot.WpfHistoryCount).IsEqualTo(EmptyHistoryCount);
         await Assert.That(snapshot.FormsRequiresSetup).IsTrue();

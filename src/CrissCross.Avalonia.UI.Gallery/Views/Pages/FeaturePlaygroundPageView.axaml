@@ -39,7 +39,9 @@
                         QueryState="{Binding SearchState}"
                         SearchCommand="{Binding SearchCommand}"
                         Text="{Binding SearchText}" />
-                    <controls:FilterBar ClearAllCommand="{Binding ClearSearchCommand}" QueryState="{Binding SearchState}" />
+                    <controls:FilterBar ClearAllCommand="{Binding ClearFiltersCommand}"
+                                        RemoveFilterCommand="{Binding RemoveFilterCommand}"
+                                        QueryState="{Binding SearchState}" />
                     <controls:DataPager
                         PageRequestCommand="{Binding PageRequestCommand}"
                         PaginationState="{Binding PaginationState}"

@@ -8,6 +8,7 @@ using CrissCross.Avalonia.UI.Controls;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Exercises navigation and snackbar service guard behavior without an application host.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaServiceCoverageTests
 {
     /// <summary>Verifies services report absent host controls through their documented guards.</summary>

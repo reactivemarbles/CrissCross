@@ -55,8 +55,18 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     /// <summary>Provides a caller-controlled clock for deterministic gallery diagnostics.</summary>
     private readonly TimeProvider _timeProvider;
 
+    /// <summary>Retains the user's active filters across searches and paging.</summary>
+    private readonly List<FilterToken> _activeFilters =
+    [
+        new("area", FilterOperator.Equals, "north", "Area: North"),
+        new("status", FilterOperator.NotEquals, "closed", "Status: Active"),
+    ];
+
     /// <summary>Tracks whether the import command is running.</summary>
     private ObservableAsPropertyHelper<bool>? _isOperationRunning;
+
+    /// <summary>Cancels the current import operation from the busy overlay.</summary>
+    private Action? _cancelImport;
 
     /// <summary>Provides the _searchText member.</summary>
     private string? _searchText = "pump alarm";
@@ -103,8 +113,11 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
         _themeState = CreateThemeState(_selectedTheme);
 
         RunImportCommand = ReactiveCommand.CreateFromTask(RunImportAsync);
+        CancelImportCommand = ReactiveCommand.Create(CancelImport);
         SearchCommand = ReactiveCommand.CreateFromTask<string>(SearchAsync);
         ClearSearchCommand = ReactiveCommand.Create(ClearSearch);
+        RemoveFilterCommand = ReactiveCommand.Create<FilterToken>(RemoveFilter);
+        ClearFiltersCommand = ReactiveCommand.Create(ClearFilters);
         PageRequestCommand = ReactiveCommand.Create<PageRequest>(ApplyPageRequest);
         RangeChangedCommand = ReactiveCommand.Create<DateTimeRange>(ApplyRange);
         SegmentChangedCommand = ReactiveCommand.Create<string>(ApplySegment);
@@ -115,11 +128,20 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     /// <summary>Gets the async command used by the command button and busy overlay demos.</summary>
     public ReactiveCommand<Unit, Unit> RunImportCommand { get; }
 
+    /// <summary>Gets the command that cancels the current import operation.</summary>
+    public ReactiveCommand<Unit, Unit> CancelImportCommand { get; }
+
     /// <summary>Gets the search submit command.</summary>
     public ReactiveCommand<string, Unit> SearchCommand { get; }
 
     /// <summary>Gets the search clear command.</summary>
     public ReactiveCommand<Unit, Unit> ClearSearchCommand { get; }
+
+    /// <summary>Gets the command that removes one active filter.</summary>
+    public ReactiveCommand<FilterToken, Unit> RemoveFilterCommand { get; }
+
+    /// <summary>Gets the command that clears removable filters while preserving the search text.</summary>
+    public ReactiveCommand<Unit, Unit> ClearFiltersCommand { get; }
 
     /// <summary>Gets the page request command used by DataPager.</summary>
     public ReactiveCommand<PageRequest, Unit> PageRequestCommand { get; }
@@ -271,22 +293,6 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
         base.Dispose(disposing);
     }
 
-    /// <summary>Provides the CreateSearchState member.</summary>
-    /// <param name="text">The text value.</param>
-    /// <param name="isSearching">The isSearching value.</param>
-    /// <returns>The result.</returns>
-    private static SearchQueryState CreateSearchState(string? text, bool isSearching) =>
-        new(
-            text,
-            debouncedText: text?.Trim(),
-            submittedText: text?.Trim(),
-            isSearching: isSearching,
-            resultCount: string.IsNullOrWhiteSpace(text) ? SampleTotalItemCount : FilteredResultCount,
-            filters:
-            [
-                new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
-                new FilterToken("status", FilterOperator.NotEquals, "closed", "Status: Active"),]);
-
     /// <summary>Provides the CreateRange member.</summary>
     /// <param name="now">The now value.</param>
     /// <returns>The result.</returns>
@@ -362,6 +368,19 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
             _ => ThemeChoice.Light,
         };
 
+    /// <summary>Provides the CreateSearchState member.</summary>
+    /// <param name="text">The text value.</param>
+    /// <param name="isSearching">The isSearching value.</param>
+    /// <returns>The result.</returns>
+    private SearchQueryState CreateSearchState(string? text, bool isSearching) =>
+        new(
+            text,
+            debouncedText: text?.Trim(),
+            submittedText: text?.Trim(),
+            isSearching: isSearching,
+            resultCount: string.IsNullOrWhiteSpace(text) ? SampleTotalItemCount : FilteredResultCount,
+            filters: _activeFilters.ToArray());
+
     /// <summary>Gets the lazily initialized command execution state.</summary>
     /// <returns>Whether the import command is executing.</returns>
     private bool GetIsOperationRunningValue()
@@ -378,22 +397,38 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     /// <returns>A task that represents the asynchronous operation.</returns>
     private async Task RunImportAsync(CancellationToken cancellationToken)
     {
+        using var importCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        _cancelImport = importCancellation.Cancel;
         CommandState = CommandButtonState.Executing;
         CommandProgress = InitialCommandProgress;
         CurrentOperation = new(
             "Loading deterministic sample data",
             "Simulates a cancellable import without network access.",
             CommandProgress,
-            ClearSearchCommand);
+            CancelImportCommand);
 
-        await Task.Delay(ImportDelayMilliseconds, cancellationToken).ConfigureAwait(true);
-
-        CommandProgress = CompletedCommandProgress;
-        CurrentOperation = null;
-        CommandState = CommandButtonState.Succeeded;
-        PaginationState = new(0, DefaultPageSize, SampleTotalItemCount);
-        SearchState = CreateSearchState(SearchText, false);
+        try
+        {
+            await Task.Delay(ImportDelayMilliseconds, importCancellation.Token).ConfigureAwait(true);
+            CommandProgress = CompletedCommandProgress;
+            CommandState = CommandButtonState.Succeeded;
+            PaginationState = new(0, DefaultPageSize, SampleTotalItemCount);
+            SearchState = CreateSearchState(SearchText, false);
+        }
+        catch (OperationCanceledException) when (importCancellation.IsCancellationRequested)
+        {
+            CommandProgress = null;
+            CommandState = CommandButtonState.Cancelled;
+        }
+        finally
+        {
+            CurrentOperation = null;
+            _cancelImport = null;
+        }
     }
+
+    /// <summary>Requests cancellation without changing the current query or filter state.</summary>
+    private void CancelImport() => _cancelImport?.Invoke();
 
     /// <summary>Provides the SearchAsync member.</summary>
     /// <param name="submittedText">The submittedText value.</param>
@@ -411,6 +446,22 @@ public sealed class FeaturePlaygroundPageViewModel : RxObject
     private void ClearSearch()
     {
         SearchText = string.Empty;
+        SearchState = CreateSearchState(SearchText, false);
+    }
+
+    /// <summary>Removes the requested token and republishes the immutable query state.</summary>
+    /// <param name="token">The requested filter token.</param>
+    private void RemoveFilter(FilterToken token)
+    {
+        ArgumentNullException.ThrowIfNull(token);
+        _ = _activeFilters.RemoveAll(candidate => candidate.IsRemovable && candidate.Key == token.Key);
+        SearchState = CreateSearchState(SearchText, false);
+    }
+
+    /// <summary>Clears removable filters while preserving the current query.</summary>
+    private void ClearFilters()
+    {
+        _ = _activeFilters.RemoveAll(static token => token.IsRemovable);
         SearchState = CreateSearchState(SearchText, false);
     }
 

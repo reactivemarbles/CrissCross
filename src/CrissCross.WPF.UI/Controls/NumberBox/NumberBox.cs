@@ -213,43 +213,7 @@ public partial class NumberBox : TextBox
             return;
         }
 
-        switch (e?.Key)
-        {
-            case Key.PageUp:
-            {
-                StepValue(LargeChange);
-                break;
-            }
-
-            case Key.PageDown:
-            {
-                StepValue(-LargeChange);
-                break;
-            }
-
-            case Key.Up:
-            {
-                StepValue(SmallChange);
-                break;
-            }
-
-            case Key.Down:
-            {
-                StepValue(-SmallChange);
-                break;
-            }
-
-            case Key.Enter:
-            {
-                if (TextWrapping != TextWrapping.Wrap)
-                {
-                    ValidateInput();
-                    MoveCaretToTextEnd();
-                }
-
-                break;
-            }
-        }
+        _ = HandleKeyUp(e?.Key);
     }
 
     /// <inheritdoc />
@@ -261,28 +225,17 @@ public partial class NumberBox : TextBox
             "CrissCross.WPF.UI.NumberBox");
 #endif
 
-        switch (parameter)
+        if (parameter is "clear")
         {
-            case "clear":
-            {
-                OnClearButtonClick();
-
-                break;
-            }
-
-            case "increment":
-            {
-                StepValue(SmallChange);
-
-                break;
-            }
-
-            case "decrement":
-            {
-                StepValue(-SmallChange);
-
-                break;
-            }
+            OnClearButtonClick();
+        }
+        else if (parameter is "increment")
+        {
+            StepValue(SmallChange);
+        }
+        else if (parameter is "decrement")
+        {
+            StepValue(-SmallChange);
         }
 
         // NOTE: Focus looks and works well with mouse and Clear button. But it sucks for spin buttons
@@ -384,6 +337,43 @@ public partial class NumberBox : TextBox
         throw new ArgumentException(
             $"{nameof(NumberFormatter)} must implement {typeof(INumberParser)}",
             nameof(NumberFormatter));
+    }
+
+    /// <summary>Handles keyboard shortcuts for value stepping and validation.</summary>
+    /// <param name="key">The released key.</param>
+    /// <returns><see langword="true"/> when the key was handled.</returns>
+    private bool HandleKeyUp(Key? key) =>
+        key switch
+        {
+            Key.PageUp => StepValueAndReturnTrue(LargeChange),
+            Key.PageDown => StepValueAndReturnTrue(-LargeChange),
+            Key.Up => StepValueAndReturnTrue(SmallChange),
+            Key.Down => StepValueAndReturnTrue(-SmallChange),
+            Key.Enter => ValidateInputAndReturnHandled(),
+            _ => false,
+        };
+
+    /// <summary>Steps the value and reports the key as handled.</summary>
+    /// <param name="change">The value change.</param>
+    /// <returns><see langword="true"/>.</returns>
+    private bool StepValueAndReturnTrue(double change)
+    {
+        StepValue(change);
+        return true;
+    }
+
+    /// <summary>Validates editable text when enter commits input.</summary>
+    /// <returns><see langword="true"/> when enter committed input.</returns>
+    private bool ValidateInputAndReturnHandled()
+    {
+        if (TextWrapping == TextWrapping.Wrap)
+        {
+            return false;
+        }
+
+        ValidateInput();
+        MoveCaretToTextEnd();
+        return true;
     }
 
     /// <summary>Provides the StepValue member.</summary>

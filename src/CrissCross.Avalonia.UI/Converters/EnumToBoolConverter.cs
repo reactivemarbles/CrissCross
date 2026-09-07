@@ -19,7 +19,8 @@ public class EnumToBoolConverter : IValueConverter
     public static EnumToBoolConverter Instance { get; } = new();
 
     /// <inheritdoc/>
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is null || parameter is null ? false : value.Equals(parameter);
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        value is not null && parameter is not null && value.Equals(parameter);
 
     /// <inheritdoc/>
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => value is true && parameter is not null ? parameter : BindingOperations.DoNothing;

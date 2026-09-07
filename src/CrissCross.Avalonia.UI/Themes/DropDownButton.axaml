@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross DropDownButton Style -->
-    <Style Selector="controls|DropDownButton">
+    <Style Selector=":is(controls|DropDownButton)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type DropDownButton}}" />
         <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
@@ -15,20 +16,20 @@
     </Style>
     
     <!-- PointerOver State -->
-    <Style Selector="controls|DropDownButton:pointerover">
+    <Style Selector=":is(controls|DropDownButton):pointerover">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPointerOver}" />
     </Style>
     
     <!-- Pressed State -->
-    <Style Selector="controls|DropDownButton:pressed">
+    <Style Selector=":is(controls|DropDownButton):pressed">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressed}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrushPressed}" />
     </Style>
     
     <!-- Disabled State -->
-    <Style Selector="controls|DropDownButton:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+    <Style Selector=":is(controls|DropDownButton):disabled">
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
     </Style>
     
 </Styles>

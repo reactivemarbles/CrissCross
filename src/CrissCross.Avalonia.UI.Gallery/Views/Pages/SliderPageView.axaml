@@ -47,7 +47,7 @@
                     <controls:TextBlock Text="Sliders can have custom minimum and maximum values." Opacity="0.7" />
                     <controls:StackPanel Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
                         <controls:StackPanel>
-                            <controls:TextBlock Text="Temperature (0°C to 40°C)" FontSize="12" Margin="0,0,0,4" />
+                            <controls:TextBlock Text="Temperature (0Â°C to 40Â°C)" FontSize="12" Margin="0,0,0,4" />
                             <controls:Slider Value="22" Minimum="0" Maximum="40" />
                         </controls:StackPanel>
                         <controls:StackPanel>

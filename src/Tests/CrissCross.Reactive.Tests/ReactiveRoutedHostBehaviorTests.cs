@@ -478,10 +478,10 @@ public sealed class ReactiveRoutedHostBehaviorTests
         await Assert.That(() => view.WhenNavigating(null!)).Throws<ArgumentNullException>();
     }
 
-    /// <summary>Verifies repeat registration reuses setup infrastructure while replacing the active host.</summary>
+    /// <summary>Verifies registration reuses the same host lifetime and replaces resources owned by a different host.</summary>
     /// <returns>A task representing the asynchronous test.</returns>
     [Test]
-    public async Task RepeatHostRegistration_ReusesSetupAndCleanupInfrastructure()
+    public async Task HostRegistration_ReusesSameHostAndDisposesReplacedHostLifetime()
     {
         const string hostName = "reuse-reactive-host";
         using var owner = new NavigationOwner(hostName);
@@ -492,12 +492,20 @@ public sealed class ReactiveRoutedHostBehaviorTests
         var originalSetupSubject = ViewModelRoutedViewHostMixins.WhenSetupSubjects[hostName];
         var originalDisposable = ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName];
         var originalResultSignal = ViewModelRoutedViewHostMixins.ResultNavigating[hostName];
+        owner.SetMainNavigationHost(firstHost);
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.WhenSetupSubjects[hostName], originalSetupSubject)).IsTrue();
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName], originalDisposable)).IsTrue();
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.ResultNavigating[hostName], originalResultSignal)).IsTrue();
+
         owner.SetMainNavigationHost(replacementHost);
 
         await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[hostName]).IsEqualTo(replacementHost);
-        await Assert.That(ViewModelRoutedViewHostMixins.WhenSetupSubjects[hostName]).IsEqualTo(originalSetupSubject);
-        await Assert.That(ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName]).IsEqualTo(originalDisposable);
-        await Assert.That(ViewModelRoutedViewHostMixins.ResultNavigating[hostName]).IsEqualTo(originalResultSignal);
+        await Assert.That(originalSetupSubject.IsDisposed).IsTrue();
+        await Assert.That(originalDisposable.IsDisposed).IsTrue();
+        await Assert.That(originalResultSignal.IsDisposed).IsTrue();
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.WhenSetupSubjects[hostName], originalSetupSubject)).IsFalse();
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.CurrentViewDisposable[hostName], originalDisposable)).IsFalse();
+        await Assert.That(ReferenceEquals(ViewModelRoutedViewHostMixins.ResultNavigating[hostName], originalResultSignal)).IsFalse();
     }
 
     /// <summary>Verifies resolved navigation reports a missing navigator after all locator fallbacks are removed.</summary>
@@ -755,10 +763,10 @@ public sealed class ReactiveRoutedHostBehaviorTests
         await Assert.That(backStates).Contains(true);
     }
 
-    /// <summary>Verifies a renamed host without a matching setup signal does not publish a stale setup event.</summary>
+    /// <summary>Verifies a renamed visual host retains setup notifications through its registered logical name.</summary>
     /// <returns>A task representing the asynchronous test.</returns>
     [Test]
-    public async Task PrimarySetup_RenamedHostWithoutSetupSignalStaysSilent()
+    public async Task PrimarySetup_RenamedVisualHostRetainsLogicalSetupSignal()
     {
         const string initialHostName = "primary-setup-initial-host";
         const string renamedHostName = "primary-setup-renamed-host";
@@ -771,7 +779,9 @@ public sealed class ReactiveRoutedHostBehaviorTests
         using var subscription = owner.WhenSetup().Subscribe(setupStates.Add);
         AppLocator.CurrentMutable.SetupComplete();
 
-        await Assert.That(setupStates).IsEmpty();
+        await Assert.That(setupStates).Contains(true);
+        await Assert.That(host.Name).IsEqualTo(renamedHostName);
+        await Assert.That(ViewModelRoutedViewHostMixins.NavigationHost[initialHostName]).IsSameReferenceAs(host);
     }
 
     /// <summary>Registers the standard resolved view-model/view pair with explicitly typed factories.</summary>

@@ -11,8 +11,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a button with a drop-down list.</summary>
-public class DropDownButton : global::Avalonia.Controls.DropDownButton
-{
-    /// <inheritdoc/>
-    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.DropDownButton);
-}
+public class DropDownButton : global::Avalonia.Controls.DropDownButton;

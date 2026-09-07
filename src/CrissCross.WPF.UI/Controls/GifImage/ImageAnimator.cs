@@ -96,7 +96,7 @@ internal sealed class ImageAnimator : Animator
     internal static Task<ImageAnimator> CreateAsync(
         Stream sourceStream,
         RepeatBehavior repeatBehavior,
-        System.Windows.Controls.Image image) => CreateAsync(sourceStream, repeatBehavior, image);
+        System.Windows.Controls.Image image) => CreateAsync(sourceStream, repeatBehavior, image, false);
 
     /// <summary>Provides the CreateAsync member.</summary>
     /// <param name="sourceStream">The sourceStream value.</param>

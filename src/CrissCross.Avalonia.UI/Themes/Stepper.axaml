@@ -32,23 +32,23 @@
                     <TextBlock Margin="0,0,0,8"
                                Opacity="0.72"
                                Text="{Binding State.ProgressText, RelativeSource={RelativeSource TemplatedParent}}" />
-                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                         <Button MinWidth="72"
                                 Margin="0,0,8,0"
                                 Command="{Binding PreviousStepCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="Previous"
-                                IsEnabled="{Binding State.CanGoPrevious, RelativeSource={RelativeSource TemplatedParent}}" />
+                                IsEnabled="{Binding State.CanGoPrevious, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}" />
                         <Button MinWidth="72"
                                 Margin="0,0,8,0"
                                 Command="{Binding NextStepCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="Next"
-                                IsEnabled="{Binding State.CanGoNext, RelativeSource={RelativeSource TemplatedParent}}" />
+                                IsEnabled="{Binding State.CanGoNext, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}" />
                         <Button MinWidth="72"
                                 Margin="0,0,8,0"
                                 Command="{Binding FinishCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="Finish"
-                                IsEnabled="{Binding State.CanFinish, RelativeSource={RelativeSource TemplatedParent}}" />
+                                IsEnabled="{Binding State.CanFinish, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}" />
                         <Button MinWidth="72"
                                 Command="{Binding CancelCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="Cancel" />

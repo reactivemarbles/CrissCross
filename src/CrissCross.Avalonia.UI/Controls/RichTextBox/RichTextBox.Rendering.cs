@@ -311,7 +311,7 @@ public partial class RichTextBox
 
         using var reader = new StreamReader(readStream, Encoding.UTF8, true);
         var text = await reader.ReadToEndAsync().ConfigureAwait(true);
-        return Encoding.UTF8.GetByteCount(text) > MaxDroppedTextFileBytes ? false : TryDropText(text);
+        return Encoding.UTF8.GetByteCount(text) <= MaxDroppedTextFileBytes && TryDropText(text);
     }
 
     /// <summary>Provides the MoveSelectionToDropPoint member.</summary>

@@ -9,6 +9,7 @@ using CrissCross.Avalonia.UI.Controls;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Tests the Avalonia AppBarButton public property surface.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public class AppBarButtonTests
 {
     /// <summary>The default circular icon surface diameter.</summary>

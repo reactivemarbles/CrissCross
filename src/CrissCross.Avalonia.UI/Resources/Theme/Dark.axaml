@@ -1,6 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <x:Double x:Key="DisabledTextControlOpacity">0.5</x:Double>
+
     <!-- Application Background -->
     <Color x:Key="ApplicationBackgroundColor">#FF202020</Color>
     <SolidColorBrush x:Key="ApplicationBackgroundBrush" Color="{StaticResource ApplicationBackgroundColor}" />
@@ -253,6 +255,8 @@
     <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource TextFillColorPrimary}" />
     <SolidColorBrush x:Key="ButtonForegroundPressed" Color="{StaticResource TextFillColorSecondary}" />
     <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="{StaticResource TextFillColorDisabled}" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ControlStrokeColorDefault}" />
+    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource ControlStrokeColorSecondary}" />
     <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource ControlStrokeColorDefault}" />
     <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="{StaticResource ControlStrokeColorDefault}" />
 

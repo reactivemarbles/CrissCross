@@ -9,10 +9,7 @@ namespace CrissCross.WPF.UI.TaskBar;
 #endif
 
 /// <summary>Specifies the state of the progress indicator in the Windows task bar.</summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage(
-    "Design",
-    "CA1027:Mark enums with FlagsAttribute",
-    Justification = "Not Required.")]
+[Flags]
 public enum TaskBarProgressState
 {
     /// <summary>No progress indicator is displayed in the task bar area.</summary>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>$(CrissCrossAvaloniaTargetFrameworks);</TargetFrameworks>
@@ -22,7 +22,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnablePackageValidation>true</EnablePackageValidation>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
-    <NoWarn>$(NoWarn);CA1812</NoWarn>
   </PropertyGroup>
 
   <!-- Release specific optimizations -->

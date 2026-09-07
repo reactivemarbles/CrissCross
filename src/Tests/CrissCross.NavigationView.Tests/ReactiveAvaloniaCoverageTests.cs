@@ -13,6 +13,7 @@ using ReactiveRichTextBox = CrissCross.Reactive.Avalonia.UI.Controls.RichTextBox
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Exercises the reactive Avalonia UI assembly's constructible public surface.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class ReactiveAvaloniaCoverageTests
 {
     /// <summary>The offset at which the word selected for editing begins.</summary>
@@ -24,7 +25,7 @@ public sealed class ReactiveAvaloniaCoverageTests
     /// <summary>Verifies every public parameterless reactive styled element can be constructed.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
-    public async Task ReactivePublicParameterlessStyledElements_WhenConstructed_ProduceStyledElements()
+    public Task ReactivePublicParameterlessStyledElements_WhenConstructed_ProduceStyledElements() => AvaloniaTestUiThread.RunAsync(static async () =>
     {
         var assembly = typeof(ReactiveAppBar).Assembly;
         var constructedCount = 0;
@@ -32,7 +33,7 @@ public sealed class ReactiveAvaloniaCoverageTests
 
         foreach (var type in assembly.GetExportedTypes())
         {
-            if (type.IsAbstract || !typeof(StyledElement).IsAssignableFrom(type) || type.GetConstructor(Type.EmptyTypes) is null)
+            if (type.IsAbstract || type.ContainsGenericParameters || !typeof(StyledElement).IsAssignableFrom(type) || type.GetConstructor(Type.EmptyTypes) is null)
             {
                 continue;
             }
@@ -56,7 +57,7 @@ public sealed class ReactiveAvaloniaCoverageTests
 
         await Assert.That(constructedCount).IsGreaterThan(0);
         await Assert.That(roundTrippedPropertyCount).IsGreaterThan(0);
-    }
+    });
 
     /// <summary>Verifies the reactive converter variant keeps the same boolean semantics.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>

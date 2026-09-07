@@ -1,0 +1,44 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
+    <Style Selector="controls|ProcessValueIndicator">
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="MinWidth" Value="220" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontSize="14" FontWeight="Bold" Text="{TemplateBinding Label}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock FontSize="22" FontWeight="Bold" Text="{TemplateBinding DisplayText}" TextTrimming="CharacterEllipsis" />
+                        <ProgressBar x:Name="PART_RangeBar" Height="8" Minimum="0" Maximum="100"
+                                     Background="{DynamicResource SystemFillColorNeutralBackgroundBrush}"
+                                     Foreground="{DynamicResource SystemFillColorSuccessBrush}" Value="{TemplateBinding Percentage}" />
+                        <TextBlock x:Name="PART_StatusText" FontSize="14" Foreground="{DynamicResource SystemFillColorSuccessBrush}"
+                                   Text="{TemplateBinding StatusText}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[IsAlarm=True] /template/ ProgressBar#PART_RangeBar">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[IsAlarm=True] /template/ TextBlock#PART_StatusText">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[Status=BadQuality] /template/ ProgressBar#PART_RangeBar">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[Status=BadQuality] /template/ TextBlock#PART_StatusText">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCautionBrush}" />
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[Status=InvalidConfiguration] /template/ ProgressBar#PART_RangeBar">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorNeutralBrush}" />
+    </Style>
+    <Style Selector="controls|ProcessValueIndicator[Status=InvalidConfiguration] /template/ TextBlock#PART_StatusText">
+        <Setter Property="Foreground" Value="{DynamicResource SystemFillColorNeutralBrush}" />
+    </Style>
+</Styles>

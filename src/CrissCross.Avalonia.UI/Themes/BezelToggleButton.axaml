@@ -4,9 +4,9 @@
     
     <!-- CrissCross BezelToggleButton Style - A toggle button with a beveled/raised 3D appearance -->
     <Style Selector="controls|BezelToggleButton">
-        <Setter Property="Background" Value="{DynamicResource ToggleButtonBackground}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToggleButtonForeground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToggleButtonBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="16,8" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />

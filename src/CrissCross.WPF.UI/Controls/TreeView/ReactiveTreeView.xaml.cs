@@ -36,7 +36,7 @@ public partial class ReactiveTreeView
 
     /// <summary>Connects the tree items to the active view model.</summary>
     /// <param name="disposables">The activation disposables.</param>
-    private void OnActivated(CompositeDisposable disposables) =>
+    private void OnActivated(ActivationDisposable disposables) =>
         this.WhenAnyValue(v => v.ViewModel)
             .Where(static vm => vm is not null)
             .Select(static vm => vm!.WhenAnyValue(x => x.Children))

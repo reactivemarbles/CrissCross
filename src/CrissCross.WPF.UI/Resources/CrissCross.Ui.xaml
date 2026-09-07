@@ -125,6 +125,7 @@
     <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/CheckBoxModern/CheckBoxModern.xaml" />
     <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Alarms/Alarms.xaml" />
     <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/AlarmBanner/AlarmBanner.xaml" />
+    <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/ProcessValueIndicator/ProcessValueIndicator.xaml" />
     <ResourceDictionary Source="pack://application:,,,/CrissCross.WPF.UI;component/Controls/Gauges/CircularGauge.xaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

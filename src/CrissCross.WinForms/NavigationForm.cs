@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WinForms;
@@ -16,6 +17,9 @@ namespace CrissCross.WinForms;
 /// <seealso cref="IUseNavigation" />
 public partial class NavigationForm : Form, ISetNavigation, IUseNavigation
 {
+    /// <summary>Stores the navigation Host Name value.</summary>
+    private string? _navigationHostName;
+
     /// <summary>Stores the navigation Frame Dock value.</summary>
     private DockStyle _navigationFrameDock = DockStyle.Fill;
 
@@ -69,18 +73,47 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation
     /// </value>
     public IObservable<bool> CanNavigateBack => NavigationFrame.CanNavigateBackObservable.Select(static x => x == true);
 
+    /// <summary>Gets or sets the stable routed navigation host name.</summary>
+    [Category("CrissCross")]
+    [Description("The logical navigation host name.")]
+    [Bindable(true)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    [Localizable(true)]
+    public string? HostName
+    {
+        get => _navigationHostName ?? Name;
+        set
+        {
+            _navigationHostName = string.IsNullOrWhiteSpace(value) ? null : value;
+            NavigationFrame.HostName = ResolveNavigationHostName();
+        }
+    }
+
     /// <summary>Gets the navigation frame.</summary>
     /// <value>
     /// The navigation frame.
     /// </value>
     public ViewModelRoutedViewHost NavigationFrame { get; } = new();
 
+    /// <inheritdoc/>
+    string? ISetNavigation.Name => HostName;
+
+    /// <inheritdoc/>
+    string? IUseNavigation.Name => HostName;
+
     /// <summary>Raises the <see cref="E:System.Windows.Forms.Form.Load" /> event.</summary>
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnLoad(EventArgs e)
     {
         SuspendLayout();
-        NavigationFrame.HostName = Name;
+        var hostName = ResolveNavigationHostName();
+        _navigationHostName = hostName;
+        NavigationFrame.HostName = hostName;
+        if (string.IsNullOrWhiteSpace(NavigationFrame.Name))
+        {
+            NavigationFrame.Name = hostName;
+        }
+
         if (!DesignMode)
         {
             this.SetMainNavigationHost(NavigationFrame);
@@ -91,5 +124,19 @@ public partial class NavigationForm : Form, ISetNavigation, IUseNavigation
         Controls.Add(NavigationFrame);
         ResumeLayout();
         base.OnLoad(e);
+    }
+
+    /// <summary>Runs the resolve Navigation Host Name operation.</summary>
+    /// <returns>The resolved host name.</returns>
+    private string ResolveNavigationHostName()
+    {
+        if (!string.IsNullOrWhiteSpace(_navigationHostName))
+        {
+            return _navigationHostName!;
+        }
+
+        return !string.IsNullOrWhiteSpace(Name)
+            ? Name
+            : $"__crisscross_navhost_{nameof(NavigationForm)}_{RuntimeHelpers.GetHashCode(this):X8}";
     }
 }

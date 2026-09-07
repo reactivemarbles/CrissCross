@@ -31,30 +31,17 @@ public sealed class ValidationSummaryState
             foreach (var message in messages)
             {
                 messageList.Add(message);
-                switch (message.Severity)
+                if (message.Severity == ValidationSeverity.Error)
                 {
-                    case ValidationSeverity.Error:
-                        {
-                            errorCount++;
-                            break;
-                        }
-
-                    case ValidationSeverity.Warning:
-                        {
-                            warningCount++;
-                            break;
-                        }
-
-                    case ValidationSeverity.Pending:
-                        {
-                            pendingCount++;
-                            break;
-                        }
-
-                    default:
-                        {
-                            break;
-                        }
+                    errorCount++;
+                }
+                else if (message.Severity == ValidationSeverity.Warning)
+                {
+                    warningCount++;
+                }
+                else if (message.Severity == ValidationSeverity.Pending)
+                {
+                    pendingCount++;
                 }
             }
         }

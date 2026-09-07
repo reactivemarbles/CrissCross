@@ -13,6 +13,9 @@ public class MainViewModel : RxObject
     /// <summary>Initializes a new instance of the <see cref="MainViewModel"/> class.</summary>
     public MainViewModel() => DisplayName = "Gallery";
 
+    /// <summary>Gets the logical window host targeted by this gallery's navigation commands.</summary>
+    public string? NavigationHostName { get; init; }
+
     /// <summary>Gets the goto home command.</summary>
     public ICommand GotoHome => field ??= CreateNavigationCommand<HomePageViewModel>();
 
@@ -52,6 +55,9 @@ public class MainViewModel : RxObject
     /// <summary>Gets the workflow and feedback gallery navigation command.</summary>
     public ICommand GotoWorkflow => field ??= CreateNavigationCommand<WorkflowPageViewModel>();
 
+    /// <summary>Gets the industrial controls gallery navigation command.</summary>
+    public ICommand GotoIndustrial => field ??= CreateNavigationCommand<IndustrialPageViewModel>();
+
     /// <summary>Gets the control and host coverage catalog navigation command.</summary>
     public ICommand GotoControlCatalog => field ??= CreateNavigationCommand<ControlCatalogPageViewModel>();
 
@@ -60,5 +66,5 @@ public class MainViewModel : RxObject
     /// <returns>The navigation command.</returns>
     private ReactiveCommand<Unit, Unit> CreateNavigationCommand<TViewModel>()
         where TViewModel : class, IRxObject =>
-        ReactiveCommand.Create(() => this.NavigateToView(new NavigationKeyRequest<TViewModel>()));
+        ReactiveCommand.Create(() => this.NavigateToView(new NavigationKeyRequest<TViewModel> { Options = new() { HostName = NavigationHostName } }));
 }

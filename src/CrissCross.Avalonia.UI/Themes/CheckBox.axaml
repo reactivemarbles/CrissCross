@@ -4,9 +4,9 @@
     
     <!-- CrissCross CheckBox Style -->
     <Style Selector="controls|CheckBox">
-        <Setter Property="Foreground" Value="{DynamicResource ThemeForegroundBrush}" />
-        <Setter Property="Background" Value="{DynamicResource ThemeBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderMidBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ControlAltFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}" />
         <Setter Property="Padding" Value="8,0,0,0" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -35,7 +35,7 @@
                                       Height="12"
                                       Data="M1.5,5.5 L4.5,8.5 L10.5,2.5"
                                       Fill="Transparent"
-                                      Stroke="White"
+                                      Stroke="{DynamicResource CheckBoxCheckGlyphForeground}"
                                       StrokeThickness="2"
                                       Stretch="Uniform"
                                       HorizontalAlignment="Center"
@@ -45,7 +45,7 @@
                                 <Rectangle Name="IndeterminateMark"
                                            Width="8"
                                            Height="8"
-                                           Fill="White"
+                                           Fill="{DynamicResource CheckBoxCheckGlyphForeground}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
                                            IsVisible="False" />
@@ -58,22 +58,17 @@
                                           Margin="{TemplateBinding Padding}"
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          TextElement.Foreground="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
     </Style>
     
-    <!-- Set foreground for content text -->
-    <Style Selector="controls|CheckBox /template/ ContentPresenter#ContentPresenter">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
-    </Style>
-    
     <!-- Unchecked state -->
     <Style Selector="controls|CheckBox:unchecked /template/ Border#CheckBorder">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}" />
     </Style>
     
     <!-- Checked State -->
@@ -108,7 +103,8 @@
     
     <!-- Disabled State -->
     <Style Selector="controls|CheckBox:disabled">
-        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Opacity" Value="{DynamicResource DisabledTextControlOpacity}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
     </Style>
     
 </Styles>

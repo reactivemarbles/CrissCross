@@ -76,7 +76,7 @@
         </Setter>
         
         <!-- Default styling -->
-        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackground}" />
+        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOff}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ToggleSwitchStrokeOff}" />
         <Setter Property="Foreground" Value="{DynamicResource ToggleSwitchContentForeground}" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -108,12 +108,12 @@
     
     <!-- PointerOver state (unchecked) -->
     <Style Selector="controls|ToggleSwitch:pointerover:not(:checked) /template/ Border#SwitchAreaGrid">
-        <Setter Property="Background" Value="{DynamicResource ToggleSwitchContainerBackgroundPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource ControlAltFillColorTertiaryBrush}" />
     </Style>
     
     <!-- PointerOver state (checked) -->
     <Style Selector="controls|ToggleSwitch:pointerover:checked /template/ Border#SwitchAreaGrid">
-        <Setter Property="Background" Value="{DynamicResource ToggleSwitchFillOnPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
     </Style>
     
 </Styles>

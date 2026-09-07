@@ -31,5 +31,6 @@
     <Compile Include="..\CrissCross.Tests\NavigationJournalTests.cs" Link="Shared\NavigationJournalTests.cs" />
     <Compile Include="..\CrissCross.Tests\SemanticThemePaletteTests.cs" Link="Shared\SemanticThemePaletteTests.cs" />
     <Compile Include="..\CrissCross.Tests\StateModelEdgeCaseTests.cs" Link="Shared\StateModelEdgeCaseTests.cs" />
+    <Compile Include="..\CrissCross.Tests\ProcessValueStateTests.cs" Link="Shared\ProcessValueStateTests.cs" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ using AvaloniaNavigationUserControl = CrissCross.Avalonia.NavigationUserControl;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Regression tests for Avalonia navigation host setup.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public class AvaloniaNavigationUserControlRegressionTests
 {
     /// <summary>The configured navigation host name.</summary>

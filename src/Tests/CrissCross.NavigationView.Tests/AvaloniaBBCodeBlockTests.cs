@@ -14,6 +14,7 @@ using AvaloniaButton = Avalonia.Controls.Button;
 namespace CrissCross.NavigationView.Tests;
 
 /// <summary>Tests the Avalonia BBCodeBlock parser, renderer, interaction, and theme integration.</summary>
+[TUnit.Core.Executors.TestExecutor<AvaloniaUiTestExecutor>]
 public sealed class AvaloniaBBCodeBlockTests
 {
     /// <summary>The expected number of parsed document children.</summary>

@@ -34,11 +34,11 @@
                         <Button MinWidth="96"
                                 Command="{Binding Model.PrimaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{Binding Model.PrimaryActionText, RelativeSource={RelativeSource TemplatedParent}}"
-                                IsVisible="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}}" />
+                                IsVisible="{Binding Model.HasPrimaryAction, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}" />
                         <Button MinWidth="96"
                                 Command="{Binding Model.SecondaryActionCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{Binding Model.SecondaryActionText, RelativeSource={RelativeSource TemplatedParent}}"
-                                IsVisible="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}}" />
+                                IsVisible="{Binding Model.HasSecondaryAction, RelativeSource={RelativeSource TemplatedParent}, FallbackValue=False, TargetNullValue=False}" />
                     </StackPanel>
                 </StackPanel>
             </ControlTemplate>

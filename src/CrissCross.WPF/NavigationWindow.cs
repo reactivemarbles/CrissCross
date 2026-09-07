@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using ReactiveUI;
 
@@ -45,6 +46,9 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
         typeof(NavigationWindow),
         new(TransitionType.Fade));
 
+    /// <summary>Stores the navigation Host Name value.</summary>
+    private string? _navigationHostName;
+
     /// <summary>Initializes a new instance of the <see cref="NavigationWindow"/> class.</summary>
     public NavigationWindow() => DefaultStyleKey = typeof(NavigationWindow);
 
@@ -53,6 +57,22 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     /// The can navigate back.
     /// </value>
     public IObservable<bool?> CanNavigateBack => NavigationFrame.CanNavigateBackObservable;
+
+    /// <summary>Gets or sets the stable routed navigation host name.</summary>
+    public string? HostName
+    {
+        get => _navigationHostName ?? Name;
+        set
+        {
+            _navigationHostName = string.IsNullOrWhiteSpace(value) ? null : value;
+            if (NavigationFrame is null)
+            {
+                return;
+            }
+
+            ConfigureNavigationHost(NavigationFrame);
+        }
+    }
 
     /// <summary>Gets or sets a value indicating whether [navigate back is enabled].</summary>
     /// <value>
@@ -85,6 +105,12 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
     }
 
     /// <inheritdoc/>
+    string? ISetNavigation.Name => HostName;
+
+    /// <inheritdoc/>
+    string? IUseNavigation.Name => HostName;
+
+    /// <inheritdoc/>
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -93,7 +119,43 @@ public class NavigationWindow : Window, ISetNavigation, IUseNavigation, IActivat
             ?? throw new InvalidOperationException(
                 $"{$"{nameof(NavigationFrame)} as a {nameof(ViewModelRoutedViewHost)} "}is missing from the Style template.");
 
-        NavigationFrame.HostName = Name;
-        this.SetMainNavigationHost(NavigationFrame);
+        ConfigureNavigationHost(NavigationFrame);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnClosed(EventArgs e)
+    {
+        NavigationFrame?.Dispose();
+        base.OnClosed(e);
+    }
+
+    /// <summary>Runs the configure Navigation Host operation.</summary>
+    /// <param name="host">The navigation host.</param>
+    private void ConfigureNavigationHost(ViewModelRoutedViewHost host)
+    {
+        var hostName = ResolveNavigationHostName();
+        _navigationHostName = hostName;
+        host.HostName = hostName;
+
+        if (string.IsNullOrWhiteSpace(host.Name))
+        {
+            host.Name = hostName;
+        }
+
+        this.SetMainNavigationHost(host);
+    }
+
+    /// <summary>Runs the resolve Navigation Host Name operation.</summary>
+    /// <returns>The resolved host name.</returns>
+    private string ResolveNavigationHostName()
+    {
+        if (!string.IsNullOrWhiteSpace(_navigationHostName))
+        {
+            return _navigationHostName!;
+        }
+
+        return !string.IsNullOrWhiteSpace(Name)
+            ? Name
+            : $"__crisscross_navhost_{nameof(NavigationWindow)}_{RuntimeHelpers.GetHashCode(this):X8}";
     }
 }

@@ -11,8 +11,4 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Represents a text control that makes suggestions to users as they enter text.</summary>
-public class AutoSuggestBox : global::Avalonia.Controls.AutoCompleteBox
-{
-    /// <inheritdoc/>
-    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.AutoCompleteBox);
-}
+public class AutoSuggestBox : global::Avalonia.Controls.AutoCompleteBox;

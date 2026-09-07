@@ -66,6 +66,7 @@
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressBar.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProgressRing.axaml" />
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/CircularGauge.axaml" />
+    <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/ProcessValueIndicator.axaml" />
 
     <!-- Rating Controls -->
     <StyleInclude Source="avares://CrissCross.Avalonia.UI/Themes/RatingControl.axaml" />

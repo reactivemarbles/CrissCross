@@ -34,7 +34,7 @@
     </Style>
 
     <Style Selector="controls|SegmentedControl > ListBoxItem:selected">
-        <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
     </Style>
 

@@ -164,43 +164,15 @@ public class TitleBarButton : Button
     {
         returnIntPtr = IntPtr.Zero;
 
-        switch (msg)
+        return msg switch
         {
-            case User32.WM.NCHITTEST:
-            {
-                if (this.IsMouseOverElement(messageParameter))
-                {
-                    Hover();
-                    returnIntPtr = (IntPtr)_returnValue;
-                    return true;
-                }
-
-                RemoveHover();
-                return false;
-            }
-
-            case User32.WM.NCMOUSELEAVE: // Mouse leaves the window
-            {
-                RemoveHover();
-                return false;
-            }
-
-            case User32.WM.NCLBUTTONDOWN when this.IsMouseOverElement(messageParameter): // Left button clicked down
-            {
-                _isClickedDown = true;
-                return true;
-            }
-
-            // Left button clicked up.
-            case User32.WM.NCLBUTTONUP when _isClickedDown && this.IsMouseOverElement(messageParameter):
-            {
-                InvokeClick();
-                return true;
-            }
-
-            default:
-                return false;
-        }
+            User32.WM.NCHITTEST when this.IsMouseOverElement(messageParameter) =>
+                HoverAndReturnHitTest(out returnIntPtr),
+            User32.WM.NCHITTEST or User32.WM.NCMOUSELEAVE => RemoveHoverAndReturnFalse(),
+            User32.WM.NCLBUTTONDOWN when this.IsMouseOverElement(messageParameter) => SetClickedDownAndReturnTrue(),
+            User32.WM.NCLBUTTONUP when _isClickedDown && this.IsMouseOverElement(messageParameter) => ClickAndReturnTrue(),
+            _ => false,
+        };
     }
 
     /// <summary>Provides the ButtonTypePropertyCallback member.</summary>
@@ -210,6 +182,40 @@ public class TitleBarButton : Button
     {
         var titleBarButton = (TitleBarButton)d;
         titleBarButton.UpdateReturnValue((TitleBarButtonType)e.NewValue);
+    }
+
+    /// <summary>Applies hover state and returns a hit-test result.</summary>
+    /// <param name="returnIntPtr">The native hit-test return pointer.</param>
+    /// <returns><see langword="true"/>.</returns>
+    private bool HoverAndReturnHitTest(out IntPtr returnIntPtr)
+    {
+        Hover();
+        returnIntPtr = (IntPtr)_returnValue;
+        return true;
+    }
+
+    /// <summary>Removes hover state and reports the message as unhandled.</summary>
+    /// <returns><see langword="false"/>.</returns>
+    private bool RemoveHoverAndReturnFalse()
+    {
+        RemoveHover();
+        return false;
+    }
+
+    /// <summary>Stores the native mouse-down state.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool SetClickedDownAndReturnTrue()
+    {
+        _isClickedDown = true;
+        return true;
+    }
+
+    /// <summary>Invokes the click command.</summary>
+    /// <returns><see langword="true"/>.</returns>
+    private bool ClickAndReturnTrue()
+    {
+        InvokeClick();
+        return true;
     }
 
     /// <summary>Provides the TitleBarButton_Unloaded member.</summary>

@@ -3,7 +3,8 @@
         xmlns:controls="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI">
     
     <!-- CrissCross DatePicker Style -->
-    <Style Selector="controls|DatePicker">
+    <Style Selector=":is(controls|DatePicker)">
+        <Setter Property="Theme" Value="{StaticResource {x:Type DatePicker}}" />
         <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
         <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
@@ -15,17 +16,17 @@
     </Style>
     
     <!-- PointerOver State -->
-    <Style Selector="controls|DatePicker:pointerover">
+    <Style Selector=":is(controls|DatePicker):pointerover">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
     </Style>
     
     <!-- Pressed State -->
-    <Style Selector="controls|DatePicker:pressed">
+    <Style Selector=":is(controls|DatePicker):pressed">
         <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
     </Style>
     
     <!-- Disabled State -->
-    <Style Selector="controls|DatePicker:disabled">
+    <Style Selector=":is(controls|DatePicker):disabled">
         <Setter Property="Opacity" Value="0.5" />
     </Style>
     

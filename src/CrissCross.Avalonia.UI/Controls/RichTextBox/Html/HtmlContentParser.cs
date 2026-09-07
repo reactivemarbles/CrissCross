@@ -80,33 +80,33 @@ internal static class HtmlContentParser
     /// <param name="writer">The writer value.</param>
     private static void ProcessNode(INode node, in FormattingContext context, SegmentWriter writer)
     {
-        switch (node)
+        if (node is IComment)
         {
-            case IComment:
-                return;
-            case IText textNode:
-            {
-                writer.AppendText(NormalizeWhitespace(textNode.Data), context);
-                return;
-            }
+            return;
+        }
 
-            case IHtmlBreakRowElement:
-            {
-                writer.AppendLineBreak();
-                return;
-            }
+        if (node is IText textNode)
+        {
+            writer.AppendText(NormalizeWhitespace(textNode.Data), context);
+            return;
+        }
 
-            case IHtmlImageElement imageElement:
-            {
-                var imageAlignmentContext = context.WithImageAlignment(ParseAlignment(imageElement));
-                var imageSource = imageElement.GetAttribute("src") ?? imageElement.Source ?? string.Empty;
-                writer.AppendImage(
-                    imageSource,
-                    imageAlignmentContext.ImageAlignment,
-                    ParseLengthAttribute(imageElement, "width"),
-                    ParseLengthAttribute(imageElement, "height"));
-                return;
-            }
+        if (node is IHtmlBreakRowElement)
+        {
+            writer.AppendLineBreak();
+            return;
+        }
+
+        if (node is IHtmlImageElement imageElement)
+        {
+            var imageAlignmentContext = context.WithImageAlignment(ParseAlignment(imageElement));
+            var imageSource = imageElement.GetAttribute("src") ?? imageElement.Source ?? string.Empty;
+            writer.AppendImage(
+                imageSource,
+                imageAlignmentContext.ImageAlignment,
+                ParseLengthAttribute(imageElement, "width"),
+                ParseLengthAttribute(imageElement, "height"));
+            return;
         }
 
         if (node is not IElement element)
@@ -119,6 +119,15 @@ internal static class HtmlContentParser
             return;
         }
 
+        ProcessElement(element, context, writer);
+    }
+
+    /// <summary>Writes an element and its children with inherited formatting.</summary>
+    /// <param name="element">The element to render.</param>
+    /// <param name="context">The inherited formatting.</param>
+    /// <param name="writer">The segment destination.</param>
+    private static void ProcessElement(IElement element, in FormattingContext context, SegmentWriter writer)
+    {
         var scopedContext = context.WithElement(element);
 
         if (element is IHtmlListItemElement)
