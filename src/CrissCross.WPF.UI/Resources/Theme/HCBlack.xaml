@@ -784,4 +784,7 @@
   <sys:Double x:Key="PersonPictureEllipseBadgeImageSourceStrokeOpacity">1.0</sys:Double>
   <sys:Double x:Key="PersonPictureEllipseStrokeThickness">0</sys:Double>
   <sys:Double x:Key="PersonPictureEllipseBadgeStrokeThickness">2</sys:Double>
+
+  <SolidColorBrush x:Key="BezelButtonBorderBrush" Color="{StaticResource SystemColorButtonTextColor}" />
+  <SolidColorBrush x:Key="BezelButtonInnerBorderBrush" Color="{StaticResource SystemColorButtonFaceColor}" />
 </ResourceDictionary>
