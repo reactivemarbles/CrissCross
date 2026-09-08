@@ -6,7 +6,7 @@
     <AvaloniaVersion>12.1.2</AvaloniaVersion>
     <SplatVersion>20.2.0</SplatVersion>
     <ReactiveUIVersion>24.2.0</ReactiveUIVersion>
-    <ReactiveUIBindingVersion>4.1.0</ReactiveUIBindingVersion>
+    <ReactiveUIBindingVersion>5.0.0</ReactiveUIBindingVersion>
     <ReactiveUIPrimitivesVersion>7.4.0</ReactiveUIPrimitivesVersion>
     <DotNetVersion>10.0.11</DotNetVersion>
     <DotNet11Version>11.0.0-preview.7.26381.103</DotNet11Version>
