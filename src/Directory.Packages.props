@@ -77,7 +77,7 @@
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.2.0" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.8.0" />
+    <PackageVersion Include="AngleSharp" Version="1.8.1" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
@@ -104,8 +104,8 @@
 
     <PackageVersion Include="MinVer" Version="8.0.0" />
     <PackageVersion Include="StyleSharp.Analyzers" Version="4.0.5" />
-    <PackageVersion Include="PerformanceSharp.Analyzers" Version="3.46.1" />
-    <PackageVersion Include="SecuritySharp.Analyzers" Version="3.46.2" />
+    <PackageVersion Include="PerformanceSharp.Analyzers" Version="4.0.5" />
+    <PackageVersion Include="SecuritySharp.Analyzers" Version="4.0.5" />
     <PackageVersion Include="Roslynator.Analyzers" Version="5.0.0" />
 
     <!-- Benchmarking -->
