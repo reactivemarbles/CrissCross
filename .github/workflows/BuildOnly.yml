@@ -48,6 +48,13 @@ jobs:
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
 
+      - name: Restore .NET workloads
+        shell: bash
+        working-directory: src
+        run: |
+          dotnet workload install wasm-tools-net10 --skip-manifest-update
+          dotnet workload restore CrissCross.slnx --from-previous-sdk --skip-manifest-update
+
       - name: 'Run: Compile'
         run: ./build.cmd Compile
 
