@@ -5,6 +5,7 @@
 using Avalonia.Controls;
 using ReactiveUI;
 using Splat;
+using LeanBinding = ReactiveUI.Binding;
 using UiNavigationUserControl = CrissCross.Avalonia.UI.Controls.NavigationUserControl;
 
 namespace CrissCross.NavigationView.Tests;
@@ -183,7 +184,7 @@ public sealed class AvaloniaUiNavigationUserControlTests
 
         await Assert.That(UiNavigationUserControl.ViewModelProperty.OwnerType).IsEqualTo(typeof(UiNavigationUserControl));
         await Assert.That(control.GetValue(UiNavigationUserControl.ViewModelProperty)).IsSameReferenceAs(viewModel);
-        await Assert.That(((IViewFor)control).ViewModel).IsSameReferenceAs(viewModel);
+        await Assert.That(((LeanBinding.IViewFor)control).ViewModel).IsSameReferenceAs(viewModel);
         await Assert.That(control.BindingRoot).IsSameReferenceAs(viewModel);
     }
 
@@ -210,13 +211,13 @@ public sealed class AvaloniaUiNavigationUserControlTests
     public sealed class SecondViewModel : RxObject;
 
     /// <summary>First test view.</summary>
-    private sealed class FirstView : TextBlock, IViewFor<FirstViewModel>
+    private sealed class FirstView : TextBlock, LeanBinding.IViewFor<FirstViewModel>
     {
         /// <summary>Gets or sets the strongly typed view model.</summary>
         public FirstViewModel? ViewModel { get; set; }
 
         /// <inheritdoc/>
-        object? IViewFor.ViewModel
+        object? LeanBinding.IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (FirstViewModel?)value;
@@ -224,13 +225,13 @@ public sealed class AvaloniaUiNavigationUserControlTests
     }
 
     /// <summary>Second test view.</summary>
-    private sealed class SecondView : TextBlock, IViewFor<SecondViewModel>
+    private sealed class SecondView : TextBlock, LeanBinding.IViewFor<SecondViewModel>
     {
         /// <summary>Gets or sets the strongly typed view model.</summary>
         public SecondViewModel? ViewModel { get; set; }
 
         /// <inheritdoc/>
-        object? IViewFor.ViewModel
+        object? LeanBinding.IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (SecondViewModel?)value;
@@ -238,39 +239,35 @@ public sealed class AvaloniaUiNavigationUserControlTests
     }
 
     /// <summary>View locator used by navigation tests.</summary>
-    private sealed class TestViewLocator : IViewLocator
+    private sealed class TestViewLocator : LeanBinding.IViewLocator
     {
         /// <inheritdoc/>
-        public IViewFor<TViewModel> ResolveView<TViewModel>()
-            where TViewModel : class => ResolveView<TViewModel>(contract: null);
-
-        /// <inheritdoc/>
-        public IViewFor<TViewModel> ResolveView<TViewModel>(string? contract)
+        public LeanBinding.IViewFor ResolveView<TViewModel>(TViewModel viewModel, string? contract)
             where TViewModel : class
         {
             if (typeof(TViewModel) == typeof(FirstViewModel))
             {
-                return (IViewFor<TViewModel>)(object)new FirstView();
+                return (LeanBinding.IViewFor<TViewModel>)(object)new FirstView();
             }
 
             if (typeof(TViewModel) == typeof(SecondViewModel))
             {
-                return (IViewFor<TViewModel>)(object)new SecondView();
+                return (LeanBinding.IViewFor<TViewModel>)(object)new SecondView();
             }
 
             throw new InvalidOperationException($"Unsupported view model type {typeof(TViewModel).FullName}.");
         }
 
         /// <inheritdoc/>
-        public IViewFor? ResolveView(object? instance) => ResolveView(instance, contract: null);
-
-        /// <inheritdoc/>
-        public IViewFor? ResolveView(object? instance, string? contract) => instance switch
+        public LeanBinding.IViewFor? ResolveView(object? viewModel, string? contract) => viewModel switch
         {
             FirstViewModel => new FirstView(),
             SecondViewModel => new SecondView(),
             _ => null,
         };
+
+        /// <inheritdoc/>
+        public LeanBinding.IViewFor? ResolveViewUnsafe(object? viewModel, string? contract) => ResolveView(viewModel, contract);
     }
 
     /// <summary>Testable UI navigation control.</summary>

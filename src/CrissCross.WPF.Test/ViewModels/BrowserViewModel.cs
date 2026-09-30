@@ -13,23 +13,22 @@ namespace CrissCross.WPF.Test;
 /// <seealso cref="CrissCross.RxObject" />
 public class BrowserViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="BrowserViewModel"/> class.</summary>
-    public BrowserViewModel() =>
-        this.BuildComplete(() =>
-        {
-            GotoMain = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("mainWindow");
-                this.NavigateToView<FirstViewModel>("secondWindow");
-            });
+    /// <summary>Provides the clock for navigation diagnostics.</summary>
+    private readonly TimeProvider _timeProvider;
 
-            GotoFirst = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("secondWindow");
-                this.NavigateToView<FirstViewModel>("mainWindow");
-            });
-            WebUrl = "https://www.aicsolutions.com";
-        });
+    /// <summary>Initializes a new instance of the <see cref="BrowserViewModel"/> class.</summary>
+    public BrowserViewModel()
+        : this(TimeProvider.System)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="BrowserViewModel"/> class.</summary>
+    /// <param name="timeProvider">The clock for navigation diagnostics.</param>
+    public BrowserViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timeProvider = timeProvider;
+    }
 
     /// <summary>Gets or sets the web URL.</summary>
     /// <value>
@@ -53,16 +52,31 @@ public class BrowserViewModel : RxObject
     /// </value>
     public ICommand? GotoFirst { get; private set; }
 
+    /// <summary>Registers commands after construction and dependency registration.</summary>
+    public void InitializeCommands() =>
+        this.BuildComplete(() =>
+        {
+            GotoMain = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = "mainWindow" } });
+                this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = "secondWindow" } });
+            });
+
+            GotoFirst = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = "secondWindow" } });
+                this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = "mainWindow" } });
+            });
+            WebUrl = "https://www.aicsolutions.com";
+        });
+
     /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
         base.WhenNavigatedTo(e, disposables);
     }
 
@@ -70,12 +84,9 @@ public class BrowserViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigatedFrom(e);
     }
 
@@ -83,12 +94,9 @@ public class BrowserViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
 }

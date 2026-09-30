@@ -467,7 +467,9 @@ public partial class NavigationShell
         _toViewModel = viewModel;
         _lastView = _currentView;
 
-        _currentView = ViewLocator?.ResolveView<T>(contract);
+        _currentView = viewModel is null
+            ? ViewLocator?.ResolveView<T>(contract)
+            : ViewLocator?.ResolveView<T>(viewModel, contract);
         if (_currentView is not null)
         {
             _currentView.ViewModel = _toViewModel;

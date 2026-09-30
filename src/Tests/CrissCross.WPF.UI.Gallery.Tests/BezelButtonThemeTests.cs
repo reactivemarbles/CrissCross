@@ -536,26 +536,8 @@ public sealed class BezelButtonThemeTests
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <param name="action">The WPF action.</param>
     /// <returns>A task that completes with the action result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        TaskCompletionSource<TResult> completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        Thread thread = new(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Stores a concrete Bezel control under test.</summary>
     /// <param name="Control">The control.</param>

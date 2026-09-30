@@ -114,7 +114,7 @@ public class FontIcon : IconElement
     /// <returns>A UIElement.</returns>
     protected override UIElement InitializeChildren()
     {
-        if (FontSize.Equals(SystemFonts.MessageFontSize))
+        if (DoubleComparison.AreClose(FontSize, SystemFonts.MessageFontSize))
         {
             SetResourceReference(FontSizeProperty, "DefaultIconFontSize");
 

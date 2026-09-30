@@ -13,14 +13,12 @@ public partial class MainWindow
     /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
     public MainWindow()
     {
-        Appearance.SystemThemeWatcher.Watch(this);
-
         InitializeComponent();
 
         Breadcrumb.SetupNavigation(nameof(mainWindow));
         Navigation = Breadcrumb;
 
-        _ = this.WhenActivated(Activate);
+        Loaded += OnLoaded;
     }
 
     /// <summary>Gets the navigation.</summary>
@@ -28,6 +26,16 @@ public partial class MainWindow
     /// The navigation.
     /// </value>
     public static BreadcrumbBar? Navigation { get; private set; }
+
+    /// <summary>Initializes window services after construction.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+        Appearance.SystemThemeWatcher.Watch(this);
+        _ = this.WhenActivated(Activate);
+    }
 
     /// <summary>Activates navigation bindings for the window.</summary>
     /// <param name="disposables">The activation disposables.</param>

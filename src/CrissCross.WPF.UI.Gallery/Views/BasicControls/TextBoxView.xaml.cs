@@ -2,15 +2,38 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Interaction logic for TextBoxView.xaml.</summary>
-[IViewFor<TextBoxViewModel>]
-public partial class TextBoxView
+public partial class TextBoxView : IViewFor<TextBoxViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(TextBoxViewModel),
+        typeof(TextBoxView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="TextBoxView"/> class.</summary>
     public TextBoxView() => InitializeComponent();
+
+    /// <summary>Gets the binding root view model.</summary>
+    public TextBoxViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public TextBoxViewModel? ViewModel
+    {
+        get => (TextBoxViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (TextBoxViewModel?)value;
+    }
 }

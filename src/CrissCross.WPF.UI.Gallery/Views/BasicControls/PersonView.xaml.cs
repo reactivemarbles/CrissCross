@@ -2,21 +2,45 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Interaction logic for PersonView.xaml.</summary>
-[IViewFor<Person>]
-public partial class PersonView
+public partial class PersonView : IViewFor<Person>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(Person),
+        typeof(PersonView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="PersonView"/> class.</summary>
     public PersonView()
     {
         InitializeComponent();
         _ = this.WhenActivated(BindViewModel);
+    }
+
+    /// <summary>Gets the binding root view model.</summary>
+    public Person? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public Person? ViewModel
+    {
+        get => (Person?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (Person?)value;
     }
 
     /// <summary>Binds the active view model to the view.</summary>

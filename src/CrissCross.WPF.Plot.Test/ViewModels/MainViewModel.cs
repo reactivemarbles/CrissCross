@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+
 namespace CrissCross.WPF.Plot.Test.ViewModels;
 
 /// <summary>MainViewModel member.</summary>

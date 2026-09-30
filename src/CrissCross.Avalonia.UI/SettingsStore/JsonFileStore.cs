@@ -58,7 +58,7 @@ public class JsonFileStore : IStore
     public IDictionary<string, object?> GetData(string id)
     {
         var filePath = GetFilePath(id);
-        Dictionary<string, object?> result = new(StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, object?> result = new(comparer: StringComparer.OrdinalIgnoreCase);
 
         if (!File.Exists(filePath))
         {

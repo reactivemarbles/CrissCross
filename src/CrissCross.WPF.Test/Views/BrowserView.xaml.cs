@@ -3,8 +3,11 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Windows;
 using ReactiveUI;
 using Splat;
+
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.Test.Views;
 
@@ -18,18 +21,28 @@ public partial class BrowserView : IUseHostedNavigation
     public BrowserView()
     {
         InitializeComponent();
+        Loaded += OnLoaded;
+    }
+
+    /// <summary>Registers activation when the fully constructed view is loaded.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
+            var viewModel = ViewModel ?? throw new InvalidOperationException("The browser view model must be registered before activation.");
             _ = this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
-            _ = this.WhenAnyValue(x => x.ViewModel!.WebUrl)
+            _ = viewModel.WhenAnyValue(x => x.WebUrl)
                 .Throttle(TimeSpan.FromSeconds(WebUrlThrottleSeconds), RxSchedulers.TaskpoolScheduler)
                 .DistinctUntilChanged()
-                .Where(query => !string.IsNullOrWhiteSpace(query))
+                .Where(static query => !string.IsNullOrWhiteSpace(query))
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
                 .BindTo(this, vm => vm.browserView.Source)
                 .DisposeWith(d);
-            this.NavigateToView<MainViewModel>(browserView.Name);
+            this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = browserView.Name } });
         });
     }
 }

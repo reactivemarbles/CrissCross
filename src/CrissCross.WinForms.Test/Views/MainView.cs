@@ -15,11 +15,23 @@ public partial class MainView : ReactiveUserControl<MainViewModel>
     public MainView()
     {
         InitializeComponent();
+    }
+
+    /// <summary>Gets the button that navigates to the first view.</summary>
+    public Button GotoFirstButton => GotoFirst;
+
+    /// <summary>Gets the button that navigates to the main view.</summary>
+    public Button GotoMainButton => GotoMain;
+
+    /// <inheritdoc />
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoFirst, static v => v.GotoFirstButton).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoMain, static v => v.GotoMainButton).DisposeWith(d);
         });
     }
 }

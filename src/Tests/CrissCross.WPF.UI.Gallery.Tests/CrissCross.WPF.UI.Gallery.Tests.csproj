@@ -25,4 +25,11 @@
     <Using Include="TUnit.Assertions.Extensions" />
   </ItemGroup>
 
+  <!-- Both binding packages ship identical analyzer binaries. Load each once for this mixed-family test assembly. -->
+  <Target Name="DeduplicateBindingAnalyzers" BeforeTargets="CoreCompile" AfterTargets="ReactiveUIBindingSelectAnalyzerSlot">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="$([System.String]::Copy('%(Analyzer.Identity)').Replace('\', '/').Contains('/reactiveui.binding.reactive/')) and ('%(Analyzer.Filename)' == 'ReactiveUI.Binding.SourceGenerators' or '%(Analyzer.Filename)' == 'ReactiveUI.Binding.Analyzer')" />
+    </ItemGroup>
+  </Target>
+
 </Project>

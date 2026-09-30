@@ -2,17 +2,24 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 using Splat;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Interaction logic for MainView.xaml.</summary>
-[IViewFor<MainViewModel>]
-public partial class MainView
+public partial class MainView : IViewFor<MainViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(MainViewModel),
+        typeof(MainView),
+        new(null));
+
     /// <summary>Tracks whether reactive bindings have been configured.</summary>
     private bool _bindingsConfigured;
 
@@ -24,10 +31,27 @@ public partial class MainView
         Loaded += OnLoaded;
     }
 
+    /// <summary>Gets the binding root view model.</summary>
+    public MainViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public MainViewModel? ViewModel
+    {
+        get => (MainViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (MainViewModel?)value;
+    }
+
     /// <summary>Configures reactive bindings after construction has completed.</summary>
     /// <param name="sender">The loaded view.</param>
     /// <param name="e">The routed event data.</param>
-    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
         if (_bindingsConfigured)
         {

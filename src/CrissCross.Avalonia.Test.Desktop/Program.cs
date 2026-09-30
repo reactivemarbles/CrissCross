@@ -12,6 +12,14 @@ namespace CrissCross.Avalonia.Test.Desktop;
 /// <summary>Provides the desktop application entry point.</summary>
 internal static class Program
 {
+    /// <summary>Avalonia configuration, don't remove; also used by visual designer.</summary>
+    /// <returns>The configured Avalonia application builder.</returns>
+    internal static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .WithInterFont()
+            .LogToTrace()
+            .UseReactiveUI(static b => { });
+
     /// <summary>
     /// Initialization code. Don't use any Avalonia, third-party APIs or any
     /// SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -19,15 +27,6 @@ internal static class Program
     /// </summary>
     /// <param name="args">The command-line arguments passed to the application.</param>
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
+    private static void Main(string[] args) => BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
-
-    /// <summary>Avalonia configuration, don't remove; also used by visual designer.</summary>
-    /// <returns>The configured Avalonia application builder.</returns>
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .WithInterFont()
-            .LogToTrace()
-            .UseReactiveUI(b => { });
 }

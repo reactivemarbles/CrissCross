@@ -117,6 +117,7 @@ public sealed class ReactivePlotExampleCoverageTests
     /// <returns>The observed lifecycle state.</returns>
     private static LiveChartLifecycleSnapshot ExerciseLiveChartCrosshairLifecycle()
     {
+        _ = Dispatcher.CurrentDispatcher;
         _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
         var previousMainThreadScheduler = RxSchedulers.MainThreadScheduler;
         RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;

@@ -41,7 +41,7 @@ public partial class NavigationView : TemplatedControl, INavigationView
         "PART_AutoSuggestBoxSymbolButton";
 
     /// <summary>The journal.</summary>
-    private readonly List<string> _journal = new(50);
+    private readonly List<string> _journal = [with(capacity: 50)];
 
     /// <summary>The navigation stack.</summary>
     private readonly ObservableCollection<INavigationViewItem> _navigationStack = [];

@@ -14,7 +14,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         _ = builder
             .UseMauiApp<App>()
-            .ConfigureFonts(fonts =>
+            .ConfigureFonts(static fonts =>
             {
                 _ = fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 _ = fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");

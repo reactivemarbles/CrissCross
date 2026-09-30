@@ -353,13 +353,13 @@ public sealed class ReactiveObjectAndMixinBehaviorTests
     }
 
     /// <summary>Provides a paired view for typed navigation request coverage.</summary>
-    private sealed class ObservableView : global::ReactiveUI.IViewFor<ObservableItem>
+    private sealed class ObservableView : IViewFor<ObservableItem>
     {
         /// <inheritdoc/>
         public ObservableItem? ViewModel { get; set; }
 
         /// <inheritdoc/>
-        object? global::ReactiveUI.IViewFor.ViewModel
+        object? IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (ObservableItem?)value;

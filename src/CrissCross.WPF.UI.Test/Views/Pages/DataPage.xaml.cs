@@ -19,12 +19,7 @@ public partial class DataPage : INavigableView<DataViewModel>, ICanShowMessages
         InitializeComponent();
         Loaded += async (_, _) =>
             await this.MessageBoxShow(
-                new CustomMessageBoxRequest
-                {
-                    BBCode = "I am a Custom message box",
-                    Title = "Custom Message Box",
-                    Buttons = new[] { "Custom Button" },
-                });
+                new CustomMessageBoxRequest { BBCode = "I am a Custom message box", Title = "Custom Message Box", Buttons = ["Custom Button"] });
     }
 
     /// <summary>

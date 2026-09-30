@@ -36,6 +36,11 @@ public static class ApplicationAccentColorManager
     /// <summary>Provides the BackgroundBrightnessThresholdValue member.</summary>
     private const double BackgroundBrightnessThresholdValue = 80D;
 
+#if DEBUG
+    /// <summary>The category used for accent diagnostic messages.</summary>
+    private const string AccentDebugCategory = "CrissCross.WPF.UI.Accent";
+#endif
+
     /// <summary>Provides the brightness correction applied to the system glass color.</summary>
     private const float SystemGlassBrightnessAdjustment = 6F;
 
@@ -197,22 +202,22 @@ public static class ApplicationAccentColorManager
         Color tertiaryAccent)
     {
 #if DEBUG
-        System.Diagnostics.Debug.WriteLine("INFO | SystemAccentColor: " + systemAccent, "CrissCross.WPF.UI.Accent");
+        System.Diagnostics.Debug.WriteLine($"INFO | SystemAccentColor: {systemAccent}", AccentDebugCategory);
         System.Diagnostics.Debug.WriteLine(
-            "INFO | SystemAccentColorPrimary: " + primaryAccent,
-            "CrissCross.WPF.UI.Accent");
+            $"INFO | SystemAccentColorPrimary: {primaryAccent}",
+            AccentDebugCategory);
         System.Diagnostics.Debug.WriteLine(
-            "INFO | SystemAccentColorSecondary: " + secondaryAccent,
-            "CrissCross.WPF.UI.Accent");
+            $"INFO | SystemAccentColorSecondary: {secondaryAccent}",
+            AccentDebugCategory);
         System.Diagnostics.Debug.WriteLine(
-            "INFO | SystemAccentColorTertiary: " + tertiaryAccent,
-            "CrissCross.WPF.UI.Accent");
+            $"INFO | SystemAccentColorTertiary: {tertiaryAccent}",
+            AccentDebugCategory);
 #endif
 
         if (secondaryAccent.GetBrightness() > BackgroundBrightnessThresholdValue)
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("INFO | Text on accent is DARK", "CrissCross.WPF.UI.Accent");
+            System.Diagnostics.Debug.WriteLine("INFO | Text on accent is DARK", AccentDebugCategory);
 #endif
             UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
             UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(0x80, 0x00, 0x00, 0x00);
@@ -227,7 +232,7 @@ public static class ApplicationAccentColorManager
         else
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("INFO | Text on accent is LIGHT", "CrissCross.WPF.UI.Accent");
+            System.Diagnostics.Debug.WriteLine("INFO | Text on accent is LIGHT", AccentDebugCategory);
 #endif
             UiApplication.Current.Resources["TextOnAccentFillColorPrimary"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF);
             UiApplication.Current.Resources["TextOnAccentFillColorSecondary"] = Color.FromArgb(0x80, 0xFF, 0xFF, 0xFF);

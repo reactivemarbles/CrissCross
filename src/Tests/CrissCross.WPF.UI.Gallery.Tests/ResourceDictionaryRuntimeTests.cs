@@ -125,26 +125,8 @@ public sealed class ResourceDictionaryRuntimeTests
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <param name="action">The resource-loading action.</param>
     /// <returns>A task that completes with the result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        TaskCompletionSource<TResult> completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        Thread thread = new(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Captures resource pack URIs for both package variants.</summary>
     /// <param name="StandardControlsSource">The standard control dictionary URI.</param>

@@ -5,7 +5,6 @@
 using System.Windows;
 using CrissCross.WPF.UI.Controls;
 using CrissCross.WPF.UI.Gallery.Views;
-using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using Splat;
 
@@ -17,10 +16,6 @@ public partial class MainWindowViewModel : RxObject
 {
     /// <summary>Provides access to persisted window tracking.</summary>
     private readonly Tracker? _tracker;
-
-    /// <summary>Provides the application title.</summary>
-    [Reactive]
-    private string _applicationTitle = "CrissCross UI Gallery";
 
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel"/> class.</summary>
     public MainWindowViewModel()
@@ -51,6 +46,10 @@ public partial class MainWindowViewModel : RxObject
 
         AppLocator.CurrentMutable.SetupComplete();
     }
+
+    /// <summary>Gets or sets the application title.</summary>
+    [Reactive]
+    public partial string ApplicationTitle { get; set; } = "CrissCross UI Gallery";
 
     /// <summary>Gets the navigation models.</summary>
     /// <value>

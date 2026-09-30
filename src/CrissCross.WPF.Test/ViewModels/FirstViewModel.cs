@@ -13,22 +13,22 @@ namespace CrissCross.WPF.Test;
 /// <seealso cref="RxObject" />
 public class FirstViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
-    public FirstViewModel() =>
-        this.BuildComplete(() =>
-        {
-            GotoMain = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("browserView");
-                this.NavigateToView<FirstViewModel>("secondWindow");
-            });
+    /// <summary>Provides the clock for navigation diagnostics.</summary>
+    private readonly TimeProvider _timeProvider;
 
-            GotoFirst = ReactiveCommand.Create(() =>
-            {
-                this.NavigateToView<MainViewModel>("secondWindow");
-                this.NavigateToView<FirstViewModel>("browserView");
-            });
-        });
+    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
+    public FirstViewModel()
+        : this(TimeProvider.System)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
+    /// <param name="timeProvider">The clock for navigation diagnostics.</param>
+    public FirstViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timeProvider = timeProvider;
+    }
 
     /// <summary>Gets the goto main.</summary>
     /// <value>
@@ -42,16 +42,30 @@ public class FirstViewModel : RxObject
     /// </value>
     public ICommand? GotoFirst { get; private set; }
 
+    /// <summary>Registers commands after construction and dependency registration.</summary>
+    public void InitializeCommands() =>
+        this.BuildComplete(() =>
+        {
+            GotoMain = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = "browserView" } });
+                this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = "secondWindow" } });
+            });
+
+            GotoFirst = ReactiveCommand.Create(() =>
+            {
+                this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = "secondWindow" } });
+                this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = "browserView" } });
+            });
+        });
+
     /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
         base.WhenNavigatedTo(e, disposables);
     }
 
@@ -59,12 +73,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigatedFrom(e);
     }
 
@@ -72,12 +83,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
 }

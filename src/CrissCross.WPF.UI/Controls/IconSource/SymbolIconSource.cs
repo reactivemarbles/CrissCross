@@ -94,7 +94,7 @@ public class SymbolIconSource : IconSource
     {
         SymbolIcon symbolIcon = new(Symbol, FontSize, Filled);
 
-        if (!FontSize.Equals(SystemFonts.MessageFontSize))
+        if (!DoubleComparison.AreClose(FontSize, SystemFonts.MessageFontSize))
         {
             symbolIcon.FontSize = FontSize;
         }

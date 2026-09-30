@@ -43,7 +43,7 @@ public static class ControlMixins
         /// <summary>Flattens the specified list of reactive tree roots.</summary>
         /// <returns>An observable sequence of flattened tree items.</returns>
         private IObservable<ReactiveTreeItem> Flatten() =>
-            list.Select(static items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>())).Switch();
+            list.Select(static items => FlattenItems(items ?? Enumerable.Empty<ReactiveTreeItem>())).SwitchTo();
     }
 
     /// <summary>Provides the FlattenItems member.</summary>
@@ -72,5 +72,5 @@ public static class ControlMixins
             .Concat(
                 item.Children.CurrentItems.Select(static children =>
                         FlattenItems(children ?? Enumerable.Empty<ReactiveTreeItem>()))
-                    .Switch());
+                    .SwitchTo());
 }

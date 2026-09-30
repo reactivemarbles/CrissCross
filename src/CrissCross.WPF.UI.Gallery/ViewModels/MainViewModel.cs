@@ -15,7 +15,7 @@ public partial class MainViewModel : RxObject
     /// The application xaml setup.
     /// </value>
     [Reactive]
-    private string _appXamlSetup = """
+    public partial string AppXamlSetup { get; set; } = """
         <Application
             x:Class="CrissCross.WPF.UI.Gallery.App"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -39,7 +39,7 @@ public partial class MainViewModel : RxObject
     /// The main window xaml setup.
     /// </value>
     [Reactive]
-    private string _mainWindowXamlSetup = """
+    public partial string MainWindowXamlSetup { get; set; } = """
         <ui:FluentNavigationWindow
             x:Class="CrissCross.WPF.UI.Gallery.MainWindow"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -84,7 +84,7 @@ public partial class MainViewModel : RxObject
     /// The main window xaml cs setup.
     /// </value>
     [Reactive]
-    private string _mainWindowXamlCsSetup = """
+    public partial string MainWindowXamlCsSetup { get; set; } = """
         using System.Windows;
         using CrissCross.WPF.UI.Appearance;
         using CrissCross.WPF.UI.Gallery.ViewModels;
@@ -101,7 +101,7 @@ public partial class MainViewModel : RxObject
                 nameof(Tracker),
                 typeof(Tracker),
                 typeof(MainWindow),
-                new PropertyMetadata(null));
+                new(null));
 
             /// <summary>Initializes a new instance of the <see cref="MainWindow"/> class.</summary>
             public MainWindow()

@@ -21,6 +21,12 @@ using ScottPlot.Palettes;
 using ScottPlot.Plottables;
 using ScottPlot.WPF;
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
 #else

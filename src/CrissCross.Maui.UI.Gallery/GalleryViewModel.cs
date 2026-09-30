@@ -185,7 +185,7 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     } = new(CreateSteps(), "review", StepperOrientation.Horizontal);
 
     /// <summary>Gets a validation summary state.</summary>
-    public ValidationSummaryState ValidationState { get; } = new([new ValidationMessage("name", "Name", "A name is required.")]);
+    public ValidationSummaryState ValidationState { get; } = new((ValidationMessage[])[new ValidationMessage("name", "Name", "A name is required.")]);
 
     /// <summary>Gets the empty-state model.</summary>
     public EmptyStateModel EmptyState { get; } = new("Nothing saved", "Restore sample content to continue.");
@@ -293,7 +293,7 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
 
     /// <summary>Creates the selectable chip definitions.</summary>
     /// <returns>The chip definitions.</returns>
-    private static IReadOnlyList<ChipModel> CreateChips() =>
+    private static ChipModel[] CreateChips() =>
     [
         new ChipModel("alarms", "Alarms"),
         new ChipModel("events", "Events"),
@@ -302,12 +302,12 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
 
     /// <summary>Creates segmented view definitions.</summary>
     /// <returns>The segment definitions.</returns>
-    private static IReadOnlyList<SegmentItem> CreateSegments() =>
+    private static SegmentItem[] CreateSegments() =>
     [new SegmentItem("table", "Table"), new SegmentItem("cards", "Cards"), new SegmentItem("timeline", "Timeline")];
 
     /// <summary>Creates workflow step definitions.</summary>
     /// <returns>The step definitions.</returns>
-    private static IReadOnlyList<StepDescriptor> CreateSteps() =>
+    private static StepDescriptor[] CreateSteps() =>
     [
         new StepDescriptor("connect", "Connect"),
         new StepDescriptor("review", "Review"),
@@ -317,15 +317,15 @@ public sealed class GalleryViewModel : ReactiveObject, IDisposable
     /// <summary>Creates filter descriptors for industrial event searches.</summary>
     /// <returns>The editable filter state.</returns>
     private static DataFilterPanelState CreateFilterPanelState() => new(
-    [
+    (FilterDescriptor[])[
         new FilterDescriptor("area", "Area", FilterEditorKind.Text),
-        new FilterDescriptor("status", "Status", FilterEditorKind.Enum, [FilterOperator.Equals], ["Running", "Stopped", "Alarm"]),
+        new FilterDescriptor("status", "Status", FilterEditorKind.Enum, (FilterOperator[])[FilterOperator.Equals], (object?[])["Running", "Stopped", "Alarm"]),
     ]);
 
     /// <summary>Creates editable equipment configuration descriptors.</summary>
     /// <returns>The configuration state.</returns>
     private static PropertyGridState CreatePropertyGridState() => new(
-    [
+    (PropertyDescriptorModel[])[
         new PropertyDescriptorModel("tag", "Equipment tag", new() { Value = "PUMP-101", OriginalValue = "PUMP-101" }),
         new PropertyDescriptorModel("enabled", "Enabled", new() { EditorKind = PropertyEditorKind.Boolean, Value = true, OriginalValue = true }),
     ]);

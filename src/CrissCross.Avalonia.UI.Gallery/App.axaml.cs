@@ -8,7 +8,6 @@ using Avalonia.Markup.Xaml;
 using CrissCross.Avalonia.UI.Gallery.ViewModels;
 using CrissCross.Avalonia.UI.Gallery.Views;
 using CrissCross.Avalonia.UI.Gallery.Views.Pages;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.Avalonia.UI.Gallery;

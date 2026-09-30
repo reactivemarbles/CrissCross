@@ -11,19 +11,19 @@ using ReactiveUI.Avalonia;
 
 [assembly: SupportedOSPlatform("browser")]
 
+namespace CrissCross.Avalonia.Test.Browser;
+
 /// <summary>Provides the browser application entry point.</summary>
 internal static class Program
 {
     /// <summary>Avalonia configuration, don't remove; also used by visual designer.</summary>
     /// <returns>The configured Avalonia application builder.</returns>
-    public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>();
+    internal static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>();
 
     /// <summary>Starts the browser application.</summary>
-    /// <param name="args">The command-line arguments passed to the application.</param>
     /// <returns>A task that represents the asynchronous startup operation.</returns>
-    public static async Task Main(string[] args) => await BuildAvaloniaApp()
+    private static Task Main() => BuildAvaloniaApp()
             .WithInterFont()
-            .UseReactiveUI(b => { })
+            .UseReactiveUI(static b => { })
             .StartBrowserAppAsync("out");
 }

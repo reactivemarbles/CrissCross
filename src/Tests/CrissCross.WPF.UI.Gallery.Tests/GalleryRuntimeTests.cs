@@ -57,8 +57,7 @@ public sealed class GalleryRuntimeTests
     /// <returns>The rendered catalog snapshot.</returns>
     private static GallerySnapshot RenderCatalog()
     {
-        var application = new App();
-        application.InitializeComponent();
+        var application = WpfTestDispatcher.GetApplication();
 
         var window = new MainWindow { Height = GalleryWindowHeight, ShowInTaskbar = false, Width = GalleryWindowWidth, WindowStartupLocation = WindowStartupLocation.Manual, };
 
@@ -118,7 +117,6 @@ public sealed class GalleryRuntimeTests
         finally
         {
             window.Close();
-            application.Shutdown();
         }
     }
 
@@ -244,26 +242,8 @@ public sealed class GalleryRuntimeTests
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <param name="action">The WPF action.</param>
     /// <returns>A task that completes with the action result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        var completion = new TaskCompletionSource<TResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var thread = new Thread(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Captures observable state from a rendered catalog.</summary>
     /// <param name="CrissCrossControlCount">The number of rendered CrissCross controls.</param>

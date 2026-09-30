@@ -21,15 +21,15 @@ public class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = MainWindow.Create();
         }
         else if (ApplicationLifetime is IActivityApplicationLifetime activity)
         {
-            activity.MainViewFactory = () => new MainUserControl();
+            activity.MainViewFactory = static () => MainUserControl.Create();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = new MainUserControl();
+            singleViewPlatform.MainView = MainUserControl.Create();
         }
 
         base.OnFrameworkInitializationCompleted();

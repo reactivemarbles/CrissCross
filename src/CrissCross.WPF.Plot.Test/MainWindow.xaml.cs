@@ -7,8 +7,9 @@ using CrissCross.WPF.Plot.Test.ViewModels;
 using CrissCross.WPF.UI;
 using CrissCross.WPF.UI.Appearance;
 using CrissCross.WPF.UI.Controls;
-using ReactiveUI;
 using Splat;
+
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.Plot.Test;
 

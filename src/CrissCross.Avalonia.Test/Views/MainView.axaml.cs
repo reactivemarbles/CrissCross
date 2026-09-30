@@ -17,12 +17,23 @@ public partial class MainView : ReactiveUserControl<MainViewModel>
     public MainView()
     {
         InitializeComponent();
+    }
 
+    /// <summary>Creates a view and registers activation after construction.</summary>
+    /// <returns>The initialized view.</returns>
+    internal static MainView Create()
+    {
+        var view = new MainView();
+        view.InitializeActivation();
+        return view;
+    }
+
+    /// <summary>Registers the view activation bindings.</summary>
+    private void InitializeActivation() =>
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoSecond).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoFirst, static v => v.GotoFirst).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoMain, static v => v.GotoSecond).DisposeWith(d);
         });
-    }
 }

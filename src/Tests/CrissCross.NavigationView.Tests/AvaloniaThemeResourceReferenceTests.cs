@@ -28,7 +28,7 @@ public sealed partial class AvaloniaThemeResourceReferenceTests
     private static readonly XNamespace XamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 
     /// <summary>Provides resource keys that are verified in Avalonia.Themes.Fluent.</summary>
-    private static readonly HashSet<string> VerifiedFluentResourceKeys = new(StringComparer.Ordinal) { "SystemAccentColorLight1", "SystemAccentColorLight2" };
+    private static readonly HashSet<string> VerifiedFluentResourceKeys = [with(StringComparer.Ordinal), "SystemAccentColorLight1", "SystemAccentColorLight2"];
 
     /// <summary>Provides the source root used to locate Avalonia markup files.</summary>
     private static readonly string SourceRoot = LocateSourceRoot();
@@ -93,7 +93,7 @@ public sealed partial class AvaloniaThemeResourceReferenceTests
             var matches = ResourceReferenceExpression().Matches(text);
             for (var matchIndex = 0; matchIndex < matches.Count; matchIndex++)
             {
-                var match = (Match)matches[matchIndex];
+                var match = matches[matchIndex];
                 var key = match.Groups[1].Value;
                 if (definedKeys.Contains(key) || VerifiedFluentResourceKeys.Contains(key) || IsNativeControlTheme(key))
                 {

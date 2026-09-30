@@ -145,8 +145,10 @@ public partial class NavigationModel : RxObject
     ///   <c>true</c> if [is name visible]; otherwise, <c>false</c>.
     /// </returns>
     private IObservable<Visibility> ObserveIsNameVisible() =>
-        this.WhenAnyValue(x => x.IsExpanded, x => x.IsExpander)
-            .Select(static x => (x.Value1 && !x.Value2) ? Visibility.Visible : Visibility.Collapsed);
+        this.WhenAnyValue(
+            x => x.IsExpanded,
+            x => x.IsExpander,
+            static (isExpanded, isExpander) => isExpanded && !isExpander ? Visibility.Visible : Visibility.Collapsed);
 
     /// <summary>Provides the IsSelectedVisible member.</summary>
     /// <returns>The result.</returns>

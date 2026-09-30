@@ -13,23 +13,6 @@ namespace CrissCross.Avalonia.Test;
 /// <seealso cref="RxObject" />
 public class FirstViewModel : RxObject
 {
-    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
-    public FirstViewModel() =>
-        this.BuildComplete(() =>
-            {
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("mainWindow");
-                    this.NavigateToView<FirstViewModel>("secondWindow");
-                });
-
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>("secondWindow");
-                    this.NavigateToView<FirstViewModel>("mainWindow");
-                });
-            });
-
     /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
@@ -46,12 +29,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{TimeProvider.System.GetLocalNow().DateTime} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
         base.WhenNavigatedTo(e, disposables);
     }
 
@@ -59,12 +39,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{TimeProvider.System.GetLocalNow().DateTime} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigatedFrom(e);
     }
 
@@ -72,12 +49,26 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{TimeProvider.System.GetLocalNow().DateTime} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
+
+    /// <summary>Initializes commands after the view model has been constructed.</summary>
+    internal void InitializeCommands() =>
+        this.BuildComplete(() =>
+            {
+                GotoMain = ReactiveCommand.Create(() =>
+                {
+                    this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new NavigationRequestOptions { HostName = "mainWindow" } });
+                    this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new NavigationRequestOptions { HostName = "secondWindow" } });
+                });
+
+                GotoFirst = ReactiveCommand.Create(() =>
+                {
+                    this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new NavigationRequestOptions { HostName = "secondWindow" } });
+                    this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new NavigationRequestOptions { HostName = "mainWindow" } });
+                });
+            });
 }

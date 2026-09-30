@@ -37,7 +37,7 @@ public partial class MainWindow : Window
     private const string PreviewEllipsis = "...";
 
     /// <summary>Image extensions that WPF can decode for inline file drops.</summary>
-    private static readonly HashSet<string> SupportedImageExtensions = new(StringComparer.OrdinalIgnoreCase) { ".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".wdp" };
+    private static readonly HashSet<string> SupportedImageExtensions = [with(StringComparer.OrdinalIgnoreCase), ".bmp", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".tif", ".tiff", ".wdp"];
 
     /// <summary>Timer used to refresh clipboard availability state.</summary>
     private readonly DispatcherTimer _clipboardTimer;

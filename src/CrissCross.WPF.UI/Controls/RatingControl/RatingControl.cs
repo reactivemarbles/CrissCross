@@ -206,7 +206,7 @@ public class RatingControl : System.Windows.Controls.ContentControl
             return;
         }
 
-        if (!Value.Equals(oldValue))
+        if (!DoubleComparison.AreClose(Value, oldValue))
         {
             RaiseEvent(new(ValueChangedEvent));
         }

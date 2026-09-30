@@ -2,9 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System.Runtime.Versioning;
 using CrissCross.WinForms.Test.Views;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.WinForms.Test;
@@ -13,17 +11,16 @@ namespace CrissCross.WinForms.Test;
 public class MainWindowViewModel : RxObject
 {
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel"/> class.</summary>
-    [RequiresPreviewFeatures]
     public MainWindowViewModel()
     {
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(static () => new MainView());
 
         AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(static () => new FirstView());
 
         AppLocator.CurrentMutable.SetupComplete();
-        var s = new SecondForm();
-        s.Show();
+        var secondForm = new SecondForm().DisposeWith(Disposables);
+        secondForm.Show();
     }
 }

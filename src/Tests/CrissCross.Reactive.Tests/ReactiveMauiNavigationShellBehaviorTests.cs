@@ -4,7 +4,6 @@
 
 using CrissCross.Reactive.MAUI;
 using Microsoft.Maui.Controls;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.Reactive.Tests;

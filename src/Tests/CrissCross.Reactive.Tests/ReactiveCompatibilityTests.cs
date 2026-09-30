@@ -43,7 +43,7 @@ public sealed class ReactiveCompatibilityTests
     }
 
     /// <summary>A minimal reactive view model used by compatibility tests.</summary>
-    private sealed class TestViewModel : RxObject
+    public sealed class TestViewModel : RxObject
     {
         /// <summary>Gets or sets the reactive value.</summary>
         public int Value

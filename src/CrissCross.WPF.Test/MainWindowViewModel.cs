@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.Test.Views;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.WPF.Test;
@@ -15,14 +14,20 @@ public class MainWindowViewModel : RxObject
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel"/> class.</summary>
     public MainWindowViewModel()
     {
-        AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+        var mainViewModel = new MainViewModel();
+        mainViewModel.InitializeCommands();
+        AppLocator.CurrentMutable.RegisterConstant(mainViewModel);
+        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(static () => new MainView());
 
-        AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        var firstViewModel = new FirstViewModel();
+        firstViewModel.InitializeCommands();
+        AppLocator.CurrentMutable.RegisterConstant(firstViewModel);
+        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(static () => new FirstView());
 
-        AppLocator.CurrentMutable.RegisterConstant<BrowserViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(() => new BrowserView());
+        var browserViewModel = new BrowserViewModel();
+        browserViewModel.InitializeCommands();
+        AppLocator.CurrentMutable.RegisterConstant(browserViewModel);
+        AppLocator.CurrentMutable.Register<IViewFor<BrowserViewModel>>(static () => new BrowserView());
         AppLocator.CurrentMutable.SetupComplete();
         var s = new SecondWindow();
         s.Show();
