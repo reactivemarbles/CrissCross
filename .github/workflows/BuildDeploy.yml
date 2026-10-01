@@ -189,7 +189,9 @@ jobs:
       - name: Restore .NET workloads
         shell: bash
         working-directory: ${{ env.solutionFolder }}
-        run: dotnet workload restore ${{ env.solutionFile }} --from-previous-sdk --skip-manifest-update
+        run: |
+          dotnet workload install wasm-tools-net10 --skip-manifest-update
+          dotnet workload restore ${{ env.solutionFile }} --from-previous-sdk --skip-manifest-update
 
       - name: Stamp version with MinVer
         id: minver

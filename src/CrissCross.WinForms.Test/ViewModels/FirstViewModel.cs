@@ -12,44 +12,39 @@ namespace CrissCross.WinForms.Test;
 public class FirstViewModel : RxObject
 {
     /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
-    public FirstViewModel() =>
-        this.BuildComplete(() =>
-            {
-                GotoMain = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>(nameof(MainForm));
-                    this.NavigateToView<FirstViewModel>(nameof(SecondForm));
-                });
+    public FirstViewModel()
+    {
+        GotoMain = ReactiveCommand.Create(() =>
+        {
+            this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = nameof(MainForm) } });
+            this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = nameof(SecondForm) } });
+        });
 
-                GotoFirst = ReactiveCommand.Create(() =>
-                {
-                    this.NavigateToView<MainViewModel>(nameof(SecondForm));
-                    this.NavigateToView<FirstViewModel>(nameof(MainForm));
-                });
-            });
+        GotoFirst = ReactiveCommand.Create(() =>
+        {
+            this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = nameof(SecondForm) } });
+            this.NavigateToView(new NavigationKeyRequest<FirstViewModel> { Options = new() { HostName = nameof(MainForm) } });
+        });
+    }
 
     /// <summary>Gets the goto main.</summary>
     /// <value>
     /// The goto main.
     /// </value>
-    public ICommand? GotoMain { get; private set; }
+    public ICommand? GotoMain { get; }
 
     /// <summary>Gets the goto first.</summary>
     /// <value>
     /// The goto first.
     /// </value>
-    public ICommand? GotoFirst { get; private set; }
+    public ICommand? GotoFirst { get; }
 
     /// <summary>WhenNavigatedTo member.</summary>
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
-
-        Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
+        ArgumentNullException.ThrowIfNull(e);
+        Debug.WriteLine($"Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
         base.WhenNavigatedTo(e, disposables);
     }
 
@@ -57,12 +52,8 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
-
-        Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        ArgumentNullException.ThrowIfNull(e);
+        Debug.WriteLine($"Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigatedFrom(e);
     }
 
@@ -70,12 +61,8 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
-
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        ArgumentNullException.ThrowIfNull(e);
+        Debug.WriteLine($"Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
 }

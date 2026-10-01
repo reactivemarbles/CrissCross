@@ -18,7 +18,7 @@ namespace CrissCross.WPF.UI.Controls;
 public partial class NavigationView
 {
     /// <summary>The journal.</summary>
-    private readonly List<string> _journal = new(50);
+    private readonly List<string> _journal = [with(capacity: 50)];
 
     /// <summary>The navigation stack.</summary>
     private readonly ObservableCollection<INavigationViewItem> _navigationStack = [];
@@ -433,13 +433,13 @@ public partial class NavigationView
         if (!exists)
         {
             const int initialHistoryCapacity = 5;
-            historyList = new(initialHistoryCapacity);
+            historyList = [with(capacity: initialHistoryCapacity)];
         }
 #else
         if (!_complexNavigationStackHistory.TryGetValue(lastItem, out var historyList))
         {
             const int initialHistoryCapacity = 5;
-            historyList = new(initialHistoryCapacity);
+            historyList = [with(capacity: initialHistoryCapacity)];
             _complexNavigationStackHistory.Add(lastItem, historyList);
         }
 #endif

@@ -25,5 +25,5 @@ public class AppDelegate : AvaloniaAppDelegate<App>
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder) =>
         base.CustomizeAppBuilder(builder)
             .WithInterFont()
-            .UseReactiveUI(b => { });
+            .UseReactiveUI(static b => { });
 }

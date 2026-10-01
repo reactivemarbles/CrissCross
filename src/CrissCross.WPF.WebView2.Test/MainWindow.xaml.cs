@@ -20,7 +20,8 @@ public partial class MainWindow : Window
     /// <param name="e">The event data.</param>
     private void WindowsXp_Click(object sender, RoutedEventArgs e)
     {
-        Greeting.Text = $"Hello CrissCross {_clickedXTimes++}";
+        Greeting.Text = $"Hello CrissCross {_clickedXTimes}";
+        _clickedXTimes++;
         WebView2Wpf.Source = new(
             "https://support.microsoft.com/en-gb/windows/"
                 + "windows-xp-support-has-ended-47b944b8-f4d3-82f2-9acc-21c79ee6ef5e");
@@ -31,7 +32,8 @@ public partial class MainWindow : Window
     /// <param name="e">The event data.</param>
     private void Windows7_Click(object sender, RoutedEventArgs e)
     {
-        Greeting.Text = $"Hello CrissCross {_clickedXTimes++}";
+        Greeting.Text = $"Hello CrissCross {_clickedXTimes}";
+        _clickedXTimes++;
         WebView2Wpf.Source = new(
             "https://support.microsoft.com/en-us/windows/"
                 + "windows-7-system-requirements-df0900f2-3513-a851-13e7-0d50bc24e15f");
@@ -42,7 +44,8 @@ public partial class MainWindow : Window
     /// <param name="e">The event data.</param>
     private void Windows10_Click(object sender, RoutedEventArgs e)
     {
-        Greeting.Text = $"Hello CrissCross {_clickedXTimes++}";
+        Greeting.Text = $"Hello CrissCross {_clickedXTimes}";
+        _clickedXTimes++;
         WebView2Wpf.Source = new("https://www.microsoft.com/en-gb/software-download/windows10");
     }
 
@@ -51,7 +54,8 @@ public partial class MainWindow : Window
     /// <param name="e">The event data.</param>
     private void ReactiveUI_Click(object sender, RoutedEventArgs e)
     {
-        Greeting.Text = $"Hello CrissCross {_clickedXTimes++}";
+        Greeting.Text = $"Hello CrissCross {_clickedXTimes}";
+        _clickedXTimes++;
         WebView2Wpf.Source = new("https://www.reactiveui.net/");
     }
 }

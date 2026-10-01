@@ -33,9 +33,8 @@ internal sealed class BidirectionalNavigator : IBidirectionalNavigator
         IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        _viewModelRegistrations = new(
-            registrations.Count);
-        _viewRegistrations = new(registrations.Count);
+        _viewModelRegistrations = new(capacity: registrations.Count);
+        _viewRegistrations = new(capacity: registrations.Count);
 
         foreach (var descriptor in registrations)
         {

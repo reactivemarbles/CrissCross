@@ -17,7 +17,12 @@ using LinqExpression = System.Linq.Expressions.Expression;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
-using ReactiveUI.SourceGenerators;
+
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
 
 #if REACTIVELIST_REACTIVE
 using NumberBox = CrissCross.Reactive.WPF.UI.Controls.NumberBox;
@@ -35,10 +40,16 @@ namespace CrissCross.WPF.Plot;
 /// binding and command handling, enabling interactive editing of item properties such as name, line width, color, and
 /// visibility. The view automatically initializes its data context and binds UI controls to corresponding view model
 /// properties when activated.</remarks>
-[IViewFor<RightPropertiesViewModel>]
 [SupportedOSPlatform("windows")]
-public partial class RightPropertiesView
+public partial class RightPropertiesView : IViewFor<RightPropertiesViewModel>
 {
+    /// <summary>Identifies the view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(RightPropertiesViewModel),
+        typeof(RightPropertiesView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="RightPropertiesView"/> class.</summary>
     /// <remarks>This constructor configures the view to activate its bindings when displayed, enabling
     /// editing and saving of configuration properties through the user interface. The view's controls are bound to
@@ -50,6 +61,23 @@ public partial class RightPropertiesView
         InitializeComponent();
 
         _ = this.WhenActivated(BindViewModel);
+    }
+
+    /// <summary>Gets the binding root view model.</summary>
+    public RightPropertiesViewModel? BindingRoot => ViewModel;
+
+    /// <summary>Gets or sets the view model.</summary>
+    public RightPropertiesViewModel? ViewModel
+    {
+        get => (RightPropertiesViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (RightPropertiesViewModel?)value;
     }
 
     /// <summary>Gets the item name text box.</summary>

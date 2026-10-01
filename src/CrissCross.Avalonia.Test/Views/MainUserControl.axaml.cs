@@ -21,20 +21,15 @@ public partial class MainUserControl : NavigationUserControl<MainWindowViewModel
     public MainUserControl()
     {
         InitializeComponent();
-        _ = this.WhenActivated(Activate);
+    }
 
-        void Activate(CompositeDisposable disposables)
-        {
-            this.NavigateToView<MainViewModel>();
-            if (_navBack is null)
-            {
-                return;
-            }
-
-            var navigateBack = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
-            _navBack.Command = navigateBack;
-            _ = navigateBack.DisposeWith(disposables);
-        }
+    /// <summary>Creates a navigation host and registers activation after construction.</summary>
+    /// <returns>The initialized navigation host.</returns>
+    internal static MainUserControl Create()
+    {
+        var view = new MainUserControl();
+        view.InitializeActivation();
+        return view;
     }
 
     /// <summary>Registers the content presenter.</summary>
@@ -53,14 +48,9 @@ public partial class MainUserControl : NavigationUserControl<MainWindowViewModel
         if (presenter.Name == "PART_ContentPresenter" && presenter.Content is null)
         {
             var grid = new Grid();
-            grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
-            _navBack = new Button
-            {
-                Content = "Back",
-                Name = "NavBack",
-                Height = NavigationButtonHeight
-            };
+            grid.ColumnDefinitions.Add(new(GridLength.Star));
+            grid.ColumnDefinitions.Add(new(GridLength.Star));
+            _navBack = new Button { Content = "Back", Name = "NavBack", Height = NavigationButtonHeight };
             grid.Children.Add(_navBack);
             Grid.SetColumn(_navBack, 0);
             grid.Children.Add(NavigationFrame!);
@@ -69,5 +59,24 @@ public partial class MainUserControl : NavigationUserControl<MainWindowViewModel
         }
 
         return base.RegisterContentPresenter(presenter);
+    }
+
+    /// <summary>Registers the navigation host activation.</summary>
+    private void InitializeActivation()
+    {
+        _ = this.WhenActivated(Activate);
+
+        void Activate(CompositeDisposable disposables)
+        {
+            this.NavigateToView(new NavigationKeyRequest<MainViewModel>());
+            if (_navBack is null)
+            {
+                return;
+            }
+
+            var navigateBack = ReactiveCommand.Create(() => this.NavigateBack(), this.CanNavigateBack());
+            _navBack.Command = navigateBack;
+            _ = navigateBack.DisposeWith(disposables);
+        }
     }
 }

@@ -154,7 +154,7 @@ public class SymbolEnumGeneratorTests
     /// <returns>The complete in-memory catalogs.</returns>
     private static ImmutableArray<AdditionalText> CreateCompleteCatalogs()
     {
-        List<string> memberDefinitions = new(ExpectedMemberCount);
+        List<string> memberDefinitions = [with(capacity: ExpectedMemberCount)];
         for (int index = 0; index < ExpectedMemberCount; index++)
         {
             memberDefinitions.Add($"Icon{index}={index}");

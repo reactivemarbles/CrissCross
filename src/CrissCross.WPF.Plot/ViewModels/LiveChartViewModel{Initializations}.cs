@@ -10,6 +10,12 @@ using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using ScottPlot;
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
 #else

@@ -10,6 +10,7 @@ using CrissCross.WPF;
 using ReactiveUI;
 using FormsHost = CrissCross.WinForms.ViewModelRoutedViewHost;
 using FormsUserControl = System.Windows.Forms.UserControl;
+using LeanBinding = ReactiveUI.Binding;
 using WpfHost = CrissCross.WPF.ViewModelRoutedViewHost;
 using WpfUserControl = System.Windows.Controls.UserControl;
 
@@ -211,39 +212,21 @@ public sealed class PlatformHostRuntimeTests
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <param name="action">The platform action.</param>
     /// <returns>A task that completes with the action result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        var completion = new TaskCompletionSource<TResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var thread = new Thread(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Provides a concrete routed view model.</summary>
     private sealed class TestViewModel : RxObject;
 
     /// <summary>Provides a WPF view for resolved navigation.</summary>
     /// <param name="viewModel">The initial view model.</param>
-    private sealed class WpfTestView(TestViewModel viewModel) : WpfUserControl, IViewFor<TestViewModel>
+    private sealed class WpfTestView(TestViewModel viewModel) : WpfUserControl, LeanBinding.IViewFor<TestViewModel>
     {
         /// <inheritdoc/>
         public TestViewModel? ViewModel { get; set; } = viewModel;
 
         /// <inheritdoc/>
-        object? IViewFor.ViewModel
+        object? LeanBinding.IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (TestViewModel?)value;
@@ -252,7 +235,7 @@ public sealed class PlatformHostRuntimeTests
 
     /// <summary>Provides a WinForms view for resolved navigation.</summary>
     /// <param name="viewModel">The initial view model.</param>
-    private sealed class FormsTestView(TestViewModel viewModel) : FormsUserControl, IViewFor<TestViewModel>
+    private sealed class FormsTestView(TestViewModel viewModel) : FormsUserControl, LeanBinding.IViewFor<TestViewModel>
     {
         /// <inheritdoc/>
         [Browsable(false)]
@@ -260,7 +243,7 @@ public sealed class PlatformHostRuntimeTests
         public TestViewModel? ViewModel { get; set; } = viewModel;
 
         /// <inheritdoc/>
-        object? IViewFor.ViewModel
+        object? LeanBinding.IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (TestViewModel?)value;

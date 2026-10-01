@@ -508,7 +508,7 @@ public class ViewModelRoutedViewHost : ReactiveTransitioningContentControl, IRes
     /// <param name="parameter">The optional navigation parameter.</param>
     private void NavigateTyped<T>(T viewModel, string? contract, object? parameter)
         where T : class, IRxObject =>
-        NavigateCore(viewModel, ViewLocator?.ResolveView<T>(contract), parameter);
+        NavigateCore(viewModel, ViewLocator?.ResolveView<T>(viewModel, contract), parameter);
 
     /// <summary>Runs runtime-resolved navigation, creating a new view instance.</summary>
     /// <param name="viewModel">The view model.</param>

@@ -20,22 +20,12 @@ public sealed class PersonPictureInitialsTests
     [Arguments("Aا", null)]
     public async Task DisplayName_WithMixedScripts_PreservesCharacterPrecedence(string displayName, string? expectedInitials)
     {
-        var completion = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var thread = new Thread(() =>
+        var initials = await WpfTestDispatcher.RunAsync(() =>
         {
-            try
-            {
-                using var picture = new PersonPicture { DisplayName = displayName };
-                completion.SetResult(picture.TemplateSettings.ActualInitials);
-            }
-            catch (Exception exception)
-            {
-                completion.SetException(exception);
-            }
+            using var picture = new PersonPicture { DisplayName = displayName };
+            return picture.TemplateSettings.ActualInitials;
         });
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
 
-        await Assert.That(await completion.Task).IsEqualTo(expectedInitials);
+        await Assert.That(initials).IsEqualTo(expectedInitials);
     }
 }

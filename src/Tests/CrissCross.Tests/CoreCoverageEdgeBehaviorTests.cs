@@ -810,13 +810,13 @@ public sealed class CoreCoverageEdgeBehaviorTests
     private sealed class TestNavigationViewModel : RxObject;
 
     /// <summary>Provides a concrete view for generic navigation value objects.</summary>
-    private sealed class TestNavigationView : ReactiveUI.IViewFor<TestNavigationViewModel>
+    private sealed class TestNavigationView : IViewFor<TestNavigationViewModel>
     {
         /// <inheritdoc/>
         public TestNavigationViewModel? ViewModel { get; set; }
 
         /// <inheritdoc/>
-        object? ReactiveUI.IViewFor.ViewModel
+        object? IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (TestNavigationViewModel?)value;
@@ -877,7 +877,7 @@ public sealed class CoreCoverageEdgeBehaviorTests
         /// <inheritdoc/>
         public IObservable<NavigationResolution<TViewModel, TView>> NavigateViewModel<TViewModel, TView>(ViewModelNavigationRequest<TViewModel, TView> request)
             where TViewModel : class, IRxObject
-            where TView : class, ReactiveUI.IViewFor<TViewModel> =>
+            where TView : class, IViewFor<TViewModel> =>
             Observable.Throw<NavigationResolution<TViewModel, TView>>(new NavigationResolutionException("Typed navigation is unavailable."));
 
         /// <inheritdoc/>
@@ -892,7 +892,7 @@ public sealed class CoreCoverageEdgeBehaviorTests
         /// <inheritdoc/>
         public IObservable<NavigationResolution<TViewModel, TView>> NavigateView<TViewModel, TView>(ViewNavigationRequest<TViewModel, TView> request)
             where TViewModel : class, IRxObject
-            where TView : class, ReactiveUI.IViewFor<TViewModel> =>
+            where TView : class, IViewFor<TViewModel> =>
             NavigateViewModel<TViewModel, TView>(null!);
 
         /// <inheritdoc/>

@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AssemblyName>CrissCross.Tests</AssemblyName>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

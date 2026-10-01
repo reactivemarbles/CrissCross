@@ -12,7 +12,24 @@ namespace CrissCross.WPF.UI.Test.ViewModels;
 public class MainWindowViewModel : RxObject
 {
     /// <summary>Initializes a new instance of the <see cref="MainWindowViewModel"/> class.</summary>
-    public MainWindowViewModel() => InitializeViewModel();
+    public MainWindowViewModel()
+    {
+        ApplicationTitle = "CrissCross.WPF.UI Demo";
+
+        NavigationItems =
+        [
+            new NavigationViewItem { Content = "Home", Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 }, TargetPageType = typeof(Views.Pages.DashboardPage) },
+            new NavigationViewItem { Content = "Data", Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 }, TargetPageType = typeof(Views.Pages.DataPage) },
+            new NavigationViewItem { Content = "Login", Icon = new SymbolIcon { Symbol = SymbolRegular.LockClosed24 }, TargetPageType = typeof(Views.Pages.LoginPage) },
+        ];
+
+        NavigationFooter =
+        [
+            new NavigationViewItem { Content = "Settings", Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 }, TargetPageType = typeof(Views.Pages.SettingsPage) },
+        ];
+
+        TrayMenuItems = [new MenuItem { Header = "Home", Tag = "tray_home" }];
+    }
 
     /// <summary>Gets or sets the application title.</summary>
     /// <value>
@@ -24,71 +41,21 @@ public class MainWindowViewModel : RxObject
         set => this.RaiseAndSetIfChanged(ref field, value);
     } = string.Empty;
 
-    /// <summary>Gets or sets the navigation items.</summary>
+    /// <summary>Gets the navigation items.</summary>
     /// <value>
     /// The navigation items.
     /// </value>
-    public ObservableCollection<object> NavigationItems
-    {
-        get => field;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = [];
+    public ObservableCollection<object> NavigationItems { get; }
 
-    /// <summary>Gets or sets the navigation footer.</summary>
+    /// <summary>Gets the navigation footer.</summary>
     /// <value>
     /// The navigation footer.
     /// </value>
-    public ObservableCollection<object> NavigationFooter
-    {
-        get => field;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = [];
+    public ObservableCollection<object> NavigationFooter { get; }
 
-    /// <summary>Gets or sets the tray menu items.</summary>
+    /// <summary>Gets the tray menu items.</summary>
     /// <value>
     /// The tray menu items.
     /// </value>
-    public ObservableCollection<MenuItem> TrayMenuItems
-    {
-        get => field;
-        set => this.RaiseAndSetIfChanged(ref field, value);
-    } = [];
-
-    /// <summary>Populates the initial navigation and tray menu state.</summary>
-    private void InitializeViewModel()
-    {
-        ApplicationTitle = "CrissCross.WPF.UI Demo";
-
-        NavigationItems =
-        [
-            new NavigationViewItem()
-            {
-                Content = "Home",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
-                TargetPageType = typeof(Views.Pages.DashboardPage),
-            },
-            new NavigationViewItem()
-            {
-                Content = "Data",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
-                TargetPageType = typeof(Views.Pages.DataPage),
-            },
-            new NavigationViewItem()
-            {
-                Content = "Login",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.LockClosed24 },
-                TargetPageType = typeof(Views.Pages.LoginPage),
-            },];
-
-        NavigationFooter =
-        [
-            new NavigationViewItem()
-            {
-                Content = "Settings",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
-                TargetPageType = typeof(Views.Pages.SettingsPage),
-            },];
-
-        TrayMenuItems = [new MenuItem { Header = "Home", Tag = "tray_home" }];
-    }
+    public ObservableCollection<MenuItem> TrayMenuItems { get; }
 }

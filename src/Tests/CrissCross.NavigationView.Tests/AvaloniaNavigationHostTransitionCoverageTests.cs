@@ -10,6 +10,7 @@ using Splat;
 using CoreNavigationWindow = CrissCross.Avalonia.NavigationWindow;
 using CoreRoutedViewHost = CrissCross.Avalonia.ViewModelRoutedViewHost;
 using CoreTransitioningContentControl = CrissCross.Avalonia.ReactiveTransitioningContentControl;
+using LeanBinding = ReactiveUI.Binding;
 using ReactiveNavigationResolution = CrissCross.Reactive.NavigationResolution;
 using ReactiveNavigationWindow = CrissCross.Reactive.Avalonia.NavigationWindow;
 using ReactiveRoutedViewHost = CrissCross.Reactive.Avalonia.ViewModelRoutedViewHost;
@@ -257,13 +258,13 @@ public sealed class AvaloniaNavigationHostTransitionCoverageTests
     private sealed class WindowNavigationViewModel : RxObject;
 
     /// <summary>Simple view used by the public navigation lifecycle regression.</summary>
-    private sealed class WindowNavigationView : Control, IViewFor<WindowNavigationViewModel>
+    private sealed class WindowNavigationView : Control, LeanBinding.IViewFor<WindowNavigationViewModel>
     {
         /// <summary>Gets or sets the strongly typed view model.</summary>
         public WindowNavigationViewModel? ViewModel { get; set; }
 
         /// <summary>Gets or sets the weakly typed view model.</summary>
-        object? IViewFor.ViewModel
+        object? LeanBinding.IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (WindowNavigationViewModel?)value;
@@ -271,21 +272,17 @@ public sealed class AvaloniaNavigationHostTransitionCoverageTests
     }
 
     /// <summary>View locator used by the public navigation lifecycle regression.</summary>
-    private sealed class WindowNavigationViewLocator : IViewLocator
+    private sealed class WindowNavigationViewLocator : LeanBinding.IViewLocator
     {
         /// <inheritdoc/>
-        public IViewFor<TViewModel> ResolveView<TViewModel>()
-            where TViewModel : class => (IViewFor<TViewModel>)(object)ResolveTypedView<TViewModel>();
+        public LeanBinding.IViewFor ResolveView<TViewModel>(TViewModel viewModel, string? contract)
+            where TViewModel : class => (LeanBinding.IViewFor<TViewModel>)(object)ResolveTypedView<TViewModel>();
 
         /// <inheritdoc/>
-        public IViewFor<TViewModel> ResolveView<TViewModel>(string? contract)
-            where TViewModel : class => (IViewFor<TViewModel>)(object)ResolveTypedView<TViewModel>();
+        public LeanBinding.IViewFor? ResolveView(object? viewModel, string? contract) => ResolveUntypedView(viewModel);
 
         /// <inheritdoc/>
-        public IViewFor? ResolveView(object? instance) => ResolveUntypedView(instance);
-
-        /// <inheritdoc/>
-        public IViewFor? ResolveView(object? instance, string? contract) => ResolveUntypedView(instance);
+        public LeanBinding.IViewFor? ResolveViewUnsafe(object? viewModel, string? contract) => ResolveView(viewModel, contract);
 
         /// <summary>Resolves a typed test view.</summary>
         /// <typeparam name="TViewModel">The view model type.</typeparam>
@@ -296,10 +293,10 @@ public sealed class AvaloniaNavigationHostTransitionCoverageTests
                 : throw new InvalidOperationException($"Unsupported view model type {typeof(TViewModel).FullName}.");
 
         /// <summary>Resolves an untyped test view.</summary>
-        /// <param name="instance">The view model.</param>
+        /// <param name="viewModel">The view model.</param>
         /// <returns>The resolved view.</returns>
-        private static WindowNavigationView? ResolveUntypedView(object? instance) =>
-            instance is WindowNavigationViewModel ? new WindowNavigationView() : null;
+        private static WindowNavigationView? ResolveUntypedView(object? viewModel) =>
+            viewModel is WindowNavigationViewModel ? new WindowNavigationView() : null;
     }
 
     /// <summary>Exposes protected core navigation-window initialization for verification.</summary>

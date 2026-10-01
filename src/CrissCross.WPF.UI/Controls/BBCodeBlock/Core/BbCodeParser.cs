@@ -17,10 +17,10 @@ internal sealed class BbCodeParser
     private const string RootTagName = "root";
 
     /// <summary>Tags whose contents are treated as literal text.</summary>
-    private static readonly HashSet<string> RawTags = new(StringComparer.OrdinalIgnoreCase) { "c", "code", "nfo", "noparse", "pre", };
+    private static readonly HashSet<string> RawTags = [with(StringComparer.OrdinalIgnoreCase), "c", "code", "nfo", "noparse", "pre"];
 
     /// <summary>Tags that do not create a nested scope.</summary>
-    private static readonly HashSet<string> SelfClosingTags = new(StringComparer.OrdinalIgnoreCase) { "*", "br", "hr", "line", };
+    private static readonly HashSet<string> SelfClosingTags = [with(StringComparer.OrdinalIgnoreCase), "*", "br", "hr", "line"];
 
     /// <summary>The BBCode source.</summary>
     private readonly string _value;

@@ -104,6 +104,9 @@ public sealed class ReactiveRoutedHostBehaviorTests
         await Assert.That(() => hostedNavigation!.ClearHistory("missing")).Throws<ArgumentNullException>();
         await Assert.That(() => owner.NavigateToView<TestViewModel>(null!)).Throws<ArgumentNullException>();
         await Assert.That(() => owner.NavigateToView(typeof(TestViewModel), null!)).Throws<ArgumentNullException>();
+        using var otherOwner = new NavigationOwner("other-reactive-host");
+        using var otherHost = new RecordingHost("other-reactive-host", false);
+        otherOwner.SetMainNavigationHost(otherHost);
         await Assert.That(() => owner.ClearHistory()).Throws<KeyNotFoundException>();
 
         using var registeredHost = new RecordingHost("unregistered-reactive-host", false);
@@ -813,13 +816,13 @@ public sealed class ReactiveRoutedHostBehaviorTests
     private sealed class ResolvedViewModel : RxObject;
 
     /// <summary>Provides the paired registered routed view.</summary>
-    private sealed class ResolvedView : global::ReactiveUI.IViewFor<ResolvedViewModel>
+    private sealed class ResolvedView : IViewFor<ResolvedViewModel>
     {
         /// <inheritdoc/>
         public ResolvedViewModel? ViewModel { get; set; }
 
         /// <inheritdoc/>
-        object? global::ReactiveUI.IViewFor.ViewModel
+        object? IViewFor.ViewModel
         {
             get => ViewModel;
             set => ViewModel = (ResolvedViewModel?)value;
@@ -852,7 +855,7 @@ public sealed class ReactiveRoutedHostBehaviorTests
         public IObservable<NavigationResolution<TViewModel, TView>> NavigateViewModel<TViewModel, TView>(
             ViewModelNavigationRequest<TViewModel, TView> request)
             where TViewModel : class, IRxObject
-            where TView : class, global::ReactiveUI.IViewFor<TViewModel> => Observable.Empty<NavigationResolution<TViewModel, TView>>();
+            where TView : class, IViewFor<TViewModel> => Observable.Empty<NavigationResolution<TViewModel, TView>>();
 
         /// <inheritdoc/>
         public IObservable<NavigationResolution> NavigateViewModel(Type viewModelKey, NavigationRequestOptions options)
@@ -866,7 +869,7 @@ public sealed class ReactiveRoutedHostBehaviorTests
         public IObservable<NavigationResolution<TViewModel, TView>> NavigateView<TViewModel, TView>(
             ViewNavigationRequest<TViewModel, TView> request)
             where TViewModel : class, IRxObject
-            where TView : class, global::ReactiveUI.IViewFor<TViewModel>
+            where TView : class, IViewFor<TViewModel>
         {
             ViewModelNavigationRequest<TViewModel, TView> viewModelRequest = new();
             return NavigateViewModel(viewModelRequest);
@@ -908,7 +911,7 @@ public sealed class ReactiveRoutedHostBehaviorTests
 
     /// <summary>Provides a notification-capable routed view.</summary>
     /// <param name="viewModel">The routed view model.</param>
-    private sealed class NavigationView(object? viewModel) : INotifiyNavigation, global::ReactiveUI.IViewFor
+    private sealed class NavigationView(object? viewModel) : INotifiyNavigation, IViewFor
     {
         /// <inheritdoc/>
         public bool ISetupNavigatedTo { get; set; }

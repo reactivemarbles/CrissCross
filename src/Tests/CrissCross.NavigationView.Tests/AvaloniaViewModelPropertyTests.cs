@@ -2,7 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ReactiveUI;
+using IViewFor = ReactiveUI.Binding.IViewFor;
 using NavigationControl = CrissCross.Avalonia.NavigationUserControl;
 using NavigationWindow = CrissCross.Avalonia.NavigationWindow;
 

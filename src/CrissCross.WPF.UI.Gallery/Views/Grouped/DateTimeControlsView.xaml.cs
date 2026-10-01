@@ -2,15 +2,38 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Date and Time grouped page.</summary>
-[IViewFor<DateTimeControlsViewModel>]
-public partial class DateTimeControlsView
+public partial class DateTimeControlsView : IViewFor<DateTimeControlsViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(DateTimeControlsViewModel),
+        typeof(DateTimeControlsView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="DateTimeControlsView"/> class.</summary>
     public DateTimeControlsView() => InitializeComponent();
+
+    /// <summary>Gets the binding root view model.</summary>
+    public DateTimeControlsViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public DateTimeControlsViewModel? ViewModel
+    {
+        get => (DateTimeControlsViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (DateTimeControlsViewModel?)value;
+    }
 }

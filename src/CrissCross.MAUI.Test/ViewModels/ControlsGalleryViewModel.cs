@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -47,11 +46,38 @@ public sealed class ControlsGalleryViewModel : RxObject
     /// <summary>Artificial search delay for deterministic manual QA feedback.</summary>
     private const int SearchDelayMilliseconds = 150;
 
+    /// <summary>Provides the NormalTemperature sample value.</summary>
+    private const double NormalTemperature = 72.4;
+
+    /// <summary>Provides the TemperatureMaximum sample value.</summary>
+    private const double TemperatureMaximum = 100;
+
+    /// <summary>Provides the TemperatureLowAlarm sample value.</summary>
+    private const double TemperatureLowAlarm = 10;
+
+    /// <summary>Provides the TemperatureHighAlarm sample value.</summary>
+    private const double TemperatureHighAlarm = 90;
+
+    /// <summary>Provides the AlarmPressure sample value.</summary>
+    private const double AlarmPressure = 126.8;
+
+    /// <summary>Provides the PressureMaximum sample value.</summary>
+    private const double PressureMaximum = 140;
+
+    /// <summary>Provides the PressureHighAlarm sample value.</summary>
+    private const double PressureHighAlarm = 120;
+
+    /// <summary>Provides the FlowMaximum sample value.</summary>
+    private const double FlowMaximum = 500;
+
     /// <summary>Provides the alarms chip key.</summary>
     private const string AlarmsChipKey = "alarms";
 
     /// <summary>Provides the review step key.</summary>
     private const string ReviewStepKey = "review";
+
+    /// <summary>Provides the clock used by the gallery.</summary>
+    private readonly TimeProvider _timeProvider;
 
     /// <summary>Provides the _isOperationRunning member.</summary>
     private ObservableAsPropertyHelper<bool>? _isOperationRunning;
@@ -78,18 +104,28 @@ public sealed class ControlsGalleryViewModel : RxObject
     private StepperState _stepperState;
 
     /// <summary>Provides the _selectedTheme member.</summary>
-    private ThemeChoice _selectedTheme = ThemeChoice.System;
+    private ThemeChoice _selectedTheme;
 
     /// <summary>Provides the _themeState member.</summary>
     private ThemePreferenceState _themeState;
 
     /// <summary>Initializes a new instance of the <see cref="ControlsGalleryViewModel"/> class.</summary>
     public ControlsGalleryViewModel()
+        : this(TimeProvider.System)
     {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="ControlsGalleryViewModel"/> class.</summary>
+    /// <param name="timeProvider">The clock used by the gallery.</param>
+    public ControlsGalleryViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
+        _timeProvider = timeProvider;
         DisplayName = "Reactive feature playground";
         _searchState = CreateSearchState(_searchText, false);
         _paginationState = new(InitialPageIndex, SamplePageSize, SampleTotalItemCount);
-        _currentRange = CreateRange(DateTimeOffset.Now);
+        _currentRange = CreateRange(_timeProvider.GetLocalNow());
         _segmentState = new(CreateSegments(), "table");
         _chipGroupState = new(CreateChips(AlarmsChipKey), ChipGroupSelectionMode.Multiple);
         _stepperState = new(CreateSteps(ReviewStepKey), ReviewStepKey, StepperOrientation.Horizontal);
@@ -243,13 +279,13 @@ public sealed class ControlsGalleryViewModel : RxObject
     }
 
     /// <summary>Gets the normal process-value sample.</summary>
-    public ProcessValueState NormalProcessValue { get; } = new("Reactor temperature", 72.4, "C", 0, 100, 10, 90);
+    public ProcessValueState NormalProcessValue { get; } = new("Reactor temperature", NormalTemperature, "C", 0, TemperatureMaximum, TemperatureLowAlarm, TemperatureHighAlarm);
 
     /// <summary>Gets the alarm process-value sample.</summary>
-    public ProcessValueState AlarmProcessValue { get; } = new("Line pressure", 126.8, "bar", 0, 140, new ProcessValueOptions { HighAlarmLimit = 120 });
+    public ProcessValueState AlarmProcessValue { get; } = new("Line pressure", AlarmPressure, "bar", 0, PressureMaximum, new ProcessValueOptions { HighAlarmLimit = PressureHighAlarm });
 
     /// <summary>Gets the bad-quality process-value sample.</summary>
-    public ProcessValueState BadQualityProcessValue { get; } = new("Flow transmitter", null, "L/min", 0, 500, new ProcessValueOptions { IsGoodQuality = false });
+    public ProcessValueState BadQualityProcessValue { get; } = new("Flow transmitter", null, "L/min", 0, FlowMaximum, new ProcessValueOptions { IsGoodQuality = false });
 
     /// <summary>Gets deterministic platform notes for manual QA.</summary>
     public string PlatformNotes { get; } = GetPlatformNotes();
@@ -267,14 +303,14 @@ public sealed class ControlsGalleryViewModel : RxObject
         ArgumentNullException.ThrowIfNull(e);
         ArgumentNullException.ThrowIfNull(disposables);
 
-        var initialTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+        var initialTimestamp = _timeProvider.GetLocalNow().ToString("HH:mm:ss", CultureInfo.InvariantCulture);
         ActivationLog = $"Activated {initialTimestamp} from {e.From?.Name ?? "<cold start>"}.";
         _ = Observable
             .Interval(TimeSpan.FromSeconds(ActivationHeartbeatSeconds), RxSchedulers.TaskpoolScheduler)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ =>
             {
-                var heartbeatTimestamp = DateTimeOffset.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+                var heartbeatTimestamp = _timeProvider.GetLocalNow().ToString("HH:mm:ss", CultureInfo.InvariantCulture);
                 ActivationLog = $"Still active {heartbeatTimestamp}; dispose this page by navigating away.";
             })
             .DisposeWith(disposables);
@@ -343,7 +379,7 @@ public sealed class ControlsGalleryViewModel : RxObject
             isSearching: isSearching,
             resultCount: string.IsNullOrWhiteSpace(text) ? SampleTotalItemCount : FilteredResultCount,
             filters:
-            [
+            (FilterToken[])[
                 new FilterToken("area", FilterOperator.Equals, "north", "Area: North"),
                 new FilterToken("status", FilterOperator.NotEquals, "closed", "Status: Active"),]);
 
@@ -355,13 +391,13 @@ public sealed class ControlsGalleryViewModel : RxObject
 
     /// <summary>Provides the CreateSegments member.</summary>
     /// <returns>The result.</returns>
-    private static IReadOnlyList<SegmentItem> CreateSegments() =>
+    private static SegmentItem[] CreateSegments() =>
         [new SegmentItem("table", "Table"), new SegmentItem("cards", "Cards"), new SegmentItem("timeline", "Timeline")];
 
     /// <summary>Provides the CreateChips member.</summary>
     /// <param name="selectedKey">The selectedKey value.</param>
     /// <returns>The result.</returns>
-    private static IReadOnlyList<ChipModel> CreateChips(string selectedKey) =>
+    private static ChipModel[] CreateChips(string selectedKey) =>
         [
             new ChipModel(AlarmsChipKey, "Alarms", new ChipModelOptions { IsSelected = selectedKey == AlarmsChipKey }),
             new ChipModel("events", "Events", new ChipModelOptions { IsSelected = selectedKey == "events" }),
@@ -370,29 +406,20 @@ public sealed class ControlsGalleryViewModel : RxObject
     /// <summary>Provides the CreateSteps member.</summary>
     /// <param name="currentKey">The currentKey value.</param>
     /// <returns>The result.</returns>
-    private static IReadOnlyList<StepDescriptor> CreateSteps(string currentKey) =>
+    private static StepDescriptor[] CreateSteps(string currentKey) =>
         [
             new StepDescriptor(
                 "connect",
                 "Connect",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = currentKey == "connect" ? StepStatus.Active : StepStatus.Completed }),
             new StepDescriptor(
                 "query",
                 "Query",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed,
-                }),
+                new StepDescriptorOptions { Status = currentKey == "query" ? StepStatus.Active : StepStatus.Completed }),
             new StepDescriptor(
                 ReviewStepKey,
                 "Review",
-                new StepDescriptorOptions
-                {
-                    Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending,
-                }),
+                new StepDescriptorOptions { Status = currentKey == ReviewStepKey ? StepStatus.Active : StepStatus.Pending }),
             new StepDescriptor(
                 "publish",
                 "Publish",
@@ -446,7 +473,7 @@ public sealed class ControlsGalleryViewModel : RxObject
 
     /// <summary>Provides the ApplyRange member.</summary>
     /// <param name="range">The range value.</param>
-    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(DateTimeOffset.Now);
+    private void ApplyRange(DateTimeRange range) => CurrentRange = range ?? CreateRange(_timeProvider.GetLocalNow());
 
     /// <summary>Provides the ApplySegment member.</summary>
     /// <param name="key">The key value.</param>
@@ -470,9 +497,11 @@ public sealed class ControlsGalleryViewModel : RxObject
         }
 
         SelectedTheme = choice;
-        if (Application.Current is { } currentApplication)
+        if (Application.Current is not { } currentApplication)
         {
-            _ = currentApplication.Resources.UseCrissCrossMauiUiResources(ThemeState);
+            return;
         }
+
+        _ = currentApplication.Resources.UseCrissCrossMauiUiResources(ThemeState);
     }
 }

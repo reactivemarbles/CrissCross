@@ -242,26 +242,8 @@ public sealed class ProcessValueIndicatorTests
     /// <param name="action">The factory to run.</param>
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <returns>A task that completes with the factory result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        var completion = new TaskCompletionSource<TResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var thread = new Thread(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Stores process value projection values captured from an indicator instance.</summary>
     /// <param name="Label">The projected label.</param>

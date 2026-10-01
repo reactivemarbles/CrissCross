@@ -99,7 +99,7 @@ public class FontIconSource : IconSource
             fontIcon.FontFamily = FontFamily;
         }
 
-        if (!FontSize.Equals(SystemFonts.MessageFontSize))
+        if (!DoubleComparison.AreClose(FontSize, SystemFonts.MessageFontSize))
         {
             fontIcon.FontSize = FontSize;
         }

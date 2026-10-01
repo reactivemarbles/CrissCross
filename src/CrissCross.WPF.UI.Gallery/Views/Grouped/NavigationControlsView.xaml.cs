@@ -2,15 +2,38 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Navigation grouped page.</summary>
-[IViewFor<NavigationControlsViewModel>]
-public partial class NavigationControlsView
+public partial class NavigationControlsView : IViewFor<NavigationControlsViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(NavigationControlsViewModel),
+        typeof(NavigationControlsView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="NavigationControlsView"/> class.</summary>
     public NavigationControlsView() => InitializeComponent();
+
+    /// <summary>Gets the binding root view model.</summary>
+    public NavigationControlsViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public NavigationControlsViewModel? ViewModel
+    {
+        get => (NavigationControlsViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (NavigationControlsViewModel?)value;
+    }
 }

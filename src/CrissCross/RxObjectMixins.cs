@@ -183,7 +183,7 @@ public static class RxObjectMixins
                         result.Clear();
                         foreach (var item in items)
                         {
-                            result.Add(item.WhenAnyValue(predicate));
+                            result.Add(item.WhenAnyValueUnsafe(predicate));
                         }
 
                         observer.OnNext(result);

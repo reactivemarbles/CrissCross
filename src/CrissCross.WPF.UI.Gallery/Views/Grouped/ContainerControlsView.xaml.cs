@@ -2,15 +2,38 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
-using ReactiveUI.SourceGenerators;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Container controls grouped page.</summary>
-[IViewFor<ContainerControlsViewModel>]
-public partial class ContainerControlsView
+public partial class ContainerControlsView : IViewFor<ContainerControlsViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(ContainerControlsViewModel),
+        typeof(ContainerControlsView),
+        new(null));
+
     /// <summary>Initializes a new instance of the <see cref="ContainerControlsView"/> class.</summary>
     public ContainerControlsView() => InitializeComponent();
+
+    /// <summary>Gets the binding root view model.</summary>
+    public ContainerControlsViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public ContainerControlsViewModel? ViewModel
+    {
+        get => (ContainerControlsViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (ContainerControlsViewModel?)value;
+    }
 }

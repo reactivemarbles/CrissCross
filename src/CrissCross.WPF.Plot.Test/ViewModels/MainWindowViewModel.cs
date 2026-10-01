@@ -6,7 +6,6 @@ using System.Windows;
 using CrissCross.WPF.Plot.Test.Views;
 using CrissCross.WPF.UI;
 using CrissCross.WPF.UI.Controls;
-using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using Splat;
 

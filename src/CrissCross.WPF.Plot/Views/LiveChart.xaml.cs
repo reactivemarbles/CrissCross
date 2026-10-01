@@ -18,6 +18,13 @@ using ReactiveUI;
 using ReactiveUI.Primitives.ObservableEvents;
 using ScottPlot;
 using ScottPlot.Plottables;
+
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
 #if REACTIVELIST_REACTIVE
 using AppBarButton = CrissCross.Reactive.WPF.UI.Controls.AppBarButton;
 using AppBarIcons = CrissCross.Reactive.WPF.UI.Controls.AppBarIcons;

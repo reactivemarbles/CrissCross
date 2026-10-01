@@ -26,8 +26,9 @@ internal sealed partial class BbCodeRenderer
     private const double TableCellVerticalPadding = 5D;
 
     /// <summary>Tags supported by the renderer.</summary>
-    private static readonly HashSet<string> KnownTags = new(StringComparer.OrdinalIgnoreCase)
-    {
+    private static readonly HashSet<string> KnownTags =
+    [
+        with(StringComparer.OrdinalIgnoreCase),
         "*",
         "align",
         "b",
@@ -95,7 +96,7 @@ internal sealed partial class BbCodeRenderer
         "url",
         "video",
         "youtube",
-    };
+    ];
 
     /// <summary>The control that owns rendered inline content.</summary>
     private readonly BBCodeBlock _source;

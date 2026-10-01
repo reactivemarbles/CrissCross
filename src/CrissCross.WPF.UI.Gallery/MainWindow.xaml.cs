@@ -8,6 +8,7 @@ using CrissCross.WPF.UI.Controls;
 using CrissCross.WPF.UI.Gallery.ViewModels;
 using ReactiveUI;
 using Splat;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery;
 

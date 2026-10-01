@@ -16,6 +16,7 @@ using UnitReplaySignal = ReactiveUI.Primitives.Signals.ReplaySignal<ReactiveUI.P
 using ReactiveUI;
 
 #if REACTIVE_SHIM
+[assembly: InternalsVisibleTo("CrissCross.Reactive.Tests")]
 [assembly: InternalsVisibleTo("CrissCross.Avalonia.Reactive")]
 [assembly: InternalsVisibleTo("CrissCross.MAUI.Reactive")]
 [assembly: InternalsVisibleTo("CrissCross.WinForms.Reactive")]

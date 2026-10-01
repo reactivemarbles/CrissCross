@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Collections.ObjectModel;
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.Tests;

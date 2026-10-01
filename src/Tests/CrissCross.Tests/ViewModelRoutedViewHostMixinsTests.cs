@@ -68,7 +68,7 @@ public partial class ViewModelRoutedViewHostMixinsTests
         viewHost.Navigate(
             new NavigationKeyRequest<TestViewModel> { Options = new NavigationRequestOptions { Contract = ProfileContract, Parameter = parameter }, });
 
-        var testHost = (TestViewModelRoutedViewHost)viewHost;
+        var testHost = viewHost;
         await Assert.That(ReferenceEquals(testHost.LastViewModel, expectedViewModel)).IsTrue();
         await Assert.That(testHost.LastContract).IsEqualTo(ProfileContract);
         await Assert.That(ReferenceEquals(testHost.LastParameter, parameter)).IsTrue();

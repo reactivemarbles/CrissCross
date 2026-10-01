@@ -195,7 +195,7 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigableViewViewModel.OnNavigatedTo();
         }
 
-        if (!(content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent }))
+        if (content is not FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent })
         {
             return;
         }
@@ -217,7 +217,7 @@ public class NavigationViewContentPresenter : Frame
             navigationAwareNavigableViewViewModel.OnNavigatedFrom();
         }
 
-        if (!(content is FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent }))
+        if (content is not FrameworkElement { DataContext: INavigationAware navigationAwareCurrentContent })
         {
             return;
         }

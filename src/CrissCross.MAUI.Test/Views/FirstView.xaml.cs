@@ -9,7 +9,7 @@ namespace CrissCross.MAUI.Test;
 
 /// <summary>FirstView member.</summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class FirstView
+public partial class FirstView : ReactiveUI.Maui.ReactiveContentPage<FirstViewModel>
 {
     /// <summary>Provides the activation registration.</summary>
     private IDisposable? _activation;
@@ -20,6 +20,12 @@ public partial class FirstView
         InitializeComponent();
     }
 
+    /// <summary>Gets the GotoMain navigation button.</summary>
+    public Button GotoMainButton => GotoMain;
+
+    /// <summary>Gets the GotoFirst navigation button.</summary>
+    public Button GotoFirstButton => GotoFirst;
+
     /// <inheritdoc />
     protected override void OnAppearing()
     {
@@ -27,8 +33,8 @@ public partial class FirstView
         _activation ??= this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<FirstViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMainButton).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirstButton).DisposeWith(d);
         });
     }
 }

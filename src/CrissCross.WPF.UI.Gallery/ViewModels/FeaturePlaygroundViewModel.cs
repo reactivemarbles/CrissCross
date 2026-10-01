@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CrissCross.WPF.UI;
 using CrissCross.WPF.UI.Appearance;
 using ReactiveUI;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 
@@ -341,7 +342,7 @@ public sealed class FeaturePlaygroundViewModel : RxObject
     {
         _isOperationRunning ??= RunImportCommand.IsExecuting.ToProperty(
             this,
-            nameof(IsOperationRunning),
+            static x => x.IsOperationRunning,
             scheduler: RxSchedulers.MainThreadScheduler);
         return _isOperationRunning.Value;
     }

@@ -4,7 +4,6 @@
 
 using System;
 using BenchmarkDotNet.Attributes;
-using ReactiveUI;
 
 namespace CrissCross.WPF.Benchmarks;
 

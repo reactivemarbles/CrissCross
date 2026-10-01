@@ -20,7 +20,7 @@ internal sealed class BbCodeRenderer
     private const string MonospaceFontFamily = "Consolas, Cascadia Mono, monospace";
 
     /// <summary>Configures spans for simple BBCode format tags.</summary>
-    private static readonly Dictionary<string, Action<Span>> SimpleFormatters = new(StringComparer.Ordinal)
+    private static readonly Dictionary<string, Action<Span>> SimpleFormatters = new(comparer: StringComparer.Ordinal)
     {
         ["b"] = static span => span.FontWeight = FontWeight.Bold,
         ["strong"] = static span => span.FontWeight = FontWeight.Bold,

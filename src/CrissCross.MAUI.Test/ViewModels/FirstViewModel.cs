@@ -12,11 +12,29 @@ namespace CrissCross.MAUI.Test;
 /// <seealso cref="RxObject" />
 public class FirstViewModel : RxObject
 {
+    /// <summary>Provides the clock used for navigation diagnostics.</summary>
+    private readonly TimeProvider _timeProvider;
+
     /// <summary>Provides the cached main-navigation command.</summary>
     private ICommand? _gotoMain;
 
     /// <summary>Provides the cached back-navigation command.</summary>
     private ICommand? _gotoFirst;
+
+    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
+    public FirstViewModel()
+        : this(TimeProvider.System)
+    {
+    }
+
+    /// <summary>Initializes a new instance of the <see cref="FirstViewModel"/> class.</summary>
+    /// <param name="timeProvider">The clock used for navigation diagnostics.</param>
+    public FirstViewModel(TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
+        _timeProvider = timeProvider;
+    }
 
     /// <summary>Gets the goto main.</summary>
     /// <value>
@@ -36,12 +54,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedTo(IViewModelNavigationEventArgs e, CompositeDisposable disposables)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated To: {e.To?.Name} From: {e.From?.Name} with Host {e.HostName}");
         base.WhenNavigatedTo(e, disposables);
     }
 
@@ -49,12 +64,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigatedFrom(IViewModelNavigationEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigated From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigatedFrom(e);
     }
 
@@ -62,12 +74,9 @@ public class FirstViewModel : RxObject
     /// <inheritdoc />
     public override void WhenNavigating(IViewModelNavigatingEventArgs e)
     {
-        if (e is null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
-        Debug.WriteLine($"{DateTime.Now} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
+        Debug.WriteLine($"{_timeProvider.GetLocalNow()} Navigating From: {e.From?.Name} To: {e.To?.Name} with Host {e.HostName}");
         base.WhenNavigating(e);
     }
 }

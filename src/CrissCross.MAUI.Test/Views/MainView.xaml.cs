@@ -9,7 +9,7 @@ namespace CrissCross.MAUI.Test;
 
 /// <summary>MainView member.</summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class MainView
+public partial class MainView : ReactiveUI.Maui.ReactiveContentPage<MainViewModel>
 {
     /// <summary>Provides the activation registration.</summary>
     private IDisposable? _activation;
@@ -20,6 +20,15 @@ public partial class MainView
         InitializeComponent();
     }
 
+    /// <summary>Gets the GotoMain navigation button.</summary>
+    public Button GotoMainButton => GotoMain;
+
+    /// <summary>Gets the GotoFirst navigation button.</summary>
+    public Button GotoFirstButton => GotoFirst;
+
+    /// <summary>Gets the GotoControlsGallery navigation button.</summary>
+    public Button GotoControlsGalleryButton => GotoControlsGallery;
+
     /// <inheritdoc />
     protected override void OnAppearing()
     {
@@ -27,9 +36,9 @@ public partial class MainView
         _activation ??= this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoControlsGallery, v => v.GotoControlsGallery).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMainButton).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirstButton).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, vm => vm.GotoControlsGallery, v => v.GotoControlsGalleryButton).DisposeWith(d);
         });
     }
 }

@@ -5,6 +5,7 @@
 using CP.Primitives.Collections;
 using CrissCross.WPF.UI.Controls;
 using ReactiveUI;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery.ViewModels;
 

@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Maui.UI;
-using ReactiveUI;
 using ReactiveUI.Builder;
 using Splat;
 
@@ -23,18 +22,18 @@ public partial class App : Application
         _ = Resources.UseCrissCrossMauiUiResources();
         _ = RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+        AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(static () => new MainView());
 
         AppLocator.CurrentMutable.RegisterConstant<FirstViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(() => new FirstView());
+        AppLocator.CurrentMutable.Register<IViewFor<FirstViewModel>>(static () => new FirstView());
         AppLocator.CurrentMutable.RegisterConstant<ControlsGalleryViewModel>(new());
-        AppLocator.CurrentMutable.Register<IViewFor<ControlsGalleryViewModel>>(() => new ControlsGalleryView());
+        AppLocator.CurrentMutable.Register<IViewFor<ControlsGalleryViewModel>>(static () => new ControlsGalleryView());
     }
 
     /// <inheritdoc/>
     protected override Window CreateWindow(IActivationState? activationState)
     {
         _ = activationState;
-        return new Window(new AppShell());
+        return new(new AppShell());
     }
 }

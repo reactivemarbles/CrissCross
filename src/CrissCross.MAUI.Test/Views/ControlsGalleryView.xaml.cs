@@ -11,11 +11,20 @@ namespace CrissCross.MAUI.Test;
 [XamlCompilation(XamlCompilationOptions.Compile)]
 public partial class ControlsGalleryView
 {
+    /// <summary>Provides the activation registration.</summary>
+    private IDisposable? _activation;
+
     /// <summary>Initializes a new instance of the <see cref="ControlsGalleryView"/> class.</summary>
     public ControlsGalleryView()
     {
         InitializeComponent();
-        _ = this.WhenActivated((CompositeDisposable _) =>
+    }
+
+    /// <inheritdoc />
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _activation ??= this.WhenActivated((CompositeDisposable _) =>
         {
             ViewModel ??= AppLocator.Current.GetService<ControlsGalleryViewModel>();
             BindingContext = ViewModel;

@@ -2,17 +2,24 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Windows;
 using CrissCross.WPF.UI.Gallery.ViewModels;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 using Splat;
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.UI.Gallery.Views;
 
 /// <summary>Interaction logic for TreeViewView.xaml.</summary>
-[IViewFor<TreeViewViewModel>]
-public partial class TreeViewView
+public partial class TreeViewView : IViewFor<TreeViewViewModel>
 {
+    /// <summary>The view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(TreeViewViewModel),
+        typeof(TreeViewView),
+        new(null));
+
     /// <summary>Tracks whether reactive bindings have been configured.</summary>
     private bool _bindingsConfigured;
 
@@ -22,6 +29,9 @@ public partial class TreeViewView
         InitializeComponent();
         ViewModel = new();
 
+        // The gallery supplies its own root collection through ItemsSource.
+        FamilyTree.ViewModel = null;
+
         // Register treeview elements
         AppLocator.CurrentMutable.Register(static () => new PersonView(), typeof(IViewFor<Person>));
         AppLocator.CurrentMutable.Register(static () => new PetView(), typeof(IViewFor<Pet>));
@@ -29,10 +39,27 @@ public partial class TreeViewView
         Loaded += OnLoaded;
     }
 
+    /// <summary>Gets the binding root view model.</summary>
+    public TreeViewViewModel? BindingRoot => ViewModel;
+
+    /// <inheritdoc/>
+    public TreeViewViewModel? ViewModel
+    {
+        get => (TreeViewViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (TreeViewViewModel?)value;
+    }
+
     /// <summary>Configures reactive bindings after construction has completed.</summary>
     /// <param name="sender">The loaded view.</param>
     /// <param name="e">The routed event data.</param>
-    private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+    private void OnLoaded(object sender, RoutedEventArgs e)
     {
         if (_bindingsConfigured)
         {
@@ -43,7 +70,7 @@ public partial class TreeViewView
         _ = this.WhenActivated(d =>
         {
             // Bind viewmodel to Treeview
-            _ = this.OneWayBind(ViewModel, vm => vm.Family, v => v.FamilyTree.ViewModel!.Children).DisposeWith(d);
+            _ = this.OneWayBind(ViewModel, vm => vm.Family, v => v.FamilyTree.ItemsSource).DisposeWith(d);
             _ = this.WhenAnyValue(x => x.FamilyTree.SelectedItem)
                 .BindTo(this, x => x.ViewModel!.SelectedItem)
                 .DisposeWith(d);

@@ -23,9 +23,15 @@ internal static class DoubleComparison
     /// <returns><see langword="true" /> when the values are sufficiently close.</returns>
     internal static bool AreClose(double left, double right)
     {
-        if (left.Equals(right))
+        if (double.IsNaN(left) || double.IsNaN(right))
         {
-            return true;
+            return double.IsNaN(left) && double.IsNaN(right);
+        }
+
+        if (double.IsInfinity(left) || double.IsInfinity(right))
+        {
+            return (double.IsPositiveInfinity(left) && double.IsPositiveInfinity(right))
+                || (double.IsNegativeInfinity(left) && double.IsNegativeInfinity(right));
         }
 
         var difference = Math.Abs(left - right);

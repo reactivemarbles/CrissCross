@@ -5,15 +5,22 @@
 using System.Windows;
 using CrissCross.WPF.Plot.Test.ViewModels;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 using Splat;
+
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 
 namespace CrissCross.WPF.Plot.Test.Views;
 
 /// <summary>Interaction logic for MainView.xaml.</summary>
-[IViewFor<MainViewModel>]
-public partial class MainView : IDisposable
+public partial class MainView : IDisposable, IViewFor<MainViewModel>
 {
+    /// <summary>Identifies the view model dependency property.</summary>
+    public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
+        nameof(ViewModel),
+        typeof(MainViewModel),
+        typeof(MainView),
+        new(null));
+
     /// <summary>Stores the bindings owned by the current visual-tree lifetime.</summary>
     private CompositeDisposable? _viewBindings;
 
@@ -24,6 +31,23 @@ public partial class MainView : IDisposable
         ViewModel = AppLocator.Current.GetService<MainViewModel>()!;
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
+    }
+
+    /// <summary>Gets the binding root view model.</summary>
+    public MainViewModel? BindingRoot => ViewModel;
+
+    /// <summary>Gets or sets the view model.</summary>
+    public MainViewModel? ViewModel
+    {
+        get => (MainViewModel?)GetValue(ViewModelProperty);
+        set => SetValue(ViewModelProperty, value);
+    }
+
+    /// <inheritdoc/>
+    object? IViewFor.ViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = (MainViewModel?)value;
     }
 
     /// <summary>Releases the view's event handlers and active bindings.</summary>
@@ -129,18 +153,24 @@ public partial class MainView : IDisposable
     /// <param name="disposables">The activation disposables.</param>
     private void BindPlotData(CompositeDisposable disposables)
     {
-        _ = ViewModel
+        var viewModel = ViewModel;
+        if (viewModel is null)
+        {
+            return;
+        }
+
+        _ = viewModel
             .WhenAnyValue(static vm => vm.NumberPointsPlotted)
             .Where(static numberOfPoints => numberOfPoints.HasValue)
             .Select(static numberOfPoints => Math.Max(1, Convert.ToInt32(numberOfPoints.GetValueOrDefault())))
             .BindTo(this, static v => v.Chart.NumberPointsPlotted)
             .DisposeWith(disposables);
-        _ = ViewModel
+        _ = viewModel
             .ReactivePlotSources.ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(sources => Chart.ReactivePlotSources = sources)
             .DisposeWith(disposables);
         _ = this.WhenAnyValue(static x => x.Chart.ViewModel)
-            .BindTo(ViewModel, static vm => vm.LiveChartViewModel)
+            .BindTo(viewModel, static vm => vm.LiveChartViewModel)
             .DisposeWith(disposables);
     }
 }

@@ -60,7 +60,7 @@ public class SettingsViewModel : RxObject, INavigationAware
     /// <summary>Gets the executing assembly version.</summary>
     /// <returns>The formatted assembly version.</returns>
     private static string GetAssemblyVersion() =>
-        System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
+        typeof(SettingsViewModel).Assembly.GetName().Version?.ToString() ?? string.Empty;
 
     /// <summary>Loads the current application settings.</summary>
     private void InitializeViewModel()
@@ -75,35 +75,15 @@ public class SettingsViewModel : RxObject, INavigationAware
     /// <param name="parameter">The requested theme key.</param>
     private void OnChangeTheme(string parameter)
     {
-        switch (parameter)
+        var theme = parameter == "theme_light"
+            ? Appearance.ApplicationTheme.Light
+            : Appearance.ApplicationTheme.Dark;
+        if (CurrentApplicationTheme == theme)
         {
-            case "theme_light":
-            {
-                if (CurrentApplicationTheme == CrissCross.WPF.UI.Appearance.ApplicationTheme.Light)
-                {
-                    break;
-                }
-
-                CrissCross.WPF.UI.Appearance.ApplicationThemeManager.Apply(
-                    CrissCross.WPF.UI.Appearance.ApplicationTheme.Light);
-                CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationTheme.Light;
-
-                break;
-            }
-
-            default:
-            {
-                if (CurrentApplicationTheme == CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark)
-                {
-                    break;
-                }
-
-                CrissCross.WPF.UI.Appearance.ApplicationThemeManager.Apply(
-                    CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark);
-                CurrentApplicationTheme = CrissCross.WPF.UI.Appearance.ApplicationTheme.Dark;
-
-                break;
-            }
+            return;
         }
+
+        Appearance.ApplicationThemeManager.Apply(theme);
+        CurrentApplicationTheme = theme;
     }
 }

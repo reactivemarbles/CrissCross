@@ -3,39 +3,25 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows.Controls;
-using ReactiveUI;
 
 namespace CrissCross.WPF.UI.Test.Views.Pages;
 
 /// <summary>Interaction logic for LoginView.xaml.</summary>
 public partial class LoginPage
 {
+    /// <summary>Owns subscriptions while the page is loaded.</summary>
+    private CompositeDisposable? _bindings;
+
     /// <summary>Initializes a new instance of the <see cref="LoginPage" /> class.</summary>
     /// <param name="loginViewModel">The login view model.</param>
     public LoginPage(LoginViewModel loginViewModel)
     {
+        ArgumentNullException.ThrowIfNull(loginViewModel);
         InitializeComponent();
         ViewModel = loginViewModel;
 
-        // Bind the password
-        _ = ViewModel.WhenAnyValue(x => x.Password).Subscribe(password => Password.Password = password ?? string.Empty);
-        _ = EventSignal
-            .From<RoutedEventHandler, RoutedEventArgs>(
-                handler => handler.Invoke,
-                handler => Password.PasswordChanged += handler,
-                handler => Password.PasswordChanged -= handler)
-            .Select(_ => Password.Password)
-            .BindTo(ViewModel, x => x.Password);
-
-        // Bind the username
-        _ = ViewModel.WhenAnyValue(x => x.Username).Subscribe(x => UserName.Text = x);
-        _ = EventSignal
-            .From<TextChangedEventHandler, TextChangedEventArgs>(
-                handler => handler.Invoke,
-                handler => UserName.TextChanged += handler,
-                handler => UserName.TextChanged -= handler)
-            .Select(_ => UserName.Text)
-            .BindTo(ViewModel, x => x.Username);
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
 
         LoginButton.Command = ViewModel.LoginCommand;
         _ = UserName.Focus();
@@ -47,4 +33,43 @@ public partial class LoginPage
     /// <see cref="T:CrissCross.WPF.UI.Controls.INavigationView" />.
     /// </summary>
     public LoginViewModel ViewModel { get; }
+
+    /// <summary>Registers bindings while the page is loaded.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        _bindings?.Dispose();
+        var bindings = new CompositeDisposable();
+        _bindings = bindings;
+        _ = ViewModel.WhenAnyValue(x => x.Password)
+            .Subscribe(password => Password.Password = password ?? string.Empty)
+            .DisposeWith(bindings);
+        _ = ViewModel.WhenAnyValue(x => x.Username)
+            .Subscribe(username => UserName.Text = username)
+            .DisposeWith(bindings);
+        Password.PasswordChanged += OnPasswordChanged;
+        UserName.TextChanged += OnUsernameChanged;
+    }
+
+    /// <summary>Releases bindings when the page is unloaded.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        Password.PasswordChanged -= OnPasswordChanged;
+        UserName.TextChanged -= OnUsernameChanged;
+        _bindings?.Dispose();
+        _bindings = null;
+    }
+
+    /// <summary>Copies password edits to the view model.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnPasswordChanged(object? sender, RoutedEventArgs e) => ViewModel.Password = Password.Password;
+
+    /// <summary>Copies username edits to the view model.</summary>
+    /// <param name="sender">The event source.</param>
+    /// <param name="e">The event data.</param>
+    private void OnUsernameChanged(object sender, TextChangedEventArgs e) => ViewModel.Username = UserName.Text;
 }

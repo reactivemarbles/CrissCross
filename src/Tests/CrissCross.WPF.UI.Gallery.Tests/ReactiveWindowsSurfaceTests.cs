@@ -101,26 +101,8 @@ public sealed class ReactiveWindowsSurfaceTests
     /// <typeparam name="TResult">The result type.</typeparam>
     /// <param name="action">The platform action.</param>
     /// <returns>A task that completes with the action result.</returns>
-    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action)
-    {
-        var completion = new TaskCompletionSource<TResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var thread = new Thread(
-            () =>
-            {
-                try
-                {
-                    completion.SetResult(action());
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                }
-            });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        return completion.Task;
-    }
+    private static Task<TResult> RunOnStaThreadAsync<TResult>(Func<TResult> action) =>
+        WpfTestDispatcher.RunAsync(action);
 
     /// <summary>Captures reactive platform host state.</summary>
     /// <param name="WpfRequiresSetup">Whether the WPF host requires setup.</param>

@@ -217,16 +217,16 @@ public struct ColorState : IEquatable<ColorState>
 
     /// <inheritdoc/>
     public readonly bool Equals(ColorState other) =>
-        _rgbR.Equals(other._rgbR)
-        && _rgbG.Equals(other._rgbG)
-        && _rgbB.Equals(other._rgbB)
-        && A.Equals(other.A)
-        && _hsvH.Equals(other._hsvH)
-        && _hsvS.Equals(other._hsvS)
-        && _hsvV.Equals(other._hsvV)
-        && _hslH.Equals(other._hslH)
-        && _hslS.Equals(other._hslS)
-        && _hslL.Equals(other._hslL);
+        EqualityComparer<double>.Default.Equals(_rgbR, other._rgbR)
+        && EqualityComparer<double>.Default.Equals(_rgbG, other._rgbG)
+        && EqualityComparer<double>.Default.Equals(_rgbB, other._rgbB)
+        && EqualityComparer<double>.Default.Equals(A, other.A)
+        && EqualityComparer<double>.Default.Equals(_hsvH, other._hsvH)
+        && EqualityComparer<double>.Default.Equals(_hsvS, other._hsvS)
+        && EqualityComparer<double>.Default.Equals(_hsvV, other._hsvV)
+        && EqualityComparer<double>.Default.Equals(_hslH, other._hslH)
+        && EqualityComparer<double>.Default.Equals(_hslS, other._hslS)
+        && EqualityComparer<double>.Default.Equals(_hslL, other._hslL);
 
     /// <inheritdoc/>
     public override readonly bool Equals(object? obj) => obj is ColorState other && Equals(other);

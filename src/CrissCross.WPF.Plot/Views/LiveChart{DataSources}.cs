@@ -6,6 +6,12 @@
 using ReactiveUI;
 #endif
 
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
 #else
@@ -110,8 +116,8 @@ public partial class LiveChart
         ViewModel?.InitializeSignalPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
-        _crosshairDisposable = ViewModel
-            .WhenAnyValue(x => x.CrossHairEnabled)
+        _crosshairDisposable = this
+            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
     }
 
@@ -127,8 +133,8 @@ public partial class LiveChart
         ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
-        _crosshairDisposable = ViewModel
-            .WhenAnyValue(x => x.CrossHairEnabled)
+        _crosshairDisposable = this
+            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
     }
 

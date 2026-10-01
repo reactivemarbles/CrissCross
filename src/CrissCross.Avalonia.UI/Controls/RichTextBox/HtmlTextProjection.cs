@@ -25,7 +25,7 @@ internal sealed class HtmlTextProjection
     private static readonly SearchValues<char> TagNameSeparators = SearchValues.Create(" /\t\r\n");
 
     /// <summary>HTML block elements whose closing tag contributes a paragraph break.</summary>
-    private static readonly HashSet<string> BlockEndTags = new(StringComparer.OrdinalIgnoreCase) { "P", "DIV", "LI", "TR", "H1", "H2", "H3", "H4", "H5", "H6", };
+    private static readonly HashSet<string> BlockEndTags = [with(StringComparer.OrdinalIgnoreCase), "P", "DIV", "LI", "TR", "H1", "H2", "H3", "H4", "H5", "H6"];
 
     /// <summary>Provides the documented member.</summary>
     private readonly List<RenderedCharacter> _characters;
