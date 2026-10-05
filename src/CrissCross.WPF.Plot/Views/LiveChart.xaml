@@ -1,4 +1,4 @@
-﻿<rxui:ReactiveUserControl
+<rxui:ReactiveUserControl
   x:Class="CrissCross.WPF.Plot.LiveChart"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -147,49 +147,9 @@
           HorizontalAlignment="Left"
           VerticalAlignment="Center"
           x:FieldModifier="public"
+          Click="PlotSettings_Click"
           Icon="Md_settings_helper"
-          ToolTip="Settings"
-        />
-        <abb:AppBarButton
-          x:Name="LiveHistoryBtn"
-          Margin="0,0,0,-20"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          x:FieldModifier="public"
-          Content="  "
-          Icon="Md_lock"
-          ToolTip="Locked"
-        />
-        <abb:AppBarButton
-          x:Name="EnableMarkerBtn"
-          Margin="0,0,0,-20"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          x:FieldModifier="public"
-          Content="  "
-          Icon="Md_crosshairs_off"
-          ToolTip="Locked"
-        />
-        <abb:AppBarButton
-          x:Name="AddCrosshairBtn"
-          Margin="0,0,0,-20"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          x:FieldModifier="public"
-          Content="  "
-          Icon="Md_plus"
-          ToolTip="Locked"
-        />
-
-        <abb:AppBarButton
-          x:Name="RemoveLabelBtn"
-          Margin="0,0,0,-20"
-          HorizontalAlignment="Right"
-          VerticalAlignment="Center"
-          x:FieldModifier="public"
-          Content="  "
-          Icon="Md_broom"
-          ToolTip="Locked"
+          ToolTip="Configure plot appearance, axes, interaction, and each attached data series."
         />
       </StackPanel>
     </Grid>

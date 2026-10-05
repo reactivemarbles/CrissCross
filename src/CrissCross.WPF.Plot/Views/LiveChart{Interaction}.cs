@@ -59,11 +59,6 @@ public partial class LiveChart
         BeginAxisLineDrag(e);
     }
 
-    /// <summary>Toggles the left panel visibility.</summary>
-    private void ToggleLeftPanelVisibility() =>
-        ViewModel!.LeftPanelVisibility =
-            ViewModel.LeftPanelVisibility == Visibility.Hidden ? Visibility.Visible : Visibility.Hidden;
-
     /// <summary>Enables autoscale after locking if needed.</summary>
     private void EnsureAutoScaleAfterLock()
     {
@@ -124,9 +119,12 @@ public partial class LiveChart
     /// <param name="e">The e value.</param>
     private void MainChartGrid_MouseUp(object sender, MouseEventArgs e)
     {
-        ViewModel!.WpfPlot1vm!.UserInputProcessor.Enable(); // enable panning again
         _plottableBeingDragged = null;
-        ViewModel!.WpfPlot1vm!.UserInputProcessor.Enable(); // enable panning again
+        if (!_locked)
+        {
+            ViewModel!.WpfPlot1vm!.UserInputProcessor.Enable();
+        }
+
         ViewModel!.WpfPlot1vm!.Refresh();
     }
 

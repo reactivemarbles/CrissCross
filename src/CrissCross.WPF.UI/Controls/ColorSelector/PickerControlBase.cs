@@ -30,6 +30,13 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
         typeof(PickerControlBase),
         new(Colors.Black, OnSelectedColorPropertyChange));
 
+    /// <summary>The bindable color model property.</summary>
+    public static readonly DependencyProperty ColorProperty = DependencyProperty.Register(
+        nameof(Color),
+        typeof(NotifyableColor),
+        typeof(PickerControlBase),
+        new((object?)null));
+
     /// <summary>The color changed event.</summary>
     public static readonly RoutedEvent ColorChangedEvent = EventManager.RegisterRoutedEvent(
         nameof(ColorChanged),
@@ -67,7 +74,7 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
     public ColorState ColorState
     {
         get => (ColorState)GetValue(ColorStateProperty);
-        set => SetValue(ColorStateProperty, value);
+        set => SetCurrentValue(ColorStateProperty, value);
     }
 
     /// <summary>Gets or sets the color of the selected.</summary>
@@ -84,7 +91,11 @@ public partial class PickerControlBase : UserControl, IColorStateStorage
     /// <value>
     /// The color.
     /// </value>
-    public NotifyableColor Color { get; set; } = null!;
+    public NotifyableColor Color
+    {
+        get => (NotifyableColor)GetValue(ColorProperty);
+        set => SetValue(ColorProperty, value);
+    }
 
     /// <summary>Gets a debugger-friendly textual representation of this instance.</summary>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

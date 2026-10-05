@@ -28,9 +28,6 @@ namespace CrissCross.WPF.Plot;
 [SupportedOSPlatform("windows")]
 public partial class StreamerUI : RxObject, IPlottableUI
 {
-    /// <summary>Stores the value buffer value.</summary>
-    private readonly double[] _valueBuffer;
-
     /// <summary>Stores the sample count value.</summary>
     private readonly uint _sampleCount = 1;
 
@@ -39,6 +36,9 @@ public partial class StreamerUI : RxObject, IPlottableUI
 
     /// <summary>Stores the number points plotted saved value.</summary>
     private readonly int _numberPointsPlottedSaved;
+
+    /// <summary>Stores the reusable buffer for incoming samples.</summary>
+    private double[] _valueBuffer;
 
     /// <summary>Stores the chart settings value.</summary>
     [Reactive]
@@ -200,13 +200,22 @@ public partial class StreamerUI : RxObject, IPlottableUI
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(d =>
             {
+                if (ChartSettings.IsPaused)
+                {
+                    return;
+                }
+
                 var sourceList = d.Y!;
-                var count = Math.Min(sourceList.Count, _numberPointsPlottedSaved);
+                var count = Math.Min(sourceList.Count, PlotLine!.Data.Length);
+                if (_valueBuffer.Length < count)
+                {
+                    _valueBuffer = new double[count];
+                }
 
                 // Copy to pre-allocated buffer to avoid allocations
                 for (var i = 0; i < count; i++)
                 {
-                    _valueBuffer[i] = sourceList[i];
+                    _valueBuffer[i] = sourceList[sourceList.Count - count + i];
                 }
 
                 // For DataStreamer, we need to provide an IEnumerable<double>
@@ -214,11 +223,6 @@ public partial class StreamerUI : RxObject, IPlottableUI
                 var segment = new ArraySegment<double>(_valueBuffer, 0, count);
                 PlotLine!.AddRange(segment);
                 PlotLine!.ManageAxisLimits = false;
-
-                if (ChartSettings.IsPaused)
-                {
-                    return;
-                }
 
                 Plot.Refresh();
             })

@@ -26,14 +26,6 @@ using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 #endif
 
 #if REACTIVELIST_REACTIVE
-using AppBarButton = CrissCross.Reactive.WPF.UI.Controls.AppBarButton;
-using AppBarIcons = CrissCross.Reactive.WPF.UI.Controls.AppBarIcons;
-#else
-using AppBarButton = CrissCross.WPF.UI.Controls.AppBarButton;
-using AppBarIcons = CrissCross.WPF.UI.Controls.AppBarIcons;
-#endif
-
-#if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
 #else
 namespace CrissCross.WPF.Plot;
@@ -67,17 +59,11 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <summary>Stores the need auto scale value.</summary>
     private bool _needAutoScale = true;
 
-    /// <summary>Stores the need cross hair off value.</summary>
-    private bool _needCrossHairOff = true;
-
     /// <summary>Stores the auto scaled value.</summary>
     private bool _autoScaled;
 
     /// <summary>Stores the locked value.</summary>
     private bool _locked = true;
-
-    /// <summary>Stores the crosshair off value.</summary>
-    private bool _crosshairOff;
 
     /// <summary>Stores the plottable being dragged value.</summary>
     private AxisLine? _plottableBeingDragged;
@@ -101,7 +87,6 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
             .DisposeWith(_dd);
         ExecuteLockUnlock();
         ExecuteManAutoScale();
-        InitializeButtons();
         _ = this.WhenActivated(ElementBinding1);
     }
 
@@ -110,18 +95,6 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// The update.
     /// </value>
     public bool First { get; set; } = true;
-
-    /// <summary>Gets the live-history command button.</summary>
-    public AppBarButton LiveHistoryButton => LiveHistoryBtn;
-
-    /// <summary>Gets the marker command button.</summary>
-    public AppBarButton EnableMarkerButton => EnableMarkerBtn;
-
-    /// <summary>Gets the add-crosshair command button.</summary>
-    public AppBarButton AddCrosshairButton => AddCrosshairBtn;
-
-    /// <summary>Gets the remove-label command button.</summary>
-    public AppBarButton RemoveLabelButton => RemoveLabelBtn;
 
     /// <summary>Gets the right properties panel.</summary>
     public RightPropertiesView RightPropertiesPanel => RightProperties;
@@ -135,77 +108,20 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
     /// <summary>Gets the top legend scroll viewer.</summary>
     public ScrollViewer TopLegendViewer => TopLegend;
 
-    /// <summary>Converts a Boolean visibility state to a WPF visibility value.</summary>
-    /// <param name="isVisible">Whether the target should be visible.</param>
-    /// <returns>The matching WPF visibility value.</returns>
-    private static Visibility ToVisibility(bool isVisible) => isVisible ? Visibility.Visible : Visibility.Collapsed;
-
     /// <summary>Handles the ElementBinding1 operation.</summary>
     /// <param name="d">The d value.</param>
     private void ElementBinding1(ActivationDisposable d)
     {
         _ = new ActionDisposable(DisposeReactivePlotConnection).DisposeWith(d);
         _ = this.Events().Unloaded.Subscribe(_ => DisposeReactivePlotConnection()).DisposeWith(d);
-        BindCommands(d);
-        BindMenuVisibility(d);
         BindRightProperties(d);
         BindChartMetadata(d);
     }
 
-    /// <summary>Binds the chart commands.</summary>
-    /// <param name="disposables">The activation disposables.</param>
-    private void BindCommands(ActivationDisposable disposables)
-    {
-        _ = this.BindCommand(ViewModel, static vm => vm.GraphLocked, static v => v.LiveHistoryBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, static vm => vm.EnableMarkerBtn, static v => v.EnableMarkerBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, static vm => vm.RemoveLabelsBtn, static v => v.RemoveLabelBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, static vm => vm.AddCrosshairBtn, static v => v.AddCrosshairBtn)
-            .DisposeWith(disposables);
-        _ = this.BindCommand(ViewModel, static vm => vm.ExpandMenuBtn, static v => v.PlotSettings)
-            .DisposeWith(disposables);
-    }
-
-    /// <summary>Binds menu expansion to command visibility.</summary>
-    /// <param name="disposables">The activation disposables.</param>
-    private void BindMenuVisibility(ActivationDisposable disposables)
-    {
-        var viewModel = ViewModel!;
-        _ = new PropertyObservable<bool>(
-                viewModel,
-                nameof(LiveChartViewModel.IsMenuExpanded),
-                static source => ((LiveChartViewModel)source).IsMenuExpanded,
-                true)
-            .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(isExpanded => LiveHistoryButton.Visibility = ToVisibility(isExpanded))
-            .DisposeWith(disposables);
-        _ = new PropertyObservable<bool>(
-                viewModel,
-                nameof(LiveChartViewModel.IsMenuExpanded),
-                static source => ((LiveChartViewModel)source).IsMenuExpanded,
-                true)
-            .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(isExpanded => EnableMarkerButton.Visibility = ToVisibility(isExpanded))
-            .DisposeWith(disposables);
-        _ = new PropertyObservable<bool>(
-                viewModel,
-                nameof(LiveChartViewModel.IsMenuExpanded),
-                static source => ((LiveChartViewModel)source).IsMenuExpanded,
-                true)
-            .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(isExpanded => AddCrosshairButton.Visibility = ToVisibility(isExpanded))
-            .DisposeWith(disposables);
-        _ = new PropertyObservable<bool>(
-                viewModel,
-                nameof(LiveChartViewModel.IsMenuExpanded),
-                static source => ((LiveChartViewModel)source).IsMenuExpanded,
-                true)
-            .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(isExpanded => RemoveLabelButton.Visibility = ToVisibility(isExpanded))
-            .DisposeWith(disposables);
-    }
+    /// <summary>Toggles the plot settings popup.</summary>
+    /// <param name="sender">The settings button.</param>
+    /// <param name="e">The click event.</param>
+    private void PlotSettings_Click(object sender, RoutedEventArgs e) => OpenPlotSettings();
 
     /// <summary>Binds the selected chart object to the right properties panel.</summary>
     /// <param name="disposables">The activation disposables.</param>
@@ -319,41 +235,36 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         ViewModel!.RightPropertyVisibility = Visibility.Visible;
     }
 
-    /// <summary>Handles the InitializeButtons operation.</summary>
-    private void InitializeButtons()
+    /// <summary>Handles the ExecuteMarkerOnOff operation.</summary>
+    private void ExecuteMarkerOnOff() => SetPointerValues(!ViewModel!.CrossHairEnabled);
+
+    /// <summary>Sets pointer markers for all supported series.</summary>
+    /// <param name="enabled">Whether pointer values should be visible.</param>
+    private void SetPointerValues(bool enabled)
     {
-        // BY DEFAULT: LOCKED AND AUTOSCALED
-        // LOCK GRAPH BUTTON
-        ViewModel?.GraphLocked?.Subscribe(_ => ExecuteLockUnlock()).DisposeWith(_dd);
-
-        // AUTO-SCALE BUTON
-        ViewModel?.EnableMarkerBtn?.Subscribe(_ => ExecuteMarkerOnOff()).DisposeWith(_dd);
-
-        // AUTO-SCALE BUTON
-        ViewModel
-            ?.ExpandMenuBtn?.ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(_ => ToggleLeftPanelVisibility())
-            .DisposeWith(_dd);
+        ViewModel!.CrossHairEnabled = enabled;
+        SynchronizePointerValues();
+        ViewModel!.WpfPlot1vm?.Refresh();
     }
 
-    /// <summary>Handles the ExecuteMarkerOnOff operation.</summary>
-    private void ExecuteMarkerOnOff()
+    /// <summary>Synchronizes supported per-series pointer markers.</summary>
+    private void SynchronizePointerValues()
     {
-        if (_needCrossHairOff && !_crosshairOff)
+        foreach (var settings in ViewModel!.SeriesSettings)
         {
-            ViewModel!.CrossHairEnabled = false;
-            _crosshairOff = true;
-        }
-        else if (!_needCrossHairOff && _crosshairOff)
-        {
-            ViewModel!.CrossHairEnabled = true;
-            _crosshairOff = false;
+            if (settings.PlotType is PlotType.Signal or PlotType.SignalXY)
+            {
+                settings.IsCrossHairVisible = ViewModel.CrossHairEnabled;
+            }
         }
 
-        _needCrossHairOff = !(_needCrossHairOff && _crosshairOff);
-        EnableMarkerBtn.ToolTip = _crosshairOff ? "Marker off" : "Marker";
-        EnableMarkerBtn.Icon = _crosshairOff ? AppBarIcons.Md_crosshairs_off : AppBarIcons.Md_crosshairs;
-        ViewModel!.WpfPlot1vm?.Refresh();
+        foreach (var line in ViewModel.PlotLinesCollectionUI)
+        {
+            if (line is SignalUI or SignalXY_UI)
+            {
+                line.ChartSettings.IsCrossHairVisible = ViewModel.CrossHairEnabled;
+            }
+        }
     }
 
     /// <summary>Handles the ExecuteLockUnlock operation.</summary>
@@ -370,8 +281,6 @@ public partial class LiveChart : ReactiveUserControl<LiveChartViewModel>
         }
 
         _needLock = !(_needLock && _locked);
-        LiveHistoryBtn.ToolTip = _locked ? "Locked" : "Interact";
-        LiveHistoryBtn.Icon = _locked ? AppBarIcons.Md_lock : AppBarIcons.Md_lock_open;
         ViewModel!.WpfPlot1vm?.Refresh();
     }
 

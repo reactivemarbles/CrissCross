@@ -336,6 +336,11 @@ public partial class SignalUI : RxObject, IPlottableUI
     /// <param name="timeValues">The converted X values.</param>
     private void AppendSignalData(IList<double> values, double[] timeValues)
     {
+        if (ChartSettings.IsPaused)
+        {
+            return;
+        }
+
         _uniqueDataBuffer.Clear();
         _uniqueTimeBuffer.Clear();
 
@@ -358,14 +363,9 @@ public partial class SignalUI : RxObject, IPlottableUI
 
         SortBuffersByTime();
 
-        TrimDisplayedPoints();
         PlotLine!.Add([.. _uniqueTimeBuffer], [.. _uniqueDataBuffer]);
+        TrimDisplayedPoints();
         PlotLine.ManageAxisLimits = false;
-
-        if (ChartSettings.IsPaused)
-        {
-            return;
-        }
 
         Plot.Refresh();
     }
