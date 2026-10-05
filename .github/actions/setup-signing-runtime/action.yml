@@ -1,0 +1,33 @@
+name: Setup signing runtime
+description: Install and validate the dependencies used by the prebuilt Certum signer.
+runs:
+  using: composite
+  steps:
+    - name: Install Python for authentication codes
+      shell: bash
+      run: |
+        set -euo pipefail
+        apt-get update
+        apt-get install -y --no-install-recommends python3
+
+    - name: Validate signing runtime
+      shell: bash
+      run: |
+        set -euo pipefail
+        for tool in python3 dotnet java curl Xvfb fluxbox xdpyinfo xdotool pkcs11-tool timeout; do
+          command -v "$tool"
+        done
+        python3 -c 'import os, hmac, hashlib, base64, struct, time; from urllib.parse import urlparse, parse_qs'
+        dotnet nuget verify --help
+        java -jar "${JSIGN_JAR:?prebuilt image must set JSIGN_JAR}" --help
+        : "${SS_DIST:?prebuilt image must set SS_DIST}"
+        test -x "$SS_DIST/SimplySignDesktop"
+        module="$(find "$SS_DIST/" -name 'SimplySignPKCS*.so' -print -quit)"
+        test -n "$module"
+        test -r "$module"
+        dependencies="$(LD_LIBRARY_PATH="$SS_DIST:${LD_LIBRARY_PATH:-}" ldd "$module")"
+        if [[ "$dependencies" == *'not found'* ]]; then
+          printf '%s\n' "$dependencies"
+          echo '::error::SimplySign PKCS11 module has missing shared libraries.'
+          exit 1
+        fi
