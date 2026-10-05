@@ -47,7 +47,7 @@ public partial class PickerControlBase
         }
 
         _ignoreColorPropertyChange = true;
-        SelectedColor = ((ColorRoutedEventArgs)args).Color;
+        SetCurrentValue(SelectedColorProperty, ((ColorRoutedEventArgs)args).Color);
         _ignoreColorPropertyChange = false;
     }
 }
