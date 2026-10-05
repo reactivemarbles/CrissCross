@@ -37,4 +37,20 @@ internal sealed class WpfReactivePlotAdapterFactory(LiveChartViewModel chart) : 
         _colorIndex = (_colorIndex + 1) % Colors.Length;
         return new WpfReactivePlotAdapter(chart, key, plotType, color);
     }
+
+    /// <summary>Applies user retention choices before the binder discards samples.</summary>
+    /// <param name="update">The incoming source update.</param>
+    /// <returns>The update with the active retention limit.</returns>
+    internal ReactivePlotUpdate ConfigureUpdate(ReactivePlotUpdate update)
+    {
+        foreach (var settings in chart.SeriesSettings)
+        {
+            if (settings.Key == update.Key)
+            {
+                return update with { MaxPoints = settings.MaxPoints ?? update.MaxPoints };
+            }
+        }
+
+        return update;
+    }
 }

@@ -85,6 +85,12 @@ ScottPlot's native mouse input supplies responsive zoom and pan. `LiveChart` add
 
 ## Lifecycle and errors
 
+The three-dot **Plot settings** button toggles the configuration popup. AppBar actions control exploration/follow mode, pointer values, axis fitting, themes, legends and annotations; toggle icons reflect their current state. Described editors configure titles, point limits, individual axis ranges and attached series.
+
+Each reactive series appears with controls appropriate to its chart type: visibility, pause, color, line and marker presentation, legend inclusion and retention. Color swatches open the CrissCross PortableColorPicker to select a color and transparency, with changes applied immediately. Area series also expose their fill baseline. Streamers expose scroll/wipe direction and sample spacing. Edits remain active as new data arrives. Invalid colors and non-finite or negative sizes are rejected.
+
+Pausing freezes the series display until the next update after resuming. Snapshot feeds may then display their retained history. Reducing retention discards older plotted samples; increasing the limit cannot recover discarded data. Changing the stream binding configuration reconnects the sources and resets plotted history and series settings, as indicated by the Apply action.
+
 `ReactivePlotBinder.Bind(...)` returns an `IReactivePlotConnection`:
 
 - `State` emits `Connecting`, `Active`, `Completed`, `Faulted`, and `Disposed` transitions.

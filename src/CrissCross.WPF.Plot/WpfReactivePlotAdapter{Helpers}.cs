@@ -15,6 +15,37 @@ namespace CrissCross.WPF.Plot;
 /// <summary>Applies normalized reactive plot updates to WPF plot UI elements.</summary>
 internal sealed partial class WpfReactivePlotAdapter
 {
+    /// <summary>Copies the newest values inside the display window.</summary>
+    /// <param name="values">The retained history.</param>
+    /// <param name="maximum">The largest visible sample count.</param>
+    /// <returns>An owned visible snapshot.</returns>
+    private static double[] CopyTail(List<double> values, int maximum)
+    {
+        var count = Math.Min(values.Count, maximum);
+        var result = new double[count];
+        values.CopyTo(values.Count - count, result, 0, count);
+        return result;
+    }
+
+    /// <summary>Sets legend text for a UI-backed series.</summary>
+    /// <param name="plottable">The series plottable.</param>
+    /// <param name="name">The series name.</param>
+    /// <param name="showInLegend">Whether to include the series.</param>
+    private static void SetUiLegendText(IPlottable plottable, string name, bool showInLegend)
+    {
+        var legendText = showInLegend ? name : string.Empty;
+        var apply = plottable switch
+        {
+            ScottPlot.Plottables.Signal signal => new Action(() => signal.LegendText = legendText),
+            Scatter scatter => () => scatter.LegendText = legendText,
+            DataLogger logger => () => logger.LegendText = legendText,
+            DataStreamer streamer => () => streamer.LegendText = legendText,
+            SignalXY signalXy => () => signalXy.LegendText = legendText,
+            _ => null,
+        };
+        apply?.Invoke();
+    }
+
     /// <summary>Copies a value list into an owned list for mutable plot adapters.</summary>
     /// <param name="values">The source values.</param>
     /// <returns>The copied values.</returns>

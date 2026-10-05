@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.ComponentModel;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
@@ -29,6 +30,9 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
 
     /// <summary>Stores the configured series color.</summary>
     private readonly string _color;
+
+    /// <summary>Stores editable settings retained across source updates.</summary>
+    private readonly ReactivePlotSeriesSettings _settings;
 
     /// <summary>Stores the signal subject value.</summary>
     private readonly Signal<(string? Name, IList<double>? Value, IList<double> X, int Axis)>? _signalSubject;
@@ -60,6 +64,21 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <summary>Stores whether the adapter has been disposed.</summary>
     private bool _disposed;
 
+    /// <summary>Stores whether source defaults have been applied.</summary>
+    private bool _settingsInitialized;
+
+    /// <summary>Stores whether the binder supplied a retained snapshot.</summary>
+    private bool _incomingSnapshot;
+
+    /// <summary>Stores whether initial axis visibility has been established.</summary>
+    private bool _axisAssigned;
+
+    /// <summary>Prevents recursive synchronization of the series selectors.</summary>
+    private bool _applyingSettings;
+
+    /// <summary>Stores the latest X-coordinate interpretation for static redraws.</summary>
+    private PlotXAxisKind _lastXAxisKind;
+
     /// <summary>Initializes a new instance of the <see cref="WpfReactivePlotAdapter"/> class.</summary>
     /// <param name="chart">The chart value.</param>
     /// <param name="key">The key value.</param>
@@ -74,6 +93,10 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         _color = color;
         Key = key;
         PlotType = plotType;
+        _settings = new(key, plotType, color);
+        _chart.SeriesSettings.Add(_settings);
+        _settings.PropertyChanged += SettingsChanged;
+        _chart.PropertyChanged += ChartSettingsChanged;
 
         var initialization = CreateInitialization(plotType);
         _signalSubject = initialization.SignalSubject;
@@ -95,13 +118,28 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     public void Apply(ReactivePlotUpdate update)
     {
         EnsureNotDisposed();
+        if (!_settingsInitialized && update.Kind != ReactivePlotUpdateKind.Clear)
+        {
+            _settings.Initialize(update);
+            _settingsInitialized = true;
+        }
+
+        if (_settings.IsPaused && update.Kind != ReactivePlotUpdateKind.Clear)
+        {
+            return;
+        }
+
+        _incomingSnapshot = update.MaxPoints is not null && PlotType != PlotType.DataLogger;
+        update = update with { Style = _settings.CreateStyle(), MaxPoints = _settings.MaxPoints ?? update.MaxPoints };
         ConfigureXAxis(update.XAxisKind);
+        _lastXAxisKind = update.XAxisKind;
         if (TryApplyClear(update))
         {
             return;
         }
 
         ApplyPlotUpdate(update);
+        TrimUiPoints();
         ApplyStyle(update.Style);
         AssignAxis(update.Key.Axis);
         _chart.WpfPlot1vm?.Refresh();
@@ -116,6 +154,16 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         }
 
         _disposed = true;
+        _settings.PropertyChanged -= SettingsChanged;
+        _chart.PropertyChanged -= ChartSettingsChanged;
+        _ = _chart.SeriesSettings.Remove(_settings);
+        _settings.Dispose();
+        if (_ui is not null)
+        {
+            _ui.ChartSettings.PropertyChanged -= UiSettingsChanged;
+            _ = _chart.PlotLinesCollectionUI.Remove(_ui);
+        }
+
         DisposeSubject(_signalSubject);
         DisposeSubject(_scatterSubject);
         DisposeSubject(_dataLoggerSubject);
@@ -261,7 +309,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             _ => throw new InvalidOperationException($"Plot type '{PlotType}' is not a snapshot chart type."),
         };
 
-        SetLegendText(_snapshotPlottable, snapshot.Key.Name, snapshot.Style?.ShowInLegend ?? true);
+        SetLegendText(_snapshotPlottable, _settings.SeriesLabel, snapshot.Style?.ShowInLegend ?? true);
     }
 
     /// <summary>Applies immutable styling to the active series.</summary>
@@ -273,16 +321,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             return;
         }
 
-        if (_ui is not null)
-        {
-            _ui.ChartSettings.LineWidth = style.LineWidth;
-            _ui.ChartSettings.IsChecked = style.LineMode != PlotLineMode.Hidden;
-            _ui.ChartSettings.Visibility = style.LineMode == PlotLineMode.Hidden ? "Invisible" : "Visible";
-            if (!string.IsNullOrWhiteSpace(style.Color))
-            {
-                _ui.ChartSettings.Color = style.Color;
-            }
-        }
+        ApplyUiSettings(style);
 
         if (_snapshotPlottable is null)
         {
@@ -290,7 +329,14 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         }
 
         var color = ResolveColor(style.Color ?? _color);
+        SetLegendText(_snapshotPlottable, _settings.SeriesLabel, style.ShowInLegend);
         _snapshotPlottable.IsVisible = style.LineMode != PlotLineMode.Hidden;
+        if (PlotType == PlotType.Area && _snapshotPlottable is Scatter area)
+        {
+            area.FillY = style.BaselineMode != PlotBaselineMode.None;
+            area.FillYValue = style.BaselineMode == PlotBaselineMode.Custom ? style.Baseline : 0;
+        }
+
         var apply = _snapshotPlottable switch
         {
             Scatter scatter => new Action(() => ApplyScatterStyle(scatter, color, style)),
@@ -312,9 +358,214 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         {
             stem.LineColor = color;
             stem.MarkerColor = color;
-            stem.LineWidth = style.LineWidth;
-            stem.MarkerSize = style.MarkerSize;
+            stem.LineWidth = style.LineMode == PlotLineMode.MarkersOnly ? 0 : style.LineWidth;
+            stem.MarkerSize = style.LineMode == PlotLineMode.LineOnly ? 0 : style.MarkerSize;
         }
+    }
+
+    /// <summary>Updates settings on a UI-backed series.</summary>
+    /// <param name="style">The effective style.</param>
+    private void ApplyUiSettings(ReactivePlotSeriesStyle style)
+    {
+        if (_ui is null)
+        {
+            return;
+        }
+
+        _applyingSettings = true;
+        try
+        {
+            _ui.ChartSettings.LineWidth = style.LineWidth;
+            _ui.ChartSettings.ItemName = _settings.SeriesLabel;
+            _ui.NumberPointsPlotted = GetPointLimit();
+            _ui.UseFixedNumberOfPoints = GetPointLimit() != int.MaxValue;
+            _ui.ChartSettings.IsCrossHairVisible = _settings.IsCrossHairVisible;
+            _ui.ChartSettings.IsChecked = style.LineMode != PlotLineMode.Hidden;
+            _ui.ChartSettings.Visibility = style.LineMode == PlotLineMode.Hidden ? "Invisible" : "Visible";
+            if (!string.IsNullOrWhiteSpace(style.Color))
+            {
+                _ui.ChartSettings.Color = style.Color;
+            }
+
+            ApplyUiStyle(style);
+        }
+        finally
+        {
+            _applyingSettings = false;
+        }
+    }
+
+    /// <summary>Preserves edits made through the existing external series selector.</summary>
+    /// <param name="sender">The chart settings.</param>
+    /// <param name="args">The changed property.</param>
+    private void UiSettingsChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (_applyingSettings || !_settingsInitialized || _ui is null)
+        {
+            return;
+        }
+
+        if (args.PropertyName == nameof(ChartObjects.IsChecked))
+        {
+            _settings.IsVisible = _ui.ChartSettings.IsChecked;
+        }
+
+        if (args.PropertyName != nameof(ChartObjects.IsCrossHairVisible))
+        {
+            return;
+        }
+
+        _settings.IsCrossHairVisible = _ui.ChartSettings.IsCrossHairVisible;
+    }
+
+    /// <summary>Refreshes presentation immediately when settings change.</summary>
+    /// <param name="sender">The settings instance.</param>
+    /// <param name="args">The changed property.</param>
+    private void SettingsChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (!_settingsInitialized || _disposed)
+        {
+            return;
+        }
+
+        ApplyStyle(_settings.CreateStyle());
+        TrimUiPoints();
+        if (args.PropertyName == nameof(ReactivePlotSeriesSettings.MaxPoints))
+        {
+            ReapplyRetainedData();
+        }
+
+        _chart.WpfPlot1vm?.Refresh();
+    }
+
+    /// <summary>Updates static feeds when the global display window changes.</summary>
+    /// <param name="sender">The chart view model.</param>
+    /// <param name="args">The changed property.</param>
+    private void ChartSettingsChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName is not (nameof(LiveChartViewModel.NumberPointsPlotted) or nameof(LiveChartViewModel.UseFixedNumberOfPoints)))
+        {
+            return;
+        }
+
+        ReapplyRetainedData();
+        ApplyStyle(_settings.CreateStyle());
+        TrimUiPoints();
+        _chart.WpfPlot1vm?.Refresh();
+    }
+
+    /// <summary>Redraws retained snapshot data without awaiting another source emission.</summary>
+    private void ReapplyRetainedData()
+    {
+        if (_retainedX.Count == 0 || _disposed)
+        {
+            return;
+        }
+
+        var replay = new ReactivePlotUpdate(
+            Key,
+            PlotType,
+            ReactivePlotUpdateKind.Replace,
+            _retainedX.ToArray(),
+            _retainedY.ToArray(),
+            _lastXAxisKind,
+            0,
+            _settings.MaxPoints,
+            _settings.CreateStyle());
+        ApplyPlotUpdate(replay);
+        ApplyStyle(replay.Style);
+        AssignAxis(Key.Axis);
+    }
+
+    /// <summary>Enforces the editable retained point limit on logger-backed series.</summary>
+    private void TrimUiPoints()
+    {
+        var maximum = GetPointLimit();
+        if (maximum == int.MaxValue)
+        {
+            return;
+        }
+
+        var logger = _ui switch
+        {
+            SignalUI signal => signal.PlotLine,
+            DataLoggerUI dataLogger => dataLogger.PlotLine,
+            _ => null,
+        };
+
+        if (logger is null || logger.Data.Coordinates.Count <= maximum)
+        {
+            return;
+        }
+
+        logger.Data.Coordinates.RemoveRange(0, logger.Data.Coordinates.Count - maximum);
+    }
+
+    /// <summary>Resolves the tightest configured presentation point limit.</summary>
+    /// <returns>The active point limit.</returns>
+    private int GetPointLimit() => _chart.UseFixedNumberOfPoints
+        ? Math.Min(_settings.MaxPoints ?? int.MaxValue, Math.Max(1, _chart.NumberPointsPlotted))
+        : _settings.MaxPoints ?? int.MaxValue;
+
+    /// <summary>Applies line, marker, and legend settings to existing UI series.</summary>
+    /// <param name="style">The effective series style.</param>
+    private void ApplyUiStyle(ReactivePlotSeriesStyle style)
+    {
+        IPlottable? plottable = _ui switch
+        {
+            SignalUI signal => signal.PlotLine,
+            ScatterUI scatter => scatter.PlotLine,
+            DataLoggerUI logger => logger.PlotLine,
+            StreamerUI streamer => streamer.PlotLine,
+            SignalXY_UI signalXy => signalXy.PlotLine,
+            _ => null,
+        };
+
+        if (plottable is null)
+        {
+            return;
+        }
+
+        plottable.IsVisible = style.LineMode != PlotLineMode.Hidden;
+        var color = ResolveColor(style.Color ?? _color);
+        var line = (IHasLine)plottable;
+        line.LineStyle.Width = style.LineMode == PlotLineMode.MarkersOnly ? 0 : style.LineWidth;
+        line.LineStyle.Color = color;
+
+        var marker = (IHasMarker)plottable;
+        marker.MarkerStyle.Size = style.LineMode == PlotLineMode.LineOnly ? 0 : style.MarkerSize;
+        marker.MarkerStyle.FillColor = color;
+        marker.MarkerStyle.LineColor = color;
+
+        ApplyStreamerSettings();
+
+        SetUiLegendText(plottable, _settings.SeriesLabel, style.ShowInLegend);
+    }
+
+    /// <summary>Applies the fixed-buffer stream view and sample interval.</summary>
+    private void ApplyStreamerSettings()
+    {
+        if (_ui is not StreamerUI { PlotLine: { } streamer })
+        {
+            return;
+        }
+
+        streamer.Period = _settings.SamplePeriod;
+        var capacity = _settings.MaxPoints ?? Math.Max(1, _chart.NumberPointsPlotted);
+        if (streamer.Data.Length != capacity)
+        {
+            streamer.Data = new(new double[capacity]);
+        }
+
+        var apply = _settings.StreamerViewMode switch
+        {
+            StreamerViewMode.ScrollLeft => new Action(streamer.ViewScrollLeft),
+            StreamerViewMode.ScrollRight => streamer.ViewScrollRight,
+            StreamerViewMode.WipeLeft => streamer.ViewWipeLeft,
+            StreamerViewMode.WipeRight => () => streamer.ViewWipeRight(),
+            _ => throw new ArgumentOutOfRangeException(nameof(_settings.StreamerViewMode)),
+        };
+        apply();
     }
 
     /// <summary>Applies a signal update.</summary>
@@ -338,7 +589,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="update">The update value.</param>
     private void ApplyDataLogger(ReactivePlotUpdate update) =>
         _dataLoggerSubject?.OnNext(
-            (update.Key.Name, CopyToList(update.Y), update.Key.Axis, update.MaxPoints ?? int.MaxValue));
+            (update.Key.Name, CopyToList(update.Y), update.Key.Axis, Math.Min(update.MaxPoints ?? int.MaxValue, GetPointLimit())));
 
     /// <summary>Applies a streamer update.</summary>
     /// <param name="update">The update value.</param>
@@ -354,6 +605,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         }
 
         _chart.PlotLinesCollectionUI.Add(_ui);
+        _ui.ChartSettings.PropertyChanged += UiSettingsChanged;
         _chart.UpdateChartObjectsCollection();
         AssignAxis(Key.Axis);
     }
@@ -369,6 +621,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
 
         if (_ui is not null)
         {
+            _ui.ChartSettings.PropertyChanged -= UiSettingsChanged;
             _ = _chart.PlotLinesCollectionUI.Remove(_ui);
             _ui.Dispose();
             _ui = null;
@@ -395,7 +648,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <returns>The result.</returns>
     private ReactivePlotUpdate PrepareSnapshotUpdate(ReactivePlotUpdate update)
     {
-        if (update.Kind == ReactivePlotUpdateKind.Replace || update.MaxPoints is not null)
+        if (update.Kind == ReactivePlotUpdateKind.Replace || _incomingSnapshot)
         {
             _retainedX.Clear();
             _retainedY.Clear();
@@ -408,7 +661,8 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
 
         _retainedX.AddRange(update.X);
         _retainedY.AddRange(update.Y);
-        if (update.MaxPoints is { } maxPoints && maxPoints > 0 && _retainedX.Count > maxPoints)
+        var maxPoints = _settings.MaxPoints ?? int.MaxValue;
+        if (_retainedX.Count > maxPoints)
         {
             var excess = _retainedX.Count - maxPoints;
             _retainedX.RemoveRange(0, excess);
@@ -417,8 +671,8 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
 
         return update with
         {
-            X = _retainedX.ToArray(),
-            Y = _retainedY.ToArray(),
+            X = CopyTail(_retainedX, GetPointLimit()),
+            Y = CopyTail(_retainedY, GetPointLimit()),
         };
     }
 
@@ -506,7 +760,12 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
         }
 
         var verticalAxis = _chart.YAxisList[axis];
-        verticalAxis.IsVisible = true;
+        if (!_axisAssigned)
+        {
+            verticalAxis.IsVisible = true;
+            _axisAssigned = true;
+        }
+
         if (_ui is not null)
         {
             _ui.ChartSettings.Marker!.Axes.YAxis = verticalAxis;

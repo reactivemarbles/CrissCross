@@ -77,10 +77,6 @@ public partial class LiveChartViewModel : RxObject
     [Reactive]
     private bool _crossHairEnabled;
 
-    /// <summary>Stores the is menu expanded value.</summary>
-    [Reactive]
-    private bool _isMenuExpanded;
-
     /// <summary>Stores the title value.</summary>
     [Reactive]
     private string _title = " ";
@@ -97,7 +93,6 @@ public partial class LiveChartViewModel : RxObject
     public LiveChartViewModel(Grid grid)
     {
         InitializeChart(grid);
-        InitializeCommands();
         AxesSetup(); // axes colors setup
         ApplyTheme(CurrentTheme);
         Initializations2();
@@ -176,37 +171,17 @@ public partial class LiveChartViewModel : RxObject
     /// <summary>Gets the complete theme currently applied to the plot surface.</summary>
     public ReactivePlotTheme CurrentTheme { get; private set; } = ReactivePlotTheme.Dark;
 
+    /// <summary>Gets editable settings for the attached reactive data series.</summary>
+#if NET6_0_OR_GREATER
+    public QuaternaryList<ReactivePlotSeriesSettings> SeriesSettings { get; } = [];
+#else
+    public ReactiveList<ReactivePlotSeriesSettings> SeriesSettings { get; } = [];
+#endif
+
     /// <summary>Gets or sets the observable stream for mouse coordinate updates.</summary>
     /// <remarks>Subscribers to this observable receive notifications whenever the mouse coordinates change.
     /// The stream emits values of type <see cref="Coordinates"/> representing the current mouse position.</remarks>
     public Signal<Coordinates> MouseCoordinatesObservable { get; set; } = new();
-
-    /// <summary>Gets the command that is executed when the graph is locked, preventing further modifications.</summary>
-    /// <remarks>Use this command to signal that the graph should enter a locked state. While the graph is
-    /// locked, operations that modify its structure or data may be disabled or ignored. The command completes when the
-    /// lock is applied.</remarks>
-    public ReactiveCommand<Unit, Unit>? GraphLocked { get; private set; }
-
-    /// <summary>Gets the command that enables the marker button in the user interface.</summary>
-    /// <remarks>The command can be bound to UI elements to control the enabled state of the marker button.
-    /// The command is reactive and may be null if the marker button is not available in the current context.</remarks>
-    public ReactiveCommand<Unit, Unit>? EnableMarkerBtn { get; private set; }
-
-    /// <summary>Gets the command that adds a crosshair to the current context when executed.</summary>
-    /// <remarks>The command is typically bound to a user interface element, such as a button, to enable users
-    /// to add a crosshair interactively. The command is disabled if adding a crosshair is not currently
-    /// permitted.</remarks>
-    public ReactiveCommand<Unit, Unit>? AddCrosshairBtn { get; private set; }
-
-    /// <summary>Gets the command that removes all labels from the current selection.</summary>
-    /// <remarks>The command is enabled only when labels can be removed from the selection. Use this property
-    /// to bind UI elements, such as a button, to the label removal functionality.</remarks>
-    public ReactiveCommand<Unit, Unit>? RemoveLabelsBtn { get; private set; }
-
-    /// <summary>Gets the command that expands the menu when executed.</summary>
-    /// <remarks>The command can be bound to UI elements to trigger menu expansion. The property may be null
-    /// if the command is not available in the current context.</remarks>
-    public ReactiveCommand<Unit, Unit>? ExpandMenuBtn { get; private set; }
 
     /// <summary>Gets or sets the visibility state of the left panel.</summary>
     public Visibility LeftPanelVisibility { get; set; }
@@ -512,6 +487,25 @@ public partial class LiveChartViewModel : RxObject
         WpfPlot1vm.Refresh();
     }
 
+    /// <summary>Adds a crosshair bound to the primary axes.</summary>
+    public void AddCrosshair()
+    {
+        CrosshairCollection.Add(
+            new(
+                WpfPlot1vm!,
+                ("crosshair 1", 0),
+                color: "Blue",
+                isXAxisDateTime: IsXAxisDateTime,
+                coordinatesObs: MouseCoordinatesObservable));
+        var crosshair = CrosshairCollection[CrosshairCollection.Count - 1].PlotLine!;
+        crosshair.Axes.YAxis = YAxisList[0];
+        crosshair.Axes.XAxis = XAxis1;
+        crosshair.VerticalLine.Axes.YAxis = YAxisList[0];
+        crosshair.VerticalLine.Axes.XAxis = XAxis1;
+        crosshair.HorizontalLine.Axes.YAxis = YAxisList[0];
+        crosshair.HorizontalLine.Axes.XAxis = XAxis1;
+    }
+
     /// <summary>Selects a predefined color from the legend item count.</summary>
     /// <remarks>The returned color is chosen by computing the remainder of the legend's item count divided by
     /// the number of available colors. If the legend is empty, the first color in the set is returned.</remarks>
@@ -573,46 +567,6 @@ public partial class LiveChartViewModel : RxObject
         YAxisList = [];
         XAxis1 = WpfPlot1vm!.Plot.Axes.AddBottomAxis();
         CreateAxisWithTimeStamp();
-    }
-
-    /// <summary>Creates the interactive chart commands.</summary>
-    private void InitializeCommands()
-    {
-        GraphLocked = ReactiveCommand.Create(static () => { });
-        EnableMarkerBtn = ReactiveCommand.Create(() =>
-        {
-            foreach (var plotLine in PlotLinesCollectionUI)
-            {
-                plotLine.ChartSettings.IsCrossHairVisible = !plotLine.ChartSettings.IsCrossHairVisible;
-            }
-        });
-        AddCrosshairBtn = ReactiveCommand.Create(AddCrosshair);
-        RemoveLabelsBtn = ReactiveCommand.Create(() =>
-        {
-            ClearLabels();
-            ClearAxisCrosshairs();
-        });
-        ExpandMenuBtn = ReactiveCommand.Create(ToggleMenuExpansion);
-        _ = ExpandMenuBtn.DisposeWith(Disposables);
-    }
-
-    /// <summary>Adds a crosshair bound to the primary axes.</summary>
-    private void AddCrosshair()
-    {
-        CrosshairCollection.Add(
-            new(
-                WpfPlot1vm!,
-                ("crosshair 1", 0),
-                color: "Blue",
-                isXAxisDateTime: IsXAxisDateTime,
-                coordinatesObs: MouseCoordinatesObservable));
-        var crosshair = CrosshairCollection[CrosshairCollection.Count - 1].PlotLine!;
-        crosshair.Axes.YAxis = YAxisList[0];
-        crosshair.Axes.XAxis = XAxis1;
-        crosshair.VerticalLine.Axes.YAxis = YAxisList[0];
-        crosshair.VerticalLine.Axes.XAxis = XAxis1;
-        crosshair.HorizontalLine.Axes.YAxis = YAxisList[0];
-        crosshair.HorizontalLine.Axes.XAxis = XAxis1;
     }
 
     /// <summary>Propagates point-window settings to active plot lines.</summary>
@@ -678,9 +632,6 @@ public partial class LiveChartViewModel : RxObject
 
         AxisStyle();
     }
-
-    /// <summary>Toggles the menu expansion state.</summary>
-    private void ToggleMenuExpansion() => IsMenuExpanded = !IsMenuExpanded;
 
     /// <summary>Collapses the right property panel.</summary>
     private void CollapseRightPropertyPanel() => RightPropertyVisibility = Visibility.Collapsed;

@@ -40,8 +40,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel.ClearContent();
         var sourceArray = sources as IReactivePlotSource[] ?? CopyReactivePlotSources(sources);
         ConfigureReactivePlotXAxis(sourceArray);
@@ -49,8 +48,11 @@ public partial class LiveChart
         ReactivePlotBindingOptions options = new()
         {
             UiScheduler = RxSchedulers.MainThreadScheduler,
-            MaxVisiblePoints = (UseFixedNumberOfPoints ? NumberPointsPlotted : null),
             MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
+            BatchWindow = _batchWindowMilliseconds > 0 ? TimeSpan.FromMilliseconds(_batchWindowMilliseconds) : null,
+            MaxBatchSize = _maximumBatchSize,
+            OverflowStrategy = _overflowStrategy,
+            ErrorMode = _errorMode,
         };
         _reactivePlotConnection = new ReactivePlotBinder().Bind(
             ViewModel,
@@ -62,6 +64,11 @@ public partial class LiveChart
     /// <summary>Handles the DisposeReactivePlotConnection operation.</summary>
     private void DisposeReactivePlotConnection()
     {
+        if (_settingsPopup is not null)
+        {
+            _settingsPopup.IsOpen = false;
+        }
+
         _reactivePlotConnection?.Dispose();
         _reactivePlotConnection = null;
         DisposeCrosshairSubscription();
@@ -82,8 +89,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeScatterPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -96,8 +102,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeScatterPlotLines(ScatterObservablesWithTimeStamp);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -111,8 +116,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeSignalPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -128,8 +132,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -146,8 +149,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeDataLoggerPlotLinesWithPoints(input.Data);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -160,8 +162,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeDataLoggerPlotLinesWithPoints(DataLoggerObservablesWithPoints);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -175,8 +176,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeSignalPlotLines(input.Data);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -189,8 +189,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeSignalPlotLines(DataWithTimeStamp);
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
@@ -209,8 +208,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeLinesForSignalPoints(data);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
@@ -235,8 +233,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeLinesForSignalObservablesPoints(
             input.Data,
             fs: Frequency,
@@ -252,8 +249,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeLinesForSignalObservablesPoints(
             SignalObservablesWithPoints,
             fs: Frequency,
@@ -270,8 +266,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeLinesForScatterPoints(input.Data);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();
@@ -285,8 +280,7 @@ public partial class LiveChart
         ExecuteLockUnlock();
         _needAutoScale = true;
         ExecuteManAutoScale();
-        _needCrossHairOff = true;
-        ExecuteMarkerOnOff();
+        SetPointerValues(false);
         ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
         InitializeControlMenu();
         ViewModel?.InitializeAxisLines();

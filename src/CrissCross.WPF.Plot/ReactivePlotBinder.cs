@@ -299,6 +299,11 @@ public sealed class ReactivePlotBinder : IReactivePlotBinder
             return;
         }
 
+        if (adapterFactory is WpfReactivePlotAdapterFactory wpfFactory)
+        {
+            update = wpfFactory.ConfigureUpdate(update);
+        }
+
         if (!Validate(update, options, stoppedSeries, connection))
         {
             return;
