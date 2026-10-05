@@ -248,6 +248,11 @@ jobs:
       CERTUM_OTP_URI: ${{ secrets.CERTUM_OTP_URI }}
       CERTUM_CERT_FINGERPRINT: ${{ secrets.CERTUM_CERT_FINGERPRINT }}
     steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup signing runtime
+        uses: ./.github/actions/setup-signing-runtime
+
       - name: Download unsigned packages
         uses: actions/download-artifact@v8
         with:
@@ -261,9 +266,9 @@ jobs:
           : "${SS_DIST:?prebuilt image must set SS_DIST}"
           {
             echo "SS_DIST=$SS_DIST"
-            echo "SS_START=$(find "$SS_DIST/" -name 'SimplySignDesktop_start' -type f | head -1)"
-            echo "SS_EXE=$(find "$SS_DIST/" -name 'SimplySignDesktop' -type f | head -1)"
-            echo "SS_PKCS11=$(find "$SS_DIST/" -name 'SimplySignPKCS*.so' | head -1)"
+            echo "SS_START=$(find "$SS_DIST/" -name 'SimplySignDesktop_start' -type f -print -quit)"
+            echo "SS_EXE=$(find "$SS_DIST/" -name 'SimplySignDesktop' -type f -print -quit)"
+            echo "SS_PKCS11=$(find "$SS_DIST/" -name 'SimplySignPKCS*.so' -print -quit)"
           } >> "$GITHUB_ENV"
 
       - name: Start headless display
@@ -305,8 +310,6 @@ jobs:
           fi
           sleep 20
 
-          OTP="$(python3 -c 'import os,hmac,hashlib,base64,struct,time;from urllib.parse import urlparse,parse_qs;q=parse_qs(urlparse(os.environ["CERTUM_OTP_URI"]).query);s=q["secret"][0];digits=int(q.get("digits",["6"])[0]);period=int(q.get("period",["30"])[0]);algo={"SHA1":hashlib.sha1,"SHA256":hashlib.sha256,"SHA512":hashlib.sha512}[q.get("algorithm",["SHA1"])[0].upper()];key=base64.b32decode(s+"="*((8-len(s)%8)%8));h=hmac.new(key,struct.pack(">Q",int(time.time()//period)),algo).digest();o=h[-1]&0xF;print(str((int.from_bytes(h[o:o+4],"big")&0x7fffffff)%(10**digits)).zfill(digits))')"
-          echo "::add-mask::$OTP"
 
           WID=""; BX=0; BY=0; BW=0; BH=0
           for attempt in $(seq 1 30); do
@@ -330,6 +333,8 @@ jobs:
           xdotool mousemove $((BX + BW/2)) $((BY + BH*39/100)) click 1; sleep 1
           xdotool type --clearmodifiers --delay 50 "$CERTUM_USER_ID"
           xdotool key Tab; sleep 1
+          OTP="$(python3 -c 'import os,hmac,hashlib,base64,struct,time;from urllib.parse import urlparse,parse_qs;q=parse_qs(urlparse(os.environ["CERTUM_OTP_URI"]).query);s=q["secret"][0];digits=int(q.get("digits",["6"])[0]);period=int(q.get("period",["30"])[0]);algo={"SHA1":hashlib.sha1,"SHA256":hashlib.sha256,"SHA512":hashlib.sha512}[q.get("algorithm",["SHA1"])[0].upper()];key=base64.b32decode(s+"="*((8-len(s)%8)%8));h=hmac.new(key,struct.pack(">Q",int(time.time()//period)),algo).digest();o=h[-1]&0xF;print(str((int.from_bytes(h[o:o+4],"big")&0x7fffffff)%(10**digits)).zfill(digits))')"
+          echo "::add-mask::$OTP"
           xdotool type --clearmodifiers --delay 50 "$OTP"
           xdotool mousemove $((BX + BW/2)) $((BY + BH*76/100)) click 1
           sleep 8

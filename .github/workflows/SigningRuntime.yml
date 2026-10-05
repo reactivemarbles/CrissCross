@@ -1,0 +1,26 @@
+name: Signing runtime
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/actions/setup-signing-runtime/**
+      - .github/workflows/SigningRuntime.yml
+      - .github/workflows/BuildDeploy.yml
+  pull_request:
+    paths:
+      - .github/actions/setup-signing-runtime/**
+      - .github/workflows/SigningRuntime.yml
+      - .github/workflows/BuildDeploy.yml
+
+permissions:
+  contents: read
+
+jobs:
+  signing-runtime:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/reactiveui/certum-signer:latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-signing-runtime
