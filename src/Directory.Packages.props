@@ -87,7 +87,7 @@
     <PackageVersion Include="CP.Extensions.Hosting.MainUIThread" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Xaml.Converters" Version="2.0.0" />
     <PackageVersion Include="Markdig" Version="1.4.0" />
-    <PackageVersion Include="ReactiveList" Version="5.3.0" />
+    <PackageVersion Include="ReactiveList" Version="5.5.0" />
     <PackageVersion Include="ReactiveList.Reactive" Version="5.4.0" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.59" />
 
