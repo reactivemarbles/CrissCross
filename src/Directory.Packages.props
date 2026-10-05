@@ -5,12 +5,13 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AvaloniaVersion>12.1.3</AvaloniaVersion>
     <SplatVersion>20.2.0</SplatVersion>
-    <ReactiveUIVersion>25.1.1</ReactiveUIVersion>
+    <ReactiveUIVersion>26.0.1</ReactiveUIVersion>
     <ReactiveUIBindingVersion>9.1.0</ReactiveUIBindingVersion>
-    <ReactiveUIPrimitivesVersion>8.4.0</ReactiveUIPrimitivesVersion>
+    <ReactiveUIPrimitivesVersion>9.0.0</ReactiveUIPrimitivesVersion>
     <DotNetVersion>10.0.12</DotNetVersion>
     <DotNet11Version>11.0.0-rc.1.26425.128</DotNet11Version>
     <ExtensionsHostingVersion>6.1.0</ExtensionsHostingVersion>
+    <ReactiveListVersion>5.5.0</ReactiveListVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,7 @@
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Core" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.5" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.6" />
     <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.6" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Maui.Reactive" Version="$(ReactiveUIVersion)" />
@@ -87,8 +88,8 @@
     <PackageVersion Include="CP.Extensions.Hosting.MainUIThread" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Xaml.Converters" Version="2.0.0" />
     <PackageVersion Include="Markdig" Version="1.4.0" />
-    <PackageVersion Include="ReactiveList" Version="5.5.0" />
-    <PackageVersion Include="ReactiveList.Reactive" Version="5.4.0" />
+    <PackageVersion Include="ReactiveList" Version="$(ReactiveListVersion)" />
+    <PackageVersion Include="ReactiveList.Reactive" Version="$(ReactiveListVersion)" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.59" />
 
     <!-- Polyfill for .NET Framework -->
