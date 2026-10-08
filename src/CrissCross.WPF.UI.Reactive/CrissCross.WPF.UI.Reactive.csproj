@@ -40,7 +40,7 @@
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net4'))">
+  <ItemGroup Condition="!$(TargetFramework.StartsWith('net4')) and !$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
 
@@ -62,9 +62,13 @@
     <Resource Include="..\CrissCross.WPF.UI\Images\*.png" Link="Images\%(Filename)%(Extension)" />
     <Resource Include="..\CrissCross.WPF.UI\Resources\Fonts\*.ttf" Link="Resources\Fonts\%(Filename)%(Extension)" />
     <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\AppBarButton\Assets\AppBar\*.xaml"
-                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.AppBar.%(Filename)%(Extension)" />
+                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.AppBar.%(Filename)%(Extension)">
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\AppBarButton\Assets\svg\*.svg"
-                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.svg.%(Filename)%(Extension)" />
+                      LogicalName="CrissCross.Reactive.WPF.UI.Controls.AppBarButton.Assets.svg.%(Filename)%(Extension)">
+      <WithCulture>false</WithCulture>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\**\*.png"
                       Link="Controls\%(RecursiveDir)%(Filename)%(Extension)" />
     <EmbeddedResource Include="..\CrissCross.WPF.UI\Controls\**\*.bmp"
