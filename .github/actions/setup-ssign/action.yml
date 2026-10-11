@@ -1,0 +1,37 @@
+name: Setup ssign package signing
+description: Install pinned ssign PKCS11 and jsign releases for headless Certum NuGet signing.
+outputs:
+  module-path:
+    description: Absolute path to the ssign PKCS11 module.
+    value: ${{ steps.install.outputs.module-path }}
+  jsign-jar:
+    description: Absolute path to the jsign standalone JAR.
+    value: ${{ steps.install.outputs.jsign-jar }}
+runs:
+  using: composite
+  steps:
+    - name: Setup Java
+      uses: actions/setup-java@v6.0.1
+      with:
+        distribution: temurin
+        java-version: '21'
+    - name: Install pinned signing tools
+      id: install
+      shell: bash
+      run: |
+        set -euo pipefail
+        tools_dir="$(mktemp -d "$RUNNER_TEMP/ssign-tools.XXXXXX")"
+        curl --fail --silent --show-error --location --retry 3 \
+          https://github.com/Le-Syl21/ssign/releases/download/v0.1.7/ssign-pkcs11-linux-x86_64.tar.gz \
+          --output "$tools_dir/module.tar.gz"
+        printf '%s  %s\n' ebe6aaea62941a4ec4fbe54ac4da134c8f9a10b4d85d9fbf467bb3d3e82ded84 "$tools_dir/module.tar.gz" | sha256sum --check --status
+        tar -xzf "$tools_dir/module.tar.gz" -C "$tools_dir" libssign_pkcs11.so
+        curl --fail --silent --show-error --location --retry 3 \
+          https://github.com/ebourg/jsign/releases/download/7.4/jsign-7.4.jar \
+          --output "$tools_dir/jsign.jar"
+        printf '%s  %s\n' 2abf2ade9ea322acc2d60c24794eadc465ff9380938fca4c932d09e0b25f1c28 "$tools_dir/jsign.jar" | sha256sum --check --status
+        {
+          echo "module-path=$tools_dir/libssign_pkcs11.so"
+          echo "jsign-jar=$tools_dir/jsign.jar"
+        } >> "$GITHUB_OUTPUT"
+        java -jar "$tools_dir/jsign.jar" --version
