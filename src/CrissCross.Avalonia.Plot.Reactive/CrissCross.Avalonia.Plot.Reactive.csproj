@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\ReactiveShim.props" />
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);PLOT_AVALONIA</DefineConstants>
+    <TargetFrameworks>$(CrissCrossAvaloniaTargetFrameworks)</TargetFrameworks>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ReactiveMarkupKind>Avalonia</ReactiveMarkupKind>
+    <ReactiveMarkupBeforeTargets>_InjectAvaloniaAdditionalFiles;AddAvaloniaResources</ReactiveMarkupBeforeTargets>
+    <ReactiveMarkupMappings>ReactiveUI.Avalonia=ReactiveUI.Avalonia.Reactive|ReactiveUI.Avalonia.Reactive;CrissCross.Avalonia.UI=CrissCross.Reactive.Avalonia.UI|CrissCross.Avalonia.UI.Reactive;CrissCross.Avalonia.Plot=CrissCross.Reactive.Avalonia.Plot|CrissCross.Avalonia.Plot.Reactive;CrissCross.Avalonia=CrissCross.Reactive.Avalonia|CrissCross.Avalonia.Reactive;CrissCross=CrissCross.Reactive|CrissCross.Reactive</ReactiveMarkupMappings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CrissCross.Avalonia.Plot\**\*.cs" Exclude="..\CrissCross.Avalonia.Plot\bin\**;..\CrissCross.Avalonia.Plot\obj\**" LinkBase="CrissCross.Avalonia.Plot" />
+    <_ReactiveMarkupSource Include="..\CrissCross.Avalonia.Plot\**\*.axaml" Exclude="..\CrissCross.Avalonia.Plot\bin\**;..\CrissCross.Avalonia.Plot\obj\**" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <AvaloniaXaml Include="@(_ReactiveMarkupSource->'$(IntermediateOutputPath)ReactiveMarkup\%(Link)')" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="ReactiveUI.Reactive" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
+    <PackageReference Include="ReactiveUI.Binding.Reactive" />
+    <PackageReference Include="ReactiveList.Reactive" />
+    <PackageReference Include="ScottPlot.Avalonia" />
+    <PackageReference Include="ReactiveUI.Primitives.ObservableEvents" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrissCross.Avalonia.UI.Reactive\CrissCross.Avalonia.UI.Reactive.csproj" />
+  </ItemGroup>
+  <Import Project="..\ReactiveMarkup.targets" />
+  <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />
+</Project>

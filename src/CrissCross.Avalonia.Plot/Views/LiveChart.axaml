@@ -1,0 +1,153 @@
+<rxui:ReactiveUserControl
+  x:CompileBindings="True"
+  x:DataType="local:LiveChartViewModel"
+  x:Class="CrissCross.Avalonia.Plot.LiveChart"
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:abb="clr-namespace:CrissCross.Avalonia.UI.Controls;assembly=CrissCross.Avalonia.UI"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:CrissCross.Avalonia.Plot"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:rxui="clr-namespace:ReactiveUI.Avalonia;assembly=ReactiveUI.Avalonia"
+  x:Name="userControl"
+  d:DesignHeight="600"
+  d:DesignWidth="800"
+  x:TypeArguments="local:LiveChartViewModel"
+>
+  <Grid x:Name="LayoutRoot">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+
+    <!--  TITLE  -->
+    <Grid Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Top">
+      <TextBlock
+        x:Name="Title"
+        HorizontalAlignment="Center"
+        FontFamily="Arial"
+        FontSize="20"
+        FontWeight="Bold"
+        Foreground="White"
+        Text="Title"
+        TextWrapping="Wrap"
+      />
+    </Grid>
+
+    <!--  TOP LEGEND  -->
+    <ScrollViewer Name="TopLegend" Grid.Row="1" Grid.Column="0" VerticalScrollBarVisibility="Auto">
+      <StackPanel>
+        <WrapPanel x:Name="WarpTop1" IsVisible="True">
+          <ItemsControl Name="Itemscontrol1" ItemsSource="{Binding PlotLinesCollectionUI}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="local:IPlottableUI">
+                <StackPanel Orientation="Horizontal">
+                  <CheckBox
+                    Name="CheckBoxDataLogger"
+                    Margin="5"
+                    Background="{Binding ChartSettings.Color}"
+                    IsChecked="{Binding ChartSettings.IsChecked}"
+                    Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                    Foreground="{Binding ChartSettings.ColorText}"
+                  />
+                  <TextBlock
+                    Name="IndexText"
+                    VerticalAlignment="Center"
+                    Text="{Binding ChartSettings.ItemName}"
+                  />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </WrapPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <!--  RIGHT LEGEND  -->
+    <ScrollViewer Name="RightLegend" Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel>
+        <!--  MaxHeight="50"  -->
+        <WrapPanel IsVisible="True">
+          <ItemsControl ItemsSource="{Binding PlotLinesCollectionUI}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel Orientation="Vertical" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="local:IPlottableUI">
+                <StackPanel Orientation="Horizontal">
+                  <CheckBox
+                    Name="CheckBoxDataLogger"
+                    Margin="5"
+                    Background="{Binding ChartSettings.Color}"
+                    IsChecked="{Binding ChartSettings.IsChecked}"
+                    Opacity="{Binding ChartSettings.OpacityCheckBox}"
+                    Foreground="{Binding ChartSettings.ColorText}"
+                  />
+                  <TextBlock
+                    Name="IndexText"
+                    VerticalAlignment="Center"
+                    Text="{Binding ChartSettings.ItemName}"
+                  />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </WrapPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <!--  RIGHT LEGEND  , LEGEND BAR MENU  -->
+    <local:RightPropertiesView x:Name="RightProperties" Grid.Row="2" Grid.Column="2" IsVisible="False" />
+
+    <!--  CHART, CHART SETTINGS  -->
+    <Grid Grid.Row="2" Margin="0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="{Binding ElementName=userControl, Path=RightWidth}" />
+      </Grid.ColumnDefinitions>
+
+      <!--  CHART  -->
+      <Grid
+        x:Name="MainChartGrid"
+        Grid.Row="1"
+      />
+
+      <!--  MENU  -->
+      <StackPanel
+        Grid.Row="1"
+        Margin="0,20"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        Orientation="Horizontal"
+      >
+        <abb:AppBarButton
+          x:Name="PlotSettings"
+          Background="#252526"
+          Foreground="White"
+          ForegroundGlyphColor="White"
+          MinWidth="36"
+          MinHeight="36"
+          Grid.Row="0"
+          Margin="0,0,0,-20"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Center"
+          Icon="Settings"
+          ToolTip.Tip="Configure plot appearance, axes, interaction, and each attached data series."
+        />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</rxui:ReactiveUserControl>

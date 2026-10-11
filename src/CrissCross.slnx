@@ -14,6 +14,8 @@
     <Project Path="CrissCross.WPF.Benchmarks/CrissCross.WPF.Benchmarks.csproj" />
   </Folder>
   <Folder Name="/Examples/">
+    <Project Path="CrissCross.Maui.Plot.Example/CrissCross.Maui.Plot.Example.csproj" />
+    <Project Path="CrissCross.Avalonia.Plot.Example/CrissCross.Avalonia.Plot.Example.csproj" />
     <Project Path="CrissCross.Avalonia.Test.Android/CrissCross.Avalonia.Example.Android.csproj">
       <Build Solution="Release|Any CPU" Project="false" />
       <Deploy Solution="*|ARM" />
@@ -80,17 +82,27 @@
     <File Path="testconfig.json" />
   </Folder>
   <Folder Name="/Reactive/">
+    <Project Path="CrissCross.Maui.Plot.Reactive/CrissCross.Maui.Plot.Reactive.csproj" />
+    <Project Path="CrissCross.Avalonia.Plot.Reactive/CrissCross.Avalonia.Plot.Reactive.csproj" />
     <Project Path="CrissCross.Reactive/CrissCross.Reactive.csproj" />
     <Project Path="CrissCross.Avalonia.Reactive/CrissCross.Avalonia.Reactive.csproj" />
     <Project Path="CrissCross.Avalonia.UI.Reactive/CrissCross.Avalonia.UI.Reactive.csproj" />
     <Project Path="CrissCross.MAUI.Reactive/CrissCross.MAUI.Reactive.csproj" />
+    <Project Path="CrissCross.Maui.UI.Reactive/CrissCross.Maui.UI.Reactive.csproj" />
     <Project Path="CrissCross.WinForms.Reactive/CrissCross.WinForms.Reactive.csproj" />
     <Project Path="CrissCross.WPF.Reactive/CrissCross.WPF.Reactive.csproj" />
     <Project Path="CrissCross.WPF.UI.Reactive/CrissCross.WPF.UI.Reactive.csproj" />
     <Project Path="CrissCross.WPF.Plot.Reactive/CrissCross.WPF.Plot.Reactive.csproj" />
     <Project Path="CrissCross.WPF.WebView2.Reactive/CrissCross.WPF.WebView2.Reactive.csproj" />
   </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="CrissCross.Plot.Shared/CrissCross.Plot.Shared.shproj" />
+  </Folder>
   <Folder Name="/Tests/">
+    <Project Path="Tests/CrissCross.Maui.Plot.Tests/CrissCross.Maui.Plot.Tests.csproj" />
+    <Project Path="Tests/CrissCross.Maui.Plot.Reactive.Tests/CrissCross.Maui.Plot.Reactive.Tests.csproj" />
+    <Project Path="Tests/CrissCross.Avalonia.Plot.Tests/CrissCross.Avalonia.Plot.Tests.csproj" />
+    <Project Path="Tests/CrissCross.Avalonia.Plot.Reactive.Tests/CrissCross.Avalonia.Plot.Reactive.Tests.csproj" />
     <Project Path="Tests/CrissCross.NavigationView.Tests/CrissCross.NavigationView.Tests.csproj" />
     <Project Path="Tests/CrissCross.Reactive.Tests/CrissCross.Reactive.Tests.csproj" />
     <Project Path="Tests/CrissCross.Tests/CrissCross.Tests.csproj" />
@@ -102,7 +114,9 @@
     <Build Project="false" />
   </Project>
   <Project Path="CrissCross.Avalonia.UI/CrissCross.Avalonia.UI.csproj" />
+  <Project Path="CrissCross.Avalonia.Plot/CrissCross.Avalonia.Plot.csproj" />
   <Project Path="CrissCross.Avalonia/CrissCross.Avalonia.csproj" />
+  <Project Path="CrissCross.Maui.Plot/CrissCross.Maui.Plot.csproj" />
   <Project Path="CrissCross.Maui.UI/CrissCross.Maui.UI.csproj" />
   <Project Path="CrissCross.MAUI/CrissCross.MAUI.csproj" />
   <Project Path="CrissCross.WinForms/CrissCross.WinForms.csproj" />

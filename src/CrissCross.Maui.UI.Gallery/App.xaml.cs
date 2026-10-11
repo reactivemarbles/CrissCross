@@ -4,6 +4,7 @@
 
 using CrissCross.Maui.UI;
 using ReactiveUI.Builder;
+using ReactiveUI.Primitives.Concurrency;
 
 namespace CrissCross.Maui.UI.Gallery;
 
@@ -15,13 +16,15 @@ public partial class App : Application
     {
         InitializeComponent();
         _ = Resources.UseCrissCrossMauiUiResources();
-        _ = RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
     }
 
     /// <inheritdoc />
     protected override Window CreateWindow(IActivationState? activationState)
     {
         _ = activationState;
+        _ = RxAppBuilder.CreateReactiveUIBuilder()
+            .WithMainThreadScheduler(MauiDispatcherSequencer.For(Dispatcher))
+            .BuildApp();
         return new(new GalleryPage());
     }
 }

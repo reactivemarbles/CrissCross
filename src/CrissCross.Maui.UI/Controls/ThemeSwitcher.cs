@@ -4,7 +4,11 @@
 
 using Microsoft.Maui.Layouts;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI.Controls;
+#else
 namespace CrissCross.Maui.UI.Controls;
+#endif
 
 /// <summary>Displays and changes a shared theme preference snapshot.</summary>
 public class ThemeSwitcher : ContentView

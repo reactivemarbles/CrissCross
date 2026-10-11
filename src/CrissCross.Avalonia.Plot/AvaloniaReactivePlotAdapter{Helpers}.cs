@@ -1,0 +1,186 @@
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using ScottPlot;
+using ScottPlot.DataSources;
+using ScottPlot.Plottables;
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.Plot;
+#else
+namespace CrissCross.Avalonia.Plot;
+#endif
+
+/// <summary>Applies normalized reactive plot updates to Avalonia plot UI elements.</summary>
+internal sealed partial class AvaloniaReactivePlotAdapter
+{
+    /// <summary>Copies the newest values inside the display window.</summary>
+    /// <param name="values">The retained history.</param>
+    /// <param name="maximum">The largest visible sample count.</param>
+    /// <returns>An owned visible snapshot.</returns>
+    private static double[] CopyTail(List<double> values, int maximum)
+    {
+        var count = Math.Min(values.Count, maximum);
+        var result = new double[count];
+        values.CopyTo(values.Count - count, result, 0, count);
+        return result;
+    }
+
+    /// <summary>Sets legend text for a UI-backed series.</summary>
+    /// <param name="plottable">The series plottable.</param>
+    /// <param name="name">The series name.</param>
+    /// <param name="showInLegend">Whether to include the series.</param>
+    private static void SetUiLegendText(IPlottable plottable, string name, bool showInLegend)
+    {
+        var legendText = showInLegend ? name : string.Empty;
+        var apply = plottable switch
+        {
+            ScottPlot.Plottables.Signal signal => new Action(() => signal.LegendText = legendText),
+            Scatter scatter => () => scatter.LegendText = legendText,
+            DataLogger logger => () => logger.LegendText = legendText,
+            DataStreamer streamer => () => streamer.LegendText = legendText,
+            SignalXY signalXy => () => signalXy.LegendText = legendText,
+            _ => null,
+        };
+        apply?.Invoke();
+    }
+
+    /// <summary>Copies a value list into an owned list for mutable plot adapters.</summary>
+    /// <param name="values">The source values.</param>
+    /// <returns>The copied values.</returns>
+    private static List<double> CopyToList(IReadOnlyList<double> values) => new(values);
+
+    /// <summary>Copies a value list into an owned array.</summary>
+    /// <param name="values">The source values.</param>
+    /// <returns>The copied values.</returns>
+    private static double[] CopyToArray(IReadOnlyList<double> values)
+    {
+        var copied = new double[values.Count];
+        for (var i = 0; i < values.Count; i++)
+        {
+            copied[i] = values[i];
+        }
+
+        return copied;
+    }
+
+    /// <summary>Clears a SignalXY UI element.</summary>
+    /// <param name="signalXy">The SignalXY UI element.</param>
+    private static void ClearSignalXy(SignalXY_UI signalXy) =>
+        signalXy.PlotLine!.Data = new SignalXYSourceDoubleArray([], []);
+
+    /// <summary>Completes and disposes a subject.</summary>
+    /// <typeparam name="T">The subject value type.</typeparam>
+    /// <param name="subject">The subject to dispose.</param>
+    private static void DisposeSubject<T>(Signal<T>? subject)
+    {
+        if (subject is null)
+        {
+            return;
+        }
+
+        subject.OnCompleted();
+        subject.Dispose();
+    }
+
+    /// <summary>Creates a horizontal-step scatter line.</summary>
+    /// <param name="plot">The destination plot.</param>
+    /// <param name="x">The rendered X values.</param>
+    /// <param name="y">The rendered Y values.</param>
+    /// <returns>The created scatter line.</returns>
+    private static Scatter CreateStepLine(ScottPlot.Plot plot, double[] x, double[] y)
+    {
+        var scatter = plot.Add.ScatterLine(x, y);
+        scatter.ConnectStyle = ConnectStyle.StepHorizontal;
+        return scatter;
+    }
+
+    /// <summary>Creates an area series with optional baseline styling.</summary>
+    /// <param name="plot">The destination plot.</param>
+    /// <param name="x">The rendered X values.</param>
+    /// <param name="y">The rendered Y values.</param>
+    /// <param name="style">Optional series styling.</param>
+    /// <returns>The created area scatter.</returns>
+    private static Scatter CreateArea(ScottPlot.Plot plot, double[] x, double[] y, ReactivePlotSeriesStyle? style)
+    {
+        var scatter = plot.Add.ScatterLine(x, y);
+        var baselineMode = style?.BaselineMode ?? PlotBaselineMode.Zero;
+        scatter.FillY = baselineMode != PlotBaselineMode.None;
+        scatter.FillYValue = baselineMode == PlotBaselineMode.Custom ? style!.Baseline : 0;
+        return scatter;
+    }
+
+    /// <summary>Converts normalized X values to values rendered by ScottPlot.</summary>
+    /// <param name="x">The normalized X values.</param>
+    /// <param name="axisKind">The X-axis interpretation.</param>
+    /// <returns>The rendered X values.</returns>
+    private static double[] ConvertXValues(IReadOnlyList<double> x, PlotXAxisKind axisKind)
+    {
+        var converted = new double[x.Count];
+        if (axisKind != PlotXAxisKind.Ticks)
+        {
+            for (var i = 0; i < x.Count; i++)
+            {
+                converted[i] = x[i];
+            }
+
+            return converted;
+        }
+
+        for (var i = 0; i < x.Count; i++)
+        {
+            converted[i] = new DateTime(Convert.ToInt64(x[i]), DateTimeKind.Local).ToOADate();
+        }
+
+        return converted;
+    }
+
+    /// <summary>Sets a legend label on a supported snapshot plottable.</summary>
+    /// <param name="plottable">The plottable to update.</param>
+    /// <param name="name">The series name.</param>
+    /// <param name="showInLegend">Whether the label is visible in the legend.</param>
+    private static void SetLegendText(IPlottable plottable, string name, bool showInLegend)
+    {
+        var legendText = showInLegend ? name : string.Empty;
+        if (plottable is Scatter scatter)
+        {
+            scatter.LegendText = legendText;
+            return;
+        }
+
+        if (plottable is BarPlot bars)
+        {
+            bars.LegendText = legendText;
+            return;
+        }
+
+        if (plottable is LollipopPlot stem)
+        {
+            stem.LegendText = legendText;
+            return;
+        }
+
+        throw new ArgumentOutOfRangeException(
+            nameof(plottable),
+            plottable,
+            "The plottable does not support legend text.");
+    }
+
+    /// <summary>Resolves a named or hexadecimal series color.</summary>
+    /// <param name="colorName">The color value.</param>
+    /// <returns>The ScottPlot color.</returns>
+    private static Color ResolveColor(string colorName)
+    {
+        if (colorName.StartsWith('#'))
+        {
+            return Color.FromHex(colorName);
+        }
+
+        var drawingColor = System.Drawing.Color.FromName(colorName);
+        var isUnknownColor =
+            drawingColor.A == 0
+            && !string.Equals(colorName, nameof(System.Drawing.Color.Transparent), StringComparison.OrdinalIgnoreCase);
+        return isUnknownColor ? Colors.White : Color.FromColor(drawingColor);
+    }
+}

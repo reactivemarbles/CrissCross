@@ -4,7 +4,11 @@
 
 using System.ComponentModel;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI.Controls;
+#else
 namespace CrissCross.Maui.UI.Controls;
+#endif
 
 /// <summary>Displays and edits a shared date/time range snapshot.</summary>
 public class DateTimeRangePicker : ContentView

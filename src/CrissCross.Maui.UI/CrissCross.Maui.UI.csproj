@@ -21,9 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CP.Extensions.Hosting.ReactiveUI.Maui" />
     <PackageReference Include="Microsoft.Maui.Controls" />
-    <PackageReference Include="ReactiveUI.Maui" />
   </ItemGroup>
 
   <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">

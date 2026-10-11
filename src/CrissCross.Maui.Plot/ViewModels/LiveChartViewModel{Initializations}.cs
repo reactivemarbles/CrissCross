@@ -1,0 +1,439 @@
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using SkiaSharp.Views.Maui;
+#if !REACTIVE_SHIM
+using ReactiveUI;
+#endif
+using ReactiveUI.SourceGenerators;
+using ScottPlot;
+
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
+using Color = ScottPlot.Color;
+using Colors = ScottPlot.Colors;
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Maui.Plot;
+#else
+namespace CrissCross.Maui.Plot;
+#endif
+
+/// <summary>
+/// Provides functionality for managing and initializing live chart plot lines, axes, and control menus in a reactive
+/// charting environment.
+/// </summary>
+/// <remarks>This class supports dynamic creation and configuration of various plot types, including signal,
+/// scatter, and data logger plots, with flexible axis assignment and control menu management. It is intended for use on
+/// MAUI desktop platforms, as indicated by the platform requirement. Thread safety and UI update
+/// considerations depend on the underlying RxObject and charting components.</remarks>
+public partial class LiveChartViewModel : RxObject
+{
+    /// <summary>The maximum number of generic plot lines.</summary>
+    private const int MaximumGenericPlotLineCount = 16;
+
+    /// <summary>The line width used for scatter points.</summary>
+    private const float ScatterPointLineWidth = 0.3F;
+
+    /// <summary>Stores the is xaxis date time value.</summary>
+    [Reactive]
+    private bool _isXAxisDateTime;
+
+    /// <summary>Stores the number points plotted value.</summary>
+    [Reactive]
+    private int _numberPointsPlotted;
+
+    /// <summary>Stores the use fixed number of points value.</summary>
+    [Reactive]
+    private bool _useFixedNumberOfPoints;
+
+    /// <summary>Initializes and configures up to 16 plot lines in the chart using the provided data and UI creation
+    /// logic, assigning each plot line to the appropriate Y-axis and setting up the X-axis as either date/time or
+    /// numeric points.</summary>
+    /// <typeparam name="T">The T type.</typeparam>
+    /// <param name="data">The data value.</param>
+    /// <param name="getYAxis">The getYAxis value.</param>
+    /// <param name="createPlotUI">The createPlotUI value.</param>
+    /// <param name="isXAxisDateTime">Whether the X-axis values are date/time values; <see langword="false"/> uses
+    /// numeric points.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="data"/>, <paramref name="getYAxis"/>, or
+    /// <paramref name="createPlotUI"/> is null, or
+    /// if a plot UI element cannot be created for a data item.</exception>
+    /// <exception cref="IndexOutOfRangeException">Thrown if the Y-axis index provided by <paramref name="getYAxis"/> is
+    /// less than zero or greater than or equal to
+    /// the number of available Y-axes.</exception>
+    public void InitializeGenericPlotLines<T>(
+        IEnumerable<T> data,
+        Func<T, object>? getYAxis,
+        Func<T, object> createPlotUI,
+        bool isXAxisDateTime)
+    {
+        ValidateGenericPlotLineArguments(data, getYAxis, createPlotUI);
+        ClearContent();
+        ConfigureXAxis(isXAxisDateTime);
+        HideAllYAxis();
+
+        var plotLineCount = 0;
+        foreach (var plotLine in data)
+        {
+            if (plotLineCount >= MaximumGenericPlotLineCount)
+            {
+                break;
+            }
+
+            AddGenericPlotLine(plotLine, getYAxis!, createPlotUI);
+            plotLineCount++;
+        }
+
+        UpdateChartObjectsCollection();
+    }
+
+    /// <summary>Initializes scatter plot lines using the provided collection of observable data series.</summary>
+    /// <param name="observables">The observables value.</param>
+    public void InitializeScatterPlotLines(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
+        InitializeGenericPlotLines(
+            data: observables,
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: obs => new ScatterUI(MauiPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: true);
+
+    /// <summary>Initializes plot lines for scatter plots using a collection of observable point sequences.</summary>
+    /// <param name="observables">The observables value.</param>
+    public void InitializeLinesForScatterObservablesPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? X, IList<double> Y, int Axis)>> observables) =>
+        InitializeGenericPlotLines(
+            data: observables,
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: obs => new ScatterUI(MauiPlot1vm!, obs, SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
+
+    /// <summary>Initializes plot lines for signal data using the provided collection of observables.</summary>
+    /// <param name="observables">The observables value.</param>
+    public void InitializeSignalPlotLines(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)>> observables) =>
+        InitializeGenericPlotLines(
+            data: observables,
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: CreateSignalUI,
+            isXAxisDateTime: true);
+
+    /// <summary>Provides the InitializeSignalPlotLines member.</summary>
+    /// <param name="data">The data value.</param>
+    public void InitializeSignalPlotLines(
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
+        InitializeGenericPlotLines(
+            data: new[] { data },
+            getYAxis: static input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                MauiPlot1vm!,
+                (data.Name, data.Value, data.DateTime, data.Axis),
+                SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: true);
+
+    /// <summary>Initializes plot lines with data points for the data logger using the provided observables.</summary>
+    /// <param name="observables">The observables value.</param>
+    public void InitializeDataLoggerPlotLinesWithPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? Value, int Axis, int nMaxPoints)>> observables) =>
+        InitializeGenericPlotLines(
+            data: observables,
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: obs => new DataLoggerUI(
+                plot: MauiPlot1vm!,
+                observable: obs,
+                color: SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
+
+    /// <summary>Initializes plot lines for a single set of signal points using the specified data tuple.</summary>
+    /// <param name="data">The data value.</param>
+    public void InitializeLinesForSignalPoints(
+        (string? Name, IList<double>? Value, IList<double> DateTime, int Axis) data) =>
+        InitializeGenericPlotLines(
+            data: new[] { data },
+            getYAxis: static input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                plot: MauiPlot1vm!,
+                data: d,
+                color: SetColorLegend(PlotLinesCollectionUI!),
+                coordinatesObs: MouseCoordinatesObservable),
+            isXAxisDateTime: false);
+
+    /// <summary>Provides the InitializeLinesForSignalPoints member.</summary>
+    /// <param name="data">The data value.</param>
+    public void InitializeLinesForSignalPoints(
+        IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data) =>
+        InitializeGenericPlotLines(
+            data: data,
+            getYAxis: static input => input.Axis,
+            createPlotUI: d => new SignalXY_UI(
+                plot: MauiPlot1vm!,
+                data: d,
+                color: SetColorLegend(PlotLinesCollectionUI!),
+                coordinatesObs: MouseCoordinatesObservable),
+            isXAxisDateTime: false);
+
+    /// <summary>Initializes plot lines for a collection of signal observables, configuring each line to display its
+    /// corresponding data points on the plot.</summary>
+    /// <param name="observables">The observables value.</param>
+    /// <param name="fs">The fs value.</param>
+    /// <param name="sampleCount">The sample count value.</param>
+    public void InitializeLinesForSignalObservablesPoints(
+        IEnumerable<IObservable<(string? Name, IList<double>? Y, IList<double> X, int Axis)>> observables,
+        int fs,
+        uint sampleCount) =>
+        InitializeGenericPlotLines(
+            data: observables,
+            getYAxis: static input => input.Select(static x => x.Axis),
+            createPlotUI: obs => new StreamerUI(
+                plot: MauiPlot1vm!,
+                observable: obs,
+                fs: fs,
+                sampleCount: sampleCount,
+                plottedPointCount: NumberPointsPlotted,
+                color: SetColorLegend(PlotLinesCollectionUI!)),
+            isXAxisDateTime: false);
+
+    /// <summary>Provides the InitializeLinesForScatterPoints member.</summary>
+    /// <param name="data">The data value.</param>
+    public void InitializeLinesForScatterPoints((string? Name, IList<double> X, IList<double> Y, int Axis) data)
+    {
+        var newMyItem = new ScatterUI(
+            MauiPlot1vm!,
+            (data.Name, data.X, data.Y, data.Axis),
+            SetColorLegend(PlotLinesCollectionUI!));
+        newMyItem.PlotLine!.Axes.YAxis = YAxisList[data.Axis];
+        newMyItem.PlotLine!.MarkerSize = 1F;
+        newMyItem.PlotLine!.LineWidth = ScatterPointLineWidth;
+
+        for (var j = 0; j < YAxisList.Count; j++)
+        {
+            YAxisList[j].IsVisible = YAxisList[j].IsVisible || data.Axis == j;
+        }
+
+        PlotLinesCollectionUI.Add(newMyItem);
+
+        // UPDATE ChartObjects COLLECTION for external access
+        UpdateChartObjectsCollection();
+    }
+
+    /// <summary>Provides the InitializeControlMenu member.</summary>
+    /// <param name="settings">The settings value.</param>
+    public void InitializeControlMenu(IList<ChartObjects>? settings)
+    {
+        if (settings is null)
+        {
+            return;
+        }
+
+        foreach (var item in ControlMenu)
+        {
+            item.Dispose();
+        }
+
+        ControlMenu.ReplaceAll(settings);
+    }
+
+    /// <summary>Provides the InitializeAxisLines member.</summary>
+    /// <remarks>This method assigns the appropriate X and Y axes to each axis line and ensures that only
+    /// non-null axis lines are processed. If no axis lines are present, the method performs no action.</remarks>
+    public void InitializeAxisLines()
+    {
+        if (AxisLinesUI is null)
+        {
+            return;
+        }
+
+        if (AxisLinesUI.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in AxisLinesUI)
+        {
+            MauiPlot1vm!.Plot.PlottableList.Add(item.AxisLine!);
+            item.AxisLine!.Axes.YAxis = YAxisList[item.Axis];
+            item.AxisLine!.Axes.XAxis = XAxis1;
+        }
+    }
+
+    /// <summary>Gets the plottable from a plot UI object.</summary>
+    /// <param name="newItem">The plot UI object.</param>
+    /// <returns>The plottable.</returns>
+    private static IPlottable GetPlottable(object newItem) =>
+        newItem switch
+        {
+            SignalUI signal => signal.PlotLine!,
+            ScatterUI scatter => scatter.PlotLine!,
+            DataLoggerUI logger => logger.PlotLine!,
+            SignalXY_UI signalXY => signalXY.PlotLine!,
+            StreamerUI streamer => streamer.PlotLine!,
+            _ => throw new ArgumentNullException(nameof(newItem)),
+        };
+
+    /// <summary>Validates generic plot line initialization arguments.</summary>
+    /// <typeparam name="T">The data item type.</typeparam>
+    /// <param name="data">The plot data.</param>
+    /// <param name="getYAxis">The axis selector.</param>
+    /// <param name="createPlotUI">The plot UI factory.</param>
+    private static void ValidateGenericPlotLineArguments<T>(
+        IEnumerable<T> data,
+        Func<T, object>? getYAxis,
+        Func<T, object> createPlotUI)
+    {
+        ThrowHelper.ThrowIfNull(data, nameof(data));
+        ThrowHelper.ThrowIfNull(getYAxis, nameof(getYAxis));
+        ThrowHelper.ThrowIfNull(createPlotUI, nameof(createPlotUI));
+    }
+
+    /// <summary>Configures the X axis mode.</summary>
+    /// <param name="isXAxisDateTime">A value indicating whether the X axis is date/time based.</param>
+    private void ConfigureXAxis(bool isXAxisDateTime)
+    {
+        IsXAxisDateTime = isXAxisDateTime;
+        if (isXAxisDateTime)
+        {
+            CreateAxisWithTimeStamp();
+            return;
+        }
+
+        CreateAxisWithPoints();
+    }
+
+    /// <summary>Adds a single generic plot line.</summary>
+    /// <typeparam name="T">The data item type.</typeparam>
+    /// <param name="plotLine">The plot line data.</param>
+    /// <param name="getYAxis">The axis selector.</param>
+    /// <param name="createPlotUI">The plot UI factory.</param>
+    private void AddGenericPlotLine<T>(T plotLine, Func<T, object> getYAxis, Func<T, object> createPlotUI)
+    {
+        var newItem = createPlotUI(plotLine);
+        var line = GetPlottable(newItem);
+        var lineUI = (IPlottableUI?)newItem ?? throw new ArgumentNullException(nameof(newItem));
+        AssignYAxis(getYAxis(plotLine), line, lineUI);
+        PlotLinesCollectionUI.Add(lineUI);
+    }
+
+    /// <summary>Creates a signal plot UI with the current point-window settings.</summary>
+    /// <param name="observable">The signal data source.</param>
+    /// <returns>The configured signal plot UI.</returns>
+    private SignalUI CreateSignalUI(
+        IObservable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> observable)
+    {
+        var fixedPoints = this.WhenAnyValue(static x => x.UseFixedNumberOfPoints);
+        var numberPointsPlotted = this.WhenAnyValue(static x => x.NumberPointsPlotted);
+        SignalUIOptions options = new() { FixedPoints = fixedPoints, NumberPointsPlotted = numberPointsPlotted };
+
+        return new(
+            MauiPlot1vm!,
+            observable: observable,
+            coordinatesObs: MouseCoordinatesObservable,
+            SetColorLegend(PlotLinesCollectionUI!),
+            options);
+    }
+
+    /// <summary>Assigns the Y axis to a plot line.</summary>
+    /// <param name="axisSource">The axis source.</param>
+    /// <param name="line">The plottable line.</param>
+    /// <param name="lineUI">The plot UI element.</param>
+    private void AssignYAxis(object axisSource, IPlottable line, IPlottableUI lineUI)
+    {
+        if (axisSource is IObservable<int> observable)
+        {
+            _ = observable
+                .DistinctUntilChanged()
+                .Subscribe(axis => AssignYAxis(axis, line, lineUI))
+                .DisposeWith(Disposables);
+            return;
+        }
+
+        if (axisSource is int axis)
+        {
+            AssignYAxis(axis, line, lineUI);
+            return;
+        }
+
+        AssignDefaultYAxis(line, lineUI);
+    }
+
+    /// <summary>Assigns a Y axis by index.</summary>
+    /// <param name="axis">The Y axis index.</param>
+    /// <param name="line">The plottable line.</param>
+    /// <param name="lineUI">The plot UI element.</param>
+    private void AssignYAxis(int axis, IPlottable line, IPlottableUI lineUI)
+    {
+        var verticalAxis = GetVisibleYAxis(axis);
+        lineUI.ChartSettings!.Marker!.Axes.YAxis = verticalAxis;
+        lineUI.ChartSettings.MarkerText!.Axes.YAxis = verticalAxis;
+        lineUI.ChartSettings.Crosshair!.Axes.YAxis = verticalAxis;
+        line.Axes.YAxis = verticalAxis;
+    }
+
+    /// <summary>Assigns the default Y axis.</summary>
+    /// <param name="line">The plottable line.</param>
+    /// <param name="lineUI">The plot UI element.</param>
+    private void AssignDefaultYAxis(IPlottable line, IPlottableUI lineUI) => AssignYAxis(0, line, lineUI);
+
+    /// <summary>Gets a visible Y axis by index.</summary>
+    /// <param name="axis">The Y axis index.</param>
+    /// <returns>The visible Y axis.</returns>
+    private IYAxis GetVisibleYAxis(int axis)
+    {
+        if (axis < 0 || axis >= YAxisList.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(axis), axis, "Invalid Y-axis index.");
+        }
+
+        for (var j = 0; j < YAxisList.Count; j++)
+        {
+            YAxisList[j].IsVisible = YAxisList[j].IsVisible || axis == j;
+        }
+
+        return YAxisList[axis];
+    }
+
+    /// <summary>Performs initialization tasks related to mouse observables and refreshes the plot view model.</summary>
+    private void Initializations2()
+    {
+        InitializeMouseObservable();
+        MauiPlot1vm?.Refresh();
+    }
+
+    /// <summary>
+    /// Initializes the observable sequence that monitors mouse movement events over the plot and publishes the
+    /// corresponding plot coordinates.
+    /// </summary>
+    /// <remarks>This method sets up event handling so that each mouse movement over the plot surface results
+    /// in the current mouse coordinates being emitted to observers. The observable sequence automatically retries on
+    /// transient errors and disposes of its subscription when the parent disposables are disposed. This method should
+    /// be called during view model initialization to ensure mouse coordinate updates are available.</remarks>
+    private void InitializeMouseObservable() =>
+        EventSignal
+            .From<EventHandler<SKTouchEventArgs>, SKTouchEventArgs>(
+                static handler => handler.Invoke,
+                handler => MauiPlot1vm!.Touch += handler,
+                handler => MauiPlot1vm!.Touch -= handler)
+            .Retry(int.MaxValue)
+            .Subscribe(e =>
+            {
+                // MOUSE EVENT
+                var position = e.Location;
+
+                //// determine where the mouse is and send the coordinates
+                Pixel mousePixel = new(position.X, position.Y);
+                var mouseLocation = MauiPlot1vm!.Plot.GetCoordinates(mousePixel);
+                try
+                {
+                    MouseCoordinatesObservable.OnNext(mouseLocation);
+                }
+                catch (Exception ex)
+                {
+                    LogMouseLocationError(ex);
+                }
+            })
+            .DisposeWith(Disposables);
+}

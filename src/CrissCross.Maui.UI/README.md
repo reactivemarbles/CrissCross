@@ -47,3 +47,5 @@ The Gallery instantiates all 28 controls below. MAUI variants use bindable snaps
 | WPF media, rich-text, BBCode, GIF, icon-element and color-selector template systems | Not yet portable | These depend on WPF text/media/template APIs; a MAUI-native design needs dedicated requirements before adding an incomplete replica. |
 
 MAUI handler-level customization remains intentionally avoided so the package stays AOT- and trimming-friendly.
+
+The lean package uses ReactiveUI.Primitives through CrissCross.MAUI. CrissCross.Maui.UI.Reactive compiles these same control sources and transformed resource dictionaries in the CrissCross.Reactive.Maui.UI namespace. Both variants support the existing .NET 10 and 11 target family; the matching MAUI Plot package references this UI layer.

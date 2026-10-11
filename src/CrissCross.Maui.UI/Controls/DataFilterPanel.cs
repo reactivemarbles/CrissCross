@@ -4,7 +4,11 @@
 
 using System.Globalization;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI.Controls;
+#else
 namespace CrissCross.Maui.UI.Controls;
+#endif
 
 /// <summary>Displays a descriptor-driven filter editing surface.</summary>
 public class DataFilterPanel : ContentView

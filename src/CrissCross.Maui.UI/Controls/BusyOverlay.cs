@@ -4,7 +4,11 @@
 
 using Microsoft.Maui.Controls.Shapes;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI.Controls;
+#else
 namespace CrissCross.Maui.UI.Controls;
+#endif
 
 /// <summary>Presents regional busy state over arbitrary content without replacing the content layout.</summary>
 public class BusyOverlay : ContentView

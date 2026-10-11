@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <ReactiveMarkupPreserveIdentifiers Condition="'$(ReactiveMarkupPreserveIdentifiers)' == ''">false</ReactiveMarkupPreserveIdentifiers>
+  </PropertyGroup>
+
   <UsingTask TaskName="GenerateReactiveMarkupTask"
              TaskFactory="RoslynCodeTaskFactory"
              AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
@@ -6,6 +10,7 @@
       <SourceFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
       <OutputDirectory ParameterType="System.String" Required="true" />
       <Mappings ParameterType="System.String" Required="true" />
+      <PreserveIdentifiers ParameterType="System.Boolean" />
       <GeneratedFiles ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
     </ParameterGroup>
     <Task>
@@ -14,6 +19,7 @@
       <Using Namespace="System.IO" />
       <Using Namespace="System.Linq" />
       <Using Namespace="System.Text" />
+      <Using Namespace="System.Text.RegularExpressions" />
       <Using Namespace="Microsoft.Build.Framework" />
       <Using Namespace="Microsoft.Build.Utilities" />
       <Code Type="Fragment" Language="cs"><![CDATA[
@@ -60,7 +66,10 @@
 
             for (var index = 0; index < mappings.Length; index++)
             {
-                content = content.Replace(mappings[index][0], "__REACTIVE_NAMESPACE_" + index + "__");
+                var replacement = "__REACTIVE_NAMESPACE_" + index + "__";
+                content = PreserveIdentifiers
+                    ? Regex.Replace(content, Regex.Escape(mappings[index][0]) + @"(?![\w])", replacement)
+                    : content.Replace(mappings[index][0], replacement);
             }
 
             for (var index = 0; index < mappings.Length; index++)
@@ -90,7 +99,8 @@
           Condition="'@(_ReactiveMarkupSource)' != ''">
     <GenerateReactiveMarkupTask SourceFiles="@(_ReactiveMarkupSource)"
                                 OutputDirectory="$(IntermediateOutputPath)ReactiveMarkup"
-                                Mappings="$(ReactiveMarkupMappings)">
+                                Mappings="$(ReactiveMarkupMappings)"
+                                PreserveIdentifiers="$(ReactiveMarkupPreserveIdentifiers)">
       <Output TaskParameter="GeneratedFiles" ItemName="_GeneratedReactiveMarkup" />
     </GenerateReactiveMarkupTask>
 

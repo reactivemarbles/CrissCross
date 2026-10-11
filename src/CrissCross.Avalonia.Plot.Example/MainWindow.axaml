@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:CrissCross.Avalonia.Plot.Example.Views"
+        x:Class="CrissCross.Avalonia.Plot.Example.MainWindow"
+        Title="CrissCross UI Plot Example" Width="800" Height="450">
+  <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">
+    <TextBlock Grid.ColumnSpan="2" Margin="12" Text="Main" FontWeight="SemiBold" />
+    <StackPanel Grid.Row="1" Width="160" x:Name="NavigationPanel">
+      <Button x:Name="ToggleNavigationButton" Content="☰" Margin="3" />
+      <TextBox x:Name="NavigationSearch" Margin="3" PlaceholderText="Search" />
+      <Button x:Name="MainNavigationButton" Content="⌂  Main" Margin="3" HorizontalAlignment="Stretch" />
+    </StackPanel>
+    <views:MainView x:Name="PlotView" Grid.Row="1" Grid.Column="1" />
+  </Grid>
+</Window>
