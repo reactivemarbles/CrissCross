@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using AngleSharp.Html.Parser;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.UI.Controls;
@@ -43,12 +44,16 @@ internal static class HtmlClipboardUtilities
             && endMarkerIndex >= startMarkerIndex + startMarker.Length)
         {
             startMarkerIndex += startMarker.Length;
-            return html[startMarkerIndex..endMarkerIndex];
+            return PreserveDocumentStyles(html, html[startMarkerIndex..endMarkerIndex]);
         }
 
         var start = GetFragmentIndex(html, "StartFragment:");
         var end = GetFragmentIndex(html, "EndFragment:");
-        return start >= 0 && end >= start && end <= html.Length ? html[start..end] : html;
+        var bytes = Encoding.UTF8.GetBytes(html);
+        var fragment = start >= 0 && end >= start && end <= bytes.Length
+            ? Encoding.UTF8.GetString(bytes, start, end - start)
+            : html;
+        return PreserveDocumentStyles(html, fragment);
     }
 
     /// <summary>Wraps an HTML fragment in the Windows HTML Clipboard Format envelope.</summary>
@@ -120,5 +125,27 @@ internal static class HtmlClipboardUtilities
                 out var value)
             ? value
             : -1;
+    }
+
+    /// <summary>Inlines stylesheet declarations that live outside a clipboard fragment.</summary>
+    /// <param name="payload">The complete clipboard envelope.</param>
+    /// <param name="fragment">The selected fragment.</param>
+    /// <returns>The standalone fragment with supported class formatting.</returns>
+    private static string PreserveDocumentStyles(string payload, string fragment)
+    {
+        if (!payload.Contains("<style", StringComparison.OrdinalIgnoreCase))
+        {
+            return fragment;
+        }
+
+        var document = new HtmlParser().ParseDocument(payload);
+        var styles = new StringBuilder();
+        foreach (var element in document.QuerySelectorAll("style"))
+        {
+            _ = styles.Append(element.OuterHtml);
+        }
+
+        _ = styles.Append(fragment);
+        return HtmlDocumentNormalizer.Normalize(styles.ToString(), normalizeWhitespace: true);
     }
 }

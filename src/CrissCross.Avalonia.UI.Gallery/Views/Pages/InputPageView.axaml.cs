@@ -134,7 +134,17 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
         + "<p>Use the toolbar, keyboard shortcuts, context menu, clipboard, drag/drop, and serialization buttons "
         + "below.</p><ul><li>Drop plain text, HTML, image files, or data:image URIs.</li>"
         + "<li>Copy/cut preserves selected rich HTML and plain-text fallback.</li>"
-        + "<li>Save/load supports HTML, Markdown, and plain-text streams.</li></ul>";
+        + "<li>Save/load supports HTML, Markdown, and plain-text streams.</li></ul>"
+        + "<p><a href='https://www.reactiveui.net'>ReactiveUI documentation</a> — links retain their destination through editing and clipboard transfer.</p>"
+        + "<p><img src='" + DemoImageDataUri + "' width='96' height='96' /></p>"
+        + "<h2 style='break-before:page;color:#17365D'>Quarterly project review</h2>"
+        + "<p style='font-family:Georgia;font-size:18px'>A second sheet demonstrates measured pagination, editable tables, images, and styled document content.</p>"
+        + "<table style='width:100%;border-collapse:collapse'><tr><th>Milestone</th><th>Status</th><th>Owner</th></tr>"
+        + "<tr><td>Rich editing</td><td style='color:green'>Ready</td><td>UI team</td></tr>"
+        + "<tr><td>Clipboard transfer</td><td style='background-color:#FFF2CC'>Review</td><td>Platform team</td></tr></table>"
+        + "<p>Try editing a table cell, adding a hyperlink, or changing the font and text color. Undo restores the complete document structure.</p>"
+        + "<h2 style='break-before:page;color:#17365D'>Notes and next steps</h2>"
+        + "<p>The document stays editable across sheets. Select content and use the separate destination editor to verify rich clipboard transfer.</p>";
 
     /// <summary>Provides the _demoClipboard member.</summary>
     private readonly RichTextMemoryClipboardAdapter _demoClipboard = new();
@@ -221,7 +231,6 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <param name="richTextBox">The richTextBox value.</param>
     private void LoadRepresentativeRichTextContent(RichTextBoxControl richTextBox)
     {
-        richTextBox.ClipboardAdapter = _demoClipboard;
         richTextBox.EditMode = _displayModeEnabled ? RichTextEditMode.Display : RichTextEditMode.EditOnFocus;
         richTextBox.SetHtml(RepresentativeHtml);
         richTextBox.Select(0, Math.Min(DefaultSelectionLength, richTextBox.PlainText.Length));
@@ -421,7 +430,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     /// <summary>Provides the OnRichTextCopyClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextCopyClick(object? sender, RoutedEventArgs e)
+    private async void OnRichTextCopyClick(object? sender, RoutedEventArgs e)
     {
         var richTextBox = DemoRichTextBox;
         if (richTextBox is null)
@@ -430,16 +439,16 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
         }
 
         EnsureDemoSelection(richTextBox);
-        richTextBox.Copy();
+        await richTextBox.CopyToClipboardAsync().ConfigureAwait(true);
         UpdateStatus(
-            $"Copied selection. Plain={_demoClipboard.PlainText?.Length ?? 0} chars; "
-            + $"HTML={_demoClipboard.HtmlText?.Length ?? 0} chars.");
+            $"Copied selection to the system clipboard. Plain={richTextBox.SelectedText.Length} chars; "
+            + $"HTML={richTextBox.SelectedHtml.Length} chars.");
     }
 
     /// <summary>Provides the OnRichTextCutClick member.</summary>
     /// <param name="sender">The sender value.</param>
     /// <param name="e">The e value.</param>
-    private void OnRichTextCutClick(object? sender, RoutedEventArgs e)
+    private async void OnRichTextCutClick(object? sender, RoutedEventArgs e)
     {
         var richTextBox = DemoRichTextBox;
         if (richTextBox is null)
@@ -448,8 +457,8 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
         }
 
         EnsureDemoSelection(richTextBox);
-        richTextBox.Cut();
-        UpdateDisplayPreview("Cut selection to rich clipboard adapter.");
+        await richTextBox.CutToClipboardAsync().ConfigureAwait(true);
+        UpdateDisplayPreview("Cut selection to the system clipboard.");
     }
 
     /// <summary>Provides the OnRichTextPasteSampleClick member.</summary>
@@ -459,7 +468,7 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     {
         _demoClipboard.SetPlainText("Clipboard plain-text fallback");
         _demoClipboard.SetHtml(ClipboardHtmlSample);
-        DemoRichTextBox?.Paste();
+        PasteDemoClipboard();
         UpdateDisplayPreview("Rich clipboard HTML sample pasted with plain-text fallback.");
     }
 
@@ -469,8 +478,28 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
     private void OnRichTextPasteImageSampleClick(object? sender, RoutedEventArgs e)
     {
         _demoClipboard.SetImage(DemoImageDataUri);
-        DemoRichTextBox?.Paste();
+        PasteDemoClipboard();
         UpdateDisplayPreview("Image clipboard sample pasted from data URI.");
+    }
+
+    /// <summary>Pastes a deterministic sample while retaining platform clipboard integration.</summary>
+    private void PasteDemoClipboard()
+    {
+        if (DemoRichTextBox is not { } editor)
+        {
+            return;
+        }
+
+        var original = editor.ClipboardAdapter;
+        try
+        {
+            editor.ClipboardAdapter = _demoClipboard;
+            editor.Paste();
+        }
+        finally
+        {
+            editor.ClipboardAdapter = original;
+        }
     }
 
     /// <summary>Provides the OnRichTextDropTextSampleClick member.</summary>

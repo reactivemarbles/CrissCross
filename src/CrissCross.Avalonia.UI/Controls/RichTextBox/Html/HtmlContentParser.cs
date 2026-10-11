@@ -22,8 +22,11 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <summary>Provides the HtmlContentParser member.</summary>
 internal static class HtmlContentParser
 {
-    /// <summary>Provides the UnitSuffixLength member.</summary>
-    private const int UnitSuffixLength = 2;
+    /// <summary>HTML width attribute name.</summary>
+    private const string WidthAttributeName = "width";
+
+    /// <summary>Maximum supported cell span.</summary>
+    private const int MaximumCellSpan = 1000;
 
     /// <summary>Provides the StyleDeclarationTokenCount member.</summary>
     private const int StyleDeclarationTokenCount = 2;
@@ -44,7 +47,7 @@ internal static class HtmlContentParser
             return [];
         }
 
-        var document = Parser.ParseDocument(html);
+        var document = Parser.ParseDocument(HtmlDocumentNormalizer.Normalize(html));
         var container = document.Body ?? document.DocumentElement;
         if (container is null)
         {
@@ -52,9 +55,10 @@ internal static class HtmlContentParser
         }
 
         var writer = new SegmentWriter();
+        var rootContext = FormattingContext.Default.WithElement(container);
         foreach (var node in container.ChildNodes)
         {
-            ProcessNode(node, FormattingContext.Default, writer);
+            ProcessNode(node, rootContext, writer);
         }
 
         return writer.Build();
@@ -87,13 +91,14 @@ internal static class HtmlContentParser
 
         if (node is IText textNode)
         {
-            writer.AppendText(NormalizeWhitespace(textNode.Data), context);
+            writer.AppendText(textNode.Data, context);
             return;
         }
 
         if (node is IHtmlBreakRowElement)
         {
-            writer.AppendLineBreak();
+            AppendBreak((IElement)node, writer);
+
             return;
         }
 
@@ -104,7 +109,7 @@ internal static class HtmlContentParser
             writer.AppendImage(
                 imageSource,
                 imageAlignmentContext.ImageAlignment,
-                ParseLengthAttribute(imageElement, "width"),
+                ParseLengthAttribute(imageElement, WidthAttributeName),
                 ParseLengthAttribute(imageElement, "height"));
             return;
         }
@@ -122,17 +127,48 @@ internal static class HtmlContentParser
         ProcessElement(element, context, writer);
     }
 
+    /// <summary>Writes a line or page break.</summary>
+    /// <param name="element">The break element.</param>
+    /// <param name="writer">The destination.</param>
+    private static void AppendBreak(IElement element, SegmentWriter writer)
+    {
+        if (IsPageBreakElement(element))
+        {
+            writer.AppendPageBreak();
+        }
+        else
+        {
+            writer.AppendLineBreak();
+        }
+    }
+
     /// <summary>Writes an element and its children with inherited formatting.</summary>
     /// <param name="element">The element to render.</param>
     /// <param name="context">The inherited formatting.</param>
     /// <param name="writer">The segment destination.</param>
     private static void ProcessElement(IElement element, in FormattingContext context, SegmentWriter writer)
     {
+        if (element.TagName is "SCRIPT" or "STYLE" or "HEAD" or "TITLE")
+        {
+            return;
+        }
+
         var scopedContext = context.WithElement(element);
+        if (IsPageBreakElement(element))
+        {
+            writer.AppendPageBoundary();
+        }
+
+        if (element.TagName == "TABLE")
+        {
+            AppendTable(element, scopedContext, writer);
+            AppendFollowingPageBoundary(element, writer);
+            return;
+        }
 
         if (element is IHtmlListItemElement)
         {
-            writer.AppendText("� ", scopedContext);
+            writer.AppendListMarker(GetListPrefix(element));
         }
 
         foreach (var child in element.ChildNodes)
@@ -146,39 +182,215 @@ internal static class HtmlContentParser
         }
 
         writer.AppendParagraphBreak(scopedContext.ParagraphAlignment);
+        AppendFollowingPageBoundary(element, writer);
     }
 
-    /// <summary>Provides the NormalizeWhitespace member.</summary>
-    /// <param name="value">The value.</param>
-    /// <returns>The result.</returns>
-    private static string NormalizeWhitespace(string value)
+    /// <summary>Writes an explicit page boundary following a block.</summary>
+    /// <param name="element">The block element.</param>
+    /// <param name="writer">The destination.</param>
+    private static void AppendFollowingPageBoundary(IElement element, SegmentWriter writer)
     {
-        if (string.IsNullOrEmpty(value))
+        if (!HasPageBreakAfter(element))
         {
-            return string.Empty;
+            return;
         }
 
-        var builder = new StringBuilder(value.Length);
-        var previousWasWhitespace = false;
+        writer.AppendPageBoundary();
+    }
 
-        foreach (var ch in value)
+    /// <summary>Gets the visible marker for a list item.</summary>
+    /// <param name="element">The list item.</param>
+    /// <returns>The ordered number or bullet prefix.</returns>
+    private static string GetListPrefix(IElement element)
+    {
+        var parent = element.ParentElement;
+        if (parent?.TagName != "OL")
         {
-            if (char.IsWhiteSpace(ch))
+            return "• ";
+        }
+
+        var number = int.TryParse(parent.GetAttribute("start"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var start) ? start : 1;
+        foreach (var sibling in parent.Children)
+        {
+            if (sibling == element)
             {
-                if (!previousWasWhitespace)
-                {
-                    _ = builder.Append(' ');
-                    previousWasWhitespace = true;
-                }
+                break;
             }
-            else
+
+            if (sibling.TagName == "LI")
             {
-                _ = builder.Append(ch);
-                previousWasWhitespace = false;
+                number++;
             }
         }
 
-        return builder.ToString();
+        return $"{number.ToString(CultureInfo.InvariantCulture)}. ";
+    }
+
+    /// <summary>Parses table cells into a positioned grid and a document projection.</summary>
+    /// <param name="element">The table element.</param>
+    /// <param name="context">The inherited table formatting.</param>
+    /// <param name="writer">The document destination.</param>
+    private static void AppendTable(IElement element, in FormattingContext context, SegmentWriter writer)
+    {
+        var state = new TableWriterState();
+        foreach (var row in element.QuerySelectorAll("tr"))
+        {
+            if (row.Closest("table") == element)
+            {
+                AppendTableRow(row, context, state);
+            }
+        }
+
+        var rowCount = state.RowCount;
+        foreach (var cell in state.Cells)
+        {
+            rowCount = Math.Max(rowCount, cell.Row + cell.RowSpan);
+        }
+
+        var table = new RichTextTable { Cells = state.Cells, RowCount = rowCount, ColumnCount = state.ColumnCount, Width = ParseLengthAttribute(element, WidthAttributeName) };
+        writer.AppendTable(table, state.Text.ToString());
+    }
+
+    /// <summary>Parses one table row while accounting for earlier row spans.</summary>
+    /// <param name="row">The row element.</param>
+    /// <param name="context">The inherited formatting.</param>
+    /// <param name="state">The table writer state.</param>
+    private static void AppendTableRow(IElement row, in FormattingContext context, TableWriterState state)
+    {
+        var columnIndex = 0;
+        var firstCell = true;
+        foreach (var cell in row.Children)
+        {
+            if (cell.TagName is not ("TD" or "TH"))
+            {
+                continue;
+            }
+
+            while (state.Occupied.Contains((state.RowCount, columnIndex)))
+            {
+                columnIndex++;
+            }
+
+            if (!firstCell)
+            {
+                _ = state.Text.Append('\t');
+            }
+
+            firstCell = false;
+            var model = CreateTableCell(cell, context.WithElement(row), state, columnIndex);
+            state.Cells.Add(model);
+            ReserveCell(model, state.Occupied);
+            columnIndex += model.ColumnSpan;
+            state.ColumnCount = Math.Max(state.ColumnCount, columnIndex);
+        }
+
+        _ = state.Text.Append(Environment.NewLine);
+        state.RowCount++;
+    }
+
+    /// <summary>Creates one positioned rich table cell.</summary>
+    /// <param name="cell">The cell element.</param>
+    /// <param name="context">The inherited formatting.</param>
+    /// <param name="state">The table state.</param>
+    /// <param name="column">The grid column.</param>
+    /// <returns>The positioned cell.</returns>
+    private static RichTextTableCell CreateTableCell(IElement cell, in FormattingContext context, TableWriterState state, int column)
+    {
+        var cellContext = context.WithElement(cell);
+        if (cell.TagName == "TH")
+        {
+            cellContext = cellContext with { Bold = true };
+        }
+
+        var cellWriter = new SegmentWriter();
+        foreach (var child in cell.ChildNodes)
+        {
+            ProcessNode(child, cellContext, cellWriter);
+        }
+
+        var segments = cellWriter.Build();
+        var start = state.Text.Length;
+        AppendCellText(segments, state.Text);
+        return new()
+        {
+            Row = state.RowCount,
+            Column = column,
+            RowSpan = ParseSpan(cell, "rowspan"),
+            ColumnSpan = ParseSpan(cell, "colspan"),
+            StartIndex = start,
+            Length = state.Text.Length - start,
+            Segments = segments,
+            Background = cellContext.Background,
+            Width = ParseLengthAttribute(cell, WidthAttributeName),
+        };
+    }
+
+    /// <summary>Writes the text projection of a cell.</summary>
+    /// <param name="segments">The cell segments.</param>
+    /// <param name="text">The text destination.</param>
+    private static void AppendCellText(List<TextSegment> segments, StringBuilder text)
+    {
+        foreach (var segment in segments)
+        {
+            _ = text.Append(segment.IsImage ? "\uFFFC" : segment.Text);
+        }
+    }
+
+    /// <summary>Reserves all grid positions occupied by a spanning cell.</summary>
+    /// <param name="cell">The positioned cell.</param>
+    /// <param name="occupied">The occupied grid positions.</param>
+    private static void ReserveCell(RichTextTableCell cell, HashSet<(int Row, int Column)> occupied)
+    {
+        for (var row = 0; row < cell.RowSpan; row++)
+        {
+            for (var column = 0; column < cell.ColumnSpan; column++)
+            {
+                _ = occupied.Add((cell.Row + row, cell.Column + column));
+            }
+        }
+    }
+
+    /// <summary>Reads a bounded positive table cell span.</summary>
+    /// <param name="element">The cell element.</param>
+    /// <param name="attribute">The span attribute.</param>
+    /// <returns>The supported span.</returns>
+    private static int ParseSpan(IElement element, string attribute) =>
+        int.TryParse(element.GetAttribute(attribute), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
+            ? Math.Clamp(value, 1, MaximumCellSpan)
+            : 1;
+
+    /// <summary>Detects explicit page breaks in exported HTML.</summary>
+    /// <param name="element">The break element.</param>
+    /// <returns>Whether the element represents a page break.</returns>
+    private static bool IsPageBreakElement(IElement element)
+    {
+        foreach (var style in ParseStyles(element.GetAttribute(StyleAttributeName)))
+        {
+            if ((style.Name.Equals("break-before", StringComparison.OrdinalIgnoreCase) && style.Value.Equals("page", StringComparison.OrdinalIgnoreCase))
+                || (style.Name.Equals("page-break-before", StringComparison.OrdinalIgnoreCase) && style.Value.Equals("always", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>Detects an explicit page boundary following a block.</summary>
+    /// <param name="element">The block element.</param>
+    /// <returns>Whether a page should follow the block.</returns>
+    private static bool HasPageBreakAfter(IElement element)
+    {
+        foreach (var style in ParseStyles(element.GetAttribute(StyleAttributeName)))
+        {
+            if ((style.Name.Equals("break-after", StringComparison.OrdinalIgnoreCase) && style.Value.Equals("page", StringComparison.OrdinalIgnoreCase))
+                || (style.Name.Equals("page-break-after", StringComparison.OrdinalIgnoreCase) && style.Value.Equals("always", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>Provides the ParseAlignment member.</summary>
@@ -214,22 +426,17 @@ internal static class HtmlContentParser
     private static double? ParseLengthAttribute(IElement element, string attributeName)
     {
         var attributeValue = element.GetAttribute(attributeName);
-        if (string.IsNullOrWhiteSpace(attributeValue))
+        foreach (var declaration in ParseStyles(element.GetAttribute(StyleAttributeName)))
         {
-            return null;
+            if (declaration.Name.Equals(attributeName, StringComparison.OrdinalIgnoreCase))
+            {
+                attributeValue = declaration.Value;
+            }
         }
 
-        var trimmed = attributeValue.Trim().ToLowerInvariant();
-        if (trimmed.EndsWith("px", StringComparison.Ordinal))
-        {
-            trimmed = trimmed[..^UnitSuffixLength];
-        }
-        else if (trimmed.EndsWith("pt", StringComparison.Ordinal))
-        {
-            trimmed = trimmed[..^UnitSuffixLength];
-        }
-
-        return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : null;
+        return string.IsNullOrWhiteSpace(attributeValue) || attributeValue.Trim().EndsWith('%')
+            ? null
+            : CssDocumentValues.ParseLength(attributeValue, null);
     }
 
     /// <summary>Provides the IsParagraphElement member.</summary>
@@ -273,6 +480,8 @@ internal static class HtmlContentParser
     /// <param name="FontFamily">The font family.</param>
     /// <param name="ImageAlignment">The image alignment.</param>
     /// <param name="ParagraphAlignment">The paragraph alignment.</param>
+    /// <param name="HyperlinkNavigationUri">The hyperlink navigation address.</param>
+    /// <param name="HyperlinkTarget">The hyperlink target.</param>
     private readonly record struct FormattingContext(
         bool Bold,
         bool Italic,
@@ -283,16 +492,18 @@ internal static class HtmlContentParser
         double? FontSize,
         FontFamily? FontFamily,
         AvaloniaHorizontalAlignment ImageAlignment,
-        TextAlignment? ParagraphAlignment)
+        TextAlignment? ParagraphAlignment,
+        string? HyperlinkNavigationUri,
+        string? HyperlinkTarget)
     {
+        /// <summary>Numeric CSS font weight considered bold.</summary>
+        private const int BoldFontWeight = 600;
+
         /// <summary>Number of characters in a heading tag name.</summary>
         private const int HeadingTagLength = 2;
 
         /// <summary>Default font size used for percentage calculations.</summary>
         private const double DefaultFontSize = 14D;
-
-        /// <summary>Divisor used to convert a percentage to a multiplier.</summary>
-        private const double PercentDivisor = 100D;
 
         /// <summary>Font size for a level-one heading.</summary>
         private const double HeadingOneFontSize = 32D;
@@ -314,7 +525,7 @@ internal static class HtmlContentParser
 
         /// <summary>Gets the default formatting context.</summary>
         internal static FormattingContext Default =>
-            new(false, false, false, false, null, null, null, null, AvaloniaHorizontalAlignment.Left, null);
+            new(false, false, false, false, null, null, null, null, AvaloniaHorizontalAlignment.Left, null, null, null);
 
         /// <summary>Provides the WithElement member.</summary>
         /// <param name="element">The element value.</param>
@@ -352,11 +563,29 @@ internal static class HtmlContentParser
             {
                 "B" or "STRONG" => context with { Bold = true },
                 "I" or "EM" => context with { Italic = true },
-                "U" or "A" => context with { Underline = true },
+                "U" => context with { Underline = true },
+                "A" => context with
+                {
+                    Underline = true,
+                    Foreground = context.Foreground ?? Brushes.RoyalBlue,
+                    HyperlinkNavigationUri = element.GetAttribute("href"),
+                    HyperlinkTarget = element.GetAttribute("target"),
+                },
+                "FONT" => ApplyFontTag(context, element),
                 "S" or "DEL" or "STRIKE" => context with { Strikethrough = true },
-                "P" or "DIV" => context with { ParagraphAlignment = ParseParagraphAlignment(element) },
+                "P" or "DIV" => context with { ParagraphAlignment = ParseParagraphAlignment(element) ?? context.ParagraphAlignment },
                 _ => context,
             };
+
+        /// <summary>Applies legacy HTML font attributes.</summary>
+        /// <param name="context">The inherited formatting.</param>
+        /// <param name="element">The font element.</param>
+        /// <returns>The updated formatting.</returns>
+        private static FormattingContext ApplyFontTag(in FormattingContext context, IElement element) => context with
+        {
+            FontFamily = element.GetAttribute("face") is { } face ? new FontFamily(face.Trim('\'', '"')) : context.FontFamily,
+            Foreground = TryParseColor(element.GetAttribute("color"), out var color) ? color : context.Foreground,
+        };
 
         /// <summary>Applies heading formatting.</summary>
         /// <param name="context">The current context.</param>
@@ -380,31 +609,28 @@ internal static class HtmlContentParser
         private static FormattingContext ApplyStyle(in FormattingContext context, (string Name, string Value) style) =>
             style.Name.ToLowerInvariant() switch
             {
-                "font-weight" when style.Value.Equals("bold", StringComparison.OrdinalIgnoreCase) => context with
+                "font-weight" => context with
                 {
-                    Bold = true,
+                    Bold = style.Value.Equals("bold", StringComparison.OrdinalIgnoreCase)
+                        || (int.TryParse(style.Value, out var weight) && weight >= BoldFontWeight),
                 },
-                "font-style" when style.Value.Equals("italic", StringComparison.OrdinalIgnoreCase) => context with
+                "font-style" => context with
                 {
-                    Italic = true,
+                    Italic = style.Value.Equals("italic", StringComparison.OrdinalIgnoreCase) || style.Value.Equals("oblique", StringComparison.OrdinalIgnoreCase),
                 },
-                "text-decoration" when style.Value.Contains("underline", StringComparison.OrdinalIgnoreCase) =>
+                "text-decoration" or "text-decoration-line" =>
                     context with
                     {
-                        Underline = true,
-                    },
-                "text-decoration" when style.Value.Contains("line-through", StringComparison.OrdinalIgnoreCase) =>
-                    context with
-                    {
-                        Strikethrough = true,
+                        Underline = style.Value.Contains("underline", StringComparison.OrdinalIgnoreCase),
+                        Strikethrough = style.Value.Contains("line-through", StringComparison.OrdinalIgnoreCase),
                     },
                 "color" when TryParseColor(style.Value, out var foreground) => context with { Foreground = foreground },
-                "background-color" when TryParseColor(style.Value, out var background) => context with
+                "background-color" or "background" or "mso-highlight" when TryParseColor(style.Value, out var background) => context with
                 {
                     Background = background,
                 },
                 "font-size" => context with { FontSize = ParseFontSize(style.Value, context.FontSize) },
-                "font-family" => context with { FontFamily = new(style.Value) },
+                "font-family" => context with { FontFamily = new(style.Value.Replace("\"", string.Empty, StringComparison.Ordinal).Replace("'", string.Empty, StringComparison.Ordinal)) },
                 "text-align" when Enum.TryParse<TextAlignment>(style.Value, true, out var alignment) => context with
                 {
                     ParagraphAlignment = alignment,
@@ -442,32 +668,8 @@ internal static class HtmlContentParser
         /// <param name="value">The value.</param>
         /// <param name="current">The current value.</param>
         /// <returns>The result.</returns>
-        private static double? ParseFontSize(string value, double? current)
-        {
-            var trimmed = value.Trim().ToLowerInvariant();
-            if (trimmed.EndsWith("px", StringComparison.Ordinal))
-            {
-                trimmed = trimmed[..^UnitSuffixLength];
-            }
-            else if (trimmed.EndsWith("pt", StringComparison.Ordinal))
-            {
-                trimmed = trimmed[..^UnitSuffixLength];
-            }
-            else if (trimmed.EndsWith('%'))
-            {
-                if (double.TryParse(trimmed[..^1], NumberStyles.Float, CultureInfo.InvariantCulture, out var pct))
-                {
-                    var baseSize = current ?? DefaultFontSize;
-                    return baseSize * (pct / PercentDivisor);
-                }
-
-                return current;
-            }
-
-            return double.TryParse(trimmed, NumberStyles.Float, CultureInfo.InvariantCulture, out var px)
-                ? px
-                : current;
-        }
+        private static double? ParseFontSize(string value, double? current) =>
+            CssDocumentValues.ParseLength(value, current ?? DefaultFontSize) ?? current;
 
         /// <summary>Provides the GetHeadingSize member.</summary>
         /// <param name="tag">The tag value.</param>
@@ -497,7 +699,7 @@ internal static class HtmlContentParser
             }
 
             var value = input.Trim();
-            if (!global::Avalonia.Media.Color.TryParse(value, out var color))
+            if (!CssDocumentValues.TryParseColor(value, out var color))
             {
                 return false;
             }
@@ -505,6 +707,25 @@ internal static class HtmlContentParser
             brush = new SolidColorBrush(color);
             return true;
         }
+    }
+
+    /// <summary>Collects a table's positioned cells and text projection.</summary>
+    private sealed class TableWriterState
+    {
+        /// <summary>Gets the source ordered cells.</summary>
+        internal List<RichTextTableCell> Cells { get; } = [];
+
+        /// <summary>Gets the occupied grid positions.</summary>
+        internal HashSet<(int Row, int Column)> Occupied { get; } = [];
+
+        /// <summary>Gets the document text destination.</summary>
+        internal StringBuilder Text { get; } = new();
+
+        /// <summary>Gets or sets the row count.</summary>
+        internal int RowCount { get; set; }
+
+        /// <summary>Gets or sets the column count.</summary>
+        internal int ColumnCount { get; set; }
     }
 
     /// <summary>Provides the SegmentWriter member.</summary>
@@ -536,6 +757,9 @@ internal static class HtmlContentParser
                 Background = context.Background,
                 FontSize = context.FontSize,
                 FontFamily = context.FontFamily,
+                ParagraphAlignment = context.ParagraphAlignment,
+                HyperlinkNavigationUri = context.HyperlinkNavigationUri,
+                HyperlinkTarget = context.HyperlinkTarget,
             };
 
             _segments.Add(segment);
@@ -549,10 +773,27 @@ internal static class HtmlContentParser
             _offset += Environment.NewLine.Length;
         }
 
+        /// <summary>Appends a document page break.</summary>
+        internal void AppendPageBreak()
+        {
+            _segments.Add(new("\f", _offset) { IsPageBreak = true });
+            _offset++;
+        }
+
+        /// <summary>Appends a page boundary that occupies no editable document positions.</summary>
+        internal void AppendPageBoundary() => _segments.Add(new(string.Empty, _offset) { BreakPageBefore = true });
+
+        /// <summary>Appends a generated list marker without consuming document positions.</summary>
+        /// <param name="marker">The marker text.</param>
+        internal void AppendListMarker(string marker) => _segments.Add(new(string.Empty, _offset) { ListMarker = marker });
+
         /// <summary>Provides the AppendParagraphBreak member.</summary>
         /// <param name="alignment">The alignment value.</param>
-        internal void AppendParagraphBreak(TextAlignment? alignment) =>
+        internal void AppendParagraphBreak(TextAlignment? alignment)
+        {
             _segments.Add(TextSegment.CreateParagraphBreak(_offset, alignment));
+            _offset += Environment.NewLine.Length;
+        }
 
         /// <summary>Provides the AppendImage member.</summary>
         /// <param name="source">The source value.</param>
@@ -573,5 +814,14 @@ internal static class HtmlContentParser
         /// <summary>Provides the Build member.</summary>
         /// <returns>The result.</returns>
         internal List<TextSegment> Build() => _segments;
+
+        /// <summary>Appends a grid table with a plain text document projection.</summary>
+        /// <param name="table">The table model.</param>
+        /// <param name="text">The flattened cell text.</param>
+        internal void AppendTable(RichTextTable table, string text)
+        {
+            _segments.Add(new(text, _offset) { Table = table });
+            _offset += text.Length;
+        }
     }
 }

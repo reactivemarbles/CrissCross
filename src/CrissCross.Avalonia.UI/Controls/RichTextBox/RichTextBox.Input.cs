@@ -111,6 +111,11 @@ public partial class RichTextBox
     /// <param name="e">The e value.</param>
     private void OnTextBoxPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
+        if (IsPageLayoutEnabled || _isUpdating)
+        {
+            return;
+        }
+
         if ((e.Property == global::Avalonia.Controls.TextBox.SelectionStartProperty
                 || e.Property == global::Avalonia.Controls.TextBox.SelectionEndProperty)
             && _editingTextBox is not null)
@@ -309,7 +314,12 @@ public partial class RichTextBox
             CaretIndex = boundedCaret;
         }
 
-        _editingTextBox?.CaretIndex = boundedCaret;
+        if (IsPageLayoutEnabled || _editingTextBox is null)
+        {
+            return;
+        }
+
+        _editingTextBox.CaretIndex = boundedCaret;
     }
 
     /// <summary>Handles document enabled property updates.</summary>
@@ -360,6 +370,7 @@ public partial class RichTextBox
     /// <returns><see langword="true"/> when pasteable content is available.</returns>
     private bool HasPasteContent(IRichTextClipboardAdapter clipboard) =>
         (IsRichClipboardEnabled && clipboard.ContainsHtml)
+        || (IsRichClipboardEnabled && clipboard is IRichTextRtfClipboardAdapter { RtfText.Length: > 0 })
         || clipboard.ContainsPlainText
         || (
             IsImagePasteEnabled

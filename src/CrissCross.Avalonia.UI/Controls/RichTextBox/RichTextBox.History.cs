@@ -25,13 +25,7 @@ public partial class RichTextBox
 
         var start = Math.Min(SelectionStart, SelectionEnd);
         var end = Math.Max(SelectionStart, SelectionEnd);
-        var builder = new StringBuilder();
-        foreach (var segment in Document.Segments)
-        {
-            RichTextHelpers.AppendSelectedSegmentHtml(segment, start, end, builder);
-        }
-
-        return builder.ToString();
+        return HtmlSelectionFragment.Create(Document.Text, start, end - start);
     }
 
     /// <summary>Provides the CaptureHistory member.</summary>
@@ -131,8 +125,15 @@ public partial class RichTextBox
     {
         var selectedText = SelectedText;
         clipboard.SetPlainText(selectedText);
+        clipboard.SetImage(null);
         if (!IsRichClipboardEnabled)
         {
+            clipboard.SetHtml(null);
+            if (clipboard is IRichTextRtfClipboardAdapter plainAdapter)
+            {
+                plainAdapter.RtfText = null;
+            }
+
             return;
         }
 
@@ -141,11 +142,17 @@ public partial class RichTextBox
             string.IsNullOrEmpty(selectedHtml)
                 ? HtmlClipboardUtilities.EncodePlainText(selectedText)
                 : selectedHtml);
+        if (clipboard is not IRichTextRtfClipboardAdapter rtfAdapter)
+        {
+            return;
+        }
+
+        rtfAdapter.RtfText = RtfDocumentConverter.TryToRtf(selectedHtml);
     }
 
     /// <summary>Copies the current selection into the platform clipboard.</summary>
     /// <returns>A task that completes when the clipboard write has finished.</returns>
-    private Task WriteSelectionToSystemClipboardAsync()
+    private async Task WriteSelectionToSystemClipboardAsync()
     {
         var selectedText = SelectedText;
         var selectedHtml = IsRichClipboardEnabled ? SelectedHtml : null;
@@ -154,7 +161,14 @@ public partial class RichTextBox
             selectedHtml = HtmlClipboardUtilities.EncodePlainText(selectedText);
         }
 
-        return RichTextSystemClipboard.WriteAsync(GetSystemClipboard(), selectedText, selectedHtml);
+        if (selectedHtml is not null)
+        {
+            selectedHtml = await RichTextClipboardImages.EmbedLocalImagesAsync(
+                HtmlDocumentNormalizer.Normalize(selectedHtml),
+                CancellationToken.None).ConfigureAwait(true);
+        }
+
+        await RichTextSystemClipboard.WriteAsync(GetSystemClipboard(), selectedText, selectedHtml).ConfigureAwait(true);
     }
 
     /// <summary>Provides the CutCore member.</summary>
@@ -200,6 +214,12 @@ public partial class RichTextBox
             return;
         }
 
+        if (IsRichClipboardEnabled && clipboard is IRichTextRtfClipboardAdapter { RtfText: { Length: > 0 } rtf })
+        {
+            ReplaceSelectionWithHtml(RtfDocumentConverter.ToHtml(rtf));
+            return;
+        }
+
         if (TryPasteImage(clipboard))
         {
             return;
@@ -218,7 +238,15 @@ public partial class RichTextBox
     private async Task PasteFromSystemClipboardAsync()
     {
         var content = await RichTextSystemClipboard.ReadAsync(GetSystemClipboard()).ConfigureAwait(true);
-        var clipboard = new RichTextMemoryClipboardAdapter { PlainText = content.PlainText, HtmlText = content.HtmlText, ImageSource = content.ImageSource, };
+        var html = content.HtmlText;
+        if (!string.IsNullOrEmpty(html))
+        {
+            html = await RichTextClipboardImages.EmbedLocalImagesAsync(
+                HtmlDocumentNormalizer.Normalize(HtmlClipboardUtilities.ExtractFragment(html), normalizeWhitespace: true),
+                CancellationToken.None).ConfigureAwait(true);
+        }
+
+        var clipboard = new RichTextMemoryClipboardAdapter { PlainText = content.PlainText, HtmlText = html, ImageSource = content.ImageSource, RtfText = content.RtfText, };
 
         PasteFromAdapter(clipboard);
     }
@@ -238,7 +266,7 @@ public partial class RichTextBox
 
         var fragment =
             HtmlClipboardUtilities.ExtractFragment(clipboard.HtmlText) ?? clipboard.HtmlText;
-        ReplaceSelectionWithHtml(fragment ?? string.Empty);
+        ReplaceSelectionWithHtml(HtmlDocumentNormalizer.Normalize(fragment ?? string.Empty, normalizeWhitespace: true));
         return true;
     }
 
@@ -355,7 +383,7 @@ public partial class RichTextBox
         }
 
         var safeStyle = style.Replace("\"", "'", StringComparison.Ordinal);
-        var selectionText = SelectedText;
+        var selectionText = SelectedHtml;
         if (string.IsNullOrWhiteSpace(selectionText))
         {
             return;

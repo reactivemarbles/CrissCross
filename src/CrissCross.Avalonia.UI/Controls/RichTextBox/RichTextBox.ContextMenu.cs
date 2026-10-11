@@ -134,7 +134,7 @@ public partial class RichTextBox
     /// <summary>Provides the ApplySelectionToTextBox member.</summary>
     private void ApplySelectionToTextBox()
     {
-        if (_editingTextBox is null)
+        if (_editingTextBox is null || IsPageLayoutEnabled)
         {
             return;
         }

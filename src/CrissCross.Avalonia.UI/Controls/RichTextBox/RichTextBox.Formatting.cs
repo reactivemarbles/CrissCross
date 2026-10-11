@@ -2,6 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Globalization;
 using Avalonia.Media;
 
 #if REACTIVELIST_REACTIVE
@@ -42,8 +43,12 @@ public partial class RichTextBox
     public void SetSelectionFontSize(double fontSize)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(fontSize);
+        if (!double.IsFinite(fontSize))
+        {
+            throw new ArgumentOutOfRangeException(nameof(fontSize));
+        }
 
-        ApplySpanStyleToSelection($"font-size:{fontSize}px;");
+        ApplySpanStyleToSelection($"font-size:{fontSize.ToString(CultureInfo.InvariantCulture)}px;");
     }
 
     /// <summary>Applies a foreground color to the selected content.</summary>

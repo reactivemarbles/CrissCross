@@ -200,7 +200,7 @@ public sealed partial class RichTextBoxFeatureTests
         await Assert.That(imageSource).IsNull();
     }
 
-    /// <summary>Provides the FormattedTextPresenter_ImageInline_KeepsPreviousTextRunSplitSafe member.</summary>
+    /// <summary>Inline images preserve the preceding run and participate in measured document positions.</summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
     [Test]
     public async Task FormattedTextPresenter_ImageInline_KeepsPreviousTextRunSplitSafe()
@@ -225,12 +225,17 @@ public sealed partial class RichTextBoxFeatureTests
                 if (inline is global::Avalonia.Controls.Documents.Run run)
                 {
                     firstRun = run;
-                    break;
                 }
             }
         }
 
-        await Assert.That(firstRun?.Text).IsEqualTo($"{AlphabetText}\u200B");
+        await Assert.That(firstRun?.Text).IsEqualTo(AlphabetText);
+        await Assert.That(FindMeasuredInlineImageSource(presenter)).IsNotNull();
+        var measured = presenter.MeasureDocument(ExplicitImageWidth * AlphabetText.Length);
+        await Assert.That(measured.Height >= ExplicitImageWidth).IsTrue();
+        await Assert.That(presenter.GetLayoutOffset(AlphabetText.Length)).IsEqualTo(AlphabetText.Length);
+        await Assert.That(presenter.GetDocumentOffset(AlphabetText.Length + 1)).IsEqualTo(document.Length);
+        await Assert.That(document.PlainText).IsEqualTo($"{AlphabetText}\uFFFC");
     }
 
     /// <summary>Verifies the documented behavior.</summary>
@@ -283,6 +288,28 @@ public sealed partial class RichTextBoxFeatureTests
 
         presenter.RemoteImageLoader = static _ => throw new InvalidOperationException("Loader failure");
         await Assert.That(presenter.CreateImageElement(imageSegment)).IsNull();
+    }
+
+    /// <summary>Finds a loaded image in the presenter's measured inline controls.</summary>
+    /// <param name="presenter">The rich presenter.</param>
+    /// <returns>The loaded inline image source.</returns>
+    private static global::Avalonia.Media.IImage? FindMeasuredInlineImageSource(FormattedTextPresenter presenter)
+    {
+        if (presenter.Inlines is null)
+        {
+            return null;
+        }
+
+        foreach (var inline in presenter.Inlines)
+        {
+            if (inline is global::Avalonia.Controls.Documents.InlineUIContainer container
+                && container.Child is global::Avalonia.Controls.Image image)
+            {
+                return image.Source;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Determines whether a document contains a dropped image source.</summary>
