@@ -110,7 +110,8 @@ internal static class HtmlContentParser
                 imageSource,
                 imageAlignmentContext.ImageAlignment,
                 ParseLengthAttribute(imageElement, WidthAttributeName),
-                ParseLengthAttribute(imageElement, "height"));
+                ParseLengthAttribute(imageElement, "height"),
+                imageElement.GetAttribute("alt"));
             return;
         }
 
@@ -148,7 +149,7 @@ internal static class HtmlContentParser
     /// <param name="writer">The segment destination.</param>
     private static void ProcessElement(IElement element, in FormattingContext context, SegmentWriter writer)
     {
-        if (element.TagName is "SCRIPT" or "STYLE" or "HEAD" or "TITLE")
+        if (IsNonRenderedElement(element))
         {
             return;
         }
@@ -198,6 +199,11 @@ internal static class HtmlContentParser
         writer.AppendPageBoundary();
     }
 
+    /// <summary>Identifies elements outside the rendered body.</summary>
+    /// <param name="element">The source element.</param>
+    /// <returns>Whether the element should be skipped.</returns>
+    private static bool IsNonRenderedElement(IElement element) => element.TagName is "SCRIPT" or "STYLE" or "HEAD" or "TITLE" or "TEMPLATE";
+
     /// <summary>Gets the visible marker for a list item.</summary>
     /// <param name="element">The list item.</param>
     /// <returns>The ordered number or bullet prefix.</returns>
@@ -212,6 +218,11 @@ internal static class HtmlContentParser
         var number = int.TryParse(parent.GetAttribute("start"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var start) ? start : 1;
         foreach (var sibling in parent.Children)
         {
+            if (sibling.TagName == "LI" && int.TryParse(sibling.GetAttribute("value"), NumberStyles.Integer, CultureInfo.InvariantCulture, out var explicitNumber))
+            {
+                number = explicitNumber;
+            }
+
             if (sibling == element)
             {
                 break;
@@ -309,6 +320,7 @@ internal static class HtmlContentParser
         }
 
         var segments = cellWriter.Build();
+        var cellStyle = RichTableCellStyle.Read(cell);
         var start = state.Text.Length;
         AppendCellText(segments, state.Text);
         return new()
@@ -317,11 +329,16 @@ internal static class HtmlContentParser
             Column = column,
             RowSpan = ParseSpan(cell, "rowspan"),
             ColumnSpan = ParseSpan(cell, "colspan"),
+            IsHeader = cell.TagName == "TH",
             StartIndex = start,
             Length = state.Text.Length - start,
             Segments = segments,
             Background = cellContext.Background,
             Width = ParseLengthAttribute(cell, WidthAttributeName),
+            BorderThickness = cellStyle.BorderThickness,
+            BorderBrush = cellStyle.BorderBrush,
+            Padding = cellStyle.Padding,
+            ContentAlignment = cellStyle.Alignment,
         };
     }
 
@@ -800,14 +817,17 @@ internal static class HtmlContentParser
         /// <param name="alignment">The alignment value.</param>
         /// <param name="width">The width value.</param>
         /// <param name="height">The height value.</param>
-        internal void AppendImage(string source, AvaloniaHorizontalAlignment alignment, double? width, double? height)
+        /// <param name="alternativeText">The accessible image description.</param>
+        internal void AppendImage(string source, AvaloniaHorizontalAlignment alignment, double? width, double? height, string? alternativeText)
         {
             if (string.IsNullOrWhiteSpace(source))
             {
                 return;
             }
 
-            _segments.Add(TextSegment.CreateImage(_offset, source, alignment, width, height));
+            var image = TextSegment.CreateImage(_offset, source, alignment, width, height);
+            image.ImageAlternativeText = alternativeText;
+            _segments.Add(image);
             _offset++;
         }
 

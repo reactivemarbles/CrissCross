@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <None Update="Fixtures\WordInteropSample.rtf" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Fixtures\WordNativeSample.docx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

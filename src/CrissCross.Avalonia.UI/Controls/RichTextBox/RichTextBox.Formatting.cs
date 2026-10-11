@@ -154,7 +154,13 @@ public partial class RichTextBox
     public void ReplaceSelection(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        ReplaceSelectionWithHtml(HtmlClipboardUtilities.EncodePlainText(text));
+        if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        ReplaceSelectionWithHtml(EncodeTypedText(text, Math.Min(SelectionStart, SelectionEnd)));
+        _typingStylePosition = CaretIndex;
     }
 
     /// <summary>Replaces the current selection with HTML.</summary>
@@ -164,6 +170,11 @@ public partial class RichTextBox
         ArgumentNullException.ThrowIfNull(html);
 
         if (IsReadOnlyInternal)
+        {
+            return;
+        }
+
+        if (TryReplaceTrackedSelection(html))
         {
             return;
         }

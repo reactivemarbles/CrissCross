@@ -2,6 +2,8 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using Avalonia;
+using Avalonia.Layout;
 using Avalonia.Media;
 
 #if REACTIVELIST_REACTIVE
@@ -25,6 +27,9 @@ public sealed class RichTextTableCell
     /// <summary>Gets the number of grid columns occupied by the cell.</summary>
     public int ColumnSpan { get; init; } = 1;
 
+    /// <summary>Gets whether this cell labels a table row or column.</summary>
+    public bool IsHeader { get; init; }
+
     /// <summary>Gets the cell start relative to the table's document range.</summary>
     public int StartIndex { get; init; }
 
@@ -39,4 +44,16 @@ public sealed class RichTextTableCell
 
     /// <summary>Gets the optional cell width in device independent pixels.</summary>
     public double? Width { get; init; }
+
+    /// <summary>Gets the optional cell border thickness.</summary>
+    public Thickness? BorderThickness { get; init; }
+
+    /// <summary>Gets the optional cell border brush.</summary>
+    public IBrush? BorderBrush { get; init; }
+
+    /// <summary>Gets the optional cell content padding.</summary>
+    public Thickness? Padding { get; init; }
+
+    /// <summary>Gets the vertical alignment of the cell content.</summary>
+    public VerticalAlignment ContentAlignment { get; init; } = VerticalAlignment.Top;
 }

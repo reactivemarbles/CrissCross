@@ -15,6 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Schema validation for native Word document tests only. -->
+    <PackageVersion Include="DocumentFormat.OpenXml" Version="3.5.1" />
     <!-- Avalonia Packages -->
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />

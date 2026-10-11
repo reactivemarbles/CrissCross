@@ -42,9 +42,6 @@ internal sealed class RtfContentParser(string source)
     /// <summary>Stores the HyperlinkInstruction conversion state.</summary>
     private const string HyperlinkInstruction = "HYPERLINK ";
 
-    /// <summary>Stores the CellEndTag conversion state.</summary>
-    private const string CellEndTag = "</td>";
-
     /// <summary>Stores the MetadataDestinations conversion state.</summary>
     private static readonly HashSet<string> MetadataDestinations = ["fonttbl", "colortbl", "stylesheet", "info", "listtable", "listoverridetable", "generator", "nonshppict"];
 
@@ -79,6 +76,9 @@ internal sealed class RtfContentParser(string source)
     /// <summary>Stores the paragraph conversion state.</summary>
     private readonly StringBuilder _paragraph = new();
 
+    /// <summary>Buffers native table structures and cell definitions.</summary>
+    private readonly RtfTableReader _tables = new();
+
     /// <summary>Stores the offset conversion state.</summary>
     private int _offset;
 
@@ -88,14 +88,14 @@ internal sealed class RtfContentParser(string source)
     /// <summary>Stores the defaultFont conversion state.</summary>
     private int _defaultFont;
 
-    /// <summary>Stores the table conversion state.</summary>
-    private bool _table;
+    /// <summary>Tracks Word's trailing nested table definition destination.</summary>
+    private bool _nestedProperties;
 
-    /// <summary>Stores the row conversion state.</summary>
-    private bool _row;
+    /// <summary>Tracks whether the current paragraph belongs to a table.</summary>
+    private bool _tableParagraph;
 
-    /// <summary>Stores the cell conversion state.</summary>
-    private bool _cell;
+    /// <summary>The nesting level inherited by the current paragraph.</summary>
+    private int _paragraphDepth = 1;
 
     /// <summary>Stores the alignment conversion state.</summary>
     private string _alignment = "left";
@@ -105,6 +105,9 @@ internal sealed class RtfContentParser(string source)
 
     /// <summary>The formatting attached to a pending surrogate pair.</summary>
     private Formatting _surrogateFormatting = new();
+
+    /// <summary>Gets the current cell or document output buffer.</summary>
+    private StringBuilder Output => _tables.Output(_output);
 
     /// <summary>Returns HTML after validating and decoding the complete RTF document.</summary>
     /// <returns>The conversion result.</returns>
@@ -122,6 +125,7 @@ internal sealed class RtfContentParser(string source)
         }
 
         ReadTables(root);
+        _tables.Colors.AddRange(_colors);
         Render(root, new Formatting { Font = _defaultFont });
         if (_highSurrogate is not null)
         {
@@ -299,7 +303,7 @@ internal sealed class RtfContentParser(string source)
             foreach (var c in text)
             {
                 if (!char.IsWhiteSpace(c))
-                {
+                    {
                     _ = hex.Append(c);
                 }
             }
@@ -546,7 +550,7 @@ internal sealed class RtfContentParser(string source)
             foreach (var c in text)
             {
                 if (c != ';')
-                {
+                    {
                     continue;
                 }
 
@@ -570,7 +574,11 @@ internal sealed class RtfContentParser(string source)
         {
             if (token.Children is { } children)
             {
+                var paragraphDepth = _paragraphDepth;
+                var tableParagraph = _tableParagraph;
                 Render(children, formatting);
+                _paragraphDepth = paragraphDepth;
+                _tableParagraph = tableParagraph;
                 continue;
             }
 
@@ -600,6 +608,16 @@ internal sealed class RtfContentParser(string source)
     private bool RenderDestination(List<Token> tokens, Formatting formatting)
     {
         var destination = Destination(tokens);
+        if (destination == "nonesttables")
+        {
+            return true;
+        }
+
+        if (destination == "nesttableprops")
+        {
+            _nestedProperties = true;
+        }
+
         if (MetadataDestinations.Contains(destination))
         {
             return true;
@@ -622,7 +640,7 @@ internal sealed class RtfContentParser(string source)
             return true;
         }
 
-        return tokens.Count > 0 && tokens[0].Word == "*" && destination != "shppict";
+        return tokens.Count > 0 && tokens[0].Word == "*" && destination is not ("shppict" or "nesttableprops");
     }
 
     /// <summary>Preserves a hyperlink target and its formatted display text.</summary>
@@ -776,7 +794,7 @@ internal sealed class RtfContentParser(string source)
     {
         FlushParagraph();
         CloseTable();
-        _ = _output.Append("<br style=\"break-before:page\" />");
+        _ = Output.Append("<br style=\"break-before:page\" />");
     }
 
     /// <summary>Applies non-character document controls.</summary>
@@ -788,53 +806,81 @@ internal sealed class RtfContentParser(string source)
     }
 
     /// <summary>Finishes a table cell.</summary>
-    private void EndCell()
+    /// <returns>A recognized cell boundary result.</returns>
+    private bool EndCell()
     {
         EnsureCell();
         FlushParagraph();
-        CloseCell();
+        _tables.EndCell();
+        return true;
     }
 
     /// <summary>Finishes a table row.</summary>
-    private void EndRow()
+    /// <returns>A recognized row boundary result.</returns>
+    private bool EndRow()
     {
         FlushParagraph();
-        CloseRow();
+        _tables.EndRow();
+        _nestedProperties = false;
+        _tableParagraph = false;
+        return true;
     }
 
-    /// <summary>Applies table boundaries and rejects unsupported cell merges.</summary>
-    /// <param name = "token">The token input.</param>
+    /// <summary>Reads native row, cell, merge, and nesting controls.</summary>
+    /// <param name="token">The table control.</param>
     private void RenderTableControl(Token token)
     {
-        if (token.Word is "clmgf" or "clmrg" or "clvmgf" or "clvmrg" or "nesttableprops")
-        {
-            throw new NotSupportedException("Merged or nested RTF table cells cannot be represented by this editor.");
-        }
-
         if (token.Word == "trowd")
         {
-            StartRow();
+            FlushParagraph();
+            if (!_nestedProperties)
+            {
+                _tables.SetDepth(_paragraphDepth, _output);
+            }
+
+            _tables.BeginDefinition();
+            _tableParagraph = true;
             return;
         }
 
-        if (token.Word == "intbl")
-        {
-            EnsureCell();
-            return;
-        }
-
-        if (token.Word == "cell")
-        {
-            EndCell();
-            return;
-        }
-
-        if (token.Word != "row")
+        if (_tables.ApplyProperty(token.Word, token.Number))
         {
             return;
         }
 
-        EndRow();
+        ApplyTableBoundary(token);
+    }
+
+    /// <summary>Changes table depth or terminates physical row and cell contents.</summary>
+    /// <param name="token">The table boundary control.</param>
+    private void ApplyTableBoundary(Token token) => _ = token.Word switch
+    {
+        "itap" => ChangeTableDepth(token.Number ?? 1),
+        "intbl" => _tableParagraph = true,
+        "cell" or "nestcell" => EndCell(),
+        "row" or "nestrow" => EndRow(),
+        "pard" => ResetTableParagraph(),
+        _ => false,
+    };
+
+    /// <summary>Changes the active paragraph's table nesting level.</summary>
+    /// <param name="depth">The requested table depth.</param>
+    /// <returns>A recognized nesting control result.</returns>
+    private bool ChangeTableDepth(int depth)
+    {
+        FlushParagraph();
+        _paragraphDepth = depth;
+        _tables.SetDepth(_paragraphDepth, _output);
+        return true;
+    }
+
+    /// <summary>Restores the default paragraph state before subsequent table controls.</summary>
+    /// <returns>A recognized paragraph reset result.</returns>
+    private bool ResetTableParagraph()
+    {
+        _tableParagraph = false;
+        _paragraphDepth = 1;
+        return true;
     }
 
     /// <summary>Updates paragraph alignment from an RTF control.</summary>
@@ -863,7 +909,7 @@ internal sealed class RtfContentParser(string source)
             throw new FormatException("Text interrupts an RTF Unicode surrogate pair.");
         }
 
-        if (_table && !_row)
+        if (_tables.HasTable && !_tables.InRow && !_tableParagraph)
         {
             CloseTable();
         }
@@ -938,35 +984,21 @@ internal sealed class RtfContentParser(string source)
         _ = _paragraph.Append(' ').Append(attribute).Append("=\"").Append((size.Value / TwipsPerPixel).ToString(CultureInfo.InvariantCulture)).Append('"');
     }
 
-    /// <summary>Opens a table row and rejects nested table rows.</summary>
-    private void StartRow()
-    {
-        FlushParagraph();
-        if (!_table)
-        {
-            _ = _output.Append("<table>");
-            _table = true;
-        }
-
-        if (_row)
-        {
-            throw new NotSupportedException("Nested RTF tables are not supported.");
-        }
-
-        _ = _output.Append("<tr>");
-        _row = true;
-    }
-
-    /// <summary>Opens a cell when content first appears in a row.</summary>
+    /// <summary>Ensures the active physical cell exists before appending content.</summary>
     private void EnsureCell()
     {
-        if (!(_row && !_cell))
+        if (_tableParagraph)
+        {
+            _tables.SetDepth(_paragraphDepth, _output);
+            _tables.EnsureRow();
+        }
+
+        if (!_tables.InRow)
         {
             return;
         }
 
-        _ = _output.Append("<td>");
-        _cell = true;
+        _tables.EnsureContent();
     }
 
     /// <summary>Emits the accumulated paragraph, optionally retaining an empty paragraph.</summary>
@@ -978,13 +1010,13 @@ internal sealed class RtfContentParser(string source)
             return;
         }
 
-        if (_table && !_row)
+        if (_tables.HasTable && !_tables.InRow && !_tableParagraph)
         {
             CloseTable();
         }
 
         EnsureCell();
-        _ = _output.Append("<p style=\"text-align:").Append(_alignment).Append(";white-space:pre-wrap\">").Append(_paragraph).Append("</p>");
+        _ = Output.Append("<p style=\"text-align:").Append(_alignment).Append(";white-space:pre-wrap\">").Append(_paragraph).Append("</p>");
         _ = _paragraph.Clear();
     }
 
@@ -996,55 +1028,20 @@ internal sealed class RtfContentParser(string source)
             return;
         }
 
-        if (_row)
+        if (_tables.InRow)
         {
             FlushParagraph();
             return;
         }
 
         CloseTable();
-        _ = _output.Append("<span style=\"text-align:").Append(_alignment)
+        _ = Output.Append("<span style=\"text-align:").Append(_alignment)
             .Append(";white-space:pre-wrap\">").Append(_paragraph).Append("</span>");
         _ = _paragraph.Clear();
     }
 
-    /// <summary>Closes the current cell when one is open.</summary>
-    private void CloseCell()
-    {
-        if (!_cell)
-        {
-            return;
-        }
-
-        _ = _output.Append(CellEndTag);
-        _cell = false;
-    }
-
-    /// <summary>Closes the current cell and row.</summary>
-    private void CloseRow()
-    {
-        CloseCell();
-        if (!_row)
-        {
-            return;
-        }
-
-        _ = _output.Append("</tr>");
-        _row = false;
-    }
-
-    /// <summary>Closes all open table boundaries.</summary>
-    private void CloseTable()
-    {
-        CloseRow();
-        if (!_table)
-        {
-            return;
-        }
-
-        _ = _output.Append("</table>");
-        _table = false;
-    }
+    /// <summary>Completes buffered table boundaries.</summary>
+    private void CloseTable() => _tables.Close(_output);
 
     /// <summary>Tracks RGB components and automatic color entries.</summary>
     private sealed class ColorComponents

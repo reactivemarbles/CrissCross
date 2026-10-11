@@ -238,6 +238,7 @@ internal sealed class HtmlTextProjection
     private static bool IsHiddenElement(string tag, string name) => !tag.StartsWith('/')
         && (name.Equals("style", StringComparison.OrdinalIgnoreCase)
             || name.Equals("script", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("template", StringComparison.OrdinalIgnoreCase)
             || name.Equals("head", StringComparison.OrdinalIgnoreCase));
 
     /// <summary>Determines whether a cell boundary separates adjacent table cells.</summary>

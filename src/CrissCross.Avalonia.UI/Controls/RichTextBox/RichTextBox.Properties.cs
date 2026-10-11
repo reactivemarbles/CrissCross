@@ -192,8 +192,8 @@ public partial class RichTextBox
     /// <summary>Gets a value indicating whether redo history is available.</summary>
     public bool CanRedo => !IsReadOnlyInternal && _redoStack.Count > 0;
 
-    /// <summary>Gets a value indicating whether formatting can be applied to the current selection.</summary>
-    public bool CanApplyFormatting => IsFormattingEnabled && !IsReadOnlyInternal && HasSelection;
+    /// <summary>Gets whether character formatting can be applied to the selection or insertion position.</summary>
+    public bool CanApplyFormatting => IsFormattingEnabled && !IsReadOnlyInternal;
 
     /// <summary>Gets the copy command.</summary>
     public ICommand CopyCommand { get; }

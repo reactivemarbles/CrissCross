@@ -50,6 +50,7 @@ public partial class MainWindow : NavigationWindow<MainViewModel>
         HostName = $"{NavHostName}_{System.Guid.NewGuid():N}";
 
         InitializeComponent();
+        RegisterWindowsAutomation();
 
         if (NavigationFrame is not null)
         {

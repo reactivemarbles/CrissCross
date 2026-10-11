@@ -90,12 +90,16 @@ public partial class RichTextBox
             return;
         }
 
-        _isUpdating = true;
-
         var newText = _editingTextBox?.Text ?? string.Empty;
+        if (TryApplyTrackedTextChange(newText))
+        {
+            return;
+        }
+
+        _isUpdating = true;
         var before = CaptureHistory();
 
-        if (RichTextEditingShim.ApplyPlainTextChange(Document, newText))
+        if (RichTextEditingShim.ApplyPlainTextChange(Document, newText, EncodeTypedText))
         {
             Text = Document.Text;
             UpdateFormattedPresenter();
@@ -171,6 +175,12 @@ public partial class RichTextBox
             return;
         }
 
+        if (!HasSelection)
+        {
+            ClearTypingFormatting();
+            return;
+        }
+
         var before = CaptureHistory();
         Document.ClearFormatting();
         SyncTextFromDocument();
@@ -183,6 +193,12 @@ public partial class RichTextBox
     /// <param name="resetUndo">The resetUndo value.</param>
     private void SetHtmlCore(string? html, bool resetUndo)
     {
+        if (resetUndo)
+        {
+            _typingStyles.Clear();
+            _typingStylePosition = -1;
+        }
+
         _isUpdating = true;
         Document.SetText(html);
         Text = html;
