@@ -354,8 +354,14 @@ public partial class RichTextBox
     /// <param name="formatType">The formatType value.</param>
     private void ApplyFormattingToSelection(TextFormatType formatType)
     {
-        if (!IsFormattingEnabled || IsReadOnlyInternal || !HasSelection)
+        if (!IsFormattingEnabled || IsReadOnlyInternal)
         {
+            return;
+        }
+
+        if (!HasSelection)
+        {
+            ToggleTypingFormat(formatType);
             return;
         }
 
@@ -377,8 +383,14 @@ public partial class RichTextBox
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(style);
 
-        if (!IsFormattingEnabled || IsReadOnlyInternal || !HasSelection)
+        if (!IsFormattingEnabled || IsReadOnlyInternal)
         {
+            return;
+        }
+
+        if (!HasSelection)
+        {
+            SetTypingStyle(style);
             return;
         }
 

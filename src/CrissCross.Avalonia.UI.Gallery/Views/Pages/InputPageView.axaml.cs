@@ -224,6 +224,8 @@ public partial class InputPageView : ReactiveUserControl<InputPageViewModel>
         _ = (EventHandler<RoutedEventArgs>)OnRichTextExportHtmlClick;
         _ = (EventHandler<RoutedEventArgs>)OnRichTextExportMarkdownClick;
         _ = (EventHandler<RoutedEventArgs>)OnRichTextSaveLoadStreamClick;
+        _ = (EventHandler<RoutedEventArgs>)OnRichTextOpenDocxClick;
+        _ = (EventHandler<RoutedEventArgs>)OnRichTextSaveDocxClick;
         _ = (EventHandler<RoutedEventArgs>)OnRichTextToggleDisplayModeClick;
     }
 

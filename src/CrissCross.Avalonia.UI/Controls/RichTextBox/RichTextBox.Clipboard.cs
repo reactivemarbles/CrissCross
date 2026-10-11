@@ -162,6 +162,13 @@ public partial class RichTextBox
     public void Save(Stream stream, RichTextDataFormat format, Encoding? encoding)
     {
         ArgumentNullException.ThrowIfNull(stream);
+        if (format == RichTextDataFormat.Docx)
+        {
+            var package = DocxDocumentConverter.ToDocx(GetDocxExportHtml());
+            stream.Write(package, 0, package.Length);
+            return;
+        }
+
         encoding ??= Encoding.UTF8;
         var content = format switch
         {
@@ -202,6 +209,12 @@ public partial class RichTextBox
     public void Load(Stream stream, RichTextDataFormat format, Encoding? encoding)
     {
         ArgumentNullException.ThrowIfNull(stream);
+        if (format == RichTextDataFormat.Docx)
+        {
+            SetHtml(DocxDocumentConverter.ToHtml(stream));
+            return;
+        }
+
         encoding ??= format == RichTextDataFormat.Rtf ? Encoding.Latin1 : Encoding.UTF8;
         using var reader = new StreamReader(stream, encoding);
         var content = reader.ReadToEnd();
@@ -233,6 +246,7 @@ public partial class RichTextBox
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        _pagedInputMethodClient?.Cancel();
 
         if (e is null)
         {

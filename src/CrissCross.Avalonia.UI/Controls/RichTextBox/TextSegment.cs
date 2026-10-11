@@ -89,6 +89,9 @@ public class TextSegment(string text, int startIndex)
     /// <summary>Gets or sets the source for the image when <see cref="IsImage"/> is true.</summary>
     public string? ImageSource { get; set; }
 
+    /// <summary>Gets or sets the accessible description of an embedded image.</summary>
+    public string? ImageAlternativeText { get; set; }
+
     /// <summary>Gets or sets the image width in device independent pixels.</summary>
     public double? ImageWidth { get; set; }
 
@@ -170,6 +173,7 @@ public class TextSegment(string text, int startIndex)
             BreakPageBefore = source.BreakPageBefore,
             IsImage = source.IsImage,
             ImageSource = source.ImageSource,
+            ImageAlternativeText = source.ImageAlternativeText,
             ImageWidth = source.ImageWidth,
             ImageHeight = source.ImageHeight,
             ImageAlignment = source.ImageAlignment,

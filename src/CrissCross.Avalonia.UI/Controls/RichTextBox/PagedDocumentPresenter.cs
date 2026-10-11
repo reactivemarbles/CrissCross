@@ -15,7 +15,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Displays editable-document coordinates on sheets partitioned at measured line boundaries.</summary>
-public sealed class PagedDocumentPresenter : Panel
+public sealed partial class PagedDocumentPresenter : Panel
 {
     /// <summary>Identifies the document property.</summary>
     public static readonly StyledProperty<FlowDocument?> DocumentProperty = AvaloniaProperty.Register<PagedDocumentPresenter, FlowDocument?>(nameof(Document));
@@ -84,6 +84,18 @@ public sealed class PagedDocumentPresenter : Panel
 
     /// <summary>Whether the measured page tree must be rebuilt.</summary>
     private bool _dirty = true;
+
+    /// <summary>The transient input method composition.</summary>
+    private string? _preeditText;
+
+    /// <summary>The composition insertion position.</summary>
+    private int _preeditOffset;
+
+    /// <summary>The cursor position within the transient composition.</summary>
+    private int _preeditCursor;
+
+    /// <summary>The committed document retained while previewing composition.</summary>
+    private FlowDocument? _preeditSource;
 
     /// <summary>Raised after the measured sheet collection changes.</summary>
     public event EventHandler? PaginationChanged;
@@ -163,7 +175,18 @@ public sealed class PagedDocumentPresenter : Panel
             }
         }
 
-        var local = new Point(point.X - page.Left - PagePadding.Left, point.Y - page.Top - PagePadding.Top + page.Slice.DocumentTop);
+        var bodyTop = page.Top + page.Padding.Top;
+        if (point.Y < bodyTop)
+        {
+            return page.Slice.Start;
+        }
+
+        if (point.Y >= bodyTop + page.Slice.Height)
+        {
+            return page.Slice.End;
+        }
+
+        var local = new Point(point.X - page.Left - page.Padding.Left, point.Y - bodyTop + page.Slice.DocumentTop);
         return Math.Clamp(page.Viewport.Presenter.GetDocumentPosition(local), page.Slice.Start, page.Slice.End);
     }
 
@@ -189,7 +212,40 @@ public sealed class PagedDocumentPresenter : Panel
 
         var caret = page.Viewport.Presenter.GetDocumentCaretRect(offset);
         var caretTop = page.Slice.Height > 0 ? caret.Y : page.Slice.DocumentTop;
-        return new(caret.X + page.Left + PagePadding.Left, caretTop + page.Top + PagePadding.Top - page.Slice.DocumentTop, caret.Width, caret.Height);
+        return new(caret.X + page.Left + page.Padding.Left, caretTop + page.Top + page.Padding.Top - page.Slice.DocumentTop, caret.Width, caret.Height);
+    }
+
+    /// <summary>Gets measured range rectangles in paper-sheet coordinates.</summary>
+    /// <param name="start">The first rendered document position.</param>
+    /// <param name="length">The number of positions.</param>
+    /// <returns>Rectangles clipped and translated to each containing sheet.</returns>
+    public IReadOnlyList<Rect> GetDocumentRangeRectangles(int start, int length)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(start);
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
+        var rectangles = new List<Rect>();
+        var end = (long)start + length;
+        foreach (var page in _pages)
+        {
+            var first = Math.Max(start, page.Slice.Start);
+            var last = (int)Math.Min(end, page.Slice.End);
+            if (last <= first)
+            {
+                continue;
+            }
+
+            foreach (var rectangle in page.Viewport.Presenter.GetDocumentRangeRectangles(first, last - first))
+            {
+                var clip = new Rect(0, page.Slice.DocumentTop, Math.Max(0, page.Size.Width - page.Padding.Left - page.Padding.Right), page.Slice.Height);
+                var clipped = rectangle.Intersect(clip);
+                if (clipped.Width > 0 && clipped.Height > 0)
+                {
+                    rectangles.Add(clipped.Translate(new(page.Left + page.Padding.Left, page.Top + page.Padding.Top - page.Slice.DocumentTop)));
+                }
+            }
+        }
+
+        return rectangles;
     }
 
     /// <summary>Moves vertically in document coordinates so paper margins cannot trap the caret.</summary>
@@ -203,11 +259,62 @@ public sealed class PagedDocumentPresenter : Panel
             return 0;
         }
 
-        var presenter = _pages[0].Viewport.Presenter;
+        var pageIndex = _pages.Count - 1;
+        for (var index = 0; index < _pages.Count; index++)
+        {
+            if (offset < _pages[index].Slice.End)
+            {
+                pageIndex = index;
+                break;
+            }
+        }
+
+        var page = _pages[pageIndex];
+        var presenter = page.Viewport.Presenter;
         var caret = presenter.GetDocumentCaretRect(offset);
         var target = new Point(caret.X, caret.Y + (caret.Height * (previous ? -Half : 1 + Half)));
-        return presenter.GetDocumentPosition(target);
+        var next = presenter.GetDocumentPosition(target);
+        return next >= page.Slice.Start && next < page.Slice.End
+            ? next
+            : GetAdjacentPagePosition(pageIndex, previous, caret.X + page.Left + page.Padding.Left);
     }
+
+    /// <summary>Updates transient composition without editing the committed document.</summary>
+    /// <param name="text">The uncommitted text.</param>
+    /// <param name="cursor">The cursor within the composition.</param>
+    /// <param name="offset">The document insertion position.</param>
+    /// <param name="selectionLength">The replaced committed range.</param>
+    /// <param name="html">The encoded composition with insertion formatting.</param>
+    internal void SetPreedit(string? text, int? cursor, int offset, int selectionLength = 0, string? html = null)
+    {
+        _preeditText = text;
+        var textLength = text?.Length ?? 0;
+        _preeditCursor = Math.Clamp(cursor ?? textLength, 0, textLength);
+        _preeditOffset = offset;
+        if (string.IsNullOrEmpty(text))
+        {
+            if (_preeditSource is not { } source)
+            {
+                return;
+            }
+
+            _preeditSource = null;
+            Document = source;
+            RefreshDocument();
+            return;
+        }
+
+        _preeditSource ??= Document;
+        var preview = new FlowDocument();
+        preview.SetText(_preeditSource?.Text);
+        preview.Replace(offset, selectionLength, html ?? HtmlClipboardUtilities.EncodePlainText(text));
+        Document = preview;
+        RefreshDocument();
+    }
+
+    /// <summary>Gets the measured composition cursor in paged surface coordinates.</summary>
+    /// <returns>The cursor rectangle.</returns>
+    internal Rect GetInputMethodCursorRectangle() => GetDocumentCaretRect(string.IsNullOrEmpty(_preeditText) ? CaretIndex : _preeditOffset + _preeditCursor);
 
     /// <inheritdoc/>
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -238,13 +345,15 @@ public sealed class PagedDocumentPresenter : Panel
         }
 
         var height = 0.0;
+        var width = PageSize.Width;
         foreach (var page in _pages)
         {
-            page.Sheet.Measure(new(PageSize.Width, page.SheetHeight));
+            page.Sheet.Measure(new(page.Size.Width, page.SheetHeight));
             height += page.SheetHeight;
+            width = Math.Max(width, page.Size.Width);
         }
 
-        return new(PageSize.Width, height + (Math.Max(0, _pages.Count - 1) * PageSpacing));
+        return new(width, height + (Math.Max(0, _pages.Count - 1) * PageSpacing));
     }
 
     /// <inheritdoc/>
@@ -253,6 +362,8 @@ public sealed class PagedDocumentPresenter : Panel
         base.OnDetachedFromVisualTree(e);
         Children.Clear();
         _pages.Clear();
+        _pageFieldRegions.Clear();
+        _automationStories.Clear();
         ClearImageCache();
         RefreshDocument();
     }
@@ -261,12 +372,12 @@ public sealed class PagedDocumentPresenter : Panel
     protected override Size ArrangeOverride(Size finalSize)
     {
         var top = 0.0;
-        var left = Math.Max(0, (finalSize.Width - PageSize.Width) * Half);
         foreach (var page in _pages)
         {
+            var left = Math.Max(0, (finalSize.Width - page.Size.Width) * Half);
             page.Top = top;
             page.Left = left;
-            page.Sheet.Arrange(new(left, top, PageSize.Width, page.SheetHeight));
+            page.Sheet.Arrange(new(left, top, page.Size.Width, page.SheetHeight));
             top += page.SheetHeight + PageSpacing;
         }
 
@@ -303,45 +414,23 @@ public sealed class PagedDocumentPresenter : Panel
     /// <summary>Recreates measured page viewports after a document layout change.</summary>
     private void RebuildPages()
     {
-        var width = PageSize.Width - PagePadding.Left - PagePadding.Right;
-        var height = PageSize.Height - PagePadding.Top - PagePadding.Bottom;
-        if (width <= 0 || height <= 0)
+        if (PagePadding.Left + PagePadding.Right >= PageSize.Width || PagePadding.Top + PagePadding.Bottom >= PageSize.Height)
         {
-            throw new InvalidOperationException("Page padding must leave positive content width and height.");
+            throw new InvalidOperationException("Page margins consume the printable paper area.");
         }
 
         Children.Clear();
         _pages.Clear();
+        _pageFieldRegions.Clear();
+        _automationStories.Clear();
         ClearImageCache();
         HasOverflow = false;
-        var measurement = CreatePresenter();
-        _ = measurement.MeasureDocument(width);
-        var lines = new List<DocumentPageLayout.MeasuredLine>();
-        foreach (var line in measurement.GetMeasuredDocumentLines())
+        foreach (var section in RichDocumentStructure.ReadSections(Document?.Text ?? string.Empty, PageSize, PagePadding))
         {
-            var start = line.Start;
-            var end = line.End;
-            var text = Document?.PlainText ?? string.Empty;
-            var breakAfter = text.AsSpan(Math.Clamp(start, 0, text.Length), Math.Max(0, Math.Min(end, text.Length) - Math.Clamp(start, 0, text.Length))).Contains('\f');
-            lines.Add(new(start, end, line.Height, BreakBefore: HasPageBreakBefore(start, end), BreakAfter: breakAfter));
+            AddSectionPages(section);
         }
 
-        foreach (var slice in DocumentPageLayout.Create(lines, height))
-        {
-            var presenter = CreatePresenter();
-            var viewport = new PageViewport(this, presenter, slice.DocumentTop, measurement.DesiredSize.Height, slice.Height == 0)
-            {
-                Height = slice.Height > 0 ? slice.Height : DefaultFontSize * EmptyLineHeightScale,
-                VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Top,
-            };
-            var sheetHeight = Math.Max(PageSize.Height, slice.Height + PagePadding.Top + PagePadding.Bottom);
-            var sheet = new Border { Background = Brushes.White, Padding = PagePadding, Child = viewport };
-            var entry = new PageEntry(sheet, viewport, slice, sheetHeight);
-            _pages.Add(entry);
-            Children.Add(sheet);
-            HasOverflow |= slice.HasOverflow;
-        }
-
+        UpdatePageFields();
         _dirty = false;
         PaginationChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -453,7 +542,9 @@ public sealed class PagedDocumentPresenter : Panel
     /// <param name="viewport">The clipped document.</param>
     /// <param name="slice">The measured document range.</param>
     /// <param name="sheetHeight">The actual sheet height.</param>
-    private sealed class PageEntry(Border sheet, PageViewport viewport, DocumentPageLayout.PageSlice slice, double sheetHeight)
+    /// <param name="size">The section paper size.</param>
+    /// <param name="padding">The section margins.</param>
+    private sealed class PageEntry(Border sheet, PageViewport viewport, DocumentPageLayout.PageSlice slice, double sheetHeight, Size size, Thickness padding)
     {
         /// <summary>Gets the paper border.</summary>
         public Border Sheet { get; } = sheet;
@@ -466,6 +557,12 @@ public sealed class PagedDocumentPresenter : Panel
 
         /// <summary>Gets the actual sheet height.</summary>
         public double SheetHeight { get; } = sheetHeight;
+
+        /// <summary>Gets the section paper size.</summary>
+        public Size Size { get; } = size;
+
+        /// <summary>Gets the section margins.</summary>
+        public Thickness Padding { get; } = padding;
 
         /// <summary>Gets or sets the arranged sheet top.</summary>
         public double Top { get; set; }
@@ -536,6 +633,12 @@ public sealed class PagedDocumentPresenter : Panel
         {
             ArgumentNullException.ThrowIfNull(context);
             base.Render(context);
+            if (!string.IsNullOrEmpty(owner._preeditText))
+            {
+                RenderComposition(context);
+                return;
+            }
+
             var start = Math.Min(owner.SelectionStart, owner.SelectionEnd);
             var length = Math.Abs(owner.SelectionEnd - owner.SelectionStart);
             if (length > 0)
@@ -551,6 +654,20 @@ public sealed class PagedDocumentPresenter : Panel
                 var caretTop = isEmpty && owner.CaretIndex == owner.Document?.Length ? documentTop : caret.Y;
                 context.DrawRectangle(owner.CaretBrush ?? owner.DefaultForeground ?? Brushes.Black, null, new(caret.X, caretTop, 1, Math.Max(1, caret.Height)));
             }
+        }
+
+        /// <summary>Decorates the actual measured composition across all preview lines.</summary>
+        /// <param name="context">The drawing context.</param>
+        private void RenderComposition(DrawingContext context)
+        {
+            var pen = new Pen(owner.CaretBrush ?? owner.DefaultForeground ?? Brushes.Black);
+            foreach (var rectangle in presenter.GetDocumentRangeRectangles(owner._preeditOffset, owner._preeditText?.Length ?? 0))
+            {
+                context.DrawLine(pen, rectangle.BottomLeft, rectangle.BottomRight);
+            }
+
+            var caret = presenter.GetDocumentCaretRect(owner._preeditOffset + owner._preeditCursor);
+            context.DrawRectangle(pen.Brush, null, new(caret.X, caret.Y, 1, Math.Max(1, caret.Height)));
         }
     }
 }

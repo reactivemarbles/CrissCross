@@ -211,6 +211,8 @@
                                 <controls:Button Click="OnRichTextExportHtmlClick" Content="Export HTML" />
                                 <controls:Button Click="OnRichTextExportMarkdownClick" Content="Export Markdown" />
                                 <controls:Button Click="OnRichTextSaveLoadStreamClick" Content="Save/Load Stream Sample" />
+                                <controls:Button Click="OnRichTextOpenDocxClick" Content="Open Word Document" />
+                                <controls:Button Click="OnRichTextSaveDocxClick" Content="Save Word Document" />
                                 <controls:Button Click="OnRichTextToggleDisplayModeClick" Content="Toggle Display Mode" />
                             </WrapPanel>
                         </controls:StackPanel>

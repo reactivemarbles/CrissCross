@@ -94,7 +94,7 @@ public partial class RichTextBox
     {
         var header = menuItem.Header?.ToString();
         return RichTextHelpers.IsFormattingMenuHeader(header)
-            ? hasSelection && canEdit && IsFormattingEnabled
+            ? canEdit && IsFormattingEnabled
             : header switch
             {
                 "Cut" => CanCut,

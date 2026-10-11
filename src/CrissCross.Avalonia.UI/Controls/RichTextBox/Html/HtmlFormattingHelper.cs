@@ -14,7 +14,42 @@ namespace CrissCross.Avalonia.UI.Controls;
 internal static class HtmlFormattingHelper
 {
     /// <summary>Element names whose contents are not rendered.</summary>
-    private static readonly string[] OpaqueElementNames = ["script", "style", "head"];
+    private static readonly string[] OpaqueElementNames = ["script", "style", "head", "template"];
+
+    /// <summary>Wraps selected HTML text leaves without crossing existing element boundaries.</summary>
+    /// <param name="source">The source HTML.</param>
+    /// <param name="start">The rendered start.</param>
+    /// <param name="length">The rendered length.</param>
+    /// <param name="opening">The opening annotation markup.</param>
+    /// <param name="closing">The closing annotation markup.</param>
+    /// <returns>The annotated source.</returns>
+    internal static string WrapMarkup(string source, int start, int length, string opening, string closing)
+    {
+        var (sourceStart, sourceLength) = HtmlTextProjection.Create(source).GetSourceRange(start, length);
+        var result = new StringBuilder(source.Length);
+        var position = 0;
+        while (position < source.Length)
+        {
+            var end = GetTokenEnd(source, position);
+            var selectedStart = Math.Max(position, sourceStart);
+            var selectedEnd = Math.Min(end, sourceStart + sourceLength);
+            var image = source.AsSpan(position, end - position).StartsWith("<img", StringComparison.OrdinalIgnoreCase);
+            if ((source[position] == '<' && !image) || selectedEnd <= selectedStart)
+            {
+                _ = result.Append(source, position, end - position);
+            }
+            else
+            {
+                _ = result.Append(source, position, selectedStart - position).Append(opening);
+                _ = result.Append(source, selectedStart, selectedEnd - selectedStart).Append(closing);
+                _ = result.Append(source, selectedEnd, end - selectedEnd);
+            }
+
+            position = end;
+        }
+
+        return result.ToString();
+    }
 
     /// <summary>Toggles the effective formatting of a rendered selection.</summary>
     /// <param name="source">The source HTML.</param>

@@ -20,7 +20,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>A control that displays formatted text using Inlines.</summary>
-public class FormattedTextPresenter : TextBlock
+public partial class FormattedTextPresenter : TextBlock
 {
     /// <summary>Property for <see cref="Document"/>.</summary>
     public static readonly StyledProperty<FlowDocument?> DocumentProperty = AvaloniaProperty.Register<
@@ -330,6 +330,10 @@ public class FormattedTextPresenter : TextBlock
             if (range is { Child: FormattedTextPresenter paragraph } paragraphRange)
             {
                 AppendMeasuredParagraphLines(result, paragraph, paragraphRange.DocumentStart, end, line.Height);
+            }
+            else if (range is { Child: Grid grid, Table: { } table } tableRange)
+            {
+                AppendMeasuredTableRows(result, grid, table, tableRange.DocumentStart, end, line.Height);
             }
             else
             {
@@ -659,7 +663,7 @@ public class FormattedTextPresenter : TextBlock
     {
         foreach (var range in _layoutRanges)
         {
-            if (range.Child is FormattedTextPresenter && range.LayoutStart >= start && range.LayoutStart < start + length)
+            if (range.Child is FormattedTextPresenter or Grid && range.LayoutStart >= start && range.LayoutStart < start + length)
             {
                 return range;
             }
@@ -729,6 +733,7 @@ public class FormattedTextPresenter : TextBlock
                 RemoteImageLoader = RemoteImageLoader,
                 ImageSourceLoader = ImageSourceLoader,
                 _inlineSegments = cell.Segments,
+                VerticalAlignment = cell.ContentAlignment,
             };
             presenter.UpdateInlines();
             presenter.HyperlinkActivated += OnCellHyperlinkActivated;
@@ -736,9 +741,9 @@ public class FormattedTextPresenter : TextBlock
             var border = new Border
             {
                 Child = presenter,
-                Padding = new(CellPadding),
-                BorderThickness = new(GeometryTolerance),
-                BorderBrush = Brushes.Gray,
+                Padding = cell.Padding ?? new(CellPadding),
+                BorderThickness = cell.BorderThickness ?? new(GeometryTolerance),
+                BorderBrush = cell.BorderBrush ?? Brushes.Gray,
                 Background = cell.Background,
                 MinWidth = Math.Min(cell.Width ?? 0, grid.Width / Math.Max(1, table.ColumnCount)),
             };
