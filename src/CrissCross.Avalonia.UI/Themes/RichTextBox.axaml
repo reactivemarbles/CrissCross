@@ -88,6 +88,14 @@
                                     IsHitTestVisible="False" />
                             </controls:Grid>
                         </controls:ScrollViewer>
+                        <controls:ScrollViewer
+                            Name="PART_PageScrollViewer"
+                            Background="#6B6B6B"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"
+                            IsVisible="False">
+                            <controls:PagedDocumentPresenter Name="PART_PagedPresenter" />
+                        </controls:ScrollViewer>
                     </controls:Grid>
                 </controls:Border>
             </ControlTemplate>

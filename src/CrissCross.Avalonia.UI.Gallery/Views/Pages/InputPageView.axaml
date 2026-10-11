@@ -109,11 +109,12 @@
                             <controls:TextBlock
                                 Margin="0,0,0,4"
                                 FontSize="12"
-                                Text="Representative editor surface:" />
+                                Text="Document editor — select text to format, or insert document elements:" />
+                            <controls:RichTextEditorRibbon Width="760" Editor="{Binding ElementName=FormattingRichTextBox}" />
                             <controls:RichTextBox
                                 Name="FormattingRichTextBox"
                                 Width="760"
-                                MinHeight="220"
+                                Height="620"
                                 AcceptsReturn="True"
                                 AcceptsTab="True"
                                 EditMode="EditOnFocus"
@@ -122,10 +123,25 @@
                                 IsFormattingEnabled="True"
                                 IsImageDropEnabled="True"
                                 IsImagePasteEnabled="True"
+                                IsPageLayoutEnabled="True"
+                                PageSize="700,900"
+                                PagePadding="48"
                                 IsRichClipboardEnabled="True"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto"
                                 Watermark="Type formatted content, paste text/images, or drop content here." />
+                        </controls:StackPanel>
+
+                        <controls:StackPanel Spacing="6">
+                            <controls:TextBlock Text="Clipboard destination — copy formatted content above, then paste here:" />
+                            <controls:RichTextEditorRibbon Width="760" Editor="{Binding ElementName=ClipboardRichTextBox}" />
+                            <controls:RichTextBox
+                                Name="ClipboardRichTextBox"
+                                Width="760"
+                                Height="240"
+                                IsDocumentEnabled="True"
+                                IsFormattingEnabled="True"
+                                Watermark="Paste formatted text, images, tables, and links here." />
                         </controls:StackPanel>
 
                         <controls:StackPanel>

@@ -77,38 +77,6 @@ public partial class RichTextBox
                     or "Foreground"
                     or "Highlight";
 
-        /// <summary>Appends selected text from one segment as HTML.</summary>
-        /// <param name="segment">The segment to inspect.</param>
-        /// <param name="start">The selected range start.</param>
-        /// <param name="end">The selected range end.</param>
-        /// <param name="builder">The destination builder.</param>
-        public static void AppendSelectedSegmentHtml(
-            TextSegment segment,
-            int start,
-            int end,
-            StringBuilder builder)
-        {
-            if (
-                !segment.HasRenderableText
-                || segment.EndIndex <= start
-                || segment.StartIndex >= end)
-            {
-                return;
-            }
-
-            var segmentStart = Math.Max(start, segment.StartIndex);
-            var segmentEnd = Math.Min(end, segment.EndIndex);
-            var segmentLength = segmentEnd - segmentStart;
-            if (segmentLength <= 0)
-            {
-                return;
-            }
-
-            var localStart = segmentStart - segment.StartIndex;
-            var selectedText = segment.Text.Substring(localStart, segmentLength);
-            _ = builder.Append(FormatSegmentAsHtml(segment, selectedText));
-        }
-
         /// <summary>Determines whether one segment contains formatting.</summary>
         /// <param name="segment">The segment to inspect.</param>
         /// <returns><see langword="true"/> when formatting is present.</returns>
@@ -264,57 +232,6 @@ public partial class RichTextBox
         /// <param name="segment">The segment to inspect.</param>
         /// <returns><see langword="true"/> when object formatting is present.</returns>
         private static bool HasObjectFormatting(TextSegment segment) => segment.IsImage;
-
-        /// <summary>Provides the FormatSegmentAsHtml member.</summary>
-        /// <param name="segment">The segment value.</param>
-        /// <param name="text">The text value.</param>
-        /// <returns>The result.</returns>
-        private static string FormatSegmentAsHtml(TextSegment segment, string text)
-        {
-            var result = HtmlClipboardUtilities.EncodePlainText(text);
-            var styles = new List<string>();
-            if (segment.FontFamily is not null)
-            {
-                styles.Add($"font-family:{segment.FontFamily.Name}");
-            }
-
-            if (segment.FontSize.HasValue)
-            {
-                styles.Add(FormattableString.Invariant($"font-size:{segment.FontSize.Value}px"));
-            }
-
-            if (segment.Foreground is SolidColorBrush foreground)
-            {
-                styles.Add($"color:{foreground.Color}");
-            }
-
-            if (segment.Background is SolidColorBrush background)
-            {
-                styles.Add($"background-color:{background.Color}");
-            }
-
-            if (styles.Count > 0)
-            {
-                result = $"<span style=\"{string.Join(';', styles)}\">{result}</span>";
-            }
-
-            if (segment.IsStrikethrough)
-            {
-                result = $"<s>{result}</s>";
-            }
-
-            if (segment.IsUnderline)
-            {
-                result = $"<u>{result}</u>";
-            }
-
-            if (segment.IsItalic)
-            {
-                result = $"<em>{result}</em>";
-            }
-
-            return segment.IsBold ? $"<strong>{result}</strong>" : result;
-        }
 
         /// <summary>Provides the GetImageMimeType member.</summary>
         /// <param name="path">The path value.</param>

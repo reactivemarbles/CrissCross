@@ -78,13 +78,7 @@ public class RichTextDocument
             return;
         }
 
-        var (sourceStart, sourceLength) = _projection.GetSourceRange(offset, length);
-        if (sourceLength <= 0)
-        {
-            return;
-        }
-
-        _rawText = RemoveEmptyFormattingElements(_rawText.Remove(sourceStart, sourceLength));
+        _rawText = RemoveEmptyFormattingElements(HtmlSelectionFragment.Replace(_rawText, offset, length, string.Empty));
         RebuildSegments();
     }
 
@@ -94,15 +88,11 @@ public class RichTextDocument
     /// <param name="text">The replacement HTML.</param>
     public void Replace(int offset, int length, string? text)
     {
-        Delete(offset, length);
-        if (string.IsNullOrEmpty(text))
-        {
-            return;
-        }
-
-        var sourceOffset = _projection.GetSourceInsertionOffset(Math.Clamp(offset, 0, _projection.Length));
-        var boundedOffset = Math.Clamp(sourceOffset, 0, _rawText.Length);
-        _rawText = _rawText.Insert(boundedOffset, text);
+        _rawText = RemoveEmptyFormattingElements(HtmlSelectionFragment.Replace(
+            _rawText,
+            Math.Clamp(offset, 0, _projection.Length),
+            Math.Max(0, length),
+            text ?? string.Empty));
         RebuildSegments();
     }
 

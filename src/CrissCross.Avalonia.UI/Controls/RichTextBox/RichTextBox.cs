@@ -168,12 +168,6 @@ public partial class RichTextBox : TemplatedControl
             nameof(FormattingApplied),
             RoutingStrategies.Bubble);
 
-    /// <summary>Provides the ParagraphBreakLineCount member.</summary>
-    private const int ParagraphBreakLineCount = 2;
-
-    /// <summary>Provides the DefaultImageOverlayHeight member.</summary>
-    private const double DefaultImageOverlayHeight = 100D;
-
     /// <summary>Provides the CharacterWidthFontScale member.</summary>
     private const double CharacterWidthFontScale = 0.6D;
 
@@ -276,6 +270,7 @@ public partial class RichTextBox : TemplatedControl
             parameter => SetSelectionHighlight((Color)parameter!),
             parameter => CanApplyFormatting && parameter is Color);
         Focusable = true;
+        LostFocus += (_, _) => UpdatePageSelection();
 
         AddHandler(
             DragDrop.DragOverEvent,

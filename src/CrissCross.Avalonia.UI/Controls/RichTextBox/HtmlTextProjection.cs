@@ -196,6 +196,13 @@ internal sealed class HtmlTextProjection
             return false;
         }
 
+        if (source.AsSpan(index).StartsWith("<!--", StringComparison.Ordinal))
+        {
+            var commentEnd = source.IndexOf("-->", index, StringComparison.Ordinal);
+            index = commentEnd < 0 ? source.Length : commentEnd + "-->".Length;
+            return true;
+        }
+
         var tagEnd = source.IndexOf('>', index);
         if (tagEnd < 0)
         {
@@ -205,9 +212,55 @@ internal sealed class HtmlTextProjection
         }
 
         var tagContent = source.Substring(index + 1, tagEnd - index - 1).Trim();
+        var tagName = GetTagName(tagContent);
+        if (IsHiddenElement(tagContent, tagName))
+        {
+            var closing = source.IndexOf($"</{tagName}", tagEnd + 1, StringComparison.OrdinalIgnoreCase);
+            var closingEnd = closing < 0 ? -1 : source.IndexOf('>', closing);
+            index = closingEnd < 0 ? source.Length : closingEnd + 1;
+            return true;
+        }
+
+        if (HasFollowingTableCell(source, tagContent, tagName, tagEnd))
+        {
+            AppendMapped("\t", index, tagEnd + 1, text, characters);
+        }
+
         AppendKnownTag(tagContent, index, tagEnd + 1, text, characters);
         index = tagEnd + 1;
         return true;
+    }
+
+    /// <summary>Determines whether a tag opens non-rendered document content.</summary>
+    /// <param name="tag">The tag content.</param>
+    /// <param name="name">The element name.</param>
+    /// <returns>Whether the element is non-rendered.</returns>
+    private static bool IsHiddenElement(string tag, string name) => !tag.StartsWith('/')
+        && (name.Equals("style", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("script", StringComparison.OrdinalIgnoreCase)
+            || name.Equals("head", StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>Determines whether a cell boundary separates adjacent table cells.</summary>
+    /// <param name="source">The source markup.</param>
+    /// <param name="tag">The current tag.</param>
+    /// <param name="name">The current element name.</param>
+    /// <param name="tagEnd">The current tag boundary.</param>
+    /// <returns>Whether a tab separator is required.</returns>
+    private static bool HasFollowingTableCell(string source, string tag, string name, int tagEnd)
+    {
+        if (!tag.StartsWith('/') || !(name.Equals("td", StringComparison.OrdinalIgnoreCase) || name.Equals("th", StringComparison.OrdinalIgnoreCase)))
+        {
+            return false;
+        }
+
+        var next = tagEnd + 1;
+        while (next < source.Length && char.IsWhiteSpace(source[next]))
+        {
+            next++;
+        }
+
+        return source.AsSpan(next).StartsWith("<td", StringComparison.OrdinalIgnoreCase)
+            || source.AsSpan(next).StartsWith("<th", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>Appends the rendered representation for supported tags.</summary>
@@ -225,7 +278,9 @@ internal sealed class HtmlTextProjection
     {
         if (IsBreakTag(tagContent))
         {
-            AppendMapped(Environment.NewLine, sourceStart, sourceEnd, text, characters);
+            var pageBreak = tagContent.Contains("break-before:page", StringComparison.OrdinalIgnoreCase)
+                || tagContent.Contains("page-break-before:always", StringComparison.OrdinalIgnoreCase);
+            AppendMapped(pageBreak ? "\f" : Environment.NewLine, sourceStart, sourceEnd, text, characters);
             return;
         }
 

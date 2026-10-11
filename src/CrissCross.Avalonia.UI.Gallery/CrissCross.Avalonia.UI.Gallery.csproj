@@ -23,4 +23,8 @@
     <ProjectReference Include="..\CrissCross.Avalonia.UI\CrissCross.Avalonia.UI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Fixtures\WordInteropSample.rtf" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

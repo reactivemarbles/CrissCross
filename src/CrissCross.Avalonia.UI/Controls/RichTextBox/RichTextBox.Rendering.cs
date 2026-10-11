@@ -30,79 +30,52 @@ public partial class RichTextBox
         Document.Refresh();
         _formattedPresenter.Document = Document;
         _formattedPresenter.UpdateInlines();
-        UpdateImageOverlay();
+        if (_imageOverlay is not null)
+        {
+            _imageOverlay.Children.Clear();
+            _imageOverlay.IsVisible = false;
+        }
+
+        if (_pagedPresenter is not null)
+        {
+            _pagedPresenter.Document = Document;
+            _pagedPresenter.PageSize = PageSize;
+            _pagedPresenter.PagePadding = PagePadding;
+            _pagedPresenter.PageSpacing = PageSpacing;
+            _pagedPresenter.DefaultFontSize = FontSize;
+            _pagedPresenter.DefaultFontFamily = FontFamily;
+            _pagedPresenter.RefreshDocument();
+            UpdatePageSelection();
+        }
+
         UpdateDisplayMode();
-    }
-
-    /// <summary>Updates the composed image layer from document image segments.</summary>
-    private void UpdateImageOverlay()
-    {
-        if (_imageOverlay is null || _formattedPresenter is null)
-        {
-            return;
-        }
-
-        _imageOverlay.Children.Clear();
-        var lineHeight = GetEstimatedLineHeight();
-        var stackedImageOffset = 0D;
-        var overlayHeight = 0D;
-
-        foreach (var segment in Document.Segments)
-        {
-            if (!segment.IsImage)
-            {
-                continue;
-            }
-
-            var image = _formattedPresenter.CreateImageElement(segment);
-            if (image is null)
-            {
-                continue;
-            }
-
-            var top = (GetPrecedingLineCount(segment) * lineHeight) + stackedImageOffset;
-            var imageHeight = double.IsNaN(image.Height) ? DefaultImageOverlayHeight : image.Height;
-
-            Canvas.SetLeft(image, 0);
-            Canvas.SetTop(image, top);
-            _imageOverlay.Children.Add(image);
-
-            stackedImageOffset += imageHeight + lineHeight;
-            overlayHeight = Math.Max(overlayHeight, top + imageHeight);
-        }
-
-        _imageOverlay.Height = overlayHeight;
-    }
-
-    /// <summary>Gets the number of rendered lines preceding a document segment.</summary>
-    /// <param name="segment">The segment to locate.</param>
-    /// <returns>The preceding line count.</returns>
-    private int GetPrecedingLineCount(TextSegment segment)
-    {
-        var lineCount = 1;
-        foreach (var candidate in Document.Segments)
-        {
-            if (candidate.StartIndex >= segment.StartIndex)
-            {
-                continue;
-            }
-
-            if (candidate.IsLineBreak)
-            {
-                lineCount++;
-            }
-            else if (candidate.IsParagraphBreak)
-            {
-                lineCount += ParagraphBreakLineCount;
-            }
-        }
-
-        return lineCount;
     }
 
     /// <summary>Provides the UpdateDisplayMode member.</summary>
     private void UpdateDisplayMode()
     {
+        if (_pageScrollViewer is not null)
+        {
+            _pageScrollViewer.IsVisible = IsPageLayoutEnabled;
+        }
+
+        if (IsPageLayoutEnabled && _pagedPresenter is not null)
+        {
+            if (_editingTextBox is not null)
+            {
+                _editingTextBox.IsVisible = false;
+            }
+
+            if (_displayScrollViewer is not null)
+            {
+                _displayScrollViewer.IsVisible = false;
+            }
+
+            UpdatePageSelection();
+            return;
+        }
+
+        _displayScrollViewer?.SetCurrentValue(IsVisibleProperty, true);
         if (_editingTextBox is null || _formattedPresenter is null)
         {
             return;
@@ -155,10 +128,9 @@ public partial class RichTextBox
             return;
         }
 
-        var showFormattedSurface = !showEditing || showRichEditingSurface;
-        _formattedPresenter.IsVisible = showFormattedSurface;
+        _formattedPresenter.IsVisible = !showEditing || showRichEditingSurface;
         _formattedPresenter.IsHitTestVisible = !showEditing && IsDocumentEnabled;
-        _imageOverlay?.SetCurrentValue(IsVisibleProperty, showFormattedSurface);
+        _imageOverlay?.SetCurrentValue(IsVisibleProperty, false);
         _displayScrollViewer?.SetCurrentValue(IsHitTestVisibleProperty, !showEditing && IsDocumentEnabled);
     }
 
@@ -334,6 +306,12 @@ public partial class RichTextBox
     private bool TryGetRenderedDocumentOffsetFromPoint(Point point, out int offset)
     {
         offset = 0;
+
+        if (IsPageLayoutEnabled && _pagedPresenter is not null && this.TranslatePoint(point, _pagedPresenter) is { } pagePoint)
+        {
+            offset = _pagedPresenter.GetDocumentPosition(pagePoint);
+            return true;
+        }
 
         if (_editingTextBox is not null)
         {

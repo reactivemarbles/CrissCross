@@ -107,7 +107,11 @@ public partial class RichTextBox
             return false;
         }
 
-        if (RichTextHelpers.LooksLikeHtml(textPayload))
+        if (textPayload.StartsWith("{\\rtf", StringComparison.Ordinal))
+        {
+            ReplaceSelectionWithHtml(RtfDocumentConverter.ToHtml(textPayload));
+        }
+        else if (RichTextHelpers.LooksLikeHtml(textPayload))
         {
             ReplaceSelectionWithHtml(textPayload);
         }
@@ -164,7 +168,7 @@ public partial class RichTextBox
             RichTextDataFormat.PlainText => PlainText,
             RichTextDataFormat.Html => Html,
             RichTextDataFormat.Markdown => Markdown,
-            RichTextDataFormat.Rtf => string.Empty,
+            RichTextDataFormat.Rtf => RtfDocumentConverter.ToRtf(Html),
             _ => Html,
         };
         var bytes = encoding.GetBytes(content);
@@ -198,7 +202,7 @@ public partial class RichTextBox
     public void Load(Stream stream, RichTextDataFormat format, Encoding? encoding)
     {
         ArgumentNullException.ThrowIfNull(stream);
-        encoding ??= Encoding.UTF8;
+        encoding ??= format == RichTextDataFormat.Rtf ? Encoding.Latin1 : Encoding.UTF8;
         using var reader = new StreamReader(stream, encoding);
         var content = reader.ReadToEnd();
         if (format == RichTextDataFormat.PlainText)
@@ -208,6 +212,10 @@ public partial class RichTextBox
         else if (format == RichTextDataFormat.Markdown)
         {
             SetMarkdown(content);
+        }
+        else if (format == RichTextDataFormat.Rtf)
+        {
+            SetHtml(RtfDocumentConverter.ToHtml(content));
         }
         else
         {
@@ -241,12 +249,17 @@ public partial class RichTextBox
         }
 
         // Find template parts
+        DetachDocumentPresenters();
+
         _editingTextBox = e.NameScope.Find<global::Avalonia.Controls.TextBox>("PART_TextBox");
         _formattedPresenter = e.NameScope.Find<FormattedTextPresenter>("PART_FormattedPresenter");
         _displayScrollViewer = e.NameScope.Find<global::Avalonia.Controls.ScrollViewer>(
             "PART_DisplayScrollViewer");
         _imageOverlay = e.NameScope.Find<Canvas>("PART_ImageOverlay");
+        _pagedPresenter = e.NameScope.Find<PagedDocumentPresenter>("PART_PagedPresenter");
+        _pageScrollViewer = e.NameScope.Find<global::Avalonia.Controls.ScrollViewer>("PART_PageScrollViewer");
         _contextMenu ??= CreateContextMenu();
+        AttachPagedPresenter();
 
         // Setup editing text box
         if (_editingTextBox is not null)
@@ -275,6 +288,7 @@ public partial class RichTextBox
 
         if (_formattedPresenter is not null)
         {
+            _formattedPresenter.HyperlinkActivated += OnDocumentHyperlinkActivated;
             _formattedPresenter.TextWrapping = TextWrapping;
             _formattedPresenter.ContextMenu = _contextMenu;
             DragDrop.SetAllowDrop(_formattedPresenter, IsDragDropEnabled && !IsReadOnlyInternal);
@@ -297,6 +311,17 @@ public partial class RichTextBox
             return;
         }
 
+        if (IsPageProperty(change.Property))
+        {
+            UpdateFormattedPresenter();
+            return;
+        }
+
+        if (change.Property == SelectionStartProperty || change.Property == SelectionEndProperty || change.Property == CaretIndexProperty)
+        {
+            UpdatePageSelection();
+        }
+
         if (!_propertyChangedHandlers.TryGetValue(change.Property, out var handler))
         {
             return;
@@ -314,7 +339,7 @@ public partial class RichTextBox
             return;
         }
 
-        if (TryHandleShortcut(e))
+        if (TryHandleShortcut(e) || HandlePageKey(e))
         {
             return;
         }
@@ -326,6 +351,12 @@ public partial class RichTextBox
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
+
+        if (_isSelectingPage)
+        {
+            _isSelectingPage = false;
+            e.Pointer.Capture(null);
+        }
 
         if (e?.InitialPressMouseButton != MouseButton.Right)
         {
@@ -342,8 +373,48 @@ public partial class RichTextBox
     {
         base.OnGotFocus(e);
 
-        _ = _editingTextBox?.Focus();
+        if (!IsPageLayoutEnabled)
+        {
+            _ = _editingTextBox?.Focus();
+        }
+
+        UpdatePageSelection();
 
         UpdateDisplayMode();
+    }
+
+    /// <summary>Determines whether a property affects paper layout.</summary>
+    /// <param name="property">The changed property.</param>
+    /// <returns>Whether pagination requires refresh.</returns>
+    private static bool IsPageProperty(AvaloniaProperty property) => property == IsPageLayoutEnabledProperty
+        || property == PageSizeProperty || property == PagePaddingProperty || property == PageSpacingProperty;
+
+    /// <summary>Detaches callbacks from the previous template presenters.</summary>
+    private void DetachDocumentPresenters()
+    {
+        if (_formattedPresenter is not null)
+        {
+            _formattedPresenter.HyperlinkActivated -= OnDocumentHyperlinkActivated;
+        }
+
+        if (_pagedPresenter is null)
+        {
+            return;
+        }
+
+        _pagedPresenter.HyperlinkActivated -= OnDocumentHyperlinkActivated;
+        _pagedPresenter.PaginationChanged -= OnPaginationChanged;
+    }
+
+    /// <summary>Attaches callbacks to the paged template presenter.</summary>
+    private void AttachPagedPresenter()
+    {
+        if (_pagedPresenter is null)
+        {
+            return;
+        }
+
+        _pagedPresenter.HyperlinkActivated += OnDocumentHyperlinkActivated;
+        _pagedPresenter.PaginationChanged += OnPaginationChanged;
     }
 }

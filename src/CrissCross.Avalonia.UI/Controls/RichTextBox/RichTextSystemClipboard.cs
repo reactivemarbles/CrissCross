@@ -16,8 +16,12 @@ namespace CrissCross.Avalonia.UI.Controls;
 internal static class RichTextSystemClipboard
 {
     /// <summary>The platform HTML clipboard format.</summary>
-    private static readonly DataFormat<string> HtmlFormat = DataFormat.CreateStringPlatformFormat(
-        OperatingSystem.IsWindows() ? "HTML Format" : "text/html");
+    private static readonly DataFormat<byte[]> HtmlFormat = DataFormat.CreateBytesPlatformFormat(
+        GetPlatformFormatName("HTML Format", "public.html", "text/html"));
+
+    /// <summary>The platform RTF clipboard format.</summary>
+    private static readonly DataFormat<byte[]> RtfFormat = DataFormat.CreateBytesPlatformFormat(
+        GetPlatformFormatName("Rich Text Format", "public.rtf", "text/rtf"));
 
     /// <summary>Gets a value indicating whether a platform clipboard is available.</summary>
     /// <param name="clipboard">The platform clipboard.</param>
@@ -40,7 +44,13 @@ internal static class RichTextSystemClipboard
         item.SetText(plainText);
         if (!string.IsNullOrWhiteSpace(htmlText))
         {
-            item.Set(HtmlFormat, HtmlClipboardUtilities.CreateClipboardHtml(htmlText));
+            htmlText = HtmlDocumentNormalizer.ToStandaloneFragment(htmlText);
+            var payload = OperatingSystem.IsWindows() ? HtmlClipboardUtilities.CreateClipboardHtml(htmlText) : htmlText;
+            item.Set(HtmlFormat, Encoding.UTF8.GetBytes(payload));
+            if (RtfDocumentConverter.TryToRtf(htmlText) is { } rtf)
+            {
+                item.Set(RtfFormat, Encoding.Latin1.GetBytes(rtf));
+            }
         }
 
         var transfer = new DataTransfer();
@@ -66,7 +76,7 @@ internal static class RichTextSystemClipboard
         }
 
         var plainText = await transfer.TryGetTextAsync().ConfigureAwait(true);
-        var htmlText = transfer.Contains(HtmlFormat)
+        var htmlBytes = transfer.Contains(HtmlFormat)
             ? await transfer.TryGetValueAsync(HtmlFormat).ConfigureAwait(true)
             : null;
 
@@ -82,6 +92,28 @@ internal static class RichTextSystemClipboard
             }
         }
 
-        return new(plainText, htmlText, imageSource);
+        var rtfBytes = transfer.Contains(RtfFormat)
+            ? await transfer.TryGetValueAsync(RtfFormat).ConfigureAwait(true)
+            : null;
+        return new(
+            plainText,
+            htmlBytes is null ? null : Encoding.UTF8.GetString(htmlBytes).TrimEnd('\0'),
+            imageSource,
+            rtfBytes is null ? null : Encoding.Latin1.GetString(rtfBytes).TrimEnd('\0'));
+    }
+
+    /// <summary>Gets the native clipboard identifier for the current platform.</summary>
+    /// <param name="windows">The Windows identifier.</param>
+    /// <param name="mac">The macOS uniform type identifier.</param>
+    /// <param name="unix">The Unix MIME type.</param>
+    /// <returns>The native identifier.</returns>
+    private static string GetPlatformFormatName(string windows, string mac, string unix)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return windows;
+        }
+
+        return OperatingSystem.IsMacOS() ? mac : unix;
     }
 }

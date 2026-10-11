@@ -9,7 +9,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>In-memory clipboard adapter used as the default deterministic fallback for rich text operations.</summary>
-public sealed class RichTextMemoryClipboardAdapter : IRichTextClipboardAdapter
+public sealed class RichTextMemoryClipboardAdapter : IRichTextRtfClipboardAdapter
 {
     /// <inheritdoc/>
     public bool ContainsPlainText => !string.IsNullOrEmpty(PlainText);
@@ -28,6 +28,9 @@ public sealed class RichTextMemoryClipboardAdapter : IRichTextClipboardAdapter
 
     /// <inheritdoc/>
     public string? ImageSource { get; set; }
+
+    /// <inheritdoc/>
+    public string? RtfText { get; set; }
 
     /// <inheritdoc/>
     public void SetPlainText(string? text) => PlainText = text;

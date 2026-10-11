@@ -12,4 +12,5 @@ namespace CrissCross.Avalonia.UI.Controls;
 /// <param name="PlainText">The plain-text representation.</param>
 /// <param name="HtmlText">The HTML representation.</param>
 /// <param name="ImageSource">The image data URI representation.</param>
-internal readonly record struct RichTextClipboardContent(string? PlainText, string? HtmlText, string? ImageSource);
+/// <param name="RtfText">The RTF representation.</param>
+internal readonly record struct RichTextClipboardContent(string? PlainText, string? HtmlText, string? ImageSource, string? RtfText = null);

@@ -59,11 +59,29 @@ public class TextSegment(string text, int startIndex)
     /// <summary>Gets or sets the font family for this segment.</summary>
     public FontFamily? FontFamily { get; set; }
 
+    /// <summary>Gets or sets the navigation address of an HTML hyperlink.</summary>
+    public string? HyperlinkNavigationUri { get; set; }
+
+    /// <summary>Gets or sets the target frame of an HTML hyperlink.</summary>
+    public string? HyperlinkTarget { get; set; }
+
+    /// <summary>Gets or sets a table occupying this segment's document range.</summary>
+    public RichTextTable? Table { get; set; }
+
+    /// <summary>Gets or sets a generated list marker that occupies no document positions.</summary>
+    public string? ListMarker { get; set; }
+
     /// <summary>Gets or sets a value indicating whether this segment represents a line break.</summary>
     public bool IsLineBreak { get; set; }
 
     /// <summary>Gets or sets a value indicating whether this segment represents a paragraph break.</summary>
     public bool IsParagraphBreak { get; set; }
+
+    /// <summary>Gets or sets whether this segment starts a new document page.</summary>
+    public bool IsPageBreak { get; set; }
+
+    /// <summary>Gets or sets whether a new page starts before this segment without consuming a document position.</summary>
+    public bool BreakPageBefore { get; set; }
 
     /// <summary>Gets or sets a value indicating whether this segment represents an image.</summary>
     public bool IsImage { get; set; }
@@ -110,7 +128,7 @@ public class TextSegment(string text, int startIndex)
     /// <param name="alignment">Alignment metadata for the paragraph.</param>
     /// <returns>A <see cref="TextSegment"/> describing the break.</returns>
     public static TextSegment CreateParagraphBreak(int offset, TextAlignment? alignment) =>
-        new(string.Empty, offset) { IsParagraphBreak = true, ParagraphAlignment = alignment };
+        new(Environment.NewLine, offset) { IsParagraphBreak = true, ParagraphAlignment = alignment };
 
     /// <summary>Creates an inline image segment.</summary>
     /// <param name="offset">The document offset where the image is injected.</param>
@@ -142,8 +160,14 @@ public class TextSegment(string text, int startIndex)
             Background = source.Background,
             FontSize = source.FontSize,
             FontFamily = source.FontFamily,
+            HyperlinkNavigationUri = source.HyperlinkNavigationUri,
+            HyperlinkTarget = source.HyperlinkTarget,
+            Table = source.Table,
+            ListMarker = source.ListMarker,
             IsLineBreak = source.IsLineBreak,
             IsParagraphBreak = source.IsParagraphBreak,
+            IsPageBreak = source.IsPageBreak,
+            BreakPageBefore = source.BreakPageBefore,
             IsImage = source.IsImage,
             ImageSource = source.ImageSource,
             ImageWidth = source.ImageWidth,
@@ -214,13 +238,17 @@ public class TextSegment(string text, int startIndex)
         && Equals(Foreground, other.Foreground)
         && Equals(Background, other.Background)
         && HaveEqualFontSize(FontSize, other.FontSize)
-        && Equals(FontFamily, other.FontFamily);
+        && Equals(FontFamily, other.FontFamily)
+        && HyperlinkNavigationUri == other.HyperlinkNavigationUri
+        && HyperlinkTarget == other.HyperlinkTarget;
 
     /// <summary>Compares line and paragraph formatting options.</summary>
     /// <param name="other">The other segment.</param>
     /// <returns><see langword="true"/> when block formatting matches.</returns>
     private bool HasSameBlockFormatting(TextSegment other) =>
-        IsLineBreak == other.IsLineBreak && IsParagraphBreak == other.IsParagraphBreak;
+        IsLineBreak == other.IsLineBreak && IsParagraphBreak == other.IsParagraphBreak
+        && IsPageBreak == other.IsPageBreak && BreakPageBefore == other.BreakPageBefore
+        && ReferenceEquals(Table, other.Table) && ListMarker == other.ListMarker;
 
     /// <summary>Compares image formatting options.</summary>
     /// <param name="other">The other segment.</param>
