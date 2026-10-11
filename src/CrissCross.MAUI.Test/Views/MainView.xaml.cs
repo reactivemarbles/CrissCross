@@ -2,43 +2,32 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.MAUI.Test;
 
-/// <summary>MainView member.</summary>
+/// <summary>Hosts the Main view model using native MAUI bindings.</summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class MainView : ReactiveUI.Maui.ReactiveContentPage<MainViewModel>
+public partial class MainView : ContentPage, IViewFor<MainViewModel>
 {
-    /// <summary>Provides the activation registration.</summary>
-    private IDisposable? _activation;
-
     /// <summary>Initializes a new instance of the <see cref="MainView"/> class.</summary>
     public MainView()
     {
         InitializeComponent();
+        ViewModel = AppLocator.Current.GetService<MainViewModel>();
     }
 
-    /// <summary>Gets the GotoMain navigation button.</summary>
-    public Button GotoMainButton => GotoMain;
-
-    /// <summary>Gets the GotoFirst navigation button.</summary>
-    public Button GotoFirstButton => GotoFirst;
-
-    /// <summary>Gets the GotoControlsGallery navigation button.</summary>
-    public Button GotoControlsGalleryButton => GotoControlsGallery;
+    /// <summary>Gets or sets the view model and native binding context.</summary>
+    public MainViewModel? ViewModel
+    {
+        get => BindingContext as MainViewModel;
+        set => BindingContext = value;
+    }
 
     /// <inheritdoc />
-    protected override void OnAppearing()
+    object? IViewFor.ViewModel
     {
-        base.OnAppearing();
-        _activation ??= this.WhenActivated(d =>
-        {
-            ViewModel ??= AppLocator.Current.GetService<MainViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMainButton).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirstButton).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoControlsGallery, v => v.GotoControlsGalleryButton).DisposeWith(d);
-        });
+        get => ViewModel;
+        set => ViewModel = (MainViewModel?)value;
     }
 }

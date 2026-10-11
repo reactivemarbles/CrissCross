@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rxui:ReactiveContentPage
+<ContentPage
     x:Class="CrissCross.MAUI.Test.ControlsGalleryView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CrissCross.MAUI.Test"
     xmlns:mauiui="clr-namespace:CrissCross.Maui.UI.Controls;assembly=CrissCross.Maui.UI"
-    xmlns:rxui="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
     Title="MAUI UI Gallery"
-    x:DataType="local:ControlsGalleryViewModel"
-    x:TypeArguments="local:ControlsGalleryViewModel">
-    <rxui:ReactiveContentPage.Content>
+    x:DataType="local:ControlsGalleryViewModel">
+    <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Padding="24" Spacing="16">
                 <Label FontAttributes="Bold" FontSize="28" Text="CrissCross MAUI UI Gallery" />
                 <Label Text="{Binding PlatformNotes}" />
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Async reactive command" />
                         <mauiui:CommandButton
@@ -28,15 +26,15 @@
                             Text="Run deterministic import" />
                         <mauiui:BusyOverlay Operation="{Binding CurrentOperation}">
                             <mauiui:BusyOverlay.Content>
-                                <Frame BackgroundColor="#1F0078D4" Padding="12">
+                                <Border BackgroundColor="#1F0078D4" Padding="12">
                                     <Label Text="BusyOverlay projects shared BusyOperation state without replacing the layout." />
-                                </Frame>
+                                </Border>
                             </mauiui:BusyOverlay.Content>
                         </mauiui:BusyOverlay>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Search, filters, and paging" />
                         <Entry Placeholder="Edit SearchText on the view model during debugging" Text="{Binding SearchText}" />
@@ -48,41 +46,41 @@
                             QueryState="{Binding SearchState}"
                             SortKey="timestamp" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Workflow controls" />
                         <mauiui:SegmentedControl SelectionCommand="{Binding SegmentChangedCommand}" State="{Binding SegmentState}" />
                         <mauiui:ChipGroup SelectionCommand="{Binding ChipChangedCommand}" State="{Binding ChipGroupState}" />
                         <mauiui:Stepper StepCommand="{Binding StepRequestedCommand}" StepperState="{Binding StepperState}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Industrial process values" />
                         <mauiui:ProcessValueIndicator State="{Binding NormalProcessValue}" />
                         <mauiui:ProcessValueIndicator State="{Binding AlarmProcessValue}" />
                         <mauiui:ProcessValueIndicator State="{Binding BadQualityProcessValue}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="10">
                         <Label FontAttributes="Bold" FontSize="18" Text="Theme and date/time" />
                         <mauiui:ThemeSwitcher ChangeThemeCommand="{Binding ThemeChangedCommand}" ThemeState="{Binding ThemeState}" />
                         <mauiui:DateTimeRangePicker ApplyRangeCommand="{Binding RangeChangedCommand}" Range="{Binding CurrentRange}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
-                <Frame Padding="16">
+                <Border Padding="16">
                     <VerticalStackLayout Spacing="8">
                         <Label FontAttributes="Bold" FontSize="18" Text="Activation/disposal" />
                         <Label Text="{Binding ActivationLog}" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
-    </rxui:ReactiveContentPage.Content>
-</rxui:ReactiveContentPage>
+    </ContentPage.Content>
+</ContentPage>

@@ -44,4 +44,5 @@
   </ItemGroup>
 
   <Import Project="..\ReactiveMarkup.targets" />
+  <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />
 </Project>

@@ -37,7 +37,9 @@ This repository uses **SLNX** (XML-based solution format) instead of legacy `.sl
 
 ### Required SDKs
 
-* .NET **8.0**, **9.0**, **10.0** SDKs (all required)
+* .NET **8.0**, **9.0**, **10.0**, **11.0** SDKs (all required)
+* The .NET 11 compiler must support Roslyn **5.9** or later for the WPF symbol generator.
+* Android builds require SDK platforms **36** and **37** for .NET 10 and 11 respectively. Configure `ANDROID_HOME` to the SDK containing both platforms.
 
 ### Workload Restore (Required)
 

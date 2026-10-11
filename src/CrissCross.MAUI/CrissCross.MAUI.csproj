@@ -19,7 +19,7 @@
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.Maui" />
+    <PackageReference Include="ReactiveUI.Primitives.Maui" />
     <PackageReference Include="Microsoft.Maui.Controls" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Logging" />

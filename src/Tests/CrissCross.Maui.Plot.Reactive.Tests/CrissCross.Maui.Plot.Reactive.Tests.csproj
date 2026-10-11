@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\ReactiveShim.props" />
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <StartupObject>CrissCross.Maui.Plot.Reactive.Tests.MicrosoftTestingPlatformEntryPoint</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\CrissCross.Maui.Plot.Tests\*.cs" Link="%(Filename)%(Extension)" />
+    <ProjectReference Include="..\..\CrissCross.Maui.Plot.Reactive\CrissCross.Maui.Plot.Reactive.csproj" />
+    <Using Include="ReactiveUI.Reactive" />
+    <Using Include="TUnit.Core" />
+    <Using Include="TUnit.Assertions" />
+    <Using Include="TUnit.Assertions.Extensions" />
+  </ItemGroup>
+</Project>

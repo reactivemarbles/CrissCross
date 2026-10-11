@@ -1,0 +1,33 @@
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+#if PLOT_MAUI && REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Maui.Plot;
+#elif PLOT_MAUI
+namespace CrissCross.Maui.Plot;
+#elif PLOT_AVALONIA && REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.Plot;
+#elif PLOT_AVALONIA
+namespace CrissCross.Avalonia.Plot;
+#elif REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
+namespace CrissCross.WPF.Plot;
+#endif
+
+/// <summary>Represents an active chart-source binding.</summary>
+public interface IReactivePlotConnection : IDisposable
+{
+    /// <summary>Gets lifecycle state transitions for the binding.</summary>
+    IObservable<ReactivePlotConnectionState> State { get; }
+
+    /// <summary>Gets recoverable update errors observed after binding.</summary>
+    IObservable<Exception> Errors { get; }
+
+    /// <summary>Gets the current lifecycle state.</summary>
+    ReactivePlotConnectionState CurrentState { get; }
+
+    /// <summary>Gets a value indicating whether all source streams completed.</summary>
+    bool IsCompleted { get; }
+}

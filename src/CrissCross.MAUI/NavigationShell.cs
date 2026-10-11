@@ -4,15 +4,11 @@
 
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using ReactiveUI;
 using Splat;
 
 #if REACTIVE_SHIM
 using ReactiveUI.Reactive;
-using ReactiveUI.Reactive.Maui;
-#else
-using ReactiveUI.Maui;
 #endif
 
 #if REACTIVELIST_REACTIVE
@@ -389,6 +385,27 @@ public partial class NavigationShell
         ns.SetMainNavigationHost(ns);
     }
 
+    /// <summary>Recognizes local and legacy animation markers without constructing external attributes.</summary>
+    /// <param name="pageType">The page type to inspect.</param>
+    /// <returns>Whether this page or a base page requests navigation without animation.</returns>
+    private static bool HasDisabledAnimation(Type pageType)
+    {
+        for (Type? type = pageType; type is not null; type = type.BaseType)
+        {
+            foreach (var attribute in type.GetCustomAttributesData())
+            {
+                if (attribute.AttributeType == typeof(DisableAnimationAttribute)
+                    || attribute.AttributeType.FullName is "ReactiveUI.Maui.DisableAnimationAttribute"
+                        or "ReactiveUI.Reactive.Maui.DisableAnimationAttribute")
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>Removes shared navigation registrations that still point to this shell.</summary>
     private void UnregisterNavigationHost()
     {
@@ -424,8 +441,7 @@ public partial class NavigationShell
     {
         var page = ToPage(_currentView!);
         var animated = true;
-        var attribute = page!.GetType().GetCustomAttribute<DisableAnimationAttribute>();
-        if (attribute is not null)
+        if (HasDisabledAnimation(page!.GetType()))
         {
             animated = false;
         }

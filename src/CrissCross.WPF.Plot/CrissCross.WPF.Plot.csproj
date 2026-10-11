@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
     <Nullable>enable</Nullable>
@@ -30,4 +30,5 @@
   <ItemGroup>
     <Resource Include="Images\*.png" />
   </ItemGroup>
+  <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />
 </Project>

@@ -5,9 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CrissCross.MAUI.Test"
     xmlns:rxNav="https://github.com/reactivemarbles/CrissCross"
-    xmlns:rxui="clr-namespace:ReactiveUI.Maui;assembly=ReactiveUI.Maui"
     Name="appShell"
     Shell.FlyoutBehavior="Disabled">
 
-    <rxui:ReactiveShellContent Title="MainView" x:TypeArguments="local:MainViewModel" />
+    <ShellContent Title="MainView" ContentTemplate="{DataTemplate local:MainView}" />
 </rxNav:NavigationShell>

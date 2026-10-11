@@ -3,10 +3,18 @@
 // See the LICENSE file in the project root for full license information.
 
 global using System.Windows.Input;
+#if REACTIVE_SHIM
+global using CrissCross.Reactive.Maui.UI.Resources.Styles;
+#else
 global using CrissCross.Maui.UI.Resources.Styles;
+#endif
 global using Microsoft.Maui.Controls;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI;
+#else
 namespace CrissCross.Maui.UI;
+#endif
 
 /// <summary>Provides registration helpers for CrissCross MAUI UI resources.</summary>
 public static class MauiUiAppBuilderExtensions

@@ -2,32 +2,32 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ReactiveUI;
 using Splat;
 
 namespace CrissCross.MAUI.Test;
 
-/// <summary>MAUI gallery page for CrissCross.Maui.UI controls.</summary>
+/// <summary>Hosts the ControlsGallery view model using native MAUI bindings.</summary>
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class ControlsGalleryView
+public partial class ControlsGalleryView : ContentPage, IViewFor<ControlsGalleryViewModel>
 {
-    /// <summary>Provides the activation registration.</summary>
-    private IDisposable? _activation;
-
     /// <summary>Initializes a new instance of the <see cref="ControlsGalleryView"/> class.</summary>
     public ControlsGalleryView()
     {
         InitializeComponent();
+        ViewModel = AppLocator.Current.GetService<ControlsGalleryViewModel>();
+    }
+
+    /// <summary>Gets or sets the view model and native binding context.</summary>
+    public ControlsGalleryViewModel? ViewModel
+    {
+        get => BindingContext as ControlsGalleryViewModel;
+        set => BindingContext = value;
     }
 
     /// <inheritdoc />
-    protected override void OnAppearing()
+    object? IViewFor.ViewModel
     {
-        base.OnAppearing();
-        _activation ??= this.WhenActivated((CompositeDisposable _) =>
-        {
-            ViewModel ??= AppLocator.Current.GetService<ControlsGalleryViewModel>();
-            BindingContext = ViewModel;
-        });
+        get => ViewModel;
+        set => ViewModel = (ControlsGalleryViewModel?)value;
     }
 }

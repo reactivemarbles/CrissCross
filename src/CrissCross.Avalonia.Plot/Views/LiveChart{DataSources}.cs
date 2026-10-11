@@ -1,0 +1,321 @@
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+#if !REACTIVE_SHIM
+using ReactiveUI;
+#endif
+
+#if REACTIVE_SHIM
+using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
+#else
+using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
+#endif
+
+#if REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.Plot;
+#else
+namespace CrissCross.Avalonia.Plot;
+#endif
+
+/// <summary>Provides the interactive Avalonia live chart.</summary>
+public partial class LiveChart
+{
+    /// <summary>Copies reactive plot sources to a stable array for rebinding.</summary>
+    /// <param name="sources">The sources to copy.</param>
+    /// <returns>A snapshot of the supplied sources.</returns>
+    private static IReactivePlotSource[] CopyReactivePlotSources(IEnumerable<IReactivePlotSource> sources) => [.. sources];
+
+    /// <summary>Handles the ChangeReactivePlotSources operation.</summary>
+    /// <param name="sources">The sources value.</param>
+    private void ChangeReactivePlotSources(IEnumerable<IReactivePlotSource>? sources)
+    {
+        DisposeReactivePlotConnection();
+        if (ViewModel is null || sources is null)
+        {
+            return;
+        }
+
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel.ClearContent();
+        var sourceArray = sources as IReactivePlotSource[] ?? CopyReactivePlotSources(sources);
+        ConfigureReactivePlotXAxis(sourceArray);
+        ViewModel.HideAllYAxis();
+        ReactivePlotBindingOptions options = new()
+        {
+            UiScheduler = RxSchedulers.MainThreadScheduler,
+            MaxAxisCount = Math.Max(1, ViewModel.YAxisList.Count),
+            BatchWindow = _batchWindowMilliseconds > 0 ? TimeSpan.FromMilliseconds(_batchWindowMilliseconds) : null,
+            MaxBatchSize = _maximumBatchSize,
+            OverflowStrategy = _overflowStrategy,
+            ErrorMode = _errorMode,
+        };
+        _reactivePlotConnection = new ReactivePlotBinder().Bind(
+            ViewModel,
+            sourceArray,
+            options);
+        ViewModel.InitializeAxisLines();
+    }
+
+    /// <summary>Handles the DisposeReactivePlotConnection operation.</summary>
+    private void DisposeReactivePlotConnection()
+    {
+        if (_settingsPopup is not null)
+        {
+            _settingsPopup.IsOpen = false;
+        }
+
+        _reactivePlotConnection?.Dispose();
+        _reactivePlotConnection = null;
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Disposes the crosshair visibility subscription.</summary>
+    private void DisposeCrosshairSubscription()
+    {
+        _crosshairDisposable?.Dispose();
+        _crosshairDisposable = null;
+    }
+
+    /// <summary>Handles the ChangeScatterObserver operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeScatterObserver(ScatterEnumObsPoints input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeScatterPlotLines(input.Data);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeScatterObserver operation.</summary>
+    private void ChangeScatterObserver()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeScatterPlotLines(ScatterObservablesWithTimeStamp);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalObserver operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeSignalObserver(SignalEnumObsTicks input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeSignalPlotLines(input.Data);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+        _crosshairDisposable = this
+            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
+            .Subscribe(ApplyCrosshairVisibility);
+    }
+
+    /// <summary>Handles the ChangeSignalObserver operation.</summary>
+    private void ChangeSignalObserver()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeSignalPlotLines(SignalObservablesWithTimeStamp);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+        _crosshairDisposable = this
+            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
+            .Subscribe(ApplyCrosshairVisibility);
+    }
+
+    /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeDataLoggerObserver(DataLoggerEnumObsPoints input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeDataLoggerPlotLinesWithPoints(input.Data);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeDataLoggerObserver operation.</summary>
+    private void ChangeDataLoggerObserver()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeDataLoggerPlotLinesWithPoints(DataLoggerObservablesWithPoints);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalData operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeSignalData(SignalXYTimestamp input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeSignalPlotLines(input.Data);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalData operation.</summary>
+    private void ChangeSignalData()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeSignalPlotLines(DataWithTimeStamp);
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeSignalDataWithPoints(SignalXYPoints input) => ChangeSignalDataWithPoints([input.Data]);
+
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
+    /// <param name="data">The signal data points.</param>
+    private void ChangeSignalDataWithPoints(
+        IEnumerable<(string? Name, IList<double>? Value, IList<double> DateTime, int Axis)> data)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeLinesForSignalPoints(data);
+        InitializeControlMenu();
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalDataWithPoints operation.</summary>
+    private void ChangeSignalDataWithPoints() => ChangeSignalDataWithPoints([SignalWithPoints]);
+
+    /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeSignalsDataWithPoints(SignalXYEnumPoints input) => ChangeSignalDataWithPoints(input.Data);
+
+    /// <summary>Handles the ChangeSignalsDataWithPoints operation.</summary>
+    private void ChangeSignalsDataWithPoints() => ChangeSignalsDataWithPoints(new(SignalsWithPoints));
+
+    /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeSignalDataObserverWithPoints(StreamerEnumObsPoints input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeLinesForSignalObservablesPoints(
+            input.Data,
+            fs: Frequency,
+            sampleCount: Convert.ToUInt32(NSamples));
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeSignalDataObserverWithPoints operation.</summary>
+    private void ChangeSignalDataObserverWithPoints()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeLinesForSignalObservablesPoints(
+            SignalObservablesWithPoints,
+            fs: Frequency,
+            sampleCount: Convert.ToUInt32(NSamples));
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
+    /// <param name="input">The input value.</param>
+    private void ChangeScatterDataWithPoints(ScatterPoints input)
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeLinesForScatterPoints(input.Data);
+        InitializeControlMenu();
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Handles the ChangeScatterDataWithPoints operation.</summary>
+    private void ChangeScatterDataWithPoints()
+    {
+        _needLock = true;
+        ExecuteLockUnlock();
+        _needAutoScale = true;
+        ExecuteManAutoScale();
+        SetPointerValues(false);
+        ViewModel?.InitializeLinesForScatterPoints(ScatterWithPoints);
+        InitializeControlMenu();
+        ViewModel?.InitializeAxisLines();
+        DisposeCrosshairSubscription();
+    }
+
+    /// <summary>Updates crosshair visibility for every active plot line.</summary>
+    /// <param name="isVisible">A value indicating whether crosshairs are visible.</param>
+    private void ApplyCrosshairVisibility(bool isVisible)
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        foreach (var plotLine in ViewModel.PlotLinesCollectionUI)
+        {
+            plotLine.ChartSettings.IsCrossHairVisible = isVisible;
+        }
+    }
+
+    /// <summary>Initializes the control menu from the active plot-line settings.</summary>
+    private void InitializeControlMenu()
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        List<ChartObjects> settings = [];
+        foreach (var plotLine in ViewModel.PlotLinesCollectionUI)
+        {
+            settings.Add(plotLine.ChartSettings);
+        }
+
+        ViewModel.InitializeControlMenu(settings);
+    }
+}

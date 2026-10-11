@@ -4,7 +4,11 @@
 
 using Microsoft.Maui.Layouts;
 
+#if REACTIVE_SHIM
+namespace CrissCross.Reactive.Maui.UI.Controls;
+#else
 namespace CrissCross.Maui.UI.Controls;
+#endif
 
 /// <summary>Represents a paging/navigation surface for local or remote MAUI data sources.</summary>
 public class DataPager : ContentView

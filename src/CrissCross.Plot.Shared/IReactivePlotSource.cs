@@ -1,0 +1,33 @@
+// Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
+// ReactiveUI Association Incorporated licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+#if PLOT_MAUI && REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Maui.Plot;
+#elif PLOT_MAUI
+namespace CrissCross.Maui.Plot;
+#elif PLOT_AVALONIA && REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.Avalonia.Plot;
+#elif PLOT_AVALONIA
+namespace CrissCross.Avalonia.Plot;
+#elif REACTIVELIST_REACTIVE
+namespace CrissCross.Reactive.WPF.Plot;
+#else
+namespace CrissCross.WPF.Plot;
+#endif
+
+/// <summary>Describes an observable source of chart updates for one logical plot series.</summary>
+public interface IReactivePlotSource
+{
+    /// <summary>Gets the stable series key used to preserve identity across updates.</summary>
+    PlotSeriesKey Key { get; }
+
+    /// <summary>Gets the plot type rendered by this source.</summary>
+    PlotType PlotType { get; }
+
+    /// <summary>Gets the X-axis interpretation used by this source when it is known upfront.</summary>
+    PlotXAxisKind? XAxisKind { get; }
+
+    /// <summary>Gets the observable update stream for this series.</summary>
+    IObservable<ReactivePlotUpdate> Updates { get; }
+}

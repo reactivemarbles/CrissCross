@@ -20,7 +20,7 @@ public partial class App : Application
     {
         InitializeComponent();
         _ = Resources.UseCrissCrossMauiUiResources();
-        _ = RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
+        _ = RxAppBuilder.CreateReactiveUIBuilder().WithMainThreadScheduler(new MauiDispatcherSequencer(Dispatcher)).BuildApp();
         AppLocator.CurrentMutable.RegisterConstant<MainViewModel>(new());
         AppLocator.CurrentMutable.Register<IViewFor<MainViewModel>>(static () => new MainView());
 

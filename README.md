@@ -17,11 +17,16 @@ This is the canonical documentation source for every library project and package
 | `CrissCross.Reactive` | The complete `CrissCross` API compiled against the Reactive dependency family. |
 | `CrissCross.Avalonia` | Avalonia navigation windows, routed view hosts, reactive transition content, and base Avalonia integration. |
 | `CrissCross.Avalonia.Reactive` | The complete `CrissCross.Avalonia` API compiled against Reactive Avalonia dependencies. |
+| `CrissCross.Avalonia.Plot` | Avalonia/ScottPlot live charts, streaming sources, technical studies, and interactive series settings. |
+| `CrissCross.Avalonia.Plot.Reactive` | The complete Avalonia plot API compiled against the Reactive dependency family. |
 | `CrissCross.Avalonia.UI` | Avalonia themed controls, Fluent-style app shell controls, services, resources, themes, and gallery-ready user controls. |
 | `CrissCross.Avalonia.UI.Reactive` | The complete `CrissCross.Avalonia.UI` API compiled against the Reactive dependency family. |
 | `CrissCross.MAUI` | MAUI Shell navigation host and ReactiveUI integration. |
 | `CrissCross.MAUI.Reactive` | The complete `CrissCross.MAUI` API compiled against Reactive MAUI dependencies. |
-| `CrissCross.Maui.UI` | Project-reference-only MAUI themed controls and shared feature controls backed by the same core state models. |
+| `CrissCross.Maui.Plot` | Native MAUI/ScottPlot live charts, sources, indicators, and editable series settings using ReactiveUI.Primitives. |
+| `CrissCross.Maui.Plot.Reactive` | The complete MAUI plot API compiled against System.Reactive dependencies. |
+| `CrissCross.Maui.UI` | MAUI themed controls and shared feature controls backed by the same core state models and ReactiveUI.Primitives. |
+| `CrissCross.Maui.UI.Reactive` | The complete MAUI UI controls and resources compiled from shared source against the Reactive dependency family. |
 | `CrissCross.WinForms` | WinForms navigation forms and routed view hosts. |
 | `CrissCross.WinForms.Reactive` | The complete `CrissCross.WinForms` API compiled against Reactive WinForms dependencies. |
 | `CrissCross.WPF` | WPF navigation windows, routed view hosts, WebView navigation host, single-instance helper, and WPF integration. |
@@ -42,8 +47,10 @@ This is the canonical documentation source for every library project and package
 | `CrissCross`, `CrissCross.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`; Windows builds additionally target `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.Avalonia`, `CrissCross.Avalonia.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`. |
 | `CrissCross.Avalonia.UI`, `CrissCross.Avalonia.UI.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`. |
-| `CrissCross.MAUI`, `CrissCross.MAUI.Reactive` | `net10.0`, `net10.0-android`, `net10.0-ios`, `net10.0-maccatalyst`, `net10.0-macos`, `net10.0-tvos`, and `net10.0-windows10.0.19041.0` on Windows. |
-| `CrissCross.Maui.UI` | The same .NET 10 MAUI target family as `CrissCross.MAUI`. This project is marked `IsPackable=false`. |
+| `CrissCross.Avalonia.Plot`, `CrissCross.Avalonia.Plot.Reactive` | `net8.0`, `net9.0`, `net10.0`, `net11.0`. |
+| `CrissCross.MAUI`, `CrissCross.MAUI.Reactive` | .NET 10 and 11: neutral, Android, iOS, Mac Catalyst, macOS, tvOS, and Windows (`-windows10.0.19041.0`). |
+| `CrissCross.Maui.Plot`, `CrissCross.Maui.Plot.Reactive` | .NET 10 and 11: neutral, Android, iOS, Mac Catalyst, and Windows (`-windows10.0.19041.0`). |
+| `CrissCross.Maui.UI`, `CrissCross.Maui.UI.Reactive` | The same .NET 10 and 11 MAUI target family as `CrissCross.MAUI`. |
 | `CrissCross.WinForms`, `CrissCross.WinForms.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.WPF`, `CrissCross.WPF.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.WPF.Plot`, `CrissCross.WPF.Plot.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
@@ -74,7 +81,9 @@ dotnet add package CrissCross.WPF.Plot
 dotnet add package CrissCross.WPF.WebView2
 dotnet add package CrissCross.Avalonia
 dotnet add package CrissCross.Avalonia.UI
+dotnet add package CrissCross.Avalonia.Plot
 dotnet add package CrissCross.MAUI
+dotnet add package CrissCross.Maui.Plot
 dotnet add package CrissCross.WinForms
 dotnet add package AICS.Windows.Controls.ColorPicker
 ```
@@ -89,7 +98,9 @@ dotnet add package CrissCross.WPF.Plot.Reactive
 dotnet add package CrissCross.WPF.WebView2.Reactive
 dotnet add package CrissCross.Avalonia.Reactive
 dotnet add package CrissCross.Avalonia.UI.Reactive
+dotnet add package CrissCross.Avalonia.Plot.Reactive
 dotnet add package CrissCross.MAUI.Reactive
+dotnet add package CrissCross.Maui.Plot.Reactive
 dotnet add package CrissCross.WinForms.Reactive
 ```
 
@@ -103,12 +114,15 @@ The public type/member surface, XAML controls, startup sequence, navigation cont
 | `CrissCross.WPF.Plot` | `CrissCross.Reactive.WPF.Plot` |
 | `CrissCross.Avalonia` | `CrissCross.Reactive.Avalonia` |
 | `CrissCross.Avalonia.UI` | `CrissCross.Reactive.Avalonia.UI` |
+| `CrissCross.Avalonia.Plot` | `CrissCross.Reactive.Avalonia.Plot` |
 | `CrissCross.MAUI` | `CrissCross.Reactive.MAUI` |
+| `CrissCross.Maui.Plot` | `CrissCross.Reactive.Maui.Plot` |
+| `CrissCross.Maui.UI` | `CrissCross.Reactive.Maui.UI` |
 | `CrissCross.WinForms` | `CrissCross.Reactive.WinForms` |
 
 `CrissCross.WPF.WebView2.Reactive` also exposes its linked control source under `CrissCross.Reactive.WPF`. Substitute these namespaces and the `.Reactive` assembly name in the examples below when using the Reactive package family.
 
-`CrissCross.Maui.UI` is not a NuGet package. Reference the project directly:
+The MAUI plot packages reference their matching UI package, and each UI package references its matching MAUI navigation package. The lean chain uses ReactiveUI.Primitives without System.Reactive; the Reactive chain shares the same source. For local development, reference the UI project directly:
 
 ```xml
 <ProjectReference Include="..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
@@ -164,6 +178,7 @@ using CrissCross.MAUI;
 using CrissCross.Maui.UI;
 using ReactiveUI;
 using ReactiveUI.Builder;
+using ReactiveUI.Primitives.Concurrency;
 
 public static class MauiProgram
 {
@@ -185,7 +200,7 @@ public partial class App : Application
     {
         InitializeComponent();
         Resources.UseCrissCrossMauiUiResources();
-        RxAppBuilder.CreateReactiveUIBuilder().WithMaui().BuildApp();
+        RxAppBuilder.CreateReactiveUIBuilder().WithMainThreadScheduler(MauiDispatcherSequencer.For(Dispatcher)).BuildApp();
         MainPage = new AppShell();
     }
 }
@@ -672,15 +687,19 @@ Use `NavigationUserControl` or `NavigationUserControl<TViewModel>` for nested na
 
 ### Register MAUI
 
+Configure the dispatcher during application window creation, before creating routed pages. Import `ReactiveUI.Primitives.Concurrency` for the lean package, or `ReactiveUI.Primitives.Reactive.Concurrency` for the Reactive package.
+
 ```csharp
 RxAppBuilder.CreateReactiveUIBuilder()
-    .WithMaui()
+    .WithMainThreadScheduler(MauiDispatcherSequencer.For(Dispatcher))
     .BuildApp();
 ```
 
 ### NavigationShell
 
 `NavigationShell` derives from `Microsoft.Maui.Controls.Shell` and implements `IViewModelRoutedViewHost`.
+
+Apply `[CrissCross.MAUI.DisableAnimation]` to a page to disable navigation animation. The Reactive variant exposes the same marker in `CrissCross.Reactive.MAUI`. Existing ReactiveUI MAUI animation markers are also recognized through their metadata.
 
 ```xml
 <rxNav:NavigationShell
@@ -1529,6 +1548,56 @@ MAUI binding shape:
 <ui:DataPager PaginationState="{Binding Paging}" PageRequestCommand="{Binding PageRequested}" />
 <ui:ValidationSummary SummaryState="{Binding Validation}" />
 ```
+
+## CrissCross.Avalonia.Plot
+
+`CrissCross.Avalonia.Plot` provides the WPF plot feature set on ScottPlot's native Avalonia surface. It includes `LiveChart`, `LiveChartViewModel`, `RightPropertiesView`, the reactive binder and source factories, all chart types, numeric and DateTime axes, themes, LTTB reduction, and static and streaming technical studies. The native adapter is `AvaloniaReactivePlotAdapter`; the view model exposes its ScottPlot control as `AvaPlot1vm`.
+
+`src/CrissCross.Plot.Shared/CrissCross.Plot.Shared.shproj` is the shared-source project for WPF, Avalonia, and MAUI. Its `.projitems` file is imported by all six plot libraries. Data models, source factories, buffering and binding policies, series settings, downsampling, and technical indicators have one implementation; UI controls, adapters, and pointer interaction remain platform-specific. Shared code compiles into each platform's existing namespace, so the WPF API remains compatible.
+
+The standard plot packages use `ReactiveUI.Primitives.RxVoid` and `ISequencer` without a `System.Reactive` dependency. The `.Reactive` packages compile the same shared source with `System.Reactive.Unit` and `System.Reactive.Concurrency.IScheduler`, in the `CrissCross.Reactive.WPF.Plot`, `CrissCross.Reactive.Avalonia.Plot`, and `CrissCross.Reactive.Maui.Plot` namespaces. Choose one dependency family consistently within a pipeline.
+
+Load Avalonia's `FluentTheme` and the CrissCross Avalonia UI styles, then add the chart:
+
+```xml
+<plot:LiveChart xmlns:plot="clr-namespace:CrissCross.Avalonia.Plot;assembly=CrissCross.Avalonia.Plot"
+                TitleContent="Live measurements"
+                ReactivePlotSources="{Binding Sources}"
+                UseFixedNumberOfPoints="True"
+                NumberPointsPlotted="600" />
+```
+
+The settings button opens plot actions, axis limits, feed delivery policies, and per-series editors. These support visibility, pause/resume, alpha-aware color editing, line and marker modes, area baselines, streamer display modes, sample intervals, and retention limits. Ctrl+click adds a coordinate annotation; draggable axis lines and pointer crosshairs use Avalonia pointer events and display scaling.
+
+Run the matching desktop example from the repository root:
+
+```powershell
+dotnet run --project src/CrissCross.Avalonia.Plot.Example/CrissCross.Avalonia.Plot.Example.csproj -f net10.0
+```
+
+It provides the same **All chart types**, **Live streams**, **Historic DateTime**, **Indicators**, theme toggle, and fixed-point controls as the WPF example. The two Avalonia plot test projects exercise both dependency families, including binding policies, study calculations, retained data, settings, rendering, and chart lifecycle behavior.
+
+## CrissCross.Maui.Plot
+
+`CrissCross.Maui.Plot` brings the same shared plot engine to ScottPlot's native MAUI surface. It includes `LiveChart`, `LiveChartViewModel`, `RightPropertiesView`, all plot types, streaming and historic sources, technical studies, themes, reduction, and editable series settings. The adapter is `MauiReactivePlotAdapter`, and `MauiPlot1vm` exposes the native ScottPlot control.
+
+The standard package uses ReactiveUI.Primitives without System.Reactive. `CrissCross.Maui.Plot.Reactive` compiles the same controls and shared engine against System.Reactive in `CrissCross.Reactive.Maui.Plot`.
+
+The example configures ReactiveUI with `MauiDispatcherSequencer.For(Dispatcher)` in `App.CreateWindow`, before creating chart controls. This uses the Primitives dispatcher directly and keeps the .NET 10 Android dependency graph compatible.
+
+Build with a .NET 11 SDK and restore the MAUI workloads first. Android builds require SDK platforms 36 and 37 for the .NET 10 and 11 targets respectively. The central AndroidX Lifecycle versions are scoped by framework and UI platform to match the MAUI and Avalonia dependency graphs.
+
+Run the example on Windows:
+
+```powershell
+dotnet run --project src/CrissCross.Maui.Plot.Example/CrissCross.Maui.Plot.Example.csproj -f net10.0-windows10.0.19041.0
+```
+
+The example provides the WPF plot scenarios: all chart types, live streaming, historic data, static and streaming indicators, themes, and limit changes. Its **Run showcase** button exercises the scenarios and writes plot PNGs and a verification report under the application's data directory in `PlotVerification`. The report verifies the expected series counts, nonempty data, point limits, downsampling, axis modes, and themes. For automated desktop verification, pass `-- --verify-directory <output-directory>` to the run command.
+
+To check native responsiveness, pass `-- --verify-responsiveness --verify-directory <output-directory>`. This runs a 120-second soak: 60 seconds cycling scenarios, settings, themes, and fixed point windows, followed by 60 seconds of steady live rendering with all chart types. A background watchdog posts native UI dispatcher sentinels every 250 milliseconds and fails if a sentinel takes more than five seconds. It also checks live coordinate progression in both phases and validates native render geometry and axis limits. The watchdog writes `responsiveness-progress.txt` and a final `responsiveness.txt` containing `PASS` or `FAIL`, including when the UI thread is blocked. This check complements the PNG showcase with direct native dispatcher and live rendering evidence. The application remains open after verification.
+
+The two TUnit projects under `src/Tests/CrissCross.Maui.Plot.Tests` and `src/Tests/CrissCross.Maui.Plot.Reactive.Tests` exercise the shared engine, actual MAUI rendering, settings, touch interaction, source replacement, and lifecycle behavior.
 
 ## CrissCross.WPF.Plot
 
