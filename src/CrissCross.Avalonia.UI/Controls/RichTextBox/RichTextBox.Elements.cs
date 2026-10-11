@@ -44,6 +44,9 @@ public partial class RichTextBox
     /// <summary>The table header cell element name.</summary>
     private const string TableHeaderCellTag = "th";
 
+    /// <summary>The native numbering instance retained by imported paragraphs.</summary>
+    private const string NativeNumberingAttribute = "data-docx-num-id";
+
     /// <summary>Inserts a hyperlink using the selected text or address as its label.</summary>
     /// <param name="address">The absolute HTTP, HTTPS, or mail address.</param>
     public void InsertHyperlink(Uri address) => InsertHyperlink(address, null);
@@ -177,9 +180,10 @@ public partial class RichTextBox
         }
 
         IElement replacement;
+        ResetNativeNumbering(item);
         if (list.LocalName == markupElementName)
         {
-            replacement = CopyParagraph(document, item, ParagraphTag);
+            replacement = CopyParagraph(document, GetListItemParagraph(item), ParagraphTag);
         }
         else
         {
@@ -195,6 +199,37 @@ public partial class RichTextBox
         }
 
         list.Remove();
+    }
+
+    /// <summary>Unwraps an imported list item's single paragraph without nesting paragraph elements.</summary>
+    /// <param name="item">The list item.</param>
+    /// <returns>The inner paragraph or the original inline list item.</returns>
+    private static IElement GetListItemParagraph(IElement item) =>
+        item.ChildElementCount == 1 && item.FirstElementChild is { LocalName: ParagraphTag } paragraph ? paragraph : item;
+
+    /// <summary>Resets native numbering on a changed item and its imported paragraphs.</summary>
+    /// <param name="item">The changed list item.</param>
+    private static void ResetNativeNumbering(IElement item)
+    {
+        ResetNativeParagraphNumbering(item);
+        foreach (var paragraph in item.QuerySelectorAll($"[{NativeNumberingAttribute}]"))
+        {
+            ResetNativeParagraphNumbering(paragraph);
+        }
+    }
+
+    /// <summary>Marks an imported paragraph for a native numbering override.</summary>
+    /// <param name="paragraph">The changed paragraph.</param>
+    private static void ResetNativeParagraphNumbering(IElement paragraph)
+    {
+        if (!paragraph.HasAttribute(NativeNumberingAttribute))
+        {
+            return;
+        }
+
+        paragraph.SetAttribute("data-docx-numbering-reset", "true");
+        _ = paragraph.RemoveAttribute(NativeNumberingAttribute);
+        _ = paragraph.RemoveAttribute("data-docx-level");
     }
 
     /// <summary>Copies a paragraph's attributes and children to a different block type.</summary>
@@ -225,6 +260,13 @@ public partial class RichTextBox
     /// <param name="markupElementName">The requested list kind.</param>
     private static void ApplyListToParagraph(IDocument document, IElement paragraph, string markupElementName)
     {
+        if (paragraph.ParentElement is { LocalName: ListItemTag } importedItem
+            && importedItem.ParentElement is { LocalName: BulletedListTag or NumberedListTag } containingList)
+        {
+            TransformListItem(document, importedItem, containingList, markupElementName);
+            return;
+        }
+
         if (paragraph.ParentElement is not { } parent)
         {
             return;

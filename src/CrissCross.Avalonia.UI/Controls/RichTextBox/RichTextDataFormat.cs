@@ -21,5 +21,8 @@ public enum RichTextDataFormat
     Markdown,
 
     /// <summary>Rich Text Format content.</summary>
-    Rtf
+    Rtf,
+
+    /// <summary>Office Open XML Word document package.</summary>
+    Docx
 }

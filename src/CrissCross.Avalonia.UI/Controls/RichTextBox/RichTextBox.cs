@@ -235,6 +235,7 @@ public partial class RichTextBox : TemplatedControl
         _propertyChangedHandlers = CreatePropertyChangedHandlers();
         Document = new();
         Selection = new(Document);
+        InitializeInputMethod();
         CopyCommand = new RichTextCommand(_ => CopyCore(), _ => CanCopy);
         CutCommand = new RichTextCommand(_ => CutCore(), _ => CanCut);
         PasteCommand = new RichTextCommand(_ => PasteCore(), _ => CanPaste);
@@ -255,7 +256,7 @@ public partial class RichTextBox : TemplatedControl
             _ => CanApplyFormatting);
         ClearFormattingCommand = new RichTextCommand(
             _ => ClearFormattingCore(),
-            _ => !IsReadOnlyInternal && IsFormattingEnabled && HasAnyFormatting());
+            _ => !IsReadOnlyInternal && IsFormattingEnabled && (HasAnyFormatting() || _typingStyles.Count > 0));
         SetFontFamilyCommand = new RichTextCommand(
             parameter => SetSelectionFontFamily(parameter?.ToString() ?? string.Empty),
             parameter => CanApplyFormatting && !string.IsNullOrWhiteSpace(parameter?.ToString()));

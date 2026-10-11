@@ -14,8 +14,9 @@ internal static class RichTextEditingShim
     /// <summary>Applies the smallest plain-text change while retaining markup outside the edited range.</summary>
     /// <param name="document">The document to update.</param>
     /// <param name="newText">The new rendered text.</param>
+    /// <param name="encodeText">Optional insertion formatting encoder.</param>
     /// <returns><see langword="true"/> when the document changed.</returns>
-    internal static bool ApplyPlainTextChange(FlowDocument document, string newText)
+    internal static bool ApplyPlainTextChange(FlowDocument document, string newText, Func<string, int, string>? encodeText = null)
     {
         ArgumentNullException.ThrowIfNull(document);
         ArgumentNullException.ThrowIfNull(newText);
@@ -26,15 +27,14 @@ internal static class RichTextEditingShim
             return false;
         }
 
-        var prefixLength = GetCommonPrefixLength(oldText, newText);
-        var suffixLength = GetCommonSuffixLength(oldText, newText, prefixLength);
-        var removedLength = oldText.Length - prefixLength - suffixLength;
-        var insertedLength = newText.Length - prefixLength - suffixLength;
-        var insertedText = insertedLength == 0 ? string.Empty : newText[prefixLength..(prefixLength + insertedLength)];
+        var replacement = CalculateReplacement(oldText, newText);
+        var prefixLength = replacement.Start;
+        var removedLength = replacement.Length;
+        var insertedText = replacement.Text;
 
         if (prefixLength == 0 && removedLength == oldText.Length)
         {
-            document.SetText(HtmlClipboardUtilities.EncodePlainText(insertedText));
+            document.SetText(EncodeInsertion(insertedText, prefixLength, encodeText));
             return true;
         }
 
@@ -51,9 +51,28 @@ internal static class RichTextEditingShim
             return true;
         }
 
-        document.Insert(prefixLength, HtmlClipboardUtilities.EncodePlainText(insertedText));
+        document.Insert(prefixLength, EncodeInsertion(insertedText, prefixLength, encodeText));
         return true;
     }
+
+    /// <summary>Finds the smallest changed range between two rendered text values.</summary>
+    /// <param name="oldText">The committed text.</param>
+    /// <param name="newText">The replacement text.</param>
+    /// <returns>The changed range and inserted characters.</returns>
+    internal static (int Start, int Length, string Text) CalculateReplacement(string oldText, string newText)
+    {
+        var prefix = GetCommonPrefixLength(oldText, newText);
+        var suffix = GetCommonSuffixLength(oldText, newText, prefix);
+        return (prefix, oldText.Length - prefix - suffix, newText[prefix..(newText.Length - suffix)]);
+    }
+
+    /// <summary>Encodes replacement characters using the editor's insertion styles.</summary>
+    /// <param name="text">Inserted characters.</param>
+    /// <param name="position">Document insertion position.</param>
+    /// <param name="encoder">Optional custom encoder.</param>
+    /// <returns>The replacement HTML.</returns>
+    private static string EncodeInsertion(string text, int position, Func<string, int, string>? encoder) =>
+        encoder?.Invoke(text, position) ?? HtmlClipboardUtilities.EncodePlainText(text);
 
     /// <summary>Gets the number of matching characters at the start of two strings.</summary>
     /// <param name="left">The first string.</param>

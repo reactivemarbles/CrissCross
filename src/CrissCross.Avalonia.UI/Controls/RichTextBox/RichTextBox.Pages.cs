@@ -83,6 +83,7 @@ public partial class RichTextBox
             return;
         }
 
+        _pagedInputMethodClient?.PrepareCommit();
         ReplaceSelection(text);
         e.Handled = true;
         BringPageCaretIntoView();
@@ -103,6 +104,8 @@ public partial class RichTextBox
         }
 
         _ = Focus();
+        _pagedInputMethodClient?.Cancel();
+        _pagedPresenter.UpdateLayout();
         var offset = _pagedPresenter.GetDocumentPosition(e.GetPosition(_pagedPresenter));
         _pageSelectionAnchor = (e.KeyModifiers & KeyModifiers.Shift) != 0 ? SelectionStart : offset;
         SetPageSelection(_pageSelectionAnchor, offset);
@@ -135,6 +138,13 @@ public partial class RichTextBox
         }
 
         var caret = Math.Clamp(CaretIndex, 0, Document.Length);
+        if (e.Key == Key.Escape)
+        {
+            _pagedInputMethodClient?.Cancel();
+            e.Handled = true;
+            return true;
+        }
+
         if (HandlePageMutation(e, caret))
         {
             e.Handled = true;
@@ -142,6 +152,7 @@ public partial class RichTextBox
             return true;
         }
 
+        CancelCompositionForNavigation(e.Key);
         var next = GetPageNavigationOffset(e, caret);
         if (next is null)
         {
@@ -152,6 +163,19 @@ public partial class RichTextBox
         e.Handled = true;
         BringPageCaretIntoView();
         return true;
+    }
+
+    /// <summary>Restores committed geometry before navigating the document.</summary>
+    /// <param name="key">The navigation key.</param>
+    private void CancelCompositionForNavigation(Key key)
+    {
+        if (key is not (Key.Left or Key.Right or Key.Up or Key.Down or Key.Home or Key.End))
+        {
+            return;
+        }
+
+        _pagedInputMethodClient?.Cancel();
+        _pagedPresenter?.UpdateLayout();
     }
 
     /// <summary>Gets the document offset for a navigation gesture.</summary>

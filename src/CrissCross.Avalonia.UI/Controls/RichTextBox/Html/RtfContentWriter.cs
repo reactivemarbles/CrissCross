@@ -14,7 +14,7 @@ namespace CrissCross.Avalonia.UI.Controls;
 #endif
 
 /// <summary>Writes scoped RTF from the rich editor's HTML document representation.</summary>
-internal sealed class RtfContentWriter
+internal sealed partial class RtfContentWriter
 {
     /// <summary>The number of points in one CSS pixel.</summary>
     private const double PointsPerPixel = 0.75;
@@ -144,20 +144,6 @@ internal sealed class RtfContentWriter
     /// <param name = "tag">The HTML tag.</param>
     /// <returns>Whether the element requires unsupported content.</returns>
     private static bool IsUnsupported(string tag) => tag is "iframe" or "object" or "embed" or "video" or "audio" or "svg" or "canvas";
-
-    /// <summary>Validates table cell spans.</summary>
-    /// <param name = "cell">The source cell.</param>
-    private static void ValidateCell(IElement cell)
-    {
-        var colspan = cell.GetAttribute("colspan");
-        var rowspan = cell.GetAttribute("rowspan");
-        if (!((colspan is not null && colspan != "1") || (rowspan is not null && rowspan != "1")))
-        {
-            return;
-        }
-
-        throw new NotSupportedException("Merged table cells cannot be exported to RTF.");
-    }
 
     /// <summary>Writes the registered fonts.</summary>
     /// <param name = "output">The document buffer.</param>
@@ -301,7 +287,7 @@ internal sealed class RtfContentWriter
         _ = _body.Append("\\pard");
         if (inTable)
         {
-            _ = _body.Append("\\intbl");
+            _ = _body.Append("\\intbl\\itap").Append(_tableDepth);
         }
 
         if (styles.TryGetValue("text-align", out var alignment))
@@ -506,58 +492,5 @@ internal sealed class RtfContentWriter
         }
 
         _ = _body.Append('\\').Append(word).Append((int)Math.Round(points * TwipsPerPoint));
-    }
-
-    /// <summary>Writes a table with unmerged cells.</summary>
-    /// <param name = "table">The source table.</param>
-    /// <param name = "inTable">Whether this table is nested.</param>
-    /// <returns>Whether the element was handled.</returns>
-    private bool WriteTable(IElement table, bool inTable)
-    {
-        if (inTable)
-        {
-            throw new NotSupportedException("Nested HTML tables cannot be exported to RTF.");
-        }
-
-        _ = _body.Append("\\par ");
-        foreach (var row in table.QuerySelectorAll("tr"))
-        {
-            WriteTableRow(row);
-        }
-
-        _ = _body.Append("\\pard ");
-        return true;
-    }
-
-    /// <summary>Writes a table row and its cell boundaries.</summary>
-    /// <param name = "row">The source row.</param>
-    private void WriteTableRow(IElement row)
-    {
-        var cells = new List<IElement>();
-        foreach (var child in row.Children)
-        {
-            if (child.LocalName is "td" or "th")
-            {
-                cells.Add(child);
-            }
-        }
-
-        _ = _body.Append("\\trowd");
-        for (var index = 0; index < cells.Count; index++)
-        {
-            ValidateCell(cells[index]);
-            _ = _body.Append("\\cellx").Append((index + 1) * CellWidth);
-        }
-
-        _ = _body.Append(' ');
-        foreach (var cell in cells)
-        {
-            _ = _body.Append("{\\pard\\intbl ");
-            WriteFormatting(cell, ReadStyles(cell));
-            WriteChildren(cell, true);
-            _ = _body.Append("\\cell}");
-        }
-
-        _ = _body.Append("\\row ");
     }
 }

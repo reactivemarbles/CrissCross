@@ -125,11 +125,11 @@ public sealed class RtfDocumentConverterTests
     public async Task ToRtf_RemoteImage_ThrowsNotSupportedException() =>
         await Assert.That(static () => RtfDocumentConverter.ToRtf("<img src='https://example.com/a.png'>")).Throws<NotSupportedException>();
 
-    /// <summary>Allows richer HTML clipboard content when RTF cannot preserve merged cells.</summary>
+    /// <summary>Includes native merged-cell controls in optional RTF clipboard output.</summary>
     /// <returns>The test execution task.</returns>
     [Test]
-    public async Task TryToRtf_MergedTable_ReturnsNull() =>
-        await Assert.That(RtfDocumentConverter.TryToRtf("<table><tr><td colspan='2'>merged</td></tr></table>")).IsNull();
+    public async Task TryToRtf_MergedTable_PreservesMergeControls() =>
+        await Assert.That(RtfDocumentConverter.TryToRtf("<table><tr><td colspan='2'>merged</td></tr></table>")).Contains("\\clmgf");
 
     /// <summary>Reports malformed image data during optional RTF export.</summary>
     /// <returns>The test execution task.</returns>

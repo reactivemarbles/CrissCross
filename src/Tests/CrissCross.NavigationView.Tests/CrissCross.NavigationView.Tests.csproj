@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" />
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="ReactiveUI.Core" />
     <ProjectReference Include="..\..\CrissCross.WPF.UI\CrissCross.WPF.UI.csproj" />
