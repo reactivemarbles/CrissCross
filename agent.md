@@ -95,28 +95,30 @@ This repo uses **Microsoft Testing Platform (MTP)** with **TUnit**. This differs
 ```powershell
 cd src
 
-# Run all tests
-dotnet test --solution CrissCross.slnx -c Release
+# Run all test projects with coverage, building each before execution
+../build/Test.ps1 -Configuration Release
 
 # Run tests for a specific project
 dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj
 
-# Run with code coverage (Microsoft Code Coverage)
-dotnet test --solution CrissCross.slnx --coverage --coverage-output-format cobertura
+# Run one project with code coverage (Microsoft Code Coverage)
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj --coverage --coverage-output-format cobertura
 
 # Detailed output (place BEFORE --)
-dotnet test --solution CrissCross.slnx -- --output Detailed
-dotnet test --solution CrissCross.slnx --coverage --coverage-output-format cobertura -- --report-trx --output Detailed
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --output Detailed
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj --coverage --coverage-output-format cobertura -- --report-trx --output Detailed
 
 # List tests
 dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --list-tests
 
 # Fail fast
-dotnet test --solution CrissCross.slnx -- --fail-fast
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --fail-fast
 
 # Limit parallelism if needed (even though repo defaults non-parallel)
-dotnet test --solution CrissCross.slnx -- --maximum-parallel-tests 4
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --maximum-parallel-tests 4
 ```
+
+The shared runner discovers every `*.Tests.csproj` under `src/Tests`, runs projects sequentially, and writes coverage beneath `src/TestResults/<project-name>`. Do not run solution-wide test discovery against `CrissCross.slnx`: its example apps include device targets that require device selection before tests can start.
 
 ### TUnit `--treenode-filter` Syntax
 
@@ -135,7 +137,7 @@ dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --treeno
 dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --treenode-filter "/*/MyNamespace/*/*"
 
 # Filter by property (e.g., Category)
-dotnet test --solution CrissCross.slnx -- --treenode-filter "/*/*/*/*[Category=Integration]"
+dotnet test --project tests/CrissCross.Tests/CrissCross.Tests.csproj -- --treenode-filter "/*/*/*/*[Category=Integration]"
 ```
 
 See: [https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test?tabs=dotnet-test-with-mtp](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test?tabs=dotnet-test-with-mtp)

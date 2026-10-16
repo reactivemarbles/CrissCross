@@ -2078,6 +2078,8 @@ Use this checklist when adding or verifying package parity:
 
 Issues and PRs are welcome. Please include platform, .NET version, and a minimal repro where applicable.
 
+On Windows with the required SDKs and workloads installed, run `pwsh ./build/Test.ps1 -Configuration Release` from the repository root to build and execute every TUnit test project with coverage. The runner selects projects under `src/Tests` so device example apps do not participate in test discovery. Results are written under `src/TestResults/<project-name>`.
+
 ---
 
 ## License
