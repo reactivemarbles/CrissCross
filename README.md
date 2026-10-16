@@ -794,6 +794,8 @@ host.Navigate(new HomeViewModel());
 
 `CrissCross.WPF.UI` is the primary themed UI package. It contains WPF control wrappers, Fluent-style shell controls, feature controls backed by core state models, resource dictionaries, services, and theme managers.
 
+`ApplicationAccentColorManager` shares frozen snapshots for `SystemAccentBrush`, `PrimaryAccentBrush`, `SecondaryAccentBrush`, and `TertiaryAccentBrush`. Repeated reads reuse the same brush until the corresponding resource color changes. Use `brush.Clone()` when you need a mutable copy. This behavior also applies to `CrissCross.WPF.UI.Reactive`.
+
 ### WPF UI XML Namespace
 
 Use the CrissCross UI namespace for CrissCross themed controls:
