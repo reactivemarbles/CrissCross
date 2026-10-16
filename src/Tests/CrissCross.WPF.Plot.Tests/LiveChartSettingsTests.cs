@@ -5,6 +5,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Threading;
@@ -26,6 +27,45 @@ namespace CrissCross.WPF.Plot.Tests;
 [NotInParallel]
 public sealed class LiveChartSettingsTests
 {
+    /// <summary>The series name shared by both legends.</summary>
+    private const string LegendSeriesName = "Motor current";
+
+    /// <summary>The current used by the legend source.</summary>
+    private const double LegendCurrent = 112;
+
+    /// <summary>The number of chart legends.</summary>
+    private const int LegendCount = 2;
+
+    /// <summary>Reads both legend item providers even when one legend is unrealized.</summary>
+    /// <returns>A task representing the assertions.</returns>
+    [Test]
+    public async Task Legend_UnrealizedSeries_ExposesNamesAndIds()
+    {
+        var observed = await OnSta(static chart =>
+        {
+            chart.DataWithTimeStamp = (LegendSeriesName, [LegendCurrent], [DateTime.UnixEpoch.ToOADate()], 0);
+            Dispatcher.CurrentDispatcher.Invoke(static () => { }, DispatcherPriority.ApplicationIdle);
+            var series = chart.ViewModel!.PlotLinesCollectionUI.ToArray()[0];
+            var results = new List<(string Name, string Id)>();
+            foreach (var legend in new[] { chart.TopLegendViewer, chart.RightLegendViewer })
+            {
+                var items = FindLegendItems((DependencyObject)legend.Content)!;
+
+                var peer = new LegendAutomationPeer((ListBox)items);
+                var item = peer.CreateItem(series);
+                results.Add((item.GetName(), item.GetAutomationId()));
+            }
+
+            return results;
+        });
+        await Assert.That(observed.Count).IsEqualTo(LegendCount);
+        foreach (var item in observed)
+        {
+            await Assert.That(item.Name).IsEqualTo(LegendSeriesName);
+            await Assert.That(item.Id).IsEqualTo(LegendSeriesName);
+        }
+    }
+
     /// <summary>Verifies consecutive settings clicks close and reopen the popup.</summary>
     /// <returns>The asynchronous test.</returns>
     [Test]
@@ -116,6 +156,27 @@ public sealed class LiveChartSettingsTests
         await Assert.That(observed.Restored).IsEqualTo(observed.initial);
         await Assert.That(observed.toggledState).IsNotEqualTo(observed.initialState);
         await Assert.That(observed.RestoredState).IsEqualTo(observed.initialState);
+    }
+
+    /// <summary>Finds the series items control within a legend.</summary>
+    /// <param name="root">The legend content.</param>
+    /// <returns>The series items control.</returns>
+    private static ItemsControl? FindLegendItems(DependencyObject root)
+    {
+        if (root is ItemsControl items)
+        {
+            return items;
+        }
+
+        foreach (var child in LogicalTreeHelper.GetChildren(root))
+        {
+            if (child is DependencyObject dependency && FindLegendItems(dependency) is { } result)
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>Reads the actual plot state represented by a toggle action.</summary>
@@ -256,5 +317,15 @@ public sealed class LiveChartSettingsTests
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start();
         return completion.Task;
+    }
+
+    /// <summary>Exposes the standard item peer factory for unrealized-container checks.</summary>
+    /// <param name="owner">The legend list.</param>
+    private sealed class LegendAutomationPeer(ListBox owner) : ListBoxAutomationPeer(owner)
+    {
+        /// <summary>Creates the standard peer for a legend series.</summary>
+        /// <param name="item">The series.</param>
+        /// <returns>The item peer.</returns>
+        internal ItemAutomationPeer CreateItem(object item) => CreateItemAutomationPeer(item);
     }
 }

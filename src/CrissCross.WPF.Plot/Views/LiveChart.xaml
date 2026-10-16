@@ -15,6 +15,38 @@
   x:TypeArguments="local:LiveChartViewModel"
   mc:Ignorable="d"
 >
+  <FrameworkElement.Resources>
+    <Style x:Key="LegendItemStyle" TargetType="ListBoxItem">
+      <Setter Property="AutomationProperties.AutomationId" Value="{Binding ChartSettings.ItemName}" />
+      <Setter Property="AutomationProperties.Name" Value="{Binding ChartSettings.ItemName}" />
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="IsTabStop" Value="False" />
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <ContentPresenter />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="LegendStyle" TargetType="ListBox">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Focusable" Value="False" />
+      <Setter Property="IsTabStop" Value="False" />
+      <Setter Property="ItemContainerStyle" Value="{StaticResource LegendItemStyle}" />
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBox">
+            <ItemsPresenter />
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </FrameworkElement.Resources>
   <Grid x:Name="LayoutRoot">
     <Grid.RowDefinitions>
       <RowDefinition Height="auto" />
@@ -46,13 +78,17 @@
     <ScrollViewer Name="TopLegend" Grid.Row="1" Grid.Column="0" VerticalScrollBarVisibility="Auto">
       <StackPanel>
         <WrapPanel x:Name="WarpTop1" Visibility="Visible">
-          <ItemsControl Name="Itemscontrol1" ItemsSource="{Binding PlotLinesCollectionUI}">
-            <ItemsControl.ItemsPanel>
+          <ListBox
+            Name="Itemscontrol1"
+            ItemsSource="{Binding ElementName=userControl, Path=ViewModel.PlotLinesCollectionUI}"
+            Style="{StaticResource LegendStyle}"
+          >
+            <ListBox.ItemsPanel>
               <ItemsPanelTemplate>
                 <WrapPanel Orientation="Horizontal" />
               </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal">
                   <CheckBox
@@ -71,8 +107,8 @@
                   />
                 </StackPanel>
               </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </WrapPanel>
       </StackPanel>
     </ScrollViewer>
@@ -82,13 +118,16 @@
       <StackPanel>
         <!--  MaxHeight="50"  -->
         <WrapPanel Visibility="Visible">
-          <ItemsControl ItemsSource="{Binding PlotLinesCollectionUI}">
-            <ItemsControl.ItemsPanel>
+          <ListBox
+            ItemsSource="{Binding ElementName=userControl, Path=ViewModel.PlotLinesCollectionUI}"
+            Style="{StaticResource LegendStyle}"
+          >
+            <ListBox.ItemsPanel>
               <ItemsPanelTemplate>
                 <WrapPanel Orientation="Vertical" />
               </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal">
                   <CheckBox
@@ -107,8 +146,8 @@
                   />
                 </StackPanel>
               </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </WrapPanel>
       </StackPanel>
     </ScrollViewer>
