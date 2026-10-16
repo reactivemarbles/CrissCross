@@ -60,15 +60,9 @@ jobs:
 
       
       - name: Tests + Coverage (MTP)
-        shell: bash
+        shell: pwsh
         working-directory: 'src'
-        run: |
-          dotnet test --solution CrissCross.slnx \
-            --configuration Release \
-            --max-parallel-test-modules 1 \
-            --coverage \
-            --coverage-output-format cobertura \
-            --results-directory ./TestResults
+        run: ../build/Test.ps1 -Configuration Release
 
       - name: Upload coverage
         uses: actions/upload-artifact@v7

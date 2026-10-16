@@ -77,6 +77,18 @@ public static class ApplicationAccentColorManager
     /// <summary>Provides the tertiary accent brush opacity.</summary>
     private const double TertiaryAccentBrushOpacity = 0.8D;
 
+    /// <summary>The cached system accent brush.</summary>
+    private static SolidColorBrush? _systemAccentBrush;
+
+    /// <summary>The cached primary accent brush.</summary>
+    private static SolidColorBrush? _primaryAccentBrush;
+
+    /// <summary>The cached secondary accent brush.</summary>
+    private static SolidColorBrush? _secondaryAccentBrush;
+
+    /// <summary>The cached tertiary accent brush.</summary>
+    private static SolidColorBrush? _tertiaryAccentBrush;
+
     /// <summary>Gets the SystemAccentColor.</summary>
     public static Color SystemAccent
     {
@@ -89,7 +101,8 @@ public static class ApplicationAccentColorManager
     }
 
     /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColor.</summary>
-    public static Brush SystemAccentBrush => new SolidColorBrush(SystemAccent);
+    /// <remarks>The frozen brush is shared until its color changes. Clone it before modifying it.</remarks>
+    public static Brush SystemAccentBrush => GetAccentBrush(SystemAccent, ref _systemAccentBrush);
 
     /// <summary>Gets the SystemAccentColorPrimary.</summary>
     public static Color PrimaryAccent
@@ -103,7 +116,8 @@ public static class ApplicationAccentColorManager
     }
 
     /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorPrimary.</summary>
-    public static Brush PrimaryAccentBrush => new SolidColorBrush(PrimaryAccent);
+    /// <remarks>The frozen brush is shared until its color changes. Clone it before modifying it.</remarks>
+    public static Brush PrimaryAccentBrush => GetAccentBrush(PrimaryAccent, ref _primaryAccentBrush);
 
     /// <summary>Gets the SystemAccentColorSecondary.</summary>
     public static Color SecondaryAccent
@@ -117,7 +131,8 @@ public static class ApplicationAccentColorManager
     }
 
     /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorSecondary.</summary>
-    public static Brush SecondaryAccentBrush => new SolidColorBrush(SecondaryAccent);
+    /// <remarks>The frozen brush is shared until its color changes. Clone it before modifying it.</remarks>
+    public static Brush SecondaryAccentBrush => GetAccentBrush(SecondaryAccent, ref _secondaryAccentBrush);
 
     /// <summary>Gets the SystemAccentColorTertiary.</summary>
     public static Color TertiaryAccent
@@ -131,7 +146,8 @@ public static class ApplicationAccentColorManager
     }
 
     /// <summary>Gets the <see cref="Brush"/> of the SystemAccentColorTertiary.</summary>
-    public static Brush TertiaryAccentBrush => new SolidColorBrush(TertiaryAccent);
+    /// <remarks>The frozen brush is shared until its color changes. Clone it before modifying it.</remarks>
+    public static Brush TertiaryAccentBrush => GetAccentBrush(TertiaryAccent, ref _tertiaryAccentBrush);
 
     /// <summary>Changes the color accents of the application based on the color entered.</summary>
     /// <param name="systemAccent">Primary accent color.</param>
@@ -189,6 +205,24 @@ public static class ApplicationAccentColorManager
     /// <summary>Gets current Desktop Window Manager colorization color.</summary>
     /// <returns>A color.</returns>
     public static Color GetColorizationColor() => UnsafeNativeMethods.GetDwmColor();
+
+    /// <summary>Reuses a frozen brush while its accent color remains unchanged.</summary>
+    /// <param name="color">The accent color to capture.</param>
+    /// <param name="cachedBrush">The most recent snapshot for this accent.</param>
+    /// <returns>A frozen snapshot that can safely be shared across callers and threads.</returns>
+    private static SolidColorBrush GetAccentBrush(Color color, ref SolidColorBrush? cachedBrush)
+    {
+        var snapshot = Volatile.Read(ref cachedBrush);
+        if (snapshot is not null && snapshot.Color == color)
+        {
+            return snapshot;
+        }
+
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        _ = Interlocked.Exchange(ref cachedBrush, brush);
+        return brush;
+    }
 
     /// <summary>Updates application resources.</summary>
     /// <param name="systemAccent">The systemAccent value.</param>

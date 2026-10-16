@@ -1,10 +1,8 @@
 using System;
 using CP.BuildTools;
-using Microsoft.Build.Construction;
 using Nuke.Common;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.MSBuild;
@@ -17,7 +15,6 @@ sealed partial class Build : NukeBuild
 
     private static AbsolutePath SolutionFile => RootDirectory / "src" / "CrissCross.slnx";
 
-    readonly Solution Solution = SolutionFile.ReadSolution();
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
@@ -42,14 +39,15 @@ sealed partial class Build : NukeBuild
         .DependsOn(Clean)
         .Executes(() =>
         {
-            DotNetWorkloadRestore(s => s.DisableSkipManifestUpdate().SetProject(Solution));
-            return DotNetRestore(s => s.SetProjectFile(Solution));
+            DotNetWorkloadRestore(s => s.DisableSkipManifestUpdate().SetProject(SolutionFile));
+            return DotNetRestore(s => s.SetProjectFile(SolutionFile));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore, Print)
         .Executes(() => DotNetBuild(s => s
-                .SetProjectFile(Solution)
+                .SetProjectFile(SolutionFile)
                 .SetConfiguration(Configuration)
+                .EnableTreatWarningsAsErrors()
                 .SetNoRestore(true)));
 }
