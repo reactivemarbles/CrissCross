@@ -8,7 +8,7 @@
     <ReactiveUIVersion>26.0.1</ReactiveUIVersion>
     <ReactiveUIBindingVersion>9.1.0</ReactiveUIBindingVersion>
     <ReactiveUIPrimitivesVersion>9.0.0</ReactiveUIPrimitivesVersion>
-    <DotNetVersion>10.0.12</DotNetVersion>
+    <DotNetVersion>10.0.13</DotNetVersion>
     <DotNet11Version>11.0.0-rc.2.26504.105</DotNet11Version>
     <ExtensionsHostingVersion>6.1.1</ExtensionsHostingVersion>
     <ReactiveListVersion>5.5.0</ReactiveListVersion>
