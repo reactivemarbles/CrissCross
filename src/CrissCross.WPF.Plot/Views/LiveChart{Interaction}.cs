@@ -19,6 +19,15 @@ namespace CrissCross.WPF.Plot;
 /// <summary>Interaction logic for WPF Chart AICS.</summary>
 public partial class LiveChart
 {
+    /// <summary>The exclusive lower bound accepted by OLE Automation date conversion.</summary>
+    private const double MinimumOADate = -657_435;
+
+    /// <summary>Reports whether an X coordinate can be represented as a date.</summary>
+    /// <param name="coordinate">The OLE Automation date coordinate.</param>
+    /// <returns>Whether the coordinate is within the supported date range.</returns>
+    private static bool IsSupportedOADate(double coordinate) =>
+        coordinate > MinimumOADate && coordinate <= DateTime.MaxValue.ToOADate();
+
     /// <summary>Handles the ConfigureReactivePlotXAxis operation.</summary>
     /// <param name="sources">The sources value.</param>
     private void ConfigureReactivePlotXAxis(IEnumerable<IReactivePlotSource> sources)
@@ -83,6 +92,11 @@ public partial class LiveChart
             ViewModel.YAxisList[0]);
         var horizontalCoordinate = mouseLocation.X;
         var verticalCoordinate = mouseLocation.Y;
+        if (ViewModel.IsXAxisDateTime && !IsSupportedOADate(horizontalCoordinate))
+        {
+            return;
+        }
+
         var text = ViewModel.IsXAxisDateTime
             ? $"X : {DateTime.FromOADate(horizontalCoordinate).ToLongTimeString()}\nY : {verticalCoordinate:F2}"
             : $"X : {horizontalCoordinate:F2}\nY : {verticalCoordinate:F2}";
@@ -154,6 +168,11 @@ public partial class LiveChart
         }
         else if (_plottableBeingDragged is VerticalLine verticalLine)
         {
+            if (ViewModel.IsXAxisDateTime && !IsSupportedOADate(rect.HorizontalCenter))
+            {
+                return;
+            }
+
             verticalLine.X = rect.HorizontalCenter;
             verticalLine.Text = ViewModel.IsXAxisDateTime
                 ? DateTime.FromOADate(Convert.ToDouble(verticalLine.X)).ToLongTimeString()
@@ -173,6 +192,12 @@ public partial class LiveChart
             mousePixel,
             ViewModel.XAxis1,
             ViewModel.YAxisList[0]);
+        if (ViewModel.IsXAxisDateTime && !IsSupportedOADate(coordinates.X))
+        {
+            ViewModel.WpfPlot1vm.SetCurrentValue(FrameworkElement.ToolTipProperty, null);
+            return;
+        }
+
         var horizontalText = ViewModel.IsXAxisDateTime
             ? DateTime.FromOADate(coordinates.X).ToString("G", CultureInfo.CurrentCulture)
             : coordinates.X.ToString("F3", CultureInfo.CurrentCulture);

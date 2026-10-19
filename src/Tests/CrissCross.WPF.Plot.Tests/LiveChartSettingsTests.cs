@@ -2,12 +2,14 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Threading;
 #if REACTIVELIST_REACTIVE
 using CrissCross.Reactive.WPF.Plot;
@@ -35,6 +37,9 @@ public sealed class LiveChartSettingsTests
 
     /// <summary>The number of chart legends.</summary>
     private const int LegendCount = 2;
+
+    /// <summary>The bounded wait for asynchronous collection notifications.</summary>
+    private const int CollectionNotificationTimeoutSeconds = 5;
 
     /// <summary>Reads both legend item providers even when one legend is unrealized.</summary>
     /// <returns>A task representing the assertions.</returns>
@@ -64,6 +69,60 @@ public sealed class LiveChartSettingsTests
             await Assert.That(item.Name).IsEqualTo(LegendSeriesName);
             await Assert.That(item.Id).IsEqualTo(LegendSeriesName);
         }
+    }
+
+    /// <summary>Verifies chart collection notifications return to their owning dispatcher.</summary>
+    /// <returns>A task representing the asynchronous test.</returns>
+    [Test]
+    public async Task ChartCollections_Notification_UsesOwningDispatcher()
+    {
+        var observed = await OnSta(static chart =>
+        {
+            var dispatcher = Dispatcher.CurrentDispatcher;
+            var frame = new DispatcherFrame();
+            var received = false;
+            var onDispatcher = false;
+            void OnChanged(object? sender, NotifyCollectionChangedEventArgs args)
+            {
+                _ = sender;
+                if (args.Action != NotifyCollectionChangedAction.Reset)
+                {
+                    return;
+                }
+
+                var notificationOnDispatcher = dispatcher.CheckAccess();
+                _ = dispatcher.BeginInvoke(() =>
+                {
+                    received = true;
+                    onDispatcher = notificationOnDispatcher;
+                    frame.Continue = false;
+                });
+            }
+
+            chart.ViewModel!.Axes.Add(chart.ViewModel.YAxisList[0]);
+            var view = CollectionViewSource.GetDefaultView(chart.ViewModel.Axes);
+            var initiallyEmpty = view.IsEmpty;
+            var collection = (INotifyCollectionChanged)view;
+            collection.CollectionChanged += OnChanged;
+            var timeout = new DispatcherTimer(DispatcherPriority.Send, dispatcher) { Interval = TimeSpan.FromSeconds(CollectionNotificationTimeoutSeconds) };
+            timeout.Tick += (_, _) => frame.Continue = false;
+            try
+            {
+                timeout.Start();
+                chart.ViewModel.Axes.Clear();
+                Dispatcher.PushFrame(frame);
+                return (received, onDispatcher, initiallyEmpty, ViewEmpty: view.IsEmpty);
+            }
+            finally
+            {
+                timeout.Stop();
+                collection.CollectionChanged -= OnChanged;
+            }
+        });
+        await Assert.That(observed.received).IsTrue();
+        await Assert.That(observed.onDispatcher).IsTrue();
+        await Assert.That(observed.initiallyEmpty).IsFalse();
+        await Assert.That(observed.ViewEmpty).IsTrue();
     }
 
     /// <summary>Verifies consecutive settings clicks close and reopen the popup.</summary>
@@ -274,12 +333,13 @@ public sealed class LiveChartSettingsTests
         {
             T result = default!;
             Exception? failure = null;
-            _ = Dispatcher.CurrentDispatcher;
-            _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
+            var previousContext = SynchronizationContext.Current;
             var previous = RxSchedulers.MainThreadScheduler;
-            RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
             try
             {
+                SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
+                _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
+                RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
                 var chart = new LiveChart { LegendPosition = LegendPosition.Right };
                 chart.ViewModel!.YAxesSetup((["Test"], ["#FFFFFF"]));
                 var window = new Window { Content = chart, ShowInTaskbar = false };
@@ -303,6 +363,7 @@ public sealed class LiveChartSettingsTests
             finally
             {
                 RxSchedulers.MainThreadScheduler = previous;
+                SynchronizationContext.SetSynchronizationContext(previousContext);
             }
 
             if (failure is null)
