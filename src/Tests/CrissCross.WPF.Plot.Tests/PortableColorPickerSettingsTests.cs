@@ -434,9 +434,10 @@ public sealed class PortableColorPickerSettingsTests
             T result = default!;
             Exception? failure = null;
             var previous = RxSchedulers.MainThreadScheduler;
+            var previousContext = SynchronizationContext.Current;
             try
             {
-                _ = Dispatcher.CurrentDispatcher;
+                SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
                 _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
                 RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
                 var chart = new LiveChart { LegendPosition = LegendPosition.Right };
@@ -467,6 +468,7 @@ public sealed class PortableColorPickerSettingsTests
             finally
             {
                 RxSchedulers.MainThreadScheduler = previous;
+                SynchronizationContext.SetSynchronizationContext(previousContext);
             }
 
             if (failure is null)
@@ -497,9 +499,10 @@ public sealed class PortableColorPickerSettingsTests
             TResult result = default!;
             Exception? failure = null;
             var previous = RxSchedulers.MainThreadScheduler;
+            var previousContext = SynchronizationContext.Current;
             try
             {
-                _ = Dispatcher.CurrentDispatcher;
+                SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
                 _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
                 RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
                 var chart = new LiveChart { LegendPosition = LegendPosition.Right };
@@ -530,6 +533,7 @@ public sealed class PortableColorPickerSettingsTests
             finally
             {
                 RxSchedulers.MainThreadScheduler = previous;
+                SynchronizationContext.SetSynchronizationContext(previousContext);
             }
 
             if (failure is null)

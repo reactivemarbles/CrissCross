@@ -117,17 +117,19 @@ public sealed class ReactivePlotExampleCoverageTests
     /// <returns>The observed lifecycle state.</returns>
     private static LiveChartLifecycleSnapshot ExerciseLiveChartCrosshairLifecycle()
     {
-        _ = Dispatcher.CurrentDispatcher;
-        _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
+        var previousContext = SynchronizationContext.Current;
         var previousMainThreadScheduler = RxSchedulers.MainThreadScheduler;
-        RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
         try
         {
+            SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(Dispatcher.CurrentDispatcher));
+            _ = RxAppBuilder.CreateReactiveUIBuilder().WithWpf().BuildApp();
+            RxSchedulers.MainThreadScheduler = ImmediateScheduler.Instance;
             return ExerciseLiveChartCrosshairLifecycleSynchronously();
         }
         finally
         {
             RxSchedulers.MainThreadScheduler = previousMainThreadScheduler;
+            SynchronizationContext.SetSynchronizationContext(previousContext);
         }
     }
 
