@@ -128,6 +128,6 @@
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" Condition="!$(TargetFramework.StartsWith('net10')) or '$(UseMaui)' != 'true'" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.9.2.1" Condition="$(TargetFramework.StartsWith('net10')) and '$(UseMaui)' == 'true'" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.11.0.1" Condition="!$(TargetFramework.StartsWith('net10')) or '$(UseMaui)' != 'true'" />
-    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.9.2.1" Condition="$(TargetFramework.StartsWith('net10')) and '$(UseMaui)' == 'true'" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.11.0.1" Condition="$(TargetFramework.StartsWith('net10')) and '$(UseMaui)' == 'true'" />
   </ItemGroup>
 </Project>
