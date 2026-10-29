@@ -94,7 +94,7 @@
     <PackageVersion Include="CP.Extensions.Hosting.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.MainUIThread" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Xaml.Converters" Version="2.0.0" />
-    <PackageVersion Include="Markdig" Version="1.4.1" />
+    <PackageVersion Include="Markdig" Version="1.4.2" />
     <PackageVersion Include="ReactiveList" Version="$(ReactiveListVersion)" />
     <PackageVersion Include="ReactiveList.Reactive" Version="$(ReactiveListVersion)" />
     <PackageVersion Include="ScottPlot.WPF" Version="5.1.59" />
