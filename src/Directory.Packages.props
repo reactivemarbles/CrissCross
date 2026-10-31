@@ -65,11 +65,11 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-rc.2.26505.5" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.110" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.120" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <!-- Compatibility has no .NET 11 RC release; ScottPlot.Maui still requires the last published preview. -->
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.110" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.120" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
