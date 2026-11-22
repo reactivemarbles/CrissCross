@@ -12,7 +12,7 @@
     <DotNet11Version>11.0.0-rc.2.26504.105</DotNet11Version>
     <ExtensionsHostingVersion>6.1.1</ExtensionsHostingVersion>
     <ReactiveListVersion>5.5.0</ReactiveListVersion>
-    <RoslynAnalyzers>5.1.4</RoslynAnalyzers>
+    <RoslynAnalyzers>5.2.0</RoslynAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
