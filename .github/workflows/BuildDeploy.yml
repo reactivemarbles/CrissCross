@@ -254,7 +254,7 @@ jobs:
       - name: Setup .NET for package verification
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
       - name: Setup ssign package signing
         id: signing-tools
