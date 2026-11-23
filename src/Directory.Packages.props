@@ -7,7 +7,7 @@
     <ReactiveUIVersion>28.0.0</ReactiveUIVersion>
     <ReactiveUIBindingVersion>12.1.0</ReactiveUIBindingVersion>
     <ReactiveUIPrimitivesVersion>10.2.3</ReactiveUIPrimitivesVersion>
-    <DotNet10Version>10.0.15</DotNet10Version>
+    <DotNet10Version>11.0.0</DotNet10Version>
     <DotNet11Version>11.0.0</DotNet11Version>
     <ExtensionsHostingVersion>7.0.1</ExtensionsHostingVersion>
     <ReactiveListVersion>6.0.0</ReactiveListVersion>
@@ -64,7 +64,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.10" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.10" Condition="$(TargetFramework.StartsWith('net10'))" />
     <!-- Compatibility has no .NET 11 stable release; ScottPlot.Maui still requires the last published preview. -->
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
