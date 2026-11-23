@@ -29,8 +29,8 @@ public partial class FirstView
         _ = this.WhenActivated(d =>
         {
             ViewModel ??= AppLocator.Current.GetService<FirstViewModel>();
-            _ = this.BindCommand(ViewModel, vm => vm.GotoMain, v => v.GotoMain).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.GotoFirst, v => v.GotoFirst).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoMain, static v => v.GotoMain).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.GotoFirst, static v => v.GotoFirst).DisposeWith(d);
         });
     }
 }

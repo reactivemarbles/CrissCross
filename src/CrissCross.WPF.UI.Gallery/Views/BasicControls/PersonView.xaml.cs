@@ -46,5 +46,5 @@ public partial class PersonView : IViewFor<Person>
     /// <summary>Binds the active view model to the view.</summary>
     /// <param name="disposables">The activation disposables.</param>
     private void BindViewModel(CompositeDisposable disposables) =>
-        this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PersonName.Text).DisposeWith(disposables);
+        this.OneWayBind(ViewModel, static vm => vm.DisplayName, static v => v.PersonName.Text).DisposeWith(disposables);
 }

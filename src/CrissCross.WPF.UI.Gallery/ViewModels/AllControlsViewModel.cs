@@ -46,7 +46,7 @@ public class AllControlsViewModel : RxObject
 
         Populate();
 
-        _ = this.WhenAnyValue(x => x.FilterText)
+        _ = this.WhenAnyValue(static x => x.FilterText)
             .Throttle(TimeSpan.FromMilliseconds(FilterThrottleMilliseconds))
             .ObserveOn(RxSchedulers.MainThreadScheduler)
             .Subscribe(_ => FilteredControls.Refresh());

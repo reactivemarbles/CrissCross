@@ -2,7 +2,7 @@
   <Import Project="..\ReactiveShim.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>$(CrissCrossWinTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks>$(CrissCrossWpfPlotTargetFrameworks)</TargetFrameworks>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <ImplicitUsings>enable</ImplicitUsings>

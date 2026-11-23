@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="ReactiveUI.WPF" />
     <PackageReference Include="Microsoft.Web.WebView2" />
+    <Using Include="ReactiveUI.Binding" />
   </ItemGroup>
 
   <ItemGroup>

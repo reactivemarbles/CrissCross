@@ -66,9 +66,9 @@ public partial class ReactiveTreeView : IViewFor<ReactiveTreeViewModel>
     /// <summary>Connects the tree items to the active view model.</summary>
     /// <param name="disposables">The activation disposables.</param>
     private void OnActivated(ActivationDisposable disposables) =>
-        this.WhenAnyValue(v => v.ViewModel)
+        this.WhenAnyValue(static v => v.ViewModel)
             .Where(static vm => vm is not null)
-            .Select(static vm => vm!.WhenAnyValue(x => x.Children))
+            .Select(static vm => vm!.WhenAnyValue(static x => x.Children))
             .SwitchTo()
             .SelectMany(static children => children.CurrentItems)
             .Subscribe(items => ItemsSource = items)

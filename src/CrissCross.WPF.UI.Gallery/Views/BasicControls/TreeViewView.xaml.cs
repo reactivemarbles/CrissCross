@@ -70,19 +70,19 @@ public partial class TreeViewView : IViewFor<TreeViewViewModel>
         _ = this.WhenActivated(d =>
         {
             // Bind viewmodel to Treeview
-            _ = this.OneWayBind(ViewModel, vm => vm.Family, v => v.FamilyTree.ItemsSource).DisposeWith(d);
-            _ = this.WhenAnyValue(x => x.FamilyTree.SelectedItem)
-                .BindTo(this, x => x.ViewModel!.SelectedItem)
+            _ = this.OneWayBind(ViewModel, static vm => vm.Family, static v => v.FamilyTree.ItemsSource).DisposeWith(d);
+            _ = this.WhenAnyValue(static x => x.FamilyTree.SelectedItem)
+                .BindTo(this, static x => x.ViewModel!.SelectedItem)
                 .DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.NewName, v => v.NewName.Text).DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.PetName, v => v.PetName.Text).DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.SelectedElement, v => v.Selected.Text).DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.LastSelectedElement, v => v.LastSelected.Text).DisposeWith(d);
-            _ = this.BindCommand(ViewModel, vm => vm.AddPerson, v => v.AddPerson);
-            _ = this.BindCommand(ViewModel, vm => vm.AddPet, v => v.AddPet);
-            _ = this.BindCommand(ViewModel, vm => vm.Collapse, v => v.Collapse);
-            _ = this.BindCommand(ViewModel, vm => vm.Expand, v => v.Expand);
-            _ = this.BindCommand(ViewModel, vm => vm.Remove, v => v.Remove);
+            _ = this.Bind(ViewModel, static vm => vm.NewName, static v => v.NewName.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.PetName, static v => v.PetName.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.SelectedElement, static v => v.Selected.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.LastSelectedElement, static v => v.LastSelected.Text).DisposeWith(d);
+            _ = this.BindCommand(ViewModel, static vm => vm.AddPerson, static v => v.AddPerson);
+            _ = this.BindCommand(ViewModel, static vm => vm.AddPet, static v => v.AddPet);
+            _ = this.BindCommand(ViewModel, static vm => vm.Collapse, static v => v.Collapse);
+            _ = this.BindCommand(ViewModel, static vm => vm.Expand, static v => v.Expand);
+            _ = this.BindCommand(ViewModel, static vm => vm.Remove, static v => v.Remove);
         });
     }
 }

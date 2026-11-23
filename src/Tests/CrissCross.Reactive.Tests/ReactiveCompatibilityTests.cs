@@ -28,7 +28,7 @@ public sealed class ReactiveCompatibilityTests
         _ = RxAppBuilder.CreateReactiveUIBuilder().WithCoreServices().BuildApp();
         using var viewModel = new TestViewModel();
         var observedValues = new List<int>();
-        var changes = System.Reactive.Linq.Observable.Skip(viewModel.WhenAnyValue(x => x.Value), 1);
+        var changes = System.Reactive.Linq.Observable.Skip(viewModel.WhenAnyValue(static x => x.Value), 1);
         using var subscription = System.Reactive.Linq.Observable
             .Select(changes, static value => value * ProjectionMultiplier)
             .Subscribe(observedValues.Add);

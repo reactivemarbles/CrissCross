@@ -5,6 +5,7 @@
 using Avalonia.Controls;
 using ReactiveUI;
 using ReactiveUI.Avalonia;
+using ReactiveUI.Binding;
 using Splat;
 
 namespace CrissCross.Avalonia.Test.Views;

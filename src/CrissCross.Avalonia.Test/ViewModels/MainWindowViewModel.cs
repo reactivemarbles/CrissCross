@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.Avalonia.Test.Views;
+using ReactiveUI.Binding;
 using Splat;
 
 namespace CrissCross.Avalonia.Test;

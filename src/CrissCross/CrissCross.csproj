@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="ReactiveList" />
+    <Using Include="ReactiveUI.Binding" />
   </ItemGroup>
 
 </Project>

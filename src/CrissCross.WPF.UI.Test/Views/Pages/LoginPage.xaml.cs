@@ -42,10 +42,10 @@ public partial class LoginPage
         _bindings?.Dispose();
         var bindings = new CompositeDisposable();
         _bindings = bindings;
-        _ = ViewModel.WhenAnyValue(x => x.Password)
+        _ = ViewModel.WhenAnyValue(static x => x.Password)
             .Subscribe(password => Password.Password = password ?? string.Empty)
             .DisposeWith(bindings);
-        _ = ViewModel.WhenAnyValue(x => x.Username)
+        _ = ViewModel.WhenAnyValue(static x => x.Username)
             .Subscribe(username => UserName.Text = username)
             .DisposeWith(bindings);
         Password.PasswordChanged += OnPasswordChanged;

@@ -13,7 +13,7 @@
     <Nullable>enable</Nullable>
     <PackageIcon>CrissCross_500.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>Compatability with Net 8/9/10/11 and net472 / net48 / net481</PackageReleaseNotes>
+    <PackageReleaseNotes>Compatability with Net 10 / 11 and net472 / net48 / net481</PackageReleaseNotes>
     <PackageTags>ReactiveUI;Navigation;wpf;avalonia;winforms;maui;xamforms;webview2;rx;reactive;extensions;observable;LINQ;net;netstandard</PackageTags>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -28,10 +28,12 @@
     <!-- Include PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
-    <CrissCrossCoreTargetFrameworks>net8.0;net9.0;net10.0;net11.0</CrissCrossCoreTargetFrameworks>
-    <CrissCrossAvaloniaTargetFrameworks>net8.0;net9.0;net10.0;net11.0</CrissCrossAvaloniaTargetFrameworks>
-    <CrissCrossWinTargetFrameworks>net472;net48;net481;net8.0-windows10.0.19041.0;net9.0-windows10.0.19041.0;net10.0-windows10.0.19041.0;net11.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
-    <CrissCrossWebviewTargetFrameworks>net472;net48;net481;net8.0-windows;net9.0-windows;net10.0-windows;net11.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossCoreTargetFrameworks>net10.0;net11.0</CrissCrossCoreTargetFrameworks>
+    <CrissCrossAvaloniaTargetFrameworks>net10.0;net11.0</CrissCrossAvaloniaTargetFrameworks>
+    <CrissCrossWebviewTargetFrameworks>net47;net471;net472;net48;net481;net10.0-windows;net11.0-windows</CrissCrossWebviewTargetFrameworks>
+    <CrissCrossWinTargetFrameworks>$(CrissCrossWebviewTargetFrameworks);net10.0-windows10.0.19041.0;net11.0-windows10.0.19041.0</CrissCrossWinTargetFrameworks>
+    <!-- SkiaSharp's modern WPF assets require Windows 10 version 19041. -->
+    <CrissCrossWpfPlotTargetFrameworks>net47;net471;net472;net48;net481;net10.0-windows10.0.19041.0;net11.0-windows10.0.19041.0</CrissCrossWpfPlotTargetFrameworks>
   </PropertyGroup>
   <PropertyGroup Condition="$([MSBuild]::IsOsPlatform('Windows'))">
     <CrissCrossCoreTargetFrameworks>$(CrissCrossCoreTargetFrameworks);$(CrissCrossWinTargetFrameworks)</CrissCrossCoreTargetFrameworks>
