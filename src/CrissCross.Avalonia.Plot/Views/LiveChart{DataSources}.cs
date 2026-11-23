@@ -121,7 +121,7 @@ public partial class LiveChart
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
         _crosshairDisposable = this
-            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
+            .WhenAnyValue(static x => x.ViewModel!.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
     }
 
@@ -137,7 +137,7 @@ public partial class LiveChart
         ViewModel?.InitializeAxisLines();
         DisposeCrosshairSubscription();
         _crosshairDisposable = this
-            .WhenAnyValue(x => x.ViewModel!.CrossHairEnabled)
+            .WhenAnyValue(static x => x.ViewModel!.CrossHairEnabled)
             .Subscribe(ApplyCrosshairVisibility);
     }
 

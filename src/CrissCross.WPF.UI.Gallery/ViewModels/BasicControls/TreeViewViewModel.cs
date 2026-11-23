@@ -57,7 +57,7 @@ public class TreeViewViewModel : RxObject
         Remove = ReactiveCommand.Create(static () => { });
         _ = Remove.Subscribe(_ => SelectedItem?.RemoveChild());
         var isAnimalOrPerson = Family.CurrentItems.FlattenAndSelect(rti =>
-            rti.WhenAnyValue(vs => vs.IsSelected)
+            rti.WhenAnyValue(static vs => vs.IsSelected)
                 .Select(x =>
                     (
                         x,

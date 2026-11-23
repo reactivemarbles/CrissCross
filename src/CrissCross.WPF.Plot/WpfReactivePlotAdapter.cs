@@ -636,8 +636,8 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
             _color,
             new SignalUIOptions
             {
-                FixedPoints = _chart.WhenAnyValue(x => x.UseFixedNumberOfPoints),
-                NumberPointsPlotted = _chart.WhenAnyValue(x => x.NumberPointsPlotted),
+                FixedPoints = _chart.WhenAnyValue(static x => x.UseFixedNumberOfPoints),
+                NumberPointsPlotted = _chart.WhenAnyValue(static x => x.NumberPointsPlotted),
                 Ticks = axisKind == PlotXAxisKind.Ticks,
             });
         AddUi();

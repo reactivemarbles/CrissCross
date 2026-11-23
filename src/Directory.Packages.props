@@ -4,15 +4,14 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AvaloniaVersion>12.1.6</AvaloniaVersion>
-    <SplatVersion>20.2.0</SplatVersion>
-    <ReactiveUIVersion>26.0.1</ReactiveUIVersion>
-    <ReactiveUIBindingVersion>9.1.0</ReactiveUIBindingVersion>
-    <ReactiveUIPrimitivesVersion>9.0.0</ReactiveUIPrimitivesVersion>
-    <DotNetVersion>10.0.13</DotNetVersion>
-    <DotNet11Version>11.0.0-rc.2.26504.105</DotNet11Version>
-    <ExtensionsHostingVersion>6.1.1</ExtensionsHostingVersion>
-    <ReactiveListVersion>5.5.0</ReactiveListVersion>
-    <RoslynAnalyzers>5.1.4</RoslynAnalyzers>
+    <ReactiveUIVersion>28.0.0</ReactiveUIVersion>
+    <ReactiveUIBindingVersion>12.1.0</ReactiveUIBindingVersion>
+    <ReactiveUIPrimitivesVersion>10.2.3</ReactiveUIPrimitivesVersion>
+    <DotNet10Version>10.0.15</DotNet10Version>
+    <DotNet11Version>11.0.0</DotNet11Version>
+    <ExtensionsHostingVersion>7.0.1</ExtensionsHostingVersion>
+    <ReactiveListVersion>6.0.0</ReactiveListVersion>
+    <RoslynAnalyzers>5.2.0</RoslynAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,8 +33,8 @@
     <PackageVersion Include="ReactiveUI" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Core" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Reactive" Version="$(ReactiveUIVersion)" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.6" />
-    <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.6" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="12.1.9" />
+    <PackageVersion Include="ReactiveUI.Avalonia.Reactive" Version="12.1.9" />
     <PackageVersion Include="ReactiveUI.Maui" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.Maui.Reactive" Version="$(ReactiveUIVersion)" />
     <PackageVersion Include="ReactiveUI.WinForms" Version="$(ReactiveUIVersion)" />
@@ -59,33 +58,31 @@
 
     <!-- Microsoft Packages -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.0-rc.2.26505.5" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.110" Condition="$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
-    <!-- Compatibility has no .NET 11 RC release; ScottPlot.Maui still requires the last published preview. -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.10" Condition="$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <!-- Compatibility has no .NET 11 stable release; ScottPlot.Maui still requires the last published preview. -->
     <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.110" Condition="$(TargetFramework.StartsWith('net10'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.120" Condition="$(TargetFramework.StartsWith('net9'))" />
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4370.26" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="System.Drawing.Common" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="System.Drawing.Common" Version="$(DotNetVersion)" Condition="!$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Bcl.Memory" Version="$(DotNetVersion)" />
+    <PackageVersion Include="System.Drawing.Common" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
+    <PackageVersion Include="Microsoft.Bcl.Memory" Version="$(DotNet10Version)" />
     <PackageVersion Include="System.Buffers" Version="4.6.1" />
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
 
     <!-- Source Generators (PrivateAssets) -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
-    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="4.2.0" />
+    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="7.1.0" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.10.2" />
+    <PackageVersion Include="AngleSharp" Version="1.10.5" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
@@ -102,14 +99,14 @@
     <PackageVersion Include="ScottPlot.Maui" Version="5.1.59" />
 
     <!-- Polyfill for .NET Framework -->
-    <PackageVersion Include="Polyfill" Version="11.4.5" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="Polyfill" Version="12.0.0" Condition="$(TargetFramework.StartsWith('net4'))" />
 
     <!-- Testing Packages -->
-    <PackageVersion Include="TUnit" Version="1.84.0" Condition="$(IsTestProject)" />
+    <PackageVersion Include="TUnit" Version="1.87.12" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.12.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" Condition="$(IsTestProject)" />
     <PackageVersion Include="PublicApiGenerator" Version="11.5.4" Condition="$(IsTestProject)" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.402" Condition="!$(IsTestProject)" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" Condition="!$(IsTestProject)" />
 
     <PackageVersion Include="MinVer" Version="8.0.0" />
     <PackageVersion Include="StyleSharp.Analyzers" Version="$(RoslynAnalyzers)" />
@@ -125,9 +122,14 @@
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Android" Version="1.12.1" />
     <PackageVersion Include="Xamarin.AndroidX.Compose.Runtime.Annotation.Jvm" Version="1.12.1" />
     <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.3" />
-    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" Condition="!$(TargetFramework.StartsWith('net10')) or '$(UseMaui)' != 'true'" />
-    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" Condition="$(TargetFramework.StartsWith('net10')) and '$(UseMaui)' == 'true'" />
-    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.11.0.1" Condition="!$(TargetFramework.StartsWith('net10')) or '$(UseMaui)' != 'true'" />
-    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.9.2.1" Condition="$(TargetFramework.StartsWith('net10')) and '$(UseMaui)' == 'true'" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Process" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModelSavedState" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.Runtime.Ktx" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Lifecycle.ViewModel.Ktx" Version="2.11.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" Version="1.5.0.1" />
+    <PackageVersion Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1" />
   </ItemGroup>
 </Project>

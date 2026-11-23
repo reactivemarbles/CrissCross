@@ -62,9 +62,9 @@ public partial class MainView : IViewFor<MainViewModel>
         _ = this.WhenActivated(d =>
         {
             // Bind the view model
-            _ = this.Bind(ViewModel, vm => vm.AppXamlSetup, v => v.AppXamlSetup.Text).DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.MainWindowXamlSetup, v => v.MainWindowXamlSetup.Text).DisposeWith(d);
-            _ = this.Bind(ViewModel, vm => vm.MainWindowXamlCsSetup, v => v.MainWindowXamlCsSetup.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.AppXamlSetup, static v => v.AppXamlSetup.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.MainWindowXamlSetup, static v => v.MainWindowXamlSetup.Text).DisposeWith(d);
+            _ = this.Bind(ViewModel, static vm => vm.MainWindowXamlCsSetup, static v => v.MainWindowXamlCsSetup.Text).DisposeWith(d);
         });
     }
 }

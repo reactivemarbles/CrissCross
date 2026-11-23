@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using CrissCross.WPF.Test.Views;
+using ReactiveUI.Binding;
 using Splat;
 
 namespace CrissCross.WPF.Test;

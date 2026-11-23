@@ -146,24 +146,24 @@ public partial class NavigationModel : RxObject
     /// </returns>
     private IObservable<Visibility> ObserveIsNameVisible() =>
         this.WhenAnyValue(
-            x => x.IsExpanded,
-            x => x.IsExpander,
+            static x => x.IsExpanded,
+            static x => x.IsExpander,
             static (isExpanded, isExpander) => isExpanded && !isExpander ? Visibility.Visible : Visibility.Collapsed);
 
     /// <summary>Provides the IsSelectedVisible member.</summary>
     /// <returns>The result.</returns>
     private IObservable<Visibility> ObserveIsSelectedVisible() =>
-        this.WhenAnyValue(x => x.IsSelected).Select(static x => x ? Visibility.Visible : Visibility.Hidden);
+        this.WhenAnyValue(static x => x.IsSelected).Select(static x => x ? Visibility.Visible : Visibility.Hidden);
 
     /// <summary>Provides the IsExpanderHorizontalAlignment member.</summary>
     /// <returns>The result.</returns>
     private IObservable<HorizontalAlignment> ObserveIsExpanderHorizontalAlignment() =>
-        this.WhenAnyValue(x => x.IsExpander).Select(static x => x ? HorizontalAlignment.Left : HorizontalAlignment.Stretch);
+        this.WhenAnyValue(static x => x.IsExpander).Select(static x => x ? HorizontalAlignment.Left : HorizontalAlignment.Stretch);
 
     /// <summary>Provides the IsExpanderVerticalAlignment member.</summary>
     /// <returns>The result.</returns>
     private IObservable<VerticalAlignment> ObserveIsExpanderVerticalAlignment() =>
-        this.WhenAnyValue(x => x.IsExpander).Select(static x => x ? VerticalAlignment.Top : VerticalAlignment.Stretch);
+        this.WhenAnyValue(static x => x.IsExpander).Select(static x => x ? VerticalAlignment.Top : VerticalAlignment.Stretch);
 
     /// <summary>Connects the derived observable properties for this model.</summary>
     private void InitializeObservableProperties()

@@ -202,7 +202,7 @@ public partial class ChartObjects : RxObject, IAppearance
     public void AppearanceSubsriptions<T>(AvaPlot plot, T plotable)
         where T : IHasLine, IHasMarker, IPlottable
     {
-        _ = this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility, static (width, color, visibility) => (Value1: width, Value2: color, Value3: visibility))
+        _ = this.WhenAnyValue(static x => x.LineWidth, static x => x.Color, static x => x.Visibility, static (width, color, visibility) => (Value1: width, Value2: color, Value3: visibility))
             .Subscribe(x =>
             {
                 var color = ResolveColor(x.Value2);
@@ -217,11 +217,11 @@ public partial class ChartObjects : RxObject, IAppearance
             })
             .DisposeWith(Disposables);
 
-        _ = this.WhenAnyValue(x => x.IsChecked)
+        _ = this.WhenAnyValue(static x => x.IsChecked)
             .Subscribe(x => Visibility = !x ? InvisibleState : VisibleState)
             .DisposeWith(Disposables);
 
-        _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility, static (visible, visibility) => (Value1: visible, Value2: visibility))
+        _ = this.WhenAnyValue(static x => x.IsCrossHairVisible, static x => x.Visibility, static (visible, visibility) => (Value1: visible, Value2: visibility))
             .Subscribe(x =>
             {
                 var visibility = x.Value1 && x.Value2 != InvisibleState;
@@ -239,7 +239,7 @@ public partial class ChartObjects : RxObject, IAppearance
     /// <param name="avaPlot">The plot control to refresh when appearance-related properties change.</param>
     public void AppearanceSubsriptions(AvaPlot avaPlot)
     {
-        _ = this.WhenAnyValue(x => x.LineWidth, x => x.Color, x => x.Visibility, static (width, color, visibility) => (Value1: width, Value2: color, Value3: visibility))
+        _ = this.WhenAnyValue(static x => x.LineWidth, static x => x.Color, static x => x.Visibility, static (width, color, visibility) => (Value1: width, Value2: color, Value3: visibility))
             .Subscribe(x =>
             {
                 var color = ResolveColor(x.Value2);
@@ -251,11 +251,11 @@ public partial class ChartObjects : RxObject, IAppearance
             })
             .DisposeWith(Disposables);
 
-        _ = this.WhenAnyValue(x => x.IsChecked)
+        _ = this.WhenAnyValue(static x => x.IsChecked)
             .Subscribe(x => Visibility = !x ? InvisibleState : VisibleState)
             .DisposeWith(Disposables);
 
-        _ = this.WhenAnyValue(x => x.IsCrossHairVisible, x => x.Visibility, static (visible, visibility) => (Value1: visible, Value2: visibility))
+        _ = this.WhenAnyValue(static x => x.IsCrossHairVisible, static x => x.Visibility, static (visible, visibility) => (Value1: visible, Value2: visibility))
             .Subscribe(x =>
             {
                 var visibility = x.Value1 && x.Value2 != InvisibleState;

@@ -34,13 +34,13 @@ public partial class BrowserView : IUseHostedNavigation
         {
             ViewModel ??= AppLocator.Current.GetService<BrowserViewModel>();
             var viewModel = ViewModel ?? throw new InvalidOperationException("The browser view model must be registered before activation.");
-            _ = this.Bind(ViewModel, vm => vm.WebUrl, v => v.WebUri.Text).DisposeWith(d);
-            _ = viewModel.WhenAnyValue(x => x.WebUrl)
+            _ = this.Bind(ViewModel, static vm => vm.WebUrl, static v => v.WebUri.Text).DisposeWith(d);
+            _ = viewModel.WhenAnyValue(static x => x.WebUrl)
                 .Throttle(TimeSpan.FromSeconds(WebUrlThrottleSeconds), RxSchedulers.TaskpoolScheduler)
                 .DistinctUntilChanged()
                 .Where(static query => !string.IsNullOrWhiteSpace(query))
                 .ObserveOn(RxSchedulers.MainThreadScheduler)
-                .BindTo(this, vm => vm.browserView.Source)
+                .BindTo(this, static vm => vm.browserView.Source)
                 .DisposeWith(d);
             this.NavigateToView(new NavigationKeyRequest<MainViewModel> { Options = new() { HostName = browserView.Name } });
         });

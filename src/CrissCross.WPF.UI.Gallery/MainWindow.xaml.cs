@@ -62,8 +62,8 @@ public partial class MainWindow : IAmBuilt
             SetCurrentValue(TrackerProperty, tracker);
 
             // Bind the view model
-            _ = this.OneWayBind(ViewModel, vm => vm.ApplicationTitle, v => v.Title).DisposeWith(d);
-            _ = this.OneWayBind(ViewModel, vm => vm.NavigationModels, v => v.NavigationLeft.ItemsSource).DisposeWith(d);
+            _ = this.OneWayBind(ViewModel, static vm => vm.ApplicationTitle, static v => v.Title).DisposeWith(d);
+            _ = this.OneWayBind(ViewModel, static vm => vm.NavigationModels, static v => v.NavigationLeft.ItemsSource).DisposeWith(d);
 
             NavBreadcrumb.SetupNavigation(nameof(mainWindow));
 

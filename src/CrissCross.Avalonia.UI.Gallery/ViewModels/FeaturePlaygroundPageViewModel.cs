@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CrissCross.Avalonia.UI;
 using CrissCross.Avalonia.UI.Appearance;
 using ReactiveUI;
+using ReactiveUI.Binding;
 
 namespace CrissCross.Avalonia.UI.Gallery.ViewModels;
 

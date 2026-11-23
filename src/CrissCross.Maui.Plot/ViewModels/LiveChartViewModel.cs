@@ -632,7 +632,7 @@ public partial class LiveChartViewModel : RxObject
     /// <summary>Propagates point-window settings to active plot lines.</summary>
     private void ObservePlotSettings()
     {
-        _ = this.WhenAnyValue(x => x.NumberPointsPlotted)
+        _ = this.WhenAnyValue(static x => x.NumberPointsPlotted)
             .Subscribe(numberOfPoints =>
             {
                 foreach (var plotLine in PlotLinesCollectionUI)
@@ -641,7 +641,7 @@ public partial class LiveChartViewModel : RxObject
                 }
             })
             .DisposeWith(Disposables);
-        _ = this.WhenAnyValue(x => x.UseFixedNumberOfPoints)
+        _ = this.WhenAnyValue(static x => x.UseFixedNumberOfPoints)
             .Subscribe(useFixedPointCount =>
             {
                 foreach (var plotLine in PlotLinesCollectionUI)

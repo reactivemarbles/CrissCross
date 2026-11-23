@@ -46,5 +46,5 @@ public partial class PetView : IViewFor<Pet>
     /// <summary>Binds the active view model to the view.</summary>
     /// <param name="disposables">The activation disposables.</param>
     private void BindViewModel(CompositeDisposable disposables) =>
-        this.OneWayBind(ViewModel, vm => vm.DisplayName, v => v.PetName.Text).DisposeWith(disposables);
+        this.OneWayBind(ViewModel, static vm => vm.DisplayName, static v => v.PetName.Text).DisposeWith(disposables);
 }

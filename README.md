@@ -53,7 +53,7 @@ This is the canonical documentation source for every library project and package
 | `CrissCross.Maui.UI`, `CrissCross.Maui.UI.Reactive` | The same .NET 10 and 11 MAUI target family as `CrissCross.MAUI`. |
 | `CrissCross.WinForms`, `CrissCross.WinForms.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.WPF`, `CrissCross.WPF.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
-| `CrissCross.WPF.Plot`, `CrissCross.WPF.Plot.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
+| `CrissCross.WPF.Plot`, `CrissCross.WPF.Plot.Reactive` | `net47`, `net471`, `net472`, `net48`, `net481`, `net10.0-windows10.0.19041.0`, and `net11.0-windows10.0.19041.0`. Modern .NET targets require Windows 10 version 19041 or newer. |
 | `CrissCross.WPF.UI`, `CrissCross.WPF.UI.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.WPF.WebView2`, `CrissCross.WPF.WebView2.Reactive` | `net472`, `net48`, `net481`, `net8.0-windows`, `net9.0-windows`, `net10.0-windows`, and `net11.0-windows`. |
 

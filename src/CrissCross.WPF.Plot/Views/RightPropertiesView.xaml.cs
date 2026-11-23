@@ -111,7 +111,7 @@ public partial class RightPropertiesView : IViewFor<RightPropertiesViewModel>
     {
         ViewModel = new();
         DataContext = ViewModel;
-        _ = this.BindCommand(ViewModel, vm => vm.SaveConfiguration, v => v.SaveBtn).DisposeWith(disposables);
+        _ = this.BindCommand(ViewModel, static vm => vm.SaveConfiguration, static v => v.SaveBtn).DisposeWith(disposables);
 
         _ = new PropertyObservable<string?>(
                 ViewModel,
