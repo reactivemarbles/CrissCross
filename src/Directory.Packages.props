@@ -78,7 +78,7 @@
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
 
     <!-- Source Generators (PrivateAssets) -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="7.1.0" />
 
     <!-- Other UI/Framework Packages -->
