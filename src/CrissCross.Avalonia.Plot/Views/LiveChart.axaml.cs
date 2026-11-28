@@ -21,8 +21,8 @@ using ReactiveUI.Avalonia.Reactive;
 #else
 using ReactiveUI.Avalonia;
 #endif
-using ScottPlot;
-using ScottPlot.Plottables;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;

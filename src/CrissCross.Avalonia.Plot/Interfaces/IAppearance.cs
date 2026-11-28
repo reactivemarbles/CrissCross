@@ -5,8 +5,7 @@
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
-using ScottPlot;
-using ScottPlot.Avalonia;
+using CrissCross.Plot;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.Plot;

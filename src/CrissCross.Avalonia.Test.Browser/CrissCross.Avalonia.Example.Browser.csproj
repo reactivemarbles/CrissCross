@@ -5,6 +5,8 @@
     <SelfContained>true</SelfContained>
     <WasmMainJSPath>AppBundle\main.js</WasmMainJSPath>
     <WasmBuildNative>true</WasmBuildNative>
+    <!-- Enable SkiaSharp's WebAssembly native-link integration for this browser-wasm host. -->
+    <UsingMicrosoftNETSdkWebAssembly>true</UsingMicrosoftNETSdkWebAssembly>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

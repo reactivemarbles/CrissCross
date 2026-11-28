@@ -583,7 +583,7 @@ public partial class LiveChart
         {
             ItemsSource = ViewModel.YAxisList,
             SelectedIndex = 0,
-            ItemTemplate = new global::Avalonia.Controls.Templates.FuncDataTemplate<ScottPlot.IYAxis>(static (item, _) => new TextBlock { Text = item?.Label.Text }),
+            ItemTemplate = new global::Avalonia.Controls.Templates.FuncDataTemplate<CrissCross.Plot.IYAxis>(static (item, _) => new TextBlock { Text = item?.Label.Text }),
         };
         content.Children.Add(axis);
         var bottom = AddValueInput(content, "Y minimum", limits.Bottom);
@@ -593,7 +593,7 @@ public partial class LiveChart
         {
             if (!TryReadFinite(left, out var xMinimum) || !TryReadFinite(right, out var xMaximum)
                 || !TryReadFinite(bottom, out var yMinimum) || !TryReadFinite(top, out var yMaximum)
-                || xMinimum >= xMaximum || yMinimum >= yMaximum || axis.SelectedItem is not ScottPlot.IYAxis selected)
+                || xMinimum >= xMaximum || yMinimum >= yMaximum || axis.SelectedItem is not CrissCross.Plot.IYAxis selected)
             {
                 error.Text = "Enter finite numbers with each minimum smaller than its maximum, and select a Y axis.";
                 return;

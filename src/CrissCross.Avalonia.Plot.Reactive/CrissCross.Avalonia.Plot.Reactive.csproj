@@ -16,16 +16,17 @@
   </ItemGroup>
   <ItemGroup>
     <Using Include="ReactiveUI.Reactive" />
+    <Using Include="CrissCross.Plot.Interactivity" Alias="Interactivity" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Skia" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.Binding.Reactive" />
     <PackageReference Include="ReactiveList.Reactive" />
-    <PackageReference Include="ScottPlot.Avalonia" />
     <PackageReference Include="ReactiveUI.Primitives.ObservableEvents" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.Avalonia.UI.Reactive\CrissCross.Avalonia.UI.Reactive.csproj" />
+    <ProjectReference Include="..\CrissCross.Plot.Core\CrissCross.Plot.Core.csproj" />
   </ItemGroup>
   <Import Project="..\ReactiveMarkup.targets" />
   <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />

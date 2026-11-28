@@ -4,6 +4,7 @@
 
 using Avalonia.Metadata;
 
+[assembly: System.Runtime.InteropServices.ComVisible(true)]
 #if REACTIVELIST_REACTIVE
 [assembly: XmlnsDefinition("https://github.com/reactivemarbles/CrissCross.ui", "CrissCross.Reactive.Avalonia.Plot")]
 #else

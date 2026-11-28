@@ -2,13 +2,12 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using CrissCross.Plot.Plottables;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot.Avalonia;
-using ScottPlot.Plottables;
-using Color = ScottPlot.Color;
+using Color = CrissCross.Plot.Color;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.Plot;
@@ -22,7 +21,7 @@ namespace CrissCross.Avalonia.Plot;
 /// </summary>
 /// <remarks>This class is intended for use on cross-platform desktops and integrates with reactive observables to
 /// display streaming data. It supports automatic and manual scaling of the plot, and can be configured to display a
-/// fixed number of data points. The UI is designed to work with ScottPlot's AvaPlot and DataLogger for efficient data
+/// fixed number of data points. The UI is designed to work with CrissCross.Plot's AvaPlot and DataLogger for efficient data
 /// visualization. Thread safety is managed internally for observable subscriptions and UI updates. Dispose of instances
 /// to release resources when no longer needed.</remarks>
 public partial class DataLoggerUI : RxObject, IPlottableUI
@@ -253,7 +252,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                     _valueBuffer[i] = valueList[i];
                 }
 
-                // Use ArraySegment since ScottPlot DataLogger doesn't support Span
+                // Use ArraySegment since CrissCross.Plot DataLogger doesn't support Span
                 if (count == _valueBuffer.Length)
                 {
                     PlotLine!.Add(_valueBuffer);

@@ -9,9 +9,9 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
-using ScottPlot;
-using ScottPlot.Plottables;
-using PlotColor = ScottPlot.Color;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
+using PlotColor = CrissCross.Plot.Color;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.Plot;

@@ -8,16 +8,15 @@ using CP.Reactive.Collections;
 #else
 using CP.Primitives.Collections;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Palettes;
+using CrissCross.Plot.Plottables;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Avalonia;
-using ScottPlot.Palettes;
-using ScottPlot.Plottables;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;

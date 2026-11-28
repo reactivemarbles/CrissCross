@@ -2,9 +2,9 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ScottPlot;
-using ScottPlot.DataSources;
-using ScottPlot.Plottables;
+using CrissCross.Plot;
+using CrissCross.Plot.DataSources;
+using CrissCross.Plot.Plottables;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Avalonia.Plot;
@@ -36,7 +36,7 @@ internal sealed partial class AvaloniaReactivePlotAdapter
         var legendText = showInLegend ? name : string.Empty;
         var apply = plottable switch
         {
-            ScottPlot.Plottables.Signal signal => new Action(() => signal.LegendText = legendText),
+            CrissCross.Plot.Plottables.Signal signal => new Action(() => signal.LegendText = legendText),
             Scatter scatter => () => scatter.LegendText = legendText,
             DataLogger logger => () => logger.LegendText = legendText,
             DataStreamer streamer => () => streamer.LegendText = legendText,
@@ -89,7 +89,7 @@ internal sealed partial class AvaloniaReactivePlotAdapter
     /// <param name="x">The rendered X values.</param>
     /// <param name="y">The rendered Y values.</param>
     /// <returns>The created scatter line.</returns>
-    private static Scatter CreateStepLine(ScottPlot.Plot plot, double[] x, double[] y)
+    private static Scatter CreateStepLine(CrissCross.Plot.Plot plot, double[] x, double[] y)
     {
         var scatter = plot.Add.ScatterLine(x, y);
         scatter.ConnectStyle = ConnectStyle.StepHorizontal;
@@ -102,7 +102,7 @@ internal sealed partial class AvaloniaReactivePlotAdapter
     /// <param name="y">The rendered Y values.</param>
     /// <param name="style">Optional series styling.</param>
     /// <returns>The created area scatter.</returns>
-    private static Scatter CreateArea(ScottPlot.Plot plot, double[] x, double[] y, ReactivePlotSeriesStyle? style)
+    private static Scatter CreateArea(CrissCross.Plot.Plot plot, double[] x, double[] y, ReactivePlotSeriesStyle? style)
     {
         var scatter = plot.Add.ScatterLine(x, y);
         var baselineMode = style?.BaselineMode ?? PlotBaselineMode.Zero;
@@ -111,7 +111,7 @@ internal sealed partial class AvaloniaReactivePlotAdapter
         return scatter;
     }
 
-    /// <summary>Converts normalized X values to values rendered by ScottPlot.</summary>
+    /// <summary>Converts normalized X values to values rendered by CrissCross.Plot.</summary>
     /// <param name="x">The normalized X values.</param>
     /// <param name="axisKind">The X-axis interpretation.</param>
     /// <returns>The rendered X values.</returns>
@@ -169,7 +169,7 @@ internal sealed partial class AvaloniaReactivePlotAdapter
 
     /// <summary>Resolves a named or hexadecimal series color.</summary>
     /// <param name="colorName">The color value.</param>
-    /// <returns>The ScottPlot color.</returns>
+    /// <returns>The CrissCross.Plot color.</returns>
     private static Color ResolveColor(string colorName)
     {
         if (colorName.StartsWith('#'))

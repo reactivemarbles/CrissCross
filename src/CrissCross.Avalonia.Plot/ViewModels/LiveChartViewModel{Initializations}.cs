@@ -3,11 +3,11 @@
 // See the LICENSE file in the project root for full license information.
 
 using Avalonia.Input;
+using CrissCross.Plot;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
