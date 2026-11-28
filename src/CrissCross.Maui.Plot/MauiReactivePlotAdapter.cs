@@ -31,6 +31,9 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
     /// <summary>Stores the owning live chart view model.</summary>
     private readonly LiveChartViewModel _chart;
 
+    /// <summary>Coordinates complete series mutations with rendering.</summary>
+    private readonly object _plotSync;
+
     /// <summary>Stores the configured series color.</summary>
     private readonly string _color;
 
@@ -97,17 +100,21 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
         Key = key;
         PlotType = plotType;
         _settings = new(key, plotType, color);
-        _chart.SeriesSettings.Add(_settings);
-        _settings.PropertyChanged += SettingsChanged;
-        _chart.PropertyChanged += ChartSettingsChanged;
+        _plotSync = chart.MauiPlot1vm!.Plot.Sync;
+        lock (_plotSync)
+        {
+            _chart.SeriesSettings.Add(_settings);
+            _settings.PropertyChanged += SettingsChanged;
+            _chart.PropertyChanged += ChartSettingsChanged;
 
-        var initialization = CreateInitialization(plotType);
-        _signalSubject = initialization.SignalSubject;
-        _scatterSubject = initialization.ScatterSubject;
-        _dataLoggerSubject = initialization.DataLoggerSubject;
-        _streamerSubject = initialization.StreamerSubject;
-        _ui = initialization.Ui;
-        AddUiIfPresent();
+            var initialization = CreateInitialization(plotType);
+            _signalSubject = initialization.SignalSubject;
+            _scatterSubject = initialization.ScatterSubject;
+            _dataLoggerSubject = initialization.DataLoggerSubject;
+            _streamerSubject = initialization.StreamerSubject;
+            _ui = initialization.Ui;
+            AddUiIfPresent();
+        }
     }
 
     /// <summary>Gets the key value.</summary>
@@ -119,6 +126,25 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
     /// <summary>Handles the Apply operation.</summary>
     /// <param name="update">The update value.</param>
     public void Apply(ReactivePlotUpdate update)
+    {
+        lock (_plotSync)
+        {
+            ApplyCore(update);
+        }
+    }
+
+    /// <summary>Handles the Dispose operation.</summary>
+    public void Dispose()
+    {
+        lock (_plotSync)
+        {
+            DisposeCore();
+        }
+    }
+
+    /// <summary>Applies a complete update while rendering is excluded.</summary>
+    /// <param name="update">The update value.</param>
+    private void ApplyCore(ReactivePlotUpdate update)
     {
         EnsureNotDisposed();
         if (!_settingsInitialized && update.Kind != ReactivePlotUpdateKind.Clear)
@@ -148,8 +174,8 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
         _chart.MauiPlot1vm?.Refresh();
     }
 
-    /// <summary>Handles the Dispose operation.</summary>
-    public void Dispose()
+    /// <summary>Removes the series while rendering is excluded.</summary>
+    private void DisposeCore()
     {
         if (_disposed)
         {
@@ -165,6 +191,7 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
         {
             _ui.ChartSettings.PropertyChanged -= UiSettingsChanged;
             _ = _chart.PlotLinesCollectionUI.Remove(_ui);
+            _ui.RemoveFromPlot(_chart.MauiPlot1vm!.Plot);
         }
 
         DisposeSubject(_signalSubject);
@@ -426,19 +453,22 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="args">The changed property.</param>
     private void SettingsChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (!_settingsInitialized || _disposed)
+        lock (_plotSync)
         {
-            return;
-        }
+            if (!_settingsInitialized || _disposed)
+            {
+                return;
+            }
 
-        ApplyStyle(_settings.CreateStyle());
-        TrimUiPoints();
-        if (args.PropertyName == nameof(ReactivePlotSeriesSettings.MaxPoints))
-        {
-            ReapplyRetainedData();
-        }
+            ApplyStyle(_settings.CreateStyle());
+            TrimUiPoints();
+            if (args.PropertyName == nameof(ReactivePlotSeriesSettings.MaxPoints))
+            {
+                ReapplyRetainedData();
+            }
 
-        _chart.MauiPlot1vm?.Refresh();
+            _chart.MauiPlot1vm?.Refresh();
+        }
     }
 
     /// <summary>Updates static feeds when the global display window changes.</summary>
@@ -451,10 +481,13 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
             return;
         }
 
-        ReapplyRetainedData();
-        ApplyStyle(_settings.CreateStyle());
-        TrimUiPoints();
-        _chart.MauiPlot1vm?.Refresh();
+        lock (_plotSync)
+        {
+            ReapplyRetainedData();
+            ApplyStyle(_settings.CreateStyle());
+            TrimUiPoints();
+            _chart.MauiPlot1vm?.Refresh();
+        }
     }
 
     /// <summary>Redraws retained snapshot data without awaiting another source emission.</summary>
@@ -514,15 +547,7 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
     /// <param name="style">The effective series style.</param>
     private void ApplyUiStyle(ReactivePlotSeriesStyle style)
     {
-        IPlottable? plottable = _ui switch
-        {
-            SignalUI signal => signal.PlotLine,
-            ScatterUI scatter => scatter.PlotLine,
-            DataLoggerUI logger => logger.PlotLine,
-            StreamerUI streamer => streamer.PlotLine,
-            SignalXY_UI signalXy => signalXy.PlotLine,
-            _ => null,
-        };
+        var plottable = _ui?.GetPlottable();
 
         if (plottable is null)
         {
@@ -631,6 +656,7 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
         {
             _ui.ChartSettings.PropertyChanged -= UiSettingsChanged;
             _ = _chart.PlotLinesCollectionUI.Remove(_ui);
+            _ui.RemoveFromPlot(_chart.MauiPlot1vm!.Plot);
             _ui.Dispose();
             _ui = null;
             _chart.UpdateChartObjectsCollection();
@@ -781,15 +807,7 @@ internal sealed partial class MauiReactivePlotAdapter : IReactivePlotAdapter
             _ui.ChartSettings.Crosshair!.Axes.YAxis = verticalAxis;
         }
 
-        IPlottable? plottable = _ui switch
-        {
-            SignalUI signal => signal.PlotLine,
-            ScatterUI scatter => scatter.PlotLine,
-            DataLoggerUI logger => logger.PlotLine,
-            StreamerUI streamer => streamer.PlotLine,
-            SignalXY_UI signalXy => signalXy.PlotLine,
-            _ => _snapshotPlottable,
-        };
+        var plottable = _ui?.GetPlottable() ?? _snapshotPlottable;
 
         if (plottable is null)
         {

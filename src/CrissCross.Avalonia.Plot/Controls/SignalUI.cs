@@ -247,7 +247,7 @@ public partial class SignalUI : RxObject, IPlottableUI
             .Select(data => (Value: data.Value!, Time: CreateTimeValues(data.DateTime)))
             .Retry(int.MaxValue)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(data => AppendSignalData(data.Value, data.Time))
+            .SubscribeSynchronized(Plot.Plot, data => AppendSignalData(data.Value, data.Time))
             .DisposeWith(Disposables);
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>

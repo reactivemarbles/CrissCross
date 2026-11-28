@@ -878,7 +878,7 @@ public static class Drawing
     /// <param name="style">The marker configuration; rendering is skipped when it is not visible.</param>
     public static void DrawMarkers(SKCanvas canvas, Paint paint, IEnumerable<Pixel> pixels, MarkerStyle style)
     {
-        if (!style.IsVisible)
+        if (!style.IsVisible || (style.Shape == MarkerShape.None && style.CustomRenderer is null))
         {
             return;
         }

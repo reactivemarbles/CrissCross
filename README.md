@@ -57,6 +57,8 @@ This is the canonical documentation source for every library project and package
 | `CrissCross.WPF.UI`, `CrissCross.WPF.UI.Reactive` | `net472`, `net48`, `net481`, and `net8.0` through `net11.0` with `-windows10.0.19041.0`. |
 | `CrissCross.WPF.WebView2`, `CrissCross.WPF.WebView2.Reactive` | `net472`, `net48`, `net481`, `net8.0-windows`, `net9.0-windows`, `net10.0-windows`, and `net11.0-windows`. |
 
+`CrissCross.Plot.Core` enables trimming and Native AOT analyzers on `net10.0` and `net11.0`. `Palette.GetPalettes()` and `Colormap.GetColormaps()` use explicit built-in registries, so these APIs do not require reflection for built-in types. Add new built-in palettes and colormaps to their respective registries.
+
 ## Gallery Projects
 
 Run the galleries:
@@ -1578,6 +1580,8 @@ dotnet run --project src/CrissCross.Avalonia.Plot.Example/CrissCross.Avalonia.Pl
 ```
 
 It provides the same **All chart types**, **Live streams**, **Historic DateTime**, **Indicators**, theme toggle, and fixed-point controls as the WPF example. The two Avalonia plot test projects exercise both dependency families, including binding policies, study calculations, retained data, settings, rendering, and chart lifecycle behavior.
+
+The Avalonia, WPF, and MAUI adapters synchronize series creation, updates, settings-driven replacements, and disposal with `Plot.Sync`. Deferred streaming callbacks acquire the same lock when they execute, so rendering cannot observe partially constructed cursor overlays or data replacements. Custom code that changes plottables or their data while rendering must also use `lock (plot.Sync)` around the complete synchronous edit; never hold that lock across an `await`.
 
 ## CrissCross.Maui.Plot
 

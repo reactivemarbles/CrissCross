@@ -1,8 +1,6 @@
 // Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-using System.Diagnostics.CodeAnalysis;
-
 namespace CrissCross.Plot;
 
 /// <summary>Provides built-in palette access and custom palette creation.</summary>
@@ -21,8 +19,34 @@ public static class Palette
     /// <returns>The custom palette.</returns>
     public static IPalette FromColors(Color[] colors) => new Palettes.Custom(colors, string.Empty, string.Empty);
 
-    /// <summary>Gets every available palette in the assembly.</summary>
+    /// <summary>Gets every built-in palette.</summary>
     /// <returns>The available palette instances.</returns>
-    [RequiresUnreferencedCode("Discovers palettes by reflecting over the assembly types.")]
-    public static IPalette[] GetPalettes() => TypeDiscovery.GetImplementations<IPalette>(typeof(Palette).Assembly);
+    public static IPalette[] GetPalettes() =>
+    [
+        new Palettes.Amber(),
+        new Palettes.Aurora(),
+        new Palettes.Building(),
+        new Palettes.Category10(),
+        new Palettes.Category20(),
+        new Palettes.ColorblindFriendly(),
+        new Palettes.ColorblindFriendlyDark(),
+        new Palettes.Dark(),
+        new Palettes.DarkPastel(),
+        new Palettes.Frost(),
+        new Palettes.LightOcean(),
+        new Palettes.LightSpectrum(),
+        new Palettes.Microcharts(),
+        new Palettes.Nero(),
+        new Palettes.Nord(),
+        new Palettes.Normal(),
+        new Palettes.OneHalf(),
+        new Palettes.OneHalfDark(),
+        new Palettes.PastelWheel(),
+        new Palettes.Penumbra(),
+        new Palettes.PolarNight(),
+        new Palettes.Redness(),
+        new Palettes.SnowStorm(),
+        new Palettes.SummerSplash(),
+        new Palettes.Tsitsulin(),
+    ];
 }

@@ -294,7 +294,7 @@ public sealed class CircularBuffer<T> : IList<T>, IReadOnlyList<T>
     /// <param name="index">The zero-based index to validate.</param>
     private void ValidateIndexInRange(int index)
     {
-        if (index < Count)
+        if (index >= 0 && index < Count)
         {
             return;
         }

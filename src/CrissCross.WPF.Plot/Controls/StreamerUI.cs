@@ -197,7 +197,7 @@ public partial class StreamerUI : RxObject, IPlottableUI
                 && d.Y.Count == d.X.Count)
             .Retry(int.MaxValue)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(d =>
+            .SubscribeSynchronized(Plot.Plot, d =>
             {
                 if (ChartSettings.IsPaused)
                 {

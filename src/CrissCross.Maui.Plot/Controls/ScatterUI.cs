@@ -266,7 +266,7 @@ public partial class ScatterUI : RxObject, IPlottableUI
                 && data.Y.Count > 0
                 && data.X.Count == data.Y.Count)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(data =>
+            .SubscribeSynchronized(Plot.Plot, data =>
             {
                 InsertData(data.X!, data.Y);
 

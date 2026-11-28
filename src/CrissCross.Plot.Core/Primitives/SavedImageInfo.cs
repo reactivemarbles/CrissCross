@@ -23,8 +23,7 @@ public class SavedImageInfo(string path, int fileSize)
         <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="icon" href="https://scottplot.net/favicon.ico" sizes="any">
-            <title>ScottPlot {{ FILENAME }}</title>
+            <title>CrissCross Plot {{ FILENAME }}</title>
             <style>
                 body {
                     padding: 0;
@@ -72,7 +71,7 @@ public class SavedImageInfo(string path, int fileSize)
             <div style='line-height: 150%;'>
                 <div>{{ FILENAME }} ({{ WIDTH }}x{{ HEIGHT }}) <script>document.write(new Date().toLocaleTimeString());</script></div>
                 <div><input id="liveCheckbox" type="checkbox" onclick="toggle();"> auto-refresh</div>
-                <div style='opacity: .5;'><a href='https://scottplot.net'>{{ VERSION }}</a></div>
+                <div style='opacity: .5;'><a href='https://github.com/reactivemarbles/CrissCross'>{{ VERSION }}</a></div>
             </div>
         </body>
 

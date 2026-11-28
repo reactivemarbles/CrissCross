@@ -20,8 +20,8 @@ public static class Version
     /// <summary>Gets the version formatted like "1.2.3-beta".</summary>
     public static string VersionString { get; } = GetVersionString();
 
-    /// <summary>Gets the version formatted like "ScottPlot 1.2.3-beta".</summary>
-    public static string LongString { get; } = $"ScottPlot {GetVersionString()}";
+    /// <summary>Gets the version formatted like "CrissCross Plot 1.2.3-beta".</summary>
+    public static string LongString { get; } = $"CrissCross Plot {GetVersionString()}";
 
     /// <summary>Throws if this version does not match the expected major version.</summary>
     /// <param name="major">The expected major version.</param>
@@ -32,7 +32,7 @@ public static class Version
             return;
         }
 
-        throw new InvalidOperationException($"ScottPlot was expected to be {major}.x.x but is actually {VersionString}");
+        throw new InvalidOperationException($"CrissCross Plot was expected to be {major}.x.x but is actually {VersionString}");
     }
 
     /// <summary>Throws if this version does not match the expected major and minor versions.</summary>
@@ -45,7 +45,7 @@ public static class Version
             return;
         }
 
-        throw new InvalidOperationException($"ScottPlot was expected to be {major}.{minor}.x but is actually {VersionString}");
+        throw new InvalidOperationException($"CrissCross Plot was expected to be {major}.{minor}.x but is actually {VersionString}");
     }
 
     /// <summary>Throws if this version does not match the expected major, minor, and build versions.</summary>
@@ -59,7 +59,7 @@ public static class Version
             return;
         }
 
-        throw new InvalidOperationException($"ScottPlot was expected to be {major}.{minor}.{build} but is actually {VersionString}");
+        throw new InvalidOperationException($"CrissCross Plot was expected to be {major}.{minor}.{build} but is actually {VersionString}");
     }
 
     /// <summary>Reads the informational version from the assembly metadata.</summary>

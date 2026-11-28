@@ -237,7 +237,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
             .Select(static data => (data.Value!, Math.Min(data.nPoints, MaximumLoggedPointCount)))
             .Retry(int.MaxValue)
             .ObserveOn(RxSchedulers.MainThreadScheduler)
-            .Subscribe(d =>
+            .SubscribeSynchronized(Plot.Plot, d =>
             {
                 var (valueList, nPoints) = d;
                 var count = valueList.Count;

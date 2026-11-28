@@ -1,7 +1,6 @@
 // Copyright (c) 2019-2026 ReactiveUI Association Incorporated. All rights reserved.
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
-using System.Diagnostics.CodeAnalysis;
 using CrissCross.Plot.Colormaps;
 
 namespace CrissCross.Plot;
@@ -12,10 +11,43 @@ public static class Colormap
     /// <summary>Gets or sets the default colormap.</summary>
     public static IColormap Default { get; set; } = new MellowRainbow();
 
-    /// <summary>Gets every available colormap in the assembly.</summary>
+    /// <summary>Gets every built-in colormap.</summary>
     /// <returns>The available colormap instances.</returns>
-    [RequiresUnreferencedCode("Discovers colormaps by reflecting over the assembly types.")]
-    public static IColormap[] GetColormaps() => TypeDiscovery.GetImplementations<IColormap>(typeof(Colormap).Assembly);
+    public static IColormap[] GetColormaps() =>
+    [
+        new Algae(),
+        new Amp(),
+        new Balance(),
+        new Blues(),
+        new Curl(),
+        new Deep(),
+        new Delta(),
+        new Dense(),
+        new Diff(),
+        new Grayscale(),
+        new GrayscaleReversed(),
+        new Greens(),
+        new Haline(),
+        new Ice(),
+        new Inferno(),
+        new Jet(),
+        new Magma(),
+        new Matter(),
+        new MellowRainbow(),
+        new Oxy(),
+        new Phase(),
+        new Plasma(),
+        new Rain(),
+        new Solar(),
+        new Speed(),
+        new Tarn(),
+        new Tempo(),
+        new Thermal(),
+        new Topo(),
+        new Turbid(),
+        new Turbo(),
+        new Viridis(),
+    ];
 
     /// <summary>Creates an image showing the colors from a colormap.</summary>
     /// <param name="colormap">The colormap to render.</param>

@@ -5,6 +5,8 @@
         <RootNamespace>CrissCross.Plot</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsTrimmable Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net11.0'">true</IsTrimmable>
+        <IsAotCompatible Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net11.0'">true</IsAotCompatible>
         <PackageId>CrissCross.Plot.Core</PackageId>
         <PackageTags>plot graph data chart signal line bar heatmap scatter</PackageTags>
         <description>CrissCross Plot is a free and open-source plotting library for .NET. This package can be used to create static plots, and user controls for displaying plots interactively are available as separate NuGet packages.</description>

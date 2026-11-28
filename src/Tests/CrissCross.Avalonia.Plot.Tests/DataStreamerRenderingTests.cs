@@ -20,6 +20,7 @@ public sealed class DataStreamerRenderingTests
         const int capacity = 4;
         const double magnitude = 2;
         const double sampleX = 0.5;
+        const double verticalLimit = 3;
         using CrissCross.Plot.Plot plot = new();
         var streamer = plot.Add.DataStreamer(capacity);
         streamer.ManageAxisLimits = false;
@@ -28,7 +29,7 @@ public sealed class DataStreamerRenderingTests
         streamer.FillYAboveColor = Colors.Red;
         streamer.FillYBelowColor = Colors.Blue;
         streamer.Add([magnitude, magnitude, -magnitude, -magnitude]);
-        plot.Axes.SetLimits(-1, capacity, -3, 3);
+        plot.Axes.SetLimits(-1, capacity, -verticalLimit, verticalLimit);
 
         using SKBitmap bitmap = SKBitmap.Decode(plot.GetImageBytes(width, height, ImageFormat.Png));
         Pixel above = plot.GetPixel(new(sampleX, 1));

@@ -18,14 +18,16 @@ public sealed class OhlcPlotTests
         const int width = 400;
         const int height = 300;
         const double high = 4;
-        const double close = 3;
-        const double open = 2;
+        const double higherPrice = 3;
+        const double lowerPrice = 2;
+        const double rightLimit = 2;
+        const double topLimit = 5;
         using CrissCross.Plot.Plot plot = new();
-        var bars = plot.Add.OHLC([new(open, high, 1, close), new(close, high, 1, open)]);
+        var bars = plot.Add.OHLC([new(lowerPrice, high, 1, higherPrice), new(higherPrice, high, 1, lowerPrice)]);
         bars.Sequential = true;
         bars.RisingStyle.Color = Colors.Red;
         bars.FallingStyle.Color = Colors.Blue;
-        plot.Axes.SetLimits(-1, 2, 0, 5);
+        plot.Axes.SetLimits(-1, rightLimit, 0, topLimit);
 
         using SKBitmap bitmap = SKBitmap.Decode(plot.GetImageBytes(width, height, ImageFormat.Png));
         Pixel rising = plot.GetPixel(new(0, high));
