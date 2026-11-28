@@ -16,7 +16,7 @@ using CrissCross.Maui.Plot;
 
 namespace CrissCross.Maui.Plot.Tests;
 
-/// <summary>Exercises actual ScottPlot rendering through the public Maui binding surface.</summary>
+/// <summary>Exercises actual CrissCross.Plot rendering through the public Maui binding surface.</summary>
 [NotInParallel]
 public sealed class MauiPlotRenderingTests
 {
@@ -121,7 +121,7 @@ public sealed class MauiPlotRenderingTests
             updates.OnNext(new(key, PlotType.Scatter, ReactivePlotUpdateKind.Replace, [ResetX, NextResetX], [FifthValue, SixthValue], PlotXAxisKind.Numeric, ResetSequence));
             foreach (var plottable in vm.MauiPlot1vm!.Plot.GetPlottables())
             {
-                if (plottable is ScottPlot.Plottables.Scatter scatter)
+                if (plottable is CrissCross.Plot.Plottables.Scatter scatter)
                 {
                     return scatter.Data.GetScatterPoints().Count;
                 }

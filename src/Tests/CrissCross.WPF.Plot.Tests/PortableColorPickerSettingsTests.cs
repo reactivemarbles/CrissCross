@@ -10,7 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-using ScottPlot.Plottables;
+using CrissCross.Plot.Plottables;
 #if REACTIVELIST_REACTIVE
 using CrissCross.Reactive.WPF.Plot;
 using CrissCross.Reactive.WPF.UI;
@@ -109,13 +109,13 @@ public sealed class PortableColorPickerSettingsTests
         var observed = await OnSta(ExerciseReactiveColorSelection);
 
         var expectedWpfColor = Color.FromArgb(EditedAlpha, ExpectedRed, ExpectedGreen, ExpectedBlue);
-        var expectedScottPlotColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromArgb(EditedAlpha, ExpectedRed, ExpectedGreen, ExpectedBlue));
+        var expectedPlotColor = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromArgb(EditedAlpha, ExpectedRed, ExpectedGreen, ExpectedBlue));
         await Assert.That(observed.selected).IsEqualTo(expectedWpfColor);
         await Assert.That(observed.standardSelected).IsEqualTo(expectedWpfColor);
-        await Assert.That(observed.updatedSetting).IsEqualTo(expectedScottPlotColor.ToHex());
-        await Assert.That(observed.updatedPlotColor).IsEqualTo(expectedScottPlotColor);
+        await Assert.That(observed.updatedSetting).IsEqualTo(expectedPlotColor.ToHex());
+        await Assert.That(observed.updatedPlotColor).IsEqualTo(expectedPlotColor);
         await Assert.That(observed.reopened).IsEqualTo(expectedWpfColor);
-        await Assert.That(observed.FollowingData).IsEqualTo(expectedScottPlotColor);
+        await Assert.That(observed.FollowingData).IsEqualTo(expectedPlotColor);
         await Assert.That(observed.squareStateBindingPreserved).IsTrue();
         await Assert.That(observed.hueBindingPreserved).IsTrue();
         await Assert.That(observed.saturationBindingPreserved).IsTrue();
@@ -157,7 +157,7 @@ public sealed class PortableColorPickerSettingsTests
                 InnerBindingPreserved: BindingOperations.IsDataBound(standardPicker, PickerControlBase.ColorStateProperty));
         });
 
-        var expected = ScottPlot.Color.FromColor(System.Drawing.Color.FromArgb(EditedAlpha, EditedRed, EditedGreen, EditedBlue));
+        var expected = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromArgb(EditedAlpha, EditedRed, EditedGreen, EditedBlue));
         await Assert.That(observed.initializedColor).IsEqualTo(Colors.Red);
         await Assert.That(observed.Color).IsEqualTo(expected.ToHex());
         await Assert.That(observed.SelectedColor).IsEqualTo(Color.FromArgb(EditedAlpha, EditedRed, EditedGreen, EditedBlue));
@@ -204,9 +204,9 @@ public sealed class PortableColorPickerSettingsTests
         Color selected,
         Color standardSelected,
         string updatedSetting,
-        ScottPlot.Color updatedPlotColor,
+        CrissCross.Plot.Color updatedPlotColor,
         Color reopened,
-        ScottPlot.Color FollowingData,
+        CrissCross.Plot.Color FollowingData,
         bool squareStateBindingPreserved,
         bool hueBindingPreserved,
         bool saturationBindingPreserved,

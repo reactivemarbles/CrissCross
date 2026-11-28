@@ -4,7 +4,7 @@
 
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ScottPlot.Plottables;
+using CrissCross.Plot.Plottables;
 #if REACTIVELIST_REACTIVE
 using CrissCross.Reactive.WPF.Plot;
 using ReactiveUI.Reactive;
@@ -120,7 +120,7 @@ public sealed class ReactivePlotSeriesSettingsTests
         await Assert.That(observed.IsVisible).IsTrue();
         await Assert.That(observed.LineWidth).IsEqualTo(EditedLineWidth);
         await Assert.That(observed.MarkerSize).IsEqualTo(EditedMarkerSize);
-        await Assert.That(observed.LineColor).IsEqualTo(ScottPlot.Color.FromColor(System.Drawing.Color.Blue));
+        await Assert.That(observed.LineColor).IsEqualTo(CrissCross.Plot.Color.FromColor(System.Drawing.Color.Blue));
         await Assert.That(observed.Top).IsEqualTo(ThirdValue);
         await Assert.That(observed.SeriesLabel).IsEqualTo(EditedLabel);
         await Assert.That(observed.ShowInLegend).IsFalse();
@@ -206,7 +206,7 @@ public sealed class ReactivePlotSeriesSettingsTests
             using var vm = new LiveChartViewModel(new Grid());
             using var updates = new Signal<ReactivePlotUpdate>();
             double immediate;
-            ScottPlot.AxisLimits final;
+            CrissCross.Plot.AxisLimits final;
             using (var connection = Bind(vm, updates, PlotType.Line))
             {
                 updates.OnNext(Update(PlotType.Line, 1, [1D, SecondValue, ThirdValue], [1D, SecondValue, ThirdValue]));
@@ -291,7 +291,7 @@ public sealed class ReactivePlotSeriesSettingsTests
             var ui = vm.PlotLinesCollectionUI[0];
             var plottable = ui switch
             {
-                SignalUI signal => (ScottPlot.IPlottable)signal.PlotLine!,
+                SignalUI signal => (CrissCross.Plot.IPlottable)signal.PlotLine!,
                 ScatterUI scatter => scatter.PlotLine!,
                 DataLoggerUI logger => logger.PlotLine!,
                 SignalXY_UI signalXy => signalXy.PlotLine!,
@@ -301,7 +301,7 @@ public sealed class ReactivePlotSeriesSettingsTests
             settings.IsVisible = true;
             settings.IsPaused = true;
             updates.OnNext(Update(type, ThirdSequence, [ThirdValue], [PausedValue]));
-            return (hidden, plottable.IsVisible, ui.ChartSettings.ItemName, ui.ChartSettings.IsCrossHairVisible, ((ScottPlot.IHasLine)plottable).LineStyle.Width, plottable.GetAxisLimits().Top);
+            return (hidden, plottable.IsVisible, ui.ChartSettings.ItemName, ui.ChartSettings.IsCrossHairVisible, ((CrissCross.Plot.IHasLine)plottable).LineStyle.Width, plottable.GetAxisLimits().Top);
         });
         await Assert.That(observed.hidden).IsTrue();
         await Assert.That(observed.IsVisible).IsTrue();

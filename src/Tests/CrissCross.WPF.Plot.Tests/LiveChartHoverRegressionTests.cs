@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ScottPlot;
-using ScottPlot.Plottables;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using TUnit.Core.Executors;
 #if REACTIVELIST_REACTIVE
 using CrissCross.Reactive.WPF.Plot;
