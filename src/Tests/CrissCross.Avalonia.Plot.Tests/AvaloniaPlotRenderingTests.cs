@@ -11,7 +11,7 @@ using CrissCross.Avalonia.Plot;
 
 namespace CrissCross.Avalonia.Plot.Tests;
 
-/// <summary>Exercises actual ScottPlot rendering through the public Avalonia binding surface.</summary>
+/// <summary>Exercises actual CrissCross.Plot rendering through the public Avalonia binding surface.</summary>
 [NotInParallel]
 public sealed class AvaloniaPlotRenderingTests
 {

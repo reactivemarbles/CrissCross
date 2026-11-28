@@ -142,7 +142,7 @@ public sealed class AvaloniaSettingsEditorTests
         flyout.Hide();
         flyout.ShowAt(swatch);
         Dispatcher.UIThread.RunJobs();
-        var retained = picker.Color == selected && picker.IsAlphaEnabled && settings.Color == new ScottPlot.Color(red, green, blue, alpha).ToHex();
+        var retained = picker.Color == selected && picker.IsAlphaEnabled && settings.Color == new CrissCross.Plot.Color(red, green, blue, alpha).ToHex();
         flyout.Hide();
         return retained;
     }
