@@ -65,9 +65,6 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(DotNet10Version)" Condition="!$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="11.0.10" Condition="$(TargetFramework.StartsWith('net11'))" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
-    <!-- Compatibility has no .NET 11 stable release; ScottPlot.Maui still requires the last published preview. -->
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="11.0.0-preview.5.26304.4" Condition="$(TargetFramework.StartsWith('net11'))" />
-    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="10.0.130" Condition="$(TargetFramework.StartsWith('net10'))" />
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4370.26" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.161" />
     <PackageVersion Include="System.Drawing.Common" Version="$(DotNet11Version)" Condition="$(TargetFramework.StartsWith('net11'))" />
@@ -82,7 +79,7 @@
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="7.1.0" />
 
     <!-- Other UI/Framework Packages -->
-    <PackageVersion Include="AngleSharp" Version="1.10.5" />
+    <PackageVersion Include="AngleSharp" Version="1.11.0" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Wpf" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Avalonia" Version="$(ExtensionsHostingVersion)" />
     <PackageVersion Include="CP.Extensions.Hosting.ReactiveUI.Maui" Version="$(ExtensionsHostingVersion)" />
@@ -94,9 +91,23 @@
     <PackageVersion Include="Markdig" Version="1.6.0" />
     <PackageVersion Include="ReactiveList" Version="$(ReactiveListVersion)" />
     <PackageVersion Include="ReactiveList.Reactive" Version="$(ReactiveListVersion)" />
-    <PackageVersion Include="ScottPlot.WPF" Version="5.1.59" />
-    <PackageVersion Include="ScottPlot.Avalonia" Version="5.1.59" />
-    <PackageVersion Include="ScottPlot.Maui" Version="5.1.59" />
+
+    <!-- Plot Packages -->
+    <PackageVersion Include="SkiaSharp" Version="4.158.0" />
+    <PackageVersion Include="SkiaSharp.HarfBuzz" Version="4.158.0" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="4.158.0" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.158.0" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.WebAssembly" Version="4.158.0" />
+    <PackageVersion Include="SkiaSharp.Views.Maui.Controls" Version="4.158.0" />
+    <PackageVersion Include="HarfBuzzSharp.NativeAssets.Linux" Version="15.0.0" />
+    <PackageVersion Include="HarfBuzzSharp.NativeAssets.WebAssembly" Version="15.0.0" />
+    <!-- SkiaSharp's WPF views use OpenTK 3 on .NET Framework and OpenTK 4 on modern .NET.
+         GLWpfControl 3.3.1 and 4.3.4+ are signed and cannot satisfy SkiaSharp's unsigned assembly reference. -->
+    <PackageVersion Include="OpenTK" Version="3.3.3" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="OpenTK" Version="4.9.4" Condition="!$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="OpenTK.GLWpfControl" Version="3.3.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="OpenTK.GLWpfControl" Version="4.3.3" Condition="!$(TargetFramework.StartsWith('net4'))" />
+    <PackageVersion Include="SkiaSharp.Views.WPF" Version="4.158.0" />
 
     <!-- Polyfill for .NET Framework -->
     <PackageVersion Include="Polyfill" Version="12.0.0" Condition="$(TargetFramework.StartsWith('net4'))" />

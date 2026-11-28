@@ -70,7 +70,7 @@ public sealed record PlotSeriesData
     public static PlotSeriesData Numeric(string name, int axis, IReadOnlyList<double> x, IReadOnlyList<double> y) =>
         new(new PlotSeriesKey(name, axis), x, y);
 
-    /// <summary>Creates a DateTime XY series using OLE Automation date values for ScottPlot compatibility.</summary>
+    /// <summary>Creates a DateTime XY series using OLE Automation date values for CrissCross.Plot compatibility.</summary>
     /// <param name="name">The series name.</param>
     /// <param name="axis">The Y-axis index.</param>
     /// <param name="timestamps">The timestamps.</param>

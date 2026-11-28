@@ -51,7 +51,7 @@ public sealed class ReactivePlotSeriesSettings : RxObject
             ThrowHelper.ThrowIfNull(value, nameof(value));
             if (value.StartsWith('#'))
             {
-                _ = ScottPlot.Color.FromHex(value);
+                _ = CrissCross.Plot.Color.FromHex(value);
             }
             else if (!System.Drawing.Color.FromName(value).IsKnownColor)
             {
