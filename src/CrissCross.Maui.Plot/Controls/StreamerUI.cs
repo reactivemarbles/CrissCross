@@ -2,16 +2,15 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Maui;
-using ScottPlot.Plottables;
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;

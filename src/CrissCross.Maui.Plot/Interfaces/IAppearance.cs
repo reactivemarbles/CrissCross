@@ -5,11 +5,10 @@
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
-using ScottPlot;
-using ScottPlot.Maui;
+using CrissCross.Plot;
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;

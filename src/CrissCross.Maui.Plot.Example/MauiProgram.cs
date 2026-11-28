@@ -2,7 +2,7 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using ScottPlot.Maui;
+using CrissCross.Maui.Plot;
 
 namespace CrissCross.Maui.Plot.Example;
 
@@ -13,6 +13,6 @@ public static class MauiProgram
     /// <returns>The configured MAUI application.</returns>
     public static MauiApp CreateMauiApp() => MauiApp.CreateBuilder()
         .UseMauiApp<App>()
-        .UseScottPlot()
+        .UseCrissCrossPlot()
         .Build();
 }

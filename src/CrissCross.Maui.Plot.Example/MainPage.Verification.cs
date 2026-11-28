@@ -4,8 +4,8 @@
 
 using System.Globalization;
 using System.Text;
-using ScottPlot;
-using ScottPlot.Plottables;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 
 namespace CrissCross.Maui.Plot.Example;
 
@@ -112,7 +112,7 @@ public sealed partial class MainPage
     private static int? GetPointCount(IPlottable plottable) => plottable switch
     {
         Scatter scatter => scatter.Data.GetScatterPoints().Count,
-        ScottPlot.Plottables.Signal signal => signal.Data.GetYs().Count,
+        CrissCross.Plot.Plottables.Signal signal => signal.Data.GetYs().Count,
         SignalXY signal => signal.Data.Count,
         DataLogger logger => logger.Data.Coordinates.Count,
         DataStreamer streamer => Math.Min(streamer.CountTotal, streamer.Count),
@@ -138,7 +138,7 @@ public sealed partial class MainPage
     /// <summary>Collects native data counts, excluding plot decorations.</summary>
     /// <param name="plot">The native rendered plot.</param>
     /// <returns>The data point counts.</returns>
-    private static List<int> CollectPointCounts(ScottPlot.Plot plot)
+    private static List<int> CollectPointCounts(CrissCross.Plot.Plot plot)
     {
         List<int> samples = [];
         foreach (var plottable in plot.GetPlottables())

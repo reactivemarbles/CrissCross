@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using Microsoft.Maui.Controls;
+using Label = Microsoft.Maui.Controls.Label;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;

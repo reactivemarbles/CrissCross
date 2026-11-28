@@ -2,16 +2,15 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Maui;
-using ScottPlot.Plottables;
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;
@@ -258,7 +257,7 @@ public partial class AxisLinesUI : RxObject
     /// <param name="position">The x-coordinate at which to place the vertical line.</param>
     public void CreateVerticalLine(double position)
     {
-        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
+        var color = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
         AxisLine = Plot.Plot.Add.VerticalLine(x: position, width: (float)ChartSettings.LineWidth, color: color);
         AxisLine.LabelText = LabelText;
     }
@@ -273,7 +272,7 @@ public partial class AxisLinesUI : RxObject
     /// drawn.</param>
     public void CreateHorizontalLine(double position)
     {
-        var color = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
+        var color = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromName(ChartSettings.Color!));
         AxisLine = Plot.Plot.Add.HorizontalLine(y: position, width: (float)ChartSettings.LineWidth, color: color);
         AxisLine.LabelText = LabelText;
         AxisLine.LabelAlignment = Alignment.MiddleCenter;

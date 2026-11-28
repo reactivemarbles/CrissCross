@@ -2,22 +2,21 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using Microsoft.Maui.Controls;
 #if REACTIVE_SHIM
 using CP.Reactive.Collections;
 #else
 using CP.Primitives.Collections;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Palettes;
+using CrissCross.Plot.Plottables;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Maui.Controls;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Maui;
-using ScottPlot.Palettes;
-using ScottPlot.Plottables;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
@@ -25,8 +24,8 @@ using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
 using static ReactiveUI.Binding.ReactiveUIBindingExtensions;
 #endif
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;
@@ -271,9 +270,9 @@ public partial class LiveChartViewModel : RxObject
     {
         var previousAxis = MauiPlot1vm!.Plot.Axes.Bottom;
         var today = DateTime.Today.ToOADate();
-        var min = previousAxis is ScottPlot.AxisPanels.DateTimeXAxis ? previousAxis.Min : today;
-        var max = previousAxis is ScottPlot.AxisPanels.DateTimeXAxis ? previousAxis.Max : today + 1;
-        XAxis1 = new ScottPlot.AxisPanels.DateTimeXAxis();
+        var min = previousAxis is CrissCross.Plot.AxisPanels.DateTimeXAxis ? previousAxis.Min : today;
+        var max = previousAxis is CrissCross.Plot.AxisPanels.DateTimeXAxis ? previousAxis.Max : today + 1;
+        XAxis1 = new CrissCross.Plot.AxisPanels.DateTimeXAxis();
         SetFiniteRange(XAxis1, min, max, today, today + 1);
         MauiPlot1vm.Plot.Axes.Remove(Edge.Bottom);
         MauiPlot1vm.Plot.Axes.AddBottomAxis(XAxis1);

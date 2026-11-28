@@ -4,8 +4,9 @@
 
 using System.Diagnostics;
 using System.Globalization;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using Microsoft.Maui.Dispatching;
-using ScottPlot.Plottables;
 
 namespace CrissCross.Maui.Plot.Example;
 
@@ -111,7 +112,7 @@ public sealed partial class MainPage
     /// <summary>Validates the native data rectangle and axes and formats their diagnostic values.</summary>
     /// <param name="plot">The actual native plot model.</param>
     /// <returns>The diagnostics and whether a nonzero native render has occurred.</returns>
-    private static (string Render, bool HasRender) GetResponsivenessRender(ScottPlot.Plot plot)
+    private static (string Render, bool HasRender) GetResponsivenessRender(CrissCross.Plot.Plot plot)
     {
         var limits = plot.Axes.GetLimits();
         var rect = plot.LastRender.DataRect;

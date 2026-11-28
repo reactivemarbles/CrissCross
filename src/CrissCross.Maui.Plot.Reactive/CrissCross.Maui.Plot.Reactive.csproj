@@ -7,7 +7,7 @@
     <UseMaui>true</UseMaui>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <Description>Native MAUI ScottPlot live charts, reactive bindings, indicators, and editable series settings.</Description>
+    <Description>Native MAUI CrissCross.Plot live charts, reactive bindings, indicators, and editable series settings.</Description>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
@@ -15,7 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" />
-    <PackageReference Include="ScottPlot.Maui" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.Binding.Reactive" />
     <PackageReference Include="ReactiveList.Reactive" />
@@ -23,9 +23,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrissCross.Maui.UI.Reactive\CrissCross.Maui.UI.Reactive.csproj" />
+    <ProjectReference Include="..\CrissCross.Plot.Core\CrissCross.Plot.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="ReactiveUI.Reactive" />
+    <Using Include="CrissCross.Plot" />
+    <Using Include="CrissCross.Plot.Interactivity" Alias="Interactivity" />
+    <Using Include="CrissCross.Plot.Plot" Alias="PlotModel" />
     <Compile Include="..\CrissCross.Maui.Plot\**\*.cs" Exclude="..\CrissCross.Maui.Plot\bin\**;..\CrissCross.Maui.Plot\obj\**" LinkBase="CrissCross.Maui.Plot" />
   </ItemGroup>
   <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />

@@ -37,7 +37,7 @@ public sealed partial class MainPage : ContentPage, IDisposable
     /// <summary>Displays the active scenario.</summary>
     private readonly Label _scenario = new() { FontSize = 20, FontAttributes = FontAttributes.Bold };
 
-    /// <summary>Hosts the native ScottPlot chart and settings controls.</summary>
+    /// <summary>Hosts the native CrissCross plot chart and settings controls.</summary>
     private readonly LiveChart _chart = new() { AutomationId = "LiveChart" };
 
     /// <summary>Provides the verification artifact clock.</summary>

@@ -5,7 +5,7 @@
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0;net11.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Description>Native MAUI ScottPlot live charts, reactive bindings, indicators, and editable series settings.</Description>
+    <Description>Native MAUI CrissCross.Plot live charts, reactive bindings, indicators, and editable series settings.</Description>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
@@ -13,14 +13,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Maui.Controls" />
-    <PackageReference Include="ScottPlot.Maui" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" />
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.Binding" />
     <PackageReference Include="ReactiveList" />
     <PackageReference Include="ReactiveUI.Primitives.Maui" />
   </ItemGroup>
   <ItemGroup>
+    <Using Include="CrissCross.Plot" />
+    <Using Include="CrissCross.Plot.Interactivity" Alias="Interactivity" />
+    <Using Include="CrissCross.Plot.Plot" Alias="PlotModel" />
     <ProjectReference Include="..\CrissCross.Maui.UI\CrissCross.Maui.UI.csproj" />
+    <ProjectReference Include="..\CrissCross.Plot.Core\CrissCross.Plot.Core.csproj" />
   </ItemGroup>
   <Import Project="..\CrissCross.Plot.Shared\CrissCross.Plot.Shared.projitems" Label="Shared" />
 </Project>

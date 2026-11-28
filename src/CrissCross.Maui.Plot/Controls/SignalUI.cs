@@ -2,16 +2,15 @@
 // ReactiveUI Association Incorporated licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Maui;
-using ScottPlot.Plottables;
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.Maui.Plot;
@@ -23,7 +22,7 @@ namespace CrissCross.Maui.Plot;
 /// Provides an MAUI UI component for plotting and streaming time-series signal data, supporting real-time updates,
 /// autoscaling, and interactive features. Nice for historical data (performance).
 /// </summary>
-/// <remarks>SignalUI integrates with ScottPlot and ReactiveUI.Primitives to visualize data streams in MAUI applications.
+/// <remarks>SignalUI integrates with CrissCross.Plot and ReactiveUI.Primitives to visualize data streams in MAUI applications.
 /// It
 /// manages plot appearance, data buffering, and user interaction such as crosshair and marker updates based on mouse
 /// coordinates. The class supports both automatic and manual scaling, and can limit the number of displayed points for

@@ -4,17 +4,17 @@
 
 using System.Collections.Specialized;
 using System.ComponentModel;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using Microsoft.Maui.Controls;
 using ReactiveUI.Primitives.Concurrency;
-using ScottPlot;
-using ScottPlot.Plottables;
-using SkiaSharp.Views.Maui;
 #if REACTIVE_SHIM
 using ReactiveUI.Primitives.Reactive.Concurrency;
 #endif
+using SkiaSharp.Views.Maui;
 
-using Color = ScottPlot.Color;
-using Colors = ScottPlot.Colors;
+using Color = CrissCross.Plot.Color;
+using Colors = CrissCross.Plot.Colors;
 using Label = Microsoft.Maui.Controls.Label;
 
 #if REACTIVELIST_REACTIVE
@@ -213,7 +213,7 @@ public sealed partial class LiveChart : ContentView, IDisposable
 
     /// <summary>Validates an edited color.</summary>
     /// <param name="value">The color.</param>
-    /// <returns>Whether ScottPlot accepts the color.</returns>
+    /// <returns>Whether CrissCross.Plot accepts the color.</returns>
     private static bool IsColor(string value)
     {
         if (!value.StartsWith('#'))
@@ -223,7 +223,7 @@ public sealed partial class LiveChart : ContentView, IDisposable
 
         try
         {
-            _ = ScottPlot.Color.FromHex(value);
+            _ = CrissCross.Plot.Color.FromHex(value);
             return true;
         }
         catch (FormatException)
