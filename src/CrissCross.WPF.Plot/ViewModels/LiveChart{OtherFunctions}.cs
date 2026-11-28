@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
-using ScottPlot.Plottables;
+using CrissCross.Plot.Plottables;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;

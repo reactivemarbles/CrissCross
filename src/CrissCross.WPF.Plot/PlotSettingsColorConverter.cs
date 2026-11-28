@@ -25,12 +25,12 @@ internal sealed class PlotSettingsColorConverter : IValueConverter
         }
 
         var color = colorName.StartsWith('#')
-            ? ScottPlot.Color.FromHex(colorName)
-            : ScottPlot.Color.FromColor(System.Drawing.Color.FromName(colorName));
-        return Color.FromArgb(color.A, color.R, color.G, color.B);
+            ? CrissCross.Plot.Color.FromHex(colorName)
+            : CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromName(colorName));
+        return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 
     /// <inheritdoc />
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-        value is Color color ? new ScottPlot.Color(color.R, color.G, color.B, color.A).ToHex() : Binding.DoNothing;
+        value is System.Windows.Media.Color color ? new CrissCross.Plot.Color(color.R, color.G, color.B, color.A).ToHex() : Binding.DoNothing;
 }

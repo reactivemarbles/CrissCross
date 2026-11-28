@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\ReactiveShim.props" />
 
   <PropertyGroup>
@@ -27,7 +27,9 @@
     <PackageReference Include="ReactiveUI.SourceGenerators" PrivateAssets="all" />
     <PackageReference Include="ReactiveUI.Binding.Wpf.Reactive" />
     <PackageReference Include="ReactiveList.Reactive" />
-    <PackageReference Include="ScottPlot.WPF" />
+    <PackageReference Include="OpenTK" />
+    <PackageReference Include="OpenTK.GLWpfControl" />
+    <PackageReference Include="SkiaSharp.Views.WPF" />
     <PackageReference Include="ReactiveUI.Primitives.ObservableEvents" PrivateAssets="all" />
   </ItemGroup>
 
@@ -36,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="CrissCross.Plot" />
+    <Using Include="CrissCross.Plot.Interactivity" Alias="Interactivity" />
+    <ProjectReference Include="..\CrissCross.Plot.Core\CrissCross.Plot.Core.csproj" />
     <ProjectReference Include="..\CrissCross.WPF.UI.Reactive\CrissCross.WPF.UI.Reactive.csproj" />
   </ItemGroup>
 

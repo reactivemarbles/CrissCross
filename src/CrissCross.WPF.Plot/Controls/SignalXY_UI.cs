@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+using CrissCross.Plot;
+using CrissCross.Plot.DataSources;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.DataSources;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;

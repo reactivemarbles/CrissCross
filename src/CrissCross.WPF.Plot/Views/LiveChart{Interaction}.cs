@@ -6,9 +6,9 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using ScottPlot;
-using ScottPlot.Plottables;
-using PlotColor = ScottPlot.Color;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
+using PlotColor = CrissCross.Plot.Color;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;

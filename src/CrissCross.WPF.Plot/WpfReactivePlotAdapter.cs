@@ -6,9 +6,9 @@ using System.ComponentModel;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
-using ScottPlot;
-using ScottPlot.DataSources;
-using ScottPlot.Plottables;
+using CrissCross.Plot;
+using CrissCross.Plot.DataSources;
+using CrissCross.Plot.Plottables;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
@@ -55,7 +55,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     /// <summary>Stores the current plottable UI element.</summary>
     private IPlottableUI? _ui;
 
-    /// <summary>Stores the current snapshot-oriented ScottPlot plottable.</summary>
+    /// <summary>Stores the current snapshot-oriented CrissCross.Plot plottable.</summary>
     private IPlottable? _snapshotPlottable;
 
     /// <summary>Stores the signal X-axis kind currently used by the UI.</summary>
@@ -288,7 +288,7 @@ internal sealed partial class WpfReactivePlotAdapter : IReactivePlotAdapter
     private void ApplySignalXySnapshot(ReactivePlotUpdate update) =>
         ApplySignalXy(PrepareSnapshotUpdate(update));
 
-    /// <summary>Renders a retained snapshot using one of the extended ScottPlot chart types.</summary>
+    /// <summary>Renders a retained snapshot using one of the extended CrissCross.Plot chart types.</summary>
     /// <param name="update">The source update.</param>
     private void ApplySnapshot(ReactivePlotUpdate update)
     {

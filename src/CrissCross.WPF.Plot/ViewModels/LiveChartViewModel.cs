@@ -15,11 +15,10 @@ using CP.Primitives.Collections;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Palettes;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Palettes;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;

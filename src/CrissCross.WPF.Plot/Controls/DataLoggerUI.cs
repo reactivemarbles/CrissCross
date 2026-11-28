@@ -6,10 +6,9 @@ using System.Runtime.Versioning;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
-using Color = ScottPlot.Color;
+using Color = CrissCross.Plot.Color;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
@@ -23,7 +22,7 @@ namespace CrissCross.WPF.Plot;
 /// </summary>
 /// <remarks>This class is intended for use on Windows platforms and integrates with reactive observables to
 /// display streaming data. It supports automatic and manual scaling of the plot, and can be configured to display a
-/// fixed number of data points. The UI is designed to work with ScottPlot's WpfPlot and DataLogger for efficient data
+/// fixed number of data points. The UI is designed to work with CrissCross.Plot's WpfPlot and DataLogger for efficient data
 /// visualization. Thread safety is managed internally for observable subscriptions and UI updates. Dispose of instances
 /// to release resources when no longer needed.</remarks>
 [SupportedOSPlatform("windows")]
@@ -255,7 +254,7 @@ public partial class DataLoggerUI : RxObject, IPlottableUI
                     _valueBuffer[i] = valueList[i];
                 }
 
-                // Use ArraySegment since ScottPlot DataLogger doesn't support Span
+                // Use ArraySegment since CrissCross.Plot DataLogger doesn't support Span
                 if (count == _valueBuffer.Length)
                 {
                     PlotLine!.Add(_valueBuffer);

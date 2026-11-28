@@ -295,7 +295,7 @@ public partial class LiveChart
             "Apply fixed ranges" => AppBarIcons.Md_axis,
             _ => AppBarIcons.Md_autorenew,
         };
-        var button = new AppBarButton { Icon = stateIcon?.Invoke() ?? icon, ToolTip = description, HorizontalAlignment = HorizontalAlignment.Left };
+        var button = new AppBarButton { Icon = stateIcon?.Invoke() ?? icon, ToolTip = description, HorizontalAlignment = System.Windows.HorizontalAlignment.Left };
         System.Windows.Automation.AutomationProperties.SetName(button, label);
         System.Windows.Automation.AutomationProperties.SetHelpText(button, description);
         if (stateIcon is not null)
@@ -621,7 +621,7 @@ public partial class LiveChart
         {
             if (!TryReadFinite(left, out var xMinimum) || !TryReadFinite(right, out var xMaximum)
                 || !TryReadFinite(bottom, out var yMinimum) || !TryReadFinite(top, out var yMaximum)
-                || xMinimum >= xMaximum || yMinimum >= yMaximum || axis.SelectedItem is not ScottPlot.IYAxis selected)
+                || xMinimum >= xMaximum || yMinimum >= yMaximum || axis.SelectedItem is not IYAxis selected)
             {
                 error.Text = "Enter finite numbers with each minimum smaller than its maximum, and select a Y axis.";
                 return;
@@ -734,7 +734,7 @@ public partial class LiveChart
 
             try
             {
-                _ = ScottPlot.Color.FromHex(text);
+                _ = CrissCross.Plot.Color.FromHex(text);
                 return ValidationResult.ValidResult;
             }
             catch (FormatException)

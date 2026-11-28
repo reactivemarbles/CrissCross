@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Runtime.Versioning;
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
@@ -233,8 +232,8 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         PlotLine.LineWidth = CrosshairLineWidth;
         PlotLine.HorizontalLine.IsDraggable = true;
         PlotLine.VerticalLine.IsDraggable = true;
-        PlotLine!.HorizontalLine.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
-        PlotLine!.VerticalLine.LabelStyle.BackgroundColor = ScottPlot.Colors.White;
+        PlotLine!.HorizontalLine.LabelStyle.BackgroundColor = CrissCross.Plot.Colors.White;
+        PlotLine!.VerticalLine.LabelStyle.BackgroundColor = CrissCross.Plot.Colors.White;
         PlotLine.HorizontalLine.Text = "Click and drag me";
         PlotLine.VerticalLine.Text = "Click and drag me";
         PlotLine.HorizontalLine.LabelStyle.IsVisible = true;
@@ -242,8 +241,8 @@ public partial class Crosshair_UI : RxObject, IPlottableUI
         PlotLine.HorizontalLine.LabelStyle.OffsetY = HorizontalLabelOffsetY;
         PlotLine.HorizontalLine.LabelStyle.OffsetX = HorizontalLabelOffsetX;
         PlotLine.HorizontalLine.LabelStyle.Rotation = 0;
-        PlotLine.HorizontalLine.LabelFontColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
-        PlotLine.LineColor = ScottPlot.Color.FromColor(System.Drawing.Color.FromName(color));
+        PlotLine.HorizontalLine.LabelFontColor = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromName(color));
+        PlotLine.LineColor = CrissCross.Plot.Color.FromColor(System.Drawing.Color.FromName(color));
     }
 
     /// <summary>Releases unmanaged and - optionally - managed resources.</summary>

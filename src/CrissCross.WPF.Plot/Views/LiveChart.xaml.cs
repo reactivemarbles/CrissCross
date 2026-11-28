@@ -15,9 +15,9 @@ using ReactiveUI.Binding.Observables;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.Primitives.ObservableEvents;
-using ScottPlot;
-using ScottPlot.Plottables;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;

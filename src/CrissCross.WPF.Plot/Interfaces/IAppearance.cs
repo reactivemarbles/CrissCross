@@ -5,8 +5,7 @@
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
-using ScottPlot;
-using ScottPlot.WPF;
+using CrissCross.Plot;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;

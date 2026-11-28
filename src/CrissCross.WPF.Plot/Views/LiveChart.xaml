@@ -2,7 +2,7 @@
   x:Class="CrissCross.WPF.Plot.LiveChart"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+  xmlns:plot="clr-namespace:CrissCross.WPF.Plot"
   xmlns:abb="clr-namespace:CrissCross.WPF.UI.Controls;assembly=CrissCross.WPF.UI"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:local="clr-namespace:CrissCross.WPF.Plot"

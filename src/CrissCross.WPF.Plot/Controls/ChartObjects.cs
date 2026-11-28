@@ -6,11 +6,10 @@ using System.Runtime.Versioning;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
-using PlotColor = ScottPlot.Color;
+using PlotColor = CrissCross.Plot.Color;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;

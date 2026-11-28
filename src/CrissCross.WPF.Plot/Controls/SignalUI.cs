@@ -6,10 +6,9 @@ using System.Runtime.Versioning;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot;
+using CrissCross.Plot.Plottables;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
-using ScottPlot.Plottables;
-using ScottPlot.WPF;
 
 #if REACTIVELIST_REACTIVE
 namespace CrissCross.Reactive.WPF.Plot;
@@ -21,7 +20,7 @@ namespace CrissCross.WPF.Plot;
 /// Provides a Windows UI component for plotting and streaming time-series signal data, supporting real-time updates,
 /// autoscaling, and interactive features. Nice for historical data (performance).
 /// </summary>
-/// <remarks>SignalUI integrates with ScottPlot and ReactiveUI.Primitives to visualize data streams in WPF applications.
+/// <remarks>SignalUI integrates with CrissCross.Plot and ReactiveUI.Primitives to visualize data streams in WPF applications.
 /// It
 /// manages plot appearance, data buffering, and user interaction such as crosshair and marker updates based on mouse
 /// coordinates. The class supports both automatic and manual scaling, and can limit the number of displayed points for

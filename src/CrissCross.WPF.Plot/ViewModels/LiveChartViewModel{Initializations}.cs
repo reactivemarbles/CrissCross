@@ -7,8 +7,8 @@ using System.Windows.Input;
 #if !REACTIVE_SHIM
 using ReactiveUI;
 #endif
+using CrissCross.Plot;
 using ReactiveUI.SourceGenerators;
-using ScottPlot;
 
 #if REACTIVE_SHIM
 using static ReactiveUI.Binding.Reactive.ReactiveUIBindingExtensions;
